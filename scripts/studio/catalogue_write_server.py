@@ -352,6 +352,10 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> Dict[str, Any]:
     }
 
 
+def extract_apply_build(body: Mapping[str, Any]) -> bool:
+    return bool(body.get("apply_build"))
+
+
 def extract_delete_request(body: Mapping[str, Any]) -> Dict[str, str]:
     kind = str(body.get("kind") or "").strip().lower()
     if kind not in {"work", "work_detail", "series"}:
@@ -1244,11 +1248,13 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_work_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
+        apply_build = extract_apply_build(body)
         requested_work_id = body.get("work_id")
         work_update = extract_work_update(body)
         if requested_work_id is None:
             requested_work_id = work_update.get("work_id")
         work_id = slug_id(requested_work_id)
+        extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
 
         works_payload = load_works_payload(self.server.works_path)
         works = works_payload["works"]
@@ -1327,12 +1333,24 @@ class Handler(BaseHTTPRequestHandler):
                     "summary": "Saved 1 work source record.",
                     "affected": {"works": [work_id], "series": [], "work_details": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
+                    }
+                )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            _build_success, build_payload = self._run_build_operation(
+                work_id=work_id,
+                series_id="",
+                extra_series_ids=extra_series_ids,
+                extra_work_ids=[],
+                detail_uid="",
+                force=False,
             )
+            response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_bulk_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
+        apply_build = extract_apply_build(body)
         request = extract_bulk_save_request(body)
         kind = request["kind"]
         selected_ids: list[str] = request["ids"]
@@ -1464,8 +1482,11 @@ class Handler(BaseHTTPRequestHandler):
                         "summary": f"Bulk-saved {len(changed_ids)} work source record(s).",
                         "affected": {"works": changed_ids, "series": sorted(affected_series_ids), "work_details": []},
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
+                        }
+                    )
+            response_payload["build_requested"] = bool(apply_build and changed)
+            if apply_build and changed:
+                response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
             self._send_json(HTTPStatus.OK, response_payload, allowed)
             return
 
@@ -1581,6 +1602,9 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_delete_preview(self, allowed: Optional[str]) -> None:
@@ -1965,6 +1989,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_work_detail_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
+        apply_build = extract_apply_build(body)
         requested_detail_uid = body.get("detail_uid")
         detail_update = extract_work_detail_update(body)
         if not requested_detail_uid:
@@ -2060,6 +2085,17 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            _build_success, build_payload = self._run_build_operation(
+                work_id=work_id,
+                series_id="",
+                extra_series_ids=[],
+                extra_work_ids=[],
+                detail_uid=detail_uid,
+                force=False,
+            )
+            response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_file_create(self, allowed: Optional[str]) -> None:
@@ -2136,6 +2172,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_work_file_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
+        apply_build = extract_apply_build(body)
         requested_uid = str(body.get("file_uid") or "").strip()
         file_update = extract_work_file_update(body)
         if not requested_uid:
@@ -2201,6 +2238,17 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            _build_success, build_payload = self._run_build_operation(
+                work_id=slug_id(updated_record.get("work_id")),
+                series_id="",
+                extra_series_ids=[],
+                extra_work_ids=[],
+                detail_uid="",
+                force=False,
+            )
+            response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_file_delete(self, allowed: Optional[str]) -> None:
@@ -2330,6 +2378,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_work_link_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
+        apply_build = extract_apply_build(body)
         requested_uid = str(body.get("link_uid") or "").strip()
         link_update = extract_work_link_update(body)
         if not requested_uid:
@@ -2395,6 +2444,17 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            _build_success, build_payload = self._run_build_operation(
+                work_id=slug_id(updated_record.get("work_id")),
+                series_id="",
+                extra_series_ids=[],
+                extra_work_ids=[],
+                detail_uid="",
+                force=False,
+            )
+            response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_link_delete(self, allowed: Optional[str]) -> None:
@@ -2452,12 +2512,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_series_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
+        apply_build = extract_apply_build(body)
         requested_series_id = body.get("series_id")
         series_update = extract_series_update(body)
         if requested_series_id is None:
             requested_series_id = series_update.get("series_id")
         series_id = normalize_series_id(requested_series_id)
         work_updates_request = extract_series_work_updates(body)
+        extra_work_ids = [slug_id(raw) for raw in body.get("extra_work_ids") or []]
 
         series_payload = load_series_payload(self.server.series_path)
         series_map = series_payload["series"]
@@ -2587,6 +2649,17 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            _build_success, build_payload = self._run_build_operation(
+                work_id="",
+                series_id=series_id,
+                extra_series_ids=[],
+                extra_work_ids=extra_work_ids,
+                detail_uid="",
+                force=False,
+            )
+            response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_series_create(self, allowed: Optional[str]) -> None:
@@ -2829,6 +2902,145 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("JSON body must be an object")
         return data
 
+    def _run_build_operation(
+        self,
+        *,
+        work_id: str,
+        series_id: str,
+        extra_series_ids: list[str],
+        extra_work_ids: list[str],
+        detail_uid: str,
+        force: bool,
+    ) -> tuple[bool, Dict[str, Any]]:
+        if work_id:
+            result = run_scoped_build(
+                self.server.repo_root,
+                source_dir=self.server.source_dir,
+                work_id=work_id,
+                extra_series_ids=extra_series_ids,
+                detail_uid=detail_uid,
+                write=not self.server.dry_run,
+                force=force,
+                log_activity=not self.server.dry_run,
+            )
+        else:
+            result = run_series_scoped_build(
+                self.server.repo_root,
+                source_dir=self.server.source_dir,
+                series_id=series_id,
+                extra_work_ids=extra_work_ids,
+                write=not self.server.dry_run,
+                force=force,
+                log_activity=not self.server.dry_run,
+            )
+
+        payload: Dict[str, Any] = {
+            "ok": result.get("status") == "completed",
+            "work_id": work_id,
+            "series_id": series_id,
+            "detail_uid": detail_uid,
+            "force": force,
+            "build": result.get("scope"),
+            "media": result.get("media"),
+            "steps": result.get("steps", []),
+        }
+        if self.server.dry_run:
+            payload["dry_run"] = True
+
+        if result.get("status") != "completed":
+            if not self.server.dry_run:
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "build.apply_failed"),
+                        "time_utc": now_utc,
+                        "kind": "build",
+                        "operation": "build.apply",
+                        "status": "failed",
+                        "summary": f"Scoped rebuild failed for {'work ' + work_id if work_id else 'series ' + series_id}.",
+                        "affected": {
+                            "works": list((result.get("scope") or {}).get("work_ids", [])),
+                            "series": list((result.get("scope") or {}).get("series_ids", [])),
+                            "work_details": [],
+                        },
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+            payload["error"] = str(result.get("error") or "Scoped JSON build failed.")
+            payload["failed_step"] = result.get("failed_step")
+            return False, payload
+
+        if not self.server.dry_run:
+            payload["completed_at_utc"] = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(payload["completed_at_utc"], "build.apply"),
+                    "time_utc": payload["completed_at_utc"],
+                    "kind": "build",
+                    "operation": "build.apply",
+                    "status": "completed",
+                    "summary": f"Scoped rebuild completed for {'work ' + work_id if work_id else 'series ' + series_id}.",
+                    "affected": {
+                        "works": list((result.get("scope") or {}).get("work_ids", [])),
+                        "series": list((result.get("scope") or {}).get("series_ids", [])),
+                        "work_details": [],
+                    },
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        return True, payload
+
+    def _run_build_targets(self, build_targets: list[Dict[str, Any]]) -> Dict[str, Any]:
+        if not build_targets:
+            return {
+                "ok": True,
+                "requested_count": 0,
+                "completed_count": 0,
+                "targets": [],
+                "remaining_targets": [],
+            }
+
+        target_results: list[Dict[str, Any]] = []
+        for index, target in enumerate(build_targets):
+            work_id = slug_id(target.get("work_id"))
+            extra_series_ids = normalize_series_ids_value(target.get("extra_series_ids"))
+            success, payload = self._run_build_operation(
+                work_id=work_id,
+                series_id="",
+                extra_series_ids=extra_series_ids,
+                extra_work_ids=[],
+                detail_uid="",
+                force=False,
+            )
+            target_results.append(
+                {
+                    "work_id": work_id,
+                    "extra_series_ids": extra_series_ids,
+                    "ok": success,
+                    "completed_at_utc": payload.get("completed_at_utc"),
+                    "error": payload.get("error"),
+                }
+            )
+            if not success:
+                return {
+                    "ok": False,
+                    "requested_count": len(build_targets),
+                    "completed_count": index,
+                    "targets": target_results,
+                    "remaining_targets": build_targets[index:],
+                    "error": payload.get("error"),
+                    "failed_step": payload.get("failed_step"),
+                }
+
+        return {
+            "ok": True,
+            "requested_count": len(build_targets),
+            "completed_count": len(build_targets),
+            "targets": target_results,
+            "remaining_targets": [],
+            "completed_at_utc": utc_now(),
+        }
+
     def _handle_build_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
@@ -2860,81 +3072,15 @@ class Handler(BaseHTTPRequestHandler):
         body = self._read_json_body()
         work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
         detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
-        if work_id:
-            result = run_scoped_build(
-                self.server.repo_root,
-                source_dir=self.server.source_dir,
-                work_id=work_id,
-                extra_series_ids=extra_series_ids,
-                detail_uid=detail_uid,
-                write=not self.server.dry_run,
-                force=force,
-                log_activity=not self.server.dry_run,
-            )
-        else:
-            result = run_series_scoped_build(
-                self.server.repo_root,
-                source_dir=self.server.source_dir,
-                series_id=series_id,
-                extra_work_ids=extra_work_ids,
-                write=not self.server.dry_run,
-                force=force,
-                log_activity=not self.server.dry_run,
-            )
-        payload: Dict[str, Any] = {
-            "ok": result.get("status") == "completed",
-            "work_id": work_id,
-            "series_id": series_id,
-            "detail_uid": detail_uid,
-            "force": force,
-            "build": result.get("scope"),
-            "media": result.get("media"),
-            "steps": result.get("steps", []),
-        }
-        if self.server.dry_run:
-            payload["dry_run"] = True
-        if result.get("status") != "completed":
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "build.apply_failed"),
-                        "time_utc": now_utc,
-                        "kind": "build",
-                        "operation": "build.apply",
-                        "status": "failed",
-                        "summary": f"Scoped rebuild failed for {'work ' + work_id if work_id else 'series ' + series_id}.",
-                        "affected": {
-                            "works": list((result.get("scope") or {}).get("work_ids", [])),
-                            "series": list((result.get("scope") or {}).get("series_ids", [])),
-                            "work_details": [],
-                        },
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
-            payload["error"] = str(result.get("error") or "Scoped JSON build failed.")
-            payload["failed_step"] = result.get("failed_step")
-            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
-            return
-        if not self.server.dry_run:
-            payload["completed_at_utc"] = utc_now()
-            self.server.append_activity(
-                {
-                    "id": activity_id(payload["completed_at_utc"], "build.apply"),
-                    "time_utc": payload["completed_at_utc"],
-                    "kind": "build",
-                    "operation": "build.apply",
-                    "status": "completed",
-                    "summary": f"Scoped rebuild completed for {'work ' + work_id if work_id else 'series ' + series_id}.",
-                    "affected": {
-                        "works": list((result.get("scope") or {}).get("work_ids", [])),
-                        "series": list((result.get("scope") or {}).get("series_ids", [])),
-                        "work_details": [],
-                    },
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
-        self._send_json(HTTPStatus.OK, payload, allowed)
+        success, payload = self._run_build_operation(
+            work_id=work_id,
+            series_id=series_id,
+            extra_series_ids=extra_series_ids,
+            extra_work_ids=extra_work_ids,
+            detail_uid=detail_uid,
+            force=force,
+        )
+        self._send_json(HTTPStatus.OK if success else HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
 
     def _handle_moment_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()

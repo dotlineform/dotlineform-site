@@ -7,6 +7,65 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Fixed the work editor so source-only fields reload from canonical work source
+
+**Status:** implemented
+
+**Area:** Studio catalogue work editor
+
+**Summary:**
+Updated `/studio/catalogue-work/` so editable work fields now reload from canonical `assets/studio/data/catalogue/works.json` records instead of being rehydrated only from the focused lookup payload under `assets/studio/data/catalogue_lookup/works/<work_id>.json`.
+
+**Reason:**
+The first Save plus Update rollout exposed a mismatch between source-editing state and generated lookup state. Source-only fields such as `notes` and `provenance` could disappear after save because the page was rebuilding its editable baseline from lookup JSON that exists to support preview and related-runtime context, not full source editing.
+
+**Effect:**
+The work editor now keeps a canonical source-record map in memory for single-record and bulk-edit baselines, computes stale-write hashes from the full source record, and still reloads the focused lookup payload only for detail/file/link lists, preview, and readiness context. End-to-end smoke testing confirmed both `Save` with deferred publication and fresh-page `Save` plus `Update site now` against the current catalogue write server implementation.
+
+**Affected files/docs:**
+- `assets/studio/js/catalogue-work-editor.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+## [2026-04-22] Replaced top-level `Rebuild` actions in catalogue editors with `Save` plus optional `Update site now`
+
+**Status:** implemented
+
+**Area:** Studio catalogue editors / catalogue write server
+
+**Summary:**
+Updated the catalogue work, detail, file, link, and series editors so `Save` is now the single primary action, publication is controlled by an adjacent `Update site now` choice, and any deferred publication is surfaced as a smaller follow-up action near the runtime status.
+
+**Reason:**
+The meaningful product distinction was not “save vs rebuild”; it was “save source only vs save and publish now”. The older `Rebuild` label exposed internal mechanism in the main editor UI and made deferred draft workflows harder to explain.
+
+**Effect:**
+The catalogue save endpoints now accept optional `apply_build: true` and return nested build status rather than forcing the client to treat save and publication as unrelated requests. Single-record editors default `Update site now` on, while the bulk editors default it off. If publication fails after a successful save, the page now reports that partial outcome explicitly and leaves a follow-up `Update site now` action available.
+
+**Affected files/docs:**
+- `scripts/studio/catalogue_write_server.py`
+- `studio/catalogue-work/index.md`
+- `studio/catalogue-work-detail/index.md`
+- `studio/catalogue-work-file/index.md`
+- `studio/catalogue-work-link/index.md`
+- `studio/catalogue-series/index.md`
+- `assets/studio/css/studio.css`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-work-file-editor.js`
+- `assets/studio/js/catalogue-work-link-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
+- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-22] Made `dev-studio` startup docs rebuilds opt-in and added startup port preflight
 
 **Status:** implemented

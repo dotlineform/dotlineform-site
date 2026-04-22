@@ -40,8 +40,11 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-link-editor
         <h2 class="tagStudio__heading">link record</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkSave">Save</button>
-          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkBuild">Rebuild</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkDelete">Delete</button>
+          <label class="catalogueWorkPage__updateToggle" for="catalogueWorkLinkApplyBuild">
+            <input type="checkbox" id="catalogueWorkLinkApplyBuild" checked>
+            <span id="catalogueWorkLinkApplyBuildLabel">Update site now</span>
+          </label>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueWorkLinkMeta"></p>
@@ -53,6 +56,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-link-editor
       <div class="tagStudioForm__fields" id="catalogueWorkLinkReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueWorkLinkRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueWorkLinkBuildImpact"></p>
+      <div class="catalogueWorkPage__runtimeActions">
+        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkBuild">Update site now</button>
+      </div>
       <div class="tagStudioForm__fields" id="catalogueWorkLinkSummary"></div>
     </aside>
   </div>

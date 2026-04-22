@@ -257,6 +257,7 @@ function buildPayload(state) {
   return {
     file_uid: state.currentFileUid,
     expected_record_hash: state.currentRecordHash,
+    apply_build: applyBuildRequested(state),
     record: {
       file_uid: state.currentFileUid,
       work_id: state.currentWorkId,
@@ -265,6 +266,40 @@ function buildPayload(state) {
       status: normalizeText(state.draft.status).toLowerCase() || null,
       published_date: normalizeText(state.draft.published_date) || null
     }
+  };
+}
+
+function applyBuildRequested(state) {
+  return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+}
+
+function updatePublishControls(state, { hasRecord, dirty, errors }) {
+  const showUpdate = hasRecord && state.rebuildPending;
+  state.buildButton.hidden = !showUpdate;
+  state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  if (state.runtimeActionsNode) {
+    state.runtimeActionsNode.hidden = !showUpdate;
+  }
+  if (state.applyBuildNode) {
+    state.applyBuildNode.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  }
+}
+
+function applySaveBuildOutcome(state, response) {
+  const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!response || !response.build_requested || !build) {
+    state.rebuildPending = Boolean(response && response.changed);
+    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
+  if (build.ok) {
+    state.rebuildPending = false;
+    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
+  }
+  state.rebuildPending = true;
+  return {
+    kind: "saved_update_failed",
+    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
+    error: normalizeText(build.error)
   };
 }
 
@@ -295,8 +330,8 @@ function updateSummary(state) {
     </div>
   `;
   state.runtimeStateNode.textContent = state.rebuildPending
-    ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
-    : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+    : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
 }
 
 function updateEditorState(state) {
@@ -309,8 +344,8 @@ function updateEditorState(state) {
   const dirty = hasRecord && draftHasChanges(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
   state.saveButton.disabled = !hasRecord || state.isSaving || state.isDeleting || errors.size > 0 || !dirty || !state.serverAvailable;
-  state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || errors.size > 0 || !state.serverAvailable;
   state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  updatePublishControls(state, { hasRecord, dirty, errors });
 }
 
 function openWorkFileByUid(state, fileUid) {
@@ -339,6 +374,7 @@ function setLoadedRecord(state, fileUid, record, options = {}) {
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
+  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);
   applyReadonly(state);
   if (state.searchNode) state.searchNode.value = fileUid;
@@ -377,6 +413,10 @@ async function saveCurrentRecord(state) {
     return;
   }
   if (!draftHasChanges(state)) {
+    if (applyBuildRequested(state) && state.rebuildPending) {
+      await buildCurrentWork(state);
+      return;
+    }
     setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
     setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
     updateEditorState(state);
@@ -384,7 +424,12 @@ async function saveCurrentRecord(state) {
   }
   state.isSaving = true;
   updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "save_status_saving", "Saving source record…"));
+  setTextWithState(
+    state.statusNode,
+    applyBuildRequested(state)
+      ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
+      : t(state, "save_status_saving", "Saving source record…")
+  );
   setTextWithState(state.resultNode, "");
   try {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkFile, buildPayload(state));
@@ -395,11 +440,36 @@ async function saveCurrentRecord(state) {
       keepResult: true,
       lookup
     });
-    state.rebuildPending = Boolean(response.changed);
+    const outcome = applySaveBuildOutcome(state, response);
     await refreshBuildPreview(state);
-    const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
-    setTextWithState(state.resultNode, response.changed ? t(state, "save_result_success", "Source saved at {saved_at}. Rebuild needed to update public catalogue.", { saved_at: savedAt }) : t(state, "save_result_unchanged", "Source already matches the current form values."), response.changed ? "success" : "");
-    setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work file {file_uid}.", { file_uid: state.currentFileUid }), "success");
+    if (outcome.kind === "saved_and_updated") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_applied", "Saved source changes and updated the public catalogue at {saved_at}.", { saved_at: outcome.stamp }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
+    } else if (outcome.kind === "saved_update_failed") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public catalogue update failed. Retry Update site now.", { saved_at: outcome.stamp }),
+        "warn"
+      );
+      setTextWithState(
+        state.statusNode,
+        `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(),
+        "error"
+      );
+    } else {
+      setTextWithState(
+        state.resultNode,
+        response.changed
+          ? t(state, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", { saved_at: outcome.stamp })
+          : t(state, "save_result_unchanged", "Source already matches the current form values."),
+        response.changed ? "success" : ""
+      );
+      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work file {file_uid}.", { file_uid: state.currentFileUid }), "success");
+    }
   } catch (error) {
     const message = Number(error && error.status) === 409
       ? t(state, "save_status_conflict", "Source record changed since this page loaded. Reload before saving again.")
@@ -415,29 +485,21 @@ async function buildCurrentWork(state) {
   if (!state.currentWorkId || !state.serverAvailable) return;
   state.isBuilding = true;
   updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "build_status_running", "Running scoped rebuild…"));
+  setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));
   setTextWithState(state.resultNode, "");
   try {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, { work_id: state.currentWorkId });
     state.rebuildPending = false;
     await refreshBuildPreview(state);
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(state.resultNode, t(state, "build_result_success", "Runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }), "success");
-    setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+    setTextWithState(state.resultNode, t(state, "build_result_success", "Public catalogue updated at {completed_at}. Build Activity updated.", { completed_at: completedAt }), "success");
+    setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
   } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Scoped rebuild failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {
     state.isBuilding = false;
     updateEditorState(state);
   }
-}
-
-async function saveAndBuild(state) {
-  if (draftHasChanges(state)) {
-    await saveCurrentRecord(state);
-    if (state.statusNode.dataset.state === "error" || draftHasChanges(state)) return;
-  }
-  await buildCurrentWork(state);
 }
 
 async function deleteCurrentRecord(state) {
@@ -485,7 +547,10 @@ async function init() {
   const saveButton = document.getElementById("catalogueWorkFileSave");
   const buildButton = document.getElementById("catalogueWorkFileBuild");
   const deleteButton = document.getElementById("catalogueWorkFileDelete");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !runtimeStateNode || !buildImpactNode || !summaryNode || !saveButton || !buildButton || !deleteButton) {
+  const runtimeActionsNode = buildButton ? buildButton.closest(".catalogueWorkPage__runtimeActions") : null;
+  const applyBuildNode = document.getElementById("catalogueWorkFileApplyBuild");
+  const applyBuildLabelNode = document.getElementById("catalogueWorkFileApplyBuildLabel");
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !runtimeStateNode || !buildImpactNode || !summaryNode || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode) {
     return;
   }
 
@@ -515,6 +580,9 @@ async function init() {
     saveButton,
     buildButton,
     deleteButton,
+    applyBuildNode,
+    applyBuildLabelNode,
+    runtimeActionsNode,
     contextNode,
     statusNode,
     warningNode,
@@ -534,7 +602,8 @@ async function init() {
     searchNode.placeholder = t(state, "search_placeholder", "find work file by id, filename, or work id");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
-    buildButton.textContent = t(state, "build_button", "Rebuild");
+    buildButton.textContent = t(state, "build_button", "Update site now");
+    applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
     deleteButton.textContent = t(state, "delete_button", "Delete");
 
     const [filesPayload, serverAvailable] = await Promise.all([
@@ -609,7 +678,7 @@ async function init() {
       saveCurrentRecord(state).catch((error) => console.warn("catalogue_work_file_editor: unexpected save failure", error));
     });
     buildButton.addEventListener("click", () => {
-      saveAndBuild(state).catch((error) => console.warn("catalogue_work_file_editor: unexpected build failure", error));
+      buildCurrentWork(state).catch((error) => console.warn("catalogue_work_file_editor: unexpected build failure", error));
     });
     deleteButton.addEventListener("click", () => {
       deleteCurrentRecord(state).catch((error) => console.warn("catalogue_work_file_editor: unexpected delete failure", error));

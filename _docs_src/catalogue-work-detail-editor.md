@@ -1,7 +1,7 @@
 ---
 doc_id: catalogue-work-detail-editor
 title: "Catalogue Work Detail Editor"
-last_updated: 2026-04-18
+last_updated: 2026-04-22
 parent_id: studio
 sort_order: 100
 ---
@@ -31,7 +31,7 @@ The first implementation covers:
 - show detail media readiness, including the resolved expected source path and missing-state guidance
 - show a compact current-record image preview at the top of the summary rail
 - preview the scoped rebuild impact for the parent work
-- run `Rebuild` through the local catalogue service
+- save with an optional `Update site now` path through the local catalogue service
 - delete one work-detail source record in single-record mode
 
 The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
@@ -49,7 +49,7 @@ Current bulk-edit behavior:
 
 - untouched fields preserve per-record values
 - an empty touched field clears that field across the selected details
-- `Rebuild` runs one scoped parent-work rebuild per affected parent work
+- `Save` can optionally run one scoped parent-work rebuild per affected parent work
 - delete is disabled in bulk mode
 
 ## Save Boundary
@@ -57,9 +57,9 @@ Current bulk-edit behavior:
 Current action labels:
 
 - `Save`
-  writes detail source JSON only and leaves parent-work rebuild pending
-- `Rebuild`
-  saves the current edited detail state if needed, then rebuilds the affected parent-work scope
+  writes detail source JSON and can optionally also update the parent work output immediately
+- `Update site now`
+  appears only when source has been saved but the parent work output is still pending
 - `Delete`
   removes the current detail source record in single-record mode after preview/confirmation
 
@@ -69,20 +69,20 @@ Current save/rebuild flow:
 2. opening a detail fetches one focused lookup record from `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
 3. browser uses the lookup-provided record hash for stale-write protection
 4. user edits the current detail form
-5. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, and the normalized detail patch
-6. the local write server validates the full source set, writes `work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record
+5. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, the normalized detail patch, and optional `apply_build: true`
+6. the local write server validates the full source set, writes `work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when requested
 7. the page reloads its focused detail lookup payload
 8. `POST /catalogue/build-preview` reports the parent-work rebuild impact and the current detail media readiness
 9. the current-record rail resolves a compact detail preview from the generated detail thumb assets when they are available
-10. `POST /catalogue/build-apply` rebuilds the parent work scope from canonical JSON
+10. `POST /catalogue/build-apply` remains available for explicit follow-up update actions
 
 Bulk save flow:
 
 1. page expands the requested detail selection in the browser
 2. page loads focused lookup records for the selected details and tracks each record hash
-3. `POST /catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, and the touched field updates
+3. `POST /catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, touched field updates, and optional `apply_build: true`
 4. the local write server validates the combined source write, writes `work_details.json` once, refreshes lookup payloads, and returns changed counts plus parent-work rebuild targets
-5. `Rebuild` then runs one scoped rebuild per affected parent work
+5. when `apply_build` is true, the same save response also reports the nested site-update result; otherwise the page leaves `Update site now` available as a follow-up action
 
 Delete flow:
 

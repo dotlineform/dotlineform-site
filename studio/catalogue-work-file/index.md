@@ -40,8 +40,11 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-file-editor
         <h2 class="tagStudio__heading">file record</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileSave">Save</button>
-          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileBuild">Rebuild</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileDelete">Delete</button>
+          <label class="catalogueWorkPage__updateToggle" for="catalogueWorkFileApplyBuild">
+            <input type="checkbox" id="catalogueWorkFileApplyBuild" checked>
+            <span id="catalogueWorkFileApplyBuildLabel">Update site now</span>
+          </label>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueWorkFileMeta"></p>
@@ -53,6 +56,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-file-editor
       <div class="tagStudioForm__fields" id="catalogueWorkFileReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueWorkFileRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueWorkFileBuildImpact"></p>
+      <div class="catalogueWorkPage__runtimeActions">
+        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileBuild">Update site now</button>
+      </div>
       <div class="tagStudioForm__fields" id="catalogueWorkFileSummary"></div>
     </aside>
   </div>

@@ -1,7 +1,7 @@
 ---
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
-last_updated: 2026-04-18
+last_updated: 2026-04-22
 parent_id: studio
 sort_order: 70
 ---
@@ -43,7 +43,7 @@ The first implementation covers:
 - preview the scoped rebuild impact for the current work
 - show work media and work prose readiness, including resolved source paths and missing-state guidance
 - run a narrow `Import prose + rebuild` action when the configured work prose file is ready
-- run `Rebuild` through the local catalogue service
+- save with an optional `Update site now` path through the local catalogue service
 - delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
 
@@ -74,7 +74,7 @@ Current bulk-edit behavior:
 - an empty touched field clears that field across the selected works
 - `series_ids` accepts either a plain comma-delimited replacement list or only `+id` / `-id` diff entries
 - detail, file, and link sections are hidden while bulk mode is active
-- `Rebuild` runs one scoped work rebuild per affected work scope after the bulk source save
+- `Save` can optionally run one scoped work rebuild per affected work scope after the bulk source save
 - delete is disabled in bulk mode
 
 ## Save Boundary
@@ -82,34 +82,34 @@ Current bulk-edit behavior:
 Current action labels:
 
 - `Save`
-  writes source JSON only and leaves runtime rebuild pending
-- `Rebuild`
-  saves the current edited source state if needed, then runs the scoped rebuild flow
+  writes source JSON and can optionally also update the public catalogue immediately
+- `Update site now`
+  appears only when source has been saved but runtime publication is still pending
 - `Delete`
   removes the current source record in single-record mode after preview/confirmation
 
 Current save/rebuild flow:
 
-1. page loads derived lookup payloads for work search and series lookup, not full canonical source maps
-2. opening a work fetches one focused work lookup record from `assets/studio/data/catalogue_lookup/works/<work_id>.json`
-3. browser uses the lookup-provided record hash for stale-write protection
+1. page loads derived lookup payloads for work search and series lookup, plus the canonical `assets/studio/data/catalogue/works.json` source map for editable work fields
+2. opening a work fetches one focused work lookup record from `assets/studio/data/catalogue_lookup/works/<work_id>.json` for generated runtime context, but the editable form baseline comes from the canonical source record
+3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
-5. `POST /catalogue/work/save` sends the current work id, the expected record hash, and the normalized record patch
-6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record
-7. the page reloads its focused work lookup payload and marks runtime rebuild as still pending
+5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and optional `apply_build: true`
+6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when the user chose `Update site now`
+7. the page reloads its focused work lookup payload for preview/detail/file/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
 9. the same preview now also carries work media/work prose readiness and source-path guidance
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
-11. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Rebuild` or `Import prose + rebuild`
+11. `POST /catalogue/build-apply` remains available for explicit follow-up update actions and `Import prose + rebuild`
 
 Bulk save flow:
 
 1. page expands the requested work selection in the browser
-2. page loads focused lookup records for the selected works and tracks each record hash
+2. page uses canonical source records for the bulk-edit baseline and only uses focused lookup records for generated runtime context
 3. user edits only the fields that should apply across the selection
-4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, and optional series membership operations
+4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, optional series membership operations, and optional `apply_build: true`
 5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus rebuild targets
-6. `Rebuild` then runs one scoped work rebuild per affected work target
+6. when `apply_build` is true, the same save response also reports the nested site-update result; otherwise the page leaves `Update site now` available as a follow-up action
 
 Delete flow:
 

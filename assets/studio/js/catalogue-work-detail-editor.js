@@ -444,6 +444,7 @@ function buildPayload(state) {
       kind: "work_details",
       ids: state.bulkDetailUids.slice(),
       expected_record_hashes: expectedRecordHashes,
+      apply_build: applyBuildRequested(state),
       set_fields: setFields
     };
   }
@@ -452,6 +453,7 @@ function buildPayload(state) {
   return {
     detail_uid: state.currentDetailUid,
     expected_record_hash: state.currentRecordHash,
+    apply_build: applyBuildRequested(state),
     record: {
       detail_uid: state.currentDetailUid,
       work_id: state.currentWorkId,
@@ -461,6 +463,59 @@ function buildPayload(state) {
       title: normalizeText(draft.title) || null,
       status: normalizeText(draft.status).toLowerCase() || null
     }
+  };
+}
+
+function applyBuildRequested(state) {
+  return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+}
+
+function updatePublishControls(state, { hasRecord, dirty, errors }) {
+  const showUpdate = hasRecord && state.rebuildPending;
+  state.buildButton.hidden = !showUpdate;
+  state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
+  if (state.applyBuildNode) {
+    state.applyBuildNode.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  }
+}
+
+function applySingleSaveBuildOutcome(state, response) {
+  const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!response || !response.build_requested || !build) {
+    state.rebuildPending = Boolean(response && response.changed);
+    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
+  if (build.ok) {
+    state.rebuildPending = false;
+    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
+  }
+  state.rebuildPending = true;
+  return {
+    kind: "saved_update_failed",
+    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
+    error: normalizeText(build.error)
+  };
+}
+
+function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
+  const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!response || !response.build_requested || !build) {
+    state.rebuildPending = Boolean(response && response.changed);
+    state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : fallbackBuildTargets;
+    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
+  if (build.ok) {
+    state.rebuildPending = false;
+    state.bulkBuildTargets = [];
+    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
+  }
+  state.rebuildPending = true;
+  state.bulkBuildTargets = Array.isArray(build.remaining_targets) ? build.remaining_targets : fallbackBuildTargets;
+  return {
+    kind: "saved_update_failed",
+    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
+    error: normalizeText(build.error)
   };
 }
 
@@ -558,8 +613,8 @@ function updateSummary(state) {
       </div>
     `;
     state.runtimeStateNode.textContent = state.rebuildPending
-      ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
-      : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+      ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+      : t(state, "summary_rebuild_current", "source and parent work output are aligned in this session");
     renderCurrentPreview(state);
     renderReadiness(state);
     return;
@@ -590,8 +645,8 @@ function updateSummary(state) {
   `;
 
   state.runtimeStateNode.textContent = state.rebuildPending
-    ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
-    : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+    : t(state, "summary_rebuild_current", "source and parent work output are aligned in this session");
   renderCurrentPreview(state);
   renderReadiness(state);
 }
@@ -611,6 +666,7 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   state.bulkBuildTargets = [];
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
+  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);
   applyReadonly(state);
   syncUrl(detailUid);
@@ -638,6 +694,7 @@ function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, opti
   state.draft = { ...bulkDraft.draft };
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
+  if (state.applyBuildNode) state.applyBuildNode.checked = false;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -695,8 +752,8 @@ function updateEditorState(state) {
   }
 
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
-  state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
 }
 
@@ -777,6 +834,10 @@ async function saveCurrentDetail(state) {
   }
 
   if (!draftHasChanges(state)) {
+    if (applyBuildRequested(state) && state.rebuildPending) {
+      await buildCurrentDetail(state);
+      return;
+    }
     setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
     setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
     updateEditorState(state);
@@ -786,7 +847,12 @@ async function saveCurrentDetail(state) {
   state.isSaving = true;
   state.saveButton.disabled = true;
   state.buildButton.disabled = true;
-  setTextWithState(state.statusNode, t(state, "save_status_saving", "Saving source record…"));
+  setTextWithState(
+    state.statusNode,
+    applyBuildRequested(state)
+      ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
+      : t(state, "save_status_saving", "Saving source record…")
+  );
   setTextWithState(state.resultNode, "");
 
   try {
@@ -807,25 +873,49 @@ async function saveCurrentDetail(state) {
           status: normalizeText(record.status)
         });
       });
-      state.rebuildPending = Boolean(response.changed);
-      state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
+      const fallbackBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
+      const outcome = applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets);
       setLoadedBulkDetails(state, state.bulkDetailUids, state.bulkRecords, state.bulkRecordHashes, {
         keepResult: true,
         buildTargets: state.bulkBuildTargets
       });
-      const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
-      const resultText = response.changed
-        ? t(state, "bulk_save_result_success", "Saved {count} detail records at {saved_at}. Rebuild needed to update the parent work output.", {
-          count: String(response.changed_count || 0),
-          saved_at: savedAt
-        })
-        : t(state, "save_result_unchanged", "Source already matches the current form values.");
-      setTextWithState(state.resultNode, resultText, response.changed ? "success" : "");
-      setTextWithState(
-        state.statusNode,
-        t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
-        response.changed ? "success" : ""
-      );
+      if (outcome.kind === "saved_and_updated") {
+        setTextWithState(
+          state.resultNode,
+          t(state, "bulk_save_result_success_applied", "Saved {count} detail records and updated the parent work output at {saved_at}.", {
+            count: String(response.changed_count || 0),
+            saved_at: outcome.stamp
+          }),
+          "success"
+        );
+        setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
+      } else if (outcome.kind === "saved_update_failed") {
+        setTextWithState(
+          state.resultNode,
+          t(state, "bulk_save_result_success_partial", "Saved {count} detail records at {saved_at}, but the site update failed. Retry Update site now.", {
+            count: String(response.changed_count || 0),
+            saved_at: outcome.stamp
+          }),
+          "warn"
+        );
+        setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+      } else {
+        setTextWithState(
+          state.resultNode,
+          response.changed
+            ? t(state, "bulk_save_result_success", "Saved {count} detail records at {saved_at}. Parent-work update still pending.", {
+              count: String(response.changed_count || 0),
+              saved_at: outcome.stamp
+            })
+            : t(state, "save_result_unchanged", "Source already matches the current form values."),
+          response.changed ? "success" : ""
+        );
+        setTextWithState(
+          state.statusNode,
+          t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
+          response.changed ? "success" : ""
+        );
+      }
       return;
     }
 
@@ -839,7 +929,7 @@ async function saveCurrentDetail(state) {
       title: normalizeText(record.title),
       status: normalizeText(record.status)
     });
-    state.rebuildPending = Boolean(response.changed);
+    const outcome = applySingleSaveBuildOutcome(state, response);
     const lookup = await loadDetailLookupRecord(state, state.currentDetailUid);
     const lookupRecord = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : record;
     setLoadedRecord(state, state.currentDetailUid, lookupRecord, {
@@ -848,12 +938,30 @@ async function saveCurrentDetail(state) {
       lookup
     });
     await refreshBuildPreview(state);
-    const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
-    const resultText = response.changed
-      ? t(state, "save_result_success", "Source saved at {saved_at}. Rebuild needed to update the parent work output.", { saved_at: savedAt })
-      : t(state, "save_result_unchanged", "Source already matches the current form values.");
-    setTextWithState(state.resultNode, resultText, response.changed ? "success" : "");
-    setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
+    if (outcome.kind === "saved_and_updated") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_applied", "Saved source changes and updated the parent work output at {saved_at}.", { saved_at: outcome.stamp }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
+    } else if (outcome.kind === "saved_update_failed") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the site update failed. Retry Update site now.", { saved_at: outcome.stamp }),
+        "warn"
+      );
+      setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+    } else {
+      setTextWithState(
+        state.resultNode,
+        response.changed
+          ? t(state, "save_result_success", "Source saved at {saved_at}. Parent-work update still pending.", { saved_at: outcome.stamp })
+          : t(state, "save_result_unchanged", "Source already matches the current form values."),
+        response.changed ? "success" : ""
+      );
+      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
+    }
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -874,7 +982,7 @@ async function buildCurrentDetail(state) {
   }
   state.isBuilding = true;
   updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "build_status_running", "Running scoped rebuild…"));
+  setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));
   setTextWithState(state.resultNode, "");
   try {
     if (state.mode === "bulk") {
@@ -896,13 +1004,13 @@ async function buildCurrentDetail(state) {
       const completedAt = utcTimestamp();
       setTextWithState(
         state.resultNode,
-        t(state, "bulk_build_result_success", "Runtime rebuilt for {count} parent work scopes at {completed_at}. Build Activity updated.", {
+        t(state, "bulk_build_result_success", "Updated {count} parent work scopes at {completed_at}. Build Activity updated.", {
           count: String(buildTargets.length),
           completed_at: completedAt
         }),
         "success"
       );
-      setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
       return;
     }
 
@@ -915,14 +1023,14 @@ async function buildCurrentDetail(state) {
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
     setTextWithState(
       state.resultNode,
-      t(state, "build_result_success", "Runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
+      t(state, "build_result_success", "Parent work output updated at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
       "success"
     );
-    setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+    setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
   } catch (error) {
     setTextWithState(
       state.statusNode,
-      `${t(state, "build_status_failed", "Scoped rebuild failed.")} ${normalizeText(error && error.message)}`.trim(),
+      `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
   } finally {
@@ -976,24 +1084,6 @@ async function deleteCurrentDetail(state) {
     state.isDeleting = false;
     updateEditorState(state);
   }
-}
-
-async function saveAndBuildCurrentDetail(state) {
-  if (state.mode === "bulk") {
-    if (!state.bulkDetailUids.length) return;
-  } else if (!state.currentRecord) {
-    return;
-  }
-  if (draftHasChanges(state)) {
-    await saveCurrentDetail(state);
-    if (state.mode === "bulk") {
-      if (draftHasChanges(state)) return;
-    } else if (!state.currentRecord || draftHasChanges(state)) {
-      return;
-    }
-    if (state.statusNode.dataset.state === "error") return;
-  }
-  await buildCurrentDetail(state);
 }
 
 async function openDetailSelection(state, requestedValue) {
@@ -1088,12 +1178,15 @@ async function init() {
   const saveButton = document.getElementById("catalogueWorkDetailSave");
   const buildButton = document.getElementById("catalogueWorkDetailBuild");
   const deleteButton = document.getElementById("catalogueWorkDetailDelete");
+  const runtimeActionsNode = buildButton ? buildButton.closest(".catalogueWorkPage__runtimeActions") : null;
+  const applyBuildNode = document.getElementById("catalogueWorkDetailApplyBuild");
+  const applyBuildLabelNode = document.getElementById("catalogueWorkDetailApplyBuildLabel");
   const saveModeNode = document.getElementById("catalogueWorkDetailSaveMode");
   const contextNode = document.getElementById("catalogueWorkDetailContext");
   const statusNode = document.getElementById("catalogueWorkDetailStatus");
   const warningNode = document.getElementById("catalogueWorkDetailWarning");
   const resultNode = document.getElementById("catalogueWorkDetailResult");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode) {
     return;
   }
 
@@ -1131,6 +1224,9 @@ async function init() {
     saveButton,
     buildButton,
     deleteButton,
+    applyBuildNode,
+    applyBuildLabelNode,
+    runtimeActionsNode,
     saveModeNode,
     contextNode,
     statusNode,
@@ -1152,7 +1248,8 @@ async function init() {
     searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
-    buildButton.textContent = t(state, "build_button", "Rebuild");
+    buildButton.textContent = t(state, "build_button", "Update site now");
+    applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
     deleteButton.textContent = t(state, "delete_button", "Delete");
 
     const [detailsPayload, serverAvailable] = await Promise.all([
@@ -1215,7 +1312,7 @@ async function init() {
     saveButton.addEventListener("click", () => saveCurrentDetail(state).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected save failure", error);
     }));
-    buildButton.addEventListener("click", () => saveAndBuildCurrentDetail(state).catch((error) => {
+    buildButton.addEventListener("click", () => buildCurrentDetail(state).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected save/build failure", error);
     }));
     deleteButton.addEventListener("click", () => deleteCurrentDetail(state).catch((error) => {

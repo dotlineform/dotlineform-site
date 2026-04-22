@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-12a9b3ff2699ad20256779e75c27bf30",
-    "generated_at_utc": "2026-04-22T18:22:34Z",
+    "version": "blake2b-80804640e2a89b7bf4208a1267a3a39b",
+    "generated_at_utc": "2026-04-22T19:24:49Z",
     "count": 118
   },
   "entries": [
@@ -961,10 +961,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-04-21",
+      "last_updated": "2026-04-22",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-21 • Design",
+      "display_meta": "2026-04-22 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -975,12 +975,12 @@
         "decision",
         "log",
         "design",
-        "2026-04-21",
+        "2026-04-22",
         "2026",
         "04",
-        "21"
+        "22"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-21 2026 04 21"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-22 2026 04 22"
     },
     {
       "id": "tag-groups",
@@ -1662,10 +1662,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-22 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -1673,12 +1673,12 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-04-18",
+        "2026-04-22",
         "2026",
         "04",
-        "18"
+        "22"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-04-22 2026 04 22"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -1886,10 +1886,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-22 • Studio",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -1898,22 +1898,22 @@
         "editor",
         "catalogue work detail editor",
         "studio",
-        "2026-04-18",
+        "2026-04-22",
         "2026",
         "04",
-        "18"
+        "22"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-04-22 2026 04 22"
     },
     {
       "id": "scripts-catalogue-write-server",
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-22",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-18 • Scripts",
+      "display_meta": "2026-04-22 • Scripts",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -1921,12 +1921,12 @@
         "write",
         "server",
         "catalogue write server",
-        "2026-04-18",
+        "2026-04-22",
         "2026",
         "04",
-        "18"
+        "22"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-18 2026 04 18"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-22 2026 04 22"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -2000,10 +2000,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-22 • Studio",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -2011,12 +2011,12 @@
         "editor",
         "catalogue series editor",
         "studio",
-        "2026-04-18",
+        "2026-04-22",
         "2026",
         "04",
-        "18"
+        "22"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-04-22 2026 04 22"
     },
     {
       "id": "config",
@@ -2087,10 +2087,10 @@
       "kind": "doc",
       "title": "Catalogue Work File Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-file-editor",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-22 • Studio",
       "search_terms": [
         "catalogue-work-file-editor",
         "catalogue",
@@ -2099,12 +2099,12 @@
         "editor",
         "catalogue work file editor",
         "studio",
-        "2026-04-18",
+        "2026-04-22",
         "2026",
         "04",
-        "18"
+        "22"
       ],
-      "search_text": "catalogue-work-file-editor catalogue work file editor catalogue work file editor studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-work-file-editor catalogue work file editor catalogue work file editor studio 2026-04-22 2026 04 22"
     },
     {
       "id": "scripts",
@@ -2256,10 +2256,10 @@
       "kind": "doc",
       "title": "Catalogue Work Link Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-link-editor",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-22 • Studio",
       "search_terms": [
         "catalogue-work-link-editor",
         "catalogue",
@@ -2268,12 +2268,12 @@
         "editor",
         "catalogue work link editor",
         "studio",
-        "2026-04-18",
+        "2026-04-22",
         "2026",
         "04",
-        "18"
+        "22"
       ],
-      "search_text": "catalogue-work-link-editor catalogue work link editor catalogue work link editor studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-work-link-editor catalogue work link editor catalogue work link editor studio 2026-04-22 2026 04 22"
     },
     {
       "id": "docs-viewer",

@@ -1,7 +1,7 @@
 ---
 doc_id: catalogue-work-file-editor
 title: "Catalogue Work File Editor"
-last_updated: 2026-04-18
+last_updated: 2026-04-22
 parent_id: studio
 sort_order: 130
 ---
@@ -27,7 +27,7 @@ The first implementation covers:
 - edit `published_date`
 - show read-only ids
 - preview the scoped rebuild impact for the parent work
-- run `Rebuild` through the local catalogue service
+- save with an optional `Update site now` path through the local catalogue service
 - delete one source record and return to the parent work editor
 
 ## Save Boundary
@@ -35,9 +35,9 @@ The first implementation covers:
 Current action labels:
 
 - `Save`
-  writes work-file source JSON only and leaves parent-work rebuild pending
-- `Rebuild`
-  saves the current edited work-file state if needed, then rebuilds the affected parent-work scope
+  writes work-file source JSON and can optionally also update the public catalogue immediately
+- `Update site now`
+  appears only when source has been saved but publication is still pending
 - `Delete`
   removes the current work-file source record and returns to the parent work editor
 
@@ -46,11 +46,11 @@ Current save/rebuild flow:
 1. opening a work-file record fetches one focused lookup record from `assets/studio/data/catalogue_lookup/work_files/<file_uid>.json`
 2. browser uses the lookup-provided record hash for stale-write protection
 3. user edits the current work-file form
-4. `POST /catalogue/work-file/save` sends the current `file_uid`, the expected record hash, and the normalized file patch
-5. the local write server validates the full source set, writes `work_files.json`, refreshes derived lookup payloads, and returns the normalized saved record
+4. `POST /catalogue/work-file/save` sends the current `file_uid`, the expected record hash, the normalized file patch, and optional `apply_build: true`
+5. the local write server validates the full source set, writes `work_files.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when requested
 6. the page reloads its focused work-file lookup payload
 7. `POST /catalogue/build-preview` reports the parent-work rebuild impact
-8. `POST /catalogue/build-apply` rebuilds the parent work scope from canonical JSON
+8. `POST /catalogue/build-apply` remains available for explicit follow-up update actions
 
 Delete flow:
 

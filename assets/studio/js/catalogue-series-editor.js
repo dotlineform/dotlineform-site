@@ -376,6 +376,8 @@ function buildPayload(state, workUpdates) {
   return {
     series_id: state.currentSeriesId,
     expected_record_hash: state.currentRecordHash,
+    apply_build: applyBuildRequested(state),
+    extra_work_ids: state.pendingBuildExtraWorkIds.slice(),
     record: {
       title: normalizeText(state.draft.title) || null,
       series_type: normalizeText(state.draft.series_type) || null,
@@ -389,6 +391,39 @@ function buildPayload(state, workUpdates) {
       notes: normalizeText(state.draft.notes) || null
     },
     work_updates: workUpdates
+  };
+}
+
+function applyBuildRequested(state) {
+  return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+}
+
+function updatePublishControls(state, { hasRecord, dirty, errors }) {
+  const showUpdate = hasRecord && state.rebuildPending;
+  state.buildButton.hidden = !showUpdate;
+  state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
+  if (state.applyBuildNode) {
+    state.applyBuildNode.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  }
+}
+
+function applySaveBuildOutcome(state, response) {
+  const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!response || !response.build_requested || !build) {
+    state.rebuildPending = Boolean(response && response.changed);
+    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
+  if (build.ok) {
+    state.rebuildPending = false;
+    state.pendingBuildExtraWorkIds = [];
+    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
+  }
+  state.rebuildPending = true;
+  return {
+    kind: "saved_update_failed",
+    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
+    error: normalizeText(build.error)
   };
 }
 
@@ -460,8 +495,8 @@ function updateSummary(state) {
     </div>
   `;
   state.runtimeStateNode.textContent = state.rebuildPending
-    ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
-    : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+    : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
   renderReadiness(state);
 }
 
@@ -544,8 +579,8 @@ function updateEditorState(state) {
   }
 
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
-  state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
   state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
 }
 
@@ -586,6 +621,7 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
   state.pendingBuildExtraWorkIds = [];
+  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   setTextWithState(state.membersStatusNode, "");
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
   setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: seriesId }));
@@ -713,6 +749,10 @@ async function saveCurrentSeries(state) {
     return;
   }
   if (!draftHasChanges(state)) {
+    if (applyBuildRequested(state) && state.rebuildPending) {
+      await buildCurrentSeries(state);
+      return;
+    }
     setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
     setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
     updateEditorState(state);
@@ -721,7 +761,12 @@ async function saveCurrentSeries(state) {
 
   state.isSaving = true;
   updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "save_status_saving", "Saving source record…"));
+  setTextWithState(
+    state.statusNode,
+    applyBuildRequested(state)
+      ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
+      : t(state, "save_status_saving", "Saving source record…")
+  );
   setTextWithState(state.resultNode, "");
 
   try {
@@ -752,8 +797,8 @@ async function saveCurrentSeries(state) {
         record_hash: entry.record_hash || state.workSearchById.get(workId)?.record_hash || ""
       });
     });
-    state.rebuildPending = Boolean(response.changed);
-    if (response.changed) {
+    const outcome = applySaveBuildOutcome(state, response);
+    if (response.changed && outcome.kind !== "saved_and_updated") {
       state.pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
     }
     const lookup = await loadSeriesLookupRecord(state, state.currentSeriesId);
@@ -763,15 +808,31 @@ async function saveCurrentSeries(state) {
       keepResult: true,
       lookup
     });
-    state.rebuildPending = Boolean(response.changed);
-    state.pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
     await refreshBuildPreview(state);
-    const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
-    const resultText = response.changed
-      ? t(state, "save_result_success", "Source saved at {saved_at}. Rebuild needed to update public catalogue.", { saved_at: savedAt })
-      : t(state, "save_result_unchanged", "Source already matches the current form values.");
-    setTextWithState(state.resultNode, resultText, response.changed ? "success" : "");
-    setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
+    if (outcome.kind === "saved_and_updated") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_applied", "Saved source changes and updated the public catalogue at {saved_at}.", { saved_at: outcome.stamp }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
+    } else if (outcome.kind === "saved_update_failed") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the site update failed. Retry Update site now.", { saved_at: outcome.stamp }),
+        "warn"
+      );
+      setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+    } else {
+      setTextWithState(
+        state.resultNode,
+        response.changed
+          ? t(state, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", { saved_at: outcome.stamp })
+          : t(state, "save_result_unchanged", "Source already matches the current form values."),
+        response.changed ? "success" : ""
+      );
+      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
+    }
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -788,7 +849,7 @@ async function buildCurrentSeries(state) {
   if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
   state.isBuilding = true;
   updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "build_status_running", "Running scoped rebuild…"));
+  setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));
   setTextWithState(state.resultNode, "");
   try {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
@@ -799,10 +860,10 @@ async function buildCurrentSeries(state) {
     state.pendingBuildExtraWorkIds = [];
     await refreshBuildPreview(state);
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(state.resultNode, t(state, "build_result_success", "Runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }), "success");
-    setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+    setTextWithState(state.resultNode, t(state, "build_result_success", "Public catalogue updated at {completed_at}. Build Activity updated.", { completed_at: completedAt }), "success");
+    setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
   } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Scoped rebuild failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {
     state.isBuilding = false;
     updateEditorState(state);
@@ -856,16 +917,6 @@ async function deleteCurrentSeries(state) {
   }
 }
 
-async function saveAndBuildCurrentSeries(state) {
-  if (!state.currentRecord) return;
-  if (draftHasChanges(state)) {
-    await saveCurrentSeries(state);
-    if (!state.currentRecord || draftHasChanges(state)) return;
-    if (state.statusNode.dataset.state === "error") return;
-  }
-  await buildCurrentSeries(state);
-}
-
 async function openSeriesById(state, requestedSeriesId) {
   const seriesId = normalizeSeriesId(requestedSeriesId);
   if (!seriesId) {
@@ -911,6 +962,9 @@ async function init() {
   const saveButton = document.getElementById("catalogueSeriesSave");
   const buildButton = document.getElementById("catalogueSeriesBuild");
   const deleteButton = document.getElementById("catalogueSeriesDelete");
+  const runtimeActionsNode = buildButton ? buildButton.closest(".catalogueWorkPage__runtimeActions") : null;
+  const applyBuildNode = document.getElementById("catalogueSeriesApplyBuild");
+  const applyBuildLabelNode = document.getElementById("catalogueSeriesApplyBuildLabel");
   const saveModeNode = document.getElementById("catalogueSeriesSaveMode");
   const contextNode = document.getElementById("catalogueSeriesContext");
   const statusNode = document.getElementById("catalogueSeriesStatus");
@@ -926,7 +980,7 @@ async function init() {
   const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
   const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
   const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
     return;
   }
 
@@ -959,6 +1013,9 @@ async function init() {
     saveButton,
     buildButton,
     deleteButton,
+    applyBuildNode,
+    applyBuildLabelNode,
+    runtimeActionsNode,
     saveModeNode,
     contextNode,
     statusNode,
@@ -987,7 +1044,8 @@ async function init() {
     searchNode.placeholder = t(state, "search_placeholder", "find series by title");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
-    buildButton.textContent = t(state, "build_button", "Rebuild");
+    buildButton.textContent = t(state, "build_button", "Update site now");
+    applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
     deleteButton.textContent = t(state, "delete_button", "Delete");
     membersHeadingNode.textContent = t(state, "members_heading", "member works");
     memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
@@ -1061,7 +1119,7 @@ async function init() {
       importSeriesProse(state).catch((error) => console.warn("catalogue_series_editor: unexpected prose import failure", error));
     });
     saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
-    buildButton.addEventListener("click", () => saveAndBuildCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save/build failure", error)));
+    buildButton.addEventListener("click", () => buildCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save/build failure", error)));
     deleteButton.addEventListener("click", () => deleteCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
     memberSearchNode.addEventListener("input", () => updateMemberList(state));
     memberAddButton.addEventListener("click", () => addWorkToSeries(state));

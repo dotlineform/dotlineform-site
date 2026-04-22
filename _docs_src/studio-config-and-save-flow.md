@@ -139,14 +139,14 @@ Current write-service implementation notes:
 Catalogue editor local save behavior:
 
 - the work editor sends `POST /catalogue/work/save` to the catalogue local write service
-- the request includes `work_id`, a browser-computed record hash, and a normalized work record patch
+- the request includes `work_id`, a browser-computed record hash, a normalized work record patch, and optional `apply_build: true`
 - the server validates the full catalogue source set before writing
 - writes are constrained to allowlisted canonical catalogue source JSON
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
-- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, and optional series membership operations
-- bulk work rebuild remains a follow-on sequence of scoped work rebuilds rather than a separate bulk build pipeline
+- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
+- bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
 - work delete removes the selected work plus dependent detail/file/link source records
 - work delete is disabled while the work editor is in bulk mode
@@ -154,11 +154,11 @@ Catalogue editor local save behavior:
 Catalogue work detail local save behavior:
 
 - the detail editor sends `POST /catalogue/work-detail/save` to the same local catalogue write service
-- the request includes `detail_uid`, a browser-computed record hash, and a normalized detail patch
+- the request includes `detail_uid`, a browser-computed record hash, a normalized detail patch, and optional `apply_build: true`
 - the server validates the parent work reference before writing
 - the server writes `work_details.json` only after full-source validation succeeds
-- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, and the touched field updates
-- bulk detail rebuild remains a follow-on sequence of scoped parent-work rebuilds
+- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, the touched field updates, and optional `apply_build: true`
+- bulk detail update still runs as a sequence of scoped parent-work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
 - work-detail delete is disabled while the detail editor is in bulk mode
 
@@ -188,7 +188,7 @@ Catalogue moment import behavior:
 Catalogue work file local save behavior:
 
 - the file editor sends `POST /catalogue/work-file/save` to the same local catalogue write service
-- the request includes `file_uid`, a browser-computed record hash, and a normalized file patch
+- the request includes `file_uid`, a browser-computed record hash, a normalized file patch, and optional `apply_build: true`
 - draft create uses `POST /catalogue/work-file/create`
 - delete uses `POST /catalogue/work-file/delete`
 - the server validates the parent work reference before writing
@@ -197,7 +197,7 @@ Catalogue work file local save behavior:
 Catalogue work link local save behavior:
 
 - the link editor sends `POST /catalogue/work-link/save` to the same local catalogue write service
-- the request includes `link_uid`, a browser-computed record hash, and a normalized link patch
+- the request includes `link_uid`, a browser-computed record hash, a normalized link patch, and optional `apply_build: true`
 - draft create uses `POST /catalogue/work-link/create`
 - delete uses `POST /catalogue/work-link/delete`
 - the server validates the parent work reference before writing
@@ -206,7 +206,7 @@ Catalogue work link local save behavior:
 Catalogue series local save behavior:
 
 - the series editor sends `POST /catalogue/series/save` to the same local catalogue write service
-- the request includes the current `series_id`, a browser-computed series record hash, the normalized series patch, and only the changed work membership rows
+- the request includes the current `series_id`, a browser-computed series record hash, the normalized series patch, only the changed work membership rows, and optional `apply_build: true`
 - work membership writes preserve the edited `series_ids` order for each changed work
 - the server validates `primary_work_id` membership and then writes `series.json` plus affected `works.json` atomically
 - the same page can also request delete preview/apply for one series record

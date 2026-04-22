@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 parent_id: design
 sort_order: 30
 ---
@@ -21,6 +21,30 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-22 / UI-011
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: the first Save plus Update rollout exposed that source-only work fields such as `notes` could disappear after save or reload because the editor rebuilt its editable baseline from focused lookup JSON rather than from the canonical work source record
+- triage: systemic
+- reasoning: the visible failure appeared on one route, but the underlying problem was a boundary mistake between canonical editing state and derived runtime context. Lookup payloads exist to support previews, related lists, and readiness guidance; they are not a safe source of truth for editable Studio forms.
+- permanent rule: when a Studio editor mixes canonical source data with derived runtime lookup data, editable field baselines and stale-write protection must come from the canonical source record. Derived lookup payloads may enrich previews, related-record navigation, and readiness panels, but they must not overwrite source-only form state after save or reload.
+- enforcement point: `assets/studio/js/catalogue-work-editor.js`, the corresponding editor docs, and future catalogue editors that consume both canonical source JSON and lookup payloads
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/site-change-log.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the site to a separate destination
+  - open `/studio/catalogue-work/?work=00001`
+  - verify `Save` with `Update site now` off leaves pending publication and preserves the edited source field
+  - verify a fresh-page `Save` with `Update site now` on keeps the edited source field and reports immediate publication success
+  - verify the test record is restored afterward
+- follow-up:
+  - audit the detail/file/link/series editors for the same canonical-source versus lookup-state boundary if they add source-only fields later
+  - prefer smoke tests against the current running write-service code, not an older long-lived localhost process
 
 ## Purpose
 
@@ -110,6 +134,37 @@ Use this decision test:
 ## Current Rules And Log
 
 Add new entries at the top of this section.
+
+## UI Rule Log 2026-04-22 / UI-027
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, `/studio/catalogue-series/`
+- issue: the catalogue editor family exposed separate top-level `Save` and `Rebuild` buttons even though the real user-facing distinction was usually “save source only” versus “save and publish/update now”. The `Rebuild` label leaked internal pipeline language into the main editing flow.
+- triage: systemic
+- reasoning: deferred publication is a legitimate workflow, especially for draft-heavy bulk editing, but the main command surface should describe that product choice rather than the underlying build mechanism.
+- permanent rule: in catalogue editors, the primary command should be `Save`, paired with an adjacent `Update site now` choice that controls whether the save also publishes runtime changes immediately. If publication remains pending after save, expose `Update site now` as a secondary follow-up action near the runtime status rather than as a peer primary button.
+- enforcement point: `studio/catalogue-work/index.md`, `studio/catalogue-work-detail/index.md`, `studio/catalogue-work-file/index.md`, `studio/catalogue-work-link/index.md`, `studio/catalogue-series/index.md`, their editor scripts, and `assets/studio/data/studio_config.json`
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `studio/catalogue-work-detail/index.md`
+  - `studio/catalogue-work-file/index.md`
+  - `studio/catalogue-work-link/index.md`
+  - `studio/catalogue-series/index.md`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `assets/studio/js/catalogue-work-file-editor.js`
+  - `assets/studio/js/catalogue-work-link-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - confirm the main action row on each catalogue editor now shows `Save`, `Delete`, and an `Update site now` toggle instead of a top-level `Rebuild` button
+  - confirm a follow-up `Update site now` action appears only when runtime publication is pending
+- follow-up:
+  - none
 
 ## UI Rule Log 2026-04-21 / UI-026
 

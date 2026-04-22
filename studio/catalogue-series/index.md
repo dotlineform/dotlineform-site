@@ -40,8 +40,11 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
         <h2 class="tagStudio__heading">series metadata</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesSave">Save</button>
-          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesBuild">Rebuild</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesDelete">Delete</button>
+          <label class="catalogueWorkPage__updateToggle" for="catalogueSeriesApplyBuild">
+            <input type="checkbox" id="catalogueSeriesApplyBuild" checked>
+            <span id="catalogueSeriesApplyBuildLabel">Update site now</span>
+          </label>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueSeriesMeta"></p>
@@ -53,6 +56,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
       <div class="tagStudioForm__fields" id="catalogueSeriesReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueSeriesRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueSeriesBuildImpact"></p>
+      <div class="catalogueWorkPage__runtimeActions">
+        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesBuild">Update site now</button>
+      </div>
       <div class="tagStudioForm__fields" id="catalogueSeriesSummary"></div>
       <div class="tagStudioForm__fields" id="catalogueSeriesReadiness"></div>
     </aside>

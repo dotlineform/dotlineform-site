@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-catalogue-write-server
 title: "Catalogue Write Server"
-last_updated: 2026-04-18
+last_updated: 2026-04-22
 parent_id: scripts
 sort_order: 100
 ---
@@ -79,6 +79,7 @@ Request behavior:
 - work bulk `series_operation.mode` may be `replace` or `add_remove`
 - the server validates the combined source write before writing the canonical JSON file once
 - successful response includes changed counts, changed ids, normalized changed records, and rebuild targets
+- optional `apply_build: true` runs the same scoped update sequence immediately and returns nested build status plus any remaining targets when that update sequence fails part-way through
 
 `POST /catalogue/delete-preview` expects:
 
@@ -140,6 +141,7 @@ After successful canonical writes, the server also refreshes the derived Studio 
 Request behavior:
 
 - `work_id` is normalized to a five-digit work id
+- optional `apply_build: true` requests a same-scope site update as part of the save response
 - `record` may be a partial update, but all keys must be known work source fields
 - `record.work_id`, when present, must match `work_id`
 - `series_ids` may be an array or comma-separated value and is normalized through the shared series-id rules
@@ -202,6 +204,7 @@ Request behavior:
 Request behavior:
 
 - `detail_uid` must resolve to an existing canonical detail record
+- optional `apply_build: true` requests a parent-work site update as part of the save response
 - `record` may be partial, but all keys must be known work-detail source fields
 - `record.detail_uid`, `record.work_id`, and `record.detail_id` must remain consistent with the target record
 - the parent `work_id` must exist in canonical source JSON
@@ -281,6 +284,7 @@ Request behavior:
 Request behavior:
 
 - `file_uid` must resolve to an existing canonical file record
+- optional `apply_build: true` requests a parent-work site update as part of the save response
 - `filename` and `label` are required
 - `record` may be partial, but all keys must be known work-file source fields
 - the parent `work_id` must remain valid
@@ -324,6 +328,7 @@ Request behavior:
 Request behavior:
 
 - `link_uid` must resolve to an existing canonical link record
+- optional `apply_build: true` requests a parent-work site update as part of the save response
 - `url` and `label` are required
 - `record` may be partial, but all keys must be known work-link source fields
 - the parent `work_id` must remain valid
@@ -373,6 +378,7 @@ Request behavior:
 Request behavior:
 
 - `series_id` must resolve to an existing canonical series record
+- optional `apply_build: true` requests a same-scope site update as part of the save response
 - `work_updates` is limited to changed membership rows for affected works
 - each changed work keeps the submitted `series_ids` order; the server does not sort it
 - draft source saves may omit `primary_work_id`

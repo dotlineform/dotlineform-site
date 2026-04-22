@@ -1882,6 +1882,30 @@ span.tagStudio__input--readonlyDisplay {
   justify-content: flex-start;
 }
 
+.catalogueWorkPage__updateToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.2rem;
+  padding: 0 0.15rem;
+  font-size: var(--font-caption);
+  color: var(--muted);
+}
+
+.catalogueWorkPage__updateToggle input {
+  margin: 0;
+}
+
+.catalogueWorkPage__runtimeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.catalogueWorkPage__runtimeActions[hidden] {
+  display: none;
+}
+
 .catalogueWorkForm__fields {
   grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;

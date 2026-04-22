@@ -61,8 +61,11 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor
         <h2 class="tagStudio__heading">work detail metadata</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailSave">Save</button>
-          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailBuild">Rebuild</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailDelete">Delete</button>
+          <label class="catalogueWorkPage__updateToggle" for="catalogueWorkDetailApplyBuild">
+            <input type="checkbox" id="catalogueWorkDetailApplyBuild" checked>
+            <span id="catalogueWorkDetailApplyBuildLabel">Update site now</span>
+          </label>
         </div>
       </div>
       <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueWorkDetailFields"></div>
@@ -74,6 +77,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor
       <div class="tagStudioForm__fields" id="catalogueWorkDetailReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueWorkDetailRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueWorkDetailBuildImpact"></p>
+      <div class="catalogueWorkPage__runtimeActions">
+        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailBuild">Update site now</button>
+      </div>
       <div class="tagStudioForm__fields" id="catalogueWorkDetailSummary"></div>
       <div class="tagStudioForm__fields" id="catalogueWorkDetailReadiness"></div>
     </aside>
