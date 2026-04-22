@@ -7,6 +7,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Added the first catalogue lookup invalidation registry foundation
+
+**Status:** implemented
+
+**Area:** catalogue write server / lookup invalidation planning
+
+**Summary:**
+Added the first explicit work-field invalidation registry to the catalogue write server and recorded the follow-on request/task structure for moving from full lookup refresh toward scoped invalidation.
+
+**Reason:**
+The current write server still refreshes the full lookup corpus after every successful save, which is safe but leaves obvious incremental wins unused. Before changing runtime behavior, the dependency contract needed one canonical registry in code rather than living only in prose notes.
+
+**Effect:**
+The write server now contains the first work-save invalidation registry plus an initial full-refresh fallback operation set. Runtime refresh behavior is unchanged for now: successful writes still use full lookup refresh until later tasks route work-save invalidation through the registry. The follow-on request now also records that any future move from code to JSON/config should happen only after the dependency model stabilizes.
+
+**Affected files/docs:**
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Fixed the work editor so source-only fields reload from canonical work source
 
 **Status:** implemented

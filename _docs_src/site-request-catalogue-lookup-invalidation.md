@@ -9,7 +9,7 @@ sort_order: 130
 
 Status:
 
-- planned
+- in progress
 
 ## Summary
 
@@ -41,6 +41,7 @@ Current implementation facts at request start:
 - `_refresh_lookup_payloads()` runs `build_and_write_catalogue_lookup(...)`
 - that builder re-derives the full lookup corpus under `assets/studio/data/catalogue_lookup/`
 - this happens even for narrow edits such as one work field changing on one record
+- Task 1 now adds the first explicit work-field invalidation registry in server code, but refresh behavior still defaults to full lookup refresh until later tasks route writes through that registry
 
 Current effect:
 
@@ -147,7 +148,7 @@ Reason:
 
 Status:
 
-- planned
+- implemented
 
 Define one explicit invalidation registry that the write server can use as the canonical contract.
 
@@ -172,6 +173,13 @@ Required output:
 - one explicit field-to-invalidation registry
 - one clear ownership point for that registry in code or config
 - one explicit list of operations that still default to `full`
+
+Implemented outcome:
+
+- the first invalidation registry now lives in `scripts/studio/catalogue_write_server.py`
+- it currently covers work-save fields only
+- it also defines the initial full-refresh fallback operation set
+- no write-routing behavior changed yet; later tasks will make the server use this registry to choose refresh scope
 
 ### Task 2. Map Lookup/Search Dependencies Into The Registry
 
@@ -299,6 +307,24 @@ After work-save invalidation is stable, decide whether to:
 Reason:
 
 - the project should not pay for more invalidation complexity than the actual workflow needs
+
+### Task 9. Reassess Code Registry vs JSON Config
+
+Status:
+
+- planned
+
+Decide whether the invalidation registry should remain in code or move into JSON/config after the dependency model stabilizes.
+
+Initial decision:
+
+- keep the registry in code for the first implementation phase
+
+Reason:
+
+- the dependency model is still being discovered
+- code is easier to evolve safely while artifact targeting rules are still changing
+- externalizing too early would lock in a config schema before the real contract is proven
 
 ## Completion Criteria
 

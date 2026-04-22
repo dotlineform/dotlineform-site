@@ -155,6 +155,109 @@ BULK_DETAIL_EDITABLE_FIELDS = {
     "status",
 }
 
+LOOKUP_INVALIDATION_SINGLE_RECORD = "single-record"
+LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD = "targeted-multi-record"
+LOOKUP_INVALIDATION_FULL = "full"
+
+LOOKUP_INVALIDATION_PRIORITY = {
+    LOOKUP_INVALIDATION_SINGLE_RECORD: 0,
+    LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD: 1,
+    LOOKUP_INVALIDATION_FULL: 2,
+}
+
+# Canonical invalidation registry for work-source fields.
+# This is the source of truth for Task 1 and stays in code for now.
+# A later task can externalize it to JSON/config once the dependency model stabilizes.
+WORK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
+    "published_date": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "project_folder": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "project_filename": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "year": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "medium_type": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "medium_caption": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "duration": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "height_cm": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "width_cm": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "depth_cm": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "storage_location": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "work_prose_file": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "notes": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "provenance": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "artist": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "title": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_record", "work_search", "related_series_records"],
+    },
+    "year_display": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_record", "work_search", "related_series_records"],
+    },
+    "status": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_record", "work_search", "related_series_records"],
+    },
+    "series_ids": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_record", "work_search", "related_series_records"],
+    },
+}
+
+LOOKUP_INVALIDATION_FULL_FALLBACK_OPERATIONS = {
+    "catalogue.bulk_save",
+    "catalogue.delete_apply",
+    "catalogue.import_apply",
+    "catalogue.work_create",
+    "catalogue.work_detail_create",
+    "catalogue.work_file_create",
+    "catalogue.work_link_create",
+    "catalogue.series_create",
+}
+
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -249,6 +352,43 @@ def normalize_detail_uid_value(value: Any) -> str:
     work_id = slug_id(raw_work_id)
     detail_id = slug_id(raw_detail_id, width=3)
     return f"{work_id}-{detail_id}"
+
+
+def work_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    changed = sorted({str(name).strip() for name in changed_field_names if str(name).strip()})
+    if not changed:
+        return {
+            "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+            "artifacts": [],
+            "fields": [],
+            "unknown_fields": [],
+        }
+
+    invalidation_class = LOOKUP_INVALIDATION_SINGLE_RECORD
+    artifacts: set[str] = set()
+    unknown_fields: list[str] = []
+
+    for field_name in changed:
+        entry = WORK_LOOKUP_INVALIDATION_REGISTRY.get(field_name)
+        if not entry:
+            unknown_fields.append(field_name)
+            invalidation_class = LOOKUP_INVALIDATION_FULL
+            continue
+        entry_class = str(entry.get("class") or LOOKUP_INVALIDATION_FULL)
+        if LOOKUP_INVALIDATION_PRIORITY.get(entry_class, LOOKUP_INVALIDATION_PRIORITY[LOOKUP_INVALIDATION_FULL]) > LOOKUP_INVALIDATION_PRIORITY[invalidation_class]:
+            invalidation_class = entry_class
+        for artifact in entry.get("artifacts") or []:
+            artifacts.add(str(artifact))
+
+    if unknown_fields:
+        artifacts.add("full_lookup_refresh")
+
+    return {
+        "class": invalidation_class,
+        "artifacts": sorted(artifacts),
+        "fields": changed,
+        "unknown_fields": unknown_fields,
+    }
 
 
 def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool]:

@@ -185,6 +185,7 @@ Follow-on direction:
 
 - keep full lookup refresh as the fallback for complex cases
 - add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
+- the first work-field invalidation registry now lives in server code; a later task will decide whether that registry should remain in code or move into JSON/config
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:
