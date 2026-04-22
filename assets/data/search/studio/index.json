@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-faaf82b236da6aa5afc6a3ae317883d7",
-    "generated_at_utc": "2026-04-21T21:37:14Z",
-    "count": 117
+    "version": "blake2b-9ca50b76984df5370ccc0668c2136294",
+    "generated_at_utc": "2026-04-22T16:40:02Z",
+    "count": 118
   },
   "entries": [
     {
@@ -331,6 +331,29 @@
         "31"
       ],
       "search_text": "ui-framework ui framework ui framework design 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "scripts-dev-studio",
+      "kind": "doc",
+      "title": "Dev Studio Runner",
+      "href": "/docs/?scope=studio&doc=scripts-dev-studio",
+      "last_updated": "2026-04-22",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-04-22 • Scripts",
+      "search_terms": [
+        "scripts-dev-studio",
+        "scripts",
+        "dev",
+        "studio",
+        "dev studio runner",
+        "runner",
+        "2026-04-22",
+        "2026",
+        "04",
+        "22"
+      ],
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-22 2026 04 22"
     },
     {
       "id": "studio-ui-start",

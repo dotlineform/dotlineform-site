@@ -172,12 +172,17 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 
 `bin/dev-studio` is the current Studio route runner.
 
+What it runs before starting long-lived services:
+
+- `./scripts/build_docs.rb --scope studio --write`
+- `./scripts/export_catalogue_lookup.py --write`
+
 What it starts:
 
-- `bundle exec ruby scripts/build_docs.rb --write`
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/tag_write_server.py`
 - `scripts/studio/catalogue_write_server.py`
+- `scripts/docs/docs_management_server.py`
 
 What it does not start:
 

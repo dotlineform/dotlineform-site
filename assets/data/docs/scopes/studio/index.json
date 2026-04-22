@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T21:31:52Z",
+  "generated_at": "2026-04-22T16:39:57Z",
   "docs": [
     {
       "scope": "studio",
@@ -154,6 +154,17 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-dev-studio",
+      "title": "Dev Studio Runner",
+      "last_updated": "2026-04-22",
+      "parent_id": "scripts",
+      "sort_order": 15,
+      "source_path": "scripts-dev-studio.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json"
     },
     {
       "scope": "studio",
