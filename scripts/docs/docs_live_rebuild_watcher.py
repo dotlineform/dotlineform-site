@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""
+Watch docs source roots and rebuild same-scope docs payloads plus docs search.
+
+Run:
+  ./scripts/docs/docs_live_rebuild_watcher.py
+  ./scripts/docs/docs_live_rebuild_watcher.py --poll-seconds 0.5 --debounce-seconds 1.5
+  ./scripts/docs/docs_live_rebuild_watcher.py --repo-root /path/to/dotlineform-site
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Dict, Optional
+
+
+SCOPE_ROOTS = {
+    "studio": Path("_docs_src"),
+    "library": Path("_docs_library_src"),
+}
+
+
+def log(message: str) -> None:
+    print(f"[docs-watch] {message}", flush=True)
+
+
+def find_repo_root(start: Path) -> Optional[Path]:
+    current = start.resolve()
+    for candidate in [current, *current.parents]:
+        if (candidate / "_config.yml").exists():
+            return candidate
+    return None
+
+
+def detect_repo_root(explicit_root: str) -> Path:
+    if explicit_root:
+        repo_root = Path(explicit_root).expanduser().resolve()
+        if not (repo_root / "_config.yml").exists():
+            raise SystemExit(f"--repo-root does not look like repo root (missing _config.yml): {repo_root}")
+        return repo_root
+
+    for start in [Path.cwd(), Path(__file__).resolve().parent]:
+        found = find_repo_root(start)
+        if found is not None:
+            return found
+
+    raise SystemExit("Could not auto-detect repo root. Pass --repo-root.")
+
+
+def detect_bundle_bin() -> Optional[str]:
+    rbenv_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
+    if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
+        return str(rbenv_bundle)
+    return shutil.which("bundle")
+
+
+def snapshot_scope(root: Path) -> Dict[str, tuple[int, int]]:
+    if not root.exists():
+        raise FileNotFoundError(f"Source root not found: {root}")
+
+    snapshot: Dict[str, tuple[int, int]] = {}
+    for path in sorted(root.glob("*.md")):
+        stat = path.stat()
+        snapshot[path.name] = (stat.st_mtime_ns, stat.st_size)
+    return snapshot
+
+
+def summarize_output(output: str, fallback: str) -> str:
+    lines = [line.strip() for line in output.splitlines() if line.strip()]
+    return lines[-1] if lines else fallback
+
+
+def rebuild_scope(repo_root: Path, bundle_bin: str, scope: str) -> bool:
+    commands = [
+        ("docs", [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]),
+        ("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]),
+    ]
+
+    log(f"Rebuilding {scope} docs and docs search.")
+    for label, command in commands:
+        completed = subprocess.run(
+            command,
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        stdout = completed.stdout.strip()
+        stderr = completed.stderr.strip()
+        if completed.returncode != 0:
+            detail = stderr or stdout or f"exit {completed.returncode}"
+            log(f"{scope} {label} rebuild failed: {detail}")
+            return False
+        log(f"{scope} {label}: {summarize_output(stdout, 'done')}")
+    return True
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild same-scope outputs.")
+    parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
+    parser.add_argument("--bundle-bin", default="", help="Override bundle executable path.")
+    parser.add_argument(
+        "--poll-seconds",
+        type=float,
+        default=float(os.environ.get("DOCS_WATCH_POLL_SECONDS", "1.0")),
+        help="Polling interval in seconds.",
+    )
+    parser.add_argument(
+        "--debounce-seconds",
+        type=float,
+        default=float(os.environ.get("DOCS_WATCH_DEBOUNCE_SECONDS", "1.0")),
+        help="Debounce window in seconds before rebuild.",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    if args.poll_seconds <= 0:
+        raise SystemExit("--poll-seconds must be greater than zero")
+    if args.debounce_seconds < 0:
+        raise SystemExit("--debounce-seconds must be zero or greater")
+
+    repo_root = detect_repo_root(args.repo_root)
+    bundle_bin = args.bundle_bin or detect_bundle_bin()
+    if not bundle_bin:
+        raise SystemExit("bundle executable not found")
+
+    states = {}
+    for scope, rel_root in SCOPE_ROOTS.items():
+        root = repo_root / rel_root
+        states[scope] = {
+            "root": root,
+            "snapshot": snapshot_scope(root),
+            "dirty_at": None,
+        }
+
+    log(
+        "Watching _docs_src/*.md -> studio and _docs_library_src/*.md -> library "
+        f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
+    )
+
+    try:
+        while True:
+            now = time.monotonic()
+            for scope in ("studio", "library"):
+                state = states[scope]
+                current_snapshot = snapshot_scope(state["root"])
+                if current_snapshot != state["snapshot"]:
+                    state["snapshot"] = current_snapshot
+                    state["dirty_at"] = now
+                    log(f"Detected source changes for {scope}.")
+
+            ready_scope = None
+            for scope in ("studio", "library"):
+                dirty_at = states[scope]["dirty_at"]
+                if dirty_at is not None and (now - dirty_at) >= args.debounce_seconds:
+                    ready_scope = scope
+                    break
+
+            if ready_scope:
+                rebuild_scope(repo_root, bundle_bin, ready_scope)
+                post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"])
+                if post_rebuild_snapshot != states[ready_scope]["snapshot"]:
+                    states[ready_scope]["snapshot"] = post_rebuild_snapshot
+                    states[ready_scope]["dirty_at"] = time.monotonic()
+                    log(f"Additional source changes arrived during the {ready_scope} rebuild; scheduling another pass.")
+                else:
+                    states[ready_scope]["dirty_at"] = None
+                continue
+
+            time.sleep(args.poll_seconds)
+    except KeyboardInterrupt:
+        log("Stopping watcher.")
+        return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

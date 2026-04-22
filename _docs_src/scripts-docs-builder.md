@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: scripts
 sort_order: 20
 ---
@@ -119,7 +119,8 @@ Flags:
 ## Operational Notes
 
 - `bin/dev-studio` currently runs this builder for the `studio` scope once before starting Jekyll
-- if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs.rb --write`
+- `bin/dev-studio` also starts the Docs Live Rebuild Watcher, which watches `_docs_src/*.md` and `_docs_library_src/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
+- if you disable the watcher or want explicit control while the dev runner is already running, re-run `./scripts/build_docs.rb --scope <scope> --write`
 - docs viewer manage mode rebuilds the current docs scope through the localhost docs-management service
 - manual `./scripts/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
 - live docs-management actions chain same-scope docs search through the docs-management service rather than through `build_docs.rb` itself
@@ -157,6 +158,8 @@ Pipeline policy config:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)

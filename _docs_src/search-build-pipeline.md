@@ -1,7 +1,7 @@
 ---
 doc_id: search-build-pipeline
 title: "Search Build Pipeline"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: search
 sort_order: 70
 ---
@@ -280,6 +280,7 @@ Current derived search support fields:
   - `./scripts/build_docs.rb --scope studio --write`
   - `./scripts/build_search.rb --scope studio --write`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
+- `bin/dev-studio` now runs a startup `studio` docs-search rebuild and then uses the Docs Live Rebuild Watcher to keep `_docs_src/*.md` changes aligned with `assets/data/search/studio/index.json`
 
 ## Library Scope
 
@@ -335,6 +336,7 @@ Current builder behaviour for Library:
   - `./scripts/build_docs.rb --scope library --write`
   - `./scripts/build_search.rb --scope library --write`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
+- while `bin/dev-studio` is running, the Docs Live Rebuild Watcher also keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`
 
 ## Related Documents
 

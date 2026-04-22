@@ -496,6 +496,7 @@ Drag/drop remains out of scope for implementation until the explicit command flo
 - tree position changes through `parent_id = _archive`
 - archived docs remain discoverable in the normal docs tree under the Archive doc
 - `_archive` is a protected reserved system doc
+- the Archive doc is structural and non-loadable in the viewer; opening it routes to its first archived child doc
 
 ### `delete`
 
@@ -521,11 +522,13 @@ Phase 1 answers:
 - flattening `_docs_src` is a prerequisite for Studio management mode
 - `_docs_library_src` is already flat and does not need the same migration
 - special names such as `_archive` remain meaningful as `doc_id` values, not as required source folders
+- the reserved `_archive` `doc_id` remains unchanged even though the viewer does not load `_archive.json` directly
 
 Implementation consequence:
 
 - write-enabled viewer management can now rely on a flat Studio source root
 - any future layout change still requires relative-link review because nested-path assumptions can affect markdown source links
+- the viewer runtime, not the docs-management server, owns the redirect from `_archive` to the first archived child doc
 
 ## Related Work
 

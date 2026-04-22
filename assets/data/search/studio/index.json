@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d2d6a9c8cb87b66deb54f96be993b338",
-    "generated_at_utc": "2026-04-22T17:02:52Z",
+    "version": "blake2b-edb244d1597b966baedee2246ed36e08",
+    "generated_at_utc": "2026-04-22T17:32:56Z",
     "count": 118
   },
   "entries": [
@@ -267,21 +267,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-23",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-23 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-04-18",
+        "2026-04-23",
         "2026",
         "04",
-        "18"
+        "23"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-04-18 2026 04 18"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-04-23 2026 04 23"
     },
     {
       "id": "ui-audit-catalogue-moment-import-20260421",
@@ -337,10 +337,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-22 • Scripts",
+      "display_meta": "2026-04-23 • Scripts",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -348,12 +348,12 @@
         "studio",
         "dev studio runner",
         "runner",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-22 2026 04 22"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-23 2026 04 23"
     },
     {
       "id": "studio-ui-start",
@@ -377,6 +377,30 @@
         "21"
       ],
       "search_text": "studio-ui-start studio ui start studio ui start design 2026-04-21 2026 04 21"
+    },
+    {
+      "id": "scripts-docs-live-rebuild-watcher",
+      "kind": "doc",
+      "title": "Docs Live Rebuild Watcher",
+      "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
+      "last_updated": "2026-04-23",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-04-23 • Scripts",
+      "search_terms": [
+        "scripts-docs-live-rebuild-watcher",
+        "scripts",
+        "docs",
+        "live",
+        "rebuild",
+        "watcher",
+        "docs live rebuild watcher",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-23 2026 04 23"
     },
     {
       "id": "data-models-catalogue",
@@ -433,10 +457,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-22 • Scripts",
+      "display_meta": "2026-04-23 • Scripts",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -444,12 +468,12 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-22 2026 04 22"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-23 2026 04 23"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
@@ -596,10 +620,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-22",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-19 • Docs Viewer",
+      "display_meta": "2026-04-22 • Docs Viewer",
       "search_terms": [
         "docs-viewer-source-organisation",
         "docs",
@@ -608,12 +632,12 @@
         "organisation",
         "source organisation",
         "docs viewer",
-        "2026-04-19",
+        "2026-04-22",
         "2026",
         "04",
-        "19"
+        "22"
       ],
-      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-19 2026 04 19"
+      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-22 2026 04 22"
     },
     {
       "id": "studio",
@@ -1685,22 +1709,22 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-22 • Search",
+      "display_meta": "2026-04-23 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-22 2026 04 22"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-23 2026 04 23"
     },
     {
       "id": "search-studio-v1-index-shape",
@@ -2038,10 +2062,10 @@
       "kind": "doc",
       "title": "Docs Build Incremental Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-04-22 • Site Docs",
+      "display_meta": "2026-04-23 • Site Docs",
       "search_terms": [
         "site-request-docs-build-incremental",
         "site",
@@ -2051,12 +2075,12 @@
         "incremental",
         "docs build incremental request",
         "site docs",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-22 2026 04 22"
+      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-23 2026 04 23"
     },
     {
       "id": "catalogue-work-file-editor",
@@ -2377,23 +2401,6 @@
       "search_text": "catalogue-moment-import catalogue moment import catalogue moment import studio 2026-04-18 2026 04 18"
     },
     {
-      "id": "_archive",
-      "kind": "doc",
-      "title": "Archive",
-      "href": "/docs/?scope=studio&doc=_archive",
-      "last_updated": "2026-04-18",
-      "display_meta": "2026-04-18",
-      "search_terms": [
-        "_archive",
-        "archive",
-        "2026-04-18",
-        "2026",
-        "04",
-        "18"
-      ],
-      "search_text": "_archive archive 2026-04-18 2026 04 18"
-    },
-    {
       "id": "tag-aliases",
       "kind": "doc",
       "title": "Tag Aliases",
@@ -2577,20 +2584,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-22",
-      "display_meta": "2026-04-22",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-22 2026 04 22"
+      "search_text": "site-change-log site change log site change log 2026-04-23 2026 04 23"
     },
     {
       "id": "tiered-dimension-policy",
@@ -2662,22 +2669,22 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-22 • Search",
+      "display_meta": "2026-04-23 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "search-change-log search change log search change log 2026-04-22 2026 04 22"
+      "search_text": "search-change-log search change log search change log 2026-04-23 2026 04 23"
     }
   ]
 }

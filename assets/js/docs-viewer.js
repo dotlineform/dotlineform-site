@@ -518,6 +518,36 @@
     return childrenByParent;
   }
 
+  function isNonLoadableDoc(doc) {
+    return Boolean(doc) && doc.doc_id === "_archive";
+  }
+
+  function firstLoadableDescendantDocId(parentId) {
+    var children = state.childrenByParent.get(parentId) || [];
+    for (var i = 0; i < children.length; i += 1) {
+      var child = children[i];
+      if (!isNonLoadableDoc(child)) {
+        return child.doc_id;
+      }
+      var nestedDocId = firstLoadableDescendantDocId(child.doc_id);
+      if (nestedDocId) {
+        return nestedDocId;
+      }
+    }
+    return "";
+  }
+
+  function resolveLoadableDocId(docId) {
+    var doc = state.docsById.get(docId);
+    if (!doc) return "";
+    if (!isNonLoadableDoc(doc)) return doc.doc_id;
+    return firstLoadableDescendantDocId(doc.doc_id);
+  }
+
+  function viewerTargetDocId(docId) {
+    return resolveLoadableDocId(docId) || docId;
+  }
+
   function flattenRoots() {
     var roots = state.childrenByParent.get("") || [];
     if (roots.length > 0) return roots;
@@ -526,7 +556,13 @@
 
   function defaultDocId() {
     var roots = flattenRoots();
-    return roots.length > 0 ? roots[0].doc_id : "";
+    for (var i = 0; i < roots.length; i += 1) {
+      var docId = resolveLoadableDocId(roots[i].doc_id);
+      if (docId) {
+        return docId;
+      }
+    }
+    return "";
   }
 
   function buildTrail(docId) {
@@ -594,7 +630,7 @@
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
       }
-      link.href = viewerUrl(doc.doc_id);
+      link.href = viewerUrl(viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
       if (canDragDoc(doc)) {
         link.draggable = true;
@@ -634,7 +670,7 @@
       }
 
       var link = document.createElement("a");
-      link.href = viewerUrl(entry.doc_id);
+      link.href = viewerUrl(viewerTargetDocId(entry.doc_id));
       link.dataset.docId = entry.doc_id;
       link.textContent = entry.title;
       pathEl.appendChild(link);
@@ -1368,6 +1404,15 @@
     var mode = options && options.historyMode ? options.historyMode : "push";
     var hash = options && options.hash ? options.hash : "";
     var shouldExpandTrail = !options || options.expandTrail !== false;
+    var targetDocId = resolveLoadableDocId(docId);
+    if (targetDocId && targetDocId !== docId) {
+      loadDoc(targetDocId, {
+        historyMode: mode === "none" ? "replace" : mode,
+        hash: hash,
+        expandTrail: shouldExpandTrail
+      });
+      return;
+    }
     var doc = state.docsById.get(docId);
     if (!doc) {
       setStatus("Document not found.", true);
@@ -1760,7 +1805,13 @@
     if (!state.docsById.has(resolvedDocId) && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
       resolvedDocId = defaultRouteDocId;
     }
-    if (!state.docsById.has(resolvedDocId)) {
+    if (state.docsById.has(resolvedDocId)) {
+      resolvedDocId = resolveLoadableDocId(resolvedDocId) || "";
+    }
+    if (!resolvedDocId && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
+      resolvedDocId = resolveLoadableDocId(defaultRouteDocId);
+    }
+    if (!resolvedDocId) {
       resolvedDocId = defaultDocId();
     }
     return {
@@ -1960,7 +2011,7 @@
     var metaText = entry.displayMeta || entry.parentTitle || "";
     return (
       '<li class="docsViewer__resultItem">' +
-        '<a class="docsViewer__resultTitle" href="' + escapeHtml(viewerUrl(entry.id, "", "")) + '">' + escapeHtml(entry.title) + '</a>' +
+        '<a class="docsViewer__resultTitle" href="' + escapeHtml(viewerUrl(viewerTargetDocId(entry.id), "", "")) + '">' + escapeHtml(entry.title) + '</a>' +
         '<p class="docsViewer__resultId">' + escapeHtml(entry.id) + '</p>' +
         (metaText ? '<p class="docsViewer__resultMeta">' + escapeHtml(metaText) + '</p>' : '') +
       '</li>'

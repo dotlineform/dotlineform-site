@@ -1,11 +1,62 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-22] Made the reserved `_archive` docs node structural and non-loadable
+
+**Status:** implemented
+
+**Area:** docs viewer / docs build pipeline
+
+**Summary:**
+Updated the docs viewer so the reserved `_archive` node now behaves as a structural section only. Direct navigation to `_archive` now opens the first archived child doc instead of trying to load `_archive.json`.
+
+**Reason:**
+The docs-management contract already treats `_archive` as a protected reserved `doc_id`, but the generated payload path for that id becomes `_archive.json`. Jekyll does not reliably publish that leading-underscore asset under `_site`, which caused a viewer 404 when the Archive node itself was opened.
+
+**Effect:**
+The Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `_archive` as a result because it is a structural node rather than a viewable content page.
+
+**Rejected options:**
+- renaming `_archive` to `archive`, because that would widen the change into the docs-management contract, archive API semantics, and existing source docs
+- escaping the generated payload filename for `_archive`, because that would spread a one-off storage rule into the builder output contract instead of fixing the runtime meaning directly
+
+**Affected files/docs:**
+- `assets/js/docs-viewer.js`
+- `scripts/build_search.rb`
+- [Docs Viewer Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+
+## [2026-04-23] Added source-root docs watching to `bin/dev-studio`
+
+**Status:** implemented
+
+**Area:** docs build pipeline / local development workflow
+
+**Summary:**
+Updated `bin/dev-studio` so it now performs a startup `studio` docs-search rebuild and starts a local docs watcher that rebuilds same-scope docs payloads plus same-scope docs search while the dev runner is active.
+
+**Reason:**
+The preferred Task 7 direction was to treat `dev-studio` as the normal integrated local workflow, watch docs source roots rather than generated outputs, and keep docs-viewer data plus docs search aligned without depending on manual follow-up commands during ordinary editing.
+
+**Effect:**
+`bin/dev-studio` now starts with `studio` docs, `studio` docs search, and catalogue lookup fresh, then watches `_docs_src/*.md` as `studio` and `_docs_library_src/*.md` as `library`. Source changes are debounced, rebuild one scope at a time, and trigger one more pass if more source edits arrive during a rebuild. The watcher ignores generated outputs, so it does not loop on its own writes.
+
+**Affected files/docs:**
+- `bin/dev-studio`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 
 ## [2026-04-22] Aligned live docs-management writes with docs-search follow-through and deprecated legacy `/build-docs`
 

@@ -1,7 +1,7 @@
 ---
 doc_id: studio-runtime
 title: "Studio Runtime"
-last_updated: 2026-04-18
+last_updated: 2026-04-23
 parent_id: studio
 sort_order: 10
 ---
@@ -175,6 +175,7 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 What it runs before starting long-lived services:
 
 - `./scripts/build_docs.rb --scope studio --write`
+- `./scripts/build_search.rb --scope studio --write`
 - `./scripts/export_catalogue_lookup.py --write`
 
 What it starts:
@@ -183,10 +184,10 @@ What it starts:
 - `scripts/studio/tag_write_server.py`
 - `scripts/studio/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
 
 What it does not start:
 
-- docs-search builders
 - catalogue/search regeneration scripts
 - any separate Studio-only frontend server
 

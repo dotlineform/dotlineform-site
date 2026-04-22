@@ -1,7 +1,7 @@
 ---
 doc_id: docs-viewer-source-organisation
 title: "Source Organisation"
-last_updated: 2026-04-19
+last_updated: 2026-04-22
 parent_id: docs-viewer
 sort_order: 20
 ---
@@ -86,11 +86,18 @@ Current effect:
 - Studio file storage no longer carries section meaning
 - tree structure comes only from `doc_id`, `parent_id`, and `sort_order`
 - `_archive` remains meaningful as a reserved system doc in the viewer tree
+- `_archive` is structural in the viewer runtime and redirects to its first child doc instead of loading its own payload
 
 Important builder consequence:
 
 - the docs builder still resolves relative markdown links from each file's `source_path`
 - any future source-layout change must review or rewrite source-relative `.md` links if nested paths are reintroduced
+
+Current runtime reason:
+
+- the generated per-doc payload path for `_archive` would be `_archive.json`
+- Jekyll does not publish that leading-underscore asset path reliably under `_site`
+- the viewer therefore treats `_archive` as a non-loadable section node rather than changing the reserved `doc_id` contract
 
 ## Current Generated Output Boundary
 

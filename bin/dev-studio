@@ -21,11 +21,15 @@ JEKYLL_HOST="${JEKYLL_HOST:-127.0.0.1}"
 JEKYLL_PORT="${JEKYLL_PORT:-4000}"
 CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 DOCS_MANAGEMENT_PORT="${DOCS_MANAGEMENT_PORT:-8789}"
+DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
+DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
+DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
 
 JEKYLL_PID=""
 TAG_WRITE_PID=""
 CATALOGUE_WRITE_PID=""
 DOCS_MANAGEMENT_PID=""
+DOCS_WATCHER_PID=""
 
 cleanup() {
   trap - EXIT INT TERM
@@ -41,7 +45,10 @@ cleanup() {
   if [ -n "$DOCS_MANAGEMENT_PID" ] && kill -0 "$DOCS_MANAGEMENT_PID" 2>/dev/null; then
     kill "$DOCS_MANAGEMENT_PID" 2>/dev/null || true
   fi
-  wait "$JEKYLL_PID" "$TAG_WRITE_PID" "$CATALOGUE_WRITE_PID" "$DOCS_MANAGEMENT_PID" 2>/dev/null || true
+  if [ -n "$DOCS_WATCHER_PID" ] && kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then
+    kill "$DOCS_WATCHER_PID" 2>/dev/null || true
+  fi
+  wait "$JEKYLL_PID" "$TAG_WRITE_PID" "$CATALOGUE_WRITE_PID" "$DOCS_MANAGEMENT_PID" "$DOCS_WATCHER_PID" 2>/dev/null || true
 }
 
 trap cleanup EXIT INT TERM
@@ -52,13 +59,20 @@ echo "Tag Write Server: http://127.0.0.1:8787"
 echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
 echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
 echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-editor/?series=<series_id>"
+if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
+  echo "Docs Live Watcher: enabled (_docs_src + _docs_library_src)"
+else
+  echo "Docs Live Watcher: disabled"
+fi
 echo
 echo "Building Studio docs viewer data"
 "$BUNDLE_BIN" exec ruby scripts/build_docs.rb --scope studio --write
+echo "Building Studio docs search data"
+"$BUNDLE_BIN" exec ruby scripts/build_search.rb --scope studio --write
 echo "Building catalogue lookup data"
 "$PYTHON_BIN" scripts/export_catalogue_lookup.py --write
 echo
-echo "Press Ctrl+C to stop both processes."
+echo "Press Ctrl+C to stop all processes."
 echo
 
 "$BUNDLE_BIN" exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
@@ -72,6 +86,13 @@ CATALOGUE_WRITE_PID=$!
 
 "$PYTHON_BIN" scripts/docs/docs_management_server.py --port "$DOCS_MANAGEMENT_PORT" &
 DOCS_MANAGEMENT_PID=$!
+
+if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
+  "$PYTHON_BIN" scripts/docs/docs_live_rebuild_watcher.py \
+    --poll-seconds "$DOCS_WATCH_POLL_SECONDS" \
+    --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS" &
+  DOCS_WATCHER_PID=$!
+fi
 
 while true; do
   if ! kill -0 "$JEKYLL_PID" 2>/dev/null; then
@@ -88,6 +109,10 @@ while true; do
   fi
   if ! kill -0 "$DOCS_MANAGEMENT_PID" 2>/dev/null; then
     wait "$DOCS_MANAGEMENT_PID"
+    break
+  fi
+  if [ -n "$DOCS_WATCHER_PID" ] && ! kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then
+    wait "$DOCS_WATCHER_PID"
     break
   fi
   sleep 1

@@ -1,12 +1,54 @@
 ---
 doc_id: search-change-log
 title: "Search Change Log"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-04-22] Removed the reserved `_archive` docs node from docs-viewer search results
+
+**Status:** implemented
+
+**Area:** docs-domain search payload
+
+**Summary:**  
+Updated the docs search builder so it no longer emits a docs-search entry for the reserved `_archive` node.
+
+**Reason:**  
+`_archive` remains a meaningful reserved `doc_id` in the viewer tree, but it now behaves as a structural section node rather than a loadable document. Leaving it in docs search would keep exposing a target that is not meant to resolve as standalone content.
+
+**Effect:**  
+Archived real docs remain searchable, but the Archive bucket itself no longer appears as a docs search result.
+
+**Affected files/docs:**  
+- `scripts/build_search.rb`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+## [2026-04-23] Added `dev-studio` docs-root watching for same-scope docs-search rebuilds
+
+**Status:** implemented
+
+**Area:** docs-domain search build flow
+
+**Summary:**  
+Updated `bin/dev-studio` so it now performs a startup `studio` docs-search rebuild and starts a local watcher that rebuilds same-scope docs search when `_docs_src/*.md` or `_docs_library_src/*.md` change.
+
+**Reason:**  
+Once Task 6 made live docs-management actions rebuild same-scope docs search automatically, the remaining gap was the normal integrated dev runner. Editing docs source files directly while `dev-studio` was already running still relied on the operator to remember a manual docs-search rebuild.
+
+**Effect:**  
+While `bin/dev-studio` is running, `_docs_src/*.md` changes now rebuild `studio` docs plus `assets/data/search/studio/index.json`, and `_docs_library_src/*.md` changes rebuild `library` docs plus `assets/data/search/library/index.json`. Manual low-level commands remain available as fallback tooling.
+
+**Affected files/docs:**  
+- `bin/dev-studio`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 
 ## [2026-04-22] Aligned live docs-management writes with same-scope docs-search rebuilds
 

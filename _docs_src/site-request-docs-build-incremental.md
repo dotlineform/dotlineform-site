@@ -1,7 +1,7 @@
 ---
 doc_id: site-request-docs-build-incremental
 title: "Docs Build Incremental Request"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: site-docs
 sort_order: 120
 ---
@@ -19,8 +19,8 @@ Status:
 - Task 4. Review Index-Metadata Churn: implemented
 - Task 5. Align Local Rebuild Entry Points: implemented
 - Task 6. Align Search Follow-Through: implemented
-- Task 7. Define `dev-studio` Live Rebuild Behavior: open
-- Task 8. Update Docs And Operating Guidance: in progress
+- Task 7. Define `dev-studio` Live Rebuild Behavior: implemented
+- Task 8. Update Docs And Operating Guidance: implemented
 - Task 9. Verify And Close Out: pending
 
 ## Summary
@@ -240,18 +240,22 @@ Reason:
 
 Status:
 
-- open
+- implemented
 
 Assume `dev-studio` becomes the normal integrated local workflow.
 
 This task is about live local runner behavior, not about the principle that search should stay current.
 
-Questions to settle:
+Implemented decisions:
 
-- should `bin/dev-studio` still do a startup docs rebuild, or should that become optional
-- should `dev-studio` watch docs source roots and rebuild automatically while running
-- how should scope detection work for `_docs_src` vs `_docs_library_src`
-- how should live rebuilds avoid loops and redundant writes
+- `bin/dev-studio` keeps an explicit startup `studio` docs rebuild
+- `bin/dev-studio` now also runs an explicit startup `studio` docs-search rebuild
+- `bin/dev-studio` starts a local docs watcher while running
+- scope detection is source-root based:
+  - `_docs_src/*.md` -> `studio`
+  - `_docs_library_src/*.md` -> `library`
+- live rebuilds avoid loops by watching source roots only and ignoring generated outputs
+- same-scope rebuilds are debounced and serialized; if more source changes arrive during a rebuild, that scope is scheduled for one more pass
 
 Preferred direction:
 
@@ -267,7 +271,7 @@ Reason:
 
 Status:
 
-- in progress
+- implemented
 
 Update the relevant docs so the new behavior is visible and consistent.
 
@@ -338,8 +342,7 @@ This request is complete when:
 
 ## Open Decisions
 
-- Should `dev-studio` still do a startup docs rebuild, or should live source watching become the primary freshness mechanism?
-- What should the exact `dev-studio` watcher contract be for `_docs_src` and `_docs_library_src`?
+- none currently
 
 ## Open Issues
 

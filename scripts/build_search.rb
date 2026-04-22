@@ -266,7 +266,9 @@ class SearchDataBuilder
   def build_docs_entries(docs)
     title_by_id = docs.to_h { |doc| [doc.doc_id, doc.title] }
 
-    docs.map do |doc|
+    docs.filter_map do |doc|
+      next if doc.doc_id == "_archive"
+
       parent_title = doc.parent_id.empty? ? "" : normalize_text(title_by_id[doc.parent_id])
       display_meta = compact_join(doc.last_updated, parent_title)
       search_terms = build_search_tokens(doc.doc_id, doc.title, parent_title, doc.last_updated)
