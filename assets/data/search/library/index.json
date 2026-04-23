@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-706045ba6607ceb70f40db9ec7285836",
-    "generated_at_utc": "2026-04-23T20:32:42Z",
-    "count": 2
+    "version": "blake2b-3b55088ab2788d2a52333b362f84a489",
+    "generated_at_utc": "2026-04-23T21:50:21Z",
+    "count": 3
   },
   "entries": [
     {
@@ -46,6 +46,30 @@
         "23"
       ],
       "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-23 2026 04 23"
+    },
+    {
+      "id": "defining-information-for-cross-boundary-comparisons-concepts",
+      "kind": "doc",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
+      "href": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
+      "search_terms": [
+        "defining-information-for-cross-boundary-comparisons-concepts",
+        "defining",
+        "information",
+        "for",
+        "cross",
+        "boundary",
+        "comparisons",
+        "concepts",
+        "defining \"information\" for cross‑boundary comparisons — concepts",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "defining-information-for-cross-boundary-comparisons-concepts defining information for cross boundary comparisons concepts defining \"information\" for cross‑boundary comparisons — concepts 2026-04-23 2026 04 23"
     }
   ]
 }
