@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-47e9e667016e58aed2a2f30560af0b85",
-    "generated_at_utc": "2026-04-23T19:01:30Z",
-    "count": 125
+    "version": "blake2b-e524d74dc50a6cfb3e807fbea04a839f",
+    "generated_at_utc": "2026-04-23T19:45:50Z",
+    "count": 126
   },
   "entries": [
     {
@@ -571,6 +571,30 @@
         "31"
       ],
       "search_text": "config-pipeline-json config pipeline json pipeline config json 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "runtime-dependencies",
+      "kind": "doc",
+      "title": "Runtime Dependencies",
+      "href": "/docs/?scope=studio&doc=runtime-dependencies",
+      "last_updated": "2026-04-23",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-23 • Site Docs",
+      "search_terms": [
+        "runtime-dependencies",
+        "runtime",
+        "dependencies",
+        "runtime dependencies",
+        "site docs",
+        "site",
+        "docs",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "runtime-dependencies runtime dependencies runtime dependencies site docs site docs 2026-04-23 2026 04 23"
     },
     {
       "id": "search-index-schema",

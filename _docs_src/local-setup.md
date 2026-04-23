@@ -11,6 +11,7 @@ sort_order: 30
 This guide centralizes the current local toolchain needed to run the Python scripts in this repo and to verify the Jekyll site locally.
 
 For cloud-hosted development guidance, see [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments).
+For dependency-role guidance across local and cloud environments, see [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies).
 
 All commands below assume you are in `dotlineform-site/` unless stated otherwise.
 
@@ -36,6 +37,9 @@ The Python scripts themselves are lightweight:
 - non-stdlib Python dependency is currently just `openpyxl`
 - image/srcset generation also depends on external command-line tools, not extra Python packages
 - the Tag Studio local write server uses only stdlib modules plus repo-local helpers
+
+That summary is now incomplete for feature-specific Python dependencies because the Docs HTML import feature adds a pinned parser/sanitizer stack in `requirements.txt`.
+Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) as the current dependency-role reference.
 
 ## Fresh macOS install
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T19:01:29Z",
+  "generated_at": "2026-04-23T19:45:48Z",
   "docs": [
     {
       "scope": "studio",
@@ -264,6 +264,17 @@
       "source_path": "config-pipeline-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-pipeline-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-pipeline-json.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "runtime-dependencies",
+      "title": "Runtime Dependencies",
+      "last_updated": "2026-04-23",
+      "parent_id": "site-docs",
+      "sort_order": 20,
+      "source_path": "runtime-dependencies.md",
+      "viewer_url": "/docs/?scope=studio&doc=runtime-dependencies",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/runtime-dependencies.json"
     },
     {
       "scope": "studio",

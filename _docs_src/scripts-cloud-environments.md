@@ -25,6 +25,8 @@ This page covers:
 - Cloudflare R2 environment contract for media workflows
 - compatibility checks for local versus non-local runs
 
+For dependency-role guidance across local and cloud environments, including which `requirements.txt` packages are baseline versus feature-specific, see [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies).
+
 ## Baseline Runtime Contract
 
 The target parity baseline for publish-sensitive checks remains:
@@ -145,6 +147,8 @@ bash .codex/setup.sh
 - Python deps in `requirements.txt`
 - Ruby deps in `Gemfile` + `Gemfile.lock`
 - Ruby runtime in `.ruby-version`
+
+Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) to record what those checked-in dependencies are used for and how critical they are in cloud sessions.
 
 ### 4) Define cloud-safe env vars
 
