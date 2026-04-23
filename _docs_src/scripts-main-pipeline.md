@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-main-pipeline
-title: "Deprecated: Build Catalogue"
+title: "Build Catalogue"
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 20

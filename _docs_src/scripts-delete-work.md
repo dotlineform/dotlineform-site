@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-delete-work
-title: "Deprecated: Delete Work"
+title: "Delete Work"
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 60

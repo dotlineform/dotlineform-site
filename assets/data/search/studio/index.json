@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-88a699f6cbf896d8d1c184fe9bfed536",
-    "generated_at_utc": "2026-04-23T15:35:19Z",
+    "version": "blake2b-60edaaf5f558b49aa1d41697ea34570b",
+    "generated_at_utc": "2026-04-23T16:17:40Z",
     "count": 123
   },
   "entries": [
@@ -53,30 +53,6 @@
         "31"
       ],
       "search_text": "data-flow data flow data flow architecture 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "pipeline-use-cases",
-      "kind": "doc",
-      "title": "Deprecated: Pipeline Use Cases",
-      "href": "/docs/?scope=studio&doc=pipeline-use-cases",
-      "last_updated": "2026-04-18",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-04-18 • Archive",
-      "search_terms": [
-        "pipeline-use-cases",
-        "pipeline",
-        "use",
-        "cases",
-        "deprecated: pipeline use cases",
-        "deprecated",
-        "archive",
-        "2026-04-18",
-        "2026",
-        "04",
-        "18"
-      ],
-      "search_text": "pipeline-use-cases pipeline use cases deprecated: pipeline use cases deprecated archive 2026-04-18 2026 04 18"
     },
     {
       "id": "user-guide-docs-images",
@@ -244,6 +220,29 @@
         "31"
       ],
       "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "pipeline-use-cases",
+      "kind": "doc",
+      "title": "Pipeline Use Cases",
+      "href": "/docs/?scope=studio&doc=pipeline-use-cases",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-04-18 • Archive",
+      "search_terms": [
+        "pipeline-use-cases",
+        "pipeline",
+        "use",
+        "cases",
+        "pipeline use cases",
+        "archive",
+        "2026-04-18",
+        "2026",
+        "04",
+        "18"
+      ],
+      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases archive 2026-04-18 2026 04 18"
     },
     {
       "id": "data-models-shared",
@@ -453,6 +452,31 @@
       "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-22 2026 04 22"
     },
     {
+      "id": "scripts-main-pipeline",
+      "kind": "doc",
+      "title": "Build Catalogue",
+      "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-04-18 • Archive",
+      "search_terms": [
+        "scripts-main-pipeline",
+        "scripts",
+        "main",
+        "pipeline",
+        "build catalogue",
+        "build",
+        "catalogue",
+        "archive",
+        "2026-04-18",
+        "2026",
+        "04",
+        "18"
+      ],
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-04-18 2026 04 18"
+    },
+    {
       "id": "data-models-catalogue",
       "kind": "doc",
       "title": "Catalogue Scope",
@@ -475,32 +499,6 @@
         "01"
       ],
       "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-01 2026 04 01"
-    },
-    {
-      "id": "scripts-main-pipeline",
-      "kind": "doc",
-      "title": "Deprecated: Build Catalogue",
-      "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
-      "last_updated": "2026-04-18",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-04-18 • Archive",
-      "search_terms": [
-        "scripts-main-pipeline",
-        "scripts",
-        "main",
-        "pipeline",
-        "deprecated: build catalogue",
-        "deprecated",
-        "build",
-        "catalogue",
-        "archive",
-        "2026-04-18",
-        "2026",
-        "04",
-        "18"
-      ],
-      "search_text": "scripts-main-pipeline scripts main pipeline deprecated: build catalogue deprecated build catalogue archive 2026-04-18 2026 04 18"
     },
     {
       "id": "scripts-docs-builder",
@@ -826,7 +824,7 @@
     {
       "id": "scripts-copy-draft-media",
       "kind": "doc",
-      "title": "Deprecated: Copy Draft Media",
+      "title": "Copy Draft Media",
       "href": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "last_updated": "2026-04-18",
       "parent_id": "_archive",
@@ -838,15 +836,14 @@
         "copy",
         "draft",
         "media",
-        "deprecated: copy draft media",
-        "deprecated",
+        "copy draft media",
         "archive",
         "2026-04-18",
         "2026",
         "04",
         "18"
       ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media deprecated: copy draft media deprecated archive 2026-04-18 2026 04 18"
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-04-18 2026 04 18"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -1349,7 +1346,7 @@
     {
       "id": "scripts-generate-work-pages",
       "kind": "doc",
-      "title": "Deprecated: Generate Work Pages",
+      "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "last_updated": "2026-04-19",
       "parent_id": "_archive",
@@ -1361,15 +1358,14 @@
         "generate",
         "work",
         "pages",
-        "deprecated: generate work pages",
-        "deprecated",
+        "generate work pages",
         "archive",
         "2026-04-19",
         "2026",
         "04",
         "19"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages deprecated: generate work pages deprecated archive 2026-04-19 2026 04 19"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-19 2026 04 19"
     },
     {
       "id": "search-normalisation-rules",
@@ -1557,7 +1553,7 @@
     {
       "id": "scripts-delete-work",
       "kind": "doc",
-      "title": "Deprecated: Delete Work",
+      "title": "Delete Work",
       "href": "/docs/?scope=studio&doc=scripts-delete-work",
       "last_updated": "2026-04-18",
       "parent_id": "_archive",
@@ -1568,15 +1564,14 @@
         "scripts",
         "delete",
         "work",
-        "deprecated: delete work",
-        "deprecated",
+        "delete work",
         "archive",
         "2026-04-18",
         "2026",
         "04",
         "18"
       ],
-      "search_text": "scripts-delete-work scripts delete work deprecated: delete work deprecated archive 2026-04-18 2026 04 18"
+      "search_text": "scripts-delete-work scripts delete work delete work archive 2026-04-18 2026 04 18"
     },
     {
       "id": "new-pipeline-refine-library",

@@ -29,6 +29,12 @@ Current title rule:
 - title matching is strict
 - intentionally shortened labels are reported
 
+Ignored links:
+
+- fragment-only links within the same doc, such as `#section`
+- same-doc viewer links with a fragment, such as `/docs/?scope=studio&doc=this-doc#section`
+- same-doc source-markdown links with a fragment
+
 ## Data Source
 
 The audit reads generated docs payloads rather than raw source Markdown.

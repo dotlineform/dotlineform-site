@@ -197,21 +197,22 @@ def parse_docs_target(resolved_href: str) -> dict[str, str] | None:
     path = parsed.path or ""
     query = parse_qs(parsed.query)
     trimmed_path = path.rstrip("/")
+    fragment = normalize_text(parsed.fragment)
 
     if trimmed_path == "/docs":
         doc_id = normalize_text(query.get("doc", [""])[0])
         if not doc_id:
             return None
-        return {"kind": "viewer", "scope": "studio", "doc_id": doc_id}
+        return {"kind": "viewer", "scope": "studio", "doc_id": doc_id, "fragment": fragment}
 
     if trimmed_path == "/library":
         doc_id = normalize_text(query.get("doc", [""])[0])
         if not doc_id:
             return None
-        return {"kind": "viewer", "scope": "library", "doc_id": doc_id}
+        return {"kind": "viewer", "scope": "library", "doc_id": doc_id, "fragment": fragment}
 
     if path.endswith(".md"):
-        return {"kind": "source_markdown", "path": path}
+        return {"kind": "source_markdown", "path": path, "fragment": fragment}
 
     return None
 
@@ -222,6 +223,25 @@ def linked_page_text_for_missing(target: dict[str, str], resolved_href: str) -> 
         doc_id = normalize_text(target.get("doc_id"))
         return f"{scope}:{doc_id}" if scope and doc_id else normalize_text(resolved_href)
     return normalize_text(target.get("path")) or normalize_text(resolved_href)
+
+
+def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> bool:
+    fragment = normalize_text(target.get("fragment"))
+    if not fragment:
+        return False
+
+    if target.get("kind") == "viewer":
+        return (
+            normalize_text(target.get("scope")) == current_doc.scope
+            and normalize_text(target.get("doc_id")) == current_doc.doc_id
+        )
+
+    if target.get("kind") == "source_markdown":
+        target_name = Path(normalize_text(target.get("path"))).name
+        current_name = Path(current_doc.source_path).name
+        return bool(target_name and current_name and target_name == current_name)
+
+    return False
 
 
 def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
@@ -243,6 +263,8 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
             resolved_href = resolve_href(raw_href, doc.meta.viewer_url)
             target = parse_docs_target(resolved_href)
             if target is None:
+                continue
+            if is_same_doc_fragment_link(doc.meta, target):
                 continue
 
             link_text = normalize_text(anchor.get("text")) or normalize_text(raw_href) or normalize_text(resolved_href)

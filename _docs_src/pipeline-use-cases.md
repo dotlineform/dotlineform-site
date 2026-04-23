@@ -1,6 +1,6 @@
 ---
 doc_id: pipeline-use-cases
-title: "Deprecated: Pipeline Use Cases"
+title: "Pipeline Use Cases"
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 10

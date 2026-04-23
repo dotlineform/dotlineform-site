@@ -31,6 +31,8 @@ Current rule:
 
 - `wrong title` is a strict exact-title check
 - intentionally shortened labels such as `Overview` linking to `Docs Viewer Overview` are reported
+- same-doc fragment links are ignored
+- this includes `#section` and links back to the current docs page with a fragment
 
 ## Result Columns
 

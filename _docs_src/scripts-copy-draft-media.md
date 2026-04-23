@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-copy-draft-media
-title: "Deprecated: Copy Draft Media"
+title: "Copy Draft Media"
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 30

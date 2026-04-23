@@ -20,7 +20,7 @@ Added `/studio/docs-broken-links/`, a reusable Python docs-links audit, and a ne
 Docs maintenance needed a practical Studio surface for two concrete failure cases: links to docs that no longer exist and links whose visible text no longer matches the current target doc title. The repo also needed that logic outside the browser so the same check can be reused from the terminal.
 
 **Effect:**
-Studio now has a dedicated docs broken-links page with scope selection and a results list linking directly to the target and source pages. The audit reports `not found` and strict `wrong title` issues, including intentionally shortened labels that no longer match the target doc title exactly. The same logic now lives in `./scripts/docs/docs_broken_links.py` and is exposed through `POST /docs/broken-links` on the localhost docs-management service.
+Studio now has a dedicated docs broken-links page with scope selection and a results list linking directly to the target and source pages. The audit reports `not found` and strict `wrong title` issues, including intentionally shortened labels that no longer match the target doc title exactly. The same logic now lives in `./scripts/docs/docs_broken_links.py` and is exposed through `POST /docs/broken-links` on the localhost docs-management service. Same-doc fragment links are ignored because they do not affect page-level docs structure, and archived deprecated docs no longer carry `Deprecated: ` in front-matter titles.
 
 **Affected files/docs:**
 - `studio/docs-broken-links/index.md`

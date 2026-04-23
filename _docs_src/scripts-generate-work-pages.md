@@ -1,6 +1,6 @@
 ---
 doc_id: scripts-generate-work-pages
-title: "Deprecated: Generate Work Pages"
+title: "Generate Work Pages"
 last_updated: 2026-04-19
 parent_id: _archive
 sort_order: 50
