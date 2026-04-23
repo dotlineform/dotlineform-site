@@ -7,6 +7,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-23] Suppressed duplicate docs watcher rebuilds after localhost docs-management writes
+
+**Status:** implemented
+
+**Area:** Studio / docs viewer / local runtime
+
+**Summary:**
+Added short-lived watcher-suppression coordination between the localhost Docs Management Server and the Docs Live Rebuild Watcher so successful source writes no longer trigger an immediate redundant second same-scope rebuild while `bin/dev-studio` is running.
+
+**Reason:**
+Docs-management writes already rebuild same-scope docs payloads and docs search directly. With the live watcher running under `bin/dev-studio`, the same `_docs_src/*.md` or `_docs_library_src/*.md` source change was then detected again and rebuilt a second time, which made one import or manage-mode write feel much slower than the actual write itself.
+
+**Effect:**
+Successful docs-management source writes now leave a short-lived suppression marker under `var/docs/watch-suppressions/` before and after the server rebuild. The watcher recognizes those markers, waits while the server-owned rebuild is pending, and skips its own duplicate pass once the server marks the write complete. This keeps immediate write-time rebuild correctness in the server path while removing the redundant watcher rebuild for the same file change.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_watch_suppression.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+
 ## [2026-04-23] Added a Library-facing Studio HTML import page and user guide
 
 **Status:** implemented

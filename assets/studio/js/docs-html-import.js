@@ -81,6 +81,18 @@ function resetWarning(state) {
   state.cancelButton.hidden = true;
 }
 
+function clearImportResult(state) {
+  state.resultNode.hidden = true;
+  state.warningsWrap.hidden = true;
+  state.warningsList.innerHTML = "";
+}
+
+function resetImportView(state, statusMessage) {
+  resetWarning(state);
+  clearImportResult(state);
+  setStatus(state.statusNode, "", statusMessage);
+}
+
 function renderWarnings(state, warnings) {
   const items = Array.isArray(warnings) ? warnings.filter((item) => normalizeText(item)) : [];
   if (!items.length) {
@@ -192,11 +204,8 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
-  state.resultNode.hidden = true;
-  resetWarning(state);
-  setStatus(
-    state.statusNode,
-    "",
+  resetImportView(
+    state,
     getStudioText(state.config, "docs_html_import.running_status", "Converting and validating staged HTML…")
   );
 
@@ -418,6 +427,17 @@ async function init() {
         "Select a staged HTML file and import it into Studio or Library docs."
       )
     );
+
+    state.fileSelect.addEventListener("change", () => {
+      resetImportView(
+        state,
+        getStudioText(
+          state.config,
+          "docs_html_import.idle_status",
+          "Select a staged HTML file and import it into Studio or Library docs."
+        )
+      );
+    });
 
     state.runButton.addEventListener("click", () => {
       runImport(state).catch((error) => console.warn("docs_html_import: unexpected import failure", error));

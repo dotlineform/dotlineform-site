@@ -56,6 +56,14 @@ if str(SCRIPTS_DIR) not in sys.path:
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_html_import import generate_import_preview, list_staged_html_files, resolve_staged_html  # noqa: E402
+from docs_watch_suppression import (  # noqa: E402
+    DEFAULT_COMPLETE_TTL_SECONDS,
+    DEFAULT_PENDING_TTL_SECONDS,
+    SUPPRESSION_COMPLETE,
+    SUPPRESSION_PENDING,
+    clear_watch_suppressions,
+    set_watch_suppressions,
+)
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -489,6 +497,44 @@ def rebuild_scope_outputs(repo_root: Path, scope: str, include_search: bool = Tr
     }
 
 
+def perform_source_write_and_rebuild(
+    repo_root: Path,
+    scope: str,
+    changed_paths: list[Path],
+    write_operation,
+    *,
+    suppression_reason: str,
+    include_search: bool = True,
+) -> Dict[str, Any]:
+    filenames = sorted({path.name for path in changed_paths if isinstance(path, Path)})
+    if filenames:
+        set_watch_suppressions(
+            repo_root,
+            scope,
+            filenames,
+            status=SUPPRESSION_PENDING,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
+        )
+    try:
+        write_operation()
+        rebuild = rebuild_scope_outputs(repo_root, scope, include_search=include_search)
+    except Exception:
+        if filenames:
+            clear_watch_suppressions(repo_root, scope, filenames)
+        raise
+    if filenames:
+        set_watch_suppressions(
+            repo_root,
+            scope,
+            filenames,
+            status=SUPPRESSION_COMPLETE,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
+        )
+    return rebuild
+
+
 def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
     bundle_bin = detect_bundle_bin()
     if not bundle_bin:
@@ -879,8 +925,13 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
                     "title": preview.get("title"),
                 },
             )
-            write_text_atomic(collision_doc.path, source_text)
-            rebuild = rebuild_scope_outputs(repo_root, scope)
+            rebuild = perform_source_write_and_rebuild(
+                repo_root,
+                scope,
+                [collision_doc.path],
+                lambda: write_text_atomic(collision_doc.path, source_text),
+                suppression_reason="docs-import-html-overwrite",
+            )
         log_event(
             repo_root,
             "docs-import-html-overwrite",
@@ -936,8 +987,13 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
                 "source_html": preview.get("source_html"),
             },
         )
-        write_text_atomic(target_path, source_text)
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target_path],
+            lambda: write_text_atomic(target_path, source_text),
+            suppression_reason="docs-import-html-create",
+        )
     log_event(
         repo_root,
         "docs-import-html-create",
@@ -1030,8 +1086,13 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
                 "after_doc_id": after_doc_id,
             },
         )
-        write_text_atomic(target_path, source_text)
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target_path],
+            lambda: write_text_atomic(target_path, source_text),
+            suppression_reason="docs-create",
+        )
         log_event(
             repo_root,
             "docs-create",
@@ -1144,8 +1205,13 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "to_sort_order": sort_order,
             },
         )
-        write_text_atomic(target.path, rewritten_source)
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target.path],
+            lambda: write_text_atomic(target.path, rewritten_source),
+            suppression_reason="docs-update-metadata",
+        )
         log_event(
             repo_root,
             "docs-update-metadata",
@@ -1245,9 +1311,13 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
                 "sort_order": next_sort_order_value,
             },
         )
-        for doc, rewritten_source in rewrites:
-            write_text_atomic(doc.path, rewritten_source)
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [doc.path for doc, _rewritten_source in rewrites],
+            lambda: [write_text_atomic(doc.path, rewritten_source) for doc, rewritten_source in rewrites],
+            suppression_reason="docs-move",
+        )
         log_event(
             repo_root,
             "docs-move",
@@ -1326,8 +1396,13 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
                 "to_sort_order": next_order,
             },
         )
-        write_text_atomic(target.path, format_source(updated_front_matter, target.body))
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target.path],
+            lambda: write_text_atomic(target.path, format_source(updated_front_matter, target.body)),
+            suppression_reason="docs-archive",
+        )
         log_event(
             repo_root,
             "docs-archive",
@@ -1382,8 +1457,13 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
                 "inbound_ref_count": len(preview["inbound_refs"]),
             },
         )
-        target.path.unlink()
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target.path],
+            lambda: target.path.unlink(),
+            suppression_reason="docs-delete",
+        )
         log_event(
             repo_root,
             "docs-delete",

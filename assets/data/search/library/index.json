@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-3b55088ab2788d2a52333b362f84a489",
-    "generated_at_utc": "2026-04-23T21:50:21Z",
-    "count": 3
+    "version": "blake2b-4af14ad29eb40492eaaaa270f1343a39",
+    "generated_at_utc": "2026-04-23T21:57:07Z",
+    "count": 4
   },
   "entries": [
     {
@@ -70,6 +70,26 @@
         "23"
       ],
       "search_text": "defining-information-for-cross-boundary-comparisons-concepts defining information for cross boundary comparisons concepts defining \"information\" for cross‑boundary comparisons — concepts 2026-04-23 2026 04 23"
+    },
+    {
+      "id": "evolutionary-psychology-overview",
+      "kind": "doc",
+      "title": "Evolutionary Psychology — Overview",
+      "href": "/library/?doc=evolutionary-psychology-overview",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
+      "search_terms": [
+        "evolutionary-psychology-overview",
+        "evolutionary",
+        "psychology",
+        "overview",
+        "evolutionary psychology — overview",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "evolutionary-psychology-overview evolutionary psychology overview evolutionary psychology — overview 2026-04-23 2026 04 23"
     }
   ]
 }

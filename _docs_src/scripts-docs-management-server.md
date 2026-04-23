@@ -45,6 +45,7 @@ Current behavior:
 - also used by `/studio/library-import/` for staged-file listing and docs HTML import writes
 - creates, archives, and deletes flat source docs under the current scope root
 - rebuilds scope-owned docs payloads and scope-owned docs search after successful writes
+- coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
 
 `GET /capabilities` reports:
 
@@ -267,6 +268,7 @@ Apply behavior:
 - `bin/dev-studio` starts this service on `http://127.0.0.1:8789`
 - the shared Docs Viewer probes `GET /capabilities` only when `?mode=manage` is present
 - if the local service is unavailable, the viewer stays read-only and shows a manage-mode unavailable message
+- successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server
 
 ## Related References
 

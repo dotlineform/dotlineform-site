@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4a1190272007c3cd01762e9fedcad28d",
-    "generated_at_utc": "2026-04-23T20:23:45Z",
+    "version": "blake2b-00eb492740f2752aed62f8abfd017a12",
+    "generated_at_utc": "2026-04-23T22:08:22Z",
     "count": 127
   },
   "entries": [
@@ -432,10 +432,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-22 • Scripts",
+      "display_meta": "2026-04-23 • Scripts",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -444,12 +444,12 @@
         "rebuild",
         "watcher",
         "docs live rebuild watcher",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-22 2026 04 22"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-23 2026 04 23"
     },
     {
       "id": "scripts-main-pipeline",

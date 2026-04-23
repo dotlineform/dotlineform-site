@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T20:23:44Z",
+  "generated_at": "2026-04-23T22:08:06Z",
   "docs": [
     {
       "scope": "studio",
@@ -203,7 +203,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-live-rebuild-watcher",
       "title": "Docs Live Rebuild Watcher",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "scripts",
       "sort_order": 18,
       "source_path": "scripts-docs-live-rebuild-watcher.md",

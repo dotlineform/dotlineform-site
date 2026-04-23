@@ -19,6 +19,7 @@ import time
 from pathlib import Path
 from typing import Dict, Optional
 
+from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
 
 SCOPE_ROOTS = {
     "studio": Path("_docs_src"),
@@ -74,6 +75,11 @@ def snapshot_scope(root: Path) -> Dict[str, tuple[int, int]]:
 def summarize_output(output: str, fallback: str) -> str:
     lines = [line.strip() for line in output.splitlines() if line.strip()]
     return lines[-1] if lines else fallback
+
+
+def changed_filenames(previous: Dict[str, tuple[int, int]], current: Dict[str, tuple[int, int]]) -> list[str]:
+    filenames = set(previous.keys()) | set(current.keys())
+    return sorted(name for name in filenames if previous.get(name) != current.get(name))
 
 
 def rebuild_scope(repo_root: Path, bundle_bin: str, scope: str) -> bool:
@@ -139,6 +145,7 @@ def main() -> int:
             "root": root,
             "snapshot": snapshot_scope(root),
             "dirty_at": None,
+            "changed_files": [],
         }
 
     log(
@@ -151,11 +158,14 @@ def main() -> int:
             now = time.monotonic()
             for scope in ("studio", "library"):
                 state = states[scope]
+                previous_snapshot = state["snapshot"]
                 current_snapshot = snapshot_scope(state["root"])
-                if current_snapshot != state["snapshot"]:
+                if current_snapshot != previous_snapshot:
                     state["snapshot"] = current_snapshot
+                    state["changed_files"] = changed_filenames(previous_snapshot, current_snapshot)
                     state["dirty_at"] = now
-                    log(f"Detected source changes for {scope}.")
+                    changed_text = ", ".join(state["changed_files"]) or "unknown files"
+                    log(f"Detected source changes for {scope}: {changed_text}.")
 
             ready_scope = None
             for scope in ("studio", "library"):
@@ -165,14 +175,33 @@ def main() -> int:
                     break
 
             if ready_scope:
+                changed_files = list(states[ready_scope]["changed_files"])
+                active_suppressions = load_active_watch_suppressions(repo_root, ready_scope)
+                if changed_files:
+                    matching = [active_suppressions.get(filename) for filename in changed_files]
+                    if all(record is not None for record in matching):
+                        if all(str(record.get("status") or "").strip() == SUPPRESSION_COMPLETE for record in matching):
+                            clear_watch_suppressions(repo_root, ready_scope, changed_files)
+                            states[ready_scope]["dirty_at"] = None
+                            states[ready_scope]["changed_files"] = []
+                            log(
+                                f"Skipped duplicate {ready_scope} rebuild for docs-management write: "
+                                f"{', '.join(changed_files)}."
+                            )
+                            continue
+                        continue
+
                 rebuild_scope(repo_root, bundle_bin, ready_scope)
                 post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"])
                 if post_rebuild_snapshot != states[ready_scope]["snapshot"]:
+                    previous_snapshot = states[ready_scope]["snapshot"]
                     states[ready_scope]["snapshot"] = post_rebuild_snapshot
+                    states[ready_scope]["changed_files"] = changed_filenames(previous_snapshot, post_rebuild_snapshot)
                     states[ready_scope]["dirty_at"] = time.monotonic()
                     log(f"Additional source changes arrived during the {ready_scope} rebuild; scheduling another pass.")
                 else:
                     states[ready_scope]["dirty_at"] = None
+                    states[ready_scope]["changed_files"] = []
                 continue
 
             time.sleep(args.poll_seconds)

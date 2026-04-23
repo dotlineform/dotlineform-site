@@ -22,6 +22,25 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-23 / UI-014
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: after selecting a different staged HTML file, the page could still show the previous file's success result, overwrite state, or warnings, which made the new selection look as if it had already been imported.
+- triage: systemic
+- reasoning: this is a shared command-page state-boundary rule. When a primary source selector changes, any result state derived from the previous selection becomes stale and should be cleared immediately unless the page is explicitly designed for side-by-side comparison.
+- permanent rule: on Studio command pages, changing the primary selected source item must clear stale result, warning, and confirmation state from the prior selection. Keep durable user inputs such as toggles or scope selectors only when they are still valid across selections.
+- enforcement point: Studio command/result pages such as `/studio/library-import/` and future pages that load/apply one selected source item at a time
+- files changed:
+  - `assets/studio/js/docs-html-import.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - import one staged file on `/studio/library-import/`
+  - change the staged-file selector to a different file
+  - confirm the prior result card, warnings list, and overwrite state clear immediately while the scope and prompt/meta toggles stay unchanged
+- follow-up:
+  - apply the same rule to future Studio pages that perform single-item preview/apply flows from a selector
+
 ## UI Rule Log 2026-04-23 / UI-013
 
 - status: adopted
