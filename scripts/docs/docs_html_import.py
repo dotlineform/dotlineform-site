@@ -68,6 +68,13 @@ def relative_path(base: Path, path: Path) -> str:
         return str(path)
 
 
+def normalize_scope(scope: str) -> str:
+    value = str(scope or "").strip().lower()
+    if value not in SCOPE_ROOTS:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_ROOTS.keys()))}")
+    return value
+
+
 @dataclass
 class TextNode:
     text: str
@@ -443,6 +450,44 @@ def build_summary(root: ElementNode, *, source_html: str, title: str, include_pr
     }
 
 
+def resolve_staged_html(repo_root: Path, staged_filename: str) -> Path:
+    filename = str(staged_filename or "").strip()
+    if not filename:
+        raise ValueError("staged_filename is required")
+    path = (repo_root / STAGING_REL_DIR / filename).resolve()
+    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    if staging_root not in [path, *path.parents]:
+        raise ValueError(f"staged file must resolve inside {STAGING_REL_DIR.as_posix()}")
+    if not path.exists():
+        raise FileNotFoundError(f"staged HTML does not exist: {filename}")
+    return path
+
+
+def generate_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+    include_prompt_meta: bool,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    source_html = source_path.read_text(encoding="utf-8", errors="replace")
+    parsed = parse_with_bs4(source_html)
+    title = extract_title(parsed.root)
+    summary = build_summary(
+        parsed.root,
+        source_html=source_html,
+        title=title,
+        include_prompt_meta=include_prompt_meta,
+    )
+    summary["scope"] = normalized_scope
+    summary["source_html"] = relative_path(repo_root, source_path)
+    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["tag_counts"] = dict(parsed.tag_counts.most_common())
+    summary["comment_count"] = parsed.comment_count
+    return summary
+
+
 def detect_repo_root(explicit_root: str) -> Path:
     if explicit_root:
         root = Path(explicit_root).expanduser().resolve()
@@ -464,13 +509,10 @@ def resolve_source_html(repo_root: Path, args: argparse.Namespace) -> Path:
             raise SystemExit(f"Source HTML does not exist: {path}")
         return path
     if args.staged_filename:
-        path = (repo_root / STAGING_REL_DIR / args.staged_filename).resolve()
-        staging_root = (repo_root / STAGING_REL_DIR).resolve()
-        if staging_root not in [path, *path.parents]:
-            raise SystemExit(f"Staged file must resolve inside {staging_root}")
-        if not path.exists():
-            raise SystemExit(f"Staged HTML does not exist: {path}")
-        return path
+        try:
+            return resolve_staged_html(repo_root, args.staged_filename)
+        except (FileNotFoundError, ValueError) as exc:
+            raise SystemExit(str(exc)) from exc
     raise SystemExit("Pass either --source-html or --staged-filename.")
 
 
@@ -489,21 +531,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     repo_root = detect_repo_root(args.repo_root)
     source_path = resolve_source_html(repo_root, args)
-    source_html = source_path.read_text(encoding="utf-8", errors="replace")
-
-    parsed = parse_with_bs4(source_html)
-    title = extract_title(parsed.root)
-    summary = build_summary(
-        parsed.root,
-        source_html=source_html,
-        title=title,
-        include_prompt_meta=args.include_prompt_meta,
+    summary = generate_import_preview(
+        repo_root,
+        source_path=source_path,
+        scope=args.scope,
+        include_prompt_meta=bool(args.include_prompt_meta),
     )
-    summary["scope"] = args.scope
-    summary["source_html"] = relative_path(repo_root, source_path)
-    summary["staging_root"] = str(STAGING_REL_DIR)
-    summary["tag_counts"] = dict(parsed.tag_counts.most_common())
-    summary["comment_count"] = parsed.comment_count
 
     if args.markdown_preview_out:
         output_path = Path(args.markdown_preview_out).expanduser().resolve()

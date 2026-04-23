@@ -25,6 +25,7 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /capabilities`
+- `POST /docs/import-html`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -40,6 +41,7 @@ Current behavior:
 - local-only write service for the shared Docs Viewer
 - used by `/docs/?mode=manage` and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
+- now also exposes a dry-run HTML import preview endpoint for the upcoming Studio import flow
 - creates, archives, and deletes flat source docs under the current scope root
 - rebuilds scope-owned docs payloads and scope-owned docs search after successful writes
 
@@ -67,6 +69,26 @@ Request behavior:
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
 - `sort_order` appends as the last sibling when both `after_doc_id` and explicit `sort_order` are omitted
+
+`POST /docs/import-html` expects:
+
+```json
+{
+  "scope": "studio",
+  "staged_filename": "example 1.html",
+  "include_prompt_meta": false
+}
+```
+
+Import-preview behavior:
+
+- `scope` must be `studio` or `library`
+- `staged_filename` must resolve inside `var/docs/import-staging/`
+- parses the full staged HTML file through the shared importer and returns a structured preview payload
+- supports the prompt/meta include toggle already defined by the import spec
+- reports whether the proposed imported `doc_id` already collides with an existing source doc
+- currently preview-only: no Markdown source doc is written yet, even when the server is not running with `--dry-run`
+- intended as the first stable API contract for the Studio import page before create/overwrite write behavior lands
 
 `POST /docs/rebuild` expects:
 

@@ -11,6 +11,7 @@ Run:
 Endpoints:
   GET /health
   GET /capabilities
+  POST /docs/import-html
   POST /docs/rebuild
   POST /docs/broken-links
   POST /docs/open-source
@@ -53,6 +54,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
+from docs_html_import import generate_import_preview, resolve_staged_html  # noqa: E402
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -722,6 +724,55 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     return payload
 
 
+def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    staged_filename = str(body.get("staged_filename") or "").strip()
+    include_prompt_meta = bool(body.get("include_prompt_meta"))
+    source_path = resolve_staged_html(repo_root, staged_filename)
+    preview = generate_import_preview(
+        repo_root,
+        source_path=source_path,
+        scope=scope,
+        include_prompt_meta=include_prompt_meta,
+    )
+
+    docs = load_scope_docs(repo_root, scope)
+    collision_doc = next((doc for doc in docs if doc.doc_id == preview["proposed_doc_id"]), None)
+    collision = {
+        "exists": collision_doc is not None,
+        "doc_id": collision_doc.doc_id if collision_doc else "",
+        "title": collision_doc.title if collision_doc else "",
+        "path": relative_path(repo_root, collision_doc.path) if collision_doc else "",
+    }
+    if collision_doc is not None:
+        preview.setdefault("warnings", []).append(
+            f"Proposed doc_id {collision_doc.doc_id!r} already exists in {scope}; explicit overwrite flow will be required."
+        )
+
+    log_event(
+        repo_root,
+        "docs-import-html-preview",
+        {
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "include_prompt_meta": include_prompt_meta,
+            "proposed_doc_id": preview["proposed_doc_id"],
+            "collision": collision["exists"],
+        },
+    )
+    return {
+        "ok": True,
+        "scope": scope,
+        "staged_filename": staged_filename,
+        "include_prompt_meta": include_prompt_meta,
+        "preview_only": True,
+        "collision": collision,
+        "import_preview": preview,
+        "summary_text": f"Prepared HTML import preview for {staged_filename}.",
+        "dry_run": dry_run,
+    }
+
+
 def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     docs = load_scope_docs(repo_root, scope)
@@ -1242,6 +1293,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 return
             if self.path == "/docs/broken-links":
                 payload = handle_broken_links(repo_root, body)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/import-html":
+                payload = handle_import_html(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/update-metadata":
