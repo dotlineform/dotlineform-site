@@ -37,6 +37,10 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
         <h4>Library docs</h4>
         <p>Open the public-library documentation set from the shared docs viewer.</p>
       </a>
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/docs-broken-links/' | relative_url }}">
+        <h4>Docs broken links</h4>
+        <p>Run a strict broken-links audit for Studio or Library docs.</p>
+      </a>
     </div>
   </section>
 </div>

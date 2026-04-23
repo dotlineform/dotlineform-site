@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f73e776080867874e30fe422613640d9",
-    "generated_at_utc": "2026-04-23T14:46:18Z",
-    "count": 121
+    "version": "blake2b-88a699f6cbf896d8d1c184fe9bfed536",
+    "generated_at_utc": "2026-04-23T15:35:19Z",
+    "count": 123
   },
   "entries": [
     {
@@ -109,10 +109,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-22 • Scripts",
+      "display_meta": "2026-04-23 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -120,12 +120,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-22 2026 04 22"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-23 2026 04 23"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -380,6 +380,30 @@
         "22"
       ],
       "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-22 2026 04 22"
+    },
+    {
+      "id": "scripts-docs-broken-links",
+      "kind": "doc",
+      "title": "Docs Broken Links Audit",
+      "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
+      "last_updated": "2026-04-23",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-04-23 • Scripts",
+      "search_terms": [
+        "scripts-docs-broken-links",
+        "scripts",
+        "docs",
+        "broken",
+        "links",
+        "docs broken links audit",
+        "audit",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit 2026-04-23 2026 04 23"
     },
     {
       "id": "studio-ui-start",
@@ -670,16 +694,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-04-18",
-      "display_meta": "2026-04-18",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
       "search_terms": [
         "studio",
-        "2026-04-18",
+        "2026-04-23",
         "2026",
         "04",
-        "18"
+        "23"
       ],
-      "search_text": "studio 2026-04-18 2026 04 18"
+      "search_text": "studio 2026-04-23 2026 04 23"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -1075,6 +1099,29 @@
         "17"
       ],
       "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification new cat pipeline cat 2026-04-17 2026 04 17"
+    },
+    {
+      "id": "docs-broken-links",
+      "kind": "doc",
+      "title": "Docs Broken Links",
+      "href": "/docs/?scope=studio&doc=docs-broken-links",
+      "last_updated": "2026-04-23",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-04-23 • Studio",
+      "search_terms": [
+        "docs-broken-links",
+        "docs",
+        "broken",
+        "links",
+        "docs broken links",
+        "studio",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-04-23 2026 04 23"
     },
     {
       "id": "bulk-add-work",
@@ -2182,16 +2229,16 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-04-18",
-      "display_meta": "2026-04-18",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
       "search_terms": [
         "scripts",
-        "2026-04-18",
+        "2026-04-23",
         "2026",
         "04",
-        "18"
+        "23"
       ],
-      "search_text": "scripts 2026-04-18 2026 04 18"
+      "search_text": "scripts 2026-04-23 2026 04 23"
     },
     {
       "id": "scripts-audit-site-consistency",

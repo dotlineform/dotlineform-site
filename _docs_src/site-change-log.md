@@ -7,6 +7,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-23] Added a Studio docs broken-links audit page and shared read-only docs audit endpoint
+
+**Status:** implemented
+
+**Area:** docs viewer / Studio
+
+**Summary:**
+Added `/studio/docs-broken-links/`, a reusable Python docs-links audit, and a new read-only docs-management endpoint so Studio can run a strict docs broken-links check for either the `studio` or `library` docs scope.
+
+**Reason:**
+Docs maintenance needed a practical Studio surface for two concrete failure cases: links to docs that no longer exist and links whose visible text no longer matches the current target doc title. The repo also needed that logic outside the browser so the same check can be reused from the terminal.
+
+**Effect:**
+Studio now has a dedicated docs broken-links page with scope selection and a results list linking directly to the target and source pages. The audit reports `not found` and strict `wrong title` issues, including intentionally shortened labels that no longer match the target doc title exactly. The same logic now lives in `./scripts/docs/docs_broken_links.py` and is exposed through `POST /docs/broken-links` on the localhost docs-management service.
+
+**Affected files/docs:**
+- `studio/docs-broken-links/index.md`
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/css/studio.css`
+- `scripts/docs/docs_broken_links.py`
+- `scripts/docs/docs_management_server.py`
+- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
+- [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
 ## [2026-04-23] Added a User Guide section and moved docs image usage guidance into a practical how-to doc
 
 **Status:** implemented

@@ -56,6 +56,7 @@ Current route inventory:
 - `studio/catalogue-status/index.md`
 - `studio/catalogue-activity/index.md`
 - `studio/build-activity/index.md`
+- `studio/docs-broken-links/index.md`
 - `studio/catalogue-new-work/index.md`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment-import/index.md`
@@ -79,6 +80,7 @@ Current page-level doc links:
 
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
+- Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
@@ -116,6 +118,7 @@ Shared Studio runtime and wiring currently live in:
 Current page controllers:
 
 - `assets/studio/js/build-activity.js`
+- `assets/studio/js/docs-broken-links.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-import.js`
 - `assets/studio/js/catalogue-status.js`
@@ -195,6 +198,11 @@ Current local generated Studio feed surfaced through this runtime:
 
 - `assets/studio/data/build_activity.json`
 - `assets/studio/data/catalogue_activity.json`
+
+Current localhost docs-maintenance integration surfaced through this runtime:
+
+- `POST /docs/broken-links`
+- `POST /docs/rebuild`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
 

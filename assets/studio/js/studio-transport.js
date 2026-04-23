@@ -40,7 +40,13 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   health: "http://127.0.0.1:8788/health"
 });
 
+const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
+  health: "http://127.0.0.1:8789/health",
+  brokenLinks: "http://127.0.0.1:8789/docs/broken-links"
+});
+
 export {
+  DOCS_MANAGEMENT_ENDPOINTS,
   STUDIO_WRITE_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS
 };
@@ -51,6 +57,10 @@ export async function probeStudioHealth(timeoutMs = 500) {
 
 export async function probeCatalogueHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
+}
+
+export async function probeDocsManagementHealth(timeoutMs = 500) {
+  return probeHealth(DOCS_MANAGEMENT_ENDPOINTS.health, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {

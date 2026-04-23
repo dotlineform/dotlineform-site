@@ -1,7 +1,7 @@
 ---
 doc_id: scripts
 title: "Scripts"
-last_updated: 2026-04-18
+last_updated: 2026-04-23
 parent_id: ""
 sort_order: 130
 ---
@@ -97,6 +97,8 @@ Catalogue/runtime maintenance:
   Watch docs source roots and rebuild same-scope docs payloads plus docs search during local development.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   Build scope-owned docs JSON for Studio and Library docs.
+- [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
+  Audit Studio or Library docs links for missing targets and strict title mismatches.
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
   Run the local Docs Viewer create/archive/delete service with explicit write allowlists.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)

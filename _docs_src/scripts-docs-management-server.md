@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: scripts
 sort_order: 10
 ---
@@ -25,6 +25,7 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /capabilities`
+- `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
 - `POST /docs/update-metadata`
@@ -38,6 +39,7 @@ Current behavior:
 
 - local-only write service for the shared Docs Viewer
 - used by `/docs/?mode=manage` and `/library/?mode=manage`
+- also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - creates, archives, and deletes flat source docs under the current scope root
 - rebuilds scope-owned docs payloads and scope-owned docs search after successful writes
 
@@ -80,6 +82,22 @@ Rebuild behavior:
 - rebuilds generated docs payloads for the requested scope
 - rebuilds the docs-search artifact for the requested scope
 - is intended for local manage mode rather than the public hosted site
+
+`POST /docs/broken-links` expects:
+
+```json
+{
+  "scope": "studio"
+}
+```
+
+Broken-links behavior:
+
+- `scope` must be `studio` or `library`
+- runs the shared docs broken-links audit for that scope
+- reports `not found` and strict `wrong title` issues
+- does not write source docs or generated outputs
+- is intended for the Studio audit page and terminal-backed local maintenance
 
 `POST /docs/open-source` expects:
 

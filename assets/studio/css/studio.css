@@ -76,6 +76,10 @@
   margin: 0 auto;
 }
 
+.docsBrokenLinksPage {
+  max-width: 78rem;
+}
+
 .tagStudioPage__header {
   display: grid;
   gap: 1rem;
@@ -798,6 +802,53 @@ span.tagStudio__input--readonlyDisplay {
 
 .tagStudio__status[data-state="error"] {
   color: var(--studio-danger);
+}
+
+.docsBrokenLinksPage__panel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.docsBrokenLinksPage__intro,
+.docsBrokenLinksPage__empty {
+  margin: 0;
+  color: var(--muted, var(--studio-muted-body));
+  font-size: var(--font-small);
+}
+
+.docsBrokenLinksPage__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.55rem 0.8rem;
+}
+
+.docsBrokenLinksPage__scopeField {
+  min-inline-size: min(100%, 15rem);
+}
+
+.docsBrokenLinksPage__head,
+.docsBrokenLinksRow {
+  grid-template-columns: minmax(6.5rem, 8rem) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.docsBrokenLinksRow__cell {
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.docsBrokenLinksRow__problem {
+  color: var(--studio-danger);
+}
+
+.docsBrokenLinksRow__problem[data-problem="wrong title"] {
+  color: var(--studio-warn);
+}
+
+.docsBrokenLinksRow__link {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .tagStudio__chipList {
@@ -2272,6 +2323,21 @@ span.tagStudio__input--readonlyDisplay {
   .tagStudioField--inline .tagStudioField__control,
   .tagStudioField--split .tagStudioField__control {
     grid-column: auto;
+  }
+
+  .docsBrokenLinksPage__head {
+    display: none;
+  }
+
+  .docsBrokenLinksRow {
+    grid-template-columns: 1fr;
+  }
+
+  .docsBrokenLinksRow__cell::before {
+    content: attr(data-label);
+    color: var(--muted, var(--studio-muted));
+    font-size: var(--font-caption);
+    text-transform: lowercase;
   }
 
   .tagStudio__buttonFeedback--editor {

@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-04-17T00:00:00Z",
+  "updated_at_utc": "2026-04-23T00:00:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -8,6 +8,7 @@
       "series_tags": "/studio/series-tags/",
       "series_tag_editor": "/studio/series-tag-editor/",
       "build_activity": "/studio/build-activity/",
+      "docs_broken_links": "/studio/docs-broken-links/",
       "catalogue_status": "/studio/catalogue-status/",
       "catalogue_activity": "/studio/catalogue-activity/",
       "bulk_add_work": "/studio/bulk-add-work/",
@@ -467,6 +468,26 @@
       "detail_actions": "actions",
       "detail_results": "results",
       "none": "none"
+    },
+    "docs_broken_links": {
+      "intro": "Run a strict docs-viewer link audit for Studio or Library docs.",
+      "scope_label": "scope",
+      "scope_option_studio": "studio",
+      "scope_option_library": "library",
+      "run_button": "Run broken links",
+      "idle_status": "Select a scope and run the audit.",
+      "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run the audit.",
+      "status_running": "Running docs broken-links audit…",
+      "status_success": "Audit complete.",
+      "status_success_empty": "No broken links found.",
+      "status_failed": "Failed to run docs broken-links audit.",
+      "empty_state": "No broken links found for this scope.",
+      "meta_summary_zero": "No broken links found.",
+      "meta_summary": "{count} issue(s): {not_found} not found, {wrong_title} wrong title.",
+      "column_problem": "problem",
+      "column_linked_page": "linked page",
+      "column_link": "link",
+      "column_from_page": "from page"
     },
     "catalogue_status": {
       "load_failed_error": "Failed to load catalogue status.",

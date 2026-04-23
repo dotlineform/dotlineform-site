@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T14:46:17Z",
+  "generated_at": "2026-04-23T15:35:18Z",
   "docs": [
     {
       "scope": "studio",
@@ -49,7 +49,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "scripts",
       "sort_order": 10,
       "source_path": "scripts-docs-management-server.md",
@@ -176,6 +176,17 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-docs-broken-links",
+      "title": "Docs Broken Links Audit",
+      "last_updated": "2026-04-23",
+      "parent_id": "scripts",
+      "sort_order": 15,
+      "source_path": "scripts-docs-broken-links.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-broken-links.json"
     },
     {
       "scope": "studio",
@@ -313,7 +324,7 @@
       "scope": "studio",
       "doc_id": "studio",
       "title": "Studio",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-23",
       "parent_id": "",
       "sort_order": 20,
       "source_path": "studio.md",
@@ -506,6 +517,17 @@
       "source_path": "web-system-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-web-system-spec.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-broken-links",
+      "title": "Docs Broken Links",
+      "last_updated": "2026-04-23",
+      "parent_id": "studio",
+      "sort_order": 35,
+      "source_path": "docs-broken-links.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json"
     },
     {
       "scope": "studio",
@@ -1039,7 +1061,7 @@
       "scope": "studio",
       "doc_id": "scripts",
       "title": "Scripts",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-23",
       "parent_id": "",
       "sort_order": 130,
       "source_path": "scripts.md",

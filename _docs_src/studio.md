@@ -1,7 +1,7 @@
 ---
 doc_id: studio
 title: "Studio"
-last_updated: 2026-04-18
+last_updated: 2026-04-23
 parent_id: ""
 sort_order: 20
 ---
@@ -35,6 +35,7 @@ Read this section in this order:
 3. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 4. Page-specific docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
+   - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
@@ -59,6 +60,7 @@ Current Studio landing routes:
 Current workflow/detail routes:
 
 - `/studio/build-activity/`
+- `/studio/docs-broken-links/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
 - `/studio/bulk-add-work/`

@@ -12,6 +12,7 @@ Endpoints:
   GET /health
   GET /capabilities
   POST /docs/rebuild
+  POST /docs/broken-links
   POST /docs/open-source
   POST /docs/update-metadata
   POST /docs/create
@@ -51,6 +52,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from script_logging import append_script_log  # noqa: E402
+from docs_broken_links import audit_docs_broken_links  # noqa: E402
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -703,6 +705,23 @@ def log_event(repo_root: Path, event: str, details: Dict[str, Any]) -> None:
     append_script_log(__file__, event, details=details, repo_root=repo_root, log_dir_rel=LOGS_REL_DIR)
 
 
+def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    payload = audit_docs_broken_links(repo_root, scope)
+    summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+    log_event(
+        repo_root,
+        "docs_broken_links",
+        {
+            "scope": scope,
+            "total": int(summary.get("total") or 0),
+            "not_found": int(summary.get("not_found") or 0),
+            "wrong_title": int(summary.get("wrong_title") or 0),
+        },
+    )
+    return payload
+
+
 def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     docs = load_scope_docs(repo_root, scope)
@@ -1219,6 +1238,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             dry_run = self.app["dry_run"]
             if self.path == "/docs/open-source":
                 payload = open_source_doc(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/broken-links":
+                payload = handle_broken_links(repo_root, body)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/update-metadata":
