@@ -278,34 +278,13 @@ Recommended simplification rule for pill-like UI:
 
 ### Non-Convertible Content
 
-V1 should use a pragmatic best-effort rule set rather than trying to solve every HTML pattern perfectly up front.
+V1 should ignore this category as a formal spec problem until a concrete source file exposes a real need.
 
-Examples of content that may not convert cleanly into Markdown:
+Current rule:
 
-- layout tables used purely for positioning
-- multi-column page compositions
-- collapsible UI widgets
-- tabs
-- forms
-- embedded scripts or interactive demos
-- CSS-dependent callout systems with no semantic markup
-- complex tables with rowspans or colspans
-- figures whose readable text is baked into positioned HTML rather than SVG
-
-Current confirmed direction:
-
-- use conservative, readable fallbacks
-- preserve content where meaning survives simplification
-- strip interaction and layout when only behavior or presentation would remain
-- record warnings for dropped or heavily simplified structures
-
-Current example-driven interpretation:
-
-- interactive disclosure behavior such as `<details>` / `<summary>` is non-convertible as interaction
-- the content inside those elements is still convertible and should be flattened into ordinary headings or labeled sections
-- semantic footer content should be kept when it reads as document content rather than site chrome
-- simple data tables with no `rowspan` or `colspan` should convert to Markdown tables
-- wrapper `div` shells used only for layout should be stripped after their content is extracted
+- do not try to pre-classify every possible non-convertible HTML pattern in advance
+- keep the importer focused on obvious supported structures and the worked example cases already captured in this spec
+- when a concrete unsupported pattern appears, add a specific rule then
 
 ## Sanitization Boundary
 
@@ -518,8 +497,11 @@ Current recommendation:
 
 Still needs implementation detail:
 
-- repo-local image paths that are meaningless after import
-- whether `data:` URLs should remain inline or be materialized into repo assets later
+- repo-local image paths should degrade to plain text in v1
+
+Locked for v1:
+
+- `data:` URLs should remain inline
 
 ### 4. Should imported docs default to a specific `parent_id`?
 
@@ -570,6 +552,7 @@ The following implementation decisions are now locked for the first pass.
 - non-convertible handling: pragmatic v1 best effort with warnings
 - external images: allowed in v1
 - `data:` URLs: allowed in v1
+- repo-local image paths: plain text in v1
 - prompt/meta inclusion: user-controlled, but detected only from clearly identifiable source markers
 - overwrite target model: existing `doc_id`
 - overwrite backup policy: light-touch same-day replacement is acceptable for v1
