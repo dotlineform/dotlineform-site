@@ -108,7 +108,7 @@ Recommended first-pass workflow:
    - created doc id
    - created source path
    - overwrite status, when applicable
-   - dropped/simplified content warnings
+   - any non-routine conversion warnings
    - link to open the new doc in the viewer
 
 Current confirmed decision:
@@ -189,7 +189,7 @@ Convert these semantic styled blocks into plain Markdown rather than stripping t
 Recommended first-pass rule for prompt/meta blocks:
 
 - expose a user-controlled include/exclude option on the import page
-- if included, render obvious prompt/meta source text as fenced code blocks or similarly plain preformatted Markdown blocks
+- if included, render obvious prompt/meta source text as wrapped quoted prose
 - if excluded, drop those blocks intentionally rather than treating them as conversion failures
 - detect only clearly identifiable prompt/meta blocks in v1, using the most obvious source markers rather than broad heuristics
 - prefer false negatives over false positives when prompt/meta detection is uncertain
@@ -365,7 +365,7 @@ Recommended server responsibilities:
 - keep overwrite backups untracked by the repo
 - rebuild same-scope docs payloads
 - rebuild same-scope docs search
-- return structured warnings about dropped or simplified content
+- return structured warnings only for non-routine or genuinely lossy conversion outcomes
 
 Recommended response shape should include at least:
 
@@ -374,7 +374,7 @@ Recommended response shape should include at least:
 - created viewer URL
 - whether the operation created or overwrote
 - collision details when overwrite confirmation is required
-- warnings
+- non-routine warnings
 - summary counts for preserved, simplified, and dropped blocks
 
 ## Implementation Approach
@@ -435,7 +435,7 @@ Add a new Studio route and page controller that:
 - lists available staged `.html` files
 - allows scope selection
 - submits the import request
-- reports created-doc details and warnings
+- reports created-doc details and any non-routine warnings
 
 ### Phase 5. Verify And Document
 
@@ -556,7 +556,7 @@ Reason:
 Current recommendation:
 
 - make inclusion user-controlled at import time
-- if included, render obvious prompt/meta source blocks in the simplest plain form, preferably fenced code blocks
+- if included, render obvious prompt/meta source blocks as wrapped quoted prose
 - do not let prompt/meta handling force a preview/edit workflow
 - use only clearly identifiable source markers in v1 because the exported HTML corpus spans several months and styling may drift
 
@@ -680,7 +680,7 @@ Interpretation:
 - overwrite preserves the target doc identity and creates a backup before replacement
 - same-scope docs payloads rebuild automatically after import
 - same-scope docs search rebuilds automatically after import
-- the import result is reported with warnings for simplified or dropped content
+- the import result is reported with non-routine warnings only, not routine spec-conformant transformations
 
 ## Related References
 

@@ -50,6 +50,7 @@ PROMPT_META_CLASS_TOKENS = {"prompt", "meta", "shade"}
 SEMANTIC_CALLOUT_CLASS_TOKENS = {"key"}
 LIST_WRAPPER_CLASS_TOKENS = {"legend"}
 ROWSPAN_COLSPAN_ATTRS = {"rowspan", "colspan"}
+PROMPT_META_TEXT_PREFIXES = ("[prompt]", "original prompt", "follow-up")
 
 
 def normalize_space(text: str) -> str:
@@ -197,6 +198,13 @@ def serialize_node(node: Any, *, in_svg: bool = False) -> str:
     return f"<{tag}{attrs}>{inner}</{tag}>"
 
 
+def render_prompt_meta_block(text: str) -> str:
+    content = normalize_space(text)
+    if not content:
+        return ""
+    return f"> {content}"
+
+
 def walk(node: Any):
     yield node
     if isinstance(node, ElementNode):
@@ -235,7 +243,14 @@ def extract_title(root: ElementNode) -> str:
 
 def is_prompt_meta_node(node: ElementNode) -> bool:
     classes = node.class_tokens()
-    return bool(classes & PROMPT_META_CLASS_TOKENS)
+    if classes & PROMPT_META_CLASS_TOKENS:
+        return True
+    if any("prompt" in token or token == "meta" or token.startswith("meta-") or token.endswith("-meta") for token in classes):
+        return True
+    text = normalize_space(node.text_content()).lower()
+    if node.tag in {"code", "pre", "div", "p", "blockquote"} and any(text.startswith(prefix) for prefix in PROMPT_META_TEXT_PREFIXES):
+        return True
+    return False
 
 
 def is_semantic_callout_node(node: ElementNode) -> bool:
@@ -355,14 +370,13 @@ def render_block(node: Any, warnings: list[str], include_prompt_meta: bool) -> s
         return ""
     if tag == "style" and node.parent and node.parent.tag != "svg":
         return ""
+    if is_prompt_meta_node(node):
+        if not include_prompt_meta:
+            return ""
+        return render_prompt_meta_block(node.text_content())
     if tag in {"body", "section", "article"}:
         return "\n\n".join(part for part in (render_block(child, warnings, include_prompt_meta) for child in node.children) if part)
     if tag == "div":
-        if is_prompt_meta_node(node):
-            if not include_prompt_meta:
-                warnings.append("Dropped clearly identifiable prompt/meta block because include_prompt_meta is false.")
-                return ""
-            return fence_code(normalize_space(node.text_content()))
         if is_semantic_callout_node(node):
             content = normalize_space("".join(render_inline(child) for child in node.children))
             return f"> {content}" if content else ""

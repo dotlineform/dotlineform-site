@@ -821,10 +821,6 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         "title": collision_doc.title if collision_doc else "",
         "path": relative_path(repo_root, collision_doc.path) if collision_doc else "",
     }
-    if collision_doc is not None:
-        preview.setdefault("warnings", []).append(
-            f"Proposed doc_id {collision_doc.doc_id!r} already exists in {scope}; explicit overwrite flow will be required."
-        )
 
     if overwrite_doc_id and collision_doc is None:
         raise ValueError("overwrite_doc_id is only allowed when the generated import target collides with an existing doc")
@@ -832,6 +828,10 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         raise ValueError(f"overwrite_doc_id must match the colliding doc_id {collision_doc.doc_id!r}")
 
     requires_overwrite_confirmation = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
+    if requires_overwrite_confirmation:
+        preview.setdefault("warnings", []).append(
+            f"Proposed doc_id {collision_doc.doc_id!r} already exists in {scope}; explicit overwrite flow will be required."
+        )
 
     if dry_run or preview_only or requires_overwrite_confirmation:
         log_event(

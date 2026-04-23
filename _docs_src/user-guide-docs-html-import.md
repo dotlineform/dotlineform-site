@@ -50,7 +50,7 @@ If the generated import target does not already exist, the importer writes the n
 When `Include obvious prompt/meta blocks` is enabled:
 
 - clearly identifiable prompt/meta sections are kept
-- they are simplified into fenced code blocks
+- they are simplified into wrapped quoted prose
 
 When it is disabled:
 
@@ -87,7 +87,7 @@ After a successful import, the page reports:
 - the imported title
 - the original staged source path
 - the viewer link for the imported doc
-- any warnings from conversion
+- any non-routine conversion warnings
 
 ## Current Practical Limits
 

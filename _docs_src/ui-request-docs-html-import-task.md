@@ -146,7 +146,7 @@ Create a conversion module under `scripts/docs/` that:
   - `<sub>`
   - `<sup>`
   - inline `<svg>`
-- returns structured warnings and summary counts
+- returns structured non-routine warnings and summary counts
 
 Required v1 behaviors:
 
@@ -187,7 +187,7 @@ Required behavior:
 - create untracked light-touch backups before replacement
 - rebuild same-scope docs payloads
 - rebuild same-scope docs search
-- return structured result metadata and warnings
+- return structured result metadata and any non-routine warnings
 
 ### 6. Add The Studio Import Page
 

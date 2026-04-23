@@ -22,6 +22,26 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-23 / UI-013
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: after an overwrite succeeded, the import page could still show the earlier collision warning in its final warnings list, which made the success state read as contradictory even though the write had already completed.
+- triage: systemic
+- reasoning: this is a command-feedback boundary issue, not just a wording glitch. Warning copy that belongs only to a pre-confirmation state must not leak into the final success state, otherwise the user cannot tell whether the action really completed.
+- permanent rule: for Studio command flows with preview or confirmation steps, the final success payload and final success UI must only show warnings that still apply after completion. Pre-confirmation blockers or overwrite warnings must be cleared or filtered once the action succeeds.
+- enforcement point: Studio command/result pages such as `/studio/library-import/` and the corresponding localhost server responses
+- files changed:
+  - `scripts/docs/docs_management_server.py`
+  - `scripts/docs/docs_html_import.py`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - run a collision import on `/studio/library-import/`
+  - confirm the overwrite-required warning appears before confirmation
+  - confirm the final success state does not keep the same collision warning afterward
+- follow-up:
+  - apply the same rule to future preview-then-apply Studio flows if they add multi-step confirmation states
+
 ## UI Rule Log 2026-04-23 / UI-012
 
 - status: adopted

@@ -497,7 +497,7 @@
       "scope_option_studio": "studio",
       "scope_option_library": "library",
       "include_prompt_meta_label": "Include obvious prompt/meta blocks",
-      "include_prompt_meta_hint": "When enabled, clearly identifiable prompt/meta sections are kept in simple fenced code blocks.",
+      "include_prompt_meta_hint": "When enabled, clearly identifiable prompt/meta sections are kept as wrapped quoted prose.",
       "import_button": "Import",
       "confirm_overwrite_button": "Confirm overwrite",
       "cancel_overwrite_button": "Cancel",

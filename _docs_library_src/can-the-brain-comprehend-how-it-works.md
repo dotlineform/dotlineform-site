@@ -7,7 +7,7 @@ sort_order: 210
 ---
 # Can the Brain Comprehend How It Works?
 
-[Prompt] 2025-12-01T00:00:00Z "Does this lead to dysfunction, where the brain can’t comprehend how it works?"
+> [Prompt] 2025-12-01T00:00:00Z "Does this lead to dysfunction, where the brain can’t comprehend how it works?"
 
 ## 1. Structural Limits vs. Dysfunction
 
