@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-65019be50afb5ae4bb85397136513d2e",
-    "generated_at_utc": "2026-04-22T20:21:44Z",
-    "count": 119
+    "version": "blake2b-f73e776080867874e30fe422613640d9",
+    "generated_at_utc": "2026-04-23T14:46:18Z",
+    "count": 121
   },
   "entries": [
     {
@@ -77,6 +77,32 @@
         "18"
       ],
       "search_text": "pipeline-use-cases pipeline use cases deprecated: pipeline use cases deprecated archive 2026-04-18 2026 04 18"
+    },
+    {
+      "id": "user-guide-docs-images",
+      "kind": "doc",
+      "title": "Docs Images And Assets",
+      "href": "/docs/?scope=studio&doc=user-guide-docs-images",
+      "last_updated": "2026-04-23",
+      "parent_id": "user-guide",
+      "parent_title": "User Guide",
+      "display_meta": "2026-04-23 • User Guide",
+      "search_terms": [
+        "user-guide-docs-images",
+        "user",
+        "guide",
+        "docs",
+        "images",
+        "docs images and assets",
+        "and",
+        "assets",
+        "user guide",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "user-guide-docs-images user guide docs images docs images and assets and assets user guide 2026-04-23 2026 04 23"
     },
     {
       "id": "scripts-docs-management-server",
@@ -620,10 +646,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-22 • Docs Viewer",
+      "display_meta": "2026-04-23 • Docs Viewer",
       "search_terms": [
         "docs-viewer-source-organisation",
         "docs",
@@ -632,12 +658,12 @@
         "organisation",
         "source organisation",
         "docs viewer",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-22 2026 04 22"
+      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-23 2026 04 23"
     },
     {
       "id": "studio",
@@ -1003,6 +1029,25 @@
         "31"
       ],
       "search_text": "tag-groups tag groups tag groups studio 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "user-guide",
+      "kind": "doc",
+      "title": "User Guide",
+      "href": "/docs/?scope=studio&doc=user-guide",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
+      "search_terms": [
+        "user-guide",
+        "user",
+        "guide",
+        "user guide",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "user-guide user guide user guide 2026-04-23 2026 04 23"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -2610,20 +2655,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-22",
-      "display_meta": "2026-04-22",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-22",
+        "2026-04-23",
         "2026",
         "04",
-        "22"
+        "23"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-22 2026 04 22"
+      "search_text": "site-change-log site change log site change log 2026-04-23 2026 04 23"
     },
     {
       "id": "tiered-dimension-policy",

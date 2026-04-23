@@ -38,7 +38,7 @@ Generated outputs:
 - reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
-- resolves `[[media:...]]` tokens in doc bodies against `_config.yml` `media_base` before rendering
+- resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
 - rewrites doc-to-doc links onto the scope-owned viewer route
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
@@ -71,6 +71,10 @@ Generated outputs:
 
 ## Link And Media Conventions
 
+Practical authoring guidance:
+
+- for task-level guidance on where docs images should be saved and what syntax to type, use [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
+
 Internal doc links:
 
 - preferred Studio public link format: `/docs/?scope=studio&doc=<doc_id>`
@@ -81,12 +85,13 @@ Internal doc links:
 
 Docs media tokens:
 
-- use `[[media:path/to/file.jpg]]` in Markdown or raw HTML doc bodies
+- use the literal token <code>&#91;&#91;media:path/to/file.jpg&#93;&#93;</code> in Markdown or raw HTML doc bodies
 - the builder resolves this token against `_config.yml` `media_base`
 - example:
-  - `![Example]([[media:library/example.jpg]])`
-  - `<img src="[[media:library/example.jpg]]" alt="Example">`
+  - <code>![Example](&#91;&#91;media:library/example.jpg&#93;&#93;)</code>
+  - <code>&lt;img src="&#91;&#91;media:library/example.jpg&#93;&#93;" alt="Example"&gt;</code>
 - this is intended for remotely hosted docs media, keeping the repo free of full-size docs images
+- repo-local docs assets are ordinary public asset paths such as `/assets/docs/...`; they are not a builder token
 
 ## Commands
 

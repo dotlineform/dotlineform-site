@@ -1,11 +1,32 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-23] Added a User Guide section and moved docs image usage guidance into a practical how-to doc
+
+**Status:** implemented
+
+**Area:** docs viewer / docs authoring
+
+**Summary:**
+Added a top-level `User Guide` section for practical task-focused documentation and introduced a dedicated docs-images guide that explains the three supported docs image paths with concrete copy-paste examples.
+
+**Reason:**
+Some existing docs mixed user-facing author guidance with technical implementation reference. The docs image flow exposed that problem clearly because the real <code>&#91;&#91;media:...&#93;&#93;</code> authoring syntax was only documented inside a builder reference page.
+
+**Effect:**
+Docs now have a clearer split between practical usage guidance and technical contracts. The new guide tells authors where to save repo-local docs images, when to use <code>&#91;&#91;media:...&#93;&#93;</code>, and when inline HTML/CSS/SVG is the better fit, while the builder doc stays focused on implementation behavior.
+
+**Affected files/docs:**
+- `_docs_src/user-guide.md`
+- `_docs_src/user-guide-docs-images.md`
+- [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 
 ## [2026-04-22] Closed the catalogue lookup invalidation request with an in-code registry decision
 

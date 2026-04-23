@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-22T20:21:43Z",
+  "generated_at": "2026-04-23T14:46:17Z",
   "docs": [
     {
       "scope": "studio",
@@ -33,6 +33,17 @@
       "source_path": "pipeline-use-cases.md",
       "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/pipeline-use-cases.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "user-guide-docs-images",
+      "title": "Docs Images And Assets",
+      "last_updated": "2026-04-23",
+      "parent_id": "user-guide",
+      "sort_order": 10,
+      "source_path": "user-guide-docs-images.md",
+      "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-images",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-images.json"
     },
     {
       "scope": "studio",
@@ -291,7 +302,7 @@
       "scope": "studio",
       "doc_id": "docs-viewer-source-organisation",
       "title": "Source Organisation",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "docs-viewer",
       "sort_order": 20,
       "source_path": "docs-viewer-source-organisation.md",
@@ -473,6 +484,17 @@
       "source_path": "tag-groups.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "user-guide",
+      "title": "User Guide",
+      "last_updated": "2026-04-23",
+      "parent_id": "",
+      "sort_order": 30,
+      "source_path": "user-guide.md",
+      "viewer_url": "/docs/?scope=studio&doc=user-guide",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide.json"
     },
     {
       "scope": "studio",
@@ -1270,7 +1292,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "",
       "sort_order": 270,
       "source_path": "site-change-log.md",

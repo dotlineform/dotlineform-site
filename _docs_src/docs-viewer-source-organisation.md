@@ -1,7 +1,7 @@
 ---
 doc_id: docs-viewer-source-organisation
 title: "Source Organisation"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: docs-viewer
 sort_order: 20
 ---
@@ -65,6 +65,7 @@ Within the Studio source root, top-level parent docs group documentation by impl
 - `docs-viewer`
 - `search`
 - `studio`
+- `user-guide`
 
 Unpublished working docs and historical notes also live in the same flat root and stay out of the published viewer through `published: false`.
 
@@ -76,6 +77,23 @@ Examples:
 - `search-config-architecture.md`
 
 Archive remains a normal viewer-tree concept through the reserved `_archive` doc, not through a special storage folder.
+
+## Guidance Split
+
+The current docs set now distinguishes between two different documentation jobs:
+
+- technical reference docs for contracts, implementation details, and generated-output behavior
+- practical user guidance for concrete editing tasks and copy-paste usage examples
+
+Current rule:
+
+- practical how-to guidance should live under [User Guide](/docs/?scope=studio&doc=user-guide)
+- technical subsystem docs should link to that guidance rather than burying task-level instructions inside implementation detail
+
+Example:
+
+- [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images) explains where docs images should be saved and exactly what syntax to type
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) remains the technical reference for token resolution and build behavior
 
 ## Current Management-Relevant Constraint
 
@@ -129,6 +147,8 @@ When updating Docs Viewer docs:
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [User Guide](/docs/?scope=studio&doc=user-guide)
+- [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Data Models](/docs/?scope=studio&doc=data-models)
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)

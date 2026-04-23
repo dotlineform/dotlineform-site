@@ -1,0 +1,11 @@
+{
+  "scope": "studio",
+  "doc_id": "user-guide",
+  "title": "User Guide",
+  "last_updated": "2026-04-23",
+  "parent_id": "",
+  "sort_order": 30,
+  "source_path": "user-guide.md",
+  "viewer_url": "/docs/?scope=studio&doc=user-guide",
+  "content_html": "<h1 id=\"user-guide\">User Guide</h1>\n\n<p>This section is the practical entry point for task-focused docs.</p>\n\n<p>Use it for:</p>\n\n<ul>\n  <li>concrete “what do I do?” guidance</li>\n  <li>exact syntax to type into source files</li>\n  <li>where files should be saved</li>\n  <li>specific workflows that a person follows while editing the site or its docs</li>\n</ul>\n\n<p>This section is intentionally different from the technical subsystem docs.\nThe technical docs remain the source of truth for contracts, implementation details, and generated output behavior.\nUser Guide pages should focus on actions, examples, and decision help first.</p>\n\n<p>Current guides:</p>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&doc=user-guide-docs-images\">Docs Images And Assets</a></li>\n</ul>\n\n<p>When a practical workflow starts to feel buried inside a technical doc, prefer moving the how-to guidance here and leaving a short cross-reference behind in the technical reference.</p>\n"
+}
