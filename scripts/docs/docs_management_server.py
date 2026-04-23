@@ -422,6 +422,38 @@ def make_backup_bundle(
     return bundle_dir
 
 
+def make_import_overwrite_backup(
+    repo_root: Path,
+    scope: str,
+    target: ScopeDoc,
+    metadata: Optional[Dict[str, Any]] = None,
+) -> Path:
+    bundle_name = f"{dt.datetime.now(dt.timezone.utc).strftime('%Y%m%d')}-{scope}-import-overwrite-{slugify(target.doc_id)}"
+    bundle_dir = repo_root / BACKUPS_REL_DIR / bundle_name
+    if bundle_dir.exists():
+        shutil.rmtree(bundle_dir)
+    bundle_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "time_utc": utc_now(),
+        "scope": scope,
+        "operation": "import-overwrite",
+        "count": 1,
+        "files": [
+            {
+                "doc_id": target.doc_id,
+                "title": target.title,
+                "path": relative_path(repo_root, target.path),
+                "filename": target.path.name,
+            }
+        ],
+    }
+    if metadata:
+        manifest["metadata"] = metadata
+    write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    shutil.copy2(target.path, bundle_dir / target.path.name)
+    return bundle_dir
+
+
 def rebuild_scope_outputs(repo_root: Path, scope: str, include_search: bool = True) -> Dict[str, Any]:
     bundle_bin = detect_bundle_bin()
     if not bundle_bin:
@@ -495,6 +527,12 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
 
 def relative_path(repo_root: Path, path: Path) -> str:
     return path.resolve().relative_to(repo_root.resolve()).as_posix()
+
+
+def viewer_url_for(scope: str, doc_id: str) -> str:
+    if scope == "studio":
+        return f"/docs/?scope=studio&doc={doc_id}"
+    return f"/library/?doc={doc_id}"
 
 
 def generated_docs_index_path(repo_root: Path, scope: str) -> Path:
@@ -724,10 +762,47 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     return payload
 
 
+def imported_body_markdown(preview: Dict[str, Any]) -> str:
+    title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
+    markdown = str(preview.get("markdown_preview") or "").strip()
+    if markdown:
+        return markdown + "\n"
+    return f"# {title}\n"
+
+
+def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc]) -> str:
+    title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
+    front_matter = {
+        "doc_id": preview["proposed_doc_id"],
+        "title": title,
+        "last_updated": current_date(),
+        "parent_id": "",
+        "sort_order": next_sort_order(docs, ""),
+    }
+    return format_source(front_matter, imported_body_markdown(preview))
+
+
+def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc) -> str:
+    title = str(preview.get("title") or target.title).strip() or target.title
+    front_matter = dict(target.front_matter)
+    front_matter["doc_id"] = target.doc_id
+    front_matter["title"] = title
+    front_matter["last_updated"] = current_date()
+    front_matter["parent_id"] = target.parent_id
+    if target.sort_order is None:
+        front_matter.pop("sort_order", None)
+    else:
+        front_matter["sort_order"] = target.sort_order
+    return format_source(front_matter, imported_body_markdown(preview))
+
+
 def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
+    overwrite_doc_id = str(body.get("overwrite_doc_id") or "").strip()
+    confirm_overwrite = bool(body.get("confirm_overwrite"))
+    preview_only = bool(body.get("preview_only"))
     source_path = resolve_staged_html(repo_root, staged_filename)
     preview = generate_import_preview(
         repo_root,
@@ -749,15 +824,127 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             f"Proposed doc_id {collision_doc.doc_id!r} already exists in {scope}; explicit overwrite flow will be required."
         )
 
-    log_event(
-        repo_root,
-        "docs-import-html-preview",
-        {
+    if overwrite_doc_id and collision_doc is None:
+        raise ValueError("overwrite_doc_id is only allowed when the generated import target collides with an existing doc")
+    if overwrite_doc_id and collision_doc and overwrite_doc_id != collision_doc.doc_id:
+        raise ValueError(f"overwrite_doc_id must match the colliding doc_id {collision_doc.doc_id!r}")
+
+    requires_overwrite_confirmation = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
+
+    if dry_run or preview_only or requires_overwrite_confirmation:
+        log_event(
+            repo_root,
+            "docs-import-html-preview",
+            {
+                "scope": scope,
+                "staged_filename": staged_filename,
+                "include_prompt_meta": include_prompt_meta,
+                "proposed_doc_id": preview["proposed_doc_id"],
+                "collision": collision["exists"],
+                "requires_overwrite_confirmation": requires_overwrite_confirmation,
+            },
+        )
+        return {
+            "ok": True,
             "scope": scope,
             "staged_filename": staged_filename,
             "include_prompt_meta": include_prompt_meta,
-            "proposed_doc_id": preview["proposed_doc_id"],
-            "collision": collision["exists"],
+            "preview_only": True,
+            "requires_overwrite_confirmation": requires_overwrite_confirmation,
+            "collision": collision,
+            "import_preview": preview,
+            "summary_text": (
+                f"Overwrite confirmation required for {collision['doc_id']}."
+                if requires_overwrite_confirmation
+                else f"Prepared HTML import preview for {staged_filename}."
+            ),
+            "dry_run": dry_run,
+        }
+
+    backup_dir = None
+    rebuild = None
+    if collision_doc is not None:
+        source_text = imported_source_text_for_overwrite(preview, collision_doc)
+        if not dry_run:
+            backup_dir = make_import_overwrite_backup(
+                repo_root,
+                scope,
+                collision_doc,
+                {
+                    "staged_filename": staged_filename,
+                    "include_prompt_meta": include_prompt_meta,
+                    "source_html": preview.get("source_html"),
+                    "title": preview.get("title"),
+                },
+            )
+            write_text_atomic(collision_doc.path, source_text)
+            rebuild = rebuild_scope_outputs(repo_root, scope)
+        log_event(
+            repo_root,
+            "docs-import-html-overwrite",
+            {
+                "scope": scope,
+                "staged_filename": staged_filename,
+                "doc_id": collision_doc.doc_id,
+                "path": relative_path(repo_root, collision_doc.path),
+                "include_prompt_meta": include_prompt_meta,
+            },
+        )
+        return {
+            "ok": True,
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "include_prompt_meta": include_prompt_meta,
+            "preview_only": False,
+            "requires_overwrite_confirmation": False,
+            "operation": "overwrite",
+            "doc_id": collision_doc.doc_id,
+            "path": relative_path(repo_root, collision_doc.path),
+            "viewer_url": viewer_url_for(scope, collision_doc.doc_id),
+            "title": preview["title"],
+            "record": {
+                "doc_id": collision_doc.doc_id,
+                "title": preview["title"],
+                "parent_id": collision_doc.parent_id,
+                "sort_order": collision_doc.sort_order,
+            },
+            "collision": collision,
+            "import_preview": preview,
+            "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+            "rebuild": rebuild,
+            "summary_text": f"Overwrote {collision_doc.doc_id} from {staged_filename}.",
+            "dry_run": dry_run,
+        }
+
+    doc_id = preview["proposed_doc_id"]
+    target_path = scope_root(repo_root, scope) / f"{doc_id}.md"
+    source_text = imported_source_text_for_create(preview, docs)
+    if not dry_run:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "import-create",
+            [],
+            {
+                "staged_filename": staged_filename,
+                "include_prompt_meta": include_prompt_meta,
+                "doc_id": doc_id,
+                "title": preview["title"],
+                "path": relative_path(repo_root, target_path),
+                "source_html": preview.get("source_html"),
+            },
+        )
+        write_text_atomic(target_path, source_text)
+        rebuild = rebuild_scope_outputs(repo_root, scope)
+    log_event(
+        repo_root,
+        "docs-import-html-create",
+        {
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "doc_id": doc_id,
+            "path": relative_path(repo_root, target_path),
+            "include_prompt_meta": include_prompt_meta,
         },
     )
     return {
@@ -765,10 +952,24 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         "scope": scope,
         "staged_filename": staged_filename,
         "include_prompt_meta": include_prompt_meta,
-        "preview_only": True,
+        "preview_only": False,
+        "requires_overwrite_confirmation": False,
+        "operation": "create",
+        "doc_id": doc_id,
+        "path": relative_path(repo_root, target_path),
+        "viewer_url": viewer_url_for(scope, doc_id),
+        "title": preview["title"],
+        "record": {
+            "doc_id": doc_id,
+            "title": preview["title"],
+            "parent_id": "",
+            "sort_order": next_sort_order(docs, ""),
+        },
         "collision": collision,
         "import_preview": preview,
-        "summary_text": f"Prepared HTML import preview for {staged_filename}.",
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "summary_text": f"Created {doc_id} from {staged_filename}.",
         "dry_run": dry_run,
     }
 

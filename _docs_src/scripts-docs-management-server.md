@@ -76,20 +76,28 @@ Request behavior:
 {
   "scope": "studio",
   "staged_filename": "example 1.html",
-  "include_prompt_meta": false
+  "include_prompt_meta": false,
+  "overwrite_doc_id": "",
+  "confirm_overwrite": false,
+  "preview_only": false
 }
 ```
 
-Import-preview behavior:
+Import behavior:
 
 - `scope` must be `studio` or `library`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
-- parses the full staged HTML file through the shared importer and returns a structured preview payload
+- parses the full staged HTML file through the shared importer
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec
-- reports whether the proposed imported `doc_id` already collides with an existing source doc
-- currently preview-only: no Markdown source doc is written yet, even when the server is not running with `--dry-run`
-- intended as the first stable API contract for the Studio import page before create/overwrite write behavior lands
+- creates a new Markdown source doc immediately when the generated import target does not collide
+- preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
+- reports collision details when the generated import target already matches an existing `doc_id`
+- requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc
+- preserves the overwritten doc's `doc_id`, filename, `parent_id`, `sort_order`, and existing `published` state
+- creates an import-specific backup before overwrite using a light-touch same-day replacement rule
+- `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
+- successful create/overwrite writes rebuild the same-scope docs payloads and docs-search artifact
 
 `POST /docs/rebuild` expects:
 

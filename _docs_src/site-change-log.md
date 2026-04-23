@@ -7,6 +7,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-23] Extended docs HTML import from preview-only into create and warned-overwrite writes
+
+**Status:** implemented
+
+**Area:** docs viewer / local docs-management
+
+**Summary:**
+Extended `POST /docs/import-html` on the localhost Docs Management Server so staged HTML import now supports real create writes plus explicit warned overwrite of an existing source doc, while validating generated Markdown through the repo's Jekyll renderer before success.
+
+**Reason:**
+The preview-only import path was enough to settle the parser and conversion contract, but it was not enough to begin real iterative use. The import flow needed an actual write path so repeated staged-file tests can create new docs, overwrite an existing target by `doc_id`, and keep backups/rebuilds inside the established docs-management boundary.
+
+**Effect:**
+`POST /docs/import-html` now creates a new source Markdown doc immediately when the generated import target is free, and returns a clear overwrite-required response when that target already exists. Overwrite now requires `overwrite_doc_id` plus `confirm_overwrite: true`, preserves the existing doc's identity and placement, writes a light-touch same-day backup under `var/docs/backups/`, and rebuilds the same-scope docs payloads plus docs search after a successful write. Generated import Markdown is also validated through the repo's Jekyll renderer helper before any write succeeds.
+
+**Affected files/docs:**
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/docs_management_server.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs HTML Import Task](/docs/?scope=studio&doc=ui-request-docs-html-import-task)
+
 ## [2026-04-23] Added a Studio docs broken-links audit page and shared read-only docs audit endpoint
 
 **Status:** implemented

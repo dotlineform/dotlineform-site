@@ -45,11 +45,11 @@ Completed now:
 - dry-run `POST /docs/import-html` endpoint added to the Docs Management Server
 - staged import preview now reports conversion summary plus `doc_id` collision detection
 - staged import preview now validates generated Markdown through the repo's Jekyll renderer helper before returning success
+- `POST /docs/import-html` now supports create and warned overwrite writes with backup/rebuild follow-through
 
 Not done yet:
 
 - Studio import page
-- create/overwrite write flow
 
 ## Implementation Boundary
 
