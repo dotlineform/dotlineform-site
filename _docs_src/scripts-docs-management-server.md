@@ -85,6 +85,7 @@ Import-preview behavior:
 - `scope` must be `studio` or `library`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
 - parses the full staged HTML file through the shared importer and returns a structured preview payload
+- validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec
 - reports whether the proposed imported `doc_id` already collides with an existing source doc
 - currently preview-only: no Markdown source doc is written yet, even when the server is not running with `--dry-run`

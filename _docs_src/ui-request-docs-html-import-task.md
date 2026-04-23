@@ -44,10 +44,10 @@ Completed now:
 - scaffold now parses through the fixed `beautifulsoup4` + `lxml` stack rather than the stdlib HTML parser
 - dry-run `POST /docs/import-html` endpoint added to the Docs Management Server
 - staged import preview now reports conversion summary plus `doc_id` collision detection
+- staged import preview now validates generated Markdown through the repo's Jekyll renderer helper before returning success
 
 Not done yet:
 
-- Jekyll render validation in the import path
 - Studio import page
 - create/overwrite write flow
 

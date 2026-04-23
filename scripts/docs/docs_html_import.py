@@ -3,8 +3,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from collections import Counter
 from dataclasses import dataclass, field
 from html import escape
@@ -73,6 +77,13 @@ def normalize_scope(scope: str) -> str:
     if value not in SCOPE_ROOTS:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_ROOTS.keys()))}")
     return value
+
+
+def detect_bundle_bin() -> Optional[str]:
+    rbenv_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
+    if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
+        return str(rbenv_bundle)
+    return shutil.which("bundle")
 
 
 @dataclass
@@ -450,6 +461,45 @@ def build_summary(root: ElementNode, *, source_html: str, title: str, include_pr
     }
 
 
+def validate_markdown_with_jekyll(repo_root: Path, markdown: str) -> dict[str, Any]:
+    renderer_script = repo_root / "scripts" / "render_markdown_with_jekyll.rb"
+    if not renderer_script.exists():
+        raise RuntimeError(f"Markdown renderer helper not found: {relative_path(repo_root, renderer_script)}")
+
+    bundle_bin = detect_bundle_bin()
+    if not bundle_bin:
+        raise RuntimeError("Bundler not found; ensure the local Jekyll toolchain is available before validating imported Markdown.")
+
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".md", delete=False) as handle:
+        handle.write(markdown)
+        handle.write("\n")
+        temp_path = Path(handle.name)
+
+    try:
+        completed = subprocess.run(
+            [bundle_bin, "exec", "ruby", str(renderer_script), str(temp_path)],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    finally:
+        try:
+            temp_path.unlink()
+        except OSError:
+            pass
+
+    if completed.returncode != 0:
+        detail = (completed.stderr or completed.stdout).strip() or f"exit {completed.returncode}"
+        raise RuntimeError(f"Jekyll Markdown validation failed: {detail}")
+
+    return {
+        "ok": True,
+        "html_chars": len(completed.stdout),
+        "renderer": "scripts/render_markdown_with_jekyll.rb",
+    }
+
+
 def resolve_staged_html(repo_root: Path, staged_filename: str) -> Path:
     filename = str(staged_filename or "").strip()
     if not filename:
@@ -485,6 +535,7 @@ def generate_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
     return summary
 
 
