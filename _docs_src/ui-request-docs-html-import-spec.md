@@ -519,12 +519,9 @@ Current recommendation:
 
 Current recommendation:
 
-- allow normal external image URLs in v1
-- allow `data:` URLs in v1
-- treat both as best-effort imports with explicit warnings when the result may be fragile or oversized
-
-Still needs implementation detail:
-
+- allow normal external image URLs in v1 on a best-effort basis
+- allow `data:` URLs in v1 on a best-effort basis
+- if an external image or `data:` URL produces a fragile, unclear, or semantically messy result, degrade to plain text with a warning
 - repo-local image paths should degrade to plain text in v1
 
 Locked for v1:
@@ -580,6 +577,7 @@ The following implementation decisions are now locked for the first pass.
 - non-convertible handling: pragmatic v1 best effort with warnings
 - external images: allowed in v1
 - `data:` URLs: allowed in v1
+- image and `data:` fallback: degrade to plain text when the result is doubtful
 - repo-local image paths: plain text in v1
 - prompt/meta inclusion: user-controlled, but detected only from clearly identifiable source markers
 - overwrite target model: existing `doc_id`
