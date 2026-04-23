@@ -57,6 +57,7 @@ Current route inventory:
 - `studio/catalogue-activity/index.md`
 - `studio/build-activity/index.md`
 - `studio/docs-broken-links/index.md`
+- `studio/library-import/index.md`
 - `studio/catalogue-new-work/index.md`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment-import/index.md`
@@ -81,6 +82,7 @@ Current page-level doc links:
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
 - Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
+- Docs HTML Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
@@ -99,6 +101,7 @@ Current page-level doc links:
 - Series Tag Editor -> `/docs/?scope=studio&doc=tag-editor`
 - Studio Works -> `/docs/?scope=studio&doc=studio-works`
 - Studio landing and dashboards -> phased-plan and domain-plan docs
+- Library Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 
 ## Shared Runtime Modules
 
@@ -119,6 +122,7 @@ Current page controllers:
 
 - `assets/studio/js/build-activity.js`
 - `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-import.js`
 - `assets/studio/js/catalogue-status.js`

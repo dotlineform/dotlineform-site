@@ -29,13 +29,9 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
         <h4>Published library</h4>
         <p>Open the public library viewer in its user-facing context.</p>
       </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/docs/?scope=studio&doc=new-pipeline-refine-library' | relative_url }}">
-        <h4>Library plan</h4>
-        <p>Parallel planning stub for the Library domain and future Studio workflows.</p>
-      </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/docs/?scope=studio&doc=library' | relative_url }}">
-        <h4>Library docs</h4>
-        <p>Open the public-library documentation set from the shared docs viewer.</p>
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/library-import/' | relative_url }}">
+        <h4>Import</h4>
+        <p>Import staged HTML into the published Library docs source, with optional Studio scope selection.</p>
       </a>
     </div>
   </section>

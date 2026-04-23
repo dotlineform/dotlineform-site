@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T19:45:48Z",
+  "generated_at": "2026-04-23T20:23:44Z",
   "docs": [
     {
       "scope": "studio",
@@ -231,6 +231,17 @@
       "source_path": "data-models-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-catalogue.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "user-guide-docs-html-import",
+      "title": "Docs HTML Import",
+      "last_updated": "2026-04-23",
+      "parent_id": "user-guide",
+      "sort_order": 20,
+      "source_path": "user-guide-docs-html-import.md",
+      "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json"
     },
     {
       "scope": "studio",
@@ -500,7 +511,7 @@
       "scope": "studio",
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-23",
       "parent_id": "design",
       "sort_order": 30,
       "source_path": "studio-ui-rules.md",

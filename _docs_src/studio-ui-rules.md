@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
-last_updated: 2026-04-22
+last_updated: 2026-04-23
 parent_id: design
 sort_order: 30
 ---
@@ -21,6 +21,30 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-23 / UI-012
+
+- status: adopted
+- route: `/studio/library/`, `/studio/library-import/`
+- issue: the Library dashboard had drifted after docs reorganization. One panel still pointed to an older planning stub, and another panel linked to a nonexistent Library docs target instead of a valid current workflow.
+- triage: systemic
+- reasoning: dashboard entry cards are route-entry actions, not decorative placeholders. When a domain dashboard link no longer resolves to a real maintained route or live doc surface, the fix should happen at the dashboard contract level rather than leaving stale panels in place. The better route-entry action for Library admin work is the import workflow itself.
+- permanent rule: Studio dashboard panel links must always point to a current maintained route or live docs surface. If a dashboard domain lacks a valid target, remove the panel rather than leaving a dead doc/viewer link in place, and prefer real workflow entry points over legacy planning stubs.
+- enforcement point: Studio dashboard routes, especially `studio/library/index.md`, and future dashboard-panel reviews
+- files changed:
+  - `studio/library/index.md`
+  - `studio/library-import/index.md`
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/library/` and confirm the dashboard now exposes `Published library` plus `Import`
+  - confirm there is no remaining broken `Library docs` dashboard panel
+  - inspect `/studio/library-import/` and confirm the page uses shared Studio panel, field, button, and status patterns
+- follow-up:
+  - if another Studio dashboard still points at a stale plan/doc stub, replace it with a live workflow entry or remove it
 
 ## UI Rule Log 2026-04-22 / UI-011
 

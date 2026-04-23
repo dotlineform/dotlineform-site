@@ -23,5 +23,6 @@ User Guide pages should focus on actions, examples, and decision help first.
 Current guides:
 
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 
 When a practical workflow starts to feel buried inside a technical doc, prefer moving the how-to guidance here and leaving a short cross-reference behind in the technical reference.

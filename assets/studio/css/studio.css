@@ -851,6 +851,100 @@ span.tagStudio__input--readonlyDisplay {
   overflow-wrap: anywhere;
 }
 
+.docsHtmlImportPage__panel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.docsHtmlImportPage__intro,
+.docsHtmlImportPage__warning > p,
+.docsHtmlImportPage__warnings ul {
+  margin: 0;
+}
+
+.docsHtmlImportPage__intro,
+.docsHtmlImportPage__toggleHint,
+.docsHtmlImportPage__warning > p {
+  color: var(--muted, var(--studio-muted-body));
+  font-size: var(--font-small);
+}
+
+.docsHtmlImportPage__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.8rem;
+}
+
+.docsHtmlImportPage__field {
+  min-inline-size: 0;
+}
+
+.docsHtmlImportPage__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-small);
+}
+
+.docsHtmlImportPage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.8rem;
+}
+
+.docsHtmlImportPage__warning,
+.docsHtmlImportPage__result {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border, var(--studio-border));
+  border-radius: 1rem;
+  background: var(--panel, var(--studio-panel));
+}
+
+.docsHtmlImportPage__warning[hidden],
+.docsHtmlImportPage__result[hidden],
+.docsHtmlImportPage__warnings[hidden] {
+  display: none;
+}
+
+.docsHtmlImportPage__warning > h3,
+.docsHtmlImportPage__result > h3,
+.docsHtmlImportPage__warnings > h4 {
+  margin: 0;
+}
+
+.docsHtmlImportPage__warning > h3 {
+  color: var(--studio-warn);
+}
+
+.docsHtmlImportPage__resultGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.8rem;
+  margin: 0;
+}
+
+.docsHtmlImportPage__resultGrid > div {
+  min-width: 0;
+}
+
+.docsHtmlImportPage__resultGrid dt {
+  margin: 0 0 0.16rem;
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-caption);
+  text-transform: lowercase;
+}
+
+.docsHtmlImportPage__resultGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.docsHtmlImportPage__warnings ul {
+  padding-left: 1.1rem;
+}
+
 .tagStudio__chipList {
   display: flex;
   flex-wrap: wrap;
@@ -2327,6 +2421,11 @@ span.tagStudio__input--readonlyDisplay {
 
   .docsBrokenLinksPage__head {
     display: none;
+  }
+
+  .docsHtmlImportPage__controls,
+  .docsHtmlImportPage__resultGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .docsBrokenLinksRow {

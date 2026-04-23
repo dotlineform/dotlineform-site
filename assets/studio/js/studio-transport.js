@@ -42,7 +42,9 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 
 const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
   health: "http://127.0.0.1:8789/health",
-  brokenLinks: "http://127.0.0.1:8789/docs/broken-links"
+  brokenLinks: "http://127.0.0.1:8789/docs/broken-links",
+  importHtml: "http://127.0.0.1:8789/docs/import-html",
+  importHtmlFiles: "http://127.0.0.1:8789/docs/import-html-files"
 });
 
 export {

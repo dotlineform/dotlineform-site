@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T20:50:03Z",
+  "generated_at": "2026-04-23T20:32:41Z",
   "docs": [
     {
       "scope": "library",
@@ -22,6 +22,17 @@
       "source_path": "archive.md",
       "viewer_url": "/library/?doc=_archive",
       "content_url": "/assets/data/docs/scopes/library/by-id/_archive.json"
+    },
+    {
+      "scope": "library",
+      "doc_id": "can-the-brain-comprehend-how-it-works",
+      "title": "Can the Brain Comprehend How It Works?",
+      "last_updated": "2026-04-23",
+      "parent_id": "",
+      "sort_order": 210,
+      "source_path": "can-the-brain-comprehend-how-it-works.md",
+      "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
     }
   ]
 }

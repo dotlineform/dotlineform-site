@@ -25,6 +25,7 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /capabilities`
+- `GET /docs/import-html-files`
 - `POST /docs/import-html`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
@@ -41,7 +42,7 @@ Current behavior:
 - local-only write service for the shared Docs Viewer
 - used by `/docs/?mode=manage` and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
-- now also exposes a dry-run HTML import preview endpoint for the upcoming Studio import flow
+- also used by `/studio/library-import/` for staged-file listing and docs HTML import writes
 - creates, archives, and deletes flat source docs under the current scope root
 - rebuilds scope-owned docs payloads and scope-owned docs search after successful writes
 
@@ -69,6 +70,12 @@ Request behavior:
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
 - `sort_order` appends as the last sibling when both `after_doc_id` and explicit `sort_order` are omitted
+
+`GET /docs/import-html-files` returns:
+
+- the current staged `.html` files under `var/docs/import-staging/`
+- filename, repo-relative path, size, and modified time for each staged file
+- a read-only listing intended for the Studio import page
 
 `POST /docs/import-html` expects:
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import os
 import re
@@ -511,6 +512,24 @@ def resolve_staged_html(repo_root: Path, staged_filename: str) -> Path:
     if not path.exists():
         raise FileNotFoundError(f"staged HTML does not exist: {filename}")
     return path
+
+
+def list_staged_html_files(repo_root: Path) -> list[dict[str, Any]]:
+    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    if not staging_root.exists():
+        return []
+    files: list[dict[str, Any]] = []
+    for path in sorted(staging_root.glob("*.html")):
+        stat = path.stat()
+        files.append(
+            {
+                "filename": path.name,
+                "path": relative_path(repo_root, path),
+                "size_bytes": stat.st_size,
+                "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            }
+        )
+    return files
 
 
 def generate_import_preview(

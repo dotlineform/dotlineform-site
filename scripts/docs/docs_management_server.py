@@ -11,6 +11,7 @@ Run:
 Endpoints:
   GET /health
   GET /capabilities
+  GET /docs/import-html-files
   POST /docs/import-html
   POST /docs/rebuild
   POST /docs/broken-links
@@ -54,7 +55,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
-from docs_html_import import generate_import_preview, resolve_staged_html  # noqa: E402
+from docs_html_import import generate_import_preview, list_staged_html_files, resolve_staged_html  # noqa: E402
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -699,6 +700,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         "ok": True,
         "capabilities": {
             "docs_management": True,
+            "html_import": True,
             "scopes": scopes,
         },
     }
@@ -1469,6 +1471,16 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                     f"generated search index for {scope}",
                 )
                 write_response(self, HTTPStatus.OK, payload)
+                return
+            if parsed.path == "/docs/import-html-files":
+                write_response(
+                    self,
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "files": list_staged_html_files(self.app["repo_root"]),
+                    },
+                )
                 return
             error_response(self, HTTPStatus.NOT_FOUND, "Not found")
         except FileNotFoundError as error:

@@ -7,6 +7,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-23] Added a Library-facing Studio HTML import page and user guide
+
+**Status:** implemented
+
+**Area:** Studio / docs viewer
+
+**Summary:**
+Added `/studio/library-import/` as the user-facing Studio page for staged docs HTML import, linked it from the Library dashboard, removed the stale broken Library docs dashboard panel, and added a matching User Guide page for the workflow.
+
+**Reason:**
+The server-side import contract was in place, but the workflow still had no actual Studio surface. The Library dashboard was also carrying a dead `Library docs` panel after docs reorganization, and its middle panel still pointed to an older planning stub instead of the new import tool.
+
+**Effect:**
+The Library dashboard now links directly to `Import`, the broken `Library docs` panel is gone, and `/studio/library-import/` lets the user choose a staged HTML file, pick `library` or `studio`, decide whether to keep prompt/meta blocks, and complete create-or-warned-overwrite imports through the localhost docs-management service. The page uses config-backed copy, reports result metadata and warnings, and links back to the imported viewer doc. The `i` link on the new page points to a practical User Guide doc rather than the lower-level implementation spec.
+
+**Affected files/docs:**
+- `studio/library/index.md`
+- `studio/library-import/index.md`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/css/studio.css`
+- `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_html_import.py`
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [User Guide](/docs/?scope=studio&doc=user-guide)
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+
 ## [2026-04-23] Extended docs HTML import from preview-only into create and warned-overwrite writes
 
 **Status:** implemented

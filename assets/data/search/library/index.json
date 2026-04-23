@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-cbd3a5dd3b2ae2df5dcf6f6e4bbd8436",
-    "generated_at_utc": "2026-04-22T17:44:09Z",
-    "count": 1
+    "version": "blake2b-706045ba6607ceb70f40db9ec7285836",
+    "generated_at_utc": "2026-04-23T20:32:42Z",
+    "count": 2
   },
   "entries": [
     {
@@ -22,6 +22,30 @@
         "30"
       ],
       "search_text": "library 2026-03-30 2026 03 30"
+    },
+    {
+      "id": "can-the-brain-comprehend-how-it-works",
+      "kind": "doc",
+      "title": "Can the Brain Comprehend How It Works?",
+      "href": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
+      "search_terms": [
+        "can-the-brain-comprehend-how-it-works",
+        "can",
+        "the",
+        "brain",
+        "comprehend",
+        "how",
+        "it",
+        "works",
+        "can the brain comprehend how it works?",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-23 2026 04 23"
     }
   ]
 }

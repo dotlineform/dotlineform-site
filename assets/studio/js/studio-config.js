@@ -9,6 +9,7 @@ const DEFAULT_STUDIO_CONFIG = {
       series_tag_editor: "/studio/series-tag-editor/",
       build_activity: "/studio/build-activity/",
       docs_broken_links: "/studio/docs-broken-links/",
+      docs_html_import: "/studio/library-import/",
       catalogue_status: "/studio/catalogue-status/",
       catalogue_activity: "/studio/catalogue-activity/",
       bulk_add_work: "/studio/bulk-add-work/",

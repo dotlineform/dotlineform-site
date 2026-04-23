@@ -36,6 +36,7 @@ Read this section in this order:
 4. Page-specific docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
+   - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
@@ -61,6 +62,7 @@ Current workflow/detail routes:
 
 - `/studio/build-activity/`
 - `/studio/docs-broken-links/`
+- `/studio/library-import/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
 - `/studio/bulk-add-work/`
