@@ -27,7 +27,7 @@ It is an ingestion shortcut for externally authored HTML, especially self-contai
 
 Current intent:
 
-- import creates new docs only
+- import can create a new doc or explicitly overwrite an existing doc
 - imported docs are still edited manually afterward in the normal source files
 - publishing still follows the current docs build and docs search rebuild flow
 
@@ -60,6 +60,7 @@ Recommended staging direction:
 - use a dedicated repo-local staging area such as `var/docs/import-staging/`
 - keep staged originals out of the published docs roots
 - keep staged originals available for later reference when the import result needs manual cleanup
+- keep staged originals untracked by the repo
 
 This is simpler and safer than trying to let the Studio page browse arbitrary external filesystem locations.
 
@@ -74,13 +75,13 @@ Included:
   - `library`
 - automatic HTML-to-Markdown conversion
 - automatic creation of one new Markdown source doc
+- explicit overwrite of an existing Markdown source doc after a warning step
 - same-scope docs rebuild after a successful import
 - same-scope docs-search rebuild after a successful import
 - warning/reporting for dropped or simplified content
 
 Excluded for this request:
 
-- overwriting an existing doc
 - updating an existing imported doc in place
 - manual user editing before write
 - arbitrary external filesystem browsing from the server
@@ -96,19 +97,24 @@ Recommended first-pass workflow:
 3. user selects:
    - one staged HTML file
    - target scope: `studio` or `library`
+   - whether obvious prompt/meta blocks should be included
 4. page submits an import request to the localhost docs-management service
 5. service parses and converts the HTML into best-attempt Markdown
-6. service writes a new source doc into the chosen flat source root
-7. service rebuilds the chosen docs scope and same-scope docs search
-8. page reports:
+6. if the generated target collides with an existing doc, the page shows an explicit overwrite warning naming the target doc
+7. user either confirms overwrite or returns without writing
+8. service writes the new source doc or overwrites the chosen existing source doc
+9. service rebuilds the chosen docs scope and same-scope docs search
+10. page reports:
    - created doc id
    - created source path
+   - overwrite status, when applicable
    - dropped/simplified content warnings
    - link to open the new doc in the viewer
 
 Current confirmed decision:
 
 - there is no preview/edit step before write
+- prompt/meta inclusion should be a user-led import choice rather than a fixed global rule
 
 ## Output Contract
 
@@ -125,15 +131,18 @@ Current root-layout implication:
 Recommended metadata generation:
 
 - `title`:
-  - first body `<h1>`, if present
-  - otherwise stripped document `<title>`, if useful
+  - stripped document `<title>`, if useful
+  - otherwise first body `<h1>`, if present
   - otherwise filename stem
 - `doc_id`:
-  - generated from the final title using the existing docs-create uniqueness rules
+  - generated from the final title using the existing docs-create uniqueness rules when creating a new doc
+  - preserved from the chosen target doc when explicitly overwriting an existing doc
 - filename stem:
-  - generated from the final title using the existing docs-create uniqueness rules
+  - generated from the final title using the existing docs-create uniqueness rules when creating a new doc
+  - preserved from the chosen target file when explicitly overwriting an existing doc
 - `parent_id`:
-  - blank by default unless later scope-specific defaults are explicitly added
+  - blank by default unless later scope-specific defaults are explicitly added for new docs
+  - preserved from the target doc when overwriting unless the overwrite contract later decides otherwise
 - `last_updated`:
   - import date
 
@@ -170,11 +179,51 @@ Convert these into normal Markdown where practical:
 - links to external websites
 - images when the source is already suitable for Markdown output
 
+Convert these semantic styled blocks into plain Markdown rather than stripping them with layout wrappers:
+
+- prompt panels
+- metadata panels
+- key-point or `TL;DR` panels
+- shaded explanatory callouts
+
+Recommended first-pass rule for prompt/meta blocks:
+
+- expose a user-controlled include/exclude option on the import page
+- if included, render obvious prompt/meta source text as fenced code blocks or similarly plain preformatted Markdown blocks
+- if excluded, drop those blocks intentionally rather than treating them as conversion failures
+- detect only clearly identifiable prompt/meta blocks in v1, using the most obvious source markers rather than broad heuristics
+- prefer false negatives over false positives when prompt/meta detection is uncertain
+
+Recommended first-pass rule for semantic callouts other than prompt/meta:
+
+- keep the content
+- remove decorative styling
+- convert to paragraphs, blockquotes, or short labeled sections depending on structure
+
 Preferred link rule:
 
 - keep external website links
 - use Markdown link syntax when the content converts cleanly
 - keep link text readable even if surrounding styling is dropped
+
+### Inline Safe HTML
+
+Markdown alone is not enough for all technical notation used in these docs.
+
+Recommended first-pass rule:
+
+- allow a narrow safe subset of inline HTML to survive when it preserves meaning that plain Markdown would lose
+
+Current priority examples:
+
+- `<sub>`
+- `<sup>`
+- inline `<svg>` and its safe child elements
+
+Reason:
+
+- scientific and mathematical notation appears frequently in the target docs corpus
+- preserving meaning is more important than forcing every imported fragment into pure Markdown
 
 ### SVG Handling
 
@@ -185,6 +234,8 @@ Recommended first-pass rule:
 - preserve inline `<svg>` blocks as raw HTML inside the Markdown body
 - drop surrounding presentational wrappers when they are not needed for the diagram itself
 - keep nearby captions or explanatory text as Markdown where possible
+- keep SVG-local `<style>` blocks when they are required for the diagram to render correctly
+- reject or strip script-like or externally dependent SVG behavior rather than stripping all SVG-local styling blindly
 
 This fits the current docs builder contract, which already allows raw HTML inside Markdown docs.
 
@@ -209,6 +260,8 @@ Examples of styling that should usually be dropped:
 - decorative colors and backgrounds
 - border and shadow treatments
 - responsive layout rules
+- card shells
+- pill styling and chip styling
 
 Examples of styling that may indicate semantic intent and therefore need a case-by-case rule:
 
@@ -217,9 +270,15 @@ Examples of styling that may indicate semantic intent and therefore need a case-
 - hidden/revealed content
 - visually grouped label/value rows
 
+Recommended simplification rule for pill-like UI:
+
+- preserve the underlying text labels
+- flatten pill rows into plain text or comma-delimited lists
+- do not attempt to preserve pill presentation as HTML/CSS
+
 ### Non-Convertible Content
 
-This needs explicit case-by-case rules in the final implementation spec.
+V1 should use a pragmatic best-effort rule set rather than trying to solve every HTML pattern perfectly up front.
 
 Examples of content that may not convert cleanly into Markdown:
 
@@ -235,8 +294,18 @@ Examples of content that may not convert cleanly into Markdown:
 
 Current confirmed direction:
 
-- do not silently assume the answer
-- capture these examples and decide the preservation/drop rule per content type
+- use conservative, readable fallbacks
+- preserve content where meaning survives simplification
+- strip interaction and layout when only behavior or presentation would remain
+- record warnings for dropped or heavily simplified structures
+
+Current example-driven interpretation:
+
+- interactive disclosure behavior such as `<details>` / `<summary>` is non-convertible as interaction
+- the content inside those elements is still convertible and should be flattened into ordinary headings or labeled sections
+- semantic footer content should be kept when it reads as document content rather than site chrome
+- simple data tables with no `rowspan` or `colspan` should convert to Markdown tables
+- wrapper `div` shells used only for layout should be stripped after their content is extracted
 
 ## Sanitization Boundary
 
@@ -248,6 +317,8 @@ Required rules:
 - remove unsupported embedded objects
 - limit preserved raw HTML to a known-safe subset
 - keep the imported output readable without relying on the original page shell
+- strip comments, layout-only wrapper attributes, and link attributes that no longer matter after Markdown conversion
+- distinguish page-level `<style>` from SVG-local `<style>` inside preserved diagrams
 
 Important reason:
 
@@ -266,7 +337,9 @@ Recommended UI:
 - scope toggle:
   - `studio`
   - `library`
+- prompt/meta include toggle
 - import action
+- overwrite warning state when a target collision is detected
 - result panel with warnings and next links
 
 Recommended behavior:
@@ -275,7 +348,9 @@ Recommended behavior:
 - fail closed when the docs-management service is unavailable
 - no inline Markdown editor
 - no pre-write preview modal
-- no overwrite path
+- allow overwrite only as an explicit warned choice after collision detection
+- make the overwrite target clear by naming the existing doc id and title
+- do not infer overwrite silently from a loose title match
 
 Visible runtime copy should live in `assets/studio/data/studio_config.json`.
 
@@ -290,7 +365,10 @@ Recommended request shape:
 ```json
 {
   "scope": "studio",
-  "staged_filename": "example-export.html"
+  "staged_filename": "example-export.html",
+  "include_prompt_meta": true,
+  "overwrite_doc_id": null,
+  "confirm_overwrite": false
 }
 ```
 
@@ -301,8 +379,11 @@ Recommended server responsibilities:
 - parse and sanitize HTML
 - convert to best-attempt Markdown
 - generate new-doc metadata
-- write one new Markdown source file in the chosen scope root
+- detect collisions against existing docs in the chosen scope
+- require explicit confirmation before overwriting an existing doc
+- write one new Markdown source file in the chosen scope root or overwrite one existing source doc
 - create a backup manifest for the write batch
+- keep overwrite backups untracked by the repo
 - rebuild same-scope docs payloads
 - rebuild same-scope docs search
 - return structured warnings about dropped or simplified content
@@ -312,6 +393,8 @@ Recommended response shape should include at least:
 - created `doc_id`
 - created source path
 - created viewer URL
+- whether the operation created or overwrote
+- collision details when overwrite confirmation is required
 - warnings
 - summary counts for preserved, simplified, and dropped blocks
 
@@ -321,10 +404,7 @@ Recommended response shape should include at least:
 
 Decide:
 
-- staging directory path and whether staged files are tracked or ignored
-- title-derivation priority when `<h1>` and `<title>` disagree
-- final preservation/drop rules for each non-convertible content type
-- whether imported images or data URLs are allowed in v1
+- final handling details for imported images and `data:` URLs
 
 ### Phase 2. Add A Shared Conversion Module
 
@@ -335,6 +415,7 @@ Add a conversion module under `scripts/docs/` that can:
 - sanitize unsafe elements
 - convert supported structures into Markdown
 - preserve selected safe HTML blocks such as inline SVG
+- preserve selected inline safe HTML for technical notation such as subscripts and superscripts
 - produce a structured conversion report
 
 ### Phase 3. Add Server-Side Import Write Support
@@ -344,6 +425,7 @@ Extend `scripts/docs/docs_management_server.py` with:
 - staged-file validation
 - import endpoint
 - scope-root write behavior
+- overwrite collision detection and confirmation handling
 - rebuild/search follow-through
 - operation-scoped backup behavior
 
@@ -379,8 +461,10 @@ After implementation, update:
 - much less manual cleanup for ChatGPT-style exported HTML
 - keeps the current Docs Viewer source-of-truth model intact
 - preserves useful diagrams without forcing SVG-to-image conversion
+- preserves technical notation that plain Markdown cannot represent cleanly
 - keeps the import workflow inside the existing local docs-management boundary
 - keeps original HTML available for later reference
+- supports rapid iteration during testing without forcing repeated manual cleanup of temporary imports
 
 ## Risks
 
@@ -389,20 +473,25 @@ After implementation, update:
 - preserving too little would discard useful structure or diagrams
 - staged originals could create repo clutter if the staging path and ignore policy are not explicit
 - no preview step means warnings and deterministic rules need to be strong enough to trust
+- overwrite behavior could replace the wrong source doc if collision handling is too loose or ambiguous
 
 ## Open Questions
 
 ### 1. What exactly counts as non-convertible content?
 
-This now needs a worked example set and explicit rules.
+This now has an initial worked-example interpretation, but some categories still need tighter final rules.
 
-The main unresolved cases are:
+Current status:
 
-- CSS-dependent callouts
+- semantic callouts should usually be converted rather than dropped
+- layout-only wrappers should be stripped
+- interactive disclosure behavior should be flattened
+
+Remaining unresolved cases:
+
 - complex tables
 - multi-column layout fragments
-- hidden/revealed content
-- interactive widgets
+- interactive widgets beyond simple disclosure
 - figures composed from positioned HTML instead of SVG
 
 ### 2. How aggressive should SVG cleanup be?
@@ -413,13 +502,24 @@ Possible choices:
 - strip non-essential SVG wrappers and metadata
 - reject SVG that depends on external assets or scripts
 
+Current recommendation:
+
+- preserve inline SVG when it is self-contained and script-free
+- keep SVG-local styling needed for rendering
+- strip or reject active/external behavior
+
 ### 3. What should happen with embedded images?
 
-Cases to decide:
+Current recommendation:
 
-- normal external image URLs
+- allow normal external image URLs in v1
+- allow `data:` URLs in v1
+- treat both as best-effort imports with explicit warnings when the result may be fragile or oversized
+
+Still needs implementation detail:
+
 - repo-local image paths that are meaningless after import
-- `data:` URLs embedded directly in the HTML
+- whether `data:` URLs should remain inline or be materialized into repo assets later
 
 ### 4. Should imported docs default to a specific `parent_id`?
 
@@ -427,6 +527,7 @@ Current recommendation:
 
 - no
 - create at the root unless a later explicit default is agreed
+- preserve the existing `parent_id` when overwriting an existing doc
 
 ### 5. Should the Studio page select only from staged files, or also support browser upload later?
 
@@ -438,15 +539,128 @@ Reason:
 
 - it keeps the first implementation closer to the existing local-write model and preserves the original source file in the repo workspace
 
+### 6. How should prompt and metadata blocks be handled?
+
+Current recommendation:
+
+- make inclusion user-controlled at import time
+- if included, render obvious prompt/meta source blocks in the simplest plain form, preferably fenced code blocks
+- do not let prompt/meta handling force a preview/edit workflow
+- use only clearly identifiable source markers in v1 because the exported HTML corpus spans several months and styling may drift
+
+### 7. How should overwrite be targeted?
+
+Current recommendation:
+
+- allow overwrite only as an explicit warned action
+- target overwrite by existing `doc_id`, not by loose title text alone
+- preserve the overwritten doc's `doc_id`, filename, and viewer identity
+- always create a backup of the replaced source before write
+- keep backups untracked by the repo
+- use a light-touch same-day backup policy, for example replacing the prior same-day backup for the same target rather than accumulating every overwrite iteration
+
+## Phase 1 Decisions
+
+The following implementation decisions are now locked for the first pass.
+
+- staging directory: `var/docs/import-staging/`
+- staged HTML files: untracked by the repo
+- overwrite backups: untracked by the repo
+- title derivation: prefer `<title>` over `<h1>` when they disagree
+- non-convertible handling: pragmatic v1 best effort with warnings
+- external images: allowed in v1
+- `data:` URLs: allowed in v1
+- prompt/meta inclusion: user-controlled, but detected only from clearly identifiable source markers
+- overwrite target model: existing `doc_id`
+- overwrite backup policy: light-touch same-day replacement is acceptable for v1
+
+## Worked Example Interpretation
+
+The initial import rules should be tested against the four reviewed external HTML examples.
+
+### Example 1. Conventional prose document
+
+Observed structure:
+
+- headings
+- paragraphs
+- lists
+- one simple citation table
+- one prompt block
+
+Interpretation:
+
+- fully convertible except for page-level styling
+- prompt block should follow the user-controlled prompt/meta rule
+- simple table should convert to Markdown
+- repeated test imports of the same converted doc are a likely overwrite candidate
+
+### Example 2. Styled semantic callouts plus formulas
+
+Observed structure:
+
+- metadata block
+- prompt block
+- `TL;DR` callout
+- blockquote
+- simple tables
+- inline technical notation using subscripts
+
+Interpretation:
+
+- semantic callout blocks should be preserved as simplified Markdown sections
+- prompt/meta handling should follow the user toggle
+- simple tables should convert to Markdown
+- inline `<sub>` should be preserved as safe inline HTML where Markdown would lose meaning
+- iterative refinement of formula handling is a likely overwrite use case during importer development
+
+### Example 3. Collapsible sections
+
+Observed structure:
+
+- metadata block
+- multiple `<details>` / `<summary>` sections
+- content-bearing footer
+
+Interpretation:
+
+- disclosure interaction is non-convertible and should be flattened
+- each summary should become a heading or labeled lead line
+- enclosed content should be preserved
+- footer should be kept because it reads as document content
+- repeated import tests should overwrite only by explicit choice because flattening rules may evolve
+
+### Example 4. Diagram-led visual document
+
+Observed structure:
+
+- prompt block
+- layout wrappers for cards and grid
+- inline SVG diagram with local `<style>` inside the SVG
+- pill-like legend labels
+- supporting prose and simple table
+
+Interpretation:
+
+- preserve the SVG as raw safe HTML
+- keep SVG-local styling needed for rendering
+- strip outer layout wrappers after content extraction
+- flatten pill rows into plain text labels or comma-delimited lists
+- convert the simple table and prose normally
+- diagram-heavy files are especially likely to need repeated overwrite testing while sanitization rules settle
+
 ## Acceptance Criteria
 
 - Studio has a local-only page for docs HTML import
 - the user can choose one staged `.html` file and a target scope
 - successful import creates one new Markdown source doc in `_docs_src/` or `_docs_library_src/`
-- import does not overwrite existing docs
+- import can overwrite an existing doc only after an explicit warning and confirmation step
 - the converter removes `head`, scripts, and irrelevant page-shell styling
 - external links remain usable
 - inline SVG diagrams are preserved in a form the Docs Viewer can render
+- technical notation that depends on safe inline HTML can survive conversion
+- interactive HTML behavior is flattened into readable static content
+- overwrite preserves the target doc identity and creates a backup before replacement
 - same-scope docs payloads rebuild automatically after import
 - same-scope docs search rebuilds automatically after import
 - the import result is reported with warnings for simplified or dropped content
