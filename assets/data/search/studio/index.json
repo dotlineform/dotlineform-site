@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c211feb99cc6874047280b7a04fbf5fc",
-    "generated_at_utc": "2026-04-23T17:08:28Z",
-    "count": 124
+    "version": "blake2b-47e9e667016e58aed2a2f30560af0b85",
+    "generated_at_utc": "2026-04-23T19:01:30Z",
+    "count": 125
   },
   "entries": [
     {
@@ -1229,6 +1229,33 @@
         "21"
       ],
       "search_text": "design 2026-04-21 2026 04 21"
+    },
+    {
+      "id": "ui-request-docs-html-import-task",
+      "kind": "doc",
+      "title": "Docs HTML Import Task",
+      "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
+      "last_updated": "2026-04-23",
+      "parent_id": "ui-requests",
+      "parent_title": "UI Requests",
+      "display_meta": "2026-04-23 • UI Requests",
+      "search_terms": [
+        "ui-request-docs-html-import-task",
+        "ui",
+        "request",
+        "docs",
+        "html",
+        "import",
+        "task",
+        "docs html import task",
+        "ui requests",
+        "requests",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task ui requests requests 2026-04-23 2026 04 23"
     },
     {
       "id": "new-pipeline-implementation-plan",
