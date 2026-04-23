@@ -8,9 +8,10 @@ import sys
 from collections import Counter
 from dataclasses import dataclass, field
 from html import escape
-from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Optional
+
+from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 
 SCOPE_ROOTS = {
@@ -101,42 +102,51 @@ class ElementNode:
         return "".join(serialize_node(child) for child in self.children)
 
 
-class TreeBuilder(HTMLParser):
-    VOID_TAGS = {"br", "img", "hr", "meta", "link", "input"}
+@dataclass
+class ParsedDocument:
+    root: ElementNode
+    tag_counts: Counter[str]
+    comment_count: int
 
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.root = ElementNode(tag="#document")
-        self.stack = [self.root]
-        self.tag_counts: Counter[str] = Counter()
-        self.comment_count = 0
 
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, Optional[str]]]) -> None:
-        element = ElementNode(tag=tag.lower(), attrs={k.lower(): (v or "") for k, v in attrs})
-        self.tag_counts[element.tag] += 1
-        self.stack[-1].add_child(element)
-        if element.tag not in self.VOID_TAGS:
-            self.stack.append(element)
+def parse_with_bs4(source_html: str) -> ParsedDocument:
+    soup = BeautifulSoup(source_html, "lxml")
+    root = ElementNode(tag="#document")
+    tag_counts: Counter[str] = Counter()
+    comment_count = 0
 
-    def handle_startendtag(self, tag: str, attrs: list[tuple[str, Optional[str]]]) -> None:
-        self.handle_starttag(tag, attrs)
-        if tag.lower() not in self.VOID_TAGS and len(self.stack) > 1:
-            self.stack.pop()
+    def convert(node: Any) -> Optional[Any]:
+        nonlocal comment_count
+        if isinstance(node, Comment):
+            comment_count += 1
+            return None
+        if isinstance(node, NavigableString):
+            text = str(node)
+            if not text:
+                return None
+            return TextNode(text=text)
+        if isinstance(node, Tag):
+            tag = node.name.lower()
+            attrs: dict[str, str] = {}
+            for key, value in node.attrs.items():
+                if isinstance(value, list):
+                    attrs[key.lower()] = " ".join(str(item) for item in value)
+                else:
+                    attrs[key.lower()] = str(value)
+            element = ElementNode(tag=tag, attrs=attrs)
+            tag_counts[tag] += 1
+            for child in node.children:
+                converted = convert(child)
+                if converted is not None:
+                    element.add_child(converted)
+            return element
+        return None
 
-    def handle_endtag(self, tag: str) -> None:
-        tag = tag.lower()
-        for index in range(len(self.stack) - 1, 0, -1):
-            if self.stack[index].tag == tag:
-                del self.stack[index:]
-                return
-
-    def handle_data(self, data: str) -> None:
-        if not data:
-            return
-        self.stack[-1].add_child(TextNode(text=data))
-
-    def handle_comment(self, data: str) -> None:
-        self.comment_count += 1
+    for child in soup.contents:
+        converted = convert(child)
+        if converted is not None:
+            root.add_child(converted)
+    return ParsedDocument(root=root, tag_counts=tag_counts, comment_count=comment_count)
 
 
 def serialize_attrs(attrs: dict[str, str], *, for_svg: bool) -> str:
@@ -481,11 +491,10 @@ def main(argv: list[str] | None = None) -> int:
     source_path = resolve_source_html(repo_root, args)
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
 
-    parser = TreeBuilder()
-    parser.feed(source_html)
-    title = extract_title(parser.root)
+    parsed = parse_with_bs4(source_html)
+    title = extract_title(parsed.root)
     summary = build_summary(
-        parser.root,
+        parsed.root,
         source_html=source_html,
         title=title,
         include_prompt_meta=args.include_prompt_meta,
@@ -493,8 +502,8 @@ def main(argv: list[str] | None = None) -> int:
     summary["scope"] = args.scope
     summary["source_html"] = relative_path(repo_root, source_path)
     summary["staging_root"] = str(STAGING_REL_DIR)
-    summary["tag_counts"] = dict(parser.tag_counts.most_common())
-    summary["comment_count"] = parser.comment_count
+    summary["tag_counts"] = dict(parsed.tag_counts.most_common())
+    summary["comment_count"] = parsed.comment_count
 
     if args.markdown_preview_out:
         output_path = Path(args.markdown_preview_out).expanduser().resolve()

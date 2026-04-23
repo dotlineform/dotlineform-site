@@ -10,7 +10,9 @@ sort_order: 40
 
 Status:
 
-- planned implementation task
+- implementation in progress
+- parser/sanitizer dependencies pinned in `requirements.txt`
+- initial dry-run importer scaffold landed in `scripts/docs/docs_html_import.py`
 - depends on [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 
 ## Goal
@@ -30,6 +32,24 @@ This task covers:
 
 This task does not change the broader docs authoring or publishing model.
 
+## Current Progress
+
+Completed now:
+
+- staged fixture directory established at `var/docs/import-staging/`
+- four reviewed HTML examples copied into local staging as fixtures
+- parser/sanitizer stack pinned in `requirements.txt`
+- local project Python has the pinned parser/sanitizer stack installed
+- dry-run importer scaffold added at `scripts/docs/docs_html_import.py`
+- scaffold now parses through the fixed `beautifulsoup4` + `lxml` stack rather than the stdlib HTML parser
+
+Not done yet:
+
+- docs-management server endpoint
+- Jekyll render validation in the import path
+- Studio import page
+- create/overwrite write flow
+
 ## Implementation Boundary
 
 The implementation should stay inside the current local docs-management and Studio workflow.
@@ -48,10 +68,17 @@ Locked implementation direction:
 - keep conversion decisions project-owned rather than delegating them to a generic HTML-to-Markdown library
 - treat successful rendering through the repo's Jekyll docs pipeline as the canonical Markdown validation step
 
+Pinned v1 parser/sanitizer stack:
+
+- `beautifulsoup4`
+- `lxml`
+- `bleach`
+
 ## Files Likely To Change
 
 Expected implementation files:
 
+- `requirements.txt`
 - `scripts/docs/docs_management_server.py`
 - new conversion helper(s) under `scripts/docs/`
 - new Studio route under `studio/`
@@ -69,7 +96,24 @@ Likely docs follow-through after implementation:
 
 ## Task List
 
-### 1. Create Fixture Coverage
+### 1. Pin And Install Parser Dependencies
+
+Add the agreed parser/sanitizer libraries to `requirements.txt` and install them into the configured project Python before extending the importer further.
+
+Required outcome:
+
+- `requirements.txt` pins:
+  - `beautifulsoup4`
+  - `lxml`
+  - `bleach`
+- local setup/install instructions are sufficient for the project Python environment to use that exact stack
+- subsequent importer work builds against the fixed parser stack rather than the temporary stdlib parser scaffold
+
+Reason:
+
+- the current dry-run importer scaffold is useful for rule exploration, but it should not become the long-term parser boundary
+
+### 2. Create Fixture Coverage
 
 Add and organize local implementation fixtures for the reviewed sample HTML files.
 
@@ -86,7 +130,7 @@ Reason:
 
 - importer behavior will be easiest to stabilize against real fixture files rather than synthetic snippets
 
-### 2. Add A Shared HTML Import Conversion Module
+### 3. Add A Shared HTML Import Conversion Module
 
 Create a conversion module under `scripts/docs/` that:
 
@@ -109,8 +153,9 @@ Required v1 behaviors:
 - semantic callouts simplified rather than dropped
 - repo-local image paths degraded to plain text
 - external images and `data:` URLs handled best-effort, with plain-text fallback when doubtful
+- replaces the temporary stdlib parser scaffold with the pinned parser/sanitizer stack
 
-### 3. Add Jekyll-Based Validation
+### 4. Add Jekyll-Based Validation
 
 Add a validation step that renders the generated Markdown through the repo's existing Jekyll docs path before write completion.
 
@@ -123,7 +168,7 @@ Reason:
 
 - Jekyll render success is the real runtime contract for the Docs Viewer
 
-### 4. Extend The Docs-Management Server
+### 5. Extend The Docs-Management Server
 
 Add `POST /docs/import-html` to `scripts/docs/docs_management_server.py`.
 
@@ -141,7 +186,7 @@ Required behavior:
 - rebuild same-scope docs search
 - return structured result metadata and warnings
 
-### 5. Add The Studio Import Page
+### 6. Add The Studio Import Page
 
 Create a new Studio route and controller for HTML import.
 
@@ -163,7 +208,7 @@ Required behavior:
 
 Visible runtime copy should come from `assets/studio/data/studio_config.json`.
 
-### 6. Add Overwrite And Backup Handling
+### 7. Add Overwrite And Backup Handling
 
 Implement the overwrite confirmation and backup path as a first-class workflow.
 
@@ -178,7 +223,7 @@ Reason:
 
 - early testing is expected to overwrite the same target repeatedly
 
-### 7. Verify With The Real Fixtures
+### 8. Verify With The Real Fixtures
 
 Run the importer against the reviewed example files and verify the expected outcomes.
 
@@ -192,7 +237,7 @@ Required checks:
 - overwrite flow
 - best-effort image and `data:` fallback behavior
 
-### 8. Update Runtime And Script Docs
+### 9. Update Runtime And Script Docs
 
 After the implementation lands, update the runtime/reference docs so the feature is discoverable and operationally clear.
 
@@ -208,6 +253,7 @@ Minimum docs follow-through:
 Codex-run checks:
 
 - Python syntax checks for new/changed Python files using the configured project Python interpreter
+- confirm the pinned parser/sanitizer libraries are importable in the configured project Python
 - dry-run style fixture execution where possible before live writes
 - `./scripts/build_docs.rb --scope studio --write`
 - `./scripts/build_search.rb --scope studio --write`

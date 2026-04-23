@@ -392,6 +392,12 @@ Recommended implementation boundary:
 - let Python-owned rules decide what to keep, flatten, preserve as safe HTML, rewrite as plain text, or drop with warnings
 - do not treat a third-party HTML-to-Markdown converter as the product logic
 
+Pinned v1 parser/sanitizer stack:
+
+- `beautifulsoup4`
+- `lxml`
+- `bleach`
+
 The parser output should be a navigable node tree in memory, not a JSON artifact written to disk as part of the normal import path.
 
 Add a conversion module under `scripts/docs/` that can:
@@ -409,6 +415,7 @@ Recommended library boundary:
 - external libraries are preferred for HTML parsing and sanitization
 - conversion decisions remain project-owned and rule-driven in local code
 - a separate Markdown parser or linter is not the canonical validator for this feature
+- the parser/sanitizer libraries should be pinned in `requirements.txt` and installed before the importer is treated as building against its real v1 parser stack
 
 ### Phase 3. Add Server-Side Import Write Support
 
@@ -581,6 +588,7 @@ The following implementation decisions are now locked for the first pass.
 - overwrite target model: existing `doc_id`
 - overwrite backup policy: light-touch same-day replacement is acceptable for v1
 - external libraries: preferred for HTML parsing and sanitization
+- parser/sanitizer stack: `beautifulsoup4`, `lxml`, `bleach`
 - Markdown validation: use the repo's Jekyll render path rather than a separate required linter
 
 ## Worked Example Interpretation
