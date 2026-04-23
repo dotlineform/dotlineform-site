@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-60edaaf5f558b49aa1d41697ea34570b",
-    "generated_at_utc": "2026-04-23T16:17:40Z",
-    "count": 123
+    "version": "blake2b-c211feb99cc6874047280b7a04fbf5fc",
+    "generated_at_utc": "2026-04-23T17:08:28Z",
+    "count": 124
   },
   "entries": [
     {
@@ -844,6 +844,33 @@
         "18"
       ],
       "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-04-18 2026 04 18"
+    },
+    {
+      "id": "ui-request-docs-html-import-spec",
+      "kind": "doc",
+      "title": "Docs HTML Import Spec",
+      "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
+      "last_updated": "2026-04-23",
+      "parent_id": "ui-requests",
+      "parent_title": "UI Requests",
+      "display_meta": "2026-04-23 • UI Requests",
+      "search_terms": [
+        "ui-request-docs-html-import-spec",
+        "ui",
+        "request",
+        "docs",
+        "html",
+        "import",
+        "spec",
+        "docs html import spec",
+        "ui requests",
+        "requests",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "ui-request-docs-html-import-spec ui request docs html import spec docs html import spec ui requests requests 2026-04-23 2026 04 23"
     },
     {
       "id": "docs-viewer-runtime-boundary",

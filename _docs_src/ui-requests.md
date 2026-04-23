@@ -46,3 +46,4 @@ Recommended naming pattern:
 
 - [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec)
 - [Docs Viewer Favourites Task](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task)
+- [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)

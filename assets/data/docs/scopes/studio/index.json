@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T16:17:38Z",
+  "generated_at": "2026-04-23T17:08:26Z",
   "docs": [
     {
       "scope": "studio",
@@ -396,6 +396,17 @@
       "source_path": "scripts-copy-draft-media.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-request-docs-html-import-spec",
+      "title": "Docs HTML Import Spec",
+      "last_updated": "2026-04-23",
+      "parent_id": "ui-requests",
+      "sort_order": 30,
+      "source_path": "ui-request-docs-html-import-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-spec.json"
     },
     {
       "scope": "studio",
