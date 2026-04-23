@@ -381,9 +381,7 @@ Recommended response shape should include at least:
 
 ### Phase 1. Lock The Import Contract
 
-Decide:
-
-- final handling details for imported images and `data:` URLs
+Phase 1 contract decisions are now locked in [Phase 1 Decisions](/docs/?scope=studio&doc=ui-request-docs-html-import-spec#phase-1-decisions).
 
 ### Phase 2. Add A Shared Conversion Module
 
