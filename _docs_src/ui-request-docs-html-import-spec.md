@@ -387,15 +387,30 @@ Decide:
 
 ### Phase 2. Add A Shared Conversion Module
 
+Recommended implementation boundary:
+
+- keep the import orchestration and rule logic in Python, alongside the local docs-management service
+- use a library-backed HTML parser and sanitization layer to parse the full source document into a DOM-like in-memory node tree
+- let Python-owned rules decide what to keep, flatten, preserve as safe HTML, rewrite as plain text, or drop with warnings
+- do not treat a third-party HTML-to-Markdown converter as the product logic
+
+The parser output should be a navigable node tree in memory, not a JSON artifact written to disk as part of the normal import path.
+
 Add a conversion module under `scripts/docs/` that can:
 
-- parse self-contained HTML
+- parse self-contained HTML with a robust HTML parser library
 - extract meaningful body content
-- sanitize unsafe elements
+- sanitize unsafe elements with a library-backed sanitization step
 - convert supported structures into Markdown
 - preserve selected safe HTML blocks such as inline SVG
 - preserve selected inline safe HTML for technical notation such as subscripts and superscripts
 - produce a structured conversion report
+
+Recommended library boundary:
+
+- external libraries are preferred for HTML parsing and sanitization
+- conversion decisions remain project-owned and rule-driven in local code
+- a separate Markdown parser or linter is not the canonical validator for this feature
 
 ### Phase 3. Add Server-Side Import Write Support
 
@@ -427,6 +442,17 @@ Verify:
 - same-scope docs-search rebuild
 - safe stripping of scripts and page-shell content
 - readable rendering of preserved SVG in the viewer
+- generated Markdown renders successfully through the repo's existing Jekyll docs build path
+
+Preferred validation rule:
+
+- treat successful rendering through the current Jekyll docs pipeline as the canonical Markdown validation step
+- do not require a separate Markdown syntax checker or linter for v1
+
+Reason:
+
+- the docs builder already renders Markdown through the repo's configured Jekyll converter
+- this is a more accurate contract for the Docs Viewer than generic Markdown validation alone
 
 After implementation, update:
 
@@ -439,6 +465,7 @@ After implementation, update:
 
 - much less manual cleanup for ChatGPT-style exported HTML
 - keeps the current Docs Viewer source-of-truth model intact
+- keeps validation aligned with the repo's real Jekyll Markdown behavior
 - preserves useful diagrams without forcing SVG-to-image conversion
 - preserves technical notation that plain Markdown cannot represent cleanly
 - keeps the import workflow inside the existing local docs-management boundary
@@ -453,6 +480,7 @@ After implementation, update:
 - staged originals could create repo clutter if the staging path and ignore policy are not explicit
 - no preview step means warnings and deterministic rules need to be strong enough to trust
 - overwrite behavior could replace the wrong source doc if collision handling is too loose or ambiguous
+- a third-party converter or linter could disagree with the repo's Jekyll behavior if treated as the source of truth
 
 ## Open Questions
 
@@ -556,6 +584,8 @@ The following implementation decisions are now locked for the first pass.
 - prompt/meta inclusion: user-controlled, but detected only from clearly identifiable source markers
 - overwrite target model: existing `doc_id`
 - overwrite backup policy: light-touch same-day replacement is acceptable for v1
+- external libraries: preferred for HTML parsing and sanitization
+- Markdown validation: use the repo's Jekyll render path rather than a separate required linter
 
 ## Worked Example Interpretation
 
