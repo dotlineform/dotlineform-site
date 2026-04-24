@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: scripts
 sort_order: 10
 ---
@@ -257,6 +257,7 @@ Apply behavior:
   - `_docs_library_src/*.md`
   - `var/docs/backups/`
   - `var/docs/logs/`
+  - `var/docs/watch-suppressions/`
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
 - backups are operation-scoped rather than full-scope:
   - `create` writes a manifest-only backup bundle
@@ -269,6 +270,7 @@ Apply behavior:
 - the shared Docs Viewer probes `GET /capabilities` only when `?mode=manage` is present
 - if the local service is unavailable, the viewer stays read-only and shows a manage-mode unavailable message
 - successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server
+- `var/` is excluded from Jekyll because docs-management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
 
 ## Related References
 

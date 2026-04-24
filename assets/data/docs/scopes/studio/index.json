@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T22:08:06Z",
+  "generated_at": "2026-04-24T08:16:53Z",
   "docs": [
     {
       "scope": "studio",
@@ -38,7 +38,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-24",
       "parent_id": "scripts",
       "sort_order": 10,
       "source_path": "scripts-docs-management-server.md",
@@ -203,7 +203,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-live-rebuild-watcher",
       "title": "Docs Live Rebuild Watcher",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-24",
       "parent_id": "scripts",
       "sort_order": 18,
       "source_path": "scripts-docs-live-rebuild-watcher.md",
@@ -1358,7 +1358,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-24",
       "parent_id": "",
       "sort_order": 270,
       "source_path": "site-change-log.md",

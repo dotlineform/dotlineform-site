@@ -1,11 +1,32 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-24] Excluded local docs runtime state from Jekyll watch input
+
+**Status:** implemented
+
+**Area:** Studio / docs viewer / local runtime
+
+**Summary:**
+Excluded `var/` from Jekyll so local docs-management runtime files no longer trigger `jekyll serve` regeneration events.
+
+**Reason:**
+Docs-management writes create short-lived watcher-suppression markers under `var/docs/watch-suppressions/`. During local imports, the docs live watcher can remove a completed marker before Jekyll's own file watcher stats it, causing a noisy `No such file or directory @ rb_file_s_stat` message even though the docs write and same-scope rebuild succeeded.
+
+**Effect:**
+Local backups, staged imports, logs, and watcher-suppression markers under `var/docs/` remain available to Studio tooling but are no longer treated as Jekyll site input. This keeps `jekyll serve` focused on publishable source files and avoids transient file-watch races from local operational state.
+
+**Affected files/docs:**
+
+- `_config.yml`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 
 ## [2026-04-23] Suppressed duplicate docs watcher rebuilds after localhost docs-management writes
 

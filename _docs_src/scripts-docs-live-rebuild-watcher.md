@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-live-rebuild-watcher
 title: "Docs Live Rebuild Watcher"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: scripts
 sort_order: 18
 ---
@@ -88,6 +88,7 @@ It does this by comparing the current root-level `.md` file set, file mtimes, an
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
 - when the localhost docs-management server writes a source doc and rebuilds the same scope itself, it now leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change
+- `var/` is excluded from Jekyll so transient watcher-suppression marker writes do not trigger Jekyll serve regenerations or file-watch stat races
 
 ## Related References
 

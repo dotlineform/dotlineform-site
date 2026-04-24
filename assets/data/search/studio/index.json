@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-00eb492740f2752aed62f8abfd017a12",
-    "generated_at_utc": "2026-04-23T22:08:22Z",
+    "version": "blake2b-a2d04cf683609cea9855a21dcad99b0b",
+    "generated_at_utc": "2026-04-24T08:16:59Z",
     "count": 127
   },
   "entries": [
@@ -85,10 +85,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-24",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-23 • Scripts",
+      "display_meta": "2026-04-24 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -96,12 +96,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-04-23",
+        "2026-04-24",
         "2026",
         "04",
-        "23"
+        "24"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-23 2026 04 23"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-24 2026 04 24"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -432,10 +432,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-24",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-23 • Scripts",
+      "display_meta": "2026-04-24 • Scripts",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -444,12 +444,12 @@
         "rebuild",
         "watcher",
         "docs live rebuild watcher",
-        "2026-04-23",
+        "2026-04-24",
         "2026",
         "04",
-        "23"
+        "24"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-23 2026 04 23"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-24 2026 04 24"
     },
     {
       "id": "scripts-main-pipeline",
@@ -2800,20 +2800,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
+      "last_updated": "2026-04-24",
+      "display_meta": "2026-04-24",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-23",
+        "2026-04-24",
         "2026",
         "04",
-        "23"
+        "24"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-23 2026 04 23"
+      "search_text": "site-change-log site change log site change log 2026-04-24 2026 04 24"
     },
     {
       "id": "tiered-dimension-policy",

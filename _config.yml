@@ -87,3 +87,4 @@ exclude:
   - vendor
   - node_modules
   - .bundle
+  - var
