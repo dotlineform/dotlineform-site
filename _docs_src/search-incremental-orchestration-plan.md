@@ -95,12 +95,19 @@ Open decisions:
 - resolved: the server should expand subtree targets from canonical docs data, using a request shape such as explicit `doc_ids` plus `include_descendants: true`
 - resolved: no-op means no source file content would change; no-op requests should write no files, create no backup, run no docs rebuild, run no search rebuild, and leave timestamps unchanged
 - resolved: backup bundles should copy only source files that actually changed, while the manifest may record requested and skipped ids
+- resolved: the first user-facing controls should keep one selected-doc command, but prompt when the action needs ancestor or descendant scope expansion
 
-Remaining decision:
+End-state viewability behavior:
 
-- which user-facing controls should expose selected-doc and subtree modes first?
+- making a selected child viewable should detect every non-viewable ancestor in the chain, prompt that parent docs will also become viewable, and send the child plus those ancestors when confirmed
+- making a selected parent, grandparent, or other ancestor viewable should prompt whether all docs under that selected doc should also become viewable
+- if the user confirms the descendant prompt, the request should include the selected doc plus all descendants
+- if the user declines the descendant prompt, the request should include only the selected doc
+- cancelling either prompt should write nothing
+- making any selected doc non-viewable should affect only that selected doc, without changing ancestors or descendants
+- descendants under a non-viewable ancestor can look indeterminate in public/default mode because the hidden ancestor prevents discovery, but their stored `viewable` values remain explicit
 
-Phase 1 can start once the first bulk UI requirement is clear.
+Phase 1 can start with selected-doc `Make viewable` and later extend to a hide/non-viewable command if that UI is needed.
 
 ## Phase 2. Incremental Docs-Search Interface
 
