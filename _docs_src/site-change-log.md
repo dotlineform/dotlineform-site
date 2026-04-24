@@ -21,7 +21,7 @@ Added a separate `viewable` docs flag so generated docs can be hidden from the p
 Bulk Library imports need to enter the generated docs system without immediately appearing as a long unstructured public root list. The existing `published` flag already means pipeline inclusion, so public visibility needed a separate field.
 
 **Effect:**
-Generated docs indexes and per-doc payloads now include `published` and `viewable`. Public/default Docs Viewer trees, recently-added lists, and direct doc routing use viewable docs only. Manage mode has a `drafts` checkbox that adds non-viewable docs to the tree while retaining visible docs for context, plus a `Make viewable` action for a selected draft. Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`.
+Generated docs indexes and per-doc payloads now include `published` and `viewable`. Public/default Docs Viewer trees, recently-added lists, and direct doc routing use viewable docs only. Manage mode has a `drafts` checkbox that adds non-viewable docs to the tree while retaining visible docs for context, plus a bulk-backed `Make viewable` action for a selected draft. That action prompts before making required non-viewable ancestors or optional descendants viewable, then writes the affected docs and runs one same-scope docs/search rebuild. Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`.
 
 **Affected files/docs:**
 

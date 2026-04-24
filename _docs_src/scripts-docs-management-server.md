@@ -203,14 +203,27 @@ Metadata-update behavior:
 }
 ```
 
+`POST /docs/update-viewability-bulk` expects:
+
+```json
+{
+  "scope": "library",
+  "doc_ids": ["example-doc", "example-parent"],
+  "viewable": true,
+  "include_descendants": false
+}
+```
+
 Viewability-update behavior:
 
 - updates only the source doc's `viewable` front matter
 - preserves `doc_id`, title, parent, sort order, body content, `added_date`, and `last_updated`
 - writes `published: true` alongside `viewable` so the doc stays in generated docs payloads
-- is used by the Docs Viewer manage-mode `Make viewable` action
-- rebuilds generated docs payloads and same-scope docs search after a successful single-doc visibility change
-- does not implement incremental search; bulk viewability work should batch source writes and run one docs/search rebuild rather than one rebuild per doc
+- the single-doc endpoint is preserved for callers that already use `doc_id`
+- the bulk endpoint accepts explicit `doc_ids`; `include_descendants: true` expands each requested doc to include its descendants from canonical docs source data
+- no-op requests write no files, create no backup, and do not rebuild docs/search
+- changed bulk requests copy only changed source files into the backup bundle, then run one docs/search rebuild for the scope
+- the Docs Viewer manage-mode `Make viewable` action now uses the bulk endpoint so it can include required ancestors and optional descendants in one write/rebuild
 
 `POST /docs/move` expects:
 

@@ -349,8 +349,8 @@ Status: implemented.
 - rebuild docs and search
 - reload viewer state
 
-Status: implemented for single selected docs.
-The action uses the existing same-scope docs/search rebuild path rather than incremental search.
+Status: implemented through the bulk docs-management endpoint.
+The viewer keeps one selected-doc button, prompts for required ancestor and optional descendant expansion, and uses the same-scope docs/search rebuild path rather than incremental search.
 
 ### Phase 5. Import/create defaults
 

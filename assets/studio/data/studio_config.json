@@ -124,7 +124,10 @@
       "manage_clear_search_note": "Clear search to manage the current doc.",
       "manage_mode_note": "Manage mode is local-only.",
       "manage_server_not_configured_error": "Local docs-management server is not configured.",
-      "manage_unavailable_note": "Manage mode unavailable: local docs server unavailable for this scope."
+      "manage_unavailable_note": "Manage mode unavailable: local docs server unavailable for this scope.",
+      "viewable_ancestor_prompt": "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",
+      "viewable_descendant_prompt": "Make descendant docs viewable too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
+      "viewable_invalid_choice": "Viewability update cancelled: expected `all` or `selected`."
     },
     "series_tag_editor": {
       "missing_series_id_error": "Tag Studio error: missing series id.",

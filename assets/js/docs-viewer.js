@@ -100,7 +100,10 @@
       clearSearchNote: "Clear search to manage the current doc.",
       manageModeNote: "Manage mode is local-only and writes through the docs-management server.",
       serverNotConfiguredError: "Local docs-management server is not configured.",
-      unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope."
+      unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope.",
+      viewableAncestorPrompt: "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",
+      viewableDescendantPrompt: "Make descendant docs viewable too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
+      viewableInvalidChoice: "Viewability update cancelled: expected `all` or `selected`."
     },
     showDrafts: false,
     reloadNonce: "",
@@ -234,6 +237,14 @@
     return String(value || fallback || "");
   }
 
+  function formatText(template, tokens) {
+    var text = String(template || "");
+    Object.keys(tokens || {}).forEach(function (key) {
+      text = text.replace(new RegExp("\\{" + key + "\\}", "g"), tokens[key]);
+    });
+    return text;
+  }
+
   function applyViewerConfig(config) {
     state.viewerConfigLoaded = true;
     state.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), DEFAULT_RECENT_LIMIT);
@@ -269,6 +280,9 @@
     state.managementText.manageModeNote = getConfigText(config, "docs_viewer.manage_mode_note", state.managementText.manageModeNote);
     state.managementText.serverNotConfiguredError = getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
     state.managementText.unavailableNote = getConfigText(config, "docs_viewer.manage_unavailable_note", state.managementText.unavailableNote);
+    state.managementText.viewableAncestorPrompt = getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
+    state.managementText.viewableDescendantPrompt = getConfigText(config, "docs_viewer.viewable_descendant_prompt", state.managementText.viewableDescendantPrompt);
+    state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
     if (state.recentModeActive) {
       renderRecentMode();
     }
@@ -1017,6 +1031,77 @@
     return bucket;
   }
 
+  function collectAllDescendantDocIds(docId, bucket) {
+    state.allDocs.forEach(function (candidate) {
+      if ((candidate.parent_id || "") !== docId || bucket.has(candidate.doc_id)) return;
+      bucket.add(candidate.doc_id);
+      collectAllDescendantDocIds(candidate.doc_id, bucket);
+    });
+    return bucket;
+  }
+
+  function nonViewableAncestorDocs(doc) {
+    var ancestors = [];
+    var current = doc && doc.parent_id ? findAllDocById(doc.parent_id) : null;
+    while (current) {
+      if (!isDocViewable(current)) {
+        ancestors.unshift(current);
+      }
+      current = current.parent_id ? findAllDocById(current.parent_id) : null;
+    }
+    return ancestors;
+  }
+
+  function docTitleList(docs) {
+    return docs.map(function (item) {
+      return item.title || item.doc_id;
+    }).join(", ");
+  }
+
+  function viewabilityTargetDocIds(doc) {
+    var ancestors = nonViewableAncestorDocs(doc);
+    if (ancestors.length) {
+      var ancestorMessage = formatText(state.managementText.viewableAncestorPrompt, {
+        titles: docTitleList(ancestors)
+      });
+      if (!window.confirm(ancestorMessage)) {
+        return null;
+      }
+    }
+
+    var includeDescendants = false;
+    var descendantIds = Array.from(collectAllDescendantDocIds(doc.doc_id, new Set()));
+    if (descendantIds.length) {
+      var descendantChoice = window.prompt(
+        state.managementText.viewableDescendantPrompt,
+        "selected"
+      );
+      if (descendantChoice === null) {
+        return null;
+      }
+      var normalizedChoice = descendantChoice.trim().toLowerCase();
+      if (normalizedChoice === "all") {
+        includeDescendants = true;
+      } else if (normalizedChoice !== "selected") {
+        setManagementMessage(state.managementText.viewableInvalidChoice, true);
+        setStatus(state.managementText.viewableInvalidChoice, true);
+        return null;
+      }
+    }
+
+    var targetIds = new Set();
+    ancestors.forEach(function (ancestor) {
+      targetIds.add(ancestor.doc_id);
+    });
+    targetIds.add(doc.doc_id);
+    if (includeDescendants) {
+      descendantIds.forEach(function (docId) {
+        targetIds.add(docId);
+      });
+    }
+    return Array.from(targetIds);
+  }
+
   function metadataParentOptions(doc) {
     var blockedIds = collectDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
     var options = [{ value: "", label: "Root" }];
@@ -1506,14 +1591,17 @@
   function handleMakeViewable() {
     var doc = currentSelectedDoc();
     if (!doc || isDocViewable(doc)) return;
+    var targetDocIds = viewabilityTargetDocIds(doc);
+    if (!targetDocIds) return;
 
     state.managementBusy = true;
-    setManagementMessage("Making " + doc.title + " viewable...", false);
-    setStatus("Making " + doc.title + " viewable...", false);
+    var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
+    setManagementMessage("Making " + countText + " viewable...", false);
+    setStatus("Making " + countText + " viewable...", false);
 
-    fetchManagementJson("/docs/update-viewability", "POST", {
+    fetchManagementJson("/docs/update-viewability-bulk", "POST", {
       scope: viewerScope,
-      doc_id: doc.doc_id,
+      doc_ids: targetDocIds,
       viewable: true
     })
       .then(function (payload) {

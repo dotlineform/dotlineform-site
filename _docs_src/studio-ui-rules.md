@@ -23,6 +23,25 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-24 / UI-030
+
+- status: adopted
+- route: `/docs/?mode=manage`, `/library/?mode=manage`
+- issue: making one draft/non-viewable docs-viewer page viewable can leave it undiscoverable if a parent remains non-viewable, while making a parent viewable may or may not imply that descendants should also appear.
+- triage: local workflow refinement
+- reasoning: viewability is a tree workflow, not only a single-doc field toggle. The UI should preserve the one-button action but make implicit tree effects explicit before writing source files.
+- outcome: `Make viewable` now detects non-viewable ancestors and prompts before including them. If the selected doc has descendants, it prompts for `all` or `selected`; cancel writes nothing. The action sends one bulk docs-management request so the source changes and docs/search rebuild happen once.
+- files changed:
+  - `assets/js/docs-viewer.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open a non-viewable child under a non-viewable parent in manage mode and confirm the ancestor prompt appears before write
+  - open a non-viewable parent with children and confirm `selected`, `all`, and cancel paths behave as described
+- follow-up:
+  - replace native browser prompts with a structured modal if more docs-management bulk actions are added
+
 ## UI Rule Log 2026-04-24 / UI-029
 
 - status: adopted

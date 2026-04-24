@@ -138,7 +138,7 @@ Current manage-mode draft behavior:
 - manage-mode direct links to a non-viewable doc auto-enable the drafts state so Studio import/create completion links can land on the target
 - viewable docs remain visible when drafts are shown, so the tree keeps context
 - non-viewable docs are marked with configurable tree-row styling from `studio_config.json`
-- a selected non-viewable doc can be made viewable through the manage toolbar
+- a selected non-viewable doc can be made viewable through the manage toolbar; the action prompts before also making required non-viewable ancestors or optional descendants viewable
 
 Document view metadata continues to display `last_updated`, because that is more meaningful while reading a single doc. Docs search also continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
 

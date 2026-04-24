@@ -15,7 +15,7 @@ Status:
 - Phase 3 implemented: leaf-doc drag/drop move with front-matter-only tree updates
 - Phase 4 implemented: current-doc metadata edit modal for `title`, `parent_id`, and `sort_order`
 - Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
-- Phase 6 implemented: draft/non-viewable review and single-doc `Make viewable`
+- Phase 6 implemented: draft/non-viewable review and bulk-backed `Make viewable`
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -35,7 +35,8 @@ Implemented now:
 - Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`
 - manage mode can show draft/non-viewable docs with a checkbox while keeping viewable docs visible for context
 - selected non-viewable docs can be made viewable through the manage toolbar
-- single-doc viewability changes rebuild docs payloads plus same-scope docs search
+- `Make viewable` includes required non-viewable ancestors after confirmation and can optionally include descendants
+- viewability changes are sent through a bulk endpoint so one action writes the affected source files and runs one docs/search rebuild
 - docs-management backups are operation-scoped rather than full-scope snapshots
 - `Open Source` is available from a manage-mode right-click menu on doc rows
 - right-click `Open Source` currently exposes:
@@ -56,8 +57,7 @@ Implemented now:
 Not implemented yet:
 
 - dragging folders or any doc with child docs
-- hosted-site or multi-user write behavior
-- bulk viewability changes or incremental docs-search updates
+- incremental docs-search updates
 
 ## Suggested Follow-On Features
 
@@ -71,14 +71,13 @@ Current state:
   - `New Sibling`
   - `New Child`
   - draft/non-viewable review
-  - `Make viewable`
+  - `Make viewable` with required-ancestor and optional-descendant handling
   - drag/drop move for leaf docs
   - archive and delete
 
 Potential later areas, if promoted:
 
 - dragging folders or docs with child docs
-- bulk viewability workflow that batches many source writes into one rebuild
 - true incremental docs-search updates for visibility-only changes
 - a stronger modal/shareable shell for docs-viewer management actions if the surface grows
 - more explicit structured impact previews for archive/delete if native confirm flows become a limiting factor
@@ -168,7 +167,7 @@ Included:
 - validation for filename and `doc_id` uniqueness
 - tree operations that affect `parent_id` and `sort_order`
 
-Excluded for the first implementation unless later promoted:
+Excluded:
 
 - remote multi-user editing
 - GitHub Pages hosted write behavior
@@ -553,7 +552,7 @@ Possible related tasks:
 The broader localhost-server consolidation question is still a separate planning track.
 Flattening is no longer optional work here: it is a prerequisite for Studio docs management.
 
-## Non-Goals For First Pass
+## Non-Goals
 
 - turning the Docs Viewer into a full CMS
 - multi-user or remote editing

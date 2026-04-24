@@ -18,6 +18,7 @@ Endpoints:
   POST /docs/open-source
   POST /docs/update-metadata
   POST /docs/update-viewability
+  POST /docs/update-viewability-bulk
   POST /docs/create
   POST /docs/move
   POST /docs/archive
@@ -1290,6 +1291,169 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
     }
 
 
+def ordered_unique_doc_ids(raw_doc_ids: Any) -> list[str]:
+    if not isinstance(raw_doc_ids, list):
+        raise ValueError("doc_ids must be a list")
+    seen: set[str] = set()
+    doc_ids: list[str] = []
+    for raw_doc_id in raw_doc_ids:
+        doc_id = str(raw_doc_id or "").strip()
+        if not doc_id or doc_id in seen:
+            continue
+        seen.add(doc_id)
+        doc_ids.append(doc_id)
+    if not doc_ids:
+        raise ValueError("doc_ids is required")
+    return doc_ids
+
+
+def expand_viewability_targets(docs: list[ScopeDoc], doc_ids: list[str], include_descendants: bool) -> list[ScopeDoc]:
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    target_ids: list[str] = []
+    seen: set[str] = set()
+
+    def add_doc_id(doc_id: str) -> None:
+        if doc_id not in docs_by_id:
+            raise FileNotFoundError(f"doc {doc_id!r} not found")
+        if doc_id in seen:
+            return
+        seen.add(doc_id)
+        target_ids.append(doc_id)
+
+    for doc_id in doc_ids:
+        add_doc_id(doc_id)
+        if include_descendants:
+            for descendant_id in sorted(descendant_doc_ids(docs, doc_id)):
+                add_doc_id(descendant_id)
+
+    targets = [docs_by_id[doc_id] for doc_id in target_ids]
+    reserved = [doc.doc_id for doc in targets if doc.doc_id in RESERVED_DOC_IDS]
+    if reserved:
+        raise ValueError(f"{', '.join(reserved)} cannot be edited")
+    return targets
+
+
+def apply_viewability_update(
+    repo_root: Path,
+    scope: str,
+    targets: list[ScopeDoc],
+    next_viewable: bool,
+    dry_run: bool,
+    *,
+    operation: str,
+    suppression_reason: str,
+    requested_doc_ids: list[str],
+    include_descendants: bool,
+) -> Dict[str, Any]:
+    changed_targets = [target for target in targets if target.viewable != next_viewable]
+    skipped_targets = [target for target in targets if target.viewable == next_viewable]
+    changed_doc_ids = {target.doc_id for target in changed_targets}
+
+    if not changed_targets:
+        return {
+            "ok": True,
+            "scope": scope,
+            "doc_ids": [target.doc_id for target in targets],
+            "changed_doc_ids": [],
+            "skipped_doc_ids": [target.doc_id for target in skipped_targets],
+            "records": [
+                {
+                    "doc_id": target.doc_id,
+                    "viewable": target.viewable,
+                    "path": relative_path(repo_root, target.path),
+                }
+                for target in targets
+            ],
+            "summary_text": f"No viewability changes for {len(targets)} doc{'s' if len(targets) != 1 else ''}.",
+            "dry_run": dry_run,
+        }
+
+    rewritten_sources = {
+        target.doc_id: rewrite_doc_source(target, {"published": True, "viewable": next_viewable})
+        for target in changed_targets
+    }
+    backup_dir = None
+    rebuild = None
+    if not dry_run:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            operation,
+            changed_targets,
+            {
+                "requested_doc_ids": requested_doc_ids,
+                "include_descendants": include_descendants,
+                "target_doc_ids": [target.doc_id for target in targets],
+                "changed_doc_ids": [target.doc_id for target in changed_targets],
+                "skipped_doc_ids": [target.doc_id for target in skipped_targets],
+                "to_viewable": next_viewable,
+            },
+        )
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target.path for target in changed_targets],
+            lambda: [
+                write_text_atomic(target.path, rewritten_sources[target.doc_id])
+                for target in changed_targets
+            ],
+            suppression_reason=suppression_reason,
+        )
+        log_event(
+            repo_root,
+            operation,
+            {
+                "scope": scope,
+                "requested_count": len(requested_doc_ids),
+                "target_count": len(targets),
+                "changed_count": len(changed_targets),
+                "to_viewable": next_viewable,
+            },
+        )
+
+    return {
+        "ok": True,
+        "scope": scope,
+        "doc_ids": [target.doc_id for target in targets],
+        "changed_doc_ids": [target.doc_id for target in changed_targets],
+        "skipped_doc_ids": [target.doc_id for target in skipped_targets],
+        "records": [
+            {
+                "doc_id": target.doc_id,
+                "viewable": next_viewable if target.doc_id in changed_doc_ids else target.viewable,
+                "path": relative_path(repo_root, target.path),
+            }
+            for target in targets
+        ],
+        "summary_text": f"Updated viewability for {len(changed_targets)} doc{'s' if len(changed_targets) != 1 else ''}.",
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "dry_run": dry_run,
+    }
+
+
+def handle_update_viewability_bulk(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    doc_ids = ordered_unique_doc_ids(body.get("doc_ids"))
+    if "viewable" not in body:
+        raise ValueError("viewable is required")
+    next_viewable = front_matter_boolean(body, "viewable", True)
+    include_descendants = bool(body.get("include_descendants"))
+    docs = load_scope_docs(repo_root, scope)
+    targets = expand_viewability_targets(docs, doc_ids, include_descendants)
+    return apply_viewability_update(
+        repo_root,
+        scope,
+        targets,
+        next_viewable,
+        dry_run,
+        operation="update-viewability-bulk",
+        suppression_reason="docs-update-viewability-bulk",
+        requested_doc_ids=doc_ids,
+        include_descendants=include_descendants,
+    )
+
+
 def handle_update_viewability(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     doc_id = str(body.get("doc_id") or "").strip()
@@ -1300,73 +1464,30 @@ def handle_update_viewability(repo_root: Path, body: Dict[str, Any], dry_run: bo
 
     next_viewable = front_matter_boolean(body, "viewable", True)
     docs = load_scope_docs(repo_root, scope)
-    target = next((doc for doc in docs if doc.doc_id == doc_id), None)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if target.doc_id in RESERVED_DOC_IDS:
-        raise ValueError(f"{target.doc_id} is a reserved system doc and cannot be edited")
-
-    if target.viewable == next_viewable:
-        return {
-            "ok": True,
-            "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
-            "record": {
-                "doc_id": target.doc_id,
-                "viewable": target.viewable,
-            },
-            "summary_text": f"No viewability changes for {target.doc_id}.",
-            "dry_run": dry_run,
-        }
-
-    rewritten_source = rewrite_doc_source(target, {"published": True, "viewable": next_viewable})
-    backup_dir = None
-    rebuild = None
-    if not dry_run:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "update-viewability",
-            [target],
-            {
-                "doc_id": target.doc_id,
-                "from_viewable": target.viewable,
-                "to_viewable": next_viewable,
-            },
-        )
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target.path],
-            lambda: write_text_atomic(target.path, rewritten_source),
-            suppression_reason="docs-update-viewability",
-        )
-        log_event(
-            repo_root,
-            "docs-update-viewability",
-            {
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "from_viewable": target.viewable,
-                "to_viewable": next_viewable,
-            },
-        )
-
-    return {
-        "ok": True,
-        "scope": scope,
+    targets = expand_viewability_targets(docs, [doc_id], False)
+    payload = apply_viewability_update(
+        repo_root,
+        scope,
+        targets,
+        next_viewable,
+        dry_run,
+        operation="update-viewability",
+        suppression_reason="docs-update-viewability",
+        requested_doc_ids=[doc_id],
+        include_descendants=False,
+    )
+    target = targets[0]
+    payload["doc_id"] = target.doc_id
+    payload["path"] = relative_path(repo_root, target.path)
+    payload["record"] = {
         "doc_id": target.doc_id,
-        "path": relative_path(repo_root, target.path),
-        "record": {
-            "doc_id": target.doc_id,
-            "viewable": next_viewable,
-        },
-        "summary_text": f"Updated viewability for {target.doc_id}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
+        "viewable": next_viewable if target.viewable != next_viewable else target.viewable,
     }
+    if target.viewable == next_viewable:
+        payload["summary_text"] = f"No viewability changes for {target.doc_id}."
+    else:
+        payload["summary_text"] = f"Updated viewability for {target.doc_id}."
+    return payload
 
 
 def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
@@ -1728,6 +1849,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 return
             if self.path == "/docs/update-viewability":
                 payload = handle_update_viewability(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/update-viewability-bulk":
+                payload = handle_update_viewability_bulk(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/create":
