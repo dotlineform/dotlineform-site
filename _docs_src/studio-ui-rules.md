@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: design
 sort_order: 30
 ---
@@ -21,6 +21,45 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-24 / UI-029
+
+- status: adopted
+- route: `/studio/library/`, `/studio/library-import/`
+- issue: Studio-originated links into the Library viewer opened the public read-only route, even though the user had entered from an admin workflow and usually needed manage-mode controls.
+- triage: local pattern refinement
+- reasoning: route context matters. Public navigation to `/library/` should remain user-facing, but links that start inside Studio are admin links and should preserve that operational context when crossing into the shared Library viewer.
+- outcome: the Library dashboard panel now opens `/library/?mode=manage`, and docs HTML import result viewer URLs for Library docs now append `mode=manage`.
+- files changed:
+  - `studio/library/index.md`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/studio-runtime.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/library/` and confirm the Library panel points to `/library/?mode=manage`
+  - complete a Library import on `/studio/library-import/` and confirm `Open viewer` opens `/library/?doc=<doc_id>&mode=manage`
+- follow-up:
+  - keep public header/nav Library links read-only unless they are explicitly part of a Studio/admin workflow
+
+## UI Rule Log 2026-04-24 / UI-028
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: the import result confirmed the imported `doc_id` and exposed a viewer link, but the post-import review actions were not optimized for the two natural follow-ups: opening the Markdown source in the editor and checking the rendered viewer without losing the import page.
+- triage: local pattern refinement
+- reasoning: result panels should turn stable identifiers into direct workflow actions when the action is unambiguous. For import completion, the `doc_id` identifies the source doc and should open that source through the existing local docs-management boundary, while viewer links should preserve the command page state by opening a separate tab.
+- outcome: the result `doc_id` now opens the Markdown source in VS Code via the docs-management `POST /docs/open-source` endpoint, and the result viewer link opens in a new browser tab.
+- files changed:
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/js/studio-transport.js`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - complete an import on `/studio/library-import/`
+  - click the result `doc_id` and confirm the source Markdown opens in VS Code
+  - click `Open viewer` and confirm the viewer opens in a new browser tab while the import page remains open
+- follow-up:
+  - apply the same result-action pattern to future Studio command pages when a completed result exposes a stable source identifier and a separate public/runtime view
 
 ## UI Rule Log 2026-04-23 / UI-014
 

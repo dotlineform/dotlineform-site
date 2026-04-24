@@ -25,9 +25,9 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
       <p>The public library remains user-facing; this dashboard is the admin-facing route into that domain.</p>
     </div>
     <div class="studioCardGrid">
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/library/' | relative_url }}">
-        <h4>Published library</h4>
-        <p>Open the public library viewer in its user-facing context.</p>
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/library/?mode=manage' | relative_url }}">
+        <h4>Manage library</h4>
+        <p>Open the Library viewer with local management controls enabled.</p>
       </a>
       <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/library-import/' | relative_url }}">
         <h4>Import</h4>

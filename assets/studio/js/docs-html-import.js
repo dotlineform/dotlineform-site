@@ -61,7 +61,19 @@ function persistSelectedScope(scope) {
 function viewerLinkHtml(config, href, fallbackLabel) {
   const label = getStudioText(config, "docs_html_import.result_open_viewer", fallbackLabel || "Open viewer");
   if (!normalizeText(href)) return "";
-  return `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`;
+  return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+}
+
+function sourceDocLinkHtml(scope, docId) {
+  const normalizedScope = normalizeText(scope);
+  const normalizedDocId = normalizeText(docId);
+  if (!normalizedScope || !normalizedDocId) return "";
+  return [
+    `<a href="#" data-doc-source-link="true"`,
+    ` data-scope="${escapeHtml(normalizedScope)}"`,
+    ` data-doc-id="${escapeHtml(normalizedDocId)}">`,
+    `${escapeHtml(normalizedDocId)}</a>`
+  ].join("");
 }
 
 async function fetchImportFiles() {
@@ -125,7 +137,7 @@ function renderResult(state, payload) {
   setText(state.resultViewerLabelNode, getStudioText(state.config, "docs_html_import.result_viewer", "viewer"));
   setText(state.resultBackupLabelNode, getStudioText(state.config, "docs_html_import.result_backup", "backup"));
   setText(state.resultScopeNode, payload.scope);
-  setText(state.resultDocIdNode, payload.doc_id);
+  setHtml(state.resultDocIdNode, sourceDocLinkHtml(payload.scope, payload.doc_id));
   setText(state.resultDocTitleNode, payload.title || preview.title || "");
   setText(state.resultSourceNode, preview.source_html || payload.staged_filename || "");
   setHtml(
@@ -151,6 +163,27 @@ function renderResult(state, payload) {
   );
   renderWarnings(state, preview.warnings);
   state.resultNode.hidden = false;
+}
+
+async function openResultSource(state, link) {
+  const scope = normalizeText(link && link.dataset ? link.dataset.scope : "");
+  const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
+  if (!scope || !docId) return;
+  try {
+    await postJson(DOCS_MANAGEMENT_ENDPOINTS.openSource, {
+      scope,
+      doc_id: docId,
+      editor: "vscode"
+    });
+  } catch (error) {
+    console.warn("docs_html_import: open source failed", error);
+    setStatus(
+      state.statusNode,
+      "error",
+      normalizeText(error && error.message)
+        || getStudioText(state.config, "docs_html_import.result_open_source_failed", "Failed to open source doc.")
+    );
+  }
 }
 
 function renderOverwriteWarning(state, payload) {
@@ -441,6 +474,19 @@ async function init() {
 
     state.runButton.addEventListener("click", () => {
       runImport(state).catch((error) => console.warn("docs_html_import: unexpected import failure", error));
+    });
+    state.resultDocIdNode.addEventListener("click", (event) => {
+      const target = event.target && event.target.closest
+        ? event.target
+        : event.target && event.target.parentElement
+          ? event.target.parentElement
+          : null;
+      const link = target && target.closest
+        ? target.closest("[data-doc-source-link]")
+        : null;
+      if (!link || !state.resultDocIdNode.contains(link)) return;
+      event.preventDefault();
+      openResultSource(state, link).catch((error) => console.warn("docs_html_import: unexpected open source failure", error));
     });
     state.confirmButton.addEventListener("click", () => {
       runImport(state, {

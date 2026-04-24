@@ -1,7 +1,7 @@
 ---
 doc_id: studio-runtime
 title: "Studio Runtime"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: studio
 sort_order: 10
 ---
@@ -35,6 +35,8 @@ The public site uses the user-facing `Works` / `Library` header nav. The only in
 
 - the site title at top left, which returns to the public site
 - the footer `studio` link, which enters `/studio/`
+
+Studio-originated Library viewer links open `/library/` with `mode=manage` so local management controls are available during admin workflows.
 
 The `i` link is the page-to-doc bridge for Studio. Each page now points to a scoped Docs Viewer URL in the form:
 

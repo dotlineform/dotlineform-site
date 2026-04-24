@@ -579,7 +579,7 @@ def relative_path(repo_root: Path, path: Path) -> str:
 def viewer_url_for(scope: str, doc_id: str) -> str:
     if scope == "studio":
         return f"/docs/?scope=studio&doc={doc_id}"
-    return f"/library/?doc={doc_id}"
+    return f"/library/?doc={doc_id}&mode=manage"
 
 
 def generated_docs_index_path(repo_root: Path, scope: str) -> Path:

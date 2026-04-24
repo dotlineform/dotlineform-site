@@ -7,6 +7,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-24] Opened Studio-originated Library viewer links in manage mode
+
+**Status:** implemented
+
+**Area:** Studio / Library / docs viewer management
+
+**Summary:**
+Changed Studio-originated Library viewer links so they open `/library/` with `mode=manage`.
+
+**Reason:**
+Links from the Library dashboard and from Docs HTML Import completion are admin workflow links, not public navigation. Opening the read-only Library viewer forced an extra manual URL edit before source-management controls were available.
+
+**Effect:**
+The Studio Library dashboard now opens the Library viewer at `/library/?mode=manage`, and Library-scope import results now open the imported doc at `/library/?doc=<doc_id>&mode=manage`. Public Library links outside Studio remain unchanged.
+
+**Affected files/docs:**
+
+- `studio/library/index.md`
+- `scripts/docs/docs_management_server.py`
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-24] Escaped source-text pipes during docs HTML import
 
 **Status:** implemented

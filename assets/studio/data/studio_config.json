@@ -521,6 +521,7 @@
       "result_viewer": "viewer",
       "result_backup": "backup",
       "result_open_viewer": "Open viewer",
+      "result_open_source_failed": "Failed to open source doc.",
       "result_summary_counts": "{links} links, {images} images, {svg} SVG, {details} details blocks",
       "warnings_heading": "Warnings",
       "collision_heading": "Overwrite warning",
