@@ -25,6 +25,7 @@ DocRecord = Struct.new(
   :scope_id,
   :doc_id,
   :title,
+  :added_date,
   :last_updated,
   :parent_id,
   :sort_order,
@@ -107,12 +108,14 @@ class DocsDataBuilder
       title = (front_matter["title"] || extract_title(body_markdown) || humanize(stem)).to_s
       parent_id = front_matter.key?("parent_id") ? front_matter["parent_id"].to_s : ""
       last_updated = front_matter["last_updated"] ? front_matter["last_updated"].to_s : ""
+      added_date = front_matter["added_date"] ? front_matter["added_date"].to_s : last_updated
       sort_order = normalize_sort_order(front_matter["sort_order"])
 
       DocRecord.new(
         scope_id: @scope_id,
         doc_id: doc_id,
         title: title,
+        added_date: added_date,
         last_updated: last_updated,
         parent_id: parent_id,
         sort_order: sort_order,
@@ -193,6 +196,7 @@ class DocsDataBuilder
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
       "title" => doc.title,
+      "added_date" => doc.added_date,
       "last_updated" => doc.last_updated,
       "parent_id" => doc.parent_id,
       "sort_order" => doc.sort_order,
@@ -207,6 +211,7 @@ class DocsDataBuilder
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
       "title" => doc.title,
+      "added_date" => doc.added_date,
       "last_updated" => doc.last_updated,
       "parent_id" => doc.parent_id,
       "sort_order" => doc.sort_order,

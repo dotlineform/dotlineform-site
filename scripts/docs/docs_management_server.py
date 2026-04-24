@@ -238,7 +238,7 @@ def format_front_matter_value(value: Any) -> str:
 
 
 def format_source(front_matter: Dict[str, Any], body: str) -> str:
-    preferred_order = ["doc_id", "title", "last_updated", "parent_id", "sort_order", "published"]
+    preferred_order = ["doc_id", "title", "added_date", "last_updated", "parent_id", "sort_order", "published"]
     ordered_keys = [key for key in preferred_order if key in front_matter]
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))
     lines = ["---"]
@@ -383,6 +383,9 @@ def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
 
 def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
     updated_front_matter = dict(doc.front_matter)
+    updated_front_matter["added_date"] = str(
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+    ).strip()
     updated_front_matter.update(front_matter_updates)
     return format_source(updated_front_matter, doc.body)
 
@@ -820,10 +823,12 @@ def imported_body_markdown(preview: Dict[str, Any]) -> str:
 
 def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc]) -> str:
     title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
+    today = current_date()
     front_matter = {
         "doc_id": preview["proposed_doc_id"],
         "title": title,
-        "last_updated": current_date(),
+        "added_date": today,
+        "last_updated": today,
         "parent_id": "",
         "sort_order": next_sort_order(docs, ""),
     }
@@ -832,10 +837,12 @@ def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc
 
 def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc) -> str:
     title = str(preview.get("title") or target.title).strip() or target.title
+    today = current_date()
     front_matter = dict(target.front_matter)
     front_matter["doc_id"] = target.doc_id
     front_matter["title"] = title
-    front_matter["last_updated"] = current_date()
+    front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or today).strip()
+    front_matter["last_updated"] = today
     front_matter["parent_id"] = target.parent_id
     if target.sort_order is None:
         front_matter.pop("sort_order", None)
@@ -1060,10 +1067,12 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
     doc_id = ensure_unique_stem(docs, title)
     target_root = scope_root(repo_root, scope)
     target_path = target_root / f"{doc_id}.md"
+    today = current_date()
     front_matter = {
         "doc_id": doc_id,
         "title": title,
-        "last_updated": current_date(),
+        "added_date": today,
+        "last_updated": today,
         "parent_id": parent_id,
         "sort_order": sort_order,
     }
@@ -1178,6 +1187,9 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
         }
 
     updated_front_matter = dict(target.front_matter)
+    updated_front_matter["added_date"] = str(
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+    ).strip()
     updated_front_matter["title"] = title
     updated_front_matter["last_updated"] = current_date()
     updated_front_matter["parent_id"] = parent_id
@@ -1376,6 +1388,9 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
 
     next_order = next_sort_order(docs, "_archive")
     updated_front_matter = dict(target.front_matter)
+    updated_front_matter["added_date"] = str(
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+    ).strip()
     updated_front_matter["last_updated"] = current_date()
     updated_front_matter["parent_id"] = "_archive"
     updated_front_matter["sort_order"] = next_order

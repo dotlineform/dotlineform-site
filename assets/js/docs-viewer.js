@@ -659,11 +659,11 @@
     return trail;
   }
 
-  function displayMetaForDoc(doc) {
+  function displayRecentMetaForDoc(doc) {
     if (!doc) return "";
     var parts = [];
-    var lastUpdated = String(doc.last_updated || "").trim();
-    if (lastUpdated) parts.push(lastUpdated);
+    var addedDate = String(doc.added_date || doc.last_updated || "").trim();
+    if (addedDate) parts.push(addedDate);
     if (doc.parent_id) {
       var parent = state.docsById.get(doc.parent_id);
       var parentTitle = parent ? String(parent.title || "").trim() : "";
@@ -2135,8 +2135,8 @@
   }
 
   function compareRecentDocs(left, right) {
-    var leftDate = String(left.last_updated || "");
-    var rightDate = String(right.last_updated || "");
+    var leftDate = String(left.added_date || left.last_updated || "");
+    var rightDate = String(right.added_date || right.last_updated || "");
     if (leftDate !== rightDate) return rightDate.localeCompare(leftDate);
     var titleCmp = String(left.title || "").localeCompare(String(right.title || ""), undefined, { sensitivity: "base", numeric: true });
     if (titleCmp !== 0) return titleCmp;
@@ -2168,7 +2168,7 @@
   }
 
   function renderRecentEntry(doc) {
-    return renderResultEntry(doc.doc_id, doc.title, displayMetaForDoc(doc));
+    return renderResultEntry(doc.doc_id, doc.title, displayRecentMetaForDoc(doc));
   }
 
   function renderRecentMode() {
