@@ -9,6 +9,23 @@ sort_order: 20
 
 # Library Semantic Enrichment Spec
 
+## Sections
+
+- [Purpose](#purpose)
+- [Problems To Solve](#problems-to-solve)
+- [Proposed Source Metadata](#proposed-source-metadata)
+- [Docs Viewer Summary Display](#docs-viewer-summary-display)
+- [Summary Export Format](#summary-export-format)
+- [Summary Import Format](#summary-import-format)
+- [Bulk Export Selection UI](#bulk-export-selection-ui)
+- [Structure Review Export Format](#structure-review-export-format)
+- [Structure Recommendation Format](#structure-recommendation-format)
+- [Role Of Codex And ChatGPT](#role-of-codex-and-chatgpt)
+- [Suggested Phases](#suggested-phases)
+- [Risks](#risks)
+- [Current Decisions](#current-decisions)
+- [Remaining Open Questions](#remaining-open-questions)
+
 ## Purpose
 
 This spec captures a future workflow for improving Library docs with summary metadata and structure recommendations.
@@ -21,6 +38,7 @@ The immediate use case is practical Library maintenance:
 - external language-model tools can help, but the current browser-chat interface is awkward for bulk source-doc work
 
 This is a planning spec, not a current runtime contract.
+The workflow should be UI/workflow-led: a technically clever export/import command will still fail if the Studio Library surface does not make selection, review, and apply decisions understandable.
 
 ## Problems To Solve
 
@@ -77,6 +95,7 @@ Reasons:
 - diffs remain easy to review
 - generated docs indexes and future search records can consume the same field
 - the field can be maintained independently from rendered document prose
+- the Docs Viewer can expose the same metadata near the updated date without forcing the summary to become part of the authored body
 
 This spec does not yet add `summary` to the docs schema.
 That should be a separate schema task covering all docs scopes or an explicit Library-only decision.
@@ -86,11 +105,43 @@ Current direction:
 - `summary` should become required for Library docs once the enrichment workflow exists
 - `summary` should be a shared docs-scope schema field across Docs Viewer scopes for consistency
 - Library is the scope where summary population and relationship review are strategically important first
+- the Docs Viewer should be able to display `summary` as optional metadata when present, especially in Library
 - shared docs schema consistency does not require identical search behavior across Catalogue, Library, and Studio
+
+## Docs Viewer Summary Display
+
+Summary text should not need to be a visible heading or paragraph inside the document body.
+The rendered document body can stay focused on the authored source content, while the summary remains reusable metadata.
+
+When a generated docs payload includes `summary`, the Docs Viewer should be able to display it in the metadata area near the ancestor path and updated date.
+
+Reasons:
+
+- a reader can quickly understand what the doc is about before reading the full body
+- the same field can support search, export, and human review
+- summary display can be optional and scope-sensitive without changing source-body conventions
+- Library docs benefit most because they are reference/research documents rather than implementation notes
+
+Initial display direction:
+
+- show the summary below the updated date when present
+- keep it visually secondary and aligned to the Docs Viewer metadata/content measure
+- do not require Studio docs to display summaries until that scope has a real use for them
+- consider a later UI option for showing summaries in Library search and recently-added results
 
 ## Summary Export Format
 
 A future exporter should write JSONL so files can be streamed, chunked, and recombined safely.
+Export files are ephemeral working artifacts, not canonical source.
+They should be created on demand with the selected options applied and should be safe to delete.
+
+Expected location:
+
+```text
+var/docs/semantic-review/<timestamp>/summaries.jsonl
+```
+
+Canonical state remains in source Markdown front matter and generated docs/search artifacts after rebuilds.
 
 Candidate row shape:
 
@@ -123,9 +174,36 @@ The exporter should report:
 - docs truncated by character limit
 - unpublished docs excluded
 
+### `source_text` format
+
+`source_text` should be plain UTF-8 text derived from rendered content, not raw Markdown or raw HTML.
+
+Rules:
+
+- omit YAML front matter
+- omit HTML tags
+- omit the document title when it is already present in the `title` field
+- preserve paragraph breaks with blank lines
+- preserve list items as separate lines
+- preserve headings as text, while also exposing headings in the structured `headings` field
+- preserve blockquotes as separate lines, optionally prefixed with `> `
+- omit code blocks or replace them with a short marker unless the document is code-heavy
+- normalize whitespace enough for model input without destroying paragraph structure
+
+Reasons:
+
+- summary generation should spend attention on document meaning rather than markup
+- plain text is portable between Codex, ChatGPT, and future tooling
+- rendered-derived text avoids HTML import noise while still reflecting what the reader sees
+- keeping `headings` structured means `source_text` does not need to preserve hierarchy perfectly
+
+Optional future/debug fields may include `source_markdown`, but the default LLM handoff field should be `source_text`.
+`content_html` should not be part of summary export by default.
+
 ## Summary Import Format
 
 Returned summaries should also use JSONL.
+Returned JSONL is also an ephemeral working artifact until validated and applied.
 
 Candidate row shape:
 
@@ -146,6 +224,48 @@ The importer should:
 - rebuild the affected docs scope after an apply run
 
 Summary import should be implemented before structure import because it is lower risk and creates useful context for later structure review.
+
+## Bulk Export Selection UI
+
+Bulk export needs a Studio Library UI that supports selecting many docs from the current Library hierarchy.
+The Library hierarchy is likely to become deeper than the Studio docs hierarchy because Library behaves more like a book, with parts, chapters, and pages.
+
+Recommended UI shape:
+
+- hierarchical checklist of Library docs
+- indentation to show depth
+- expand/collapse controls for branches
+- checkbox per doc
+- selecting a parent selects all descendants
+- deselecting a child puts ancestors into an indeterminate state
+- select all and clear controls
+- option to limit the view/export to docs missing summaries
+- optional include/exclude archived docs control
+
+The UI should show basic operational counts:
+
+- selected docs
+- selected docs missing summaries
+- estimated exported characters or size
+- number of batches that will be created
+
+Export options should be visible before the export runs:
+
+- include body text
+- maximum characters per doc
+- batch size
+- output format
+
+The exporter should resolve the UI selection to an explicit set of `doc_id` values before writing JSONL.
+The exported file should not depend on parent-selection state, because imports and later validation should operate against explicit doc ids.
+
+Reasons:
+
+- a flat list will not scale to a book-like Library hierarchy
+- users need to select meaningful branches, not individual docs one by one
+- parent selection makes large exports practical
+- explicit exported `doc_id` rows keep import validation simple and deterministic
+- selection and review are part of the product workflow, not merely decoration around a script
 
 ## Structure Review Export Format
 
@@ -223,6 +343,7 @@ Outputs:
 - a short report of counts, missing summaries, and truncation
 
 No source writes.
+The first export UI should be able to call this read-only path and show the same report back to the user.
 
 ### Phase 2. Summary import preview/apply
 
@@ -297,7 +418,11 @@ This should probably reuse Docs Viewer management validation rules for:
 - Library is the first and most important scope for actually populating summaries and reviewing semantic relationships.
 - Library search should initially use summary text rather than full body text.
 - Full body text search remains an unproven later option.
-- Library viewer summary display is a potential UI option, especially for search results.
+- Library viewer summary display should be supported as document metadata when `summary` is present.
+- Library search/recently-added summary display remains a potential UI option.
+- Summary export/import JSONL files are ephemeral working artifacts, not canonical state.
+- Summary export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML.
+- Bulk export selection should be hierarchical and checkbox-driven, with parent selection applying to descendants.
 - Structure review should support recommendations that depend on new parent/category docs.
 - New parent/category docs can be created manually before document moves are applied.
 - A Studio Library page should become the user-facing entry point for running export/import/review scripts and seeing basic reports.
@@ -311,3 +436,4 @@ This should probably reuse Docs Viewer management validation rules for:
 - Should the Library viewer offer a user option to show summaries in search and recently-added lists?
 - What basic report shape should the Studio Library semantic-enrichment page show first?
 - Should structure recommendations include suggested new parent/category doc titles?
+- Should code-heavy Library docs ever include code blocks in `source_text`, or should code always be summarized from surrounding prose?
