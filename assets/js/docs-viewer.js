@@ -3,6 +3,7 @@
   if (!root) return;
 
   var nav = document.getElementById("docsViewerNav");
+  var sidebarToggle = document.getElementById("docsViewerSidebarToggle");
   var status = document.getElementById("docsViewerStatus");
   var meta = document.getElementById("docsViewerMeta");
   var pathEl = document.getElementById("docsViewerPath");
@@ -52,7 +53,10 @@
   var MANAGEMENT_MODE = "manage";
   var RELOAD_RETRY_ATTEMPTS = 12;
   var RELOAD_RETRY_DELAY_MS = 250;
+  var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
+  var SIDEBAR_STORAGE_PREFIX = "dotlineform-docs-viewer-sidebar:";
   var bookmarkScope = viewerScope || viewerPathname || "docs";
+  var sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
 
   var state = {
     docs: [],
@@ -93,7 +97,8 @@
     dropPosition: "",
     contextMenuDocId: "",
     metadataEditingDocId: "",
-    metadataRestoreFocusId: ""
+    metadataRestoreFocusId: "",
+    sidebarCollapsed: readSidebarCollapsedState()
   };
 
   function sortKey(doc) {
@@ -148,6 +153,50 @@
   function renderRecentButtonState() {
     if (!recentButton) return;
     recentButton.setAttribute("aria-pressed", state.recentModeActive ? "true" : "false");
+  }
+
+  function sidebarCollapseAvailable() {
+    if (!window.matchMedia) return window.innerWidth > 820;
+    return window.matchMedia(SIDEBAR_COLLAPSE_MEDIA).matches;
+  }
+
+  function readSidebarCollapsedState() {
+    try {
+      return window.localStorage.getItem(sidebarStorageKey) === "collapsed";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function persistSidebarCollapsedState() {
+    try {
+      window.localStorage.setItem(sidebarStorageKey, state.sidebarCollapsed ? "collapsed" : "expanded");
+    } catch (error) {
+      return;
+    }
+  }
+
+  function renderSidebarCollapsedState() {
+    var active = state.sidebarCollapsed && sidebarCollapseAvailable();
+    root.dataset.sidebarState = active ? "collapsed" : "expanded";
+    if (!sidebarToggle) return;
+
+    sidebarToggle.hidden = !sidebarCollapseAvailable();
+    sidebarToggle.setAttribute("aria-expanded", active ? "false" : "true");
+    sidebarToggle.setAttribute("aria-label", active ? "Expand docs index" : "Collapse docs index");
+    sidebarToggle.title = active ? "Expand docs index" : "Collapse docs index";
+    var icon = sidebarToggle.querySelector(".docsViewer__sidebarToggleIcon");
+    if (icon) {
+      icon.textContent = active ? "›" : "‹";
+    }
+  }
+
+  function toggleSidebarCollapsed() {
+    if (!sidebarCollapseAvailable()) return;
+    state.sidebarCollapsed = !state.sidebarCollapsed;
+    persistSidebarCollapsedState();
+    hideContextMenu();
+    renderSidebarCollapsedState();
   }
 
   function positiveInteger(value, fallback) {
@@ -1726,6 +1775,12 @@
       });
     }
 
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener("click", function () {
+        toggleSidebarCollapsed();
+      });
+    }
+
     if (recentButton) {
       recentButton.addEventListener("click", function () {
         hideContextMenu();
@@ -2273,7 +2328,10 @@
   });
 
   window.addEventListener("scroll", hideContextMenu, { passive: true });
-  window.addEventListener("resize", hideContextMenu);
+  window.addEventListener("resize", function () {
+    hideContextMenu();
+    renderSidebarCollapsedState();
+  });
   window.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
       hideContextMenu();
@@ -2281,6 +2339,7 @@
   });
 
   bindLinkInterception();
+  renderSidebarCollapsedState();
   loadViewerConfig();
   initializeBookmarks();
   initializeManagement();

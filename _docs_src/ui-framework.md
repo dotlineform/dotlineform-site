@@ -126,6 +126,7 @@ The current shared viewer uses:
 - a left index rail for the docs tree
 - a right main pane for search, metadata, and content
 - a sticky sidebar on larger screens
+- a desktop sidebar collapse control for widening the document pane
 - a stacked single-column layout on smaller screens
 
 The docs tree remains visible while the right pane switches between:
@@ -134,6 +135,8 @@ The docs tree remains visible while the right pane switches between:
 - inline docs-search results mode
 
 This should stay a quiet document-reader layout rather than becoming an app-style workspace shell.
+
+On larger screens, the index rail may collapse to a narrow visible strip. The collapse control must remain visible in both states, and the collapsed document pane may use a wider capped reading measure. It should not become fully fluid prose. The mobile stacked layout should remain unchanged because the document pane is already full width there.
 
 ### Search placement
 

@@ -54,6 +54,7 @@ The route shells both render the same structural include:
 This include renders:
 
 - the sidebar nav container
+- the desktop sidebar collapse control
 - the main content pane
 - the optional inline search input
 - status, path, and updated metadata areas
@@ -96,6 +97,14 @@ At runtime the viewer:
 3. sorts siblings by `sort_order`, then title, then `doc_id`
 4. loads per-doc rendered HTML from the selected document payload
 5. keeps the left navigation in place while the right pane switches between document view and inline search results
+
+Current sidebar behavior:
+
+- larger screens show a small control in the index panel header that collapses the docs tree to a narrow rail
+- the collapsed rail keeps the control visible so the index can always be restored
+- the collapsed desktop layout widens the Docs Viewer reading measure without making prose fully fluid
+- the collapsed state is stored per viewer scope in browser storage
+- smaller screens keep the existing stacked layout and do not show the collapse control, because the document pane already has the full viewport width
 
 Current search behavior:
 
