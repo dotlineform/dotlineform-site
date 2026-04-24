@@ -90,10 +90,15 @@ Risks:
 
 Open decisions:
 
-- should bulk viewability support selected docs only, subtree operations, or both?
-- should the first bulk endpoint accept explicit doc ids only, leaving tree expansion to the browser?
-- should a no-op bulk request still run rebuilds, or report no changes and skip them?
-- should bulk operation backups include every touched source file or only files that actually changed?
+- resolved: bulk viewability should support both selected-doc and subtree operations
+- resolved: parent selection should not always imply children; use explicit operation modes so `selected` affects only explicit ids, while `subtree` affects explicit ids plus descendants
+- resolved: the server should expand subtree targets from canonical docs data, using a request shape such as explicit `doc_ids` plus `include_descendants: true`
+- resolved: no-op means no source file content would change; no-op requests should write no files, create no backup, run no docs rebuild, run no search rebuild, and leave timestamps unchanged
+- resolved: backup bundles should copy only source files that actually changed, while the manifest may record requested and skipped ids
+
+Remaining decision:
+
+- which user-facing controls should expose selected-doc and subtree modes first?
 
 Phase 1 can start once the first bulk UI requirement is clear.
 
