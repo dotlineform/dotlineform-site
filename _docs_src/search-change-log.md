@@ -9,6 +9,26 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-24] Added incremental search orchestration plan
+
+**Status:** planned
+
+**Area:** search build orchestration
+
+**Summary:**
+Added a phased planning document for incremental docs-domain search updates.
+
+**Reason:**
+Bulk docs-management edits and future heavier indexed fields, such as body text or summaries, will make repeated full same-scope search rebuilds increasingly awkward. The implementation boundary needs to be explicit before targeted updates are introduced.
+
+**Effect:**
+The plan separates server/watcher orchestration from search-owned record generation. It recommends starting with bulk server operations that batch source writes into one docs rebuild and one search rebuild, then adding a targeted docs-search update interface, affected-record rules, and later heavier-index dependency tracking.
+
+**Affected files/docs:**
+
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+- [Search](/docs/?scope=studio&doc=search)
+
 ## [2026-04-24] Filtered docs search by `viewable`
 
 **Status:** implemented

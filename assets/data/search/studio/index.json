@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-619f5595424b62c50df78b7aa2439ee2",
-    "generated_at_utc": "2026-04-24T16:02:06Z",
-    "count": 130
+    "version": "blake2b-eb0155caa9d26141c7ce331d6dde2634",
+    "generated_at_utc": "2026-04-24T17:32:32Z",
+    "count": 131
   },
   "entries": [
     {
@@ -2096,6 +2096,29 @@
       "search_text": "build-activity build activity build activity studio 2026-04-18 2026 04 18"
     },
     {
+      "id": "search-incremental-orchestration-plan",
+      "kind": "doc",
+      "title": "Incremental Search Orchestration Plan",
+      "href": "/docs/?scope=studio&doc=search-incremental-orchestration-plan",
+      "last_updated": "2026-04-24",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-04-24 • Search",
+      "search_terms": [
+        "search-incremental-orchestration-plan",
+        "search",
+        "incremental",
+        "orchestration",
+        "plan",
+        "incremental search orchestration plan",
+        "2026-04-24",
+        "2026",
+        "04",
+        "24"
+      ],
+      "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-04-24 2026 04 24"
+    },
+    {
       "id": "scripts-tag-write-server",
       "kind": "doc",
       "title": "Tag Write Server",
@@ -2623,16 +2646,16 @@
       "kind": "doc",
       "title": "Search",
       "href": "/docs/?scope=studio&doc=search",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-24",
+      "display_meta": "2026-04-24",
       "search_terms": [
         "search",
-        "2026-03-31",
+        "2026-04-24",
         "2026",
-        "03",
-        "31"
+        "04",
+        "24"
       ],
-      "search_text": "search 2026-03-31 2026 03 31"
+      "search_text": "search 2026-04-24 2026 04 24"
     },
     {
       "id": "tag-registry",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T16:41:13Z",
+  "generated_at": "2026-04-24T17:32:31Z",
   "docs": [
     {
       "scope": "studio",
@@ -1263,6 +1263,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "search-incremental-orchestration-plan",
+      "title": "Incremental Search Orchestration Plan",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-04-24",
+      "parent_id": "search",
+      "sort_order": 90,
+      "published": true,
+      "viewable": true,
+      "source_path": "search-incremental-orchestration-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-incremental-orchestration-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-incremental-orchestration-plan.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-tag-write-server",
       "title": "Tag Write Server",
       "added_date": "2026-03-31",
@@ -1602,7 +1616,7 @@
       "doc_id": "search",
       "title": "Search",
       "added_date": "2026-03-31",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-24",
       "parent_id": "",
       "sort_order": 180,
       "published": true,
