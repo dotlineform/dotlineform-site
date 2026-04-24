@@ -171,19 +171,24 @@ Possible display labels:
 - non-viewable marker in metadata row
 - `Make viewable` or `Show on site` button in the manage action row when the selected doc has `viewable: false`
 
+The UI may use `draft` as the user-facing label for `viewable: false`.
+This is acceptable because `draft` describes the user's workflow state, while `viewable` remains the source schema and runtime filtering term.
+
 ## Manage Mode Viewability UI
 
 Manage mode should provide a small viewability-management surface in the existing Docs Viewer controls.
 
 Initial controls:
 
-- show/hide non-viewable toggle
+- show/hide drafts toggle that adds non-viewable docs to the tree
 - make selected doc viewable button when the selected doc has `viewable: false`
+
+Viewable docs should always remain displayed in manage mode.
+Showing drafts/non-viewable docs is an additive context-preserving view, not a replacement filter.
 
 Future controls:
 
 - make selected doc non-viewable
-- show only non-viewable docs
 - make selected subtree viewable
 - non-viewable count
 - manage-mode search/filter over non-viewable docs
@@ -225,11 +230,12 @@ Open behavior to decide:
 
 Recommended first rule:
 
-- avoid viewable docs under non-viewable parents unless there is a clear use case
+- do as little builder enforcement as possible
 
 Reason:
 
-- public tree rendering becomes confusing if a viewable child depends on a hidden generated ancestor
+- viewable children under non-viewable parents are conceptually confusing, but this should usually be a user/content-management responsibility
+- the builder should prevent hard failures and invalid payloads, not become a strict workflow policy engine
 
 ## Search Requirements
 
@@ -255,7 +261,7 @@ Recommended defaults:
 
 - Library imports: `published: true`, `viewable: false`
 - Library new docs in manage mode: `published: true`, `viewable: false`
-- Studio docs new docs: decide separately, likely published by default unless created through a draft-oriented workflow
+- Studio docs new docs: `published: true`, `viewable: true`
 
 Reasons:
 
@@ -320,11 +326,11 @@ The system should not treat `_archive` as equivalent to `viewable: false`.
 
 - filter public/default tree to viewable docs
 - hide non-viewable docs from search/recently-added
-- handle direct non-viewable URLs gracefully outside manage mode
+- handle direct non-viewable URLs outside manage mode using the existing missing-doc behavior: fall back to the scope default doc
 
 ### Phase 3. Manage-mode visibility toggle
 
-- add show/hide non-viewable toggle in manage mode
+- add show/hide drafts toggle in manage mode
 - mark non-viewable rows
 - allow non-viewable docs to be selected and reviewed
 
@@ -350,11 +356,13 @@ The system should not treat `_archive` as equivalent to `viewable: false`.
 - visibility toggles can clutter manage mode if the UI is not restrained
 - the extra source field adds schema and validation surface area
 
-## Open Questions
+## Resolved Decisions
 
-- Should Library import/create default to non-viewable immediately when this workflow lands?
-- Should Studio docs use the same default or remain published by default?
-- Should public direct URLs to non-viewable docs show a not-found state or redirect to the scope default doc?
-- Should manage mode support `show only non-viewable` in the first implementation?
-- Should viewable docs under non-viewable parents be rejected by the builder?
-- Should non-viewable per-doc payload generation be acceptable for all scopes, or should private-sensitive docs require a different preview strategy later?
+- Library docs created through import/create should default to `published: true`, `viewable: false`.
+- Studio docs should default to `published: true`, `viewable: true`.
+- Public/default direct URLs to non-viewable docs should behave like missing docs and fall back to the scope default doc.
+- Manage mode should always show viewable docs; the draft toggle should add non-viewable docs rather than replacing the tree.
+- `draft` is acceptable UI language for `viewable: false`, but the schema and generated data should use `viewable`.
+- Draft/non-viewable styling should be configurable, especially font weight and color, so accessibility can be tuned without code changes.
+- The builder should avoid strict workflow enforcement for viewable docs under non-viewable parents, beyond preventing hard failures and invalid payloads.
+- Non-viewable per-doc payload generation is acceptable for all docs scopes. There is no current private/sensitive docs requirement that needs a separate preview strategy.
