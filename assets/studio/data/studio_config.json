@@ -118,7 +118,13 @@
       "recently_added_button": "recently added",
       "draft_toggle_label": "drafts",
       "draft_toggle_aria_label": "Show draft docs",
-      "make_viewable_button": "Make viewable"
+      "make_viewable_button": "Make viewable",
+      "manage_archive_unavailable_note": "Archive is unavailable for this scope until `_archive` exists.",
+      "manage_checking_note": "Checking manage mode...",
+      "manage_clear_search_note": "Clear search to manage the current doc.",
+      "manage_mode_note": "Manage mode is local-only.",
+      "manage_server_not_configured_error": "Local docs-management server is not configured.",
+      "manage_unavailable_note": "Manage mode unavailable: local docs server unavailable for this scope."
     },
     "series_tag_editor": {
       "missing_series_id_error": "Tag Studio error: missing series id.",

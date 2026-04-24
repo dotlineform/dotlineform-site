@@ -94,6 +94,14 @@
     managementCapabilities: null,
     managementMessage: "",
     managementMessageIsError: false,
+    managementText: {
+      archiveUnavailableNote: "Archive is unavailable for this scope until `_archive` exists.",
+      checkingNote: "Checking manage mode...",
+      clearSearchNote: "Clear search to manage the current doc.",
+      manageModeNote: "Manage mode is local-only and writes through the docs-management server.",
+      serverNotConfiguredError: "Local docs-management server is not configured.",
+      unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope."
+    },
     showDrafts: false,
     reloadNonce: "",
     reloadExpectedDocId: "",
@@ -255,6 +263,12 @@
       manageViewableButton.setAttribute("aria-label", makeViewableLabel);
       manageViewableButton.title = makeViewableLabel;
     }
+    state.managementText.archiveUnavailableNote = getConfigText(config, "docs_viewer.manage_archive_unavailable_note", state.managementText.archiveUnavailableNote);
+    state.managementText.checkingNote = getConfigText(config, "docs_viewer.manage_checking_note", state.managementText.checkingNote);
+    state.managementText.clearSearchNote = getConfigText(config, "docs_viewer.manage_clear_search_note", state.managementText.clearSearchNote);
+    state.managementText.manageModeNote = getConfigText(config, "docs_viewer.manage_mode_note", state.managementText.manageModeNote);
+    state.managementText.serverNotConfiguredError = getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
+    state.managementText.unavailableNote = getConfigText(config, "docs_viewer.manage_unavailable_note", state.managementText.unavailableNote);
     if (state.recentModeActive) {
       renderRecentMode();
     }
@@ -1086,12 +1100,12 @@
   function managementNoteText() {
     if (state.managementMessage) return state.managementMessage;
     if (state.searchRouteActive) {
-      return "Clear search to manage the current doc.";
+      return state.managementText.clearSearchNote;
     }
     if (!managementArchiveAvailable()) {
-      return "Archive is unavailable for this scope until `_archive` exists.";
+      return state.managementText.archiveUnavailableNote;
     }
-    return "Manage mode is local-only and writes through the docs-management server.";
+    return state.managementText.manageModeNote;
   }
 
   function renderManagementUi() {
@@ -1112,9 +1126,9 @@
       var noteText = "";
       var noteIsError = false;
       if (!state.managementChecked) {
-        noteText = "Checking manage mode...";
+        noteText = state.managementText.checkingNote;
       } else if (!state.managementAvailable) {
-        noteText = "Manage mode unavailable: local docs server unavailable for this scope.";
+        noteText = state.managementText.unavailableNote;
         noteIsError = true;
       } else {
         noteText = managementNoteText();
@@ -1174,7 +1188,7 @@
 
   function fetchManagementJson(path, method, payload) {
     if (!managementBaseUrl) {
-      return Promise.reject(new Error("Local docs-management server is not configured."));
+      return Promise.reject(new Error(state.managementText.serverNotConfiguredError));
     }
 
     var options = {
