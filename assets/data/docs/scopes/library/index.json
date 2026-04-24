@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-23T21:57:07Z",
+  "generated_at": "2026-04-24T08:08:30Z",
   "docs": [
     {
       "scope": "library",
@@ -55,6 +55,17 @@
       "source_path": "evolutionary-psychology-overview.md",
       "viewer_url": "/library/?doc=evolutionary-psychology-overview",
       "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json"
+    },
+    {
+      "scope": "library",
+      "doc_id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "title": "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27",
+      "last_updated": "2026-04-24",
+      "parent_id": "",
+      "sort_order": 240,
+      "source_path": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.md",
+      "viewer_url": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "content_url": "/assets/data/docs/scopes/library/by-id/loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.json"
     }
   ]
 }
