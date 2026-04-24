@@ -29,6 +29,8 @@ DocRecord = Struct.new(
   :last_updated,
   :parent_id,
   :sort_order,
+  :published,
+  :viewable,
   :source_path,
   :viewer_url,
   :content_url,
@@ -110,6 +112,8 @@ class DocsDataBuilder
       last_updated = front_matter["last_updated"] ? front_matter["last_updated"].to_s : ""
       added_date = front_matter["added_date"] ? front_matter["added_date"].to_s : last_updated
       sort_order = normalize_sort_order(front_matter["sort_order"])
+      published = true
+      viewable = boolean_front_matter_value(front_matter, "viewable", true)
 
       DocRecord.new(
         scope_id: @scope_id,
@@ -119,6 +123,8 @@ class DocsDataBuilder
         last_updated: last_updated,
         parent_id: parent_id,
         sort_order: sort_order,
+        published: published,
+        viewable: viewable,
         source_path: relative_path,
         viewer_url: viewer_url_for(doc_id),
         content_url: content_url_for(doc_id),
@@ -138,12 +144,16 @@ class DocsDataBuilder
   end
 
   def unpublished_doc?(front_matter)
-    return false unless front_matter.key?("published")
+    !boolean_front_matter_value(front_matter, "published", true)
+  end
 
-    value = front_matter["published"]
-    return !value if value == true || value == false
+  def boolean_front_matter_value(front_matter, key, default)
+    return default unless front_matter.key?(key)
 
-    %w[false 0 no off].include?(value.to_s.strip.downcase)
+    value = front_matter[key]
+    return value if value == true || value == false
+
+    !%w[false 0 no off].include?(value.to_s.strip.downcase)
   end
 
   def extract_title(markdown)
@@ -200,6 +210,8 @@ class DocsDataBuilder
       "last_updated" => doc.last_updated,
       "parent_id" => doc.parent_id,
       "sort_order" => doc.sort_order,
+      "published" => doc.published,
+      "viewable" => doc.viewable,
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,
       "content_url" => doc.content_url
@@ -215,6 +227,8 @@ class DocsDataBuilder
       "last_updated" => doc.last_updated,
       "parent_id" => doc.parent_id,
       "sort_order" => doc.sort_order,
+      "published" => doc.published,
+      "viewable" => doc.viewable,
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,
       "content_html" => rewrite_doc_links(

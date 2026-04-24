@@ -24,6 +24,9 @@
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
   var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
+  var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
+  var draftToggle = document.getElementById("docsViewerDraftToggle");
+  var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var metadataModal = document.getElementById("docsViewerMetadataModal");
   var metadataForm = document.getElementById("docsViewerMetadataForm");
   var metadataDocId = document.getElementById("docsViewerMetadataDocId");
@@ -59,6 +62,7 @@
   var sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
 
   var state = {
+    allDocs: [],
     docs: [],
     docsById: new Map(),
     childrenByParent: new Map(),
@@ -90,6 +94,7 @@
     managementCapabilities: null,
     managementMessage: "",
     managementMessageIsError: false,
+    showDrafts: false,
     reloadNonce: "",
     reloadExpectedDocId: "",
     dragDocId: "",
@@ -224,11 +229,31 @@
   function applyViewerConfig(config) {
     state.viewerConfigLoaded = true;
     state.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), DEFAULT_RECENT_LIMIT);
+    var draftColor = String(getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
+    var draftFontWeight = String(getConfigValue(config, "docs_viewer.draft_nav_font_weight") || "").trim();
+    if (draftColor) {
+      root.style.setProperty("--docs-viewer-draft-color", draftColor);
+    }
+    if (draftFontWeight) {
+      root.style.setProperty("--docs-viewer-draft-font-weight", draftFontWeight);
+    }
     if (recentButton) {
       var label = getConfigText(config, "docs_viewer.recently_added_button", "recently added");
       recentButton.textContent = label;
       recentButton.setAttribute("aria-label", label);
       recentButton.title = label;
+    }
+    if (draftLabel) {
+      draftLabel.textContent = getConfigText(config, "docs_viewer.draft_toggle_label", "drafts");
+    }
+    if (draftToggle) {
+      draftToggle.setAttribute("aria-label", getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show draft docs"));
+    }
+    if (manageViewableButton) {
+      var makeViewableLabel = getConfigText(config, "docs_viewer.make_viewable_button", "Make viewable");
+      manageViewableButton.textContent = makeViewableLabel;
+      manageViewableButton.setAttribute("aria-label", makeViewableLabel);
+      manageViewableButton.title = makeViewableLabel;
     }
     if (state.recentModeActive) {
       renderRecentMode();
@@ -643,6 +668,41 @@
     return childrenByParent;
   }
 
+  function isDocViewable(doc) {
+    return !doc || doc.viewable !== false;
+  }
+
+  function shouldIncludeDoc(doc) {
+    return isDocViewable(doc) || (state.managementMode && state.showDrafts);
+  }
+
+  function applyDocVisibility() {
+    state.docs = state.allDocs.filter(shouldIncludeDoc).slice().sort(compareDocs);
+    state.docsById = new Map(
+      state.docs.map(function (doc) {
+        return [doc.doc_id, doc];
+      })
+    );
+    state.childrenByParent = buildChildrenMap(state.docs);
+  }
+
+  function findAllDocById(docId) {
+    for (var i = 0; i < state.allDocs.length; i += 1) {
+      if (state.allDocs[i].doc_id === docId) return state.allDocs[i];
+    }
+    return null;
+  }
+
+  function syncDraftVisibilityForRequestedDoc() {
+    if (!state.managementMode) return;
+    var requestedDocId = getCurrentDocId();
+    if (!requestedDocId) return;
+    var requestedDoc = findAllDocById(requestedDocId);
+    if (requestedDoc && !isDocViewable(requestedDoc)) {
+      state.showDrafts = true;
+    }
+  }
+
   function isNonLoadableDoc(doc) {
     return Boolean(doc) && doc.doc_id === "_archive";
   }
@@ -749,6 +809,9 @@
       item.className = "docsViewer__navItem";
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
+      if (!isDocViewable(doc)) {
+        row.className += " is-draft";
+      }
       row.dataset.docRowId = doc.doc_id;
       var children = docChildren(doc.doc_id);
       var hasChildren = children.length > 0;
@@ -775,6 +838,10 @@
       if (doc.doc_id === state.selectedDocId) {
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
+      }
+      if (!isDocViewable(doc)) {
+        link.setAttribute("data-draft-doc", "true");
+        link.title = "Draft";
       }
       link.href = viewerUrl(viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
@@ -817,11 +884,11 @@
     });
 
     if (doc.last_updated) {
-      updatedEl.textContent = "Updated " + doc.last_updated;
+      updatedEl.textContent = (isDocViewable(doc) ? "" : "Draft • ") + "Updated " + doc.last_updated;
       updatedEl.hidden = false;
     } else {
-      updatedEl.textContent = "";
-      updatedEl.hidden = true;
+      updatedEl.textContent = isDocViewable(doc) ? "" : "Draft";
+      updatedEl.hidden = isDocViewable(doc);
     }
     meta.hidden = false;
     renderBookmarkToggle();
@@ -1019,7 +1086,7 @@
   function managementNoteText() {
     if (state.managementMessage) return state.managementMessage;
     if (state.searchRouteActive) {
-      return "Clear search to archive or delete the current doc.";
+      return "Clear search to manage the current doc.";
     }
     if (!managementArchiveAvailable()) {
       return "Archive is unavailable for this scope until `_archive` exists.";
@@ -1057,10 +1124,11 @@
       manageNote.classList.toggle("is-error", noteIsError);
     }
 
-    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton) return;
+    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
 
     var doc = currentSelectedDoc();
     var reserved = Boolean(doc && doc.doc_id === "_archive");
+    var draftDoc = Boolean(doc && !isDocViewable(doc));
     var editDisabled = (
       state.managementBusy ||
       !doc ||
@@ -1081,12 +1149,24 @@
       state.searchRouteActive ||
       reserved
     );
+    var viewableDisabled = (
+      state.managementBusy ||
+      !doc ||
+      state.searchRouteActive ||
+      reserved ||
+      !draftDoc
+    );
 
     manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
     manageEditButton.disabled = !state.managementAvailable || editDisabled;
     manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
     manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
+    manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
+    if (draftToggle) {
+      draftToggle.disabled = !state.managementAvailable || state.managementBusy;
+      draftToggle.checked = state.showDrafts;
+    }
     if (metadataSaveButton) {
       metadataSaveButton.disabled = state.managementBusy;
     }
@@ -1407,6 +1487,57 @@
         state.managementBusy = false;
         renderManagementUi();
       });
+  }
+
+  function handleMakeViewable() {
+    var doc = currentSelectedDoc();
+    if (!doc || isDocViewable(doc)) return;
+
+    state.managementBusy = true;
+    setManagementMessage("Making " + doc.title + " viewable...", false);
+    setStatus("Making " + doc.title + " viewable...", false);
+
+    fetchManagementJson("/docs/update-viewability", "POST", {
+      scope: viewerScope,
+      doc_id: doc.doc_id,
+      viewable: true
+    })
+      .then(function (payload) {
+        setManagementMessage(payload.summary_text || "Doc made viewable.", false);
+        return reloadDocsIndex(doc.doc_id, payload.summary_text || "Doc made viewable.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Viewability update failed.", true);
+        setStatus(error.message || "Viewability update failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleDraftToggleChange() {
+    if (!draftToggle) return;
+    state.showDrafts = Boolean(draftToggle.checked);
+    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
+    applyDocVisibility();
+    renderSidebar();
+    renderBookmarkUi();
+    renderManagementUi();
+
+    var currentDocId = state.selectedDocId;
+    var targetDocId = currentDocId && state.docsById.has(currentDocId) ? currentDocId : defaultDocId();
+    if (state.recentModeActive) {
+      renderRecentMode();
+      return;
+    }
+    if (state.searchRouteActive) {
+      renderSearchMode();
+      return;
+    }
+    if (targetDocId) {
+      loadDoc(targetDocId, { historyMode: "replace", hash: "" });
+    }
   }
 
   function handleMoveDoc(docId, targetDocId, position) {
@@ -1884,6 +2015,20 @@
       });
     }
 
+    if (manageViewableButton) {
+      manageViewableButton.addEventListener("click", function () {
+        hideContextMenu();
+        handleMakeViewable();
+      });
+    }
+
+    if (draftToggle) {
+      draftToggle.addEventListener("change", function () {
+        hideContextMenu();
+        handleDraftToggleChange();
+      });
+    }
+
     if (contextMenu) {
       contextMenu.addEventListener("click", function (event) {
         var action = event.target.closest("[data-context-action]");
@@ -1996,13 +2141,10 @@
   }
 
   function initializeIndex(payload) {
-    state.docs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
-    state.docsById = new Map(
-      state.docs.map(function (doc) {
-        return [doc.doc_id, doc];
-      })
-    );
-    state.childrenByParent = buildChildrenMap(state.docs);
+    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
+    state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
+    syncDraftVisibilityForRequestedDoc();
+    applyDocVisibility();
 
     renderSidebar();
     renderBookmarkUi();
@@ -2017,6 +2159,9 @@
 
   function applyCurrentRoute(options) {
     setRecentModeActive(false);
+    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
+    syncDraftVisibilityForRequestedDoc();
+    applyDocVisibility();
     var route = resolveDocId();
     var docId = route.docId;
     if (!docId) {
@@ -2027,7 +2172,6 @@
     var query = getCurrentQuery();
     state.searchQuery = query;
     state.searchRouteActive = hasActiveQuery(query);
-    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     state.selectedDocId = docId;
     if (searchInput) {
       searchInput.value = query;
@@ -2195,7 +2339,7 @@
   function collectRecentDocs() {
     return state.docs
       .filter(function (doc) {
-        return doc && doc.doc_id && doc.doc_id !== "_archive";
+        return doc && doc.doc_id && doc.doc_id !== "_archive" && isDocViewable(doc);
       })
       .slice()
       .sort(compareRecentDocs)

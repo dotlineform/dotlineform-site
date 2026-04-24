@@ -109,11 +109,16 @@
     }
   },
   "docs_viewer": {
-    "recently_added_limit": 10
+    "recently_added_limit": 10,
+    "draft_nav_color": "var(--muted)",
+    "draft_nav_font_weight": "600"
   },
   "ui_text": {
     "docs_viewer": {
-      "recently_added_button": "recently added"
+      "recently_added_button": "recently added",
+      "draft_toggle_label": "drafts",
+      "draft_toggle_aria_label": "Show draft docs",
+      "make_viewable_button": "Make viewable"
     },
     "series_tag_editor": {
       "missing_series_id_error": "Tag Studio error: missing series id.",

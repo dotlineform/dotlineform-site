@@ -40,6 +40,7 @@ SearchDocRecord = Struct.new(
   :last_updated,
   :parent_id,
   :viewer_url,
+  :viewable,
   keyword_init: true
 )
 
@@ -208,15 +209,26 @@ class SearchDataBuilder
       title = normalize_text(row["title"])
       viewer_url = normalize_text(row["viewer_url"])
       next if doc_id.empty? || title.empty? || viewer_url.empty?
+      next unless boolean_field(row, "viewable", true)
 
       SearchDocRecord.new(
         doc_id: doc_id,
         title: title,
         last_updated: normalize_text(row["last_updated"]),
         parent_id: normalize_text(row["parent_id"]),
-        viewer_url: viewer_url
+        viewer_url: viewer_url,
+        viewable: true
       )
     end.compact
+  end
+
+  def boolean_field(row, key, default)
+    return default unless row.key?(key)
+
+    value = row[key]
+    return value if value == true || value == false
+
+    !%w[false 0 no off].include?(value.to_s.strip.downcase)
   end
 
   def load_index_hash(path, key)

@@ -17,6 +17,7 @@ Endpoints:
   POST /docs/broken-links
   POST /docs/open-source
   POST /docs/update-metadata
+  POST /docs/update-viewability
   POST /docs/create
   POST /docs/move
   POST /docs/archive
@@ -94,6 +95,7 @@ class ScopeDoc:
     parent_id: str
     sort_order: Optional[int]
     published: bool
+    viewable: bool
 
 
 def utc_now() -> str:
@@ -238,7 +240,16 @@ def format_front_matter_value(value: Any) -> str:
 
 
 def format_source(front_matter: Dict[str, Any], body: str) -> str:
-    preferred_order = ["doc_id", "title", "added_date", "last_updated", "parent_id", "sort_order", "published"]
+    preferred_order = [
+        "doc_id",
+        "title",
+        "added_date",
+        "last_updated",
+        "parent_id",
+        "sort_order",
+        "published",
+        "viewable",
+    ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))
     lines = ["---"]
@@ -266,12 +277,24 @@ def write_text_atomic(path: Path, text: str) -> None:
 
 
 def doc_is_published(front_matter: Dict[str, Any]) -> bool:
-    if "published" not in front_matter:
-        return True
-    value = front_matter["published"]
+    return front_matter_boolean(front_matter, "published", True)
+
+
+def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
+    return front_matter_boolean(front_matter, "viewable", True)
+
+
+def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) -> bool:
+    if key not in front_matter:
+        return default
+    value = front_matter[key]
     if isinstance(value, bool):
         return value
     return str(value or "").strip().lower() not in {"false", "0", "no", "off"}
+
+
+def default_viewable_for_scope(scope: str) -> bool:
+    return scope != "library"
 
 
 def normalize_scope(scope: Any) -> str:
@@ -314,6 +337,7 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 parent_id=parent_id,
                 sort_order=sort_order,
                 published=doc_is_published(front_matter),
+                viewable=doc_is_viewable(front_matter),
             )
         )
     validate_scope_docs(docs)
@@ -821,7 +845,7 @@ def imported_body_markdown(preview: Dict[str, Any]) -> str:
     return f"# {title}\n"
 
 
-def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc]) -> str:
+def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc], scope: str) -> str:
     title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
     today = current_date()
     front_matter = {
@@ -831,6 +855,8 @@ def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc
         "last_updated": today,
         "parent_id": "",
         "sort_order": next_sort_order(docs, ""),
+        "published": True,
+        "viewable": default_viewable_for_scope(scope),
     }
     return format_source(front_matter, imported_body_markdown(preview))
 
@@ -844,6 +870,8 @@ def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc
     front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or today).strip()
     front_matter["last_updated"] = today
     front_matter["parent_id"] = target.parent_id
+    front_matter.setdefault("published", True)
+    front_matter.setdefault("viewable", target.viewable)
     if target.sort_order is None:
         front_matter.pop("sort_order", None)
     else:
@@ -967,6 +995,8 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
                 "title": preview["title"],
                 "parent_id": collision_doc.parent_id,
                 "sort_order": collision_doc.sort_order,
+                "published": True,
+                "viewable": collision_doc.viewable,
             },
             "collision": collision,
             "import_preview": preview,
@@ -978,7 +1008,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
 
     doc_id = preview["proposed_doc_id"]
     target_path = scope_root(repo_root, scope) / f"{doc_id}.md"
-    source_text = imported_source_text_for_create(preview, docs)
+    source_text = imported_source_text_for_create(preview, docs, scope)
     if not dry_run:
         backup_dir = make_backup_bundle(
             repo_root,
@@ -1029,6 +1059,8 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             "title": preview["title"],
             "parent_id": "",
             "sort_order": next_sort_order(docs, ""),
+            "published": True,
+            "viewable": default_viewable_for_scope(scope),
         },
         "collision": collision,
         "import_preview": preview,
@@ -1075,6 +1107,8 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
         "last_updated": today,
         "parent_id": parent_id,
         "sort_order": sort_order,
+        "published": True,
+        "viewable": default_viewable_for_scope(scope),
     }
     source_text = format_source(front_matter, f"# {title}\n")
 
@@ -1122,6 +1156,8 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
             "title": title,
             "parent_id": parent_id,
             "sort_order": sort_order,
+            "published": True,
+            "viewable": default_viewable_for_scope(scope),
         },
         "summary_text": f"Created {doc_id}.",
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
@@ -1248,6 +1284,85 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             "sort_order": sort_order,
         },
         "summary_text": f"Updated metadata for {target.doc_id}.",
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "dry_run": dry_run,
+    }
+
+
+def handle_update_viewability(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    doc_id = str(body.get("doc_id") or "").strip()
+    if not doc_id:
+        raise ValueError("doc_id is required")
+    if "viewable" not in body:
+        raise ValueError("viewable is required")
+
+    next_viewable = front_matter_boolean(body, "viewable", True)
+    docs = load_scope_docs(repo_root, scope)
+    target = next((doc for doc in docs if doc.doc_id == doc_id), None)
+    if target is None:
+        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+    if target.doc_id in RESERVED_DOC_IDS:
+        raise ValueError(f"{target.doc_id} is a reserved system doc and cannot be edited")
+
+    if target.viewable == next_viewable:
+        return {
+            "ok": True,
+            "scope": scope,
+            "doc_id": target.doc_id,
+            "path": relative_path(repo_root, target.path),
+            "record": {
+                "doc_id": target.doc_id,
+                "viewable": target.viewable,
+            },
+            "summary_text": f"No viewability changes for {target.doc_id}.",
+            "dry_run": dry_run,
+        }
+
+    rewritten_source = rewrite_doc_source(target, {"published": True, "viewable": next_viewable})
+    backup_dir = None
+    rebuild = None
+    if not dry_run:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "update-viewability",
+            [target],
+            {
+                "doc_id": target.doc_id,
+                "from_viewable": target.viewable,
+                "to_viewable": next_viewable,
+            },
+        )
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [target.path],
+            lambda: write_text_atomic(target.path, rewritten_source),
+            suppression_reason="docs-update-viewability",
+        )
+        log_event(
+            repo_root,
+            "docs-update-viewability",
+            {
+                "scope": scope,
+                "doc_id": target.doc_id,
+                "from_viewable": target.viewable,
+                "to_viewable": next_viewable,
+            },
+        )
+
+    return {
+        "ok": True,
+        "scope": scope,
+        "doc_id": target.doc_id,
+        "path": relative_path(repo_root, target.path),
+        "record": {
+            "doc_id": target.doc_id,
+            "viewable": next_viewable,
+        },
+        "summary_text": f"Updated viewability for {target.doc_id}.",
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
         "rebuild": rebuild,
         "dry_run": dry_run,
@@ -1609,6 +1724,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 return
             if self.path == "/docs/update-metadata":
                 payload = handle_update_metadata(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/update-viewability":
+                payload = handle_update_viewability(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/create":
