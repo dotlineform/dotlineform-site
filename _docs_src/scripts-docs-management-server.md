@@ -32,6 +32,7 @@ Exposed endpoints:
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
 - `POST /docs/update-metadata`
+- `POST /docs/update-viewability`
 - `POST /docs/create`
 - `POST /docs/move`
 - `POST /docs/archive`
@@ -45,6 +46,8 @@ Current behavior:
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/library-import/` for staged-file listing and docs HTML import writes
 - creates, archives, and deletes flat source docs under the current scope root
+- creates Studio docs as `published: true`, `viewable: true`
+- creates Library docs as `published: true`, `viewable: false`
 - rebuilds scope-owned docs payloads and scope-owned docs search after successful writes
 - coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
 
@@ -69,6 +72,8 @@ Request behavior:
 - `scope` must be `studio` or `library`
 - `title` defaults to `New Doc` when omitted or blank
 - new docs write `added_date` and `last_updated` to the current date
+- new Studio docs write `published: true`, `viewable: true`
+- new Library docs write `published: true`, `viewable: false`
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
@@ -103,10 +108,12 @@ Import behavior:
 - supports the prompt/meta include toggle already defined by the import spec
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current date
+- new Studio imports write `published: true`, `viewable: true`
+- new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
 - reports collision details when the generated import target already matches an existing `doc_id`
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc
-- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published` state
+- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild the same-scope docs payloads and docs-search artifact
@@ -185,6 +192,25 @@ Metadata-update behavior:
 - `sort_order` accepts a non-negative integer or blank
 - always rebuilds docs payloads for the scope
 - always rebuilds the same-scope docs-search artifact after a successful write
+
+`POST /docs/update-viewability` expects:
+
+```json
+{
+  "scope": "library",
+  "doc_id": "example-doc",
+  "viewable": true
+}
+```
+
+Viewability-update behavior:
+
+- updates only the source doc's `viewable` front matter
+- preserves `doc_id`, title, parent, sort order, body content, `added_date`, and `last_updated`
+- writes `published: true` alongside `viewable` so the doc stays in generated docs payloads
+- is used by the Docs Viewer manage-mode `Make viewable` action
+- rebuilds generated docs payloads and same-scope docs search after a successful single-doc visibility change
+- does not implement incremental search; bulk viewability work should batch source writes and run one docs/search rebuild rather than one rebuild per doc
 
 `POST /docs/move` expects:
 

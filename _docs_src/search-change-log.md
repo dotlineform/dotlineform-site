@@ -9,6 +9,27 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-24] Filtered docs search by `viewable`
+
+**Status:** implemented
+
+**Area:** docs-domain search build flow
+
+**Summary:**
+Docs-domain search now includes only generated docs whose docs index row is not `viewable: false`.
+
+**Reason:**
+Library imports can now be generated for manage-mode review before they are ready for the public/default Library viewer. Those draft docs should not appear in inline docs search until they are made viewable.
+
+**Effect:**
+`scripts/build_search.rb` skips non-viewable rows from the generated Studio and Library docs indexes. Single-doc `Make viewable` actions use the existing same-scope full search rebuild for correctness; bulk visibility changes should batch source writes into one rebuild or wait for a separate incremental docs-search design.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec)
+
 ## [2026-04-24] Aligned Docs Viewer search result metadata across docs scopes
 
 **Status:** implemented

@@ -83,7 +83,7 @@ Those source and upstream artifact families are documented in:
 
 ### 2. Search index generation
 
-`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical published docs indexes.
+`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical generated docs indexes and skips docs with `viewable: false`.
 
 ### 3. Search policy
 

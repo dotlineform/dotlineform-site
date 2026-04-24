@@ -6,6 +6,8 @@
   "last_updated": "2026-04-24",
   "parent_id": "",
   "sort_order": 150,
+  "published": true,
+  "viewable": true,
   "source_path": "llm.md",
   "viewer_url": "/docs/?scope=studio&doc=llm",
   "content_html": "<h1 id=\"llm-integration\">LLM Integration</h1>\n\n<p>This section describes calling LLM API to support tagging and scoring decisions.</p>\n\n<h2 id=\"documents\">Documents</h2>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&doc=llm-dimension\">LLM-Assisted Dimension Recommendation</a> captures the current conceptual dimension/tag recommendation notes.</li>\n  <li><a href=\"/docs/?scope=studio&doc=llm-semantic-enrichment-spec\">LLM Semantic Enrichment Spec</a> defines the shared planning direction across tagging, dimensions, Library summaries, and structure review.</li>\n  <li><a href=\"/docs/?scope=studio&doc=generic-llm-helper-pattern\">Generic LLM Helper Pattern</a> defines the reusable structured invocation pattern.</li>\n</ul>\n"

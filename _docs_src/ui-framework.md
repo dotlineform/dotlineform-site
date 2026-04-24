@@ -186,6 +186,8 @@ The current shared treatment is:
 - docs-viewer search and recently-added results show title plus `date` or `date • parent`; they do not show `doc_id` as a separate visible line
 - docs-viewer search uses `last_updated` for its date metadata, while recently-added uses `added_date`
 - active state should be obvious without turning the viewer into a tabbed interface
+- in manage mode, the draft checkbox adds non-viewable docs to the tree while keeping viewable docs visible for context
+- draft/non-viewable tree-row color and font weight should come from `studio_config.json` so accessibility can be tuned without code changes
 
 ## Public Search UI Standards
 

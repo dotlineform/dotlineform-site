@@ -274,6 +274,7 @@ Current content families:
   - `parent_id`
   - `sort_order`
   - optional `published`
+  - optional `viewable`
 - Markdown or raw HTML body content
 
 Why Markdown is part of the data model here:
@@ -289,8 +290,8 @@ Purpose:
 
 Current content families:
 
-- one row per published Studio doc
-- identity, title, added/update dates, ordering, source path, viewer URL, and per-doc content URL
+- one row per generated Studio doc
+- identity, title, added/update dates, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
 
 Current site mapping:
 
@@ -331,7 +332,7 @@ Purpose:
 
 Current content families:
 
-- one `doc` entry per published Studio doc
+- one `doc` entry per viewable Studio doc
 - doc identity, title, viewer URL, last-updated metadata, parent context, and normalized search text
 
 Search currently uses `last_updated`, not `added_date`. The docs-viewer recently-added list reads `added_date` from the generated docs index, but search review is intentionally separate.
@@ -342,8 +343,9 @@ Current site mapping:
 
 Why it is derived from the docs index rather than the source Markdown directly:
 
-- the canonical published Studio docs corpus is the generated docs index, not every source file under `_docs_src/`
-- this keeps unpublished docs and invalid tree relationships out of the search corpus automatically
+- the canonical generated Studio docs corpus is the generated docs index, not every source file under `_docs_src/`
+- this keeps `published: false` source docs out of the generated corpus automatically
+- docs with `viewable: false` can have generated payloads for manage mode, but are filtered out of public/default docs search
 
 Current writer:
 

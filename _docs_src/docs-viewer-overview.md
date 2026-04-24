@@ -78,6 +78,7 @@ Current URL state:
 
 - `doc` selects the active document
 - `q` activates inline docs search for the current scope
+- `mode=manage` enables local manage mode when the docs-management server is available
 - `#hash` targets a heading within the rendered document
 
 Studio docs currently normalize onto a canonical scoped URL:
@@ -116,6 +117,7 @@ Current sidebar behavior:
 Current search behavior:
 
 - docs search is inline within the viewer rather than a separate docs search page
+- docs search includes only viewable docs
 - the viewer lazily loads the scope search index when `q` is present
 - result links route back into the same viewer URL model
 - search and recently-added list entries use title plus muted metadata rather than showing `doc_id`
@@ -124,10 +126,19 @@ Current search behavior:
 Current recently-added behavior:
 
 - the button is rendered by the shared shell when inline docs search is enabled
-- the runtime sorts current-scope docs by `added_date` descending, then title ascending
+- the runtime sorts current-scope viewable docs by `added_date` descending, then title ascending
 - the list is capped by `docs_viewer.recently_added_limit` in `assets/studio/data/studio_config.json`
 - list metadata uses `added_date` and, when available, parent title in the form `date • parent`
 - `_archive` is excluded from the list
+
+Current manage-mode draft behavior:
+
+- public/default tree rendering includes only docs whose generated index row is not `viewable: false`
+- manage mode has a `drafts` checkbox that adds non-viewable docs to the tree
+- manage-mode direct links to a non-viewable doc auto-enable the drafts state so Studio import/create completion links can land on the target
+- viewable docs remain visible when drafts are shown, so the tree keeps context
+- non-viewable docs are marked with configurable tree-row styling from `studio_config.json`
+- a selected non-viewable doc can be made viewable through the manage toolbar
 
 Document view metadata continues to display `last_updated`, because that is more meaningful while reading a single doc. Docs search also continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
 

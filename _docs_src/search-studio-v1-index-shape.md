@@ -27,12 +27,13 @@ For the wider docs-scope model that these artifacts sit on top of, use:
 
 ## Upstream Sources
 
-The docs-domain search builder reads the published docs indexes:
+The docs-domain search builder reads the generated docs indexes:
 
 - `assets/data/docs/scopes/studio/index.json`
 - `assets/data/docs/scopes/library/index.json`
 
 It does not read raw Markdown source files directly.
+Rows with `viewable: false` are excluded from the docs-domain search artifacts.
 
 ## Top-Level Output Shape
 
@@ -105,7 +106,7 @@ The generated docs index also includes `added_date`, but docs-domain search inte
 
 Current builder behavior:
 
-- one search record per published doc
+- one search record per viewable generated doc
 - no section-level records
 - no summary or snippet field
 - no body-prose indexing

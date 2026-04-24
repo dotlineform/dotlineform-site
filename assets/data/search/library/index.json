@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-a843ede9d2b35365027e5781c8b9f530",
-    "generated_at_utc": "2026-04-24T08:37:53Z",
-    "count": 5
+    "version": "blake2b-c4feb1833d1e2d8980e9fea2a381daf2",
+    "generated_at_utc": "2026-04-24T17:11:11Z",
+    "count": 4
   },
   "entries": [
     {
@@ -22,30 +22,6 @@
         "30"
       ],
       "search_text": "library 2026-03-30 2026 03 30"
-    },
-    {
-      "id": "can-the-brain-comprehend-how-it-works",
-      "kind": "doc",
-      "title": "Can the Brain Comprehend How It Works?",
-      "href": "/library/?doc=can-the-brain-comprehend-how-it-works",
-      "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
-      "search_terms": [
-        "can-the-brain-comprehend-how-it-works",
-        "can",
-        "the",
-        "brain",
-        "comprehend",
-        "how",
-        "it",
-        "works",
-        "can the brain comprehend how it works?",
-        "2026-04-23",
-        "2026",
-        "04",
-        "23"
-      ],
-      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-23 2026 04 23"
     },
     {
       "id": "defining-information-for-cross-boundary-comparisons-concepts",

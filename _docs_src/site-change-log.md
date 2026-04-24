@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-24] Added Docs Viewer viewability workflow
+
+**Status:** implemented
+
+**Area:** Docs Viewer / docs management
+
+**Summary:**
+Added a separate `viewable` docs flag so generated docs can be hidden from the public/default Docs Viewer while remaining reviewable in manage mode.
+
+**Reason:**
+Bulk Library imports need to enter the generated docs system without immediately appearing as a long unstructured public root list. The existing `published` flag already means pipeline inclusion, so public visibility needed a separate field.
+
+**Effect:**
+Generated docs indexes and per-doc payloads now include `published` and `viewable`. Public/default Docs Viewer trees, recently-added lists, and direct doc routing use viewable docs only. Manage mode has a `drafts` checkbox that adds non-viewable docs to the tree while retaining visible docs for context, plus a `Make viewable` action for a selected draft. Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`.
+
+**Affected files/docs:**
+
+- `scripts/build_docs.rb`
+- `scripts/docs/docs_management_server.py`
+- `_includes/docs_viewer_shell.html`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- `assets/studio/data/studio_config.json`
+- [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)
+
 ## [2026-04-24] Added desktop Docs Viewer index collapse
 
 **Status:** implemented

@@ -6,6 +6,8 @@
   "last_updated": "2026-03-30",
   "parent_id": "",
   "sort_order": 10,
+  "published": true,
+  "viewable": true,
   "source_path": "library.md",
   "viewer_url": "/library/?doc=library",
   "content_html": "<h1 id=\"library\">Library</h1>\n\n<p>coming soon…</p>\n"

@@ -44,7 +44,7 @@ Current build principles:
 Current source boundary:
 
 - `catalogue` search reads canonical repo JSON artifacts, not `works.xlsx` and not non-repo source files
-- `studio` and `library` search read canonical published docs indexes
+- `studio` and `library` search read canonical generated docs indexes and include only rows where `viewable !== false`
 
 This means search now has one owner even though the upstream source artifacts are different per scope.
 
@@ -253,8 +253,8 @@ Current supported overrides:
 
 Current builder behaviour for Studio:
 
-- reads the published Studio docs index
-- emits one search record per published Studio doc
+- reads the generated Studio docs index
+- emits one search record per viewable Studio doc
 - keeps record shape compatible with the shared Docs Viewer inline search runtime
 - does not create section-level records
 - does not index doc body prose
@@ -281,6 +281,7 @@ Current derived search support fields:
   - `./scripts/build_docs.rb --scope studio --write`
   - `./scripts/build_search.rb --scope studio --write`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
+- single-doc viewability changes currently use the same full same-scope docs-search rebuild path; bulk viewability changes should batch writes and run one rebuild, or wait for a separate incremental docs-search design
 - `bin/dev-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `_docs_src/*.md` changes aligned with `assets/data/search/studio/index.json`
 
 ## Library Scope
@@ -297,7 +298,8 @@ Current derived search support fields:
 
 - `assets/data/docs/scopes/library/index.json`
 
-The current Library search artifact is derived from the published Library docs index rather than directly from `_docs_library_src/`.
+The current Library search artifact is derived from the generated Library docs index rather than directly from `_docs_library_src/`.
+Rows with `viewable: false` are skipped so draft Library docs can be generated for manage-mode review without appearing in public/default search.
 
 ### Current Commands
 
@@ -325,8 +327,8 @@ Current supported overrides:
 Current builder behaviour for Library:
 
 - matches the same docs-domain record model used by Studio
-- reads only the published Library docs index
-- emits one search record per published Library doc
+- reads only the generated Library docs index
+- emits one search record per viewable Library doc
 - stays compatible with the shared Docs Viewer inline search runtime
 
 ### Current Runtime Mapping
@@ -337,6 +339,7 @@ Current builder behaviour for Library:
   - `./scripts/build_docs.rb --scope library --write`
   - `./scripts/build_search.rb --scope library --write`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
+- single-doc viewability changes currently use the same full same-scope docs-search rebuild path; bulk viewability changes should batch writes and run one rebuild, or wait for a separate incremental docs-search design
 - if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/dev-studio` runs a startup `library` docs-search rebuild
 - while `bin/dev-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`
 

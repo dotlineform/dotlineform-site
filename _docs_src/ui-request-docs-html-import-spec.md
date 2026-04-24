@@ -146,6 +146,10 @@ Recommended metadata generation:
   - preserved from the target doc when overwriting unless the overwrite contract later decides otherwise
 - `last_updated`:
   - import date
+- `published` and `viewable`:
+  - new Studio imports default to `published: true`, `viewable: true`
+  - new Library imports default to `published: true`, `viewable: false`
+  - overwrite preserves the target doc's existing generated/visibility state
 
 Recommended body goal:
 
@@ -679,6 +683,7 @@ Interpretation:
 - technical notation that depends on safe inline HTML can survive conversion
 - interactive HTML behavior is flattened into readable static content
 - overwrite preserves the target doc identity and creates a backup before replacement
+- new Library imports are generated but draft/non-viewable by default so they can be reviewed in manage mode before appearing on `/library/`
 - same-scope docs payloads rebuild automatically after import
 - same-scope docs search rebuilds automatically after import
 - the import result is reported with non-routine warnings only, not routine spec-conformant transformations

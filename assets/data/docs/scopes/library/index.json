@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T10:01:18Z",
+  "generated_at": "2026-04-24T17:11:11Z",
   "docs": [
     {
       "scope": "library",
@@ -9,6 +9,8 @@
       "last_updated": "2026-03-30",
       "parent_id": "",
       "sort_order": 10,
+      "published": true,
+      "viewable": true,
       "source_path": "library.md",
       "viewer_url": "/library/?doc=library",
       "content_url": "/assets/data/docs/scopes/library/by-id/library.json"
@@ -21,6 +23,8 @@
       "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 200,
+      "published": true,
+      "viewable": true,
       "source_path": "archive.md",
       "viewer_url": "/library/?doc=_archive",
       "content_url": "/assets/data/docs/scopes/library/by-id/_archive.json"
@@ -33,6 +37,8 @@
       "last_updated": "2026-04-23",
       "parent_id": "",
       "sort_order": 210,
+      "published": true,
+      "viewable": false,
       "source_path": "can-the-brain-comprehend-how-it-works.md",
       "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
       "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
@@ -45,6 +51,8 @@
       "last_updated": "2026-04-24",
       "parent_id": "",
       "sort_order": 220,
+      "published": true,
+      "viewable": true,
       "source_path": "defining-information-for-cross-boundary-comparisons-concepts.md",
       "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
       "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons-concepts.json"
@@ -57,6 +65,8 @@
       "last_updated": "2026-04-23",
       "parent_id": "",
       "sort_order": 230,
+      "published": true,
+      "viewable": true,
       "source_path": "evolutionary-psychology-overview.md",
       "viewer_url": "/library/?doc=evolutionary-psychology-overview",
       "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json"
@@ -69,6 +79,8 @@
       "last_updated": "2026-04-24",
       "parent_id": "",
       "sort_order": 240,
+      "published": true,
+      "viewable": true,
       "source_path": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.md",
       "viewer_url": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
       "content_url": "/assets/data/docs/scopes/library/by-id/loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.json"

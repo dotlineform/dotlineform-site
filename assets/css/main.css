@@ -937,6 +937,8 @@ th{ background: var(--panel-2); }
 
 .docsViewer{
   --docs-viewer-measure: var(--content-measure);
+  --docs-viewer-draft-color: var(--muted);
+  --docs-viewer-draft-font-weight: 600;
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
   column-gap: var(--space-5);
@@ -1108,6 +1110,11 @@ th{ background: var(--panel-2); }
 .docsViewer__navLink.is-active{
   background: var(--panel-2);
   border-color: var(--border);
+}
+
+.docsViewer__navRow.is-draft .docsViewer__navLink{
+  color: var(--docs-viewer-draft-color);
+  font-weight: var(--docs-viewer-draft-font-weight);
 }
 
 .docsViewer__navLink[draggable="true"]{
@@ -1311,6 +1318,25 @@ select.docsViewer__fieldInput{
   flex-wrap: wrap;
   align-items: center;
   gap: 0.55rem;
+}
+
+.docsViewer__draftToggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  min-height: 2.3rem;
+  color: var(--text);
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.docsViewer__draftInput{
+  margin: 0;
+}
+
+.docsViewer__draftInput:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
 }
 
 .docsViewer__manageNote{

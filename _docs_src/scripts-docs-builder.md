@@ -36,7 +36,7 @@ Generated outputs:
 ## What The Builder Does
 
 - reads Markdown source docs from each configured flat scope source root
-- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
+- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, `parent_id`, optional `sort_order`, optional `published`, and optional `viewable`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
@@ -49,7 +49,8 @@ Generated outputs:
 - every root-level `.md` file in `_docs_src/` is published by default
 - every root-level `.md` file in `_docs_library_src/` is published by default
 - nested Markdown docs are rejected so the flat source-layout contract stays explicit
-- add front matter with `published: false` to keep a Markdown file in either source root without publishing it
+- add front matter with `published: false` to keep a Markdown file in either source root without generating it into docs-viewer JSON
+- add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
 - if front matter is omitted, the builder falls back to:
   - `doc_id`: filename stem
@@ -70,7 +71,9 @@ Generated outputs:
 - `sort_order`
   optional integer for stable ordering inside the index tree
 - `published`
-  optional boolean; set `false` to exclude the file from published docs output
+  optional boolean; set `false` to exclude the file from generated docs output
+- `viewable`
+  optional boolean; set `false` to keep a generated doc hidden from public/default Docs Viewer discovery
 
 ## Link And Media Conventions
 
@@ -137,7 +140,7 @@ Flags:
 - manual `./scripts/build_docs.rb --write` with no `--scope` rebuilds all configured docs scopes, currently `studio` and `library`
 - current write behavior is incremental within the rebuilt scope:
   - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
-  - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer publishes that doc
+  - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
 - if you want a scope-specific rebuild, use `--scope studio` or `--scope library` explicitly
 
 Jekyll verification builds:

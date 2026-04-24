@@ -42,6 +42,7 @@ Current design:
 - same front-matter model as the Studio docs scope
 - same Markdown-or-raw-HTML authoring model
 - separate source root so Library can grow without being folded into Studio docs
+- Library import/create defaults new docs to `published: true`, `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
 
 Current implementation note:
 
@@ -60,8 +61,8 @@ Purpose:
 
 Current content families:
 
-- one row per published Library doc
-- identity, added/update dates, ordering, viewer URL, and per-doc content URL
+- one row per generated Library doc
+- identity, added/update dates, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
 
 Current site mapping:
 
@@ -92,7 +93,7 @@ Purpose:
 
 Current content families:
 
-- one `doc` entry per published Library doc
+- one `doc` entry per viewable Library doc
 - identity, viewer URL, last-updated metadata, and normalized search text
 
 Library recently-added lists use `added_date` from the generated docs index. Library search continues to use `last_updated`.
@@ -121,7 +122,8 @@ Current dependencies:
 Current enforcement:
 
 - duplicate `doc_id` values and invalid `parent_id` references are rejected by the docs builder before Library docs data is written
-- unpublished docs are excluded before both the docs data and Library search data are generated
+- `published: false` docs are excluded before Library docs data is generated
+- `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from Library search and public/default viewer discovery
 
 ## Performance Notes
 

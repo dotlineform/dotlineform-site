@@ -29,7 +29,7 @@ The desired workflow is:
 - make selected docs viewable when they are ready
 - avoid creating a parallel manage-only docs index if the existing index can carry the needed state
 
-This is a planning spec, not the current implementation.
+The first implementation is now in place for the shared Docs Viewer, docs builder, docs search builder, and docs-management server.
 
 ## Current Model
 
@@ -45,7 +45,8 @@ Some Studio docs already use this field for local audit outputs that should not 
 This means `published: false` is a pipeline inclusion flag today.
 It is not suitable as the public visibility flag for generated-but-hidden Library docs.
 
-There is no docs `status` field and no docs `viewable` field yet.
+There is no docs `status` field.
+The docs builder and management flow now support `viewable`.
 
 The docs-management flow already has an `_archive` structural section, but `_archive` is not a publication state.
 It is a tree/navigation location for archived docs.
@@ -161,6 +162,7 @@ Manage mode:
 
 - default view can still show viewable docs only, to avoid clutter
 - a `show non-viewable` toggle can include hidden generated docs in the tree
+- direct manage-mode links to a non-viewable doc should auto-enable the draft tree state
 - non-viewable rows should be visually marked
 - when non-viewable docs are shown, tree ancestors needed to reach selected non-viewable docs should also be visible
 - selected non-viewable docs should be openable and reviewable
@@ -271,7 +273,7 @@ Reasons:
 
 Open decision:
 
-- whether import UI should expose a `make viewable immediately` option
+- whether import UI should expose a `make viewable immediately` option later; the first implementation defaults Library imports to non-viewable without adding another import-page choice
 
 ## Data Model Notes
 
@@ -322,17 +324,23 @@ The system should not treat `_archive` as equivalent to `viewable: false`.
 - update docs builder docs
 - keep viewer filtering viewable-only by default
 
+Status: implemented.
+
 ### Phase 2. Viewer filtering
 
 - filter public/default tree to viewable docs
 - hide non-viewable docs from search/recently-added
 - handle direct non-viewable URLs outside manage mode using the existing missing-doc behavior: fall back to the scope default doc
 
+Status: implemented.
+
 ### Phase 3. Manage-mode visibility toggle
 
 - add show/hide drafts toggle in manage mode
 - mark non-viewable rows
 - allow non-viewable docs to be selected and reviewed
+
+Status: implemented.
 
 ### Phase 4. Make-viewable action
 
@@ -341,11 +349,17 @@ The system should not treat `_archive` as equivalent to `viewable: false`.
 - rebuild docs and search
 - reload viewer state
 
+Status: implemented for single selected docs.
+The action uses the existing same-scope docs/search rebuild path rather than incremental search.
+
 ### Phase 5. Import/create defaults
 
 - make Library import/create default to `published: true`, `viewable: false`
 - consider UI option for immediate viewability
 - document scope-specific defaults
+
+Status: implemented for defaults.
+The immediate-viewability option remains deferred.
 
 ## Risks
 
@@ -355,6 +369,7 @@ The system should not treat `_archive` as equivalent to `viewable: false`.
 - viewable children under non-viewable parents can make the public tree ambiguous
 - visibility toggles can clutter manage mode if the UI is not restrained
 - the extra source field adds schema and validation surface area
+- single-doc viewability changes currently rebuild same-scope docs search; bulk viewability should batch writes and run one rebuild, or wait for a dedicated incremental search design
 
 ## Resolved Decisions
 
