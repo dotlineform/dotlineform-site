@@ -1,6 +1,7 @@
 ---
 doc_id: ui-audits
 title: "UI Audits"
+added_date: 2026-04-21
 last_updated: 2026-04-21
 parent_id: ""
 sort_order: 275

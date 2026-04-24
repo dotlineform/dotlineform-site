@@ -1,7 +1,8 @@
 ---
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
-last_updated: 2026-04-23
+added_date: 2026-04-23
+last_updated: 2026-04-24
 parent_id: scripts
 sort_order: 20
 ---
@@ -35,7 +36,7 @@ Generated outputs:
 ## What The Builder Does
 
 - reads Markdown source docs from each configured flat scope source root
-- reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
+- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
@@ -60,6 +61,8 @@ Generated outputs:
   stable ID used by the scope-owned viewer route
 - `title`
   label used in the viewer index and page title
+- `added_date`
+  generated docs index metadata for recently-added lists; legacy source docs without this field fall back to `last_updated`
 - `last_updated`
   display metadata for the viewer
 - `parent_id`

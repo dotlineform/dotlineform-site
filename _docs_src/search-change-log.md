@@ -1,6 +1,7 @@
 ---
 doc_id: search-change-log
 title: "Search Change Log"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: search
 sort_order: 1010

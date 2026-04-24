@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: scripts
 sort_order: 10
@@ -67,6 +68,7 @@ Request behavior:
 
 - `scope` must be `studio` or `library`
 - `title` defaults to `New Doc` when omitted or blank
+- new docs write `added_date` and `last_updated` to the current date
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
@@ -100,10 +102,11 @@ Import behavior:
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec
 - creates a new Markdown source doc immediately when the generated import target does not collide
+- new imported docs write `added_date` and `last_updated` to the current date
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
 - reports collision details when the generated import target already matches an existing `doc_id`
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc
-- preserves the overwritten doc's `doc_id`, filename, `parent_id`, `sort_order`, and existing `published` state
+- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published` state
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild the same-scope docs payloads and docs-search artifact
@@ -176,6 +179,7 @@ Metadata-update behavior:
 - updates only front matter; body content and filename remain unchanged
 - currently supports `title`, `parent_id`, and `sort_order`
 - title changes do not mutate `doc_id` or filename
+- `added_date` is preserved; `last_updated` is refreshed after a successful metadata write
 - `parent_id` may be blank for root, but must otherwise resolve inside the same scope
 - `parent_id` cannot point at the current doc or any of its descendants
 - `sort_order` accepts a non-negative integer or blank
@@ -200,6 +204,7 @@ Move behavior:
 - only leaf docs can move; docs with child docs are rejected
 - moves rewrite front matter only and never move files on disk
 - moves update only the dragged doc's `sort_order` and `parent_id`
+- moves preserve `added_date`
 - sibling `sort_order` values are left unchanged to keep write noise low
 - successful moves rebuild the current scope docs payloads and docs-search artifact
 
@@ -217,6 +222,7 @@ Request behavior:
 - moves the doc into the Archive section by setting `parent_id = _archive`
 - appends the archived doc as the last sibling under `_archive`
 - does not move the file on disk
+- preserves `added_date` and refreshes `last_updated`
 - fails when `_archive` is not defined for the scope
 
 `POST /docs/delete-preview` expects:

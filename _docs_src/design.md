@@ -1,6 +1,7 @@
 ---
 doc_id: design
 title: "Design"
+added_date: 2026-04-21
 last_updated: 2026-04-21
 parent_id: ""
 sort_order: 40

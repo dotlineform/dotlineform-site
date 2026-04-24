@@ -1,6 +1,7 @@
 ---
 doc_id: build-activity
 title: "Build Activity"
+added_date: 2026-04-18
 last_updated: 2026-04-18
 parent_id: studio
 sort_order: 90

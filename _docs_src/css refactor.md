@@ -1,6 +1,7 @@
 ---
 doc_id: css-refactor
 title: "CSS Refactor"
+added_date: 2026-04-19
 last_updated: 2026-04-19
 parent_id: design
 sort_order: 60

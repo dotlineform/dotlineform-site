@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b56be1c26d5e5d9ef50119703bed5faf",
-    "generated_at_utc": "2026-04-24T09:34:36Z",
+    "version": "blake2b-b0a7204dd61ba8d243723f86c5bd364c",
+    "generated_at_utc": "2026-04-24T10:05:11Z",
     "count": 127
   },
   "entries": [
@@ -530,10 +530,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-24",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-23 • Scripts",
+      "display_meta": "2026-04-24 • Scripts",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -541,22 +541,22 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-04-23",
+        "2026-04-24",
         "2026",
         "04",
-        "23"
+        "24"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-23 2026 04 23"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-24 2026 04 24"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
       "kind": "doc",
       "title": "Docs Viewer Favourites",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-24",
       "parent_id": "ui-requests",
       "parent_title": "UI Requests",
-      "display_meta": "2026-04-19 • UI Requests",
+      "display_meta": "2026-04-24 • UI Requests",
       "search_terms": [
         "ui-request-docs-viewer-favourites-task",
         "ui",
@@ -568,12 +568,12 @@
         "docs viewer favourites",
         "ui requests",
         "requests",
-        "2026-04-19",
+        "2026-04-24",
         "2026",
         "04",
-        "19"
+        "24"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites ui requests requests 2026-04-19 2026 04 19"
+      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites ui requests requests 2026-04-24 2026 04 24"
     },
     {
       "id": "config-pipeline-json",
@@ -1060,10 +1060,10 @@
       "kind": "doc",
       "title": "Studio Scope",
       "href": "/docs/?scope=studio&doc=data-models-studio",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-24",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-19 • Data Models",
+      "display_meta": "2026-04-24 • Data Models",
       "search_terms": [
         "data-models-studio",
         "data",
@@ -1072,12 +1072,12 @@
         "studio scope",
         "scope",
         "data models",
-        "2026-04-19",
+        "2026-04-24",
         "2026",
         "04",
-        "19"
+        "24"
       ],
-      "search_text": "data-models-studio data models studio studio scope scope data models 2026-04-19 2026 04 19"
+      "search_text": "data-models-studio data models studio studio scope scope data models 2026-04-24 2026 04 24"
     },
     {
       "id": "studio-ui-rules",
@@ -1336,10 +1336,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-24",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-03-31 • Data Models",
+      "display_meta": "2026-04-24 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1348,12 +1348,12 @@
         "library scope",
         "scope",
         "data models",
-        "2026-03-31",
+        "2026-04-24",
         "2026",
-        "03",
-        "31"
+        "04",
+        "24"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-03-31 2026 03 31"
+      "search_text": "data-models-library data models library library scope scope data models 2026-04-24 2026 04 24"
     },
     {
       "id": "search-ranking-model",
@@ -1921,10 +1921,10 @@
       "kind": "doc",
       "title": "Docs Scope Index Shape",
       "href": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-24",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-24 • Search",
       "search_terms": [
         "search-studio-v1-index-shape",
         "search",
@@ -1935,12 +1935,12 @@
         "docs scope index shape",
         "docs",
         "scope",
-        "2026-03-31",
+        "2026-04-24",
         "2026",
-        "03",
-        "31"
+        "04",
+        "24"
       ],
-      "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-03-31 2026 03 31"
+      "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-04-24 2026 04 24"
     },
     {
       "id": "architecture",

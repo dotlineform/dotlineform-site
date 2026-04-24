@@ -1,6 +1,7 @@
 ---
 doc_id: ui-audit-catalogue-moment-import-20260421
 title: "UI Audit: Catalogue Moment Import (2026-04-21)"
+added_date: 2026-04-21
 last_updated: 2026-04-21
 parent_id: ui-audits
 sort_order: 10

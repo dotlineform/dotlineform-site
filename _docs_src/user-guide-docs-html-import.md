@@ -1,6 +1,7 @@
 ---
 doc_id: user-guide-docs-html-import
 title: "Docs HTML Import"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: user-guide
 sort_order: 20

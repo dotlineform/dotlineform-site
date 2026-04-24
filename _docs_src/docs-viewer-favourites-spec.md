@@ -1,6 +1,7 @@
 ---
 doc_id: ui-request-docs-viewer-favourites-spec
 title: "Docs Viewer Favourites Spec"
+added_date: 2026-04-19
 last_updated: 2026-04-19
 parent_id: ui-requests
 sort_order: 10

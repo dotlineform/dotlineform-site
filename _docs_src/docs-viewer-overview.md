@@ -1,6 +1,7 @@
 ---
 doc_id: docs-viewer-overview
 title: "Overview"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: docs-viewer
 sort_order: 10
@@ -102,16 +103,17 @@ Current search behavior:
 - the viewer lazily loads the scope search index when `q` is present
 - result links route back into the same viewer URL model
 - search and recently-added list entries use title plus muted metadata rather than showing `doc_id`
-- metadata uses `last_updated` and, when available, parent title in the form `date • parent`
+- search metadata uses `last_updated` and, when available, parent title in the form `date • parent`
 
 Current recently-added behavior:
 
 - the button is rendered by the shared shell when inline docs search is enabled
-- the runtime sorts current-scope docs by `last_updated` descending, then title ascending
+- the runtime sorts current-scope docs by `added_date` descending, then title ascending
 - the list is capped by `docs_viewer.recently_added_limit` in `assets/studio/data/studio_config.json`
+- list metadata uses `added_date` and, when available, parent title in the form `date • parent`
 - `_archive` is excluded from the list
 
-The current recently-added list uses `last_updated` as a temporary date source. A future schema change should add a true added/published date so metadata edits do not make older docs appear newly added.
+Document view metadata continues to display `last_updated`, because that is more meaningful while reading a single doc. Docs search also continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
 
 ## Scope Boundary
 

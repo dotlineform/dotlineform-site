@@ -1,6 +1,7 @@
 ---
 doc_id: local-setup
 title: "Local Setup"
+added_date: 2026-04-13
 last_updated: 2026-04-13
 parent_id: scripts
 sort_order: 30

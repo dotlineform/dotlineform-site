@@ -1,7 +1,8 @@
 ---
 doc_id: data-models-library
 title: "Library Scope"
-last_updated: 2026-03-31
+added_date: 2026-03-31
+last_updated: 2026-04-24
 parent_id: data-models
 sort_order: 40
 ---
@@ -44,8 +45,8 @@ Current design:
 
 Current implementation note:
 
-- the Library source corpus is still minimal
-- the current checked-in scope contains only `library.md`
+- the Library source corpus is still small, but it now contains multiple imported docs
+- the route still uses the same docs-scope contract as Studio rather than a Library-specific runtime
 
 That is not a special-case runtime model. It is simply a small corpus using the same docs-scope contract as Studio.
 
@@ -60,7 +61,7 @@ Purpose:
 Current content families:
 
 - one row per published Library doc
-- identity, ordering, viewer URL, and per-doc content URL
+- identity, added/update dates, ordering, viewer URL, and per-doc content URL
 
 Current site mapping:
 
@@ -93,6 +94,8 @@ Current content families:
 
 - one `doc` entry per published Library doc
 - identity, viewer URL, last-updated metadata, and normalized search text
+
+Library recently-added lists use `added_date` from the generated docs index. Library search continues to use `last_updated`.
 
 Current site mapping:
 

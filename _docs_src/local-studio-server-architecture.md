@@ -1,6 +1,7 @@
 ---
 doc_id: local-studio-server-architecture
 title: "Local Studio Server Architecture"
+added_date: 2026-04-17
 last_updated: 2026-04-17
 parent_id: servers
 sort_order: 10

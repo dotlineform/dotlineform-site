@@ -1,7 +1,8 @@
 ---
 doc_id: search-studio-v1-index-shape
 title: "Docs Scope Index Shape"
-last_updated: 2026-03-31
+added_date: 2026-03-31
+last_updated: 2026-04-24
 parent_id: search
 sort_order: 75
 ---
@@ -97,6 +98,8 @@ Current field mapping back to the docs model:
 - `href` <- scope-owned docs viewer URL
 - `last_updated`, `parent_id`, `parent_title`, `display_meta` <- docs metadata used for context and search support
 - `search_terms` and `search_text` <- search-specific derived fields built from that metadata
+
+The generated docs index also includes `added_date`, but docs-domain search intentionally does not consume it yet. Search review remains separate from the Docs Viewer recently-added list.
 
 ## Current Builder Rules
 

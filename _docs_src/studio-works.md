@@ -1,6 +1,7 @@
 ---
 doc_id: studio-works
 title: "Studio Works"
+added_date: 2026-04-01
 last_updated: 2026-04-01
 parent_id: studio
 sort_order: 230

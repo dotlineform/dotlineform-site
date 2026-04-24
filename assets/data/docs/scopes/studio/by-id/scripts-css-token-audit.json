@@ -2,6 +2,7 @@
   "scope": "studio",
   "doc_id": "scripts-css-token-audit",
   "title": "CSS Token Audit",
+  "added_date": "2026-03-31",
   "last_updated": "2026-03-31",
   "parent_id": "scripts",
   "sort_order": 120,

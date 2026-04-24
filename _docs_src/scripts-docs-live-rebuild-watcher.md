@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-docs-live-rebuild-watcher
 title: "Docs Live Rebuild Watcher"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: scripts
 sort_order: 18

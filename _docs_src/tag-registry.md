@@ -1,6 +1,7 @@
 ---
 doc_id: tag-registry
 title: "Tag Registry"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: studio
 sort_order: 180

@@ -1,6 +1,7 @@
 ---
 doc_id: runtime-dependencies
 title: "Runtime Dependencies"
+added_date: 2026-04-23
 last_updated: 2026-04-23
 parent_id: site-docs
 sort_order: 20

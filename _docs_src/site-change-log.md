@@ -1,11 +1,40 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-24] Added generated `added_date` metadata for docs scopes
+
+**Status:** implemented
+
+**Area:** Docs Viewer / docs data model
+
+**Summary:**
+Added `added_date` as generated docs metadata for all docs scopes and backfilled existing published docs from their current `last_updated` values.
+
+**Reason:**
+The recently-added list needed a stable date field that reflects when a doc entered the corpus. Reusing `last_updated` would make ordinary metadata/content edits reorder older docs as if they had just been added.
+
+**Effect:**
+Generated docs indexes and per-doc payloads now include `added_date`. New docs and new HTML imports write both `added_date` and `last_updated`, while overwrite, metadata, move, and archive flows preserve `added_date`. The recently-added list now sorts and displays from `added_date`; doc view metadata and docs search continue to use `last_updated`.
+
+**Affected files/docs:**
+
+- `scripts/build_docs.rb`
+- `scripts/docs/docs_management_server.py`
+- `assets/js/docs-viewer.js`
+- `_docs_src/*.md`
+- `_docs_library_src/*.md`
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 
 ## [2026-04-24] Added shared Docs Viewer recently-added results
 

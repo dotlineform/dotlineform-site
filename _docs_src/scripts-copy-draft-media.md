@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-copy-draft-media
 title: "Copy Draft Media"
+added_date: 2026-04-18
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 30

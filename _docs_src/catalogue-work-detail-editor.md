@@ -1,6 +1,7 @@
 ---
 doc_id: catalogue-work-detail-editor
 title: "Catalogue Work Detail Editor"
+added_date: 2026-04-22
 last_updated: 2026-04-22
 parent_id: studio
 sort_order: 100

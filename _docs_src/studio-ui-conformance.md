@@ -1,6 +1,7 @@
 ---
 doc_id: studio-ui-conformance
 title: "Studio UI Conformance Spec"
+added_date: 2026-04-21
 last_updated: 2026-04-21
 parent_id: design
 sort_order: 22

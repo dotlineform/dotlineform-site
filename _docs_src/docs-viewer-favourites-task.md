@@ -1,7 +1,8 @@
 ---
 doc_id: ui-request-docs-viewer-favourites-task
 title: "Docs Viewer Favourites"
-last_updated: 2026-04-19
+added_date: 2026-04-19
+last_updated: 2026-04-24
 parent_id: ui-requests
 sort_order: 20
 ---
@@ -146,7 +147,7 @@ Likely scope-owned routes to verify:
 Build verification completed:
 
 - `node --check assets/js/docs-viewer.js`
-- `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 
 ## Open Decisions
 

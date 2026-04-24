@@ -2,6 +2,7 @@
   "scope": "studio",
   "doc_id": "site-shell-runtime",
   "title": "Site Shell Runtime",
+  "added_date": "2026-03-31",
   "last_updated": "2026-03-31",
   "parent_id": "architecture",
   "sort_order": 20,

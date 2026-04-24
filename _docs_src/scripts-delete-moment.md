@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-delete-moment
 title: "Delete Moment"
+added_date: 2026-04-01
 last_updated: 2026-04-01
 parent_id: scripts
 sort_order: 80

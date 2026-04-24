@@ -1,6 +1,7 @@
 ---
 doc_id: new-pipeline-web-system-spec
 title: "Web System Specification"
+added_date: 2026-04-17
 last_updated: 2026-04-17
 parent_id: new-pipeline
 sort_order: 30

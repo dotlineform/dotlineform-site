@@ -1,6 +1,7 @@
 ---
 doc_id: user-guide
 title: "User Guide"
+added_date: 2026-04-23
 last_updated: 2026-04-23
 parent_id: ""
 sort_order: 30

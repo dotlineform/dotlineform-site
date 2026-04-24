@@ -1,6 +1,7 @@
 ---
 doc_id: new-pipeline-studio-implementation-plan
 title: "Studio Implementation Plan"
+added_date: 2026-04-18
 last_updated: 2026-04-18
 parent_id: new-pipeline
 sort_order: 50

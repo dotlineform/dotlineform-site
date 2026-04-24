@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-audit-site-consistency
 title: "Site Consistency Audit"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 130

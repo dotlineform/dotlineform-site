@@ -1,6 +1,7 @@
 ---
 doc_id: search-overview
 title: "Search Overview"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: search
 sort_order: 20

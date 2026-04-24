@@ -1,6 +1,7 @@
 ---
 doc_id: docs-viewer
 title: "Docs Viewer"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: ""
 sort_order: 160

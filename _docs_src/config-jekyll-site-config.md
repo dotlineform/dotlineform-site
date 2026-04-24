@@ -1,6 +1,7 @@
 ---
 doc_id: config-jekyll-site-config
 title: "Jekyll Site Config"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: config
 sort_order: 10

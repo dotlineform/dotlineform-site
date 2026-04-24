@@ -1,6 +1,7 @@
 ---
 doc_id: _archive
 title: "Archive"
+added_date: 2026-04-18
 last_updated: 2026-04-18
 parent_id: ""
 sort_order: 200

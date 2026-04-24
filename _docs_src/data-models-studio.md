@@ -1,7 +1,8 @@
 ---
 doc_id: data-models-studio
 title: "Studio Scope"
-last_updated: 2026-04-19
+added_date: 2026-04-19
+last_updated: 2026-04-24
 parent_id: data-models
 sort_order: 30
 ---
@@ -268,6 +269,7 @@ Current content families:
 - front matter used as identity/tree metadata:
   - `doc_id`
   - `title`
+  - `added_date`
   - `last_updated`
   - `parent_id`
   - `sort_order`
@@ -288,7 +290,7 @@ Purpose:
 Current content families:
 
 - one row per published Studio doc
-- identity, title, ordering, source path, viewer URL, and per-doc content URL
+- identity, title, added/update dates, ordering, source path, viewer URL, and per-doc content URL
 
 Current site mapping:
 
@@ -331,6 +333,8 @@ Current content families:
 
 - one `doc` entry per published Studio doc
 - doc identity, title, viewer URL, last-updated metadata, parent context, and normalized search text
+
+Search currently uses `last_updated`, not `added_date`. The docs-viewer recently-added list reads `added_date` from the generated docs index, but search review is intentionally separate.
 
 Current site mapping:
 

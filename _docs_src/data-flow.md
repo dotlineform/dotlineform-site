@@ -1,6 +1,7 @@
 ---
 doc_id: data-flow
 title: "Data Flow"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: architecture
 sort_order: 10

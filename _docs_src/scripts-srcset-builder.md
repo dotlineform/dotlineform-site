@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-srcset-builder
 title: "Srcset Builder"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 50

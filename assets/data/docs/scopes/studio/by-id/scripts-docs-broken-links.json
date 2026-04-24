@@ -2,6 +2,7 @@
   "scope": "studio",
   "doc_id": "scripts-docs-broken-links",
   "title": "Docs Broken Links Audit",
+  "added_date": "2026-04-23",
   "last_updated": "2026-04-23",
   "parent_id": "scripts",
   "sort_order": 15,

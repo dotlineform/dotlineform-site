@@ -1,6 +1,7 @@
 ---
 doc_id: new-pipeline-studio-e2e-checklist
 title: "Studio E2E Checklist"
+added_date: 2026-04-19
 last_updated: 2026-04-19
 parent_id: new-pipeline
 sort_order: 60

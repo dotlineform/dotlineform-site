@@ -1,6 +1,7 @@
 ---
 doc_id: pipeline-use-cases
 title: "Pipeline Use Cases"
+added_date: 2026-04-18
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 10

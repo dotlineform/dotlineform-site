@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-main-pipeline
 title: "Build Catalogue"
+added_date: 2026-04-18
 last_updated: 2026-04-18
 parent_id: _archive
 sort_order: 20

@@ -1,6 +1,7 @@
 ---
 doc_id: tag-aliases
 title: "Tag Aliases"
+added_date: 2026-03-31
 last_updated: 2026-03-31
 parent_id: studio
 sort_order: 200

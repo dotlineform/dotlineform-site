@@ -1,6 +1,7 @@
 ---
 doc_id: loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27
 title: "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: ""
 sort_order: 240

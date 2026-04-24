@@ -1,6 +1,7 @@
 ---
 doc_id: ui-framework
 title: "UI Framework"
+added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: design
 sort_order: 10
@@ -177,6 +178,7 @@ The current shared treatment is:
 - result links render as simple stacked list items
 - result metadata stays secondary and muted
 - docs-viewer search and recently-added results show title plus `date` or `date • parent`; they do not show `doc_id` as a separate visible line
+- docs-viewer search uses `last_updated` for its date metadata, while recently-added uses `added_date`
 - active state should be obvious without turning the viewer into a tabbed interface
 
 ## Public Search UI Standards

@@ -1,6 +1,7 @@
 ---
 doc_id: scripts-catalogue-write-server
 title: "Catalogue Write Server"
+added_date: 2026-04-22
 last_updated: 2026-04-22
 parent_id: scripts
 sort_order: 100

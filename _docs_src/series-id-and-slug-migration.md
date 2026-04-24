@@ -1,6 +1,7 @@
 ---
 doc_id: series-id-and-slug-migration
 title: "Series ID Migration"
+added_date: 2026-04-01
 last_updated: 2026-04-01
 parent_id: ""
 sort_order: 260

@@ -1,6 +1,7 @@
 ---
 doc_id: experimental-dimension-framework
 title: "Experimental Dimension Framework"
+added_date: 2026-04-16
 last_updated: 2026-04-16
 parent_id: studio
 sort_order: 250
