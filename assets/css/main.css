@@ -1008,6 +1008,8 @@ th{ background: var(--panel-2); }
 
 .docsViewer__nav{
   min-width: 0;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
 }
 
 @media (min-width: 821px){

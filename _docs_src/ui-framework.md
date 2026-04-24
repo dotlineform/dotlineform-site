@@ -180,6 +180,7 @@ In recently-added mode, the main pane should show:
 The current shared treatment is:
 
 - tree links render as quiet pill-like rows, not file-manager rows
+- tree text uses the small text token so the index reads as secondary navigation and long titles fit better
 - result links render as simple stacked list items
 - result metadata stays secondary and muted
 - docs-viewer search and recently-added results show title plus `date` or `date • parent`; they do not show `doc_id` as a separate visible line
