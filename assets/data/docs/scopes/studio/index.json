@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T10:04:59Z",
+  "generated_at": "2026-04-24T12:10:43Z",
   "docs": [
     {
       "scope": "studio",
@@ -288,6 +288,18 @@
       "source_path": "docs-viewer-favourites-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-semantic-enrichment-spec",
+      "title": "Library Semantic Enrichment Spec",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-04-24",
+      "parent_id": "library",
+      "sort_order": 20,
+      "source_path": "library-semantic-enrichment-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-semantic-enrichment-spec.json"
     },
     {
       "scope": "studio",
@@ -867,18 +879,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "new-pipeline-refine-library",
-      "title": "Library Plan",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
-      "parent_id": "new-pipeline",
-      "sort_order": 60,
-      "source_path": "refine-library.md",
-      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-library",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-library.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
       "added_date": "2026-03-31",
@@ -1308,6 +1308,18 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library",
+      "title": "Library",
+      "added_date": "2026-04-18",
+      "last_updated": "2026-04-24",
+      "parent_id": "",
+      "sort_order": 165,
+      "source_path": "library.md",
+      "viewer_url": "/docs/?scope=studio&doc=library",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library.json"
     },
     {
       "scope": "studio",

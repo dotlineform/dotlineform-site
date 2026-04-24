@@ -21,7 +21,7 @@ Read this section in this order:
 5. **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)** for the next phased Studio roadmap, with Catalogue as the main implementation thread
 6. **[Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)** for the first full execution pass across Studio and public-runtime follow-through
 7. **[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)** for capturing IAB UI issues, triage notes, one-off corrections, and permanent Studio UI rules
-8. **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for the parallel Library planning track
+8. **[Library](/docs/?scope=studio&doc=library)** for the parallel Library planning track
 9. **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for the parallel Analytics planning track
 10. **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the parallel Search planning track
 

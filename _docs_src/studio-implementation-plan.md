@@ -28,7 +28,7 @@ It is now a wider Studio roadmap rather than a catalogue-only refinement note. C
 
 Parallel domain planning lives in:
 
-- **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)**
+- **[Library](/docs/?scope=studio&doc=library)**
 - **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)**
 - **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)**
 
@@ -797,7 +797,7 @@ Risks:
 
 These domains should now develop in parallel as planning tracks, even where implementation remains lighter than Catalogue in the short term:
 
-- **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for `/library/` maintenance workflows and their Studio administration boundary
+- **[Library](/docs/?scope=studio&doc=library)** for `/library/` maintenance workflows and their Studio administration boundary
 - **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for tagging and future analytical tooling
 - **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for search configuration, validation, pipelines, and operational visibility
 

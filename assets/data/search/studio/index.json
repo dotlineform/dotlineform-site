@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b0a7204dd61ba8d243723f86c5bd364c",
-    "generated_at_utc": "2026-04-24T10:05:11Z",
-    "count": 127
+    "version": "blake2b-568617ce1569548edbd9a6400704c5be",
+    "generated_at_utc": "2026-04-24T12:10:44Z",
+    "count": 128
   },
   "entries": [
     {
@@ -574,6 +574,29 @@
         "24"
       ],
       "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites ui requests requests 2026-04-24 2026 04 24"
+    },
+    {
+      "id": "library-semantic-enrichment-spec",
+      "kind": "doc",
+      "title": "Library Semantic Enrichment Spec",
+      "href": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
+      "last_updated": "2026-04-24",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-04-24 • Library",
+      "search_terms": [
+        "library-semantic-enrichment-spec",
+        "library",
+        "semantic",
+        "enrichment",
+        "spec",
+        "library semantic enrichment spec",
+        "2026-04-24",
+        "2026",
+        "04",
+        "24"
+      ],
+      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-04-24 2026 04 24"
     },
     {
       "id": "config-pipeline-json",
@@ -1677,32 +1700,6 @@
       "search_text": "scripts-delete-work scripts delete work delete work archive 2026-04-18 2026 04 18"
     },
     {
-      "id": "new-pipeline-refine-library",
-      "kind": "doc",
-      "title": "Library Plan",
-      "href": "/docs/?scope=studio&doc=new-pipeline-refine-library",
-      "last_updated": "2026-04-18",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-18 • New Cat Pipeline",
-      "search_terms": [
-        "new-pipeline-refine-library",
-        "new",
-        "pipeline",
-        "refine",
-        "library",
-        "library plan",
-        "plan",
-        "new cat pipeline",
-        "cat",
-        "2026-04-18",
-        "2026",
-        "04",
-        "18"
-      ],
-      "search_text": "new-pipeline-refine-library new pipeline refine library library plan plan new cat pipeline cat 2026-04-18 2026 04 18"
-    },
-    {
       "id": "search-ui-behaviour",
       "kind": "doc",
       "title": "Search UI Behaviour",
@@ -2509,6 +2506,22 @@
         "24"
       ],
       "search_text": "docs-viewer docs viewer docs viewer 2026-04-24 2026 04 24"
+    },
+    {
+      "id": "library",
+      "kind": "doc",
+      "title": "Library",
+      "href": "/docs/?scope=studio&doc=library",
+      "last_updated": "2026-04-24",
+      "display_meta": "2026-04-24",
+      "search_terms": [
+        "library",
+        "2026-04-24",
+        "2026",
+        "04",
+        "24"
+      ],
+      "search_text": "library 2026-04-24 2026 04 24"
     },
     {
       "id": "new-pipeline",
