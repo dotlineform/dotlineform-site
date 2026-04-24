@@ -1401,7 +1401,7 @@ select.docsViewer__fieldInput{
 }
 
 .docsViewer__actionButton[disabled]{
-  cursor: wait;
+  cursor: default;
   opacity: 0.72;
 }
 
