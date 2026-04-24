@@ -96,6 +96,7 @@ Import behavior:
 - `scope` must be `studio` or `library`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
 - parses the full staged HTML file through the shared importer
+- escapes literal pipe characters from source text so mathematical notation such as `I(X;Y|Z)` does not become an accidental Markdown table
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec
 - creates a new Markdown source doc immediately when the generated import target does not collide

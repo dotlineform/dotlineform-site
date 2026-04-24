@@ -57,6 +57,10 @@ def normalize_space(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
 
 
+def escape_markdown_pipes(text: str) -> str:
+    return (text or "").replace("|", r"\|")
+
+
 def slugify(value: str) -> str:
     text = re.sub(r"[^a-z0-9]+", "-", (value or "").strip().lower()).strip("-")
     return text or "imported-doc"
@@ -199,7 +203,7 @@ def serialize_node(node: Any, *, in_svg: bool = False) -> str:
 
 
 def render_prompt_meta_block(text: str) -> str:
-    content = normalize_space(text)
+    content = escape_markdown_pipes(normalize_space(text))
     if not content:
         return ""
     return f"> {content}"
@@ -260,7 +264,7 @@ def is_semantic_callout_node(node: ElementNode) -> bool:
 
 def render_inline(node: Any) -> str:
     if isinstance(node, TextNode):
-        return node.text
+        return escape_markdown_pipes(node.text)
     tag = node.tag
     if tag in {"strong", "b"}:
         return f"**{''.join(render_inline(child) for child in node.children).strip()}**"
@@ -271,7 +275,7 @@ def render_inline(node: Any) -> str:
     if tag in {"sub", "sup"}:
         return serialize_node(node)
     if tag == "a":
-        text = normalize_space("".join(render_inline(child) for child in node.children)) or node.attr("href")
+        text = normalize_space("".join(render_inline(child) for child in node.children)) or escape_markdown_pipes(node.attr("href"))
         href = node.attr("href")
         if href:
             return f"[{text}]({href})"
@@ -314,7 +318,7 @@ def extract_table_rows(table: ElementNode) -> list[list[str]]:
 def render_table(table: ElementNode, warnings: list[str]) -> str:
     if has_rowspan_or_colspan(table):
         warnings.append("Complex table kept as plain text because rowspan/colspan is unsupported in v1.")
-        return normalize_space(table.text_content())
+        return escape_markdown_pipes(normalize_space(table.text_content()))
     rows = extract_table_rows(table)
     if not rows:
         return ""
@@ -364,7 +368,7 @@ def render_list(node: ElementNode, warnings: list[str], indent: int = 0, ordered
 
 def render_block(node: Any, warnings: list[str], include_prompt_meta: bool) -> str:
     if isinstance(node, TextNode):
-        return normalize_space(node.text)
+        return escape_markdown_pipes(normalize_space(node.text))
     tag = node.tag
     if tag in DROP_TAGS:
         return ""

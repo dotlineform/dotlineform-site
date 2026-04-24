@@ -1,7 +1,7 @@
 ---
 doc_id: user-guide-docs-html-import
 title: "Docs HTML Import"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: user-guide
 sort_order: 20
 ---
@@ -29,6 +29,7 @@ The import page:
 - lets you choose whether the imported doc should publish into `library` or `studio`
 - optionally keeps clearly identifiable prompt/meta blocks
 - converts the HTML into a best-attempt Markdown source doc
+- keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
 - writes a new doc immediately when the target is free
 - asks for explicit confirmation before overwriting an existing doc

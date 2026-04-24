@@ -7,6 +7,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-24] Escaped source-text pipes during docs HTML import
+
+**Status:** implemented
+
+**Area:** Studio / docs viewer / docs HTML import
+
+**Summary:**
+Updated the docs HTML importer so literal pipe characters from source text are escaped in generated Markdown.
+
+**Reason:**
+Kramdown can interpret ordinary lines containing `|` as Markdown tables, including blockquotes and list items. Imported mathematical expressions such as `I(X;Y|Z)` and `I(... | access)` were therefore rendering as accidental one-row tables instead of inline notation.
+
+**Effect:**
+Future HTML imports preserve source-text pipe characters as visible text while keeping importer-generated Markdown table delimiters for actual source `<table>` elements. This protects formulas and other technical notation from accidental table parsing.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_html_import.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+
 ## [2026-04-24] Excluded local docs runtime state from Jekyll watch input
 
 **Status:** implemented

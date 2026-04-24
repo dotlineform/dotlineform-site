@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-25948e3deb758e31b6bfb9ef757b2daf",
-    "generated_at_utc": "2026-04-24T08:08:31Z",
+    "version": "blake2b-a843ede9d2b35365027e5781c8b9f530",
+    "generated_at_utc": "2026-04-24T08:37:53Z",
     "count": 5
   },
   "entries": [
@@ -52,8 +52,8 @@
       "kind": "doc",
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
       "href": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
-      "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
+      "last_updated": "2026-04-24",
+      "display_meta": "2026-04-24",
       "search_terms": [
         "defining-information-for-cross-boundary-comparisons-concepts",
         "defining",
@@ -64,12 +64,12 @@
         "comparisons",
         "concepts",
         "defining \"information\" for cross‑boundary comparisons — concepts",
-        "2026-04-23",
+        "2026-04-24",
         "2026",
         "04",
-        "23"
+        "24"
       ],
-      "search_text": "defining-information-for-cross-boundary-comparisons-concepts defining information for cross boundary comparisons concepts defining \"information\" for cross‑boundary comparisons — concepts 2026-04-23 2026 04 23"
+      "search_text": "defining-information-for-cross-boundary-comparisons-concepts defining information for cross boundary comparisons concepts defining \"information\" for cross‑boundary comparisons — concepts 2026-04-24 2026 04 24"
     },
     {
       "id": "evolutionary-psychology-overview",

@@ -1,7 +1,7 @@
 ---
 doc_id: defining-information-for-cross-boundary-comparisons-concepts
 title: "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts"
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 parent_id: ""
 sort_order: 220
 ---
@@ -20,7 +20,7 @@ sort_order: 220
 
 ## 2) Working definition (operational)
 
-> **Information (for observer O about system S)** = any state of a channel that, when received by O, changes O’s probability distribution over S’s states. A boundary transmits information if *I(S_⁠inside; S_⁠outside | access)* > 0.
+> **Information (for observer O about system S)** = any state of a channel that, when received by O, changes O’s probability distribution over S’s states. A boundary transmits information if *I(S_⁠inside; S_⁠outside \| access)* > 0.
 
 This is syntactic/physical, not semantic: it measures *predictive constraint*, regardless of meaning. [S1][P1][PHI1]
 
@@ -40,19 +40,19 @@ This is syntactic/physical, not semantic: it measures *predictive constraint*, r
 ## 5) Formula panel (operational & compact)
 
 - **Shannon entropy**: H(X) = -∑<sub>x</sub> p(x) log p(x). *Units*: bits (base-2). [S1]
-- **Mutual information**: I(X;Y) = ∑<sub>x,y</sub> p(x,y) log p(x,y)/(p(x)p(y)) = H(X) - H(X|Y). *Interpretation*: reduction in uncertainty about X given Y. [S1]
-- **Conditional MI**: I(X;Y|Z) = H(X|Z) - H(X|Y,Z). *Use*: “accessible MI,” conditioning on what an observer can actually receive. [S1]
-- **Operational definition (this note)**: A boundary “passes information” iff I(S<sub>inside</sub>; O<sub>outside</sub> | access) > 0.
+- **Mutual information**: I(X;Y) = ∑<sub>x,y</sub> p(x,y) log p(x,y)/(p(x)p(y)) = H(X) - H(X\|Y). *Interpretation*: reduction in uncertainty about X given Y. [S1]
+- **Conditional MI**: I(X;Y\|Z) = H(X\|Z) - H(X\|Y,Z). *Use*: “accessible MI,” conditioning on what an observer can actually receive. [S1]
+- **Operational definition (this note)**: A boundary “passes information” iff I(S<sub>inside</sub>; O<sub>outside</sub> \| access) > 0.
 
 ### Estimating MI around a *memory event boundary*
 
 1. Extract features in a sliding window before (W<sub>pre</sub>) and after (W<sub>post</sub>) the putative boundary (e.g., embeddings, motion/scene vectors).
 2. Estimate I(W<sub>pre</sub>; W<sub>post</sub>) via a nonparametric estimator (e.g., kNN MI) or discretized bins. Expect a *drop* vs. within‑event windows. [M1][M2][M3]
-3. Relate boundary strength to prediction error: PE<sub>t</sub> = −log p(s<sub>t</sub> | model<sub>t−1</sub>); boundaries where PE spikes. [M1][M2]
+3. Relate boundary strength to prediction error: PE<sub>t</sub> = −log p(s<sub>t</sub> \| model<sub>t−1</sub>); boundaries where PE spikes. [M1][M2]
 
 ### “Accessible MI” at a *black‑hole event horizon*
 
-- For an outside observer, classical channels from inside → outside are absent; treat I(S<sub>inside</sub>; O<sub>outside</sub> | access) ≈ 0. [BH1]
+- For an outside observer, classical channels from inside → outside are absent; treat I(S<sub>inside</sub>; O<sub>outside</sub> \| access) ≈ 0. [BH1]
 - Quantum context: unitarity + Hawking radiation imply *global* information conservation, but not classical transmission across the horizon. [BH2][BH3]
 - Entropy bound context: S<sub>BH</sub> = (k<sub>B</sub> c³ A)/(4 G ħ). (Bekenstein–Hawking area law) [BH2]
 
