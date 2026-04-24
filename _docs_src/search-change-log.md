@@ -1,12 +1,33 @@
 ---
 doc_id: search-change-log
 title: "Search Change Log"
-last_updated: 2026-04-22
+last_updated: 2026-04-24
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-04-24] Aligned Docs Viewer search result metadata across docs scopes
+
+**Status:** implemented
+
+**Area:** docs-domain search UI
+
+**Summary:**
+Updated the shared Docs Viewer result renderer so `/docs/` and `/library/` search results use the same title-plus-metadata pattern.
+
+**Reason:**
+Library search results were still showing `doc_id` as a visible second line, while Studio docs search presented the more useful `date • parent` metadata pattern. The two routes share the same Docs Viewer runtime, so the presentation contract should be consistent.
+
+**Effect:**
+Docs Viewer search results now omit the visible `doc_id` line and show muted metadata from `display_meta`, which is `date` or `date • parent` when available. The new recently-added view uses the same result shape.
+
+**Affected files/docs:**
+- `assets/js/docs-viewer.js`
+- `_includes/docs_viewer_shell.html`
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
 
 ## [2026-04-22] Made `dev-studio` startup docs-search rebuilds opt-in
 

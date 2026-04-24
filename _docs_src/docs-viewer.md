@@ -1,7 +1,7 @@
 ---
 doc_id: docs-viewer
 title: "Docs Viewer"
-last_updated: 2026-04-19
+last_updated: 2026-04-24
 parent_id: ""
 sort_order: 160
 ---
@@ -19,6 +19,7 @@ The current implementation uses:
 - scope-specific route shells to define the route, scope, and generated data URLs
 - one shared shell include in `_includes/docs_viewer_shell.html`
 - one shared runtime in `assets/js/docs-viewer.js`
+- shared Docs Viewer settings in `assets/studio/data/studio_config.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 
 This section documents the current Docs Viewer implementation as a common module.

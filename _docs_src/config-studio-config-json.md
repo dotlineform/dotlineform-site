@@ -1,7 +1,7 @@
 ---
 doc_id: config-studio-config-json
 title: "Studio Config JSON"
-last_updated: 2026-04-17
+last_updated: 2026-04-24
 parent_id: config
 sort_order: 30
 ---
@@ -20,6 +20,7 @@ Current responsibilities include:
 
 - route paths used by Studio and search UI
 - JSON data paths used by Studio and search loaders
+- shared Docs Viewer settings used by `/docs/` and `/library/`
 - the route and feed path for the current Studio build-activity page
 - route and data paths for catalogue status, catalogue activity, and catalogue work-editor pages
 - Studio analysis group and RAG settings
@@ -43,6 +44,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-activity.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/js/search/search-page.js`
+- `assets/js/docs-viewer.js`
 
 It also feeds shared path resolution used by:
 
@@ -59,6 +61,7 @@ It also feeds shared path resolution used by:
 What stays here:
 
 - route and data-path lookup used by browser-side modules
+- shared Docs Viewer UI settings such as `docs_viewer.recently_added_limit`
 - shared Studio UI text
 - shared Studio analysis policy used by current tag metrics/RAG helpers
 - the lookup path for dedicated search policy and scope-owned search indexes

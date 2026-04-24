@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-04-23T00:00:00Z",
+  "updated_at_utc": "2026-04-24T00:00:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -108,7 +108,13 @@
       }
     }
   },
+  "docs_viewer": {
+    "recently_added_limit": 10
+  },
   "ui_text": {
+    "docs_viewer": {
+      "recently_added_button": "recently added"
+    },
     "series_tag_editor": {
       "missing_series_id_error": "Tag Studio error: missing series id.",
       "load_failed_error": "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json.",

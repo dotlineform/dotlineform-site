@@ -11,6 +11,7 @@
   var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
   var content = document.getElementById("docsViewerContent");
   var contextMenu = document.getElementById("docsViewerContextMenu");
+  var recentButton = document.getElementById("docsViewerRecentButton");
   var searchInput = document.getElementById("docsViewerSearchInput");
   var results = document.getElementById("docsViewerResults");
   var more = document.getElementById("docsViewerMore");
@@ -39,10 +40,12 @@
   var defaultRouteDocId = String(root.dataset.defaultDocId || "").trim();
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
+  var studioConfigUrl = String(root.dataset.studioConfigUrl || "").trim();
   var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
   var managementBaseUrl = String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "");
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
+  var DEFAULT_RECENT_LIMIT = 10;
   var BOOKMARK_DB_NAME = "dotlineform-docs-viewer";
   var BOOKMARK_DB_VERSION = 1;
   var BOOKMARK_STORE_NAME = "favorites";
@@ -66,6 +69,10 @@
     searchVisibleCount: SEARCH_BATCH_SIZE,
     searchDebounceId: null,
     searchRouteActive: false,
+    recentModeActive: false,
+    recentLimit: DEFAULT_RECENT_LIMIT,
+    viewerConfigLoaded: false,
+    viewerConfigRequestPromise: null,
     bookmarks: [],
     bookmarksLoaded: false,
     bookmarkDbPromise: null,
@@ -131,6 +138,75 @@
 
   function hasActiveQuery(query) {
     return Boolean(normalize(typeof query === "string" ? query : state.searchQuery));
+  }
+
+  function setRecentModeActive(active) {
+    state.recentModeActive = Boolean(active);
+    renderRecentButtonState();
+  }
+
+  function renderRecentButtonState() {
+    if (!recentButton) return;
+    recentButton.setAttribute("aria-pressed", state.recentModeActive ? "true" : "false");
+  }
+
+  function positiveInteger(value, fallback) {
+    var parsed = parseInt(value, 10);
+    return parsed > 0 ? parsed : fallback;
+  }
+
+  function getConfigValue(config, path) {
+    var current = config;
+    String(path || "").split(".").filter(Boolean).forEach(function (key) {
+      if (current && Object.prototype.hasOwnProperty.call(current, key)) {
+        current = current[key];
+      } else {
+        current = undefined;
+      }
+    });
+    return current;
+  }
+
+  function getConfigText(config, path, fallback) {
+    var value = getConfigValue(config, "ui_text." + path);
+    return String(value || fallback || "");
+  }
+
+  function applyViewerConfig(config) {
+    state.viewerConfigLoaded = true;
+    state.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), DEFAULT_RECENT_LIMIT);
+    if (recentButton) {
+      var label = getConfigText(config, "docs_viewer.recently_added_button", "recently added");
+      recentButton.textContent = label;
+      recentButton.setAttribute("aria-label", label);
+      recentButton.title = label;
+    }
+    if (state.recentModeActive) {
+      renderRecentMode();
+    }
+  }
+
+  function loadViewerConfig() {
+    if (state.viewerConfigLoaded) return Promise.resolve(null);
+    if (state.viewerConfigRequestPromise) return state.viewerConfigRequestPromise;
+    if (!studioConfigUrl) {
+      applyViewerConfig({});
+      return Promise.resolve(null);
+    }
+
+    state.viewerConfigRequestPromise = fetchJsonWithRetry(studioConfigUrl, "Failed to load Studio config")
+      .then(function (config) {
+        applyViewerConfig(config || {});
+        return config;
+      })
+      .catch(function () {
+        applyViewerConfig({});
+        return null;
+      })
+      .finally(function () {
+        state.viewerConfigRequestPromise = null;
+      });
+    return state.viewerConfigRequestPromise;
   }
 
   function bookmarkKey(scope, docId) {
@@ -581,6 +657,19 @@
       current = current.parent_id ? state.docsById.get(current.parent_id) : null;
     }
     return trail;
+  }
+
+  function displayMetaForDoc(doc) {
+    if (!doc) return "";
+    var parts = [];
+    var lastUpdated = String(doc.last_updated || "").trim();
+    if (lastUpdated) parts.push(lastUpdated);
+    if (doc.parent_id) {
+      var parent = state.docsById.get(doc.parent_id);
+      var parentTitle = parent ? String(parent.title || "").trim() : "";
+      if (parentTitle) parts.push(parentTitle);
+    }
+    return parts.join(" • ");
   }
 
   function expandTrail(docId) {
@@ -1356,6 +1445,7 @@
   }
 
   function showDocPane() {
+    setRecentModeActive(false);
     content.hidden = false;
     results.hidden = true;
     more.hidden = true;
@@ -1367,6 +1457,12 @@
     results.hidden = false;
   }
 
+  function showRecentPane() {
+    hideDocPane();
+    setRecentModeActive(true);
+    results.hidden = false;
+  }
+
   function renderPayload(doc, payload, hash) {
     state.selectedDocId = doc.doc_id;
     renderSidebar();
@@ -1374,6 +1470,7 @@
     renderManagementUi();
 
     if (hasActiveQuery()) {
+      setRecentModeActive(false);
       renderSearchMode();
       return;
     }
@@ -1409,6 +1506,7 @@
   }
 
   function loadDoc(docId, options) {
+    setRecentModeActive(false);
     var mode = options && options.historyMode ? options.historyMode : "push";
     var hash = options && options.hash ? options.hash : "";
     var shouldExpandTrail = !options || options.expandTrail !== false;
@@ -1628,6 +1726,24 @@
       });
     }
 
+    if (recentButton) {
+      recentButton.addEventListener("click", function () {
+        hideContextMenu();
+        cancelSearchDebounce();
+        var activeDocId = state.selectedDocId || resolveDocId().docId || defaultDocId();
+        state.searchQuery = "";
+        state.searchRouteActive = false;
+        state.searchVisibleCount = SEARCH_BATCH_SIZE;
+        if (searchInput) {
+          searchInput.value = "";
+        }
+        if (activeDocId) {
+          setHistory(activeDocId, "", "", "push");
+        }
+        renderRecentMode();
+      });
+    }
+
     if (bookmarkRow) {
       bookmarkRow.addEventListener("click", function (event) {
         var removeButton = event.target.closest("[data-bookmark-remove]");
@@ -1782,6 +1898,7 @@
         var activeDocId = state.selectedDocId || resolveDocId().docId || "";
 
         cancelSearchDebounce();
+        setRecentModeActive(false);
         state.searchQuery = nextQuery;
         state.searchVisibleCount = SEARCH_BATCH_SIZE;
 
@@ -1850,6 +1967,7 @@
   }
 
   function applyCurrentRoute(options) {
+    setRecentModeActive(false);
     var route = resolveDocId();
     var docId = route.docId;
     if (!docId) {
@@ -1954,9 +2072,10 @@
           title: title,
           href: href,
           displayMeta: displayMeta,
-          parentTitle: parentTitle,
-          searchTerms: searchTerms,
-          searchText: normalize(String(entry.search_text || "")),
+      parentTitle: parentTitle,
+      lastUpdated: String(entry.last_updated || "").trim(),
+      searchTerms: searchTerms,
+      searchText: normalize(String(entry.search_text || "")),
           titleNorm: normalize(title),
           idNorm: normalize(id),
           titleTokens: normalize(title).split(" ").filter(Boolean),
@@ -2015,19 +2134,65 @@
     return matches;
   }
 
-  function renderSearchEntry(entry) {
-    var metaText = entry.displayMeta || entry.parentTitle || "";
+  function compareRecentDocs(left, right) {
+    var leftDate = String(left.last_updated || "");
+    var rightDate = String(right.last_updated || "");
+    if (leftDate !== rightDate) return rightDate.localeCompare(leftDate);
+    var titleCmp = String(left.title || "").localeCompare(String(right.title || ""), undefined, { sensitivity: "base", numeric: true });
+    if (titleCmp !== 0) return titleCmp;
+    return String(left.doc_id || "").localeCompare(String(right.doc_id || ""), undefined, { sensitivity: "base", numeric: true });
+  }
+
+  function collectRecentDocs() {
+    return state.docs
+      .filter(function (doc) {
+        return doc && doc.doc_id && doc.doc_id !== "_archive";
+      })
+      .slice()
+      .sort(compareRecentDocs)
+      .slice(0, state.recentLimit);
+  }
+
+  function renderResultEntry(docId, title, metaText) {
     return (
       '<li class="docsViewer__resultItem">' +
-        '<a class="docsViewer__resultTitle" href="' + escapeHtml(viewerUrl(viewerTargetDocId(entry.id), "", "")) + '">' + escapeHtml(entry.title) + '</a>' +
-        '<p class="docsViewer__resultId">' + escapeHtml(entry.id) + '</p>' +
+        '<a class="docsViewer__resultTitle" href="' + escapeHtml(viewerUrl(viewerTargetDocId(docId), "", "")) + '">' + escapeHtml(title) + '</a>' +
         (metaText ? '<p class="docsViewer__resultMeta">' + escapeHtml(metaText) + '</p>' : '') +
       '</li>'
     );
   }
 
+  function renderSearchEntry(entry) {
+    var metaText = entry.displayMeta || [entry.lastUpdated, entry.parentTitle].filter(Boolean).join(" • ");
+    return renderResultEntry(entry.id, entry.title, metaText);
+  }
+
+  function renderRecentEntry(doc) {
+    return renderResultEntry(doc.doc_id, doc.title, displayMetaForDoc(doc));
+  }
+
+  function renderRecentMode() {
+    if (!searchEnabled) return;
+    showRecentPane();
+    document.title = "Recently Added | dotlineform";
+    var recentDocs = collectRecentDocs();
+    if (!recentDocs.length) {
+      setStatus("No recently added docs.", false);
+      results.innerHTML = "";
+      more.innerHTML = "";
+      more.hidden = true;
+      return;
+    }
+
+    setStatus(recentDocs.length === 1 ? "1 recently added doc" : recentDocs.length + " recently added docs", false);
+    results.innerHTML = recentDocs.map(renderRecentEntry).join("");
+    more.innerHTML = "";
+    more.hidden = true;
+  }
+
   function renderSearchPendingState() {
     if (!searchEnabled || !hasActiveQuery()) return;
+    setRecentModeActive(false);
     showSearchPane();
     setStatus(state.searchLoaded ? "Searching..." : "Loading search index...", false);
     results.innerHTML = "";
@@ -2051,6 +2216,7 @@
     }
 
     showSearchPane();
+    setRecentModeActive(false);
     document.title = "Search | dotlineform";
 
     if (!state.searchLoaded) {
@@ -2115,6 +2281,7 @@
   });
 
   bindLinkInterception();
+  loadViewerConfig();
   initializeBookmarks();
   initializeManagement();
   loadIndex().catch(function () {});

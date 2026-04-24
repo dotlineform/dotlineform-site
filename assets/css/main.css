@@ -1266,6 +1266,10 @@ select.docsViewer__fieldInput{
   min-width: 0;
 }
 
+.docsViewer__recentButton{
+  flex: 0 0 auto;
+}
+
 .docsViewer__searchInput{
   box-sizing: border-box;
   width: 100%;
@@ -1312,6 +1316,11 @@ select.docsViewer__fieldInput{
 .docsViewer__actionButton[disabled]{
   cursor: wait;
   opacity: 0.72;
+}
+
+.docsViewer__recentButton[aria-pressed="true"]{
+  border-color: var(--border-strong);
+  background: var(--panel-2);
 }
 
 .docsViewer__status{
@@ -1536,7 +1545,6 @@ select.docsViewer__fieldInput{
   text-underline-offset: 2px;
 }
 
-.docsViewer__resultId,
 .docsViewer__resultMeta{
   margin: 0.18rem 0 0;
   color: var(--muted);

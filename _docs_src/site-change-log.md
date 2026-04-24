@@ -7,6 +7,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-24] Added shared Docs Viewer recently-added results
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Library / Studio docs
+
+**Summary:**
+Added a shared recently-added control to the Docs Viewer search row and aligned Docs Viewer result metadata across `/docs/` and `/library/`.
+
+**Reason:**
+The Library viewer needed a quick way to show the most recently updated Library docs, and its search results were showing `doc_id` where the Studio docs viewer already used the more useful `date • parent` pattern.
+
+**Effect:**
+The shared Docs Viewer now shows a `recently added` button beside inline search on both `/docs/` and `/library/`. The list is capped by `docs_viewer.recently_added_limit` in `studio_config.json`, sorted by `last_updated` descending then title ascending, and renders title plus `date` or `date • parent`. Search results use the same visible metadata pattern and no longer show `doc_id` as a separate line.
+
+**Notes:**
+The recently-added list currently uses `last_updated`; a future schema task should add a true added/published date.
+
+**Affected files/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- `assets/studio/data/studio_config.json`
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+
 ## [2026-04-24] Opened Studio-originated Library viewer links in manage mode
 
 **Status:** implemented

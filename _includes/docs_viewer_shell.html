@@ -7,11 +7,13 @@
   data-include-scope-param="{{ include.include_scope_param | default: false }}"
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
+  data-studio-config-url="{{ include.studio_config_url | default: '/assets/studio/data/studio_config.json' | relative_url }}"
   data-management-base-url="{{ include.management_base_url | default: '' }}"
 >
   <div class="docsViewer__controls">
     {%- if include.search_index_url -%}
     <div class="docsViewer__searchRow">
+      <button class="docsViewer__actionButton docsViewer__recentButton" type="button" id="docsViewerRecentButton" aria-pressed="false">recently added</button>
       <div class="docsViewer__search">
         <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
         <input

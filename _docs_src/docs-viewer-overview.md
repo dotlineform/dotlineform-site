@@ -1,7 +1,7 @@
 ---
 doc_id: docs-viewer-overview
 title: "Overview"
-last_updated: 2026-03-31
+last_updated: 2026-04-24
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -16,6 +16,7 @@ It provides:
 - a left-hand tree navigation built from generated docs indexes
 - a right-hand document pane for rendered doc content
 - inline docs search within the same viewer shell
+- a shared recently-added list beside inline docs search
 
 Current live scopes:
 
@@ -100,6 +101,17 @@ Current search behavior:
 - docs search is inline within the viewer rather than a separate docs search page
 - the viewer lazily loads the scope search index when `q` is present
 - result links route back into the same viewer URL model
+- search and recently-added list entries use title plus muted metadata rather than showing `doc_id`
+- metadata uses `last_updated` and, when available, parent title in the form `date • parent`
+
+Current recently-added behavior:
+
+- the button is rendered by the shared shell when inline docs search is enabled
+- the runtime sorts current-scope docs by `last_updated` descending, then title ascending
+- the list is capped by `docs_viewer.recently_added_limit` in `assets/studio/data/studio_config.json`
+- `_archive` is excluded from the list
+
+The current recently-added list uses `last_updated` as a temporary date source. A future schema change should add a true added/published date so metadata edits do not make older docs appear newly added.
 
 ## Scope Boundary
 

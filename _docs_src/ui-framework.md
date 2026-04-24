@@ -1,7 +1,7 @@
 ---
 doc_id: ui-framework
 title: "UI Framework"
-last_updated: 2026-03-31
+last_updated: 2026-04-24
 parent_id: design
 sort_order: 10
 ---
@@ -139,11 +139,14 @@ This should stay a quiet document-reader layout rather than becoming an app-styl
 When docs search is enabled for a scope:
 
 - the search input lives in the main pane header
+- the recently-added command lives immediately before the search input
 - results replace the normal content pane
 - search is inline, not a floating overlay or dropdown
 - the docs tree remains the stable left-side navigation surface
 
 This keeps docs search visually tied to the current docs scope rather than the global site header.
+
+The recently-added command is part of the shared Docs Viewer shell. It should remain available on both `/docs/` and `/library/` when inline docs search is available, and it should render the same simple result-list shape as docs search.
 
 ### Metadata and content framing
 
@@ -160,6 +163,12 @@ In search mode, the main pane should show:
 - one inline results list
 - one inline `more` control when needed
 
+In recently-added mode, the main pane should show:
+
+- status line
+- one inline capped results list
+- no separate `more` control
+
 ### Tree and result styling
 
 The current shared treatment is:
@@ -167,6 +176,7 @@ The current shared treatment is:
 - tree links render as quiet pill-like rows, not file-manager rows
 - result links render as simple stacked list items
 - result metadata stays secondary and muted
+- docs-viewer search and recently-added results show title plus `date` or `date • parent`; they do not show `doc_id` as a separate visible line
 - active state should be obvious without turning the viewer into a tabbed interface
 
 ## Public Search UI Standards
