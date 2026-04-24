@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T15:18:04Z",
+  "generated_at": "2026-04-24T16:02:05Z",
   "docs": [
     {
       "scope": "studio",
@@ -636,6 +636,18 @@
       "source_path": "docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-draft-publishing-spec",
+      "title": "Viewability Workflow Spec",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-04-24",
+      "parent_id": "docs-viewer",
+      "sort_order": 35,
+      "source_path": "docs-viewer-draft-publishing-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-draft-publishing-spec.json"
     },
     {
       "scope": "studio",

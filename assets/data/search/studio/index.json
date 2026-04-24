@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8e0c601d8b80f5d17fb3a0ef0e272bd8",
-    "generated_at_utc": "2026-04-24T15:18:06Z",
-    "count": 129
+    "version": "blake2b-619f5595424b62c50df78b7aa2439ee2",
+    "generated_at_utc": "2026-04-24T16:02:06Z",
+    "count": 130
   },
   "entries": [
     {
@@ -1241,6 +1241,33 @@
         "23"
       ],
       "search_text": "docs-broken-links docs broken links docs broken links studio 2026-04-23 2026 04 23"
+    },
+    {
+      "id": "docs-viewer-draft-publishing-spec",
+      "kind": "doc",
+      "title": "Viewability Workflow Spec",
+      "href": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
+      "last_updated": "2026-04-24",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-04-24 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-draft-publishing-spec",
+        "docs",
+        "viewer",
+        "draft",
+        "publishing",
+        "spec",
+        "viewability workflow spec",
+        "viewability",
+        "workflow",
+        "docs viewer",
+        "2026-04-24",
+        "2026",
+        "04",
+        "24"
+      ],
+      "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-04-24 2026 04 24"
     },
     {
       "id": "bulk-add-work",
