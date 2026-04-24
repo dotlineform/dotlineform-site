@@ -98,6 +98,13 @@ At runtime the viewer:
 4. loads per-doc rendered HTML from the selected document payload
 5. keeps the left navigation in place while the right pane switches between document view and inline search results
 
+Current document metadata behavior:
+
+- the document H1 is treated as the visible title
+- the metadata path shows ancestor docs only, so it does not duplicate the current document title
+- root-level docs hide the metadata path and let the updated date move up
+- the updated date continues to use `last_updated`
+
 Current sidebar behavior:
 
 - larger screens show a small control in the index panel header that collapses the docs tree to a narrow rail

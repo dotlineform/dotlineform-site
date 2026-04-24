@@ -797,8 +797,9 @@
   }
 
   function renderMeta(doc) {
-    var trail = buildTrail(doc.doc_id);
+    var trail = buildTrail(doc.doc_id).slice(0, -1);
     pathEl.textContent = "";
+    pathEl.hidden = trail.length === 0;
 
     trail.forEach(function (entry, index) {
       if (index > 0) {
@@ -806,13 +807,6 @@
         separator.className = "docsViewer__pathSep";
         separator.textContent = "/";
         pathEl.appendChild(separator);
-      }
-
-      if (index === trail.length - 1) {
-        var current = document.createElement("span");
-        current.textContent = entry.title;
-        pathEl.appendChild(current);
-        return;
       }
 
       var link = document.createElement("a");

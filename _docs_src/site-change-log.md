@@ -21,7 +21,7 @@ Added a shared desktop/tablet collapse control for the Docs Viewer index panel.
 Longer Library docs needed more available reading width while keeping the index panel discoverable and easy to restore.
 
 **Effect:**
-The shared Docs Viewer now shows a small index-panel toggle on non-mobile layouts. Collapsing the panel shrinks the left column to a narrow rail, hides the tree, widens the capped Docs Viewer reading measure, and leaves the control visible for expansion. The collapsed state is stored per viewer scope. Mobile keeps the existing stacked layout and does not show the control.
+The shared Docs Viewer now shows a small index-panel toggle on non-mobile layouts. Collapsing the panel shrinks the left column to a narrow rail, hides the tree, widens the capped Docs Viewer reading measure, and leaves the control visible for expansion. The document metadata path now shows ancestor docs only instead of repeating the current title above the H1. The collapsed state is stored per viewer scope. Mobile keeps the existing stacked layout and does not show the control.
 
 **Affected files/docs:**
 
