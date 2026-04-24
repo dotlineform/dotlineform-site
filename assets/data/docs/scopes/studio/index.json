@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T12:10:43Z",
+  "generated_at": "2026-04-24T15:18:04Z",
   "docs": [
     {
       "scope": "studio",
@@ -183,6 +183,18 @@
     },
     {
       "scope": "studio",
+      "doc_id": "generic-llm-helper-pattern",
+      "title": "Generic LLM Helper Pattern",
+      "added_date": "2026-04-16",
+      "last_updated": "2026-04-16",
+      "parent_id": "llm",
+      "sort_order": 11,
+      "source_path": "generic-llm-helper-pattern.md",
+      "viewer_url": "/docs/?scope=studio&doc=generic-llm-helper-pattern",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/generic-llm-helper-pattern.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
@@ -300,6 +312,18 @@
       "source_path": "library-semantic-enrichment-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-semantic-enrichment-spec.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "llm-semantic-enrichment-spec",
+      "title": "LLM Semantic Enrichment Spec",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-04-24",
+      "parent_id": "llm",
+      "sort_order": 20,
+      "source_path": "llm-semantic-enrichment-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=llm-semantic-enrichment-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/llm-semantic-enrichment-spec.json"
     },
     {
       "scope": "studio",
@@ -492,18 +516,6 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "generic-llm-helper-pattern",
-      "title": "Generic LLM Helper Pattern",
-      "added_date": "2026-04-16",
-      "last_updated": "2026-04-16",
-      "parent_id": "llm",
-      "sort_order": 30,
-      "source_path": "generic-llm-helper-pattern.md",
-      "viewer_url": "/docs/?scope=studio&doc=generic-llm-helper-pattern",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/generic-llm-helper-pattern.json"
     },
     {
       "scope": "studio",
@@ -1266,7 +1278,7 @@
       "doc_id": "llm",
       "title": "LLM",
       "added_date": "2026-04-16",
-      "last_updated": "2026-04-16",
+      "last_updated": "2026-04-24",
       "parent_id": "",
       "sort_order": 150,
       "source_path": "llm.md",

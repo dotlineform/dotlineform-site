@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-568617ce1569548edbd9a6400704c5be",
-    "generated_at_utc": "2026-04-24T12:10:44Z",
-    "count": 128
+    "version": "blake2b-8e0c601d8b80f5d17fb3a0ef0e272bd8",
+    "generated_at_utc": "2026-04-24T15:18:06Z",
+    "count": 129
   },
   "entries": [
     {
@@ -358,6 +358,29 @@
       "search_text": "ui-framework ui framework ui framework design 2026-04-24 2026 04 24"
     },
     {
+      "id": "generic-llm-helper-pattern",
+      "kind": "doc",
+      "title": "Generic LLM Helper Pattern",
+      "href": "/docs/?scope=studio&doc=generic-llm-helper-pattern",
+      "last_updated": "2026-04-16",
+      "parent_id": "llm",
+      "parent_title": "LLM",
+      "display_meta": "2026-04-16 • LLM",
+      "search_terms": [
+        "generic-llm-helper-pattern",
+        "generic",
+        "llm",
+        "helper",
+        "pattern",
+        "generic llm helper pattern",
+        "2026-04-16",
+        "2026",
+        "04",
+        "16"
+      ],
+      "search_text": "generic-llm-helper-pattern generic llm helper pattern generic llm helper pattern 2026-04-16 2026 04 16"
+    },
+    {
       "id": "scripts-dev-studio",
       "kind": "doc",
       "title": "Dev Studio Runner",
@@ -597,6 +620,29 @@
         "24"
       ],
       "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-04-24 2026 04 24"
+    },
+    {
+      "id": "llm-semantic-enrichment-spec",
+      "kind": "doc",
+      "title": "LLM Semantic Enrichment Spec",
+      "href": "/docs/?scope=studio&doc=llm-semantic-enrichment-spec",
+      "last_updated": "2026-04-24",
+      "parent_id": "llm",
+      "parent_title": "LLM",
+      "display_meta": "2026-04-24 • LLM",
+      "search_terms": [
+        "llm-semantic-enrichment-spec",
+        "llm",
+        "semantic",
+        "enrichment",
+        "spec",
+        "llm semantic enrichment spec",
+        "2026-04-24",
+        "2026",
+        "04",
+        "24"
+      ],
+      "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-04-24 2026 04 24"
     },
     {
       "id": "config-pipeline-json",
@@ -967,29 +1013,6 @@
         "31"
       ],
       "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "generic-llm-helper-pattern",
-      "kind": "doc",
-      "title": "Generic LLM Helper Pattern",
-      "href": "/docs/?scope=studio&doc=generic-llm-helper-pattern",
-      "last_updated": "2026-04-16",
-      "parent_id": "llm",
-      "parent_title": "LLM",
-      "display_meta": "2026-04-16 • LLM",
-      "search_terms": [
-        "generic-llm-helper-pattern",
-        "generic",
-        "llm",
-        "helper",
-        "pattern",
-        "generic llm helper pattern",
-        "2026-04-16",
-        "2026",
-        "04",
-        "16"
-      ],
-      "search_text": "generic-llm-helper-pattern generic llm helper pattern generic llm helper pattern 2026-04-16 2026 04 16"
     },
     {
       "id": "local-setup",
@@ -2428,16 +2451,16 @@
       "kind": "doc",
       "title": "LLM",
       "href": "/docs/?scope=studio&doc=llm",
-      "last_updated": "2026-04-16",
-      "display_meta": "2026-04-16",
+      "last_updated": "2026-04-24",
+      "display_meta": "2026-04-24",
       "search_terms": [
         "llm",
-        "2026-04-16",
+        "2026-04-24",
         "2026",
         "04",
-        "16"
+        "24"
       ],
-      "search_text": "llm 2026-04-16 2026 04 16"
+      "search_text": "llm 2026-04-24 2026 04 24"
     },
     {
       "id": "catalogue-new-work-file-editor",
