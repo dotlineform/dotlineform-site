@@ -118,15 +118,18 @@ Add a search-owned way to update only affected docs-domain search entries after 
 Implementation shape:
 
 - keep `build_search.rb --scope <scope> --write` as the full rebuild command
-- add either:
+- add targeted docs-mode flags to `build_search.rb`, using this first command shape:
   - `build_search.rb --scope <scope> --write --only-doc-ids id1,id2 --remove-missing`
-  - or a small Ruby library method used by a new CLI wrapper
+- accept doc ids only for targeted updates; do not accept source paths in the first contract
+- refuse targeted updates for `catalogue` until catalogue has its own dependency model
 - load the existing generated search artifact
 - load the generated docs index for the scope
 - rebuild search entries for affected viewable docs
 - remove affected ids that are missing, non-viewable, or `_archive`
 - recompute header `version`, `generated_at_utc`, and `count`
 - write only when the artifact content changes
+- do not add a debug full-equivalence mode unless a real operational need appears
+- report diagnostic counts for Codex/server use, including changed, removed, skipped, unchanged, and full-fallback counts
 
 Search-owned responsibilities:
 
@@ -155,12 +158,13 @@ Risks:
 - dependency rules must be explicit before this is used by default
 - version and ordering must remain byte-stable compared with full rebuild output
 
-Open decisions:
+Resolved decisions:
 
-- should the targeted update CLI accept doc ids, source paths, or both?
-- should targeted update verify equivalence against a full rebuild in a debug mode?
-- should output report changed, removed, skipped, and full-fallback counts?
-- should the targeted command refuse catalogue scope until there is a catalogue-specific dependency model?
+- targeted updates accept doc ids only
+- targeted updates do not support source paths in the first contract
+- no debug full-equivalence mode is required
+- output should report full diagnostic counts for Codex/server use, not for routine human review
+- targeted mode refuses catalogue scope until there is a catalogue-specific dependency model
 
 Phase 2 can start once the targeted command contract is settled.
 
