@@ -166,7 +166,13 @@ Resolved decisions:
 - output should report full diagnostic counts for Codex/server use, not for routine human review
 - targeted mode refuses catalogue scope until there is a catalogue-specific dependency model
 
-Phase 2 can start once the targeted command contract is settled.
+Status: implemented for docs-domain scopes in `scripts/build_search.rb`.
+Targeted mode currently supports `studio` and `library` by `doc_id`; `catalogue` still falls back to full rebuilds only.
+
+### Manual checks needed:
+
+ - run a real docs-management action that changes title, parent_id, or viewable, then call targeted search update with the exact affected ids and confirm the inline docs search reflects it without a full same-scope rebuild
+ - confirm orchestration still uses full rebuild for catalogue until its dependency model is defined
 
 ## Phase 3. Affected-Record Orchestration
 

@@ -40,6 +40,7 @@ Current build principles:
 - scope-owned search artifacts
 - compact records rather than prose-heavy payloads
 - search stays downstream of canonical source systems rather than becoming a new source of truth
+- docs-domain scopes can use targeted search updates by `doc_id` while `catalogue` remains full-rebuild-only
 
 Current source boundary:
 
@@ -140,6 +141,11 @@ Current supported overrides:
 - `--output PATH`
 - `--write`
 - `--force`
+
+Current targeted-update boundary:
+
+- `catalogue` does not support `--only-doc-ids`
+- catalogue search still uses full rebuilds only
 
 ### Current Included Content
 
@@ -246,6 +252,8 @@ Current supported overrides:
 
 - `--source-index PATH`
 - `--output PATH`
+- `--only-doc-ids IDS`
+- `--remove-missing`
 - `--write`
 - `--force`
 
@@ -254,6 +262,7 @@ Current supported overrides:
 Current builder behaviour for Studio:
 
 - reads the generated Studio docs index
+- can patch the existing Studio search artifact for targeted `doc_id` updates
 - emits one search record per viewable Studio doc
 - keeps record shape compatible with the shared Docs Viewer inline search runtime
 - does not create section-level records
@@ -280,8 +289,10 @@ Current derived search support fields:
 - manual docs rebuilds remain split:
   - `./scripts/build_docs.rb --scope studio --write`
   - `./scripts/build_search.rb --scope studio --write`
+- targeted docs-search command:
+  - `./scripts/build_search.rb --scope studio --write --only-doc-ids search-build-pipeline --remove-missing`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
-- single-doc viewability changes currently use the same full same-scope docs-search rebuild path; bulk viewability changes should batch writes and run one rebuild, or wait for a separate incremental docs-search design
+- targeted docs-search updates rebuild only affected Studio docs entries by `doc_id`, remove affected ids that are missing, non-viewable, or `_archive`, and report diagnostic counts for Codex/server use
 - `bin/dev-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `_docs_src/*.md` changes aligned with `assets/data/search/studio/index.json`
 
 ## Library Scope
@@ -319,6 +330,8 @@ Current supported overrides:
 
 - `--source-index PATH`
 - `--output PATH`
+- `--only-doc-ids IDS`
+- `--remove-missing`
 - `--write`
 - `--force`
 
@@ -328,6 +341,7 @@ Current builder behaviour for Library:
 
 - matches the same docs-domain record model used by Studio
 - reads only the generated Library docs index
+- can patch the existing Library search artifact for targeted `doc_id` updates
 - emits one search record per viewable Library doc
 - stays compatible with the shared Docs Viewer inline search runtime
 
@@ -338,8 +352,10 @@ Current builder behaviour for Library:
 - manual docs rebuilds remain split:
   - `./scripts/build_docs.rb --scope library --write`
   - `./scripts/build_search.rb --scope library --write`
+- targeted docs-search command:
+  - `./scripts/build_search.rb --scope library --write --only-doc-ids library --remove-missing`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
-- single-doc viewability changes currently use the same full same-scope docs-search rebuild path; bulk viewability changes should batch writes and run one rebuild, or wait for a separate incremental docs-search design
+- targeted docs-search updates rebuild only affected Library docs entries by `doc_id`, remove affected ids that are missing, non-viewable, or `_archive`, and report diagnostic counts for Codex/server use
 - if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/dev-studio` runs a startup `library` docs-search rebuild
 - while `bin/dev-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`
 

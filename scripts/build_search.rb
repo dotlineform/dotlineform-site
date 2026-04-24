@@ -71,10 +71,17 @@ class SearchDataBuilder
     @work_search_metadata_by_id = {}
   end
 
-  def run(write:, force:)
+  def run(write:, force:, only_doc_ids: nil, remove_missing: false)
     validate_scope!
-    payload = @kind == :catalogue ? build_catalogue_payload : build_docs_payload
-    write_payload(payload, write: write, force: force)
+    targeted_doc_ids = normalize_target_doc_ids(only_doc_ids)
+    validate_targeted_options!(targeted_doc_ids, remove_missing)
+    payload, diagnostics =
+      if @kind == :catalogue
+        [build_catalogue_payload, nil]
+      else
+        build_docs_payload(target_doc_ids: targeted_doc_ids, remove_missing: remove_missing)
+      end
+    write_payload(payload, write: write, force: force, diagnostics: diagnostics)
   end
 
   private
@@ -85,10 +92,12 @@ class SearchDataBuilder
     raise SystemExit, "Unsupported scope: #{@scope}. Current builder scopes: #{SCOPE_DEFAULTS.keys.join(', ')}"
   end
 
-  def build_docs_payload
+  def build_docs_payload(target_doc_ids: nil, remove_missing: false)
     docs = load_docs_index(@source_index_path)
     entries = build_docs_entries(docs)
-    build_docs_search_payload(entries)
+    return [build_docs_search_payload(entries), nil] if target_doc_ids.empty?
+
+    build_targeted_docs_payload(entries, target_doc_ids, remove_missing)
   end
 
   def build_catalogue_payload
@@ -168,31 +177,60 @@ class SearchDataBuilder
     build_catalogue_search_payload(ordered_entries)
   end
 
-  def write_payload(payload, write:, force:)
+  def write_payload(payload, write:, force:, diagnostics: nil)
     count = payload.dig("header", "count")
     relative_output_path = relative_path(@output_path)
     existing_version = extract_existing_version(@output_path)
     payload_version = payload.dig("header", "version")
 
     if existing_version == payload_version && !force
-      if write
-        puts "Search index JSON done. Wrote: 0. Skipped: 1. Path: #{relative_output_path}"
-      else
-        puts "Search index JSON done. Would write: 0. Skipped: 1. Path: #{relative_output_path}"
-      end
+      print_skip_message(relative_output_path, write, diagnostics)
       return payload
     end
 
     unless write
-      puts "Dry run: #{count} #{@scope} search entries"
-      puts "Would write: #{relative_output_path}"
+      print_dry_run_message(relative_output_path, count, diagnostics)
       return payload
     end
 
     FileUtils.mkdir_p(@output_path.dirname)
     File.write(@output_path, JSON.pretty_generate(payload) + "\n")
-    puts "Wrote #{relative_output_path} with #{count} #{@scope} search entries"
+    print_write_message(relative_output_path, count, diagnostics)
     payload
+  end
+
+  def print_skip_message(relative_output_path, write, diagnostics)
+    if diagnostics
+      verb = write ? "Wrote" : "Would write"
+      puts "Targeted search index JSON done. #{verb}: 0. Skipped: 1. Changed: #{diagnostics[:changed]}. Removed: #{diagnostics[:removed]}. Unchanged: #{diagnostics[:unchanged]}. Full fallback: #{diagnostics[:full_fallback]}. Path: #{relative_output_path}"
+      return
+    end
+
+    if write
+      puts "Search index JSON done. Wrote: 0. Skipped: 1. Path: #{relative_output_path}"
+    else
+      puts "Search index JSON done. Would write: 0. Skipped: 1. Path: #{relative_output_path}"
+    end
+  end
+
+  def print_dry_run_message(relative_output_path, count, diagnostics)
+    if diagnostics
+      puts "Targeted dry run: #{count} #{@scope} search entries"
+      puts "Would write: 1. Skipped: 0. Changed: #{diagnostics[:changed]}. Removed: #{diagnostics[:removed]}. Unchanged: #{diagnostics[:unchanged]}. Full fallback: #{diagnostics[:full_fallback]}. Path: #{relative_output_path}"
+      return
+    end
+
+    puts "Dry run: #{count} #{@scope} search entries"
+    puts "Would write: #{relative_output_path}"
+  end
+
+  def print_write_message(relative_output_path, count, diagnostics)
+    if diagnostics
+      puts "Targeted search index JSON done. Wrote: 1. Skipped: 0. Changed: #{diagnostics[:changed]}. Removed: #{diagnostics[:removed]}. Unchanged: #{diagnostics[:unchanged]}. Full fallback: #{diagnostics[:full_fallback]}. Path: #{relative_output_path}"
+      return
+    end
+
+    puts "Wrote #{relative_output_path} with #{count} #{@scope} search entries"
   end
 
   def load_docs_index(path)
@@ -298,6 +336,91 @@ class SearchDataBuilder
         "search_text" => search_terms.join(" ")
       }.reject { |_key, value| empty_scalar?(value) }
     end
+  end
+
+  def build_targeted_docs_payload(entries, target_doc_ids, remove_missing)
+    existing_payload = load_existing_search_payload
+    unless existing_payload
+      diagnostics = {
+        changed: entries.length,
+        removed: 0,
+        unchanged: 0,
+        full_fallback: 1
+      }
+      return [build_docs_search_payload(entries), diagnostics]
+    end
+
+    existing_entries = existing_payload["entries"]
+    unless existing_entries.is_a?(Array)
+      diagnostics = {
+        changed: entries.length,
+        removed: 0,
+        unchanged: 0,
+        full_fallback: 1
+      }
+      return [build_docs_search_payload(entries), diagnostics]
+    end
+
+    entry_by_id = entries.to_h { |entry| [normalize_text(entry["id"]), entry] }
+    order_by_id = entries.each_with_index.to_h { |entry, index| [normalize_text(entry["id"]), index] }
+    existing_by_id = existing_entries.each_with_object({}) do |entry, out|
+      next unless entry.is_a?(Hash)
+
+      entry_id = normalize_text(entry["id"])
+      next if entry_id.empty?
+
+      out[entry_id] = entry
+    end
+    existing_order_by_id = existing_entries.each_with_index.to_h do |entry, index|
+      [normalize_text(entry["id"]), index]
+    end
+
+    changed = 0
+    removed = 0
+    unchanged = 0
+
+    target_doc_ids.each do |doc_id|
+      next_entry = entry_by_id[doc_id]
+      current_entry = existing_by_id[doc_id]
+
+      if next_entry.nil?
+        unless remove_missing
+          abort "Targeted docs search update for #{@scope} requires --remove-missing when affected ids may be missing, non-viewable, or _archive"
+        end
+
+        if current_entry
+          existing_by_id.delete(doc_id)
+          removed += 1
+        else
+          unchanged += 1
+        end
+        next
+      end
+
+      if current_entry == next_entry
+        unchanged += 1
+      else
+        existing_by_id[doc_id] = next_entry
+        changed += 1
+      end
+    end
+
+    merged_entries = existing_by_id.values.sort_by do |entry|
+      entry_id = normalize_text(entry["id"])
+      [
+        order_by_id.fetch(entry_id, entries.length + existing_order_by_id.fetch(entry_id, 0)),
+        existing_order_by_id.fetch(entry_id, existing_entries.length)
+      ]
+    end
+
+    payload = build_docs_search_payload(merged_entries)
+    diagnostics = {
+      changed: changed,
+      removed: removed,
+      unchanged: unchanged,
+      full_fallback: 0
+    }
+    [payload, diagnostics]
   end
 
   def build_docs_search_payload(entries)
@@ -540,6 +663,30 @@ class SearchDataBuilder
     nil
   end
 
+  def load_existing_search_payload
+    return nil unless @output_path&.file?
+
+    payload = JSON.parse(File.read(@output_path, encoding: "utf-8"))
+    return nil unless payload.is_a?(Hash)
+
+    payload
+  rescue JSON::ParserError
+    nil
+  end
+
+  def normalize_target_doc_ids(values)
+    Array(values).flat_map { |value| normalize_text(value).split(",") }.map { |value| normalize_text(value) }.reject(&:empty?).uniq
+  end
+
+  def validate_targeted_options!(targeted_doc_ids, remove_missing)
+    return if targeted_doc_ids.empty? && !remove_missing
+
+    if @kind == :catalogue
+      abort "Targeted search updates are not supported for catalogue scope"
+    end
+    abort "Targeted docs search updates require at least one doc id" if targeted_doc_ids.empty?
+  end
+
   def compact_catalogue_field?(key, value)
     return false if %w[series_ids series_titles tag_ids tag_labels].include?(key)
 
@@ -568,6 +715,8 @@ options = {
   moments_index_path: nil,
   tag_assignments_path: nil,
   tag_registry_path: nil,
+  only_doc_ids: [],
+  remove_missing: false,
   write: false,
   force: false
 }
@@ -607,6 +756,14 @@ OptionParser.new do |parser|
     options[:output_path] = value
   end
 
+  parser.on("--only-doc-ids IDS", "Comma-separated doc ids for targeted docs-domain search updates") do |value|
+    options[:only_doc_ids] << value
+  end
+
+  parser.on("--remove-missing", "Allow targeted docs-domain updates to remove missing, non-viewable, or _archive ids") do
+    options[:remove_missing] = true
+  end
+
   parser.on("--write", "Persist generated files (default is dry-run)") do
     options[:write] = true
   end
@@ -625,4 +782,9 @@ SearchDataBuilder.new(
   moments_index_path: options[:moments_index_path],
   tag_assignments_path: options[:tag_assignments_path],
   tag_registry_path: options[:tag_registry_path]
-).run(write: options[:write], force: options[:force])
+).run(
+  write: options[:write],
+  force: options[:force],
+  only_doc_ids: options[:only_doc_ids],
+  remove_missing: options[:remove_missing]
+)

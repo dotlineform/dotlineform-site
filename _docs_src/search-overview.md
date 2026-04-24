@@ -83,7 +83,7 @@ Those source and upstream artifact families are documented in:
 
 ### 2. Search index generation
 
-`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical generated docs indexes and skips docs with `viewable: false`.
+`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical generated docs indexes, skips docs with `viewable: false`, and can now patch affected docs-search entries by `doc_id` instead of always rebuilding the full docs-domain artifact.
 
 ### 3. Search policy
 
@@ -164,6 +164,8 @@ Current implementation status:
 - the dedicated `/search/` runtime and policy are now trimmed to catalogue-only behavior
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
 - a single search-owned builder emits `assets/data/search/catalogue/index.json`, `assets/data/search/studio/index.json`, and `assets/data/search/library/index.json`
+- docs-domain targeted updates are available for `studio` and `library` by `doc_id`
+- `catalogue` remains full-rebuild-only until it has a scope-specific dependency model
 - indexed content types are works, series, moments, Studio docs, and Library docs
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons

@@ -9,6 +9,29 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-24] Added targeted docs-domain search updates
+
+**Status:** implemented
+
+**Area:** docs-domain search build flow
+
+**Summary:**
+Added a targeted `doc_id` update mode to `scripts/build_search.rb` for `studio` and `library` search artifacts.
+
+**Reason:**
+Docs-management and later watcher orchestration need a search-owned way to update affected docs-domain entries without always rebuilding the full same-scope search artifact.
+
+**Effect:**
+`scripts/build_search.rb` now accepts `--only-doc-ids` plus `--remove-missing` for `studio` and `library`. Targeted mode loads the existing docs-domain search artifact, rebuilds only the affected `doc_id` entries from the generated docs index, removes affected ids that are missing, non-viewable, or `_archive`, recomputes header metadata, and reports diagnostic counts. `catalogue` targeted mode is explicitly refused and remains full-rebuild-only.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+
 ## [2026-04-24] Added incremental search orchestration plan
 
 **Status:** planned

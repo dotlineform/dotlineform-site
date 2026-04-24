@@ -51,6 +51,9 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
 - [ ] Run `./scripts/build_search.rb --scope library`
 - [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
+- [ ] If the change touched targeted docs-search updates, run `./scripts/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
+- [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
+- [ ] Confirm `./scripts/build_search.rb --scope catalogue --only-doc-ids anything --remove-missing` fails closed because targeted mode is docs-only
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`
 
