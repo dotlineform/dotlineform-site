@@ -58,13 +58,13 @@ This description stays at the syntactic/physical level; it does not take a stanc
 
 ## Citations
 
-[Shannon (1948) — A Mathematical Theory of Communication (PDF)](https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)
-[Landauer (1961) — Irreversibility and Heat Generation (IBM JRD, PDF)](https://sites.pitt.edu/~jdnorton/lectures/Rotman_Summer_School_2013/thermo_computing_docs/Landauer_1961.pdf)
-[SEP — Information (overview)](https://plato.stanford.edu/entries/information/)
-[SEP — Semantic Conceptions of Information](https://plato.stanford.edu/entries/information-semantic/)
-[Zacks et al. (2007) — Event Segmentation (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3314399/)
-[Kurby & Zacks (2008) — Segmentation in Perception & Memory (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2263140/)
-[Ben‑Yakov & Henson (2018) — Hippocampal boundary response (J. Neurosci.)](https://www.jneurosci.org/content/38/47/10057)
-[NASA GSFC — Event horizon as point of no return](https://imagine.gsfc.nasa.gov/science/objects/black_holes1.html)
-[Bekenstein (1973) — Black Holes and Entropy (PRD)](https://link.aps.org/doi/10.1103/PhysRevD.7.2333)
-[ArXiv — Black Holes, Entropy, and Information (review)](https://arxiv.org/pdf/0708.3680)
+[Shannon (1948) — A Mathematical Theory of Communication (PDF)](https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)  
+[Landauer (1961) — Irreversibility and Heat Generation (IBM JRD, PDF)](https://sites.pitt.edu/~jdnorton/lectures/Rotman_Summer_School_2013/thermo_computing_docs/Landauer_1961.pdf)  
+[SEP — Information (overview)](https://plato.stanford.edu/entries/information/)  
+[SEP — Semantic Conceptions of Information](https://plato.stanford.edu/entries/information-semantic/)  
+[Zacks et al. (2007) — Event Segmentation (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3314399/)  
+[Kurby & Zacks (2008) — Segmentation in Perception & Memory (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2263140/)  
+[Ben‑Yakov & Henson (2018) — Hippocampal boundary response (J. Neurosci.)](https://www.jneurosci.org/content/38/47/10057)  
+[NASA GSFC — Event horizon as point of no return](https://imagine.gsfc.nasa.gov/science/objects/black_holes1.html)  
+[Bekenstein (1973) — Black Holes and Entropy (PRD)](https://link.aps.org/doi/10.1103/PhysRevD.7.2333)  
+[ArXiv — Black Holes, Entropy, and Information (review)](https://arxiv.org/pdf/0708.3680)  

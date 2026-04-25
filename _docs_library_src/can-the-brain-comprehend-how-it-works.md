@@ -6,7 +6,7 @@ last_updated: 2026-04-25
 parent_id: ""
 sort_order: 201
 published: true
-viewable: false
+viewable: true
 ---
 # Can the Brain Comprehend How It Works?
 
@@ -57,7 +57,7 @@ A concise way to put this is:
 
 **The brain’s inability to fully comprehend itself reflects structural limits and the use of simplified self-models, not an inherent dysfunction. Dysfunction arises only when those models and limits become sources of conflict, distress, or breakdown in integration.**
 
-## 7. Citation Table
+## 7. Citations
 
 Key sources used in this note, with titles and URLs for further reading.
 

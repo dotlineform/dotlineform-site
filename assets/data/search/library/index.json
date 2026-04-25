@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-cd0f4b99df607cb8ca5da335ddcbc34d",
-    "generated_at_utc": "2026-04-25T21:24:43Z",
-    "count": 4
+    "version": "blake2b-20e923ec261056a4a8cca7d3c48aea2b",
+    "generated_at_utc": "2026-04-25T21:33:14Z",
+    "count": 5
   },
   "entries": [
     {
@@ -22,6 +22,30 @@
         "30"
       ],
       "search_text": "library 2026-03-30 2026 03 30"
+    },
+    {
+      "id": "can-the-brain-comprehend-how-it-works",
+      "kind": "doc",
+      "title": "Can the Brain Comprehend How It Works?",
+      "href": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "last_updated": "2026-04-25",
+      "display_meta": "2026-04-25",
+      "search_terms": [
+        "can-the-brain-comprehend-how-it-works",
+        "can",
+        "the",
+        "brain",
+        "comprehend",
+        "how",
+        "it",
+        "works",
+        "can the brain comprehend how it works?",
+        "2026-04-25",
+        "2026",
+        "04",
+        "25"
+      ],
+      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-25 2026 04 25"
     },
     {
       "id": "dreaming-is-actve",

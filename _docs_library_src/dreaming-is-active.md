@@ -85,7 +85,7 @@ NREM replay REM construction Abstraction/triage Emotion regulation Integration
 
 Together these mechanisms show dreaming is not passive background noise but an *active reconstruction engine*.
 
-## Inline Citation Table
+## Citations
 
 | Claim / Node | Source | URL |
 | --- | --- | --- |
