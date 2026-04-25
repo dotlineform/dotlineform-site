@@ -1033,6 +1033,34 @@
     );
   }
 
+  function normalizeMoveUndoRecords(records) {
+    if (!Array.isArray(records)) return [];
+    var seen = new Set();
+    return records.reduce(function (acc, record) {
+      if (!record || !record.doc_id) return acc;
+      var docId = String(record.doc_id || "").trim();
+      if (!docId || seen.has(docId)) return acc;
+      seen.add(docId);
+      acc.push({
+        doc_id: docId,
+        title: String(record.title || docId),
+        parent_id: String(record.parent_id || ""),
+        sort_order: normalizeSortOrderValue(record.sort_order)
+      });
+      return acc;
+    }, []);
+  }
+
+  function moveUndoPayloadRecords(undoRecords) {
+    return undoRecords.map(function (record) {
+      return {
+        doc_id: record.doc_id,
+        parent_id: record.parent_id || "",
+        sort_order: normalizeSortOrderValue(record.sort_order)
+      };
+    });
+  }
+
   function contextMenuEnabled() {
     return state.managementMode && state.managementAvailable;
   }
@@ -1722,12 +1750,6 @@
     var movingDoc = state.docsById.get(docId);
     var targetDoc = state.docsById.get(targetDocId);
     if (!movingDoc || !targetDoc) return;
-    var undoRecord = {
-      doc_id: movingDoc.doc_id,
-      title: movingDoc.title || movingDoc.doc_id,
-      parent_id: movingDoc.parent_id || "",
-      sort_order: normalizeSortOrderValue(movingDoc.sort_order)
-    };
 
     state.managementBusy = true;
     clearDragState();
@@ -1741,8 +1763,27 @@
       position: position
     })
       .then(function (payload) {
-        if (moveUndoRecordChanged(undoRecord, payload.record)) {
-          state.moveUndo = undoRecord;
+        var undoRecords = normalizeMoveUndoRecords(payload.undo_records);
+        if (undoRecords.length) {
+          state.moveUndo = {
+            doc_id: movingDoc.doc_id,
+            title: movingDoc.title || movingDoc.doc_id,
+            records: undoRecords
+          };
+        } else if (moveUndoRecordChanged({
+          parent_id: movingDoc.parent_id || "",
+          sort_order: normalizeSortOrderValue(movingDoc.sort_order)
+        }, payload.record)) {
+          state.moveUndo = {
+            doc_id: movingDoc.doc_id,
+            title: movingDoc.title || movingDoc.doc_id,
+            records: [{
+              doc_id: movingDoc.doc_id,
+              title: movingDoc.title || movingDoc.doc_id,
+              parent_id: movingDoc.parent_id || "",
+              sort_order: normalizeSortOrderValue(movingDoc.sort_order)
+            }]
+          };
         }
         setManagementMessage("", false);
         return reloadDocsIndex(movingDoc.doc_id, "");
@@ -1761,8 +1802,9 @@
     var undoRecord = state.moveUndo;
     if (!undoRecord || state.managementBusy) return;
 
-    var doc = findAllDocById(undoRecord.doc_id);
-    if (!doc) {
+    var undoRecords = normalizeMoveUndoRecords(undoRecord.records || [undoRecord]);
+    var focusDocId = String(undoRecord.doc_id || (undoRecords[0] && undoRecords[0].doc_id) || "").trim();
+    if (!focusDocId || !findAllDocById(focusDocId) || !undoRecords.length) {
       state.moveUndo = null;
       setManagementMessage("Undo unavailable: moved doc is no longer in the current index.", true);
       setStatus("Undo unavailable: moved doc is no longer in the current index.", true);
@@ -1775,17 +1817,15 @@
     setManagementMessage(state.managementText.undoMoveStatus, false);
     setStatus(state.managementText.undoMoveStatus, false);
 
-    fetchManagementJson("/docs/update-metadata", "POST", {
+    fetchManagementJson("/docs/restore-move", "POST", {
       scope: viewerScope,
-      doc_id: doc.doc_id,
-      title: doc.title || undoRecord.title || doc.doc_id,
-      parent_id: undoRecord.parent_id || "",
-      sort_order: normalizeSortOrderValue(undoRecord.sort_order)
+      focus_doc_id: focusDocId,
+      records: moveUndoPayloadRecords(undoRecords)
     })
       .then(function (response) {
         state.moveUndo = null;
         setManagementMessage(response.summary_text || "Move undone.", false);
-        return reloadDocsIndex(doc.doc_id, response.summary_text || "Move undone.");
+        return reloadDocsIndex(response.doc_id || focusDocId, response.summary_text || "Move undone.");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Undo failed.", true);

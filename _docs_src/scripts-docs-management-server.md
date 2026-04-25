@@ -35,6 +35,7 @@ Exposed endpoints:
 - `POST /docs/update-viewability`
 - `POST /docs/create`
 - `POST /docs/move`
+- `POST /docs/restore-move`
 - `POST /docs/archive`
 - `POST /docs/delete-preview`
 - `POST /docs/delete-apply`
@@ -253,10 +254,35 @@ Move behavior:
 - `position: "inside"` places the dragged doc as the last child of the target doc
 - only leaf docs can move; docs with child docs are rejected
 - moves rewrite front matter only and never move files on disk
-- moves update only the dragged doc's `sort_order` and `parent_id`
+- moves update the dragged doc's `parent_id` and normalize the destination sibling set to sparse unique `sort_order` values
 - moves preserve `added_date`
-- sibling `sort_order` values are left unchanged to keep write noise low
+- moves may rewrite multiple sibling docs when normalization changes their order values
+- successful move responses include `undo_records` for every doc whose placement changed
 - successful moves rebuild the current scope docs payloads and run a targeted docs-search update for the moved doc
+
+`POST /docs/restore-move` expects:
+
+```json
+{
+  "scope": "studio",
+  "focus_doc_id": "docs-viewer-management",
+  "records": [
+    {
+      "doc_id": "docs-viewer-management",
+      "parent_id": "ui-requests",
+      "sort_order": 21
+    }
+  ]
+}
+```
+
+Restore-move behavior:
+
+- restores one client-side move history step by rewriting all supplied placement records
+- validates each restored `parent_id` against the current scope and rejects self-parent or descendant-parent cycles
+- accepts integer or blank `sort_order`
+- writes only records whose current placement differs from the supplied restore record
+- rebuilds the current scope docs payloads and runs targeted docs-search updates for changed doc ids
 
 `POST /docs/archive` expects:
 

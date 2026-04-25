@@ -21,6 +21,7 @@ Endpoints:
   POST /docs/update-viewability-bulk
   POST /docs/create
   POST /docs/move
+  POST /docs/restore-move
   POST /docs/archive
   POST /docs/delete-preview
   POST /docs/delete-apply
@@ -436,6 +437,51 @@ def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> s
     ).strip()
     updated_front_matter.update(front_matter_updates)
     return format_source(updated_front_matter, doc.body)
+
+
+def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str, sort_order: Optional[int]) -> str:
+    updated_front_matter = dict(doc.front_matter)
+    updated_front_matter["added_date"] = str(
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+    ).strip()
+    updated_front_matter["parent_id"] = parent_id
+    if sort_order is None:
+        updated_front_matter.pop("sort_order", None)
+    else:
+        updated_front_matter["sort_order"] = sort_order
+    return format_source(updated_front_matter, doc.body)
+
+
+def placement_record(doc: ScopeDoc) -> Dict[str, Any]:
+    return {
+        "doc_id": doc.doc_id,
+        "title": doc.title,
+        "parent_id": doc.parent_id,
+        "sort_order": doc.sort_order,
+    }
+
+
+def normalized_move_placements(
+    docs: list[ScopeDoc],
+    moving_doc: ScopeDoc,
+    target_doc: ScopeDoc,
+    position: str,
+) -> list[tuple[ScopeDoc, str, int]]:
+    if position == "inside":
+        next_parent_id = target_doc.doc_id
+        ordered_docs = sorted_siblings(docs, next_parent_id)
+        ordered_docs = [doc for doc in ordered_docs if doc.doc_id != moving_doc.doc_id]
+        ordered_docs.append(moving_doc)
+    else:
+        next_parent_id = target_doc.parent_id
+        ordered_docs = sorted_siblings(docs, next_parent_id)
+        ordered_docs = [doc for doc in ordered_docs if doc.doc_id != moving_doc.doc_id]
+        target_index = next((index for index, doc in enumerate(ordered_docs) if doc.doc_id == target_doc.doc_id), None)
+        if target_index is None:
+            raise ValueError(f"target_doc_id {target_doc.doc_id!r} is not in the expected sibling set")
+        ordered_docs.insert(target_index + 1, moving_doc)
+
+    return [(doc, next_parent_id, (index + 1) * 10) for index, doc in enumerate(ordered_docs)]
 
 
 def ensure_unique_stem(docs: list[ScopeDoc], title: str) -> str:
@@ -1588,35 +1634,24 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
     if any(doc.parent_id == moving_doc.doc_id for doc in docs):
         raise ValueError(f"{moving_doc.doc_id} has child docs and cannot be moved")
 
-    remaining_docs = [doc for doc in docs if doc.doc_id != moving_doc.doc_id]
-    if position == "inside":
-        next_parent_id = target_doc.doc_id
-        next_sort_order_value = next_sort_order(remaining_docs, next_parent_id)
-    else:
-        next_parent_id = target_doc.parent_id
-        next_sort_order_value = create_sort_order_after(remaining_docs, target_doc)
-
-    if moving_doc.parent_id == next_parent_id and moving_doc.sort_order == next_sort_order_value:
-        rewrites: list[tuple[ScopeDoc, str]] = []
-        touched_docs: list[ScopeDoc] = []
-    else:
-        rewrites = [
-            (
-                moving_doc,
-                rewrite_doc_source(
-                    moving_doc,
-                    {
-                        "parent_id": next_parent_id,
-                        "sort_order": next_sort_order_value,
-                    },
-                ),
-            )
-        ]
-        touched_docs = [moving_doc]
+    planned_placements = normalized_move_placements(docs, moving_doc, target_doc, position)
+    changed_placements = [
+        (doc, parent_id, sort_order)
+        for doc, parent_id, sort_order in planned_placements
+        if doc.parent_id != parent_id or doc.sort_order != sort_order
+    ]
+    undo_records = [placement_record(doc) for doc, _parent_id, _sort_order in changed_placements]
+    rewrites = [
+        (doc, rewrite_doc_placement_source(doc, parent_id, sort_order))
+        for doc, parent_id, sort_order in changed_placements
+    ]
+    touched_docs = [doc for doc, _parent_id, _sort_order in changed_placements]
+    moved_parent_id = next(parent_id for doc, parent_id, _sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
+    moved_sort_order = next(sort_order for doc, _parent_id, sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
 
     backup_dir = None
     rebuild = None
-    if not dry_run:
+    if not dry_run and rewrites:
         backup_dir = make_backup_bundle(
             repo_root,
             scope,
@@ -1626,8 +1661,10 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
                 "doc_id": moving_doc.doc_id,
                 "target_doc_id": target_doc.doc_id,
                 "position": position,
-                "parent_id": next_parent_id,
-                "sort_order": next_sort_order_value,
+                "parent_id": moved_parent_id,
+                "sort_order": moved_sort_order,
+                "changed_doc_ids": [doc.doc_id for doc in touched_docs],
+                "undo_records": undo_records,
             },
         )
         rebuild = perform_source_write_and_rebuild(
@@ -1646,15 +1683,16 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
                 "doc_id": moving_doc.doc_id,
                 "target_doc_id": target_doc.doc_id,
                 "position": position,
-                "parent_id": next_parent_id,
-                "sort_order": next_sort_order_value,
+                "parent_id": moved_parent_id,
+                "sort_order": moved_sort_order,
+                "changed_count": len(touched_docs),
             },
         )
 
     moved_record = {
         "doc_id": moving_doc.doc_id,
-        "parent_id": next_parent_id,
-        "sort_order": next_sort_order_value,
+        "parent_id": moved_parent_id,
+        "sort_order": moved_sort_order,
     }
 
     return {
@@ -1662,7 +1700,123 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
         "scope": scope,
         "doc_id": moving_doc.doc_id,
         "record": moved_record,
+        "undo_records": undo_records,
+        "changed_doc_ids": [doc.doc_id for doc in touched_docs],
         "summary_text": f"Moved {moving_doc.doc_id}.",
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "dry_run": dry_run,
+    }
+
+
+def parse_restore_sort_order(raw_sort_order: Any) -> Optional[int]:
+    if raw_sort_order is None or raw_sort_order == "":
+        return None
+    try:
+        sort_order = int(str(raw_sort_order).strip())
+    except (TypeError, ValueError) as exc:
+        raise ValueError("restore sort_order must be an integer or blank") from exc
+    if sort_order < 0:
+        raise ValueError("restore sort_order must be zero or greater")
+    return sort_order
+
+
+def handle_restore_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    raw_records = body.get("records")
+    if not isinstance(raw_records, list) or not raw_records:
+        raise ValueError("records must be a non-empty list")
+
+    docs = load_scope_docs(repo_root, scope)
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    restore_records: list[tuple[ScopeDoc, str, Optional[int]]] = []
+    seen_doc_ids: set[str] = set()
+    for raw_record in raw_records:
+        if not isinstance(raw_record, dict):
+            raise ValueError("each restore record must be an object")
+        doc_id = str(raw_record.get("doc_id") or "").strip()
+        if not doc_id:
+            raise ValueError("restore record doc_id is required")
+        if doc_id in seen_doc_ids:
+            continue
+        seen_doc_ids.add(doc_id)
+        doc = docs_by_id.get(doc_id)
+        if doc is None:
+            raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+
+        parent_id = str(raw_record.get("parent_id") or "").strip()
+        if parent_id == doc.doc_id:
+            raise ValueError("restore parent_id cannot be the current doc")
+        if parent_id and parent_id not in docs_by_id:
+            raise ValueError(f"Unknown restore parent_id {parent_id!r} for scope {scope}")
+        if parent_id and parent_id in descendant_doc_ids(docs, doc.doc_id):
+            raise ValueError("restore parent_id cannot be a child or descendant of the current doc")
+        sort_order = parse_restore_sort_order(raw_record.get("sort_order"))
+        restore_records.append((doc, parent_id, sort_order))
+
+    changed_records = [
+        (doc, parent_id, sort_order)
+        for doc, parent_id, sort_order in restore_records
+        if doc.parent_id != parent_id or doc.sort_order != sort_order
+    ]
+    rewrites = [
+        (doc, rewrite_doc_placement_source(doc, parent_id, sort_order))
+        for doc, parent_id, sort_order in changed_records
+    ]
+    touched_docs = [doc for doc, _parent_id, _sort_order in changed_records]
+
+    backup_dir = None
+    rebuild = None
+    if not dry_run and rewrites:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "restore-move",
+            touched_docs,
+            {
+                "changed_doc_ids": [doc.doc_id for doc in touched_docs],
+                "restore_records": [
+                    {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
+                    for doc, parent_id, sort_order in changed_records
+                ],
+            },
+        )
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [doc.path for doc, _rewritten_source in rewrites],
+            lambda: [write_text_atomic(doc.path, rewritten_source) for doc, rewritten_source in rewrites],
+            suppression_reason="docs-restore-move",
+            search_doc_ids=[doc.doc_id for doc in touched_docs],
+        )
+        log_event(
+            repo_root,
+            "docs-restore-move",
+            {
+                "scope": scope,
+                "changed_count": len(touched_docs),
+                "changed_doc_ids": [doc.doc_id for doc in touched_docs],
+            },
+        )
+
+    focus_doc_id = str(body.get("focus_doc_id") or "").strip()
+    if focus_doc_id and focus_doc_id not in docs_by_id:
+        focus_doc_id = ""
+
+    return {
+        "ok": True,
+        "scope": scope,
+        "doc_id": focus_doc_id or (restore_records[0][0].doc_id if restore_records else ""),
+        "changed_doc_ids": [doc.doc_id for doc in touched_docs],
+        "records": [
+            {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
+            for doc, parent_id, sort_order in restore_records
+        ],
+        "summary_text": (
+            f"Restored move for {len(touched_docs)} doc{'s' if len(touched_docs) != 1 else ''}."
+            if touched_docs
+            else "Move already restored."
+        ),
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
         "rebuild": rebuild,
         "dry_run": dry_run,
@@ -1941,6 +2095,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 return
             if self.path == "/docs/move":
                 payload = handle_move(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/restore-move":
+                payload = handle_restore_move(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/archive":

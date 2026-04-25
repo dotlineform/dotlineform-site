@@ -33,7 +33,8 @@ Implemented now:
 - all nodes can gain children through drag/drop; there is no source or generated `folder` schema field
 - the index toolbar exposes a one-step Undo action for the most recent successful move in the current viewer session
 - source writes remain front-matter-only; files do not move on disk
-- move/create-after-selected use sparse `sort_order` increments without renumbering siblings
+- drag/drop moves normalize the destination sibling set into sparse unique `sort_order` values so reorder actions have a visible effect even when previous sibling orders collided
+- create-after-selected uses sparse `sort_order` increments without renumbering siblings
 - create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
 - Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`
 - manage mode can show draft/non-viewable docs with a checkbox while keeping viewable docs visible for context
@@ -529,7 +530,8 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 - dropping on the upper half of a row changes `parent_id` to that target doc and appends as the target's last child
 - dropping on the lower half of a row keeps the target's parent, shows an insert line after the target row, and places the moved doc after the target
 - any node can become a parent through drag/drop; there is no `folder` source field
-- one successful move is stored client-side for Undo in the current viewer session
+- the destination sibling set is normalized to sparse unique orders after the move, currently `10`, `20`, `30`, and so on
+- one successful move is stored client-side for Undo in the current viewer session, including all docs whose placement was changed by normalization
 
 ## Data And Builder Implications
 
@@ -634,7 +636,7 @@ If a doc is reparented in the viewer, does only parent_id change, or should the 
 A: file doesn't move on disk (flat structure).
 
 If sort_order changes by drag/drop, should the system renumber sibling items automatically or preserve sparse numbering?  
-A: preserve sparse numbering. use a simple integer increment for the moved doc and do not renumber siblings automatically, because that creates too much change noise. 
+A: drag/drop now normalizes the destination sibling set to sparse unique values after each move. This may rewrite multiple sibling docs, but it makes reorders visible and prevents duplicate `sort_order` values from making a requested placement appear impossible. Undo restores every touched doc's prior placement in one client-side history step.
 
 What does archive mean?  
 A: parent_id becomes doc_id: _archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs_src. published remains true, so that it is still viewable.

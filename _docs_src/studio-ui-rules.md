@@ -23,6 +23,26 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-25 / UI-034
+
+- status: adopted
+- route: `/docs/?mode=manage`, `/library/?mode=manage`
+- issue: docs-viewer drag/drop reorder could appear to do nothing when sibling docs already had duplicate `sort_order` values, because the requested move wrote placement metadata without creating a unique visible order.
+- triage: shared docs-viewer management refinement
+- reasoning: the viewer should make a reorder action visibly true after drop. Preserving every sibling's existing sort value creates less write noise, but it allows old metadata collisions to keep producing unpredictable or unchanged order.
+- outcome: drag/drop move now normalizes the destination sibling set to sparse unique `sort_order` values after every successful move. The one-step Undo record stores every doc whose placement changed and restores those records through one bulk restore endpoint.
+- files changed:
+  - `assets/js/docs-viewer.js`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/docs-viewer-management.md`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - create or find sibling docs with duplicate `sort_order` values, drag one after the other, and confirm the visible order changes
+  - use index Undo and confirm every touched sibling returns to its previous parent/order
+  - confirm move writes still trigger targeted same-scope search updates rather than full search rebuilds
+
 ## UI Rule Log 2026-04-25 / UI-033
 
 - status: adopted

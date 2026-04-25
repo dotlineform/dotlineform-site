@@ -190,6 +190,7 @@ The current shared treatment is:
 - draft/non-viewable tree-row color and font weight should come from `studio_config.json` so accessibility can be tuned without code changes
 - in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"
 - the "move after" state should render a visible insert line after the target row rather than relying only on a subtle row shadow
+- drag/drop tree moves should normalize the destination sibling set to sparse unique sort orders so the requested placement is visible even when earlier metadata contains duplicate order values
 - the one-step move Undo control belongs to the index toolbar/header area because it reverses a tree operation, not a content edit
 
 ## Public Search UI Standards

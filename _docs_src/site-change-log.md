@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-25] Normalized Docs Viewer drag reorder sort orders
+
+**Status:** implemented
+
+**Area:** Docs Viewer / docs management
+
+**Summary:**
+Made drag/drop reorder normalize destination sibling sort orders and made move Undo restore every touched placement record.
+
+**Reason:**
+Duplicate sibling `sort_order` values could make a drag/drop reorder appear to fail: the write succeeded, but the generated tree still had no unique ordering basis for the requested placement.
+
+**Effect:**
+After a successful drag/drop move, the docs-management server rewrites the destination sibling set to sparse unique `sort_order` values. The move response returns all prior placements touched by that normalization, and the index Undo action restores those records through a bulk restore endpoint. Search updates remain targeted because sibling sort-order normalization does not require a full search rebuild.
+
+**Affected files/docs:**
+
+- `assets/js/docs-viewer.js`
+- `scripts/docs/docs_management_server.py`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-25] Refined Docs Viewer drag placement and manage startup probing
 
 **Status:** implemented
