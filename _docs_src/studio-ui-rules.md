@@ -23,6 +23,24 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-25 / UI-032
+
+- status: adopted
+- route: `/docs/?mode=manage`, `/library/?mode=manage`
+- issue: metadata-modal parent changes preserved the doc's previous `sort_order`, so moving a doc into another sibling set could place it unexpectedly relative to that new parent's children.
+- triage: shared docs-viewer management refinement
+- reasoning: parent changes and sibling ordering are related enough that the default should be predictable, while still allowing explicit numeric ordering when the user edits the sort field.
+- outcome: when the metadata modal changes `parent_id` and the `sort_order` field is left at its original value, the client sends an append request and the docs-management server stores the next sparse sibling order under the new parent.
+- files changed:
+  - `assets/js/docs-viewer.js`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/docs-viewer-management.md`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - edit a doc's parent in manage mode without changing `sort_order` and confirm it appears as the last child under the new parent
+  - edit a doc's parent while changing `sort_order` manually and confirm the explicit value is preserved
+
 ## UI Rule Log 2026-04-25 / UI-031
 
 - status: adopted

@@ -1472,6 +1472,8 @@
     }
 
     var parentId = String(metadataParentInput.value || "").trim();
+    var originalParentId = String(doc.parent_id || "").trim();
+    var originalSortOrderText = normalizeSortOrderValue(doc.sort_order);
     var sortOrderText = String(metadataSortOrderInput.value || "").trim();
     if (sortOrderText && Number(sortOrderText) < 0) {
       setManagementMessage("sort_order must be zero or greater.", true);
@@ -1479,12 +1481,16 @@
       metadataSortOrderInput.focus();
       return;
     }
+    var payloadSortOrder = sortOrderText;
+    if (parentId !== originalParentId && sortOrderText === originalSortOrderText) {
+      payloadSortOrder = "append";
+    }
     var payload = {
       scope: viewerScope,
       doc_id: doc.doc_id,
       title: title,
       parent_id: parentId,
-      sort_order: sortOrderText
+      sort_order: payloadSortOrder
     };
 
     state.managementBusy = true;

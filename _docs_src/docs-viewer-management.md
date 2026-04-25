@@ -55,6 +55,7 @@ Implemented now:
   - `sort_order`
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
+- when the metadata modal changes `parent_id` and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
 - metadata edits rebuild docs payloads plus same-scope docs search
 
 Not implemented yet:

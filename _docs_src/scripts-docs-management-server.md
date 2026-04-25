@@ -189,7 +189,8 @@ Metadata-update behavior:
 - `added_date` is preserved; `last_updated` is refreshed after a successful metadata write
 - `parent_id` may be blank for root, but must otherwise resolve inside the same scope
 - `parent_id` cannot point at the current doc or any of its descendants
-- `sort_order` accepts a non-negative integer or blank
+- `sort_order` accepts a non-negative integer, blank, or `append`
+- `append` stores the next available sparse `sort_order` under the requested `parent_id`
 - always rebuilds docs payloads for the scope
 - always rebuilds the same-scope docs-search artifact after a successful write
 

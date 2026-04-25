@@ -21,7 +21,7 @@ Refined manage-mode docs-tree drag/drop so any node can receive children and add
 The previous drag/drop rule only allowed "drop inside" for collapsed nodes with existing children. Empty grouping nodes, including Archive, therefore could not receive their first child from the viewer.
 
 **Effect:**
-In manage mode, the upper/main part of a docs-tree row moves the dragged leaf doc inside that node, while the lower edge moves it after the node. There is no `folder` source or generated schema field; parent capability remains a viewer interaction concept. A new icon-only Undo control in the index toolbar restores the previous `parent_id` and `sort_order` for the most recent successful move in the current viewer session.
+In manage mode, the upper/main part of a docs-tree row moves the dragged leaf doc inside that node, while the lower edge moves it after the node. There is no `folder` source or generated schema field; parent capability remains a viewer interaction concept. A new icon-only Undo control in the index toolbar restores the previous `parent_id` and `sort_order` for the most recent successful move in the current viewer session. Metadata-modal parent changes now append the doc under the new parent when the `sort_order` field is left unchanged.
 
 **Affected files/docs:**
 
@@ -29,6 +29,7 @@ In manage mode, the upper/main part of a docs-tree row moves the dragged leaf do
 - `assets/js/docs-viewer.js`
 - `assets/css/main.css`
 - `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_management_server.py`
 - [Docs Viewer Index Drag Undo Task](/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task)
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)

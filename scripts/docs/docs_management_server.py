@@ -1194,13 +1194,17 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
         raise ValueError("parent_id cannot be a child or descendant of the current doc")
 
     raw_sort_order = body.get("sort_order")
-    if raw_sort_order in {None, ""}:
+    raw_sort_order_text = "" if raw_sort_order is None else str(raw_sort_order).strip()
+    if raw_sort_order_text.lower() == "append":
+        remaining_docs = [doc for doc in docs if doc.doc_id != target.doc_id]
+        sort_order = next_sort_order(remaining_docs, parent_id)
+    elif raw_sort_order_text == "":
         sort_order = None
     else:
         try:
-            sort_order = int(raw_sort_order)
+            sort_order = int(raw_sort_order_text)
         except (TypeError, ValueError) as exc:
-            raise ValueError("sort_order must be an integer or blank") from exc
+            raise ValueError("sort_order must be an integer, blank, or append") from exc
         if sort_order < 0:
             raise ValueError("sort_order must be zero or greater")
 
