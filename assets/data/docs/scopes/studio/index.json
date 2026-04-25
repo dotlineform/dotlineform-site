@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T12:04:33Z",
+  "generated_at": "2026-04-25T14:41:40Z",
   "docs": [
     {
       "scope": "studio",
@@ -426,7 +426,7 @@
       "doc_id": "search-overview",
       "title": "Search Overview",
       "added_date": "2026-03-31",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-25",
       "parent_id": "search",
       "sort_order": 20,
       "published": true,
@@ -997,6 +997,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-search-build-json",
+      "title": "Search Build Config JSON",
+      "added_date": "2026-04-25",
+      "last_updated": "2026-04-25",
+      "parent_id": "config",
+      "sort_order": 55,
+      "published": true,
+      "viewable": true,
+      "source_path": "config-search-build-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-search-build-json",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-build-json.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-public-ui-contract",
       "title": "Search Public UI Contract",
       "added_date": "2026-03-31",
@@ -1392,7 +1406,7 @@
       "doc_id": "config",
       "title": "Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-25",
       "parent_id": "",
       "sort_order": 120,
       "published": true,

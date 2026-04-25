@@ -9,6 +9,7 @@ require "pathname"
 require "time"
 
 DEFAULT_SCOPE = "studio"
+SEARCH_BUILD_CONFIG_PATH = "scripts/search/build_config.json"
 SCOPE_DEFAULTS = {
   "catalogue" => {
     kind: :catalogue,
@@ -73,6 +74,7 @@ class SearchDataBuilder
 
   def run(write:, force:, only_doc_ids: nil, remove_missing: false)
     validate_scope!
+    validate_search_build_config!
     targeted_doc_ids = normalize_target_doc_ids(only_doc_ids)
     validate_targeted_options!(targeted_doc_ids, remove_missing)
     payload, diagnostics =
@@ -81,6 +83,7 @@ class SearchDataBuilder
       else
         build_docs_payload(target_doc_ids: targeted_doc_ids, remove_missing: remove_missing)
       end
+    validate_entry_source_families!(payload)
     write_payload(payload, write: write, force: force, diagnostics: diagnostics)
   end
 
@@ -90,6 +93,99 @@ class SearchDataBuilder
     return if SCOPE_DEFAULTS.key?(@scope)
 
     raise SystemExit, "Unsupported scope: #{@scope}. Current builder scopes: #{SCOPE_DEFAULTS.keys.join(', ')}"
+  end
+
+  def validate_search_build_config!
+    @search_build_config = load_json(resolve_path(SEARCH_BUILD_CONFIG_PATH))
+    unless @search_build_config.is_a?(Hash)
+      raise SystemExit, "Invalid search build config: expected top-level object"
+    end
+
+    version = normalize_text(@search_build_config["search_build_config_version"])
+    unless version == "search_build_config_v1"
+      raise SystemExit, "Invalid search build config version: #{version.empty? ? '(missing)' : version}"
+    end
+
+    source_families = @search_build_config["source_families"]
+    unless source_families.is_a?(Hash) && !source_families.empty?
+      raise SystemExit, "Invalid search build config: expected source_families object"
+    end
+    validate_source_families!(source_families)
+
+    scopes = @search_build_config["scopes"]
+    unless scopes.is_a?(Hash)
+      raise SystemExit, "Invalid search build config: expected scopes object"
+    end
+    unless scopes.key?(@scope)
+      raise SystemExit, "Invalid search build config: missing scope #{@scope}"
+    end
+    validate_scope_build_config!(scopes.fetch(@scope), source_families)
+  end
+
+  def validate_source_families!(source_families)
+    source_families.each do |family_id, raw_family|
+      unless raw_family.is_a?(Hash)
+        raise SystemExit, "Invalid search build config: source family #{family_id} must be an object"
+      end
+
+      scopes = raw_family["scopes"]
+      unless scopes.is_a?(Array) && scopes.all? { |scope| SCOPE_DEFAULTS.key?(normalize(scope)) }
+        raise SystemExit, "Invalid search build config: source family #{family_id} has unsupported scopes"
+      end
+      unless [true, false].include?(raw_family["targeted"])
+        raise SystemExit, "Invalid search build config: source family #{family_id} targeted must be boolean"
+      end
+      if normalize_text(raw_family["fallback"]) != "full_rebuild"
+        raise SystemExit, "Invalid search build config: source family #{family_id} fallback must be full_rebuild"
+      end
+    end
+  end
+
+  def validate_scope_build_config!(scope_config, source_families)
+    unless scope_config.is_a?(Hash)
+      raise SystemExit, "Invalid search build config: scope #{@scope} must be an object"
+    end
+    fields = scope_config["fields"]
+    unless fields.is_a?(Hash) && !fields.empty?
+      raise SystemExit, "Invalid search build config: scope #{@scope} needs fields"
+    end
+
+    fields.each do |field_name, field_config|
+      unless field_config.is_a?(Hash)
+        raise SystemExit, "Invalid search build config: field #{@scope}.#{field_name} must be an object"
+      end
+      families = Array(field_config["source_families"]).map { |family| normalize_text(family) }.reject(&:empty?)
+      if families.empty?
+        raise SystemExit, "Invalid search build config: field #{@scope}.#{field_name} needs source_families"
+      end
+      unknown_family = families.find { |family| !source_families.key?(family) }
+      if unknown_family
+        raise SystemExit, "Invalid search build config: field #{@scope}.#{field_name} references unknown source family #{unknown_family}"
+      end
+      unsupported_family = families.find do |family|
+        !Array(source_families.fetch(family)["scopes"]).map { |scope| normalize(scope) }.include?(@scope)
+      end
+      if unsupported_family
+        raise SystemExit, "Invalid search build config: field #{@scope}.#{field_name} references source family #{unsupported_family} outside its scope"
+      end
+    end
+  end
+
+  def validate_entry_source_families!(payload)
+    scope_config = @search_build_config.dig("scopes", @scope)
+    fields = scope_config.is_a?(Hash) ? scope_config["fields"] : nil
+    unless fields.is_a?(Hash)
+      raise SystemExit, "Invalid search build config: scope #{@scope} fields unavailable"
+    end
+
+    entries = payload.is_a?(Hash) ? payload["entries"] : nil
+    return unless entries.is_a?(Array)
+
+    emitted_fields = entries.flat_map { |entry| entry.is_a?(Hash) ? entry.keys : [] }.uniq.sort
+    missing_fields = emitted_fields.reject { |field| fields.key?(field) }
+    return if missing_fields.empty?
+
+    raise SystemExit, "Invalid search build config: scope #{@scope} missing field source declarations for #{missing_fields.join(', ')}"
   end
 
   def build_docs_payload(target_doc_ids: nil, remove_missing: false)

@@ -349,7 +349,7 @@ Initial build-config concept:
 
 This is a contract sketch rather than a committed file path. The implementation should choose a build-owned config location and keep runtime-facing policy separate unless a rule is genuinely shared by both builder and browser.
 
-Phase 4 can now start with a small source-family/dependency config and builder validation before adding body or summary fields.
+Phase 4 status: implemented as a small source-family/dependency config at `scripts/search/build_config.json`, with builder validation in `scripts/build_search.rb` before adding body or summary fields.
 
 ## Historical First Implementation Slice
 

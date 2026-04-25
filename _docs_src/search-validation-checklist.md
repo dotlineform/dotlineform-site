@@ -26,8 +26,8 @@ Keep this checklist practical. It is for confirming that the implemented v1 sear
 
 ## How to use this checklist
 
-- small UI-only change: run sections C, D, and E
-- ranking or normalization change: run sections B, C, D, and E
+- small UI-only change: run sections F, G, and H
+- ranking or normalization change: run sections B, D, E, F, and G
 - generator or schema change: run all sections
 
 Prefer real site examples over synthetic test strings.
@@ -36,7 +36,7 @@ Prefer real site examples over synthetic test strings.
 
 - [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/generate_work_pages.py`
 - [ ] Run `./scripts/build_search.rb --scope catalogue`
-- [ ] Confirm the dry run completes without error
+- [ ] Confirm the dry run completes without error, including build-config validation
 - [ ] Run `./scripts/build_search.rb --scope catalogue --write`
 - [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
@@ -48,9 +48,9 @@ Prefer real site examples over synthetic test strings.
 - [ ] Run `./scripts/build_docs.rb`
 - [ ] Confirm the docs dry run completes without error for both `studio` and `library`
 - [ ] Run `./scripts/build_search.rb --scope studio`
-- [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
+- [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check, including build-config validation
 - [ ] Run `./scripts/build_search.rb --scope library`
-- [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
+- [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check, including build-config validation
 - [ ] If the change touched targeted docs-search updates, run `./scripts/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
 - [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
 - [ ] If the change touched docs-management search orchestration, confirm docs-management rebuild responses report `search.mode: targeted` for explicit affected ids
@@ -58,7 +58,14 @@ Prefer real site examples over synthetic test strings.
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`
 
-## C. Catalogue Index Integrity Checks
+## C. Search Build Config Checks
+
+- [ ] Confirm `scripts/search/build_config.json` is valid JSON
+- [ ] Confirm every emitted field for the changed scope has a source-family declaration
+- [ ] Confirm source-family scope declarations match the intended targeted or full-rebuild policy
+- [ ] Confirm future heavy-index field additions update `scripts/search/build_config.json` before changing builder output
+
+## D. Catalogue Index Integrity Checks
 
 - [ ] Confirm records exist for all three current kinds: `work`, `series`, `moment`
 - [ ] Confirm every serialized record has `kind`, `id`, `title`, `href`, `search_terms`, and `search_text`
@@ -67,7 +74,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm ids are unique across the full entry list
 - [ ] Confirm representative example records in the docs still reflect reality closely enough to stay useful
 
-## D. Catalogue Search Behaviour Checks
+## E. Catalogue Search Behaviour Checks
 
 - [ ] Query by exact work id and confirm the intended item appears at or near the top
 - [ ] Query by exact work title and confirm the intended item appears at or near the top
@@ -88,7 +95,7 @@ Suggested current examples:
 - date-like moment query: `2020`
 - empty-results example: `zzzz-not-a-real-query`
 
-## E. Dedicated Search Page UI Checks
+## F. Dedicated Search Page UI Checks
 
 - [ ] Open `/search/?scope=catalogue`
 - [ ] Confirm the page loads and the input is visible
@@ -105,7 +112,7 @@ Suggested current examples:
 - [ ] Open `/search/` without `scope`
 - [ ] Confirm the input is disabled and the page shows the missing-scope message
 
-## F. Docs-Viewer Search Checks
+## G. Docs-Viewer Search Checks
 
 - [ ] Open `/docs/?scope=studio&doc=search&q=search`
 - [ ] Confirm the Docs Viewer switches the right pane into inline search mode
@@ -116,7 +123,7 @@ Suggested current examples:
 - [ ] Confirm Library docs results link back into `/library/?doc=...`
 - [ ] Confirm both docs scopes show `more` when result counts exceed the current batch size
 
-## G. Keyboard And Accessibility Checks
+## H. Keyboard And Accessibility Checks
 
 - [ ] Confirm the input receives focus on page load
 - [ ] Confirm the page can be used without a pointer
@@ -125,7 +132,7 @@ Suggested current examples:
 - [ ] Confirm focus-visible styling is present on interactive controls
 - [ ] Confirm there is no broken keyboard behaviour from unsupported features such as arrow-key navigation or Escape handling
 
-## H. Documentation Alignment Checks
+## I. Documentation Alignment Checks
 
 - [ ] [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) still matches the generated index
 - [ ] [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) still matches active field usage

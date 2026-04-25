@@ -62,8 +62,8 @@ Current shared build conventions:
 - records are generated at build time, not assembled in the browser
 - content-version hashing is used for write skipping
 - generated payloads stay compact and avoid body-prose indexing
-- future heavy-index fields should declare their source artifact family and dependency policy in build-owned search config
-- builder code should validate that dependency config while keeping record-generation algorithms in code
+- current fields declare their source artifact family and dependency policy in `scripts/search/build_config.json`
+- builder code validates that dependency config while keeping record-generation algorithms in code
 - public search artifacts should not become operation logs; targeted-update changed-id diagnostics belong in CLI/server output or local logs, not in the artifact by default
 - keep one combined artifact per scope until payload size or browser performance proves sidecar payloads are needed
 
@@ -74,6 +74,29 @@ Current non-goals across all scopes:
 - no prose shard loading
 - no strict schema-fail validation layer separate from the builders themselves
 - no per-record checksums for body or summary indexing in the first heavy-index slice
+
+## Build Config
+
+The search builder loads `scripts/search/build_config.json` for every run.
+
+Current config responsibilities:
+
+- declare source families such as `docs_index`, `catalogue_indexes`, `catalogue_work_payloads`, `tag_assignments`, and `tag_registry`
+- declare scope eligibility for each source family
+- declare targeted versus full-rebuild fallback policy
+- map emitted search fields to source families
+- keep one combined artifact strategy per scope
+
+Current validation responsibilities in `scripts/build_search.rb`:
+
+- reject unsupported config versions
+- reject source-family references outside their declared scopes
+- reject fields without source-family declarations
+- reject emitted entry fields that are missing from the config for the current scope
+
+The config is intentionally not a record-generation DSL. The builder still owns field derivation, sorting, normalization, hashing, and targeted-update algorithms.
+
+For the config-specific reference, see [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json).
 
 ## Catalogue Scope
 
@@ -222,6 +245,7 @@ Current safeguards include:
 - normalized and deduplicated token generation
 - deterministic sort order before serialization
 - content-version hashing for change detection
+- build-config validation before output is written or skipped
 
 ## Studio Scope
 

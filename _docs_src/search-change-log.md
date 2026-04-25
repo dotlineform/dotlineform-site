@@ -9,6 +9,31 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Added search build source-family config
+
+**Status:** implemented
+
+**Area:** search build architecture
+
+**Summary:**
+Added a build-owned source-family config and validation pass for the search builder.
+
+**Reason:**
+Phase 4 needed a lightweight dependency contract before adding body, summary, or prose-heavy search fields. The contract should be machine-readable without turning field construction into JSON-driven logic.
+
+**Effect:**
+`scripts/search/build_config.json` now declares current source families, scope eligibility, targeted/full-rebuild fallback policy, and field-to-source-family mappings. `scripts/build_search.rb` validates that config on each run and rejects emitted fields without source-family declarations. Public search artifacts remain unchanged in shape and do not gain operation provenance.
+
+**Affected files/docs:**
+
+- `scripts/search/build_config.json`
+- `scripts/build_search.rb`
+- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+
 ## [2026-04-25] Recorded Phase 4 heavy-index readiness decisions
 
 **Status:** decision recorded

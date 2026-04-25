@@ -2,7 +2,7 @@
 doc_id: config
 title: "Config"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-04-25
 parent_id: ""
 sort_order: 120
 ---
@@ -17,6 +17,7 @@ Use this section for:
 - shared Studio/search browser config in `assets/studio/data/studio_config.json`
 - the Studio/search config loader in `assets/studio/js/studio-config.js`
 - dedicated `/search/` runtime policy in `assets/data/search/policy.json`
+- build-owned search source-family config in `scripts/search/build_config.json`
 
 This section is not for:
 
@@ -30,6 +31,7 @@ Read this section in this order:
 3. **[Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)**
 4. **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**
 5. **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
+6. **[Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)**
 
 Related subsystem docs:
 

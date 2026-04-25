@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d296ae96d02f89594474940f8849bf9f",
-    "generated_at_utc": "2026-04-25T12:04:35Z",
-    "count": 132
+    "version": "blake2b-ee2406cea97031a823cbe53617f89ade",
+    "generated_at_utc": "2026-04-25T14:41:41Z",
+    "count": 133
   },
   "entries": [
     {
@@ -717,21 +717,21 @@
       "kind": "doc",
       "title": "Search Overview",
       "href": "/docs/?scope=studio&doc=search-overview",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-25",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-25 • Search",
       "search_terms": [
         "search-overview",
         "search",
         "overview",
         "search overview",
-        "2026-03-31",
+        "2026-04-25",
         "2026",
-        "03",
-        "31"
+        "04",
+        "25"
       ],
-      "search_text": "search-overview search overview search overview 2026-03-31 2026 03 31"
+      "search_text": "search-overview search overview search overview 2026-04-25 2026 04 25"
     },
     {
       "id": "site-shell-runtime",
@@ -1666,6 +1666,29 @@
       "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan new cat pipeline cat 2026-04-18 2026 04 18"
     },
     {
+      "id": "config-search-build-json",
+      "kind": "doc",
+      "title": "Search Build Config JSON",
+      "href": "/docs/?scope=studio&doc=config-search-build-json",
+      "last_updated": "2026-04-25",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-04-25 • Config",
+      "search_terms": [
+        "config-search-build-json",
+        "config",
+        "search",
+        "build",
+        "json",
+        "search build config json",
+        "2026-04-25",
+        "2026",
+        "04",
+        "25"
+      ],
+      "search_text": "config-search-build-json config search build json search build config json 2026-04-25 2026 04 25"
+    },
+    {
       "id": "search-public-ui-contract",
       "kind": "doc",
       "title": "Search Public UI Contract",
@@ -2312,16 +2335,16 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-25",
+      "display_meta": "2026-04-25",
       "search_terms": [
         "config",
-        "2026-03-31",
+        "2026-04-25",
         "2026",
-        "03",
-        "31"
+        "04",
+        "25"
       ],
-      "search_text": "config 2026-03-31 2026 03 31"
+      "search_text": "config 2026-04-25 2026 04 25"
     },
     {
       "id": "scripts-css-token-audit",

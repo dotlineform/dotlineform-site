@@ -1,0 +1,108 @@
+{
+  "search_build_config_version": "search_build_config_v1",
+  "source_families": {
+    "docs_index": {
+      "description": "Generated docs scope index payloads under assets/data/docs/scopes/<scope>/index.json.",
+      "scopes": ["studio", "library"],
+      "targeted": true,
+      "id_field": "doc_id",
+      "fallback": "full_rebuild"
+    },
+    "catalogue_indexes": {
+      "description": "Generated catalogue aggregate indexes for series, works, and moments.",
+      "scopes": ["catalogue"],
+      "targeted": false,
+      "id_field": "id",
+      "fallback": "full_rebuild"
+    },
+    "catalogue_work_payloads": {
+      "description": "Generated per-work JSON payloads used for work-level search enrichment.",
+      "scopes": ["catalogue"],
+      "targeted": false,
+      "id_field": "work_id",
+      "fallback": "full_rebuild"
+    },
+    "tag_assignments": {
+      "description": "Studio tag assignment metadata that contributes catalogue search tag ids.",
+      "scopes": ["catalogue"],
+      "targeted": false,
+      "id_field": "tag_id",
+      "fallback": "full_rebuild"
+    },
+    "tag_registry": {
+      "description": "Studio tag registry metadata that contributes catalogue search tag labels.",
+      "scopes": ["catalogue"],
+      "targeted": false,
+      "id_field": "tag_id",
+      "fallback": "full_rebuild"
+    }
+  },
+  "scopes": {
+    "catalogue": {
+      "artifact_strategy": "combined",
+      "targeted": false,
+      "fields": {
+        "kind": { "source_families": ["catalogue_indexes"] },
+        "id": { "source_families": ["catalogue_indexes"] },
+        "title": { "source_families": ["catalogue_indexes"] },
+        "href": { "source_families": ["catalogue_indexes"] },
+        "year": { "source_families": ["catalogue_indexes"] },
+        "date": { "source_families": ["catalogue_indexes"] },
+        "display_meta": { "source_families": ["catalogue_indexes"] },
+        "series_ids": { "source_families": ["catalogue_indexes"] },
+        "series_titles": { "source_families": ["catalogue_indexes"] },
+        "medium_type": { "source_families": ["catalogue_work_payloads"] },
+        "medium_caption": { "source_families": ["catalogue_work_payloads"] },
+        "series_type": { "source_families": ["catalogue_indexes"] },
+        "tag_ids": { "source_families": ["tag_assignments"] },
+        "tag_labels": { "source_families": ["tag_registry"] },
+        "search_terms": {
+          "source_families": [
+            "catalogue_indexes",
+            "catalogue_work_payloads"
+          ],
+          "derived": true
+        },
+        "search_text": {
+          "source_families": [
+            "catalogue_indexes",
+            "catalogue_work_payloads"
+          ],
+          "derived": true
+        }
+      }
+    },
+    "studio": {
+      "artifact_strategy": "combined",
+      "targeted": true,
+      "fields": {
+        "id": { "source_families": ["docs_index"] },
+        "kind": { "source_families": ["docs_index"] },
+        "title": { "source_families": ["docs_index"] },
+        "href": { "source_families": ["docs_index"] },
+        "last_updated": { "source_families": ["docs_index"] },
+        "parent_id": { "source_families": ["docs_index"] },
+        "parent_title": { "source_families": ["docs_index"] },
+        "display_meta": { "source_families": ["docs_index"] },
+        "search_terms": { "source_families": ["docs_index"], "derived": true },
+        "search_text": { "source_families": ["docs_index"], "derived": true }
+      }
+    },
+    "library": {
+      "artifact_strategy": "combined",
+      "targeted": true,
+      "fields": {
+        "id": { "source_families": ["docs_index"] },
+        "kind": { "source_families": ["docs_index"] },
+        "title": { "source_families": ["docs_index"] },
+        "href": { "source_families": ["docs_index"] },
+        "last_updated": { "source_families": ["docs_index"] },
+        "parent_id": { "source_families": ["docs_index"] },
+        "parent_title": { "source_families": ["docs_index"] },
+        "display_meta": { "source_families": ["docs_index"] },
+        "search_terms": { "source_families": ["docs_index"], "derived": true },
+        "search_text": { "source_families": ["docs_index"], "derived": true }
+      }
+    }
+  }
+}
