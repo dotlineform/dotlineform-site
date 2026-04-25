@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T11:13:58Z",
+  "generated_at": "2026-04-25T12:04:33Z",
   "docs": [
     {
       "scope": "studio",
@@ -230,7 +230,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-25",
       "parent_id": "scripts",
       "sort_order": 15,
       "published": true,
@@ -272,7 +272,7 @@
       "doc_id": "scripts-docs-live-rebuild-watcher",
       "title": "Docs Live Rebuild Watcher",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "scripts",
       "sort_order": 18,
       "published": true,

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1764a12182c355b49aa3064312c4cda6",
-    "generated_at_utc": "2026-04-25T11:14:07Z",
+    "version": "blake2b-d296ae96d02f89594474940f8849bf9f",
+    "generated_at_utc": "2026-04-25T12:04:35Z",
     "count": 132
   },
   "entries": [
@@ -385,10 +385,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-25",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-22 • Scripts",
+      "display_meta": "2026-04-25 • Scripts",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -396,12 +396,12 @@
         "studio",
         "dev studio runner",
         "runner",
-        "2026-04-22",
+        "2026-04-25",
         "2026",
         "04",
-        "22"
+        "25"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-22 2026 04 22"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-25 2026 04 25"
     },
     {
       "id": "scripts-docs-broken-links",
@@ -455,10 +455,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-24 • Scripts",
+      "display_meta": "2026-04-25 • Scripts",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -467,12 +467,12 @@
         "rebuild",
         "watcher",
         "docs live rebuild watcher",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-24 2026 04 24"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-25 2026 04 25"
     },
     {
       "id": "scripts-main-pipeline",

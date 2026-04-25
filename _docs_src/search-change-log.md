@@ -9,6 +9,29 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Added watcher-targeted docs search orchestration
+
+**Status:** implemented
+
+**Area:** docs-domain search orchestration
+
+**Summary:**
+Changed the Docs Live Rebuild Watcher so safe small source edits use targeted docs-search updates.
+
+**Reason:**
+The watcher had enough explicit rules to avoid filename-derived `doc_id` assumptions, and repeated full same-scope search rebuilds are unnecessary for ordinary one-file source edits.
+
+**Effect:**
+The watcher now keeps a parsed per-scope source snapshot, computes affected ids for adds, edits, deletes, `doc_id` changes, title changes, and parent changes, and runs targeted search with `--remove-missing` when the changed-file count is at or below the threshold. It falls back to a full same-scope search rebuild for threshold overflow, missing snapshots, parse failure, invalid docs trees, or unknown state. The default threshold is `5` and can be overridden with `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` or `--targeted-search-threshold`.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+
 ## [2026-04-25] Clarified watcher-targeted docs search rules
 
 **Status:** decision recorded
@@ -16,13 +39,13 @@ sort_order: 1010
 **Area:** docs-domain search orchestration
 
 **Summary:**
-Recorded the future watcher-targeting rule for docs search as a parsed snapshot comparison, not a filename-derived `doc_id` shortcut.
+Recorded the watcher-targeting rule for docs search as a parsed snapshot comparison, not a filename-derived `doc_id` shortcut.
 
 **Reason:**
 The docs live watcher only sees source filenames, while docs search correctness depends on front matter such as `doc_id`, title, parent, published, and viewable state. Imported Library docs make a filename equals `doc_id` convention too fragile to use as a correctness rule.
 
 **Effect:**
-Future watcher-targeted search updates must compare a previous per-scope parsed snapshot to the new source state. Adds, changes, deletes, `doc_id` changes, title child expansion, parent changes, threshold fallback, parse failure, and unknown-state fallback are now explicit implementation decisions. Current watcher behavior remains full-rebuild-only.
+Watcher-targeted search updates must compare a previous per-scope parsed snapshot to the new source state. Adds, changes, deletes, `doc_id` changes, title child expansion, parent changes, threshold fallback, parse failure, and unknown-state fallback are now explicit implementation decisions.
 
 **Affected files/docs:**
 

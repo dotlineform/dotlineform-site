@@ -256,18 +256,19 @@ Resolved decisions:
 - docs-management server writes use targeted docs-search updates when the handler has explicit affected doc ids
 - docs-management targeted calls always pass `--remove-missing`
 - title-change child expansion happens in docs-management orchestration because child entries include `parent_title`
-- watcher-targeted updates are disabled for the first Phase 3 slice; watcher-triggered source edits still run full same-scope search rebuilds
-- future watcher-targeted updates must use a parsed previous snapshot rather than a filename equals `doc_id` assumption
+- watcher-targeted updates use a parsed previous snapshot rather than a filename equals `doc_id` assumption
 - parent changes are safe to target by changed doc id under the current search schema
 - filename equals `doc_id` is not a reliable operational rule, especially for imported Library docs that may need substantial post-import editing
+- the initial watcher changed-file threshold is `5`; above that, watcher search falls back to a full same-scope rebuild
+- missing parsed snapshots, parse failures, invalid docs trees, and unknown states fall back to full same-scope search rebuilds
 
 Open decisions:
 
-- what changed-file threshold should force a full rebuild?
+- whether the threshold should stay at `5` after more real Library import/edit sessions
 
 Phase 3 can start after Phase 2 has a targeted update interface.
 
-Status: server-side orchestration implemented for docs-management writes. Watcher orchestration remains full-rebuild-only until the previous parsed snapshot and changed-file threshold are implemented.
+Status: server-side orchestration implemented for docs-management writes. Watcher orchestration is implemented for safe small source changes with full fallback for threshold overflow or ambiguous source state.
 
 ## Phase 4. Heavy-Index Readiness
 

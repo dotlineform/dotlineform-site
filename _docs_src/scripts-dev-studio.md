@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: "Dev Studio Runner"
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-04-25
 parent_id: scripts
 sort_order: 15
 ---
@@ -66,11 +66,14 @@ The runner does not currently take CLI flags. It is configured through environme
   default: `1.0`
 - `DOCS_WATCH_DEBOUNCE_SECONDS`
   default: `1.0`
+- `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD`
+  default: `5`
+  controls the maximum changed file count for watcher-targeted docs-search updates; use `-1` to target whenever affected ids are safe
 
 Example:
 
 ```bash
-DOCS_STARTUP_REBUILD_SCOPES=studio JEKYLL_PORT=4001 TAG_WRITE_PORT=8797 CATALOGUE_WRITE_PORT=8798 DOCS_MANAGEMENT_PORT=8799 DOCS_WATCH_DEBOUNCE_SECONDS=1.5 bin/dev-studio
+DOCS_STARTUP_REBUILD_SCOPES=studio JEKYLL_PORT=4001 TAG_WRITE_PORT=8797 CATALOGUE_WRITE_PORT=8798 DOCS_MANAGEMENT_PORT=8799 DOCS_WATCH_DEBOUNCE_SECONDS=1.5 DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8 bin/dev-studio
 ```
 
 That form applies the environment overrides to that one `bin/dev-studio` run only.
@@ -174,6 +177,7 @@ bundle exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT"
 - watches `_docs_library_src/*.md` as `library`
 - rebuilds same-scope docs payloads plus same-scope docs search after source changes
 - can be disabled with `DOCS_WATCH_ENABLED=0`
+- uses targeted docs-search updates for safe small source changes and full same-scope search rebuilds for threshold overflow or ambiguous source state
 - related doc: [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 
 ## What It Also Prints
