@@ -1001,8 +1001,14 @@ th{ background: var(--panel-2); }
   cursor: pointer;
 }
 
-.docsViewer__indexUndoButton{
-  font-size: 1.05rem;
+.docsViewer__indexUndoIcon{
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .docsViewer__indexUndoButton:hover,

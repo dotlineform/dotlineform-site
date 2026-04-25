@@ -2,11 +2,11 @@
 doc_id: can-the-brain-comprehend-how-it-works
 title: "Can the Brain Comprehend How It Works?"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-04-25
+parent_id: ""
+sort_order: 201
 published: true
 viewable: false
-parent_id: ""
-sort_order: 210
 ---
 # Can the Brain Comprehend How It Works?
 
