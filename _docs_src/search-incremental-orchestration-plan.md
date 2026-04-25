@@ -8,6 +8,16 @@ sort_order: 90
 ---
 # Incremental Search Orchestration Plan
 
+Status:
+
+- closed/completed for the four-phase docs-domain incremental search implementation
+- Phase 1 completed: bulk docs-management operations batch writes before docs/search rebuilds
+- Phase 2 completed: `studio` and `library` docs-search targeted update interface
+- Phase 3 completed: docs-management and watcher affected-record orchestration
+- Phase 4 completed: build-owned source-family config and validation for heavier-index readiness
+- remaining watcher threshold tuning is observational and not an implementation blocker
+- catalogue targeted search is intentionally split into [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)
+
 This document defines a staged plan for incremental search updates across docs-domain search and later heavier search sources such as body text, summaries, and bulk catalogue edits.
 
 The core decision is that incremental search is primarily an orchestration concern. Search code should own record generation, normalization, schema shape, and version hashing. Server and watcher orchestration should own when a full rebuild is required, when a targeted update is safe, and which records are affected by a source change.

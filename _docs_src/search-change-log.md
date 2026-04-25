@@ -9,6 +9,27 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Closed docs-domain incremental search phases
+
+**Status:** documented
+
+**Area:** search build orchestration
+
+**Summary:**
+Closed the four-phase docs-domain incremental search implementation and split catalogue targeted search into its own follow-on plan.
+
+**Reason:**
+The completed docs-domain work now has a stable boundary, while catalogue targeted search has different dependency risks across works, series, moments, tag assignments, and tag registry labels.
+
+**Effect:**
+The incremental orchestration plan now carries a top-level completed status for Phases 1-4. Catalogue targeted search is tracked separately with observations, proposed CLI shapes, affected-record rules, builder/orchestration boundaries, validation requirements, and a narrow first implementation slice.
+
+**Affected files/docs:**
+
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)
+- [Search](/docs/?scope=studio&doc=search)
+
 ## [2026-04-25] Added search build source-family config
 
 **Status:** implemented

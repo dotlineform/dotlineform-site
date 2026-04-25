@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T14:41:40Z",
+  "generated_at": "2026-04-25T14:57:34Z",
   "docs": [
     {
       "scope": "studio",
@@ -1319,6 +1319,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "search-catalogue-targeted-plan",
+      "title": "Catalogue Targeted Search Plan",
+      "added_date": "2026-04-25",
+      "last_updated": "2026-04-25",
+      "parent_id": "search",
+      "sort_order": 95,
+      "published": true,
+      "viewable": true,
+      "source_path": "search-catalogue-targeted-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-catalogue-targeted-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-catalogue-targeted-plan.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
       "added_date": "2026-04-22",
@@ -1644,7 +1658,7 @@
       "doc_id": "search",
       "title": "Search",
       "added_date": "2026-03-31",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "",
       "sort_order": 180,
       "published": true,

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ee2406cea97031a823cbe53617f89ade",
-    "generated_at_utc": "2026-04-25T14:41:41Z",
-    "count": 133
+    "version": "blake2b-3cc983fa4ed516b9fbb07c2983fff51d",
+    "generated_at_utc": "2026-04-25T14:57:35Z",
+    "count": 134
   },
   "entries": [
     {
@@ -2194,6 +2194,29 @@
       "search_text": "scripts-tag-write-server scripts tag write server tag write server 2026-03-31 2026 03 31"
     },
     {
+      "id": "search-catalogue-targeted-plan",
+      "kind": "doc",
+      "title": "Catalogue Targeted Search Plan",
+      "href": "/docs/?scope=studio&doc=search-catalogue-targeted-plan",
+      "last_updated": "2026-04-25",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-04-25 • Search",
+      "search_terms": [
+        "search-catalogue-targeted-plan",
+        "search",
+        "catalogue",
+        "targeted",
+        "plan",
+        "catalogue targeted search plan",
+        "2026-04-25",
+        "2026",
+        "04",
+        "25"
+      ],
+      "search_text": "search-catalogue-targeted-plan search catalogue targeted plan catalogue targeted search plan 2026-04-25 2026 04 25"
+    },
+    {
       "id": "catalogue-work-detail-editor",
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
@@ -2698,16 +2721,16 @@
       "kind": "doc",
       "title": "Search",
       "href": "/docs/?scope=studio&doc=search",
-      "last_updated": "2026-04-24",
-      "display_meta": "2026-04-24",
+      "last_updated": "2026-04-25",
+      "display_meta": "2026-04-25",
       "search_terms": [
         "search",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "search 2026-04-24 2026 04 24"
+      "search_text": "search 2026-04-25 2026 04 25"
     },
     {
       "id": "tag-registry",
