@@ -62,6 +62,10 @@ Current shared build conventions:
 - records are generated at build time, not assembled in the browser
 - content-version hashing is used for write skipping
 - generated payloads stay compact and avoid body-prose indexing
+- future heavy-index fields should declare their source artifact family and dependency policy in build-owned search config
+- builder code should validate that dependency config while keeping record-generation algorithms in code
+- public search artifacts should not become operation logs; targeted-update changed-id diagnostics belong in CLI/server output or local logs, not in the artifact by default
+- keep one combined artifact per scope until payload size or browser performance proves sidecar payloads are needed
 
 Current non-goals across all scopes:
 
@@ -69,6 +73,7 @@ Current non-goals across all scopes:
 - no search-specific backend service
 - no prose shard loading
 - no strict schema-fail validation layer separate from the builders themselves
+- no per-record checksums for body or summary indexing in the first heavy-index slice
 
 ## Catalogue Scope
 

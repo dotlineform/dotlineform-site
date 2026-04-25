@@ -287,6 +287,8 @@ Design rules:
 
 - every indexed field should declare its source artifact family
 - every source artifact family should have a dependency rule
+- dependency config should declare source families and invalidation policy, while builder code still owns record-generation algorithms
+- docs should explain how to interpret the config and when to choose the full-rebuild escape hatch
 - shared dependency changes, such as tag label updates, should trigger full rebuild unless the affected set is cheap and explicit
 - large bulk operations should batch writes before index updates
 - full rebuild should remain the operational escape hatch
@@ -303,14 +305,51 @@ Risks:
 - over-optimizing too early could make the pipeline harder to reason about
 - partial updates across multiple artifact families increase stale-index risk
 
-Open decisions:
+Resolved decisions:
 
-- should source-dependency metadata live in search config, builder code, or docs?
-- should body/summary indexing introduce per-record checksums?
-- should generated search artifacts include build provenance for changed ids?
-- should the site keep one combined search artifact per scope or split heavy text into sidecar payloads?
+- source-dependency metadata should live primarily in search build config when it represents user-led content or presentation policy, such as which source family feeds an indexed field and what fallback rule applies
+- builder code should enforce the config, validate it, and keep architectural algorithms in code rather than trying to express record construction in JSON
+- docs should align with the config and explain how to read it, because Codex and human maintainers often need both the machine-readable rule and the surrounding guidance
+- body and summary indexing should not add per-record checksums in the first heavy-index slice; the artifact-level version hash, deterministic build path, and full rebuild fallback are enough for current drift risk
+- generated public search artifacts should not include changed-id build provenance by default; targeted-update diagnostics should remain in CLI/server output and optional local logs rather than turning the artifact into an operation log
+- each scope should keep one combined search artifact at first, including heavier fields if they are added; split heavy text into sidecar payloads only after Library size or browser performance proves that necessary
 
-Phase 4 should wait until there is a concrete body or summary indexing requirement.
+Rationale:
+
+- config is useful for source lineage, dependency policy, and future user-facing search expansion, but too much algorithmic behavior in JSON would make the system harder to reason about
+- per-record checksums would react to every minor body or summary edit, add JSON size, and require more checking code without solving a current high-risk drift problem
+- changed-id provenance can help debug targeted updates, but it becomes misleading after later patches and does not prove correctness; operation diagnostics are a better fit for terminal output or local logs
+- one artifact per scope keeps the runtime and possible LLM handoff simpler while the search payload is still manageable
+
+Initial build-config concept:
+
+```json
+{
+  "source_families": {
+    "docs_index": {
+      "scopes": ["studio", "library"],
+      "targeted": true,
+      "id_field": "doc_id",
+      "fallback": "full_rebuild"
+    },
+    "docs_payload": {
+      "scopes": ["studio", "library"],
+      "targeted": true,
+      "id_field": "doc_id",
+      "fallback": "full_rebuild"
+    },
+    "tag_registry": {
+      "scopes": ["catalogue"],
+      "targeted": false,
+      "fallback": "full_rebuild"
+    }
+  }
+}
+```
+
+This is a contract sketch rather than a committed file path. The implementation should choose a build-owned config location and keep runtime-facing policy separate unless a rule is genuinely shared by both builder and browser.
+
+Phase 4 can now start with a small source-family/dependency config and builder validation before adding body or summary fields.
 
 ## Historical First Implementation Slice
 

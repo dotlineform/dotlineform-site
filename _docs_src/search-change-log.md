@@ -9,6 +9,26 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Recorded Phase 4 heavy-index readiness decisions
+
+**Status:** decision recorded
+
+**Area:** search build architecture
+
+**Summary:**
+Settled the Phase 4 direction for heavier search indexing before implementing body, summary, or prose-heavy fields.
+
+**Reason:**
+Search is preparing to expand beyond compact docs/catalogue records. The dependency model should be clear before heavier fields make targeted updates more expensive or ambiguous.
+
+**Effect:**
+Source-family dependency rules should live in build-owned search config when they represent user-led content or presentation policy, while builder code keeps algorithmic record generation. Per-record body/summary checksums are deferred. Changed-id build provenance stays out of public search artifacts by default. Search keeps one combined artifact per scope until payload size or browser performance proves sidecar payloads are necessary.
+
+**Affected files/docs:**
+
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+
 ## [2026-04-25] Added watcher-targeted docs search orchestration
 
 **Status:** implemented
