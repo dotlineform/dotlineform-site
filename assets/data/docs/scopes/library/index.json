@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T19:27:51Z",
+  "generated_at": "2026-04-25T21:10:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -53,7 +53,7 @@
     },
     {
       "scope": "library",
-      "doc_id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "doc_id": "dreaming-is-actve",
       "title": "Dreaming is Active",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
@@ -61,9 +61,9 @@
       "sort_order": 201,
       "published": true,
       "viewable": true,
-      "source_path": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.md",
-      "viewer_url": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
-      "content_url": "/assets/data/docs/scopes/library/by-id/loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.json",
+      "source_path": "dreaming-is-active.md",
+      "viewer_url": "/library/?doc=dreaming-is-actve",
+      "content_url": "/assets/data/docs/scopes/library/by-id/dreaming-is-actve.json",
       "summary": "Dreaming is not a passive process, it actively influences the memory reconstruction process."
     },
     {
