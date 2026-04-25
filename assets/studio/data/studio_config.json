@@ -123,6 +123,8 @@
       "manage_checking_note": "Checking manage mode...",
       "manage_clear_search_note": "Clear search to manage the current doc.",
       "manage_mode_note": "Manage mode is local-only.",
+      "undo_move_label": "Undo move",
+      "undo_move_status": "Undoing move...",
       "manage_server_not_configured_error": "Local docs-management server is not configured.",
       "manage_unavailable_note": "Manage mode unavailable: local docs server unavailable for this scope.",
       "viewable_ancestor_prompt": "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",

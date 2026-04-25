@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,30 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-25 / UI-031
+
+- status: adopted
+- route: `/docs/?mode=manage`, `/library/?mode=manage`
+- issue: docs-viewer drag/drop could not populate an empty node because "drop inside" was inferred from existing children, so empty intended sections such as Archive behaved only as sibling targets.
+- triage: shared docs-viewer interaction refinement
+- reasoning: tree editability should not depend on a separate source schema flag or on whether a node already has children. Any doc node can become a parent through the viewer, while nodes remain loadable unless they are already special non-loadable docs such as `_archive`.
+- outcome: drag/drop now uses row position: the upper/main row area moves inside the target node, while the lower edge moves after it. The index toolbar adds an icon-only one-step Undo for the most recent successful move in the current viewer session.
+- files changed:
+  - `_includes/docs_viewer_shell.html`
+  - `assets/js/docs-viewer.js`
+  - `assets/css/main.css`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/ui-request-docs-viewer-index-drag-undo-task.md`
+  - `_docs_src/docs-viewer-management.md`
+  - `_docs_src/ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - in manage mode, drag a root doc onto empty Archive and confirm it becomes a child
+  - use the index Undo action and confirm the doc returns to its prior parent/order
+  - drag a doc onto an ordinary node without children and confirm that node gains a child while remaining loadable
+- follow-up:
+  - consider a more explicit visual drop-zone affordance if row-position targeting proves too subtle in manual use
 
 ## UI Rule Log 2026-04-24 / UI-030
 

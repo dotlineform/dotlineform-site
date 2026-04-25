@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: "Docs Viewer Management"
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-04-25
 parent_id: ui-requests
 sort_order: 21
 ---
@@ -16,6 +16,7 @@ Status:
 - Phase 4 implemented: current-doc metadata edit modal for `title`, `parent_id`, and `sort_order`
 - Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
 - Phase 6 implemented: draft/non-viewable review and bulk-backed `Make viewable`
+- Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -27,8 +28,10 @@ Implemented now:
 - shared manage mode enabled for both `/docs/` and `/library/` behind `?mode=manage`
 - create, archive, delete-preview, and delete-apply implemented
 - drag/drop move implemented for leaf docs only
-- dropping on a visible doc moves the dragged doc after that doc
-- dropping on a collapsed folder moves the dragged doc into that folder as its last child
+- dropping on the upper/main part of any doc row moves the dragged doc inside that doc as its last child
+- dropping on the lower edge of a doc row moves the dragged doc after that doc
+- all nodes can gain children through drag/drop; there is no source or generated `folder` schema field
+- the index toolbar exposes a one-step Undo action for the most recent successful move in the current viewer session
 - source writes remain front-matter-only; files do not move on disk
 - move/create-after-selected use sparse `sort_order` increments without renumbering siblings
 - create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
@@ -56,7 +59,7 @@ Implemented now:
 
 Not implemented yet:
 
-- dragging folders or any doc with child docs
+- dragging any doc with child docs
 - incremental docs-search updates
 
 ## Suggested Follow-On Features
@@ -73,11 +76,13 @@ Current state:
   - draft/non-viewable review
   - `Make viewable` with required-ancestor and optional-descendant handling
   - drag/drop move for leaf docs
+  - one-step move Undo
   - archive and delete
 
 Potential later areas, if promoted:
 
-- dragging folders or docs with child docs
+- dragging docs with child docs
+- deeper undo/history beyond the most recent move
 - true incremental docs-search updates for visibility-only changes
 - a stronger modal/shareable shell for docs-viewer management actions if the surface grows
 - more explicit structured impact previews for archive/delete if native confirm flows become a limiting factor
@@ -487,14 +492,14 @@ Required write-model properties:
 
 ## Command Semantics
 
-Phase 1 command semantics are defined for `new`, `archive`, and `delete`.
-Drag/drop remains out of scope for implementation until the explicit command flow is proven.
+Initial command semantics were defined for `new`, `archive`, and `delete`.
+The implemented management surface now also includes metadata edit, leaf-doc drag/drop move, draft viewability, and one-step move Undo.
 
 ### `new`
 
 - minimum required field from UI: `scope`
 - server may accept omitted title and create `New Doc`
-- default folder is the flat scope root
+- default parent is the flat scope root
 - default parent is blank unless created from a parent context
 - default `sort_order` appends as the last sibling
 - default title and `doc_id` use the normalized `New Doc` stem rule
@@ -519,11 +524,11 @@ Drag/drop remains out of scope for implementation until the explicit command flo
 
 ### `move` / drag and drop
 
-Questions:
-
-- whether drag/drop can change both `parent_id` and `sort_order`
-- whether folder moves happen automatically
-- whether the drag target is sibling ordering only in v1
+- only leaf docs are draggable
+- dropping on the upper/main part of a row changes `parent_id` to that target doc and appends as the target's last child
+- dropping on the lower edge of a row keeps the target's parent and places the moved doc after the target
+- any node can become a parent through drag/drop; there is no `folder` source field
+- one successful move is stored client-side for Undo in the current viewer session
 
 ## Data And Builder Implications
 
@@ -595,7 +600,17 @@ Status:
 Status:
 
 - implemented as a leaf-doc-only move flow
-- folders and docs with children remain non-draggable by design
+- docs with children remain non-draggable by design
+
+### Phase 7
+
+- let any node receive children through drag/drop without adding a source schema field
+- add a one-step client-side Undo action for the most recent successful move
+- keep Undo in the index toolbar because it reverses tree state, not document content
+
+Status:
+
+- implemented
 
 ## Decision Log
 
@@ -660,10 +675,10 @@ whether references should be checked first before delete?
 A: yes, preview references first. broken links can still be user-resolved, but delete should surface what will break before confirmation.
 
 whether drag/drop can change both parent_id and sort_order?  
-A: yes. if doc is dropped onto a collapsed folder, it becomes the last sibling in that folder. if doc is dropped onto a visible doc, it is placed next to (after) that doc.
+A: yes. if a leaf doc is dropped on the upper/main part of any doc row, it becomes the last child of that target doc. if it is dropped on the lower edge of a row, it is placed after that target doc.
 
 whether folder moves happen automatically?  
-A: folders cannot be created, moved, or deleted. attempting to drag a folder is uneffective. the visible tree structure can only be changed manually by editing the front matter.
+A: there is no source-level folder flag. any node can become a parent through drag/drop, but docs that already have children still cannot be dragged in the current implementation.
 
 does the docs builder assume source folder placement has semantic meaning beyond the doc tree?  
 A: not in a flat structure.

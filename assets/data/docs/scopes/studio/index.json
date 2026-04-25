@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T17:32:31Z",
+  "generated_at": "2026-04-25T08:33:09Z",
   "docs": [
     {
       "scope": "studio",
@@ -202,7 +202,7 @@
       "doc_id": "ui-framework",
       "title": "UI Framework",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "design",
       "sort_order": 10,
       "published": true,
@@ -524,7 +524,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-25",
       "parent_id": "ui-requests",
       "sort_order": 21,
       "published": true,
@@ -678,7 +678,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "design",
       "sort_order": 30,
       "published": true,
@@ -910,6 +910,20 @@
       "source_path": "css-audit-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=css-audit-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-audit-spec.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-request-docs-viewer-index-drag-undo-task",
+      "title": "Docs Viewer Index Drag Undo",
+      "added_date": "2026-04-25",
+      "last_updated": "2026-04-25",
+      "parent_id": "ui-requests",
+      "sort_order": 50,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-request-docs-viewer-index-drag-undo-task.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json"
     },
     {
       "scope": "studio",
@@ -1784,7 +1798,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

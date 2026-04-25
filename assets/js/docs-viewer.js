@@ -3,6 +3,7 @@
   if (!root) return;
 
   var nav = document.getElementById("docsViewerNav");
+  var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
   var sidebarToggle = document.getElementById("docsViewerSidebarToggle");
   var status = document.getElementById("docsViewerStatus");
   var meta = document.getElementById("docsViewerMeta");
@@ -99,6 +100,8 @@
       checkingNote: "Checking manage mode...",
       clearSearchNote: "Clear search to manage the current doc.",
       manageModeNote: "Manage mode is local-only and writes through the docs-management server.",
+      undoMoveLabel: "Undo move",
+      undoMoveStatus: "Undoing move...",
       serverNotConfiguredError: "Local docs-management server is not configured.",
       unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope.",
       viewableAncestorPrompt: "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",
@@ -111,6 +114,7 @@
     dragDocId: "",
     dropTargetDocId: "",
     dropPosition: "",
+    moveUndo: null,
     contextMenuDocId: "",
     metadataEditingDocId: "",
     metadataRestoreFocusId: "",
@@ -278,6 +282,8 @@
     state.managementText.checkingNote = getConfigText(config, "docs_viewer.manage_checking_note", state.managementText.checkingNote);
     state.managementText.clearSearchNote = getConfigText(config, "docs_viewer.manage_clear_search_note", state.managementText.clearSearchNote);
     state.managementText.manageModeNote = getConfigText(config, "docs_viewer.manage_mode_note", state.managementText.manageModeNote);
+    state.managementText.undoMoveLabel = getConfigText(config, "docs_viewer.undo_move_label", state.managementText.undoMoveLabel);
+    state.managementText.undoMoveStatus = getConfigText(config, "docs_viewer.undo_move_status", state.managementText.undoMoveStatus);
     state.managementText.serverNotConfiguredError = getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
     state.managementText.unavailableNote = getConfigText(config, "docs_viewer.manage_unavailable_note", state.managementText.unavailableNote);
     state.managementText.viewableAncestorPrompt = getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
@@ -965,24 +971,30 @@
     return !docHasChildren(doc.doc_id);
   }
 
-  function dropPositionForDoc(docId) {
+  function dropPositionForRow(row, event) {
     if (!managementDragEnabled()) return "";
+    if (!row) return "";
+    var docId = row.dataset.docRowId || "";
     if (!docId || !state.docsById.has(docId)) return "";
     if (state.dragDocId === docId) return "";
-    if (docHasChildren(docId) && !state.expandedDocIds.has(docId)) {
-      return "inside";
+
+    var rect = row.getBoundingClientRect();
+    var clientY = event && typeof event.clientY === "number" ? event.clientY : rect.top + (rect.height / 2);
+    var lowerEdgeHeight = Math.max(6, Math.min(14, rect.height * 0.32));
+    if (clientY >= rect.bottom - lowerEdgeHeight) {
+      return "after";
     }
-    return "after";
+    return "inside";
   }
 
-  function canDropOnDoc(docId) {
+  function canDropOnDoc(docId, position) {
     if (!state.dragDocId || !managementDragEnabled()) return false;
     var dragDoc = state.docsById.get(state.dragDocId);
     var targetDoc = state.docsById.get(docId);
     if (!dragDoc || !targetDoc) return false;
     if (!canDragDoc(dragDoc)) return false;
     if (dragDoc.doc_id === targetDoc.doc_id) return false;
-    return Boolean(dropPositionForDoc(docId));
+    return position === "inside" || position === "after";
   }
 
   function clearDragState() {
@@ -990,6 +1002,18 @@
     state.dropTargetDocId = "";
     state.dropPosition = "";
     updateNavDragState();
+  }
+
+  function normalizeSortOrderValue(value) {
+    return value == null ? "" : String(value);
+  }
+
+  function moveUndoRecordChanged(record, nextRecord) {
+    if (!record || !nextRecord) return false;
+    return (
+      String(record.parent_id || "") !== String(nextRecord.parent_id || "") ||
+      normalizeSortOrderValue(record.sort_order) !== normalizeSortOrderValue(nextRecord.sort_order)
+    );
   }
 
   function contextMenuEnabled() {
@@ -1199,6 +1223,9 @@
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     if (!state.managementMode) {
       manageRow.hidden = true;
+      if (indexUndoButton) {
+        indexUndoButton.hidden = true;
+      }
       return;
     }
 
@@ -1221,6 +1248,18 @@
       }
       manageNote.textContent = noteText;
       manageNote.classList.toggle("is-error", noteIsError);
+    }
+
+    if (indexUndoButton) {
+      indexUndoButton.hidden = !state.managementMode;
+      indexUndoButton.disabled = (
+        state.managementBusy ||
+        !state.managementChecked ||
+        !state.managementAvailable ||
+        !state.moveUndo
+      );
+      indexUndoButton.setAttribute("aria-label", state.managementText.undoMoveLabel);
+      indexUndoButton.title = state.managementText.undoMoveLabel;
     }
 
     if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
@@ -1647,6 +1686,12 @@
     var movingDoc = state.docsById.get(docId);
     var targetDoc = state.docsById.get(targetDocId);
     if (!movingDoc || !targetDoc) return;
+    var undoRecord = {
+      doc_id: movingDoc.doc_id,
+      title: movingDoc.title || movingDoc.doc_id,
+      parent_id: movingDoc.parent_id || "",
+      sort_order: normalizeSortOrderValue(movingDoc.sort_order)
+    };
 
     state.managementBusy = true;
     clearDragState();
@@ -1660,12 +1705,55 @@
       position: position
     })
       .then(function (payload) {
+        if (moveUndoRecordChanged(undoRecord, payload.record)) {
+          state.moveUndo = undoRecord;
+        }
         setManagementMessage("", false);
         return reloadDocsIndex(movingDoc.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Move failed.", true);
         setStatus(error.message || "Move failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleUndoMove() {
+    var undoRecord = state.moveUndo;
+    if (!undoRecord || state.managementBusy) return;
+
+    var doc = findAllDocById(undoRecord.doc_id);
+    if (!doc) {
+      state.moveUndo = null;
+      setManagementMessage("Undo unavailable: moved doc is no longer in the current index.", true);
+      setStatus("Undo unavailable: moved doc is no longer in the current index.", true);
+      renderManagementUi();
+      return;
+    }
+
+    state.managementBusy = true;
+    hideContextMenu();
+    setManagementMessage(state.managementText.undoMoveStatus, false);
+    setStatus(state.managementText.undoMoveStatus, false);
+
+    fetchManagementJson("/docs/update-metadata", "POST", {
+      scope: viewerScope,
+      doc_id: doc.doc_id,
+      title: doc.title || undoRecord.title || doc.doc_id,
+      parent_id: undoRecord.parent_id || "",
+      sort_order: normalizeSortOrderValue(undoRecord.sort_order)
+    })
+      .then(function (response) {
+        state.moveUndo = null;
+        setManagementMessage(response.summary_text || "Move undone.", false);
+        return reloadDocsIndex(doc.doc_id, response.summary_text || "Move undone.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Undo failed.", true);
+        setStatus(error.message || "Undo failed.", true);
       })
       .finally(function () {
         state.managementBusy = false;
@@ -1911,7 +1999,8 @@
         }
 
         var targetDocId = row.dataset.docRowId || "";
-        if (!canDropOnDoc(targetDocId)) {
+        var nextPosition = dropPositionForRow(row, event);
+        if (!canDropOnDoc(targetDocId, nextPosition)) {
           if (state.dropTargetDocId || state.dropPosition) {
             state.dropTargetDocId = "";
             state.dropPosition = "";
@@ -1924,7 +2013,6 @@
         if (event.dataTransfer) {
           event.dataTransfer.dropEffect = "move";
         }
-        var nextPosition = dropPositionForDoc(targetDocId);
         if (state.dropTargetDocId !== targetDocId || state.dropPosition !== nextPosition) {
           state.dropTargetDocId = targetDocId;
           state.dropPosition = nextPosition;
@@ -1939,8 +2027,8 @@
           return;
         }
         var targetDocId = row.dataset.docRowId || "";
-        var position = dropPositionForDoc(targetDocId);
-        if (!canDropOnDoc(targetDocId) || !position) {
+        var position = dropPositionForRow(row, event);
+        if (!canDropOnDoc(targetDocId, position) || !position) {
           clearDragState();
           return;
         }
@@ -2087,6 +2175,12 @@
       manageRebuildButton.addEventListener("click", function () {
         hideContextMenu();
         handleRebuildDocs();
+      });
+    }
+
+    if (indexUndoButton) {
+      indexUndoButton.addEventListener("click", function () {
+        handleUndoMove();
       });
     }
 

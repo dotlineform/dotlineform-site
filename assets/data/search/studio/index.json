@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-eb0155caa9d26141c7ce331d6dde2634",
-    "generated_at_utc": "2026-04-24T17:32:32Z",
-    "count": 131
+    "version": "blake2b-40d708f3aaaf1e8f165d98cced40c58c",
+    "generated_at_utc": "2026-04-25T08:33:11Z",
+    "count": 132
   },
   "entries": [
     {
@@ -340,22 +340,22 @@
       "kind": "doc",
       "title": "UI Framework",
       "href": "/docs/?scope=studio&doc=ui-framework",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-24 • Design",
+      "display_meta": "2026-04-25 • Design",
       "search_terms": [
         "ui-framework",
         "ui",
         "framework",
         "ui framework",
         "design",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "ui-framework ui framework ui framework design 2026-04-24 2026 04 24"
+      "search_text": "ui-framework ui framework ui framework design 2026-04-25 2026 04 25"
     },
     {
       "id": "generic-llm-helper-pattern",
@@ -873,10 +873,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-25",
       "parent_id": "ui-requests",
       "parent_title": "UI Requests",
-      "display_meta": "2026-04-22 • UI Requests",
+      "display_meta": "2026-04-25 • UI Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -886,12 +886,12 @@
         "ui requests",
         "ui",
         "requests",
-        "2026-04-22",
+        "2026-04-25",
         "2026",
         "04",
-        "22"
+        "25"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management ui requests ui requests 2026-04-22 2026 04 22"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management ui requests ui requests 2026-04-25 2026 04 25"
     },
     {
       "id": "studio-ui-conformance",
@@ -1130,10 +1130,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-24 • Design",
+      "display_meta": "2026-04-25 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -1144,12 +1144,12 @@
         "decision",
         "log",
         "design",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-24 2026 04 24"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-25 2026 04 25"
     },
     {
       "id": "tag-groups",
@@ -1518,6 +1518,35 @@
         "31"
       ],
       "search_text": "css-audit-spec css audit spec css audit spec (v1) v1 design 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "ui-request-docs-viewer-index-drag-undo-task",
+      "kind": "doc",
+      "title": "Docs Viewer Index Drag Undo",
+      "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
+      "last_updated": "2026-04-25",
+      "parent_id": "ui-requests",
+      "parent_title": "UI Requests",
+      "display_meta": "2026-04-25 • UI Requests",
+      "search_terms": [
+        "ui-request-docs-viewer-index-drag-undo-task",
+        "ui",
+        "request",
+        "docs",
+        "viewer",
+        "index",
+        "drag",
+        "undo",
+        "task",
+        "docs viewer index drag undo",
+        "ui requests",
+        "requests",
+        "2026-04-25",
+        "2026",
+        "04",
+        "25"
+      ],
+      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo ui requests requests 2026-04-25 2026 04 25"
     },
     {
       "id": "scripts-generate-work-pages",
@@ -2886,20 +2915,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-24",
-      "display_meta": "2026-04-24",
+      "last_updated": "2026-04-25",
+      "display_meta": "2026-04-25",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-24 2026 04 24"
+      "search_text": "site-change-log site change log site change log 2026-04-25 2026 04 25"
     },
     {
       "id": "tiered-dimension-policy",

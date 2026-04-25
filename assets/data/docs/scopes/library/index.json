@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T17:11:11Z",
+  "generated_at": "2026-04-25T07:58:06Z",
   "docs": [
     {
       "scope": "library",
@@ -31,6 +31,20 @@
     },
     {
       "scope": "library",
+      "doc_id": "defining-information-for-cross-boundary-comparisons-concepts",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-04-24",
+      "parent_id": "",
+      "sort_order": 201,
+      "published": true,
+      "viewable": true,
+      "source_path": "defining-information-for-cross-boundary-comparisons-concepts.md",
+      "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
+      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons-concepts.json"
+    },
+    {
+      "scope": "library",
       "doc_id": "can-the-brain-comprehend-how-it-works",
       "title": "Can the Brain Comprehend How It Works?",
       "added_date": "2026-04-23",
@@ -42,20 +56,6 @@
       "source_path": "can-the-brain-comprehend-how-it-works.md",
       "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
       "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
-    },
-    {
-      "scope": "library",
-      "doc_id": "defining-information-for-cross-boundary-comparisons-concepts",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
-      "parent_id": "",
-      "sort_order": 220,
-      "published": true,
-      "viewable": true,
-      "source_path": "defining-information-for-cross-boundary-comparisons-concepts.md",
-      "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
-      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons-concepts.json"
     },
     {
       "scope": "library",
