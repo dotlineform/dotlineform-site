@@ -2,7 +2,7 @@
 doc_id: search-incremental-orchestration-plan
 title: "Incremental Search Orchestration Plan"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: search
 sort_order: 90
 ---
@@ -171,7 +171,7 @@ Targeted mode currently supports `studio` and `library` by `doc_id`; `catalogue`
 
 ### Manual checks needed:
 
- - run a real docs-management action that changes title, parent_id, or viewable, then call targeted search update with the exact affected ids and confirm the inline docs search reflects it without a full same-scope rebuild
+ - run a real docs-management action that changes title, parent_id, or viewable, then confirm the response reports targeted search for the affected ids and inline docs search reflects the change without a full same-scope rebuild
  - confirm orchestration still uses full rebuild for catalogue until its dependency model is defined
 
 ## Phase 3. Affected-Record Orchestration
@@ -228,14 +228,21 @@ Risks:
 - source edits outside docs-management can change front matter in ways the watcher cannot classify
 - future search fields can add new dependencies that must be reflected here
 
+Resolved decisions:
+
+- docs-management server writes use targeted docs-search updates when the handler has explicit affected doc ids
+- docs-management targeted calls always pass `--remove-missing`
+- title-change child expansion happens in docs-management orchestration because child entries include `parent_title`
+- watcher-targeted updates are disabled for the first Phase 3 slice; watcher-triggered source edits still run full same-scope search rebuilds
+
 Open decisions:
 
 - should the watcher maintain a previous docs-index snapshot for dependency calculation?
-- should watcher-targeted updates be disabled initially, leaving targeted updates server-only?
 - what changed-file threshold should force a full rebuild?
-- should parent-title dependency expansion happen in orchestration or inside the targeted search command?
 
 Phase 3 can start after Phase 2 has a targeted update interface.
+
+Status: server-side orchestration implemented for docs-management writes. Watcher orchestration remains full-rebuild-only until filename-to-doc-id snapshot handling and threshold rules are explicit.
 
 ## Phase 4. Heavy-Index Readiness
 
@@ -279,9 +286,9 @@ Open decisions:
 
 Phase 4 should wait until there is a concrete body or summary indexing requirement.
 
-## Suggested First Implementation Slice
+## Historical First Implementation Slice
 
-The first implementation should be Phase 1 plus a design stub for Phase 2.
+The first implementation was Phase 1 plus a design stub for Phase 2. This section is retained as implementation history; Phase 2 and the server-side Phase 3 slice are now implemented.
 
 Recommended slice:
 

@@ -2,7 +2,7 @@
 doc_id: search-validation-checklist
 title: "Search Validation Checklist"
 added_date: 2026-04-01
-last_updated: 2026-04-01
+last_updated: 2026-04-25
 parent_id: search
 sort_order: 80
 ---
@@ -53,6 +53,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
 - [ ] If the change touched targeted docs-search updates, run `./scripts/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
 - [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
+- [ ] If the change touched docs-management search orchestration, confirm docs-management rebuild responses report `search.mode: targeted` for explicit affected ids
 - [ ] Confirm `./scripts/build_search.rb --scope catalogue --only-doc-ids anything --remove-missing` fails closed because targeted mode is docs-only
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`

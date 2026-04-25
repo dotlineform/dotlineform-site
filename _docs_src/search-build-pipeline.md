@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline
 title: "Search Build Pipeline"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-04-25
 parent_id: search
 sort_order: 70
 ---
@@ -291,7 +291,8 @@ Current derived search support fields:
   - `./scripts/build_search.rb --scope studio --write`
 - targeted docs-search command:
   - `./scripts/build_search.rb --scope studio --write --only-doc-ids search-build-pipeline --remove-missing`
-- live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
+- live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
+- the explicit `POST /docs/rebuild` endpoint and Docs Live Rebuild Watcher still run full same-scope docs-search rebuilds
 - targeted docs-search updates rebuild only affected Studio docs entries by `doc_id`, remove affected ids that are missing, non-viewable, or `_archive`, and report diagnostic counts for Codex/server use
 - `bin/dev-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `_docs_src/*.md` changes aligned with `assets/data/search/studio/index.json`
 
@@ -354,7 +355,8 @@ Current builder behaviour for Library:
   - `./scripts/build_search.rb --scope library --write`
 - targeted docs-search command:
   - `./scripts/build_search.rb --scope library --write --only-doc-ids library --remove-missing`
-- live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
+- live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
+- the explicit `POST /docs/rebuild` endpoint and Docs Live Rebuild Watcher still run full same-scope docs-search rebuilds
 - targeted docs-search updates rebuild only affected Library docs entries by `doc_id`, remove affected ids that are missing, non-viewable, or `_archive`, and report diagnostic counts for Codex/server use
 - if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/dev-studio` runs a startup `library` docs-search rebuild
 - while `bin/dev-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`

@@ -406,6 +406,29 @@ def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
     return seen
 
 
+def direct_child_doc_ids(docs: list[ScopeDoc], doc_id: str) -> list[str]:
+    return [doc.doc_id for doc in sorted(docs, key=scope_doc_sort_key) if doc.parent_id == doc_id]
+
+
+def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for raw_doc_id in doc_ids:
+        doc_id = str(raw_doc_id or "").strip()
+        if not doc_id or doc_id in seen:
+            continue
+        seen.add(doc_id)
+        ordered.append(doc_id)
+    return ordered
+
+
+def metadata_search_doc_ids(docs: list[ScopeDoc], doc_id: str, *, title_changed: bool) -> list[str]:
+    doc_ids = [doc_id]
+    if title_changed:
+        doc_ids.extend(direct_child_doc_ids(docs, doc_id))
+    return ordered_search_doc_ids(doc_ids)
+
+
 def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
     updated_front_matter = dict(doc.front_matter)
     updated_front_matter["added_date"] = str(
@@ -491,14 +514,40 @@ def make_import_overwrite_backup(
     return bundle_dir
 
 
-def rebuild_scope_outputs(repo_root: Path, scope: str, include_search: bool = True) -> Dict[str, Any]:
+def rebuild_scope_outputs(
+    repo_root: Path,
+    scope: str,
+    include_search: bool = True,
+    search_doc_ids: Optional[list[str]] = None,
+) -> Dict[str, Any]:
     bundle_bin = detect_bundle_bin()
     if not bundle_bin:
         raise RuntimeError("bundle executable not found")
 
     commands = [[bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]]
+    search = {"mode": "none", "doc_ids": []}
     if include_search:
-        commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
+        if search_doc_ids is None:
+            search = {"mode": "full", "doc_ids": []}
+            commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
+        else:
+            target_doc_ids = ordered_search_doc_ids(search_doc_ids)
+            search = {"mode": "targeted" if target_doc_ids else "none", "doc_ids": target_doc_ids}
+            if target_doc_ids:
+                commands.append(
+                    [
+                        bundle_bin,
+                        "exec",
+                        "ruby",
+                        "scripts/build_search.rb",
+                        "--scope",
+                        scope,
+                        "--write",
+                        "--only-doc-ids",
+                        ",".join(target_doc_ids),
+                        "--remove-missing",
+                    ]
+                )
     steps = []
     for command in commands:
         completed = subprocess.run(
@@ -522,6 +571,7 @@ def rebuild_scope_outputs(repo_root: Path, scope: str, include_search: bool = Tr
     return {
         "ok": True,
         "steps": steps,
+        "search": search,
     }
 
 
@@ -533,6 +583,7 @@ def perform_source_write_and_rebuild(
     *,
     suppression_reason: str,
     include_search: bool = True,
+    search_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     filenames = sorted({path.name for path in changed_paths if isinstance(path, Path)})
     if filenames:
@@ -546,7 +597,12 @@ def perform_source_write_and_rebuild(
         )
     try:
         write_operation()
-        rebuild = rebuild_scope_outputs(repo_root, scope, include_search=include_search)
+        rebuild = rebuild_scope_outputs(
+            repo_root,
+            scope,
+            include_search=include_search,
+            search_doc_ids=search_doc_ids,
+        )
     except Exception:
         if filenames:
             clear_watch_suppressions(repo_root, scope, filenames)
@@ -949,6 +1005,12 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
     rebuild = None
     if collision_doc is not None:
         source_text = imported_source_text_for_overwrite(preview, collision_doc)
+        overwrite_title = str(preview.get("title") or collision_doc.title).strip() or collision_doc.title
+        search_doc_ids = metadata_search_doc_ids(
+            docs,
+            collision_doc.doc_id,
+            title_changed=overwrite_title != collision_doc.title,
+        )
         if not dry_run:
             backup_dir = make_import_overwrite_backup(
                 repo_root,
@@ -967,6 +1029,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
                 [collision_doc.path],
                 lambda: write_text_atomic(collision_doc.path, source_text),
                 suppression_reason="docs-import-html-overwrite",
+                search_doc_ids=search_doc_ids,
             )
         log_event(
             repo_root,
@@ -1031,6 +1094,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             [target_path],
             lambda: write_text_atomic(target_path, source_text),
             suppression_reason="docs-import-html-create",
+            search_doc_ids=[doc_id],
         )
     log_event(
         repo_root,
@@ -1136,6 +1200,7 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
             [target_path],
             lambda: write_text_atomic(target_path, source_text),
             suppression_reason="docs-create",
+            search_doc_ids=[doc_id],
         )
         log_event(
             repo_root,
@@ -1264,6 +1329,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             [target.path],
             lambda: write_text_atomic(target.path, rewritten_source),
             suppression_reason="docs-update-metadata",
+            search_doc_ids=metadata_search_doc_ids(docs, target.doc_id, title_changed=title_changed),
         )
         log_event(
             repo_root,
@@ -1402,6 +1468,7 @@ def apply_viewability_update(
                 for target in changed_targets
             ],
             suppression_reason=suppression_reason,
+            search_doc_ids=[target.doc_id for target in changed_targets],
         )
         log_event(
             repo_root,
@@ -1569,6 +1636,7 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
             [doc.path for doc, _rewritten_source in rewrites],
             lambda: [write_text_atomic(doc.path, rewritten_source) for doc, rewritten_source in rewrites],
             suppression_reason="docs-move",
+            search_doc_ids=[moving_doc.doc_id],
         )
         log_event(
             repo_root,
@@ -1657,6 +1725,7 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
             [target.path],
             lambda: write_text_atomic(target.path, format_source(updated_front_matter, target.body)),
             suppression_reason="docs-archive",
+            search_doc_ids=[target.doc_id],
         )
         log_event(
             repo_root,
@@ -1718,6 +1787,7 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             [target.path],
             lambda: target.path.unlink(),
             suppression_reason="docs-delete",
+            search_doc_ids=[target.doc_id],
         )
         log_event(
             repo_root,

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: scripts
 sort_order: 10
 ---
@@ -48,8 +48,18 @@ Current behavior:
 - creates, archives, and deletes flat source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Library docs as `published: true`, `viewable: false`
-- rebuilds scope-owned docs payloads and scope-owned docs search after successful writes
+- rebuilds scope-owned docs payloads after successful writes
+- runs targeted docs-search updates after successful writes when affected doc ids are explicit
 - coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
+
+Search update behavior:
+
+- create/import targets the new doc id
+- import overwrite and metadata title edits target the changed doc id plus direct children because child search entries include `parent_title`
+- metadata parent/order edits, move, archive, and delete target the changed doc id
+- bulk viewability targets changed doc ids only
+- internal targeted calls pass `--remove-missing` so missing, non-viewable, and `_archive` ids can be reconciled safely
+- `POST /docs/rebuild` remains a full same-scope docs-search rebuild
 
 `GET /capabilities` reports:
 
@@ -116,7 +126,7 @@ Import behavior:
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
-- successful create/overwrite writes rebuild the same-scope docs payloads and docs-search artifact
+- successful create/overwrite writes rebuild the same-scope docs payloads and run targeted docs-search updates for affected ids
 
 `POST /docs/rebuild` expects:
 
@@ -192,7 +202,7 @@ Metadata-update behavior:
 - `sort_order` accepts a non-negative integer, blank, or `append`
 - `append` stores the next available sparse `sort_order` under the requested `parent_id`
 - always rebuilds docs payloads for the scope
-- always rebuilds the same-scope docs-search artifact after a successful write
+- runs a targeted same-scope docs-search update for affected ids after a successful write
 
 `POST /docs/update-viewability` expects:
 
@@ -223,7 +233,7 @@ Viewability-update behavior:
 - the single-doc endpoint is preserved for callers that already use `doc_id`
 - the bulk endpoint accepts explicit `doc_ids`; `include_descendants: true` expands each requested doc to include its descendants from canonical docs source data
 - no-op requests write no files, create no backup, and do not rebuild docs/search
-- changed bulk requests copy only changed source files into the backup bundle, then run one docs/search rebuild for the scope
+- changed bulk requests copy only changed source files into the backup bundle, then run one docs rebuild and one targeted docs-search update for the scope
 - the Docs Viewer manage-mode `Make viewable` action now uses the bulk endpoint so it can include required ancestors and optional descendants in one write/rebuild
 
 `POST /docs/move` expects:
@@ -246,7 +256,7 @@ Move behavior:
 - moves update only the dragged doc's `sort_order` and `parent_id`
 - moves preserve `added_date`
 - sibling `sort_order` values are left unchanged to keep write noise low
-- successful moves rebuild the current scope docs payloads and docs-search artifact
+- successful moves rebuild the current scope docs payloads and run a targeted docs-search update for the moved doc
 
 `POST /docs/archive` expects:
 
@@ -293,7 +303,7 @@ Apply behavior:
 - requires explicit confirmation
 - re-runs preview validation before delete
 - deletes the Markdown source file when no blockers remain
-- rebuilds the current scope docs payloads and docs-search artifact after delete
+- rebuilds the current scope docs payloads and runs a targeted docs-search removal/update after delete
 
 ## Security Constraints
 

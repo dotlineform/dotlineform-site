@@ -2,12 +2,35 @@
 doc_id: search-change-log
 title: "Search Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-04-25] Added targeted docs-management search orchestration
+
+**Status:** implemented
+
+**Area:** docs-domain search orchestration
+
+**Summary:**
+Changed docs-management writes so they run targeted docs-search updates when the affected `doc_id` set is explicit.
+
+**Reason:**
+Phase 2 added the targeted search command, but docs-management still followed every successful write with a full same-scope search rebuild.
+
+**Effect:**
+Create/import, overwrite, metadata edit, viewability, move, archive, and delete handlers now pass affected ids to the rebuild orchestrator. Targeted internal calls include `--remove-missing`; title changes also include direct children because child entries store `parent_title`. The explicit rebuild endpoint and docs live watcher still use full same-scope search rebuilds.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_management_server.py`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
 
 ## [2026-04-24] Added targeted docs-domain search updates
 
