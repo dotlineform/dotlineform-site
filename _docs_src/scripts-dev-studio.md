@@ -131,6 +131,9 @@ bundle exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT"
 
 - default URL: `http://127.0.0.1:4000`
 - serves the local site and Studio routes
+- when launched through `bin/dev-studio`, the Jekyll process loads `scripts/jekyll_webrick_client_reset_filter.rb` through `RUBYOPT`
+- that filter suppresses only WEBrick `Errno::ECONNRESET` server-log entries, which are expected when the browser closes a local connection during refreshes, rebuilds, or cancelled asset loads
+- other WEBrick errors, Jekyll build warnings, and docs watcher messages remain visible
 
 ### Tag Write Server
 

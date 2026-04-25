@@ -26,6 +26,11 @@ DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
 DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
 DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
+JEKYLL_WEBRICK_FILTER="$ROOT_DIR/scripts/jekyll_webrick_client_reset_filter.rb"
+JEKYLL_RUBYOPT="-r$JEKYLL_WEBRICK_FILTER"
+if [ -n "${RUBYOPT:-}" ]; then
+  JEKYLL_RUBYOPT="$JEKYLL_RUBYOPT $RUBYOPT"
+fi
 
 JEKYLL_PID=""
 TAG_WRITE_PID=""
@@ -194,7 +199,7 @@ echo
 echo "Press Ctrl+C to stop all processes."
 echo
 
-"$BUNDLE_BIN" exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
+RUBYOPT="$JEKYLL_RUBYOPT" "$BUNDLE_BIN" exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
 JEKYLL_PID=$!
 
 "$PYTHON_BIN" scripts/studio/tag_write_server.py --port "$TAG_WRITE_PORT" &

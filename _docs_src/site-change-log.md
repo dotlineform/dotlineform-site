@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-25] Suppressed benign WEBrick client-reset noise in dev Studio
+
+**Status:** implemented
+
+**Area:** local development workflow / `bin/dev-studio`
+
+**Summary:**
+Filtered expected `Errno::ECONNRESET` messages from the Jekyll WEBrick server when it is launched by `bin/dev-studio`.
+
+**Reason:**
+During local rebuilds, refreshes, or cancelled asset loads, browsers can close a socket while WEBrick is still reading it. WEBrick logs that as an error-level stack trace, which made normal docs-watch and Jekyll regeneration cycles noisy even when the viewer was functioning correctly.
+
+**Effect:**
+`bin/dev-studio` now starts Jekyll with a narrow Ruby preload that suppresses only WEBrick `Errno::ECONNRESET` logger calls. Other WEBrick errors, Jekyll build warnings, and docs watcher output remain visible. Plain `bundle exec jekyll serve` is unchanged.
+
+**Affected files/docs:**
+
+- `bin/dev-studio`
+- `scripts/jekyll_webrick_client_reset_filter.rb`
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+
 ## [2026-04-25] Normalized Docs Viewer drag reorder sort orders
 
 **Status:** implemented
