@@ -2,7 +2,7 @@
 doc_id: docs-viewer-draft-publishing-spec
 title: "Viewability Workflow Spec"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: docs-viewer
 sort_order: 35
 ---
@@ -308,7 +308,8 @@ Non-viewable:
 Archive:
 
 - structural location under `_archive`
-- may still be viewable if the archive section is visible
+- may still be viewable if the archive section is visible in the current scope
+- may be hidden outside manage mode by scope-level viewer options without becoming a draft
 - used for docs that should remain available but are no longer active
 
 The system should not treat `_archive` as equivalent to `viewable: false`.

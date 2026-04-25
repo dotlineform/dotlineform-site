@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: data-models
 sort_order: 40
 ---
@@ -63,10 +63,12 @@ Current content families:
 
 - one row per generated Library doc
 - identity, added/update dates, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
+- `viewer_options` declaring `_archive` as a non-loadable, manage-only tree root
 
 Current site mapping:
 
 - the nav/tree layer on `/library/`
+- public/default `/library/` hides `_archive` and descendants; `/library/?mode=manage` shows that branch for local management
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
@@ -93,7 +95,7 @@ Purpose:
 
 Current content families:
 
-- one `doc` entry per viewable Library doc
+- one `doc` entry per public-viewable Library doc after applying viewability and manage-only tree-root filtering
 - identity, viewer URL, last-updated metadata, and normalized search text
 
 Library recently-added lists use `added_date` from the generated docs index. Library search continues to use `last_updated`.
@@ -124,6 +126,7 @@ Current enforcement:
 - duplicate `doc_id` values and invalid `parent_id` references are rejected by the docs builder before Library docs data is written
 - `published: false` docs are excluded before Library docs data is generated
 - `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from Library search and public/default viewer discovery
+- `_archive` and its descendants remain generated for manage mode but are excluded from public/default Library tree discovery and Library search
 
 ## Performance Notes
 

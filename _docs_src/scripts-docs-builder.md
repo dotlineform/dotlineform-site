@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
 added_date: 2026-04-23
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: scripts
 sort_order: 20
 ---
@@ -41,6 +41,7 @@ Generated outputs:
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
 - rewrites doc-to-doc links onto the scope-owned viewer route
+- emits scope-level viewer options such as non-loadable structural doc ids and manage-only tree root ids
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 
@@ -51,6 +52,7 @@ Generated outputs:
 - nested Markdown docs are rejected so the flat source-layout contract stays explicit
 - add front matter with `published: false` to keep a Markdown file in either source root without generating it into docs-viewer JSON
 - add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
+- the builder can also mark configured tree roots as manage-only for a scope; Library uses this for `_archive`, while Studio keeps Archive visible as a public reference section
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
 - if front matter is omitted, the builder falls back to:
   - `doc_id`: filename stem

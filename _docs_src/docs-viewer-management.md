@@ -511,7 +511,8 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 - file does not move
 - `published` does not change automatically
 - tree position changes through `parent_id = _archive`
-- archived docs remain discoverable in the normal docs tree under the Archive doc
+- archived Studio docs remain discoverable in the normal docs tree under the Archive doc
+- archived Library docs remain generated but are hidden outside manage mode by Library scope viewer options
 - `_archive` is a protected reserved system doc
 - the Archive doc is structural and non-loadable in the viewer; opening it routes to its first archived child doc
 - if there is no archived child doc yet, opening Archive falls back to the scope's default doc

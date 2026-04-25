@@ -1,5 +1,13 @@
 {
-  "generated_at": "2026-04-25T12:20:43Z",
+  "generated_at": "2026-04-25T17:50:46Z",
+  "viewer_options": {
+    "non_loadable_doc_ids": [
+      "_archive"
+    ],
+    "manage_only_tree_root_ids": [
+      "_archive"
+    ]
+  },
   "docs": [
     {
       "scope": "library",

@@ -2,7 +2,7 @@
 doc_id: data-models-shared
 title: "Shared Patterns"
 added_date: 2026-04-19
-last_updated: 2026-04-19
+last_updated: 2026-04-25
 parent_id: data-models
 sort_order: 10
 ---
@@ -46,6 +46,13 @@ Purpose:
 - provide one lightweight entry point for lists, trees, and cross-item lookup
 - avoid one fetch per card or nav node
 - keep large per-item prose or detail payloads out of list-level responses
+
+Docs-scope indexes also carry `viewer_options` for scope-level runtime behavior that should remain data-driven. Current options include:
+
+- `non_loadable_doc_ids`
+  structural docs that can appear in the tree but route to a loadable descendant or the scope default doc
+- `manage_only_tree_root_ids`
+  tree roots hidden from public/default viewer and docs-search discovery but visible in manage mode
 
 ### 3. Generated per-record JSON
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3cc983fa4ed516b9fbb07c2983fff51d",
-    "generated_at_utc": "2026-04-25T14:57:35Z",
+    "version": "blake2b-2b0979d892e123ebbe640d35f7b5d86c",
+    "generated_at_utc": "2026-04-25T17:43:24Z",
     "count": 134
   },
   "entries": [
@@ -204,22 +204,22 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-24 • Docs Viewer",
+      "display_meta": "2026-04-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-04-24 2026 04 24"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-04-25 2026 04 25"
     },
     {
       "id": "pipeline-use-cases",
@@ -249,10 +249,10 @@
       "kind": "doc",
       "title": "Shared Patterns",
       "href": "/docs/?scope=studio&doc=data-models-shared",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-25",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-19 • Data Models",
+      "display_meta": "2026-04-25 • Data Models",
       "search_terms": [
         "data-models-shared",
         "data",
@@ -261,12 +261,12 @@
         "shared patterns",
         "patterns",
         "data models",
-        "2026-04-19",
+        "2026-04-25",
         "2026",
         "04",
-        "19"
+        "25"
       ],
-      "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-04-19 2026 04 19"
+      "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-04-25 2026 04 25"
     },
     {
       "id": "site-docs",
@@ -553,10 +553,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-24 • Scripts",
+      "display_meta": "2026-04-25 • Scripts",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -564,12 +564,12 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-24 2026 04 24"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-25 2026 04 25"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
@@ -995,10 +995,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-03-31 • Docs Viewer",
+      "display_meta": "2026-04-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -1007,12 +1007,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-03-31",
+        "2026-04-25",
         "2026",
-        "03",
-        "31"
+        "04",
+        "25"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-03-31 2026 03 31"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-04-25 2026 04 25"
     },
     {
       "id": "local-setup",
@@ -1106,10 +1106,10 @@
       "kind": "doc",
       "title": "Studio Scope",
       "href": "/docs/?scope=studio&doc=data-models-studio",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-24 • Data Models",
+      "display_meta": "2026-04-25 • Data Models",
       "search_terms": [
         "data-models-studio",
         "data",
@@ -1118,12 +1118,12 @@
         "studio scope",
         "scope",
         "data models",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "data-models-studio data models studio studio scope scope data models 2026-04-24 2026 04 24"
+      "search_text": "data-models-studio data models studio studio scope scope data models 2026-04-25 2026 04 25"
     },
     {
       "id": "studio-ui-rules",
@@ -1247,10 +1247,10 @@
       "kind": "doc",
       "title": "Viewability Workflow Spec",
       "href": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-24 • Docs Viewer",
+      "display_meta": "2026-04-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-draft-publishing-spec",
         "docs",
@@ -1262,12 +1262,12 @@
         "viewability",
         "workflow",
         "docs viewer",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-04-24 2026 04 24"
+      "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-04-25 2026 04 25"
     },
     {
       "id": "bulk-add-work",
@@ -1409,10 +1409,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-24 • Data Models",
+      "display_meta": "2026-04-25 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1421,12 +1421,12 @@
         "library scope",
         "scope",
         "data models",
-        "2026-04-24",
+        "2026-04-25",
         "2026",
         "04",
-        "24"
+        "25"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-04-24 2026 04 24"
+      "search_text": "data-models-library data models library library scope scope data models 2026-04-25 2026 04 25"
     },
     {
       "id": "search-ranking-model",

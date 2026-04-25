@@ -380,8 +380,10 @@ class SearchDataBuilder
     unless docs.is_a?(Array)
       raise SystemExit, "Invalid docs index payload: expected top-level docs array"
     end
+    viewer_options = payload.is_a?(Hash) && payload["viewer_options"].is_a?(Hash) ? payload["viewer_options"] : {}
+    manage_only_tree_root_ids = normalize_id_array(viewer_options["manage_only_tree_root_ids"])
 
-    docs.map do |row|
+    records = docs.map do |row|
       next unless row.is_a?(Hash)
 
       doc_id = normalize_text(row["doc_id"])
@@ -399,6 +401,27 @@ class SearchDataBuilder
         viewable: true
       )
     end.compact
+
+    return records if manage_only_tree_root_ids.empty?
+
+    records_by_id = records.to_h { |doc| [doc.doc_id, doc] }
+    records.reject { |doc| manage_only_tree_doc?(doc, records_by_id, manage_only_tree_root_ids) }
+  end
+
+  def normalize_id_array(values)
+    Array(values).map { |value| normalize_text(value) }.reject(&:empty?).uniq
+  end
+
+  def manage_only_tree_doc?(doc, docs_by_id, root_ids)
+    visited = {}
+    current = doc
+    while current && !visited[current.doc_id]
+      return true if root_ids.include?(current.doc_id)
+
+      visited[current.doc_id] = true
+      current = current.parent_id.empty? ? nil : docs_by_id[current.parent_id]
+    end
+    false
   end
 
   def boolean_field(row, key, default)

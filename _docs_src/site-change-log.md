@@ -8,6 +8,33 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-25] Made Library Archive manage-only through docs scope options
+
+**Status:** implemented
+
+**Area:** Docs Viewer / docs scopes
+
+**Summary:**
+Added generated docs-viewer scope options so structural docs branches can be non-loadable or manage-only without hard-coding scope checks in the shared viewer.
+
+**Reason:**
+Studio Archive and Library Archive have different product intent. Studio Archive is useful public reference material for completed planning docs, deprecated guidance, and decision history. Library Archive has minimal public-facing use and should be available mainly for local management.
+
+**Effect:**
+`scripts/build_docs.rb` now emits `viewer_options` in each docs index. Studio marks `_archive` as non-loadable but keeps it visible. Library marks `_archive` as both non-loadable and manage-only, so `/library/` hides Archive and descendants unless `mode=manage` is active. The shared viewer consumes the generated options generically, and docs search applies the same manage-only tree filtering.
+
+**Affected files/docs:**
+
+- `scripts/build_docs.rb`
+- `assets/js/docs-viewer.js`
+- `scripts/build_search.rb`
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Shared Patterns](/docs/?scope=studio&doc=data-models-shared)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+
 ## [2026-04-25] Improved no-context work-page back links
 
 **Status:** implemented

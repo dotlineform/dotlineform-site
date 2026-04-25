@@ -66,6 +66,7 @@
 
   var state = {
     allDocs: [],
+    allDocsById: new Map(),
     docs: [],
     docsById: new Map(),
     childrenByParent: new Map(),
@@ -121,6 +122,8 @@
     contextMenuDocId: "",
     metadataEditingDocId: "",
     metadataRestoreFocusId: "",
+    nonLoadableDocIds: new Set(["_archive"]),
+    manageOnlyTreeRootIds: new Set(),
     sidebarCollapsed: readSidebarCollapsedState()
   };
 
@@ -709,11 +712,29 @@
     return !doc || doc.viewable !== false;
   }
 
+  function isManageOnlyTreeDoc(doc) {
+    if (!doc || state.manageOnlyTreeRootIds.size === 0) return false;
+    var visited = new Set();
+    var current = doc;
+    while (current && current.doc_id && !visited.has(current.doc_id)) {
+      if (state.manageOnlyTreeRootIds.has(current.doc_id)) return true;
+      visited.add(current.doc_id);
+      current = current.parent_id ? state.allDocsById.get(current.parent_id) : null;
+    }
+    return false;
+  }
+
   function shouldIncludeDoc(doc) {
+    if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
     return isDocViewable(doc) || (state.managementMode && state.showDrafts);
   }
 
   function applyDocVisibility() {
+    state.allDocsById = new Map(
+      state.allDocs.map(function (doc) {
+        return [doc.doc_id, doc];
+      })
+    );
     state.docs = state.allDocs.filter(shouldIncludeDoc).slice().sort(compareDocs);
     state.docsById = new Map(
       state.docs.map(function (doc) {
@@ -741,7 +762,7 @@
   }
 
   function isNonLoadableDoc(doc) {
-    return Boolean(doc) && doc.doc_id === "_archive";
+    return Boolean(doc) && state.nonLoadableDocIds.has(doc.doc_id);
   }
 
   function firstLoadableDescendantDocId(parentId) {
@@ -2414,6 +2435,11 @@
 
   function initializeIndex(payload) {
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
+    var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
+      ? payload.viewer_options
+      : {};
+    state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, ["_archive"]);
+    state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
     syncDraftVisibilityForRequestedDoc();
     applyDocVisibility();
@@ -2883,6 +2909,16 @@
       .replace(/[^a-z0-9]+/g, " ")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  function normalizeDocIdSet(values, fallback) {
+    var source = Array.isArray(values) ? values : fallback;
+    var ids = Array.isArray(source) ? source : [];
+    return new Set(
+      ids
+        .map(function (value) { return String(value || "").trim(); })
+        .filter(Boolean)
+    );
   }
 
   function escapeHtml(value) {

@@ -358,6 +358,7 @@ Current derived search support fields:
 
 The current Library search artifact is derived from the generated Library docs index rather than directly from `_docs_library_src/`.
 Rows with `viewable: false` are skipped so draft Library docs can be generated for manage-mode review without appearing in public/default search.
+The builder also applies docs-index `viewer_options.manage_only_tree_root_ids`, so Library Archive docs can remain generated and manageable without appearing in public Library search.
 
 ### Current Commands
 
@@ -389,7 +390,7 @@ Current builder behaviour for Library:
 - matches the same docs-domain record model used by Studio
 - reads only the generated Library docs index
 - can patch the existing Library search artifact for targeted `doc_id` updates
-- emits one search record per viewable Library doc
+- emits one search record per public-viewable Library doc after applying viewability and manage-only tree-root filtering
 - stays compatible with the shared Docs Viewer inline search runtime
 
 ### Current Runtime Mapping

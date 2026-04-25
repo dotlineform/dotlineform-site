@@ -1,5 +1,11 @@
 {
-  "generated_at": "2026-04-25T14:57:34Z",
+  "generated_at": "2026-04-25T17:43:22Z",
+  "viewer_options": {
+    "non_loadable_doc_ids": [
+      "_archive"
+    ],
+    "manage_only_tree_root_ids": []
+  },
   "docs": [
     {
       "scope": "studio",
@@ -118,7 +124,7 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "docs-viewer",
       "sort_order": 10,
       "published": true,
@@ -146,7 +152,7 @@
       "doc_id": "data-models-shared",
       "title": "Shared Patterns",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-25",
       "parent_id": "data-models",
       "sort_order": 10,
       "published": true,
@@ -328,7 +334,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "scripts",
       "sort_order": 20,
       "published": true,
@@ -594,7 +600,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-25",
       "parent_id": "docs-viewer",
       "sort_order": 30,
       "published": true,
@@ -664,7 +670,7 @@
       "doc_id": "data-models-studio",
       "title": "Studio Scope",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "data-models",
       "sort_order": 30,
       "published": true,
@@ -748,7 +754,7 @@
       "doc_id": "docs-viewer-draft-publishing-spec",
       "title": "Viewability Workflow Spec",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "docs-viewer",
       "sort_order": 35,
       "published": true,
@@ -846,7 +852,7 @@
       "doc_id": "data-models-library",
       "title": "Library Scope",
       "added_date": "2026-03-31",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-25",
       "parent_id": "data-models",
       "sort_order": 40,
       "published": true,

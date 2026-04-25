@@ -18,6 +18,8 @@ ScopeConfig = Struct.new(
   :output,
   :viewer_base_url,
   :include_scope_param,
+  :non_loadable_doc_ids,
+  :manage_only_tree_root_ids,
   keyword_init: true
 )
 
@@ -42,13 +44,23 @@ class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
 
-  def initialize(scope_id:, source_dir:, output_dir:, viewer_base_url:, include_scope_param: false)
+  def initialize(
+    scope_id:,
+    source_dir:,
+    output_dir:,
+    viewer_base_url:,
+    include_scope_param: false,
+    non_loadable_doc_ids: [],
+    manage_only_tree_root_ids: []
+  )
     @scope_id = scope_id.to_s
     @source_dir = Pathname(source_dir).expand_path
     @output_dir = Pathname(output_dir).expand_path
     @items_dir = @output_dir.join("by-id")
     @viewer_base_url = normalize_viewer_base_url(viewer_base_url)
     @include_scope_param = include_scope_param
+    @non_loadable_doc_ids = normalize_doc_ids(non_loadable_doc_ids)
+    @manage_only_tree_root_ids = normalize_doc_ids(manage_only_tree_root_ids)
     @repo_root = Pathname(__dir__).parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
@@ -59,8 +71,10 @@ class DocsDataBuilder
     validate_docs!(docs)
 
     docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc) }
+    viewer_options = viewer_options_payload
     index_payload = {
-      "generated_at" => effective_generated_at(docs_index),
+      "generated_at" => effective_generated_at(docs_index, viewer_options),
+      "viewer_options" => viewer_options,
       "docs" => docs_index
     }
     item_payloads = docs.to_h { |doc| [doc.doc_id, item_entry(doc, docs)] }
@@ -90,6 +104,17 @@ class DocsDataBuilder
     normalized = "/docs/" if normalized.empty?
     normalized = "/#{normalized}" unless normalized.start_with?("/")
     normalized.end_with?("/") ? normalized : "#{normalized}/"
+  end
+
+  def normalize_doc_ids(values)
+    Array(values).map { |value| value.to_s.strip }.reject(&:empty?).uniq.sort
+  end
+
+  def viewer_options_payload
+    {
+      "non_loadable_doc_ids" => @non_loadable_doc_ids,
+      "manage_only_tree_root_ids" => @manage_only_tree_root_ids
+    }
   end
 
   def load_docs
@@ -307,13 +332,15 @@ class DocsDataBuilder
     ]
   end
 
-  def effective_generated_at(docs_index)
+  def effective_generated_at(docs_index, viewer_options)
     existing_payload = load_json_file(@output_dir.join("index.json"))
     return Time.now.utc.iso8601 unless existing_payload.is_a?(Hash)
 
     existing_docs = existing_payload["docs"]
+    existing_viewer_options = existing_payload["viewer_options"]
     existing_generated_at = existing_payload["generated_at"].to_s
     return Time.now.utc.iso8601 unless existing_docs == docs_index
+    return Time.now.utc.iso8601 unless existing_viewer_options == viewer_options
     return Time.now.utc.iso8601 if existing_generated_at.empty?
 
     existing_generated_at
@@ -484,14 +511,18 @@ scope_configs = [
     source: "_docs_src",
     output: "assets/data/docs/scopes/studio",
     viewer_base_url: "/docs/",
-    include_scope_param: true
+    include_scope_param: true,
+    non_loadable_doc_ids: ["_archive"],
+    manage_only_tree_root_ids: []
   ),
   ScopeConfig.new(
     scope_id: "library",
     source: "_docs_library_src",
     output: "assets/data/docs/scopes/library",
     viewer_base_url: "/library/",
-    include_scope_param: false
+    include_scope_param: false,
+    non_loadable_doc_ids: ["_archive"],
+    manage_only_tree_root_ids: ["_archive"]
   )
 ]
 
@@ -511,7 +542,9 @@ selected_scopes.each do |config|
     source_dir: options[:source] || config.source,
     output_dir: options[:output] || config.output,
     viewer_base_url: options[:viewer_base_url] || config.viewer_base_url,
-    include_scope_param: config.include_scope_param
+    include_scope_param: config.include_scope_param,
+    non_loadable_doc_ids: config.non_loadable_doc_ids,
+    manage_only_tree_root_ids: config.manage_only_tree_root_ids
   )
   builder.run(write: options[:write])
 end

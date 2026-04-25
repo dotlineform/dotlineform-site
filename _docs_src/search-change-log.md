@@ -9,6 +9,27 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Applied docs manage-only tree filtering to docs search
+
+**Status:** implemented
+
+**Area:** docs search build flow
+
+**Summary:**
+Made docs-domain search builders read generated docs-index viewer options and exclude docs under configured manage-only tree roots.
+
+**Reason:**
+Library Archive should remain generated and manageable without becoming public Library discovery material. Hiding it in the viewer alone would leave a search path to archived Library docs.
+
+**Effect:**
+`scripts/build_search.rb` now applies `viewer_options.manage_only_tree_root_ids` from the docs index after viewability filtering. Library Archive and descendants are excluded from `assets/data/search/library/index.json`, while Studio Archive behavior remains unchanged because Studio has no manage-only tree roots.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+
 ## [2026-04-25] Opened catalogue search results in new tabs
 
 **Status:** implemented

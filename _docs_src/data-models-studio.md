@@ -2,7 +2,7 @@
 doc_id: data-models-studio
 title: "Studio Scope"
 added_date: 2026-04-19
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 parent_id: data-models
 sort_order: 30
 ---
@@ -292,10 +292,12 @@ Current content families:
 
 - one row per generated Studio doc
 - identity, title, added/update dates, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
+- `viewer_options` declaring `_archive` as non-loadable while leaving it visible in the normal Studio tree
 
 Current site mapping:
 
 - left-hand tree and lookup layer for `/docs/`
+- Studio Archive remains public/default tree reference material for completed planning docs, deprecated guidance, and decision history
 
 Why it exists separately from the per-doc payload:
 

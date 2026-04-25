@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: "Docs Viewer Runtime Boundary"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-04-25
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -51,6 +51,7 @@ These are normal route-shell differences and should not force a runtime fork.
 - surrounding page context and navigation state
 - scope-specific copy or small shell-level layout changes
 - distinct source trees and generated JSON artifacts
+- scope-specific viewer options in generated docs indexes, such as manage-only structural tree roots
 
 These are expected uses of the current architecture.
 
@@ -63,6 +64,7 @@ The following are not good reasons to split the runtime.
 - changing which scope-owned JSON tree the viewer loads
 - adding small optional shell parameters to the shared include
 - keeping Studio and library docs in separate source roots
+- hiding a structural tree branch in one scope when that rule can be expressed as generated scope-owned data
 
 If the difference can be expressed through data, route-shell composition, or a small include option, the runtime should stay shared.
 

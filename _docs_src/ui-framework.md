@@ -186,6 +186,7 @@ The current shared treatment is:
 - docs-viewer search and recently-added results show title plus `date` or `date • parent`; they do not show `doc_id` as a separate visible line
 - docs-viewer search uses `last_updated` for its date metadata, while recently-added uses `added_date`
 - active state should be obvious without turning the viewer into a tabbed interface
+- scope-level structural visibility, such as a manage-only Archive branch, should come from generated docs index options rather than hard-coded scope checks in the viewer
 - in manage mode, the draft checkbox adds non-viewable docs to the tree while keeping viewable docs visible for context
 - draft/non-viewable tree-row color and font weight should come from `studio_config.json` so accessibility can be tuned without code changes
 - in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"
