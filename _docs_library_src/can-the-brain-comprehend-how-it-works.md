@@ -10,7 +10,7 @@ viewable: false
 ---
 # Can the Brain Comprehend How It Works?
 
-> [Prompt] 2025-12-01T00:00:00Z "Does this lead to dysfunction, where the brain can’t comprehend how it works?"
+> "Does this lead to dysfunction?"
 
 ## 1. Structural Limits vs. Dysfunction
 
@@ -61,20 +61,10 @@ A concise way to put this is:
 
 Key sources used in this note, with titles and URLs for further reading.
 
-| Topic | Reference (short) | URL |
+| Topic | Reference | URL |
 | --- | --- | --- |
 | Limits of introspection and confabulation | Nisbett & Wilson, 1977, *Telling more than we can know* | [https://philpapers.org/rec/NISTMT-2](https://philpapers.org/rec/NISTMT-2) |
 | Choice blindness and introspective limits | Johansson et al., 2005/2006, *Choice blindness* | [https://pubmed.ncbi.nlm.nih.gov/17049881/](https://pubmed.ncbi.nlm.nih.gov/17049881/) |
 | Self-model theory of subjectivity | Metzinger, 2003, *Being No One* | [https://direct.mit.edu/books/monograph/1991/Being-No-OneThe-Self-Model-Theory-of-Subjectivity](https://direct.mit.edu/books/monograph/1991/Being-No-OneThe-Self-Model-Theory-of-Subjectivity) |
 | Attention schema theory and awareness | Graziano, 2015, *The attention schema theory* | [https://pmc.ncbi.nlm.nih.gov/articles/PMC4407481/](https://pmc.ncbi.nlm.nih.gov/articles/PMC4407481/) |
 | Cognitive closure and limits of explanation | McGinn, 1989/1991, *The problem of consciousness* | [https://www.jstor.org/stable/2940985](https://www.jstor.org/stable/2940985) |
-
-## 8. APA-style References
-
-Full references in APA format:
-
-- Graziano, M. S. A. (2015). The attention schema theory: A mechanistic account of subjective awareness. *Frontiers in Psychology, 6*, 500. https://doi.org/10.3389/fpsyg.2015.00500
-- Johansson, P., Hall, L., Sikström, S., & Olsson, A. (2005). Failure to detect mismatches between intention and outcome in a simple decision task. *Science, 310*(5745), 116–119. https://doi.org/10.1126/science.1111709
-- McGinn, C. (1991). *The problem of consciousness*. Blackwell.
-- Metzinger, T. (2003). *Being no one: The self-model theory of subjectivity*. MIT Press.
-- Nisbett, R. E., & Wilson, T. D. (1977). Telling more than we can know: Verbal reports on mental processes. *Psychological Review, 84*(3), 231–259. https://doi.org/10.1037/0033-295X.84.3.231

@@ -9,4 +9,4 @@ sort_order: 10
 
 # Library
 
-coming soon...
+Research notes and project references.

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-751d8b8815aff647e0c37b8e9a19335e",
-    "generated_at_utc": "2026-04-25T21:10:55Z",
+    "version": "blake2b-cd0f4b99df607cb8ca5da335ddcbc34d",
+    "generated_at_utc": "2026-04-25T21:24:43Z",
     "count": 4
   },
   "entries": [
@@ -45,28 +45,27 @@
       "search_text": "dreaming-is-actve dreaming is actve dreaming is active active 2026-04-25 2026 04 25"
     },
     {
-      "id": "defining-information-for-cross-boundary-comparisons-concepts",
+      "id": "defining-information-for-cross-boundary-comparisons",
       "kind": "doc",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
-      "href": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "href": "/library/?doc=defining-information-for-cross-boundary-comparisons",
       "last_updated": "2026-04-25",
       "display_meta": "2026-04-25",
       "search_terms": [
-        "defining-information-for-cross-boundary-comparisons-concepts",
+        "defining-information-for-cross-boundary-comparisons",
         "defining",
         "information",
         "for",
         "cross",
         "boundary",
         "comparisons",
-        "concepts",
-        "defining \"information\" for cross‑boundary comparisons — concepts",
+        "defining \"information\" for cross‑boundary comparisons",
         "2026-04-25",
         "2026",
         "04",
         "25"
       ],
-      "search_text": "defining-information-for-cross-boundary-comparisons-concepts defining information for cross boundary comparisons concepts defining \"information\" for cross‑boundary comparisons — concepts 2026-04-25 2026 04 25"
+      "search_text": "defining-information-for-cross-boundary-comparisons defining information for cross boundary comparisons defining \"information\" for cross‑boundary comparisons 2026-04-25 2026 04 25"
     },
     {
       "id": "evolutionary-psychology-overview",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T21:10:55Z",
+  "generated_at": "2026-04-25T21:30:08Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -68,17 +68,18 @@
     },
     {
       "scope": "library",
-      "doc_id": "defining-information-for-cross-boundary-comparisons-concepts",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
+      "doc_id": "defining-information-for-cross-boundary-comparisons",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
       "parent_id": "",
       "sort_order": 202,
       "published": true,
       "viewable": true,
-      "source_path": "defining-information-for-cross-boundary-comparisons-concepts.md",
-      "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons-concepts",
-      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons-concepts.json"
+      "source_path": "defining-information-for-cross-boundary-comparisons.md",
+      "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons",
+      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons.json",
+      "summary": "Establish a consistent, cross‑domain definition of “information” to compare event boundaries in memory and event horizons in black holes."
     },
     {
       "scope": "library",
@@ -92,7 +93,8 @@
       "viewable": true,
       "source_path": "evolutionary-psychology-overview.md",
       "viewer_url": "/library/?doc=evolutionary-psychology-overview",
-      "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json",
+      "summary": "This overview frames evolutionary psychology for a Processing application."
     }
   ]
 }
