@@ -63,13 +63,13 @@ Current policy values:
 - `record_update`
   Used by docs-domain scopes where create, update, and delete can target explicit `doc_id` records.
 - `additive_only`
-  Reserved for the first catalogue targeted-search slice, where only new work, series, and moment entries are safe to insert without changing existing records.
+  Used by the first catalogue targeted-search slice, where only new work, series, and moment entries are safe to insert without changing existing records.
 - `full_rebuild`
   Used when a source family or scope should not use targeted updates.
 
 The policy value is intentionally more explicit than a boolean because catalogue can become partly targetable without making every catalogue source-family change safe for targeted updates.
 
-Validation rejects the old `targeted` boolean form. Policies that allow targeted updates must declare `targeted_operations`; `full_rebuild` entries must omit it.
+Validation rejects the old `targeted` boolean form. Policies that allow targeted updates must declare `targeted_operations`; `full_rebuild` entries must omit it. Operation values must also match the policy: `record_update` allows `create`, `update`, and `delete`; `additive_only` allows `create`.
 
 ## Heavy-index readiness
 

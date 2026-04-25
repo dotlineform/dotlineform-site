@@ -11,6 +11,11 @@ require "time"
 DEFAULT_SCOPE = "studio"
 SEARCH_BUILD_CONFIG_PATH = "scripts/search/build_config.json"
 SEARCH_BUILD_TARGETED_POLICIES = %w[full_rebuild record_update additive_only].freeze
+SEARCH_BUILD_TARGETED_POLICY_OPERATIONS = {
+  "record_update" => %w[create update delete],
+  "additive_only" => %w[create]
+}.freeze
+CATALOGUE_TARGET_KINDS = %w[moment series work].freeze
 SCOPE_DEFAULTS = {
   "catalogue" => {
     kind: :catalogue,
@@ -46,6 +51,12 @@ SearchDocRecord = Struct.new(
   keyword_init: true
 )
 
+CatalogueSearchTarget = Struct.new(
+  :kind,
+  :id,
+  keyword_init: true
+)
+
 class SearchDataBuilder
   def initialize(
     scope:,
@@ -73,14 +84,15 @@ class SearchDataBuilder
     @work_search_metadata_by_id = {}
   end
 
-  def run(write:, force:, only_doc_ids: nil, remove_missing: false)
+  def run(write:, force:, only_doc_ids: nil, only_records: nil, remove_missing: false)
     validate_scope!
     validate_search_build_config!
     targeted_doc_ids = normalize_target_doc_ids(only_doc_ids)
-    validate_targeted_options!(targeted_doc_ids, remove_missing)
+    targeted_records = normalize_target_catalogue_records(only_records)
+    validate_targeted_options!(targeted_doc_ids, targeted_records, remove_missing)
     payload, diagnostics =
       if @kind == :catalogue
-        [build_catalogue_payload, nil]
+        build_catalogue_payload(target_records: targeted_records)
       else
         build_docs_payload(target_doc_ids: targeted_doc_ids, remove_missing: remove_missing)
       end
@@ -192,6 +204,12 @@ class SearchDataBuilder
     unless operations.is_a?(Array) && operations.all? { |operation| !normalize_text(operation).empty? }
       raise SystemExit, "Invalid search build config: #{label} targeted_operations must be a non-empty string array"
     end
+    unsupported_operation = operations.map { |operation| normalize_text(operation) }.find do |operation|
+      !SEARCH_BUILD_TARGETED_POLICY_OPERATIONS.fetch(policy).include?(operation)
+    end
+    if unsupported_operation
+      raise SystemExit, "Invalid search build config: #{label} targeted_operations includes unsupported #{unsupported_operation} for #{policy}"
+    end
   end
 
   def validate_entry_source_families!(payload)
@@ -219,7 +237,8 @@ class SearchDataBuilder
     build_targeted_docs_payload(entries, target_doc_ids, remove_missing)
   end
 
-  def build_catalogue_payload
+  def build_catalogue_payload(target_records: nil)
+    target_records ||= []
     series_payload = load_index_hash(@series_index_path, "series")
     works_payload = load_index_hash(@works_index_path, "works")
     moments_payload = load_index_hash(@moments_index_path, "moments")
@@ -293,7 +312,9 @@ class SearchDataBuilder
       ]
     end
 
-    build_catalogue_search_payload(ordered_entries)
+    return [build_catalogue_search_payload(ordered_entries), nil] if target_records.empty?
+
+    build_targeted_catalogue_payload(ordered_entries, target_records)
   end
 
   def write_payload(payload, write:, force:, diagnostics: nil)
@@ -302,7 +323,8 @@ class SearchDataBuilder
     existing_version = extract_existing_version(@output_path)
     payload_version = payload.dig("header", "version")
 
-    if existing_version == payload_version && !force
+    targeted_changes = diagnostics && (diagnostics[:changed].to_i.positive? || diagnostics[:removed].to_i.positive?)
+    if existing_version == payload_version && !force && !targeted_changes
       print_skip_message(relative_output_path, write, diagnostics)
       return payload
     end
@@ -536,6 +558,80 @@ class SearchDataBuilder
     diagnostics = {
       changed: changed,
       removed: removed,
+      unchanged: unchanged,
+      full_fallback: 0
+    }
+    [payload, diagnostics]
+  end
+
+  def build_targeted_catalogue_payload(entries, target_records)
+    existing_payload = load_existing_search_payload
+    unless existing_payload
+      diagnostics = {
+        changed: entries.length,
+        removed: 0,
+        unchanged: 0,
+        full_fallback: 1
+      }
+      return [build_catalogue_search_payload(entries), diagnostics]
+    end
+
+    existing_entries = existing_payload["entries"]
+    unless existing_entries.is_a?(Array)
+      diagnostics = {
+        changed: entries.length,
+        removed: 0,
+        unchanged: 0,
+        full_fallback: 1
+      }
+      return [build_catalogue_search_payload(entries), diagnostics]
+    end
+
+    entry_by_key = entries.to_h { |entry| [catalogue_entry_key(entry), entry] }
+    order_by_key = entries.each_with_index.to_h { |entry, index| [catalogue_entry_key(entry), index] }
+    existing_by_key = existing_entries.each_with_object({}) do |entry, out|
+      next unless entry.is_a?(Hash)
+
+      entry_key = catalogue_entry_key(entry)
+      next if entry_key.empty?
+
+      out[entry_key] = entry
+    end
+    existing_order_by_key = existing_entries.each_with_index.to_h do |entry, index|
+      [catalogue_entry_key(entry), index]
+    end
+
+    changed = 0
+    unchanged = 0
+
+    target_records.each do |target|
+      target_key = catalogue_record_key(target.kind, target.id)
+      next_entry = entry_by_key[target_key]
+      abort "Targeted catalogue search create could not find source record #{target_key}" unless next_entry
+
+      current_entry = existing_by_key[target_key]
+      if current_entry.nil?
+        existing_by_key[target_key] = next_entry
+        changed += 1
+      elsif current_entry == next_entry
+        unchanged += 1
+      else
+        abort "Targeted catalogue search is additive-only; existing record #{target_key} requires a full catalogue search rebuild"
+      end
+    end
+
+    merged_entries = existing_by_key.values.sort_by do |entry|
+      entry_key = catalogue_entry_key(entry)
+      [
+        order_by_key.fetch(entry_key, entries.length + existing_order_by_key.fetch(entry_key, 0)),
+        existing_order_by_key.fetch(entry_key, existing_entries.length)
+      ]
+    end
+
+    payload = build_catalogue_search_payload(merged_entries)
+    diagnostics = {
+      changed: changed,
+      removed: 0,
       unchanged: unchanged,
       full_fallback: 0
     }
@@ -797,13 +893,51 @@ class SearchDataBuilder
     Array(values).flat_map { |value| normalize_text(value).split(",") }.map { |value| normalize_text(value) }.reject(&:empty?).uniq
   end
 
-  def validate_targeted_options!(targeted_doc_ids, remove_missing)
-    return if targeted_doc_ids.empty? && !remove_missing
+  def normalize_target_catalogue_records(values)
+    seen = {}
+    Array(values).flat_map { |value| normalize_text(value).split(",") }.filter_map do |raw_record|
+      record = normalize_text(raw_record)
+      next if record.empty?
+
+      kind, id = record.split(":", 2).map { |part| normalize_text(part) }
+      if kind.empty? || id.empty?
+        abort "Targeted catalogue records must use kind:id form"
+      end
+      kind = normalize(kind)
+      unless CATALOGUE_TARGET_KINDS.include?(kind)
+        abort "Targeted catalogue record kind must be one of #{CATALOGUE_TARGET_KINDS.join(', ')}"
+      end
+
+      key = catalogue_record_key(kind, id)
+      next if seen[key]
+
+      seen[key] = true
+      CatalogueSearchTarget.new(kind: kind, id: id)
+    end
+  end
+
+  def validate_targeted_options!(targeted_doc_ids, targeted_records, remove_missing)
+    return if targeted_doc_ids.empty? && targeted_records.empty? && !remove_missing
 
     if @kind == :catalogue
-      abort "Targeted search updates are not supported for catalogue scope"
+      abort "Targeted catalogue search updates do not support --only-doc-ids" unless targeted_doc_ids.empty?
+      abort "Targeted catalogue search updates require --only-records" if targeted_records.empty?
+      abort "Targeted catalogue search is additive-only and does not support --remove-missing" if remove_missing
+      return
     end
+
+    abort "Targeted docs search updates do not support --only-records" unless targeted_records.empty?
     abort "Targeted docs search updates require at least one doc id" if targeted_doc_ids.empty?
+  end
+
+  def catalogue_entry_key(entry)
+    return "" unless entry.is_a?(Hash)
+
+    catalogue_record_key(entry["kind"], entry["id"])
+  end
+
+  def catalogue_record_key(kind, id)
+    "#{normalize(kind)}:#{normalize_text(id)}"
   end
 
   def compact_catalogue_field?(key, value)
@@ -835,6 +969,7 @@ options = {
   tag_assignments_path: nil,
   tag_registry_path: nil,
   only_doc_ids: [],
+  only_records: [],
   remove_missing: false,
   write: false,
   force: false
@@ -879,6 +1014,10 @@ OptionParser.new do |parser|
     options[:only_doc_ids] << value
   end
 
+  parser.on("--only-records RECORDS", "Comma-separated kind:id records for additive catalogue search updates") do |value|
+    options[:only_records] << value
+  end
+
   parser.on("--remove-missing", "Allow targeted docs-domain updates to remove missing, non-viewable, or _archive ids") do
     options[:remove_missing] = true
   end
@@ -905,5 +1044,6 @@ SearchDataBuilder.new(
   write: options[:write],
   force: options[:force],
   only_doc_ids: options[:only_doc_ids],
+  only_records: options[:only_records],
   remove_missing: options[:remove_missing]
 )

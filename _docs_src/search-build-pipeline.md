@@ -40,7 +40,8 @@ Current build principles:
 - scope-owned search artifacts
 - compact records rather than prose-heavy payloads
 - search stays downstream of canonical source systems rather than becoming a new source of truth
-- docs-domain scopes can use targeted search updates by `doc_id` while `catalogue` remains full-rebuild-only
+- docs-domain scopes can use targeted search updates by `doc_id`
+- catalogue can use additive-only targeted inserts by explicit `kind:id` record targets
 
 Current source boundary:
 
@@ -93,7 +94,7 @@ Current validation responsibilities in `scripts/build_search.rb`:
 - reject source-family references outside their declared scopes
 - reject unsupported `targeted_policy` values
 - reject obsolete boolean `targeted` flags
-- reject missing or misplaced `targeted_operations`
+- reject missing, misplaced, or policy-incompatible `targeted_operations`
 - reject fields without source-family declarations
 - reject emitted entry fields that are missing from the config for the current scope
 
@@ -102,7 +103,7 @@ The config is intentionally not a record-generation DSL. The builder still owns 
 Current targeted policy values:
 
 - `record_update`: targeted create, update, and delete by explicit record id
-- `additive_only`: targeted insertion only, reserved for the first catalogue targeted-search slice
+- `additive_only`: targeted insertion only, currently used by the first catalogue targeted-search slice
 - `full_rebuild`: targeted updates are not allowed for that source family or scope
 
 For the config-specific reference, see [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json).
@@ -176,13 +177,19 @@ Current supported overrides:
 - `--tag-assignments PATH`
 - `--tag-registry PATH`
 - `--output PATH`
+- `--only-records RECORDS`
 - `--write`
 - `--force`
 
 Current targeted-update boundary:
 
 - `catalogue` does not support `--only-doc-ids`
-- catalogue search still uses full rebuilds only
+- `--only-records` accepts comma-separated `work:<id>`, `series:<id>`, and `moment:<id>` targets
+- catalogue targeted mode is additive-only
+- missing entries are inserted from current generated catalogue source JSON
+- identical existing entries are treated as unchanged
+- changed existing entries are refused and require a full catalogue search rebuild
+- `--remove-missing` is not supported for catalogue
 
 ### Current Included Content
 

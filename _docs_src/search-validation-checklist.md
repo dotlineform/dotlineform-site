@@ -54,7 +54,10 @@ Prefer real site examples over synthetic test strings.
 - [ ] If the change touched targeted docs-search updates, run `./scripts/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
 - [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
 - [ ] If the change touched docs-management search orchestration, confirm docs-management rebuild responses report `search.mode: targeted` for explicit affected ids
-- [ ] Confirm `./scripts/build_search.rb --scope catalogue --only-doc-ids anything --remove-missing` fails closed because targeted mode is docs-only
+- [ ] Confirm `./scripts/build_search.rb --scope catalogue --only-doc-ids anything --remove-missing` fails closed because catalogue uses `--only-records`
+- [ ] If the change touched catalogue targeted search, run `./scripts/build_search.rb --scope catalogue --only-records moment:4-stories`
+- [ ] Confirm catalogue targeted dry run reports changed, removed, unchanged, skipped, and full-fallback behavior
+- [ ] Confirm catalogue targeted mode refuses changed existing records and `--remove-missing`
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`
 
@@ -63,6 +66,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm `scripts/search/build_config.json` is valid JSON
 - [ ] Confirm every emitted field for the changed scope has a source-family declaration
 - [ ] Confirm source-family scope declarations match the intended `targeted_policy`
+- [ ] Confirm `targeted_operations` values are valid for the configured `targeted_policy`
 - [ ] Confirm future heavy-index field additions update `scripts/search/build_config.json` before changing builder output
 
 ## D. Catalogue Index Integrity Checks

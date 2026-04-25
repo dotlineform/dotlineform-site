@@ -10,11 +10,10 @@ sort_order: 95
 
 Status:
 
-- follow-on planning document
-- not implemented
+- first additive-only slice implemented
 - depends on the completed docs-domain incremental search phases
-- should start with dependency rules before changing `scripts/build_search.rb`
-- first implementation slice should be additive new work, new series, and new moment records only
+- supports additive new work, new series, and new moment records only
+- existing-record edits and removals still require a full catalogue search rebuild
 - tags, tag assignments, and work details are out of scope
 
 ## Purpose
@@ -29,10 +28,11 @@ Current catalogue search behavior:
 
 - `./scripts/build_search.rb --scope catalogue --write` performs a full rebuild
 - `--only-doc-ids` is refused for `catalogue`
-- `scripts/search/build_config.json` currently marks catalogue source families with `targeted_policy: "full_rebuild"`
+- `--only-records` supports additive catalogue inserts for `work`, `series`, and `moment`
+- `scripts/search/build_config.json` marks the catalogue scope with `targeted_policy: "additive_only"` and `targeted_operations: ["create"]`
 - generated catalogue search remains one combined artifact at `assets/data/search/catalogue/index.json`
 
-This is correct for now. A full rebuild remains the operational escape hatch until catalogue affected-record rules are precise enough to trust targeted patching.
+A full rebuild remains the operational escape hatch for edits, removals, tag changes, work-detail changes, and ambiguous dependency states.
 
 ## Key Observations
 
@@ -54,19 +54,21 @@ The biggest near-term win is additive creation. New work, new series, and new mo
 
 Do not reuse `--only-doc-ids` for catalogue.
 
-A catalogue-specific interface should name catalogue record identity explicitly. A likely first command shape is:
+A catalogue-specific interface names catalogue record identity explicitly:
 
 ```bash
-./scripts/build_search.rb --scope catalogue --write --only-records work:00001,series:009,moment:blue-sky --remove-missing
+./scripts/build_search.rb --scope catalogue --write --only-records work:00001,series:009,moment:blue-sky
 ```
 
-Open naming choices:
+Accepted record kinds:
 
-- `--only-records`
-- `--only-catalogue-records`
-- separate flags such as `--work-ids`, `--series-ids`, and `--moment-ids`
+- `work`
+- `series`
+- `moment`
 
-The separate-flag version is more verbose but easier to validate and may match existing catalogue generator command shapes better.
+The command is additive-only. If the target entry is missing from the existing search artifact, the builder inserts it from the current generated catalogue source JSON. If the target entry already exists and is identical, the command is idempotent and reports it as unchanged. If the target entry already exists but differs, the builder refuses the targeted run and requires a full catalogue search rebuild.
+
+`--remove-missing` is not supported for catalogue in this slice.
 
 ## Affected-Record Rules
 
@@ -75,11 +77,11 @@ Initial conservative rules:
 - new work targets only the new work entry
 - new series targets only the new series entry
 - new moment targets only the new moment entry
-- work source changes target the changed work entry
-- per-work payload changes target the changed work entry
-- moment source changes target the changed moment entry
-- series source changes target the series entry plus related work entries
-- work `series_ids` changes target the changed work entry and may require old and new related series entries only if serialized series summaries change
+- work source edits require full rebuild for now
+- per-work payload edits require full rebuild for now
+- moment source edits require full rebuild for now
+- series source edits require full rebuild for now
+- work `series_ids` edits require full rebuild for now
 - tag assignment changes are out of scope for the first catalogue targeted-search implementation
 - tag registry label changes are out of scope for the first catalogue targeted-search implementation
 - work detail changes are out of scope for catalogue targeted search unless a later search schema intentionally adds detail-level records or fields
@@ -94,7 +96,8 @@ The search builder should own:
 
 - rebuilding catalogue entries from current generated source artifacts
 - loading the existing search artifact for targeted mode
-- removing affected entries when `--remove-missing` is present and the source record no longer produces an entry
+- refusing removal requests in the additive-only first slice
+- removing affected entries in a later slice only when deletion rules are explicit
 - merging changed entries into the existing artifact
 - sorting deterministically
 - recomputing header version and count
@@ -126,23 +129,24 @@ Before enabling catalogue targeted search in live write flows:
 - run targeted catalogue update for representative new work, new series, and new moment cases
 - compare targeted output against a full rebuild for the same final source state
 - verify deterministic ordering and header version behavior
-- verify removed or unpublished records are removed only when the targeted command explicitly allows removal
+- verify catalogue targeted mode refuses `--remove-missing`
+- verify existing changed records are refused and routed to full rebuild
 - confirm `catalogue` targeted mode still refuses ambiguous source-family changes, tag changes, and work-detail changes
 - update [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) with catalogue-targeted checks
 
 ## First Implementation Slice
 
-Recommended first slice:
+Implemented first slice:
 
-1. decide the CLI shape
-2. change the catalogue scope policy to `targeted_policy: "additive_only"` with `targeted_operations: ["create"]`
-3. add catalogue record-id parsing without using it in live Studio writes
-4. support targeted insertion for new work records
-5. support targeted insertion for new series records
-6. support targeted insertion for new moment records
-7. keep edits to existing records full-rebuild-only at first
-8. keep tags, tag assignments, and work details out of scope
-9. compare targeted output with full rebuild output in verification
-10. document remaining catalogue dependency gaps
+1. CLI shape is `--only-records kind:id,...`
+2. catalogue scope policy is `targeted_policy: "additive_only"` with `targeted_operations: ["create"]`
+3. catalogue record-id parsing validates `work`, `series`, and `moment`
+4. targeted insertion supports new work records
+5. targeted insertion supports new series records
+6. targeted insertion supports new moment records
+7. edits to existing records remain full-rebuild-only
+8. tags, tag assignments, and work details remain out of scope
+9. verification compares targeted output with full rebuild output
+10. remaining catalogue dependency gaps stay documented for later slices
 
 This provides a narrow proof of the merge/update mechanics without prematurely solving existing-record edits or the hardest cross-record invalidation cases.

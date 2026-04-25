@@ -9,6 +9,30 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Added additive catalogue targeted search
+
+**Status:** implemented
+
+**Area:** catalogue search build flow
+
+**Summary:**
+Added an additive-only targeted catalogue search mode for new work, series, and moment records.
+
+**Reason:**
+New catalogue records do not require existing search entries to be invalidated under the current schema, so they can be inserted without a full catalogue search rebuild. Existing-record edits, removals, tag changes, and work-detail changes still have broader dependency risks.
+
+**Effect:**
+`scripts/build_search.rb` now accepts `--only-records kind:id,...` for `catalogue` scope, with supported kinds `work`, `series`, and `moment`. Targeted catalogue mode inserts missing records from the current generated catalogue source JSON, treats identical existing records as unchanged, refuses changed existing records, and does not support `--remove-missing`. `scripts/search/build_config.json` marks the catalogue scope and catalogue source families used for additive records with `targeted_policy: "additive_only"` and `targeted_operations: ["create"]`.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- `scripts/search/build_config.json`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)
+- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+
 ## [2026-04-25] Clarified search build targeted policy config
 
 **Status:** implemented
@@ -22,7 +46,7 @@ Replaced boolean search build targeted flags with explicit `targeted_policy` val
 Catalogue targeted search needs to support a future additive-only slice without implying that all catalogue changes are safe for targeted updates. A true/false flag was too broad for that distinction.
 
 **Effect:**
-`scripts/search/build_config.json` now uses `targeted_policy` values such as `record_update`, `additive_only`, and `full_rebuild`. `scripts/build_search.rb` validates those policy values, rejects obsolete boolean `targeted` flags, and requires `targeted_operations` for targetable policies. Catalogue remains full-rebuild-only for now, while the follow-on catalogue plan names the later additive-only policy boundary.
+`scripts/search/build_config.json` now uses `targeted_policy` values such as `record_update`, `additive_only`, and `full_rebuild`. `scripts/build_search.rb` validates those policy values, rejects obsolete boolean `targeted` flags, and requires `targeted_operations` for targetable policies. This made the later additive catalogue slice explicit instead of relying on a broad true/false flag.
 
 **Affected files/docs:**
 

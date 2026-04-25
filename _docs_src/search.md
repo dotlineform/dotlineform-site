@@ -29,7 +29,7 @@ Current live search scopes:
 - [Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) - describes token preparation, deduplication, hyphen/space handling, and similar preprocessing rules.
 - [Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) - operational checks for catalogue and docs-domain search surfaces.
 - [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan) - separates server/watch orchestration from search-owned record generation for future incremental updates.
-- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan) - follow-on plan for catalogue-specific targeted search updates.
+- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan) - additive-only catalogue targeted search boundary and remaining follow-on work.
 
 ## Maintenance
 

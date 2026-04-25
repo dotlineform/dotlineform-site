@@ -12,14 +12,16 @@
     "catalogue_indexes": {
       "description": "Generated catalogue aggregate indexes for series, works, and moments.",
       "scopes": ["catalogue"],
-      "targeted_policy": "full_rebuild",
+      "targeted_policy": "additive_only",
+      "targeted_operations": ["create"],
       "id_field": "id",
       "fallback": "full_rebuild"
     },
     "catalogue_work_payloads": {
       "description": "Generated per-work JSON payloads used for work-level search enrichment.",
       "scopes": ["catalogue"],
-      "targeted_policy": "full_rebuild",
+      "targeted_policy": "additive_only",
+      "targeted_operations": ["create"],
       "id_field": "work_id",
       "fallback": "full_rebuild"
     },
@@ -41,7 +43,8 @@
   "scopes": {
     "catalogue": {
       "artifact_strategy": "combined",
-      "targeted_policy": "full_rebuild",
+      "targeted_policy": "additive_only",
+      "targeted_operations": ["create"],
       "fields": {
         "kind": { "source_families": ["catalogue_indexes"] },
         "id": { "source_families": ["catalogue_indexes"] },
