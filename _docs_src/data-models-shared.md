@@ -54,7 +54,7 @@ Docs-scope indexes also carry `viewer_options` for scope-level runtime behavior 
 - `manage_only_tree_root_ids`
   tree roots hidden from public/default viewer and docs-search discovery but visible in manage mode
 
-Docs-scope index rows can also carry optional `summary` metadata when source front matter defines it. Search indexes do not consume that field until a scope-specific search task explicitly promotes it.
+Docs-scope index rows can also carry optional `summary` metadata when source front matter defines it. The field is plain text and single-paragraph in the shared management flow. Search indexes do not consume that field until a scope-specific search task explicitly promotes it.
 
 ### 3. Generated per-record JSON
 

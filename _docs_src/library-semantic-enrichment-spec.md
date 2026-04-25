@@ -89,6 +89,9 @@ Summary text should eventually live in Library source Markdown front matter:
 summary: "A concise paragraph describing the document."
 ```
 
+The current field is plain text, not rendered Markdown or HTML.
+The metadata editor and local write service normalize whitespace to one paragraph, so line breaks are collapsed and formatting markers such as `**bold**` display literally.
+
 Reasons:
 
 - the summary belongs to the source doc, not only to a generated search artifact

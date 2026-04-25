@@ -43,7 +43,7 @@ Current design:
 - same Markdown-or-raw-HTML authoring model
 - separate source root so Library can grow without being folded into Studio docs
 - Library import/create defaults new docs to `published: true`, `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
-- optional `summary` front matter stores a concise document summary; the shared Docs Viewer metadata editor can maintain it, and blank values remove the field
+- optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
 
 Current implementation note:
 
