@@ -9,6 +9,30 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Clarified search build targeted policy config
+
+**Status:** implemented
+
+**Area:** search build architecture
+
+**Summary:**
+Replaced boolean search build targeted flags with explicit `targeted_policy` values.
+
+**Reason:**
+Catalogue targeted search needs to support a future additive-only slice without implying that all catalogue changes are safe for targeted updates. A true/false flag was too broad for that distinction.
+
+**Effect:**
+`scripts/search/build_config.json` now uses `targeted_policy` values such as `record_update`, `additive_only`, and `full_rebuild`. `scripts/build_search.rb` validates those policy values, rejects obsolete boolean `targeted` flags, and requires `targeted_operations` for targetable policies. Catalogue remains full-rebuild-only for now, while the follow-on catalogue plan names the later additive-only policy boundary.
+
+**Affected files/docs:**
+
+- `scripts/search/build_config.json`
+- `scripts/build_search.rb`
+- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+
 ## [2026-04-25] Closed docs-domain incremental search phases
 
 **Status:** documented

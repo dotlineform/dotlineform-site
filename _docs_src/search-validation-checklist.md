@@ -62,7 +62,7 @@ Prefer real site examples over synthetic test strings.
 
 - [ ] Confirm `scripts/search/build_config.json` is valid JSON
 - [ ] Confirm every emitted field for the changed scope has a source-family declaration
-- [ ] Confirm source-family scope declarations match the intended targeted or full-rebuild policy
+- [ ] Confirm source-family scope declarations match the intended `targeted_policy`
 - [ ] Confirm future heavy-index field additions update `scripts/search/build_config.json` before changing builder output
 
 ## D. Catalogue Index Integrity Checks

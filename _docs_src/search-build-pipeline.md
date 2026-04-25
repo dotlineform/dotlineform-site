@@ -83,7 +83,7 @@ Current config responsibilities:
 
 - declare source families such as `docs_index`, `catalogue_indexes`, `catalogue_work_payloads`, `tag_assignments`, and `tag_registry`
 - declare scope eligibility for each source family
-- declare targeted versus full-rebuild fallback policy
+- declare explicit `targeted_policy` values for each source family and scope
 - map emitted search fields to source families
 - keep one combined artifact strategy per scope
 
@@ -91,10 +91,19 @@ Current validation responsibilities in `scripts/build_search.rb`:
 
 - reject unsupported config versions
 - reject source-family references outside their declared scopes
+- reject unsupported `targeted_policy` values
+- reject obsolete boolean `targeted` flags
+- reject missing or misplaced `targeted_operations`
 - reject fields without source-family declarations
 - reject emitted entry fields that are missing from the config for the current scope
 
 The config is intentionally not a record-generation DSL. The builder still owns field derivation, sorting, normalization, hashing, and targeted-update algorithms.
+
+Current targeted policy values:
+
+- `record_update`: targeted create, update, and delete by explicit record id
+- `additive_only`: targeted insertion only, reserved for the first catalogue targeted-search slice
+- `full_rebuild`: targeted updates are not allowed for that source family or scope
 
 For the config-specific reference, see [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json).
 

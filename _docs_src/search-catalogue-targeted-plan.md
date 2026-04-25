@@ -29,7 +29,7 @@ Current catalogue search behavior:
 
 - `./scripts/build_search.rb --scope catalogue --write` performs a full rebuild
 - `--only-doc-ids` is refused for `catalogue`
-- `scripts/search/build_config.json` marks catalogue source families as full-rebuild-only
+- `scripts/search/build_config.json` currently marks catalogue source families with `targeted_policy: "full_rebuild"`
 - generated catalogue search remains one combined artifact at `assets/data/search/catalogue/index.json`
 
 This is correct for now. A full rebuild remains the operational escape hatch until catalogue affected-record rules are precise enough to trust targeted patching.
@@ -135,13 +135,14 @@ Before enabling catalogue targeted search in live write flows:
 Recommended first slice:
 
 1. decide the CLI shape
-2. add catalogue record-id parsing without using it in live Studio writes
-3. support targeted insertion for new work records
-4. support targeted insertion for new series records
-5. support targeted insertion for new moment records
-6. keep edits to existing records full-rebuild-only at first
-7. keep tags, tag assignments, and work details out of scope
-8. compare targeted output with full rebuild output in verification
-9. document remaining catalogue dependency gaps
+2. change the catalogue scope policy to `targeted_policy: "additive_only"` with `targeted_operations: ["create"]`
+3. add catalogue record-id parsing without using it in live Studio writes
+4. support targeted insertion for new work records
+5. support targeted insertion for new series records
+6. support targeted insertion for new moment records
+7. keep edits to existing records full-rebuild-only at first
+8. keep tags, tag assignments, and work details out of scope
+9. compare targeted output with full rebuild output in verification
+10. document remaining catalogue dependency gaps
 
 This provides a narrow proof of the merge/update mechanics without prematurely solving existing-record edits or the hardest cross-record invalidation cases.

@@ -1,38 +1,39 @@
 {
-  "search_build_config_version": "search_build_config_v1",
+  "search_build_config_version": "search_build_config_v2",
   "source_families": {
     "docs_index": {
       "description": "Generated docs scope index payloads under assets/data/docs/scopes/<scope>/index.json.",
       "scopes": ["studio", "library"],
-      "targeted": true,
+      "targeted_policy": "record_update",
+      "targeted_operations": ["create", "update", "delete"],
       "id_field": "doc_id",
       "fallback": "full_rebuild"
     },
     "catalogue_indexes": {
       "description": "Generated catalogue aggregate indexes for series, works, and moments.",
       "scopes": ["catalogue"],
-      "targeted": false,
+      "targeted_policy": "full_rebuild",
       "id_field": "id",
       "fallback": "full_rebuild"
     },
     "catalogue_work_payloads": {
       "description": "Generated per-work JSON payloads used for work-level search enrichment.",
       "scopes": ["catalogue"],
-      "targeted": false,
+      "targeted_policy": "full_rebuild",
       "id_field": "work_id",
       "fallback": "full_rebuild"
     },
     "tag_assignments": {
       "description": "Studio tag assignment metadata that contributes catalogue search tag ids.",
       "scopes": ["catalogue"],
-      "targeted": false,
+      "targeted_policy": "full_rebuild",
       "id_field": "tag_id",
       "fallback": "full_rebuild"
     },
     "tag_registry": {
       "description": "Studio tag registry metadata that contributes catalogue search tag labels.",
       "scopes": ["catalogue"],
-      "targeted": false,
+      "targeted_policy": "full_rebuild",
       "id_field": "tag_id",
       "fallback": "full_rebuild"
     }
@@ -40,7 +41,7 @@
   "scopes": {
     "catalogue": {
       "artifact_strategy": "combined",
-      "targeted": false,
+      "targeted_policy": "full_rebuild",
       "fields": {
         "kind": { "source_families": ["catalogue_indexes"] },
         "id": { "source_families": ["catalogue_indexes"] },
@@ -74,7 +75,8 @@
     },
     "studio": {
       "artifact_strategy": "combined",
-      "targeted": true,
+      "targeted_policy": "record_update",
+      "targeted_operations": ["create", "update", "delete"],
       "fields": {
         "id": { "source_families": ["docs_index"] },
         "kind": { "source_families": ["docs_index"] },
@@ -90,7 +92,8 @@
     },
     "library": {
       "artifact_strategy": "combined",
-      "targeted": true,
+      "targeted_policy": "record_update",
+      "targeted_operations": ["create", "update", "delete"],
       "fields": {
         "id": { "source_families": ["docs_index"] },
         "kind": { "source_families": ["docs_index"] },

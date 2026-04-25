@@ -338,19 +338,21 @@ Initial build-config concept:
   "source_families": {
     "docs_index": {
       "scopes": ["studio", "library"],
-      "targeted": true,
+      "targeted_policy": "record_update",
+      "targeted_operations": ["create", "update", "delete"],
       "id_field": "doc_id",
       "fallback": "full_rebuild"
     },
     "docs_payload": {
       "scopes": ["studio", "library"],
-      "targeted": true,
+      "targeted_policy": "record_update",
+      "targeted_operations": ["create", "update", "delete"],
       "id_field": "doc_id",
       "fallback": "full_rebuild"
     },
     "tag_registry": {
       "scopes": ["catalogue"],
-      "targeted": false,
+      "targeted_policy": "full_rebuild",
       "fallback": "full_rebuild"
     }
   }

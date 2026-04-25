@@ -10,6 +10,7 @@ require "time"
 
 DEFAULT_SCOPE = "studio"
 SEARCH_BUILD_CONFIG_PATH = "scripts/search/build_config.json"
+SEARCH_BUILD_TARGETED_POLICIES = %w[full_rebuild record_update additive_only].freeze
 SCOPE_DEFAULTS = {
   "catalogue" => {
     kind: :catalogue,
@@ -102,7 +103,7 @@ class SearchDataBuilder
     end
 
     version = normalize_text(@search_build_config["search_build_config_version"])
-    unless version == "search_build_config_v1"
+    unless version == "search_build_config_v2"
       raise SystemExit, "Invalid search build config version: #{version.empty? ? '(missing)' : version}"
     end
 
@@ -132,9 +133,7 @@ class SearchDataBuilder
       unless scopes.is_a?(Array) && scopes.all? { |scope| SCOPE_DEFAULTS.key?(normalize(scope)) }
         raise SystemExit, "Invalid search build config: source family #{family_id} has unsupported scopes"
       end
-      unless [true, false].include?(raw_family["targeted"])
-        raise SystemExit, "Invalid search build config: source family #{family_id} targeted must be boolean"
-      end
+      validate_targeted_policy!(raw_family, "source family #{family_id}")
       if normalize_text(raw_family["fallback"]) != "full_rebuild"
         raise SystemExit, "Invalid search build config: source family #{family_id} fallback must be full_rebuild"
       end
@@ -149,6 +148,7 @@ class SearchDataBuilder
     unless fields.is_a?(Hash) && !fields.empty?
       raise SystemExit, "Invalid search build config: scope #{@scope} needs fields"
     end
+    validate_targeted_policy!(scope_config, "scope #{@scope}")
 
     fields.each do |field_name, field_config|
       unless field_config.is_a?(Hash)
@@ -168,6 +168,29 @@ class SearchDataBuilder
       if unsupported_family
         raise SystemExit, "Invalid search build config: field #{@scope}.#{field_name} references source family #{unsupported_family} outside its scope"
       end
+    end
+  end
+
+  def validate_targeted_policy!(config, label)
+    if config.key?("targeted")
+      raise SystemExit, "Invalid search build config: #{label} uses obsolete targeted boolean; use targeted_policy"
+    end
+
+    policy = normalize_text(config["targeted_policy"])
+    unless SEARCH_BUILD_TARGETED_POLICIES.include?(policy)
+      raise SystemExit, "Invalid search build config: #{label} targeted_policy must be one of #{SEARCH_BUILD_TARGETED_POLICIES.join(', ')}"
+    end
+
+    operations = config["targeted_operations"]
+    if policy == "full_rebuild"
+      if operations
+        raise SystemExit, "Invalid search build config: #{label} targeted_operations is only valid for targeted policies"
+      end
+      return
+    end
+
+    unless operations.is_a?(Array) && operations.all? { |operation| !normalize_text(operation).empty? }
+      raise SystemExit, "Invalid search build config: #{label} targeted_operations must be a non-empty string array"
     end
   end
 

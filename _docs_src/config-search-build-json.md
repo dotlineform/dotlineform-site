@@ -20,7 +20,8 @@ Config file:
 Current responsibilities include:
 
 - declaring source artifact families used by each live search scope
-- declaring whether each source family supports targeted updates or falls back to full rebuilds
+- declaring each source family's `targeted_policy`
+- declaring `targeted_operations` for policies that allow targeted updates
 - mapping emitted search fields to their source families
 - documenting that current search artifacts stay combined per scope
 
@@ -43,7 +44,7 @@ What stays here:
 
 - source-family names
 - scope eligibility for each source family
-- targeted versus full-rebuild dependency policy
+- targeted policy values such as `record_update`, `additive_only`, and `full_rebuild`
 - field-to-source-family declarations
 
 What does not stay here:
@@ -54,6 +55,21 @@ What does not stay here:
 - operation logs or targeted-update provenance
 
 Those remain in builder code, search runtime code, CLI/server output, or the dedicated runtime policy files as appropriate.
+
+## Targeted Policy Values
+
+Current policy values:
+
+- `record_update`
+  Used by docs-domain scopes where create, update, and delete can target explicit `doc_id` records.
+- `additive_only`
+  Reserved for the first catalogue targeted-search slice, where only new work, series, and moment entries are safe to insert without changing existing records.
+- `full_rebuild`
+  Used when a source family or scope should not use targeted updates.
+
+The policy value is intentionally more explicit than a boolean because catalogue can become partly targetable without making every catalogue source-family change safe for targeted updates.
+
+Validation rejects the old `targeted` boolean form. Policies that allow targeted updates must declare `targeted_operations`; `full_rebuild` entries must omit it.
 
 ## Heavy-index readiness
 
