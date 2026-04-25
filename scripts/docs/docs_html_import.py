@@ -51,6 +51,8 @@ SEMANTIC_CALLOUT_CLASS_TOKENS = {"key"}
 LIST_WRAPPER_CLASS_TOKENS = {"legend"}
 ROWSPAN_COLSPAN_ATTRS = {"rowspan", "colspan"}
 PROMPT_META_TEXT_PREFIXES = ("[prompt]", "original prompt", "follow-up")
+PLAIN_URL_PATTERN = re.compile(r"https?://[^\s<>\"]+")
+PLAIN_URL_TRAILING_PUNCTUATION = ".,;:!?)]}'"
 
 
 def normalize_space(text: str) -> str:
@@ -59,6 +61,32 @@ def normalize_space(text: str) -> str:
 
 def escape_markdown_pipes(text: str) -> str:
     return (text or "").replace("|", r"\|")
+
+
+def text_node_has_ancestor(node: Any, tags: set[str]) -> bool:
+    current = node.parent
+    while current:
+        if current.tag in tags:
+            return True
+        current = current.parent
+    return False
+
+
+def autolink_plain_urls(text: str) -> str:
+    parts: list[str] = []
+    last_index = 0
+    for match in PLAIN_URL_PATTERN.finditer(text or ""):
+        raw_url = match.group(0)
+        url = raw_url.rstrip(PLAIN_URL_TRAILING_PUNCTUATION)
+        trailing = raw_url[len(url):]
+        if not url:
+            continue
+        parts.append(escape_markdown_pipes(text[last_index:match.start()]))
+        parts.append(f"<{escape_markdown_pipes(url)}>")
+        parts.append(escape_markdown_pipes(trailing))
+        last_index = match.end()
+    parts.append(escape_markdown_pipes(text[last_index:]))
+    return "".join(parts)
 
 
 def slugify(value: str) -> str:
@@ -264,7 +292,9 @@ def is_semantic_callout_node(node: ElementNode) -> bool:
 
 def render_inline(node: Any) -> str:
     if isinstance(node, TextNode):
-        return escape_markdown_pipes(node.text)
+        if text_node_has_ancestor(node, {"a", "code", "pre"}):
+            return escape_markdown_pipes(node.text)
+        return autolink_plain_urls(node.text)
     tag = node.tag
     if tag in {"strong", "b"}:
         return f"**{''.join(render_inline(child) for child in node.children).strip()}**"

@@ -1,18 +1,13 @@
 ---
 doc_id: loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27
-title: "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27"
+title: Dreaming is Active
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-25
+summary: Dreaming is not a passive process, it actively influences the memory reconstruction process.
 parent_id: ""
 sort_order: 201
 ---
 # Dreaming is Active: Flow of Memory Reconstruction
-
-Loose Ends — Memory • Generated 2025-09-27T15:10:00+01:00
-
-> Original prompt (2025-09-27T15:08:00+01:00) So dreaming is not a passive process, it actively influences the memory reconstruction process? Follow‑up (2025-09-27T15:10:00+01:00) Yes — create a visual flow diagram in HTML.
-
-## Flow Diagram
 
 Dreaming participates in a recurrent loop that reactivates, edits, and integrates memory traces — especially across NREM (systems consolidation) and REM (emotional recalibration) phases.
 

@@ -209,6 +209,7 @@ Preferred link rule:
 
 - keep external website links
 - use Markdown link syntax when the content converts cleanly
+- convert plain-text `http://` and `https://` URLs in prose into Markdown autolinks
 - keep link text readable even if surrounding styling is dropped
 
 ### Inline Safe HTML

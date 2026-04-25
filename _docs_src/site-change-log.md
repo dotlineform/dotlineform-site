@@ -35,6 +35,27 @@ Studio Archive and Library Archive have different product intent. Studio Archive
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
 - [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
 
+## [2026-04-25] Autolinked plain-text URLs during docs HTML import
+
+**Status:** implemented
+
+**Area:** Studio / docs viewer / docs HTML import
+
+**Summary:**
+Updated the docs HTML importer so plain-text `http://` and `https://` URLs in imported prose become Markdown autolinks.
+
+**Reason:**
+Some imported reference sections contain bare source URLs rather than `<a href>` elements. Keeping those as plain text made the resulting Library docs less useful even though the URLs were valid external references.
+
+**Effect:**
+Future HTML imports convert bare prose URLs to clickable Markdown autolinks while preserving existing anchor conversion and leaving code/preformatted text alone.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_html_import.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+
 ## [2026-04-25] Improved no-context work-page back links
 
 **Status:** implemented

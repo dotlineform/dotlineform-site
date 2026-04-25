@@ -101,6 +101,7 @@ Expect good results for:
 - headings and lists
 - simple tables
 - external links
+- plain-text `http://` and `https://` URLs, which become clickable autolinks
 - inline SVG diagrams
 - technical notation that needs safe inline HTML such as subscripts
 
