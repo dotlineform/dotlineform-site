@@ -9,7 +9,7 @@ sort_order: 202
 ---
 # Defining "Information" for Cross‑Boundary Comparisons — Concepts
 
-Use an *operational* notion: information for an observer = any physically realizable signal state that changes the observer’s predictive distribution over a target variable. Quantify with *mutual information*. Then a boundary “passes information” iff there is non‑zero, accessible mutual information across it. Memory boundaries drop—but rarely zero—MI between past and next moments; classical horizons make outside‑accessible MI from the inside effectively zero.
+Use an *operational* notion: information for an observer = any physically realizable signal state that changes the observer’s predictive distribution over a target variable. Quantify with *mutual information*. Then a boundary “passes information” if there is non‑zero, accessible mutual information across it. Memory boundaries drop—but rarely zero—MI between past and next moments; classical horizons make outside‑accessible MI from the inside effectively zero.
 
 ## 1) Why the definition matters
 
