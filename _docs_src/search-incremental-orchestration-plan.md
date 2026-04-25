@@ -211,10 +211,33 @@ Server behavior:
 Watcher behavior:
 
 - the watcher sees changed filenames rather than high-level operations
-- it can map filenames to generated docs-index rows after a docs rebuild
-- for simple file edits, it can target the changed doc id
-- for deletes, it needs the previous filename-to-doc-id snapshot or should fall back to full rebuild
-- if multiple files change together, it can either target the set or fall back based on a threshold
+- targeted watcher updates must be based on a previous parsed filename-to-doc snapshot, not on deriving `doc_id` from filename
+- the snapshot should be maintained per scope after successful watcher rebuilds and store, at minimum:
+  - filename
+  - `doc_id`
+  - `title`
+  - `parent_id`
+  - `published`
+  - `viewable`
+- file added:
+  - parse the new file
+  - affected id is the new `doc_id`
+- file content changed:
+  - compare previous parsed row to the new parsed row
+  - affected id is the new `doc_id`
+  - if `doc_id` changed, affected ids are old `doc_id` plus new `doc_id`
+  - if `title` changed, also include direct child doc ids because child entries include `parent_title`
+  - if `parent_id` changed, the changed doc id is sufficient under the current search schema; old and new siblings are not affected
+- file deleted:
+  - use the previous snapshot row
+  - affected id is the old `doc_id`
+  - run targeted search with `--remove-missing`
+- multiple changed files:
+  - target the merged affected-id set only when the changed-file count is at or below the explicit threshold
+  - above that threshold, run a full same-scope search rebuild
+- parse failure, invalid docs tree, missing snapshot, or unknown state:
+  - run a full same-scope search rebuild when possible
+  - if the full rebuild fails, report the error and keep the previous snapshot
 
 Benefits:
 
@@ -234,15 +257,17 @@ Resolved decisions:
 - docs-management targeted calls always pass `--remove-missing`
 - title-change child expansion happens in docs-management orchestration because child entries include `parent_title`
 - watcher-targeted updates are disabled for the first Phase 3 slice; watcher-triggered source edits still run full same-scope search rebuilds
+- future watcher-targeted updates must use a parsed previous snapshot rather than a filename equals `doc_id` assumption
+- parent changes are safe to target by changed doc id under the current search schema
+- filename equals `doc_id` is not a reliable operational rule, especially for imported Library docs that may need substantial post-import editing
 
 Open decisions:
 
-- should the watcher maintain a previous docs-index snapshot for dependency calculation?
 - what changed-file threshold should force a full rebuild?
 
 Phase 3 can start after Phase 2 has a targeted update interface.
 
-Status: server-side orchestration implemented for docs-management writes. Watcher orchestration remains full-rebuild-only until filename-to-doc-id snapshot handling and threshold rules are explicit.
+Status: server-side orchestration implemented for docs-management writes. Watcher orchestration remains full-rebuild-only until the previous parsed snapshot and changed-file threshold are implemented.
 
 ## Phase 4. Heavy-Index Readiness
 

@@ -9,6 +9,25 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Clarified watcher-targeted docs search rules
+
+**Status:** decision recorded
+
+**Area:** docs-domain search orchestration
+
+**Summary:**
+Recorded the future watcher-targeting rule for docs search as a parsed snapshot comparison, not a filename-derived `doc_id` shortcut.
+
+**Reason:**
+The docs live watcher only sees source filenames, while docs search correctness depends on front matter such as `doc_id`, title, parent, published, and viewable state. Imported Library docs make a filename equals `doc_id` convention too fragile to use as a correctness rule.
+
+**Effect:**
+Future watcher-targeted search updates must compare a previous per-scope parsed snapshot to the new source state. Adds, changes, deletes, `doc_id` changes, title child expansion, parent changes, threshold fallback, parse failure, and unknown-state fallback are now explicit implementation decisions. Current watcher behavior remains full-rebuild-only.
+
+**Affected files/docs:**
+
+- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)
+
 ## [2026-04-25] Added targeted docs-management search orchestration
 
 **Status:** implemented
