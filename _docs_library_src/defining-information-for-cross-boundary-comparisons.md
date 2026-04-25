@@ -1,11 +1,11 @@
 ---
 doc_id: defining-information-for-cross-boundary-comparisons
 title: "Defining \"Information\" for Cross‑Boundary Comparisons"
-summary: Establish a consistent, cross‑domain definition of “information” to compare event boundaries in memory and event horizons in black holes.
 added_date: 2026-04-24
 last_updated: 2026-04-25
-parent_id: ""
-sort_order: 202
+summary: "Establish a consistent, cross‑domain definition of “information” to compare event boundaries in memory and event horizons in black holes."
+parent_id: library
+sort_order: 30
 ---
 # Defining "Information" for Cross‑Boundary Comparisons — Concepts
 

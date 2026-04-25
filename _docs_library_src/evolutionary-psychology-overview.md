@@ -1,11 +1,11 @@
 ---
 doc_id: evolutionary-psychology-overview
 title: "Evolutionary Psychology — Overview"
-summary: This overview frames evolutionary psychology for a Processing application.
 added_date: 2026-04-23
 last_updated: 2026-04-23
-parent_id: ""
-sort_order: 202
+summary: This overview frames evolutionary psychology for a Processing application.
+parent_id: library
+sort_order: 40
 ---
 # Evolutionary Psychology — Overview
 

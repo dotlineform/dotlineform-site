@@ -1,10 +1,10 @@
 ---
-doc_id: _archive
-title: "Archive"
+doc_id: "_archive"
+title: Archive
 added_date: 2026-04-19
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 200
+sort_order: 30
 ---
 # Archive
 

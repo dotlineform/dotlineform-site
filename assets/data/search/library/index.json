@@ -2,11 +2,38 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-20e923ec261056a4a8cca7d3c48aea2b",
-    "generated_at_utc": "2026-04-25T21:33:14Z",
+    "version": "blake2b-cb4615395e19f89ed4a03f09c71daf8a",
+    "generated_at_utc": "2026-04-25T22:22:19Z",
     "count": 5
   },
   "entries": [
+    {
+      "id": "can-the-brain-comprehend-how-it-works",
+      "kind": "doc",
+      "title": "Can the Brain Comprehend How It Works?",
+      "href": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "last_updated": "2026-04-25",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-04-25 • Library",
+      "search_terms": [
+        "can-the-brain-comprehend-how-it-works",
+        "can",
+        "the",
+        "brain",
+        "comprehend",
+        "how",
+        "it",
+        "works",
+        "can the brain comprehend how it works?",
+        "library",
+        "2026-04-25",
+        "2026",
+        "04",
+        "25"
+      ],
+      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? library 2026-04-25 2026 04 25"
+    },
     {
       "id": "library",
       "kind": "doc",
@@ -24,36 +51,14 @@
       "search_text": "library 2026-03-30 2026 03 30"
     },
     {
-      "id": "can-the-brain-comprehend-how-it-works",
-      "kind": "doc",
-      "title": "Can the Brain Comprehend How It Works?",
-      "href": "/library/?doc=can-the-brain-comprehend-how-it-works",
-      "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
-      "search_terms": [
-        "can-the-brain-comprehend-how-it-works",
-        "can",
-        "the",
-        "brain",
-        "comprehend",
-        "how",
-        "it",
-        "works",
-        "can the brain comprehend how it works?",
-        "2026-04-25",
-        "2026",
-        "04",
-        "25"
-      ],
-      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-25 2026 04 25"
-    },
-    {
       "id": "dreaming-is-actve",
       "kind": "doc",
       "title": "Dreaming is Active",
       "href": "/library/?doc=dreaming-is-actve",
       "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-04-25 • Library",
       "search_terms": [
         "dreaming-is-actve",
         "dreaming",
@@ -61,12 +66,13 @@
         "actve",
         "dreaming is active",
         "active",
+        "library",
         "2026-04-25",
         "2026",
         "04",
         "25"
       ],
-      "search_text": "dreaming-is-actve dreaming is actve dreaming is active active 2026-04-25 2026 04 25"
+      "search_text": "dreaming-is-actve dreaming is actve dreaming is active active library 2026-04-25 2026 04 25"
     },
     {
       "id": "defining-information-for-cross-boundary-comparisons",
@@ -74,7 +80,9 @@
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "href": "/library/?doc=defining-information-for-cross-boundary-comparisons",
       "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-04-25 • Library",
       "search_terms": [
         "defining-information-for-cross-boundary-comparisons",
         "defining",
@@ -84,12 +92,13 @@
         "boundary",
         "comparisons",
         "defining \"information\" for cross‑boundary comparisons",
+        "library",
         "2026-04-25",
         "2026",
         "04",
         "25"
       ],
-      "search_text": "defining-information-for-cross-boundary-comparisons defining information for cross boundary comparisons defining \"information\" for cross‑boundary comparisons 2026-04-25 2026 04 25"
+      "search_text": "defining-information-for-cross-boundary-comparisons defining information for cross boundary comparisons defining \"information\" for cross‑boundary comparisons library 2026-04-25 2026 04 25"
     },
     {
       "id": "evolutionary-psychology-overview",
@@ -97,19 +106,22 @@
       "title": "Evolutionary Psychology — Overview",
       "href": "/library/?doc=evolutionary-psychology-overview",
       "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-04-23 • Library",
       "search_terms": [
         "evolutionary-psychology-overview",
         "evolutionary",
         "psychology",
         "overview",
         "evolutionary psychology — overview",
+        "library",
         "2026-04-23",
         "2026",
         "04",
         "23"
       ],
-      "search_text": "evolutionary-psychology-overview evolutionary psychology overview evolutionary psychology — overview 2026-04-23 2026 04 23"
+      "search_text": "evolutionary-psychology-overview evolutionary psychology overview evolutionary psychology — overview library 2026-04-23 2026 04 23"
     }
   ]
 }

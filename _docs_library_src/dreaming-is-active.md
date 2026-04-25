@@ -4,8 +4,8 @@ title: Dreaming is Active
 added_date: 2026-04-24
 last_updated: 2026-04-25
 summary: Dreaming is not a passive process, it actively influences the memory reconstruction process.
-parent_id: ""
-sort_order: 201
+parent_id: library
+sort_order: 20
 ---
 # Dreaming is Active: Flow of Memory Reconstruction
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T22:15:53Z",
+  "generated_at": "2026-04-25T22:22:19Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -10,6 +10,20 @@
     "show_updated_date": false
   },
   "docs": [
+    {
+      "scope": "library",
+      "doc_id": "can-the-brain-comprehend-how-it-works",
+      "title": "Can the Brain Comprehend How It Works?",
+      "added_date": "2026-04-23",
+      "last_updated": "2026-04-25",
+      "parent_id": "library",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "can-the-brain-comprehend-how-it-works.md",
+      "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
+    },
     {
       "scope": "library",
       "doc_id": "library",
@@ -26,40 +40,12 @@
     },
     {
       "scope": "library",
-      "doc_id": "_archive",
-      "title": "Archive",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
-      "parent_id": "",
-      "sort_order": 200,
-      "published": true,
-      "viewable": true,
-      "source_path": "archive.md",
-      "viewer_url": "/library/?doc=_archive",
-      "content_url": "/assets/data/docs/scopes/library/by-id/_archive.json"
-    },
-    {
-      "scope": "library",
-      "doc_id": "can-the-brain-comprehend-how-it-works",
-      "title": "Can the Brain Comprehend How It Works?",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-04-25",
-      "parent_id": "",
-      "sort_order": 201,
-      "published": true,
-      "viewable": true,
-      "source_path": "can-the-brain-comprehend-how-it-works.md",
-      "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
-      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
-    },
-    {
-      "scope": "library",
       "doc_id": "dreaming-is-actve",
       "title": "Dreaming is Active",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
-      "parent_id": "",
-      "sort_order": 201,
+      "parent_id": "library",
+      "sort_order": 20,
       "published": true,
       "viewable": true,
       "source_path": "dreaming-is-active.md",
@@ -69,12 +55,26 @@
     },
     {
       "scope": "library",
+      "doc_id": "_archive",
+      "title": "Archive",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-04-19",
+      "parent_id": "",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "archive.md",
+      "viewer_url": "/library/?doc=_archive",
+      "content_url": "/assets/data/docs/scopes/library/by-id/_archive.json"
+    },
+    {
+      "scope": "library",
       "doc_id": "defining-information-for-cross-boundary-comparisons",
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
-      "parent_id": "",
-      "sort_order": 202,
+      "parent_id": "library",
+      "sort_order": 30,
       "published": true,
       "viewable": true,
       "source_path": "defining-information-for-cross-boundary-comparisons.md",
@@ -88,8 +88,8 @@
       "title": "Evolutionary Psychology — Overview",
       "added_date": "2026-04-23",
       "last_updated": "2026-04-23",
-      "parent_id": "",
-      "sort_order": 202,
+      "parent_id": "library",
+      "sort_order": 40,
       "published": true,
       "viewable": true,
       "source_path": "evolutionary-psychology-overview.md",
