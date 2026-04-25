@@ -4,7 +4,7 @@ title: "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Di
 added_date: 2026-04-24
 last_updated: 2026-04-24
 parent_id: ""
-sort_order: 240
+sort_order: 202
 ---
 # Dreaming is Active: Flow of Memory Reconstruction
 

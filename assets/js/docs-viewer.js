@@ -55,6 +55,8 @@
   var BOOKMARK_DB_VERSION = 1;
   var BOOKMARK_STORE_NAME = "favorites";
   var MANAGEMENT_MODE = "manage";
+  var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = 60;
+  var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = 500;
   var RELOAD_RETRY_ATTEMPTS = 12;
   var RELOAD_RETRY_DELAY_MS = 250;
   var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
@@ -980,8 +982,8 @@
 
     var rect = row.getBoundingClientRect();
     var clientY = event && typeof event.clientY === "number" ? event.clientY : rect.top + (rect.height / 2);
-    var lowerEdgeHeight = Math.max(6, Math.min(14, rect.height * 0.32));
-    if (clientY >= rect.bottom - lowerEdgeHeight) {
+    var afterThresholdY = rect.top + (rect.height * 0.5);
+    if (clientY >= afterThresholdY) {
       return "after";
     }
     return "inside";
@@ -1350,6 +1352,10 @@
       return;
     }
 
+    checkManagementCapabilities(0);
+  }
+
+  function checkManagementCapabilities(attempt) {
     fetchManagementJson("/capabilities", "GET")
       .then(function (payload) {
         var scopeCaps = payload && payload.capabilities && payload.capabilities.scopes
@@ -1361,6 +1367,12 @@
         renderManagementUi();
       })
       .catch(function () {
+        if (attempt < MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
+          window.setTimeout(function () {
+            checkManagementCapabilities(attempt + 1);
+          }, MANAGEMENT_CAPABILITY_RETRY_DELAY_MS);
+          return;
+        }
         state.managementCapabilities = null;
         state.managementChecked = true;
         state.managementAvailable = false;

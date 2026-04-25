@@ -28,8 +28,8 @@ Implemented now:
 - shared manage mode enabled for both `/docs/` and `/library/` behind `?mode=manage`
 - create, archive, delete-preview, and delete-apply implemented
 - drag/drop move implemented for leaf docs only
-- dropping on the upper/main part of any doc row moves the dragged doc inside that doc as its last child
-- dropping on the lower edge of a doc row moves the dragged doc after that doc
+- dropping on the upper half of any doc row moves the dragged doc inside that doc as its last child
+- dropping on the lower half of a doc row moves the dragged doc after that doc and shows a visible insert line
 - all nodes can gain children through drag/drop; there is no source or generated `folder` schema field
 - the index toolbar exposes a one-step Undo action for the most recent successful move in the current viewer session
 - source writes remain front-matter-only; files do not move on disk
@@ -526,8 +526,8 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 ### `move` / drag and drop
 
 - only leaf docs are draggable
-- dropping on the upper/main part of a row changes `parent_id` to that target doc and appends as the target's last child
-- dropping on the lower edge of a row keeps the target's parent and places the moved doc after the target
+- dropping on the upper half of a row changes `parent_id` to that target doc and appends as the target's last child
+- dropping on the lower half of a row keeps the target's parent, shows an insert line after the target row, and places the moved doc after the target
 - any node can become a parent through drag/drop; there is no `folder` source field
 - one successful move is stored client-side for Undo in the current viewer session
 

@@ -23,6 +23,25 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-25 / UI-033
+
+- status: adopted
+- route: `/docs/?mode=manage`, `/library/?mode=manage`
+- issue: docs-viewer drag/drop placement made accidental child moves too likely because "after" was only a narrow lower-edge zone with a subtle row shadow.
+- triage: shared docs-viewer interaction refinement
+- reasoning: reordering needs an explicit insertion affordance, while parent creation should remain available without dominating the target row.
+- outcome: row-position targeting now uses upper half for "inside" and lower half for "after"; the after state renders a visible insert line after the target row. Manage-mode capability probing also retries briefly so a page loaded during dev-server startup can become writable without a manual refresh.
+- files changed:
+  - `assets/js/docs-viewer.js`
+  - `assets/css/main.css`
+  - `_docs_src/docs-viewer-management.md`
+  - `_docs_src/ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - in manage mode, drag over the lower half of a row and confirm a visible insert line appears after that row
+  - drag over the upper half of a row and confirm the inside highlight appears
+  - load manage mode before the docs-management server is ready and confirm controls become available after the server starts
+
 ## UI Rule Log 2026-04-25 / UI-032
 
 - status: adopted

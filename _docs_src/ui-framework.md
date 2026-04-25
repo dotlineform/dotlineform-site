@@ -188,7 +188,8 @@ The current shared treatment is:
 - active state should be obvious without turning the viewer into a tabbed interface
 - in manage mode, the draft checkbox adds non-viewable docs to the tree while keeping viewable docs visible for context
 - draft/non-viewable tree-row color and font weight should come from `studio_config.json` so accessibility can be tuned without code changes
-- in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper/main row area means "move inside", and the lower edge means "move after"
+- in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"
+- the "move after" state should render a visible insert line after the target row rather than relying only on a subtle row shadow
 - the one-step move Undo control belongs to the index toolbar/header area because it reverses a tree operation, not a content edit
 
 ## Public Search UI Standards

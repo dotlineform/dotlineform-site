@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-25] Refined Docs Viewer drag placement and manage startup probing
+
+**Status:** implemented
+
+**Area:** Docs Viewer / docs management
+
+**Summary:**
+Made manage-mode drag/drop placement easier to read and made server capability detection tolerate dev-server startup timing.
+
+**Reason:**
+The previous "move after" zone was a narrow lower-edge target with only a subtle row shadow, which made accidental child moves too easy. The viewer also checked docs-management capabilities only once, so loading manage mode before the local server was ready could leave drag/drop unavailable until refresh.
+
+**Effect:**
+The upper half of a docs-tree row now means "move inside"; the lower half means "move after" and renders a visible insert line after the target row. Manage-mode capability probing retries briefly before failing closed.
+
+**Affected files/docs:**
+
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-25] Added Docs Viewer move Undo and empty-node drops
 
 **Status:** implemented

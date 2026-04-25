@@ -4,7 +4,7 @@ title: "Evolutionary Psychology — Overview"
 added_date: 2026-04-23
 last_updated: 2026-04-23
 parent_id: ""
-sort_order: 10
+sort_order: 202
 ---
 # Evolutionary Psychology — Overview
 

@@ -2,31 +2,11 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-876a0d954e0a19f117186b1eef348cb3",
-    "generated_at_utc": "2026-04-25T09:11:02Z",
+    "version": "blake2b-f171b88cd226c889b8b4499721fcfc71",
+    "generated_at_utc": "2026-04-25T11:43:25Z",
     "count": 4
   },
   "entries": [
-    {
-      "id": "evolutionary-psychology-overview",
-      "kind": "doc",
-      "title": "Evolutionary Psychology — Overview",
-      "href": "/library/?doc=evolutionary-psychology-overview",
-      "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
-      "search_terms": [
-        "evolutionary-psychology-overview",
-        "evolutionary",
-        "psychology",
-        "overview",
-        "evolutionary psychology — overview",
-        "2026-04-23",
-        "2026",
-        "04",
-        "23"
-      ],
-      "search_text": "evolutionary-psychology-overview evolutionary psychology overview evolutionary psychology — overview 2026-04-23 2026 04 23"
-    },
     {
       "id": "library",
       "kind": "doc",
@@ -66,6 +46,26 @@
         "25"
       ],
       "search_text": "defining-information-for-cross-boundary-comparisons-concepts defining information for cross boundary comparisons concepts defining \"information\" for cross‑boundary comparisons — concepts 2026-04-25 2026 04 25"
+    },
+    {
+      "id": "evolutionary-psychology-overview",
+      "kind": "doc",
+      "title": "Evolutionary Psychology — Overview",
+      "href": "/library/?doc=evolutionary-psychology-overview",
+      "last_updated": "2026-04-23",
+      "display_meta": "2026-04-23",
+      "search_terms": [
+        "evolutionary-psychology-overview",
+        "evolutionary",
+        "psychology",
+        "overview",
+        "evolutionary psychology — overview",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "evolutionary-psychology-overview evolutionary psychology overview evolutionary psychology — overview 2026-04-23 2026 04 23"
     },
     {
       "id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
