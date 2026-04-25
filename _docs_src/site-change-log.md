@@ -21,7 +21,7 @@ Made manage-mode drag/drop placement easier to read and made server capability d
 The previous "move after" zone was a narrow lower-edge target with only a subtle row shadow, which made accidental child moves too easy. The viewer also checked docs-management capabilities only once, so loading manage mode before the local server was ready could leave drag/drop unavailable until refresh.
 
 **Effect:**
-The upper half of a docs-tree row now means "move inside"; the lower half means "move after" and renders a visible insert line after the target row. Manage-mode capability probing retries briefly before failing closed.
+The upper half of a docs-tree row now means "move inside"; the lower half means "move after" and renders a visible insert line after the target row. Drop handling uses the last highlighted target as a fallback when the final drop event cannot resolve a row cleanly. Manage-mode capability probing retries briefly before failing closed, and stale retry attempts cannot overwrite a newer successful capability check.
 
 **Affected files/docs:**
 

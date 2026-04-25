@@ -4,7 +4,7 @@ title: "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts"
 added_date: 2026-04-24
 last_updated: 2026-04-25
 parent_id: ""
-sort_order: 201
+sort_order: 202
 ---
 # Defining "Information" for Cross‑Boundary Comparisons — Concepts
 

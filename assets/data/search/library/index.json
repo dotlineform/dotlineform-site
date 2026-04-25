@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-f171b88cd226c889b8b4499721fcfc71",
-    "generated_at_utc": "2026-04-25T11:43:25Z",
+    "version": "blake2b-e7d3694d0aa129baab91267b5154b71b",
+    "generated_at_utc": "2026-04-25T12:20:37Z",
     "count": 4
   },
   "entries": [
@@ -22,6 +22,33 @@
         "30"
       ],
       "search_text": "library 2026-03-30 2026 03 30"
+    },
+    {
+      "id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "kind": "doc",
+      "title": "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27",
+      "href": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "last_updated": "2026-04-24",
+      "display_meta": "2026-04-24",
+      "search_terms": [
+        "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+        "loose",
+        "ends",
+        "memory",
+        "dreaming",
+        "reconstruction",
+        "flow",
+        "diagram",
+        "2025",
+        "09",
+        "27",
+        "loose ends — memory — dreaming ↔ memory reconstruction — flow diagram — 2025-09-27",
+        "2026-04-24",
+        "2026",
+        "04",
+        "24"
+      ],
+      "search_text": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27 loose ends memory dreaming reconstruction flow diagram 2025 09 27 loose ends — memory — dreaming ↔ memory reconstruction — flow diagram — 2025-09-27 2026-04-24 2026 04 24"
     },
     {
       "id": "defining-information-for-cross-boundary-comparisons-concepts",
@@ -66,33 +93,6 @@
         "23"
       ],
       "search_text": "evolutionary-psychology-overview evolutionary psychology overview evolutionary psychology — overview 2026-04-23 2026 04 23"
-    },
-    {
-      "id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
-      "kind": "doc",
-      "title": "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27",
-      "href": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
-      "last_updated": "2026-04-24",
-      "display_meta": "2026-04-24",
-      "search_terms": [
-        "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
-        "loose",
-        "ends",
-        "memory",
-        "dreaming",
-        "reconstruction",
-        "flow",
-        "diagram",
-        "2025",
-        "09",
-        "27",
-        "loose ends — memory — dreaming ↔ memory reconstruction — flow diagram — 2025-09-27",
-        "2026-04-24",
-        "2026",
-        "04",
-        "24"
-      ],
-      "search_text": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27 loose ends memory dreaming reconstruction flow diagram 2025 09 27 loose ends — memory — dreaming ↔ memory reconstruction — flow diagram — 2025-09-27 2026-04-24 2026 04 24"
     }
   ]
 }

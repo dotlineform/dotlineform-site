@@ -95,6 +95,7 @@
     managementAvailable: false,
     managementBusy: false,
     managementCapabilities: null,
+    managementCapabilityCheckId: 0,
     managementMessage: "",
     managementMessageIsError: false,
     managementText: {
@@ -999,6 +1000,20 @@
     return position === "inside" || position === "after";
   }
 
+  function currentDropTargetFromEvent(event) {
+    var row = event && event.target ? event.target.closest("[data-doc-row-id]") : null;
+    if (row) {
+      return {
+        targetDocId: row.dataset.docRowId || "",
+        position: dropPositionForRow(row, event)
+      };
+    }
+    return {
+      targetDocId: state.dropTargetDocId,
+      position: state.dropPosition
+    };
+  }
+
   function clearDragState() {
     state.dragDocId = "";
     state.dropTargetDocId = "";
@@ -1352,12 +1367,14 @@
       return;
     }
 
-    checkManagementCapabilities(0);
+    state.managementCapabilityCheckId += 1;
+    checkManagementCapabilities(0, state.managementCapabilityCheckId);
   }
 
-  function checkManagementCapabilities(attempt) {
+  function checkManagementCapabilities(attempt, checkId) {
     fetchManagementJson("/capabilities", "GET")
       .then(function (payload) {
+        if (checkId !== state.managementCapabilityCheckId) return;
         var scopeCaps = payload && payload.capabilities && payload.capabilities.scopes
           ? payload.capabilities.scopes[viewerScope]
           : null;
@@ -1367,9 +1384,10 @@
         renderManagementUi();
       })
       .catch(function () {
+        if (checkId !== state.managementCapabilityCheckId) return;
         if (attempt < MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
           window.setTimeout(function () {
-            checkManagementCapabilities(attempt + 1);
+            checkManagementCapabilities(attempt + 1, checkId);
           }, MANAGEMENT_CAPABILITY_RETRY_DELAY_MS);
           return;
         }
@@ -2039,18 +2057,18 @@
       });
 
       nav.addEventListener("drop", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row) {
-          clearDragState();
-          return;
+        event.preventDefault();
+        var dropTarget = currentDropTargetFromEvent(event);
+        var targetDocId = dropTarget.targetDocId;
+        var position = dropTarget.position;
+        if ((!targetDocId || !position) && state.dropTargetDocId && state.dropPosition) {
+          targetDocId = state.dropTargetDocId;
+          position = state.dropPosition;
         }
-        var targetDocId = row.dataset.docRowId || "";
-        var position = dropPositionForRow(row, event);
         if (!canDropOnDoc(targetDocId, position) || !position) {
           clearDragState();
           return;
         }
-        event.preventDefault();
         var movingDocId = state.dragDocId;
         clearDragState();
         handleMoveDoc(movingDocId, targetDocId, position);

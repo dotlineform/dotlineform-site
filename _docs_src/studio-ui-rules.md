@@ -30,7 +30,7 @@ Use this as the single capture surface for Studio UI work:
 - issue: docs-viewer drag/drop placement made accidental child moves too likely because "after" was only a narrow lower-edge zone with a subtle row shadow.
 - triage: shared docs-viewer interaction refinement
 - reasoning: reordering needs an explicit insertion affordance, while parent creation should remain available without dominating the target row.
-- outcome: row-position targeting now uses upper half for "inside" and lower half for "after"; the after state renders a visible insert line after the target row. Manage-mode capability probing also retries briefly so a page loaded during dev-server startup can become writable without a manual refresh.
+- outcome: row-position targeting now uses upper half for "inside" and lower half for "after"; the after state renders a visible insert line after the target row, and drop handling trusts the last highlighted target if the final drop event cannot resolve a row cleanly. Manage-mode capability probing also retries briefly so a page loaded during dev-server startup can become writable without a manual refresh.
 - files changed:
   - `assets/js/docs-viewer.js`
   - `assets/css/main.css`

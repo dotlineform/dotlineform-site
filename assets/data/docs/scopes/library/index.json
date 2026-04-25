@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T11:43:25Z",
+  "generated_at": "2026-04-25T12:20:43Z",
   "docs": [
     {
       "scope": "library",
@@ -45,12 +45,26 @@
     },
     {
       "scope": "library",
+      "doc_id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "title": "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-04-24",
+      "parent_id": "",
+      "sort_order": 201,
+      "published": true,
+      "viewable": true,
+      "source_path": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.md",
+      "viewer_url": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
+      "content_url": "/assets/data/docs/scopes/library/by-id/loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.json"
+    },
+    {
+      "scope": "library",
       "doc_id": "defining-information-for-cross-boundary-comparisons-concepts",
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons — Concepts",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
       "parent_id": "",
-      "sort_order": 201,
+      "sort_order": 202,
       "published": true,
       "viewable": true,
       "source_path": "defining-information-for-cross-boundary-comparisons-concepts.md",
@@ -70,20 +84,6 @@
       "source_path": "evolutionary-psychology-overview.md",
       "viewer_url": "/library/?doc=evolutionary-psychology-overview",
       "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json"
-    },
-    {
-      "scope": "library",
-      "doc_id": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
-      "title": "Loose Ends — Memory — Dreaming ↔ Memory Reconstruction — Flow Diagram — 2025-09-27",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
-      "parent_id": "",
-      "sort_order": 202,
-      "published": true,
-      "viewable": true,
-      "source_path": "loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.md",
-      "viewer_url": "/library/?doc=loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27",
-      "content_url": "/assets/data/docs/scopes/library/by-id/loose-ends-memory-dreaming-memory-reconstruction-flow-diagram-2025-09-27.json"
     }
   ]
 }
