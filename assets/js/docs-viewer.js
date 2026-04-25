@@ -126,6 +126,7 @@
     metadataRestoreFocusId: "",
     nonLoadableDocIds: new Set(["_archive"]),
     manageOnlyTreeRootIds: new Set(),
+    showUpdatedDate: true,
     sidebarCollapsed: readSidebarCollapsedState()
   };
 
@@ -943,7 +944,10 @@
       pathEl.appendChild(link);
     });
 
-    if (doc.last_updated) {
+    if (!state.showUpdatedDate) {
+      updatedEl.textContent = isDocViewable(doc) ? "" : "Draft";
+      updatedEl.hidden = isDocViewable(doc);
+    } else if (doc.last_updated) {
       updatedEl.textContent = (isDocViewable(doc) ? "" : "Draft • ") + "Updated " + doc.last_updated;
       updatedEl.hidden = false;
     } else {
@@ -2449,6 +2453,7 @@
       : {};
     state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, ["_archive"]);
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
+    state.showUpdatedDate = viewerOptions.show_updated_date !== false;
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
     syncDraftVisibilityForRequestedDoc();
     applyDocVisibility();

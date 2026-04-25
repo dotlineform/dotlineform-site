@@ -293,7 +293,7 @@ Current content families:
 
 - one row per generated Studio doc
 - identity, title, added/update dates, optional `summary`, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
-- `viewer_options` declaring `_archive` as non-loadable while leaving it visible in the normal Studio tree
+- `viewer_options` declaring `_archive` as non-loadable while leaving it visible in the normal Studio tree and keeping document-view updated dates visible
 
 Current site mapping:
 

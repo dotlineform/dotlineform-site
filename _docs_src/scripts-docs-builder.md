@@ -41,7 +41,7 @@ Generated outputs:
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
 - rewrites doc-to-doc links onto the scope-owned viewer route
-- emits scope-level viewer options such as non-loadable structural doc ids and manage-only tree root ids
+- emits scope-level viewer options such as non-loadable structural doc ids, manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 
@@ -67,7 +67,7 @@ Generated outputs:
 - `added_date`
   generated docs index metadata for recently-added lists; legacy source docs without this field fall back to `last_updated`
 - `last_updated`
-  display metadata for the viewer
+  display metadata for viewer scopes whose generated `viewer_options.show_updated_date` is not `false`, and search metadata for docs-domain search
 - `parent_id`
   empty string for a top-level doc
 - `sort_order`

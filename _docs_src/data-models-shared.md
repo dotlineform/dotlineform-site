@@ -53,6 +53,8 @@ Docs-scope indexes also carry `viewer_options` for scope-level runtime behavior 
   structural docs that can appear in the tree but route to a loadable descendant or the scope default doc
 - `manage_only_tree_root_ids`
   tree roots hidden from public/default viewer and docs-search discovery but visible in manage mode
+- `show_updated_date`
+  controls whether document view metadata displays the generated row's `last_updated` date
 
 Docs-scope index rows can also carry optional `summary` metadata when source front matter defines it. The field is plain text and single-paragraph in the shared management flow. Search indexes do not consume that field until a scope-specific search task explicitly promotes it.
 

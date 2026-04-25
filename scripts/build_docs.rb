@@ -20,6 +20,7 @@ ScopeConfig = Struct.new(
   :include_scope_param,
   :non_loadable_doc_ids,
   :manage_only_tree_root_ids,
+  :show_updated_date,
   keyword_init: true
 )
 
@@ -52,7 +53,8 @@ class DocsDataBuilder
     viewer_base_url:,
     include_scope_param: false,
     non_loadable_doc_ids: [],
-    manage_only_tree_root_ids: []
+    manage_only_tree_root_ids: [],
+    show_updated_date: true
   )
     @scope_id = scope_id.to_s
     @source_dir = Pathname(source_dir).expand_path
@@ -62,6 +64,7 @@ class DocsDataBuilder
     @include_scope_param = include_scope_param
     @non_loadable_doc_ids = normalize_doc_ids(non_loadable_doc_ids)
     @manage_only_tree_root_ids = normalize_doc_ids(manage_only_tree_root_ids)
+    @show_updated_date = show_updated_date != false
     @repo_root = Pathname(__dir__).parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
@@ -114,7 +117,8 @@ class DocsDataBuilder
   def viewer_options_payload
     {
       "non_loadable_doc_ids" => @non_loadable_doc_ids,
-      "manage_only_tree_root_ids" => @manage_only_tree_root_ids
+      "manage_only_tree_root_ids" => @manage_only_tree_root_ids,
+      "show_updated_date" => @show_updated_date
     }
   end
 
@@ -524,7 +528,8 @@ scope_configs = [
     viewer_base_url: "/docs/",
     include_scope_param: true,
     non_loadable_doc_ids: ["_archive"],
-    manage_only_tree_root_ids: []
+    manage_only_tree_root_ids: [],
+    show_updated_date: true
   ),
   ScopeConfig.new(
     scope_id: "library",
@@ -533,7 +538,8 @@ scope_configs = [
     viewer_base_url: "/library/",
     include_scope_param: false,
     non_loadable_doc_ids: ["_archive"],
-    manage_only_tree_root_ids: ["_archive"]
+    manage_only_tree_root_ids: ["_archive"],
+    show_updated_date: false
   )
 ]
 
@@ -555,7 +561,8 @@ selected_scopes.each do |config|
     viewer_base_url: options[:viewer_base_url] || config.viewer_base_url,
     include_scope_param: config.include_scope_param,
     non_loadable_doc_ids: config.non_loadable_doc_ids,
-    manage_only_tree_root_ids: config.manage_only_tree_root_ids
+    manage_only_tree_root_ids: config.manage_only_tree_root_ids,
+    show_updated_date: config.show_updated_date
   )
   builder.run(write: options[:write])
 end

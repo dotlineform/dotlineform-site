@@ -64,12 +64,13 @@ Current content families:
 
 - one row per generated Library doc
 - identity, added/update dates, optional `summary`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
-- `viewer_options` declaring `_archive` as a non-loadable, manage-only tree root
+- `viewer_options` declaring `_archive` as a non-loadable, manage-only tree root and hiding document-view updated dates
 
 Current site mapping:
 
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides `_archive` and descendants; `/library/?mode=manage` shows that branch for local management
+- Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 

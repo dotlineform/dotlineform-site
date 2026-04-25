@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-04-25T17:43:22Z",
+  "generated_at": "2026-04-25T22:15:56Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
     ],
-    "manage_only_tree_root_ids": []
+    "manage_only_tree_root_ids": [],
+    "show_updated_date": true
   },
   "docs": [
     {

@@ -103,8 +103,9 @@ Current document metadata behavior:
 
 - the document H1 is treated as the visible title
 - the metadata path shows ancestor docs only, so it does not duplicate the current document title
-- root-level docs hide the metadata path and let the updated date move up
-- the updated date continues to use `last_updated`
+- root-level docs hide the metadata path and let remaining metadata move up
+- the updated date uses `last_updated` only when the active scope's generated `viewer_options.show_updated_date` is not `false`
+- Studio Docs shows the updated date; Library hides it in document view
 
 Current sidebar behavior:
 
@@ -148,7 +149,7 @@ Current manage-mode draft behavior:
 - non-viewable docs are marked with configurable tree-row styling from `studio_config.json`
 - a selected non-viewable doc can be made viewable through the manage toolbar; the action prompts before also making required non-viewable ancestors or optional descendants viewable
 
-Document view metadata continues to display `last_updated`, because that is more meaningful while reading a single doc. Docs search also continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
+Document view updated-date metadata is scope-configurable because it is more useful in Studio Docs than Library. Docs search continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
 
 ## Scope Boundary
 

@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-25] Hid Library document updated dates through docs scope options
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Library
+
+**Summary:**
+Added a generated docs-viewer scope option for document-view updated-date display, and disabled that row for Library while keeping it visible for Studio Docs.
+
+**Reason:**
+Library reading pages should stay cleaner and less operational than Studio Docs. The existing scope-option model already handles Library-specific viewer behavior without hard-coding scope checks in the shared runtime.
+
+**Effect:**
+`scripts/build_docs.rb` now emits `viewer_options.show_updated_date`. Studio sets it to `true`; Library sets it to `false`. The shared viewer hides only the document metadata-row `Updated ...` text when the option is false. Recently-added still uses `added_date`, and docs search still uses `last_updated`.
+
+**Affected files/docs:**
+
+- `scripts/build_docs.rb`
+- `assets/js/docs-viewer.js`
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Shared Patterns](/docs/?scope=studio&doc=data-models-shared)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+
 ## [2026-04-25] Made Library Archive manage-only through docs scope options
 
 **Status:** implemented
