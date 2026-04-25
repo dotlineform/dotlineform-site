@@ -9,6 +9,29 @@ sort_order: 1010
 
 # Search Change Log
 
+## [2026-04-25] Opened catalogue search results in new tabs
+
+**Status:** implemented
+
+**Area:** public search UI
+
+**Summary:**
+Changed catalogue search result links to preserve the search page while opening result targets separately.
+
+**Reason:**
+The public catalogue search page is a discovery surface. Opening works, series, and moments in a new tab lets the search result list remain available while reviewing an item.
+
+**Effect:**
+On `/search/?scope=catalogue`, work, series, and moment title links now open in a new tab. Work result metadata now renders series titles as links to the related series pages, also opening in a new tab.
+
+**Affected files/docs:**
+
+- `assets/js/search/search-page.js`
+- `assets/css/main.css`
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+
 ## [2026-04-25] Added additive catalogue targeted search
 
 **Status:** implemented

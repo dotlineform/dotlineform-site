@@ -150,6 +150,7 @@ function normalizeEntries(entries) {
       const href = String(entry.href || "").trim();
       const displayMeta = String(entry.display_meta || "").trim();
       const parentTitle = String(entry.parent_title || "").trim();
+      const seriesIds = Array.isArray(entry.series_ids) ? entry.series_ids.map((item) => String(item || "").trim()).filter(Boolean) : [];
       const seriesTitles = Array.isArray(entry.series_titles) ? entry.series_titles.map((item) => String(item || "").trim()).filter(Boolean) : [];
       const searchTerms = Array.isArray(entry.search_terms) ? entry.search_terms.map((item) => normalize(String(item || ""))).filter(Boolean) : [];
       return {
@@ -161,6 +162,7 @@ function normalizeEntries(entries) {
         parentTitle,
         year: Number.isFinite(Number(entry.year)) ? Number(entry.year) : null,
         date: String(entry.date || "").trim(),
+        seriesIds,
         seriesTitles,
         mediumType: String(entry.medium_type || "").trim(),
         seriesType: String(entry.series_type || "").trim(),
@@ -259,23 +261,40 @@ function matchesAllTokens(entry, queryTokens) {
 
 function renderEntry(state, entry) {
   const metaParts = [];
-  if (entry.displayMeta) metaParts.push(entry.displayMeta);
-  if (entry.kind === "work" && entry.mediumType) metaParts.push(entry.mediumType);
+  const separator = searchText(state.config, "result_meta_separator", " • ");
+  if (entry.displayMeta) metaParts.push(escapeHtml(entry.displayMeta));
+  if (entry.kind === "work" && entry.mediumType) metaParts.push(escapeHtml(entry.mediumType));
   if (entry.kind === "work" && entry.seriesTitles.length) {
-    metaParts.push(entry.seriesTitles.join(searchText(state.config, "result_meta_separator", " • ")));
+    metaParts.push(renderSeriesLinks(state, entry).join(escapeHtml(separator)));
   }
-  if (entry.kind === "series" && entry.seriesType) metaParts.push(entry.seriesType);
-  const metaText = metaParts.join(searchText(state.config, "result_meta_separator", " • "));
+  if (entry.kind === "series" && entry.seriesType) metaParts.push(escapeHtml(entry.seriesType));
+  const metaHtml = metaParts.join(escapeHtml(separator));
+  const linkAttrs = catalogueEntryTargetAttrs(entry);
   return `
     <li class="studioSearch__item">
       <div class="studioSearch__itemHead">
         <span class="studioSearch__kind">${escapeHtml(kindLabel(state.config, entry.kind))}</span>
-        <a class="studioSearch__title" href="${escapeHtml(withBaseUrl(state.baseurl, entry.href))}">${escapeHtml(entry.title)}</a>
+        <a class="studioSearch__title" href="${escapeHtml(withBaseUrl(state.baseurl, entry.href))}"${linkAttrs}>${escapeHtml(entry.title)}</a>
       </div>
       <p class="studioSearch__id">${escapeHtml(entry.id)}</p>
-      ${metaText ? `<p class="studioSearch__meta">${escapeHtml(metaText)}</p>` : ""}
+      ${metaHtml ? `<p class="studioSearch__meta">${metaHtml}</p>` : ""}
     </li>
   `;
+}
+
+function renderSeriesLinks(state, entry) {
+  return entry.seriesTitles.map((title, index) => {
+    const seriesId = String(entry.seriesIds[index] || "").trim();
+    if (!seriesId) return escapeHtml(title);
+    const href = withBaseUrl(state.baseurl, `/series/${encodeURIComponent(seriesId)}/`);
+    return `<a class="studioSearch__metaLink" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`;
+  });
+}
+
+function catalogueEntryTargetAttrs(entry) {
+  return entry.kind === "work" || entry.kind === "series" || entry.kind === "moment"
+    ? ' target="_blank" rel="noopener"'
+    : "";
 }
 
 function resetVisibleCount(state) {

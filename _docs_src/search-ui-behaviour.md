@@ -188,7 +188,7 @@ This is incremental list expansion, not paged navigation.
 Each result currently displays:
 
 - kind label
-- title as the main link
+- title as the main link, opening work, series, and moment results in a new tab
 - id on a separate line
 - optional metadata line
 
@@ -196,7 +196,7 @@ The metadata line may include:
 
 - `display_meta`
 - `medium_type` for works
-- `series_titles` for works
+- linked `series_titles` for works
 - `series_type` for series
 
 ### Result ordering
@@ -272,7 +272,8 @@ The current UI does not yet implement roving focus, active-result selection, or 
 
 Current pointer behaviour:
 
-- clicking a result link navigates directly to the target page
+- clicking a work, series, or moment result link opens the target page in a new tab
+- clicking a linked series title in work metadata opens that series page in a new tab
 - clicking `more` reveals the next batch of results
 
 Not currently implemented:
@@ -340,7 +341,7 @@ Current accessible behaviours:
 
 - the search input has a visually hidden label and configured `aria-label`
 - focus-visible states exist for result links and the `more` button
-- result links are standard anchors
+- result links and linked work-series metadata are standard anchors
 - keyboard users can reach all current interactive controls through normal tab navigation
 
 Current gaps:

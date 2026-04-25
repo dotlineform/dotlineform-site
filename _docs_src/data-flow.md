@@ -108,6 +108,7 @@ What `series_index.json` provides on the work page:
 - series context when the work is opened with `?series=<series_id>`
 - previous and next work navigation inside that series
 - series title used for the inline series link and back-link labeling
+- no-context back-link fallback to the work's primary series when no explicit return source is present
 
 The work page is work-local by design. Detail sections, detail links, prose, downloads, and published links all come from the per-work record.
 

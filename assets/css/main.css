@@ -935,6 +935,22 @@ th{ background: var(--panel-2); }
   line-height: var(--line-snug);
 }
 
+.studioSearch__metaLink{
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.studioSearch__metaLink:hover{
+  color: var(--link-hover);
+}
+
+.studioSearch__metaLink:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
 .docsViewer{
   --docs-viewer-measure: var(--content-measure);
   --docs-viewer-draft-color: var(--muted);

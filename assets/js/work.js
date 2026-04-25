@@ -15,6 +15,7 @@
   var seriesFromQuery = (params.get('series') || '').trim();
   var seriesPageRaw = Number(params.get('series_page') || '0');
   var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
+  var fromContext = (params.get('from') || '').trim().toLowerCase();
 
   var prevA = document.getElementById('seriesNavPrev');
   var nextA = document.getElementById('seriesNavNext');
@@ -82,6 +83,9 @@
     backLink.setAttribute('data-series-label', label);
     if (seriesFromQuery && seriesFromQuery === sid) {
       backLink.textContent = '← ' + label;
+    } else if (!seriesFromQuery && !fromContext) {
+      backLink.textContent = '← ' + label;
+      backLink.setAttribute('href', baseurl + '/series/' + encodeURIComponent(sid) + '/');
     }
   }
 
@@ -116,6 +120,7 @@
     if (pageSeriesId) {
       setSeriesLinkTarget(pageSeriesId);
       setSeriesLinkVisibilityFromIds(extractSeriesIndexIds(seriesIndexData, pageSeriesId));
+      setBackLinkLabel(pageSeriesId);
     } else if (seriesLinkWrap) {
       seriesLinkWrap.hidden = true;
       setSeriesLinkTarget('');

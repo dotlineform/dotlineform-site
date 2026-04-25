@@ -232,6 +232,7 @@ Results should remain:
 - inline on the page
 - visibly typed by small kind labels
 - light on controls and chrome
+- able to expose secondary metadata links when the metadata is directly useful navigation, such as work result series titles
 
 The page should not introduce:
 

@@ -109,6 +109,9 @@ Suggested current examples:
 - [ ] Confirm the result count text matches the visible result set
 - [ ] Confirm results render inline below the controls
 - [ ] Confirm result rows show kind, title link, id, and metadata where expected
+- [ ] Confirm work, series, and moment title links open in a new tab on `/search/?scope=catalogue`
+- [ ] Confirm linked series titles in work result metadata open the related series page in a new tab
+- [ ] Confirm a work opened from search without URL return context uses its primary series for the work-page back link when metadata loads
 - [ ] Confirm empty query returns the prompt state
 - [ ] Confirm a no-results query returns the empty state
 - [ ] Confirm a large result set shows the `more` control
@@ -132,6 +135,7 @@ Suggested current examples:
 - [ ] Confirm the input receives focus on page load
 - [ ] Confirm the page can be used without a pointer
 - [ ] Confirm the input, result links, and `more` are reachable by Tab when `scope=catalogue`
+- [ ] Confirm linked work-result series titles are reachable by Tab when present
 - [ ] Confirm inline docs-viewer search results are keyboard reachable on `/docs/` and `/library/`
 - [ ] Confirm focus-visible styling is present on interactive controls
 - [ ] Confirm there is no broken keyboard behaviour from unsupported features such as arrow-key navigation or Escape handling

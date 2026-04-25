@@ -8,6 +8,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-25] Improved no-context work-page back links
+
+**Status:** implemented
+
+**Area:** work pages / navigation
+
+**Summary:**
+Changed work pages opened without URL return context to prefer the work's primary series for the back link.
+
+**Reason:**
+Search result links now open works in a new tab. In that no-context entry case, the previous fallback back link went to the general works index, which was less useful than moving into the work's related series.
+
+**Effect:**
+Explicit return contexts still win: `?series=...`, recently added, public work index, and Studio work index return links keep their existing behavior. When no return context is present and the work has a resolvable primary series, the back link becomes `← <series title>` and points to that series page. If metadata or series lookup fails, the link keeps the existing `← works` fallback.
+
+**Affected files/docs:**
+
+- `assets/js/work.js`
+- [Data Flow](/docs/?scope=studio&doc=data-flow)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+
 ## [2026-04-25] Suppressed benign WEBrick client-reset noise in dev Studio
 
 **Status:** implemented
