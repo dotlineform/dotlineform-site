@@ -247,6 +247,7 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "title",
         "added_date",
         "last_updated",
+        "summary",
         "parent_id",
         "sort_order",
         "published",
@@ -293,6 +294,10 @@ def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) 
     if isinstance(value, bool):
         return value
     return str(value or "").strip().lower() not in {"false", "0", "no", "off"}
+
+
+def normalize_summary(value: Any) -> str:
+    return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
 def default_viewable_for_scope(scope: str) -> bool:
@@ -1322,7 +1327,11 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
     title_changed = title != target.title
     parent_changed = parent_id != target.parent_id
     sort_changed = sort_order != target.sort_order
-    if not (title_changed or parent_changed or sort_changed):
+    summary_was_provided = "summary" in body
+    current_summary = normalize_summary(target.front_matter.get("summary"))
+    summary = normalize_summary(body.get("summary")) if summary_was_provided else current_summary
+    summary_changed = summary_was_provided and summary != current_summary
+    if not (title_changed or parent_changed or sort_changed or summary_changed):
         return {
             "ok": True,
             "scope": scope,
@@ -1333,6 +1342,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "title": target.title,
                 "parent_id": target.parent_id,
                 "sort_order": target.sort_order,
+                "summary": current_summary,
             },
             "summary_text": f"No metadata changes for {target.doc_id}.",
             "dry_run": dry_run,
@@ -1344,6 +1354,11 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
     ).strip()
     updated_front_matter["title"] = title
     updated_front_matter["last_updated"] = current_date()
+    if summary_was_provided:
+        if summary:
+            updated_front_matter["summary"] = summary
+        else:
+            updated_front_matter.pop("summary", None)
     updated_front_matter["parent_id"] = parent_id
     if sort_order is None:
         updated_front_matter.pop("sort_order", None)
@@ -1367,6 +1382,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "to_parent_id": parent_id,
                 "from_sort_order": target.sort_order,
                 "to_sort_order": sort_order,
+                "summary_changed": summary_changed,
             },
         )
         rebuild = perform_source_write_and_rebuild(
@@ -1386,6 +1402,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "title_changed": title_changed,
                 "parent_changed": parent_changed,
                 "sort_changed": sort_changed,
+                "summary_changed": summary_changed,
             },
         )
 
@@ -1399,6 +1416,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             "title": title,
             "parent_id": parent_id,
             "sort_order": sort_order,
+            "summary": summary,
         },
         "summary_text": f"Updated metadata for {target.doc_id}.",
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",

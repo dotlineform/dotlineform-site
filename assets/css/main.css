@@ -1331,6 +1331,11 @@ select.docsViewer__fieldInput{
   padding-bottom: 0;
 }
 
+.docsViewer__fieldInput--textarea{
+  min-height: 6rem;
+  resize: vertical;
+}
+
 .docsViewer__fieldInput:focus-visible,
 .docsViewer__modalClose:focus-visible{
   outline: 2px solid var(--border-strong);
@@ -1507,7 +1512,8 @@ select.docsViewer__fieldInput{
 }
 
 .docsViewer__path,
-.docsViewer__updated{
+.docsViewer__updated,
+.docsViewer__summary{
   margin: 0;
 }
 

@@ -97,8 +97,8 @@ Reasons:
 - the field can be maintained independently from rendered document prose
 - the Docs Viewer can expose the same metadata near the updated date without forcing the summary to become part of the authored body
 
-This spec does not yet add `summary` to the docs schema.
-That should be a separate schema task covering all docs scopes or an explicit Library-only decision.
+The initial schema task adds `summary` as an optional shared docs-scope field.
+Library is the first expected population workflow, but the generated docs contract can carry the same field for any scope when present.
 
 Current direction:
 
@@ -358,7 +358,7 @@ Apply mode should:
 
 ### Phase 3. Generated docs schema integration
 
-Add `summary` to generated docs indexes and per-doc payloads if the field proves useful beyond source maintenance.
+Add `summary` to generated docs indexes and per-doc payloads, plus the shared metadata editor, without changing docs search behavior.
 
 This phase should update:
 
@@ -366,6 +366,13 @@ This phase should update:
 - docs builder behavior
 - validation checks
 - any UI surfaces that display summaries
+
+Current task:
+
+- add optional `summary` front matter to the generated docs schema
+- add `summary` to the Edit metadata modal so imported Library docs can be summarized during manual review
+- display non-empty summaries in the Docs Viewer metadata area below the updated date
+- keep Library search unchanged until the separate search-integration phase
 
 ### Phase 4. Search integration
 

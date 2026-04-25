@@ -102,6 +102,10 @@
           <input class="docsViewer__fieldInput" id="docsViewerMetadataTitleInput" name="title" type="text" autocomplete="off" spellcheck="false" required>
         </label>
         <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">summary</span>
+          <textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="docsViewerMetadataSummaryInput" name="summary" rows="4"></textarea>
+        </label>
+        <label class="docsViewer__field">
           <span class="docsViewer__fieldLabel">parent</span>
           <select class="docsViewer__fieldInput" id="docsViewerMetadataParentInput" name="parent_id"></select>
         </label>
@@ -124,6 +128,7 @@
         <div class="docsViewer__metaCopy">
           <p class="docsViewer__path small" id="docsViewerPath"></p>
           <p class="docsViewer__updated muted small" id="docsViewerUpdated"></p>
+          <p class="docsViewer__summary muted small" id="docsViewerSummary"></p>
         </div>
         <button class="docsViewer__bookmarkToggle" id="docsViewerBookmarkToggle" type="button" hidden aria-label="Add bookmark" aria-pressed="false" title="Add bookmark">☆</button>
       </div>

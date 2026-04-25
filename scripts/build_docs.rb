@@ -29,6 +29,7 @@ DocRecord = Struct.new(
   :title,
   :added_date,
   :last_updated,
+  :summary,
   :parent_id,
   :sort_order,
   :published,
@@ -136,6 +137,7 @@ class DocsDataBuilder
       parent_id = front_matter.key?("parent_id") ? front_matter["parent_id"].to_s : ""
       last_updated = front_matter["last_updated"] ? front_matter["last_updated"].to_s : ""
       added_date = front_matter["added_date"] ? front_matter["added_date"].to_s : last_updated
+      summary = normalize_summary(front_matter["summary"])
       sort_order = normalize_sort_order(front_matter["sort_order"])
       published = true
       viewable = boolean_front_matter_value(front_matter, "viewable", true)
@@ -146,6 +148,7 @@ class DocsDataBuilder
         title: title,
         added_date: added_date,
         last_updated: last_updated,
+        summary: summary,
         parent_id: parent_id,
         sort_order: sort_order,
         published: published,
@@ -202,6 +205,10 @@ class DocsDataBuilder
     raise "Invalid sort_order #{value.inspect}; expected an integer"
   end
 
+  def normalize_summary(value)
+    value.to_s.gsub(/\s+/, " ").strip
+  end
+
   def viewer_url_for(doc_id, anchor = nil)
     query_pairs = []
     query_pairs << "scope=#{CGI.escape(@scope_id)}" if @include_scope_param && !@scope_id.empty?
@@ -227,7 +234,7 @@ class DocsDataBuilder
   end
 
   def index_entry(doc)
-    {
+    entry = {
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
       "title" => doc.title,
@@ -241,10 +248,12 @@ class DocsDataBuilder
       "viewer_url" => doc.viewer_url,
       "content_url" => doc.content_url
     }
+    entry["summary"] = doc.summary unless doc.summary.empty?
+    entry
   end
 
   def item_entry(doc, docs)
-    {
+    entry = {
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
       "title" => doc.title,
@@ -262,6 +271,8 @@ class DocsDataBuilder
         docs: docs
       )
     }
+    entry["summary"] = doc.summary unless doc.summary.empty?
+    entry
   end
 
   def rewrite_doc_links(html, current_doc:, docs:)

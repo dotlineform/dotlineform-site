@@ -9,6 +9,7 @@
   var meta = document.getElementById("docsViewerMeta");
   var pathEl = document.getElementById("docsViewerPath");
   var updatedEl = document.getElementById("docsViewerUpdated");
+  var summaryEl = document.getElementById("docsViewerSummary");
   var bookmarkRow = document.getElementById("docsViewerBookmarkRow");
   var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
   var content = document.getElementById("docsViewerContent");
@@ -32,6 +33,7 @@
   var metadataForm = document.getElementById("docsViewerMetadataForm");
   var metadataDocId = document.getElementById("docsViewerMetadataDocId");
   var metadataTitleInput = document.getElementById("docsViewerMetadataTitleInput");
+  var metadataSummaryInput = document.getElementById("docsViewerMetadataSummaryInput");
   var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
   var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
   var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
@@ -948,6 +950,11 @@
       updatedEl.textContent = isDocViewable(doc) ? "" : "Draft";
       updatedEl.hidden = isDocViewable(doc);
     }
+    if (summaryEl) {
+      var summary = String(doc.summary || "").trim();
+      summaryEl.textContent = summary;
+      summaryEl.hidden = !summary;
+    }
     meta.hidden = false;
     renderBookmarkToggle();
   }
@@ -1223,7 +1230,7 @@
 
   function openMetadataModal() {
     var doc = currentSelectedDoc();
-    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataParentInput || !metadataSortOrderInput) return;
     if (doc.doc_id === "_archive") return;
 
     hideContextMenu();
@@ -1234,6 +1241,7 @@
     }
 
     metadataTitleInput.value = doc.title || "";
+    metadataSummaryInput.value = doc.summary || "";
     metadataSortOrderInput.value = doc.sort_order == null ? "" : String(doc.sort_order);
     metadataSortOrderInput.min = "0";
     metadataParentInput.innerHTML = metadataParentOptions(doc).map(function (option) {
@@ -1542,7 +1550,7 @@
 
   function handleEditMetadataSubmit() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataParentInput || !metadataSortOrderInput) return;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
@@ -1568,6 +1576,7 @@
       scope: viewerScope,
       doc_id: doc.doc_id,
       title: title,
+      summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
       parent_id: parentId,
       sort_order: payloadSortOrder
     };

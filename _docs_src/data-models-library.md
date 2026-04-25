@@ -43,6 +43,7 @@ Current design:
 - same Markdown-or-raw-HTML authoring model
 - separate source root so Library can grow without being folded into Studio docs
 - Library import/create defaults new docs to `published: true`, `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
+- optional `summary` front matter stores a concise document summary; the shared Docs Viewer metadata editor can maintain it, and blank values remove the field
 
 Current implementation note:
 
@@ -62,7 +63,7 @@ Purpose:
 Current content families:
 
 - one row per generated Library doc
-- identity, added/update dates, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
+- identity, added/update dates, optional `summary`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
 - `viewer_options` declaring `_archive` as a non-loadable, manage-only tree root
 
 Current site mapping:
@@ -79,6 +80,7 @@ Purpose:
 Current content families:
 
 - doc identity metadata
+- optional `summary` metadata when the source front matter defines it
 - rendered `content_html`
 
 Current site mapping:
@@ -99,6 +101,7 @@ Current content families:
 - identity, viewer URL, last-updated metadata, and normalized search text
 
 Library recently-added lists use `added_date` from the generated docs index. Library search continues to use `last_updated`.
+Library search does not currently consume `summary`.
 
 Current site mapping:
 

@@ -158,10 +158,12 @@ In doc-view mode, the main pane should show:
 
 - search field first when available
 - status line below the search field
-- ancestor path and last-updated metadata above document content
+- ancestor path, last-updated metadata, and optional summary metadata above document content
 - one readable content column rather than full-width text
 
 The ancestor path must not repeat the current doc title, because the rendered document H1 is the title. Root-level docs should hide the path line and let the updated date occupy the top metadata line.
+
+When a doc has summary metadata, show it below the updated date as secondary text rather than folding it into the authored body.
 
 In search mode, the main pane should show:
 

@@ -13,7 +13,7 @@ Status:
 - Phase 1 implemented: flat Studio source layout and management contract
 - Phase 2 implemented: localhost write service plus manage-mode create/archive/delete
 - Phase 3 implemented: leaf-doc drag/drop move with front-matter-only tree updates
-- Phase 4 implemented: current-doc metadata edit modal for `title`, `parent_id`, and `sort_order`
+- Phase 4 implemented: current-doc metadata edit modal for `title`, `summary`, `parent_id`, and `sort_order`
 - Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
 - Phase 6 implemented: draft/non-viewable review and bulk-backed `Make viewable`
 - Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
@@ -52,8 +52,10 @@ Implemented now:
 - `Edit` is available for the current doc in the manage toolbar
 - metadata edit opens in a modal and currently supports:
   - `title`
+  - `summary`
   - `parent_id`
   - `sort_order`
+- blank `summary` removes the front matter field
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
 - when the metadata modal changes `parent_id` and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
