@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline
 title: "Search Build Pipeline"
 added_date: 2026-04-23
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: search
 sort_order: 70
 ---
@@ -32,6 +32,7 @@ Current live search outputs:
 
 - `assets/data/search/catalogue/index.json`
 - `assets/data/search/studio/index.json`
+- `assets/data/search/analysis/index.json`
 - `assets/data/search/library/index.json`
 
 Current build principles:
@@ -46,7 +47,7 @@ Current build principles:
 Current source boundary:
 
 - `catalogue` search reads canonical repo JSON artifacts, not `works.xlsx` and not non-repo source files
-- `studio` and `library` search read canonical generated docs indexes and include only rows where `viewable !== false`
+- `studio`, `analysis`, and `library` search read canonical generated docs indexes and include only rows where `viewable !== false`
 
 This means search now has one owner even though the upstream source artifacts are different per scope.
 
@@ -409,6 +410,73 @@ Current builder behaviour for Library:
 - if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/dev-studio` runs a startup `library` docs-search rebuild
 - while `bin/dev-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`
 
+## Analysis Scope
+
+### Current Writer
+
+- `./scripts/build_search.rb --scope analysis`
+
+### Current Output
+
+- `assets/data/search/analysis/index.json`
+
+### Current Source Input
+
+- `assets/data/docs/scopes/analysis/index.json`
+
+The current Analysis search artifact is derived from the generated Analysis docs index rather than directly from `_docs_src_analysis/`.
+Rows with `viewable: false` are skipped so draft Analysis docs can be generated for manage-mode review without appearing in public/default search.
+
+### Current Commands
+
+Default write command:
+
+```bash
+./scripts/build_search.rb --scope analysis --write
+```
+
+Dry run:
+
+```bash
+./scripts/build_search.rb --scope analysis
+```
+
+Current supported overrides:
+
+- `--source-index PATH`
+- `--output PATH`
+- `--only-doc-ids IDS`
+- `--remove-missing`
+- `--write`
+- `--force`
+
+### Current Build Behaviour
+
+Current builder behaviour for Analysis:
+
+- matches the same docs-domain record model used by Studio and Library
+- reads only the generated Analysis docs index
+- can patch the existing Analysis search artifact for targeted `doc_id` updates
+- emits one search record per public-viewable Analysis doc
+- stays compatible with the shared Docs Viewer inline search runtime
+- does not index doc body prose
+
+### Current Runtime Mapping
+
+- consumed by inline docs search on `/analysis/`
+- not consumed by the dedicated `/search/` page
+- manual docs rebuilds remain split:
+  - `./scripts/build_docs.rb --scope analysis --write`
+  - `./scripts/build_search.rb --scope analysis --write`
+- targeted docs-search command:
+  - `./scripts/build_search.rb --scope analysis --write --only-doc-ids analysis --remove-missing`
+- live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
+- the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
+- the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
+- targeted docs-search updates rebuild only affected Analysis docs entries by `doc_id`, remove affected ids that are missing, non-viewable, or `_archive`, and report diagnostic counts for Codex/server use
+- if `DOCS_STARTUP_REBUILD_SCOPES` includes `analysis`, `bin/dev-studio` runs a startup `analysis` docs-search rebuild
+- while `bin/dev-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_src_analysis/**/*.md` changes aligned with `assets/data/search/analysis/index.json`
+
 ## Related Documents
 
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
@@ -418,4 +486,5 @@ Current builder behaviour for Library:
 - [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
 - [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Data Models: Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)
 - [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)

@@ -2,7 +2,7 @@
 doc_id: data-models
 title: "Data Models"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-04-26
 parent_id: ""
 sort_order: 110
 ---
@@ -14,9 +14,10 @@ It covers:
 
 - generated JSON artifacts that the runtime reads directly
 - source Markdown files where the Markdown itself acts as a route or identity record
-- how those artifacts map onto the three live scopes:
+- how those artifacts map onto the live scopes:
   - `catalogue`
   - `studio`
+  - `analysis`
   - `library`
 - the shared patterns that recur across scopes
 
@@ -33,7 +34,8 @@ Read it in this order:
 1. **[Shared Patterns](/docs/?scope=studio&doc=data-models-shared)** for the common conventions used across generated artifacts
 2. **[Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)** for public works, series, moments, and catalogue search data
 3. **[Studio Scope](/docs/?scope=studio&doc=data-models-studio)** for Studio tag data plus the Studio docs corpus and Studio docs search data
-4. **[Library Scope](/docs/?scope=studio&doc=data-models-library)** for the Library docs corpus and Library docs search data
+4. **[Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)** for the public Analysis docs corpus and Analysis docs search data
+5. **[Library Scope](/docs/?scope=studio&doc=data-models-library)** for the Library docs corpus and Library docs search data
 
 ## Practical Rule
 

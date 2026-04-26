@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
 added_date: 2026-04-23
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: scripts
 sort_order: 20
 ---
@@ -19,23 +19,27 @@ Script:
 Source location:
 
 - `_docs_src/`
+- `_docs_src_analysis/`
 - `_docs_library_src/`
 
 Published viewer route:
 
 - Studio docs: `/docs/`
+- Analysis docs: `/analysis/`
 - Library docs: `/library/`
 
 Generated outputs:
 
 - `assets/data/docs/scopes/studio/index.json`
 - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+- `assets/data/docs/scopes/analysis/index.json`
+- `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 - `assets/data/docs/scopes/library/index.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
 ## What The Builder Does
 
-- reads Markdown source docs from each configured flat scope source root
+- reads Markdown source docs from each configured scope source root
 - reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, `parent_id`, optional `sort_order`, optional `published`, and optional `viewable`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
@@ -49,7 +53,9 @@ Generated outputs:
 
 - every root-level `.md` file in `_docs_src/` is published by default
 - every root-level `.md` file in `_docs_library_src/` is published by default
-- nested Markdown docs are rejected so the flat source-layout contract stays explicit
+- every `.md` file under `_docs_src_analysis/` is published by default, including nested docs
+- nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
+- nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`
 - add front matter with `published: false` to keep a Markdown file in either source root without generating it into docs-viewer JSON
 - add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
 - the builder can also mark configured tree roots as manage-only for a scope; Library uses this for `_archive`, while Studio keeps Archive visible as a public reference section
@@ -86,6 +92,7 @@ Practical authoring guidance:
 Internal doc links:
 
 - preferred Studio public link format: `/docs/?scope=studio&doc=<doc_id>`
+- preferred Analysis public link format: `/analysis/?doc=<doc_id>`
 - preferred Library public link format: `/library/?doc=<doc_id>`
 - optional anchors should use the normal hash suffix on the scope-owned route
 - the builder rewrites scope-owned viewer links and relative `.md` links onto the current scope-owned viewer route
@@ -119,7 +126,7 @@ Flags:
 
 - `--scope NAME`
   limit the build to a named docs scope
-  current values: `studio`, `library`
+  current values: `studio`, `analysis`, `library`
   if omitted, the builder runs for all configured scopes
 - `--source PATH`
   override docs source directory for a single selected scope
@@ -133,17 +140,17 @@ Flags:
 ## Operational Notes
 
 - `bin/dev-studio` currently runs this builder for the `studio` scope once before starting Jekyll
-- `bin/dev-studio` also starts the Docs Live Rebuild Watcher, which watches `_docs_src/*.md` and `_docs_library_src/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
+- `bin/dev-studio` also starts the Docs Live Rebuild Watcher, which watches `_docs_src/*.md`, `_docs_src_analysis/**/*.md`, and `_docs_library_src/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
 - if you disable the watcher or want explicit control while the dev runner is already running, re-run `./scripts/build_docs.rb --scope <scope> --write`
 - docs viewer manage mode rebuilds the current docs scope through the localhost docs-management service
 - manual `./scripts/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
 - live docs-management actions chain same-scope docs search through the docs-management service rather than through `build_docs.rb` itself
 - changing only the docs data does not require any separate asset pipeline
-- manual `./scripts/build_docs.rb --write` with no `--scope` rebuilds all configured docs scopes, currently `studio` and `library`
+- manual `./scripts/build_docs.rb --write` with no `--scope` rebuilds all configured docs scopes, currently `studio`, `analysis`, and `library`
 - current write behavior is incremental within the rebuilt scope:
   - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
   - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
-- if you want a scope-specific rebuild, use `--scope studio` or `--scope library` explicitly
+- if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
 
 Jekyll verification builds:
 

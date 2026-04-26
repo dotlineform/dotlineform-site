@@ -8,6 +8,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Added the public Analysis docs viewer
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Analysis
+
+**Summary:**
+Added a public `/analysis/` docs viewer backed by a new `analysis` docs scope, generated Analysis docs payloads, and an inline Analysis search artifact.
+
+**Reason:**
+Analysis needs a concrete public-facing document surface for portfolio interpretation, series/work analysis, tags, dimensions, and LLM-assisted review output without mixing that material into Library or Studio docs.
+
+**Effect:**
+The public nav now orders the main content surfaces as `works`, `analysis`, and `library`. Analysis source docs live under `_docs_src_analysis/`, with nested `series/` and `works/` folders reserved for future ID-addressable content such as `series-001` and `work-00008`. Viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`.
+
+**Affected files/docs:**
+
+- `analysis/index.md`
+- `_docs_src_analysis/`
+- `scripts/build_docs.rb`
+- `scripts/build_search.rb`
+- `scripts/search/build_config.json`
+- `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- `_layouts/default.html`
+- [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
+- [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+
 ## [2026-04-26] Added the Studio list primitive catalogue page
 
 **Status:** implemented

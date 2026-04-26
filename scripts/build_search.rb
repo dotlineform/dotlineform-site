@@ -38,6 +38,12 @@ SCOPE_DEFAULTS = {
     schema: "search_index_library_v1",
     output_path: "assets/data/search/library/index.json",
     source_index_path: "assets/data/docs/scopes/library/index.json"
+  },
+  "analysis" => {
+    kind: :docs,
+    schema: "search_index_analysis_v1",
+    output_path: "assets/data/search/analysis/index.json",
+    source_index_path: "assets/data/docs/scopes/analysis/index.json"
   }
 }.freeze
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4f98bd8c1eb60abed50bc3e7bb795bca",
-    "generated_at_utc": "2026-04-26T15:14:19Z",
-    "count": 136
+    "version": "blake2b-a847908e0792849de9154f19455b068f",
+    "generated_at_utc": "2026-04-26T15:37:44Z",
+    "count": 137
   },
   "entries": [
     {
@@ -85,10 +85,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-25 • Scripts",
+      "display_meta": "2026-04-26 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -96,12 +96,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-25 2026 04 25"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-26 2026 04 26"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -249,10 +249,10 @@
       "kind": "doc",
       "title": "Shared Patterns",
       "href": "/docs/?scope=studio&doc=data-models-shared",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-25 • Data Models",
+      "display_meta": "2026-04-26 • Data Models",
       "search_terms": [
         "data-models-shared",
         "data",
@@ -261,12 +261,12 @@
         "shared patterns",
         "patterns",
         "data models",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-04-25 2026 04 25"
+      "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-04-26 2026 04 26"
     },
     {
       "id": "site-docs",
@@ -455,10 +455,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-25 • Scripts",
+      "display_meta": "2026-04-26 • Scripts",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -467,12 +467,12 @@
         "rebuild",
         "watcher",
         "docs live rebuild watcher",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-25 2026 04 25"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-26 2026 04 26"
     },
     {
       "id": "scripts-main-pipeline",
@@ -553,10 +553,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-25 • Scripts",
+      "display_meta": "2026-04-26 • Scripts",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -564,12 +564,12 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-25 2026 04 25"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-26 2026 04 26"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
@@ -786,10 +786,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-26",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-23 • Docs Viewer",
+      "display_meta": "2026-04-26 • Docs Viewer",
       "search_terms": [
         "docs-viewer-source-organisation",
         "docs",
@@ -798,12 +798,12 @@
         "organisation",
         "source organisation",
         "docs viewer",
-        "2026-04-23",
+        "2026-04-26",
         "2026",
         "04",
-        "23"
+        "26"
       ],
-      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-23 2026 04 23"
+      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-26 2026 04 26"
     },
     {
       "id": "studio",
@@ -1218,6 +1218,30 @@
         "17"
       ],
       "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification new cat pipeline cat 2026-04-17 2026 04 17"
+    },
+    {
+      "id": "data-models-analysis",
+      "kind": "doc",
+      "title": "Analysis Scope",
+      "href": "/docs/?scope=studio&doc=data-models-analysis",
+      "last_updated": "2026-04-26",
+      "parent_id": "data-models",
+      "parent_title": "Data Models",
+      "display_meta": "2026-04-26 • Data Models",
+      "search_terms": [
+        "data-models-analysis",
+        "data",
+        "models",
+        "analysis",
+        "analysis scope",
+        "scope",
+        "data models",
+        "2026-04-26",
+        "2026",
+        "04",
+        "26"
+      ],
+      "search_text": "data-models-analysis data models analysis analysis scope scope data models 2026-04-26 2026 04 26"
     },
     {
       "id": "docs-broken-links",
@@ -1998,22 +2022,22 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-25 • Search",
+      "display_meta": "2026-04-26 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-25 2026 04 25"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-26 2026 04 26"
     },
     {
       "id": "search-studio-v1-index-shape",
@@ -2291,19 +2315,19 @@
       "kind": "doc",
       "title": "Data Models",
       "href": "/docs/?scope=studio&doc=data-models",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-26",
+      "display_meta": "2026-04-26",
       "search_terms": [
         "data-models",
         "data",
         "models",
         "data models",
-        "2026-03-31",
+        "2026-04-26",
         "2026",
-        "03",
-        "31"
+        "04",
+        "26"
       ],
-      "search_text": "data-models data models data models 2026-03-31 2026 03 31"
+      "search_text": "data-models data models data models 2026-04-26 2026 04 26"
     },
     {
       "id": "catalogue-new-work-detail-editor",
@@ -3101,22 +3125,22 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-25 • Search",
+      "display_meta": "2026-04-26 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "search-change-log search change log search change log 2026-04-25 2026 04 25"
+      "search_text": "search-change-log search change log search change log 2026-04-26 2026 04 26"
     }
   ]
 }

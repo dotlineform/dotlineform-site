@@ -54,16 +54,23 @@
           {%- assign is_works_active = false -%}
           {%- assign is_library_index = false -%}
           {%- assign is_library_active = false -%}
+          {%- assign is_analysis_index = false -%}
+          {%- assign is_analysis_active = false -%}
           {%- if u == '/series/' -%}{%- assign is_works_index = true -%}{%- endif -%}
+          {%- if u == '/analysis/' -%}{%- assign is_analysis_index = true -%}{%- endif -%}
           {%- if u == '/library/' -%}{%- assign is_library_index = true -%}{%- endif -%}
           {%- if page.collection == 'series' or page.collection == 'moments' or page.section == 'series' or u_series == '/series/' or u_moments == '/moments/' -%}
             {%- assign is_works_active = true -%}
+          {%- endif -%}
+          {%- if u == '/analysis/' or page.section == 'analysis' -%}
+            {%- assign is_analysis_active = true -%}
           {%- endif -%}
           {%- if u == '/library/' or page.section == 'library' -%}
             {%- assign is_library_active = true -%}
           {%- endif -%}
 
           {% include nav_item.html label="works" href='/series/' class_name='nav-item' is_current=is_works_index is_active=is_works_active %}
+          {% include nav_item.html label="analysis" href='/analysis/' class_name='nav-item' is_current=is_analysis_index is_active=is_analysis_active %}
           {% include nav_item.html label="library" href='/library/' class_name='nav-item' is_current=is_library_index is_active=is_library_active %}
         {% endif %}
 

@@ -2,12 +2,35 @@
 doc_id: search-change-log
 title: "Search Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-04-26] Added Analysis docs search
+
+**Status:** implemented
+
+**Area:** docs search build flow
+
+**Summary:**
+Added an `analysis` docs-search scope for the new public `/analysis/` docs viewer.
+
+**Reason:**
+The Analysis viewer needs inline search that stays separate from Library, Studio docs, and catalogue search.
+
+**Effect:**
+`scripts/build_search.rb` now supports `--scope analysis`, reading `assets/data/docs/scopes/analysis/index.json` and writing `assets/data/search/analysis/index.json`. The shared search build config declares Analysis as a docs-index-backed scope with the same targeted `doc_id` update policy used by Studio and Library docs search.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- `scripts/search/build_config.json`
+- `assets/data/search/analysis/index.json`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)
 
 ## [2026-04-25] Applied docs manage-only tree filtering to docs search
 

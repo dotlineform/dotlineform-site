@@ -29,7 +29,7 @@ Endpoints:
 Security constraints:
   - Binds to 127.0.0.1 only.
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
-  - Writes only allowlisted Markdown docs under _docs_src/ and _docs_library_src/.
+  - Writes only allowlisted Markdown docs under _docs_src/, _docs_library_src/, and _docs_src_analysis/.
   - Creates timestamped backup bundles under var/docs/backups/.
   - Writes minimal local logs under var/docs/logs/.
 """
@@ -78,7 +78,9 @@ SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SCOPE_ROOTS = {
     "studio": Path("_docs_src"),
     "library": Path("_docs_library_src"),
+    "analysis": Path("_docs_src_analysis"),
 }
+NESTED_SOURCE_SCOPES = {"analysis"}
 RESERVED_DOC_IDS = {"_archive"}
 BACKUPS_REL_DIR = Path("var/docs/backups")
 LOGS_REL_DIR = Path("var/docs/logs")
@@ -315,13 +317,18 @@ def scope_root(repo_root: Path, scope: str) -> Path:
     return repo_root / SCOPE_ROOTS[scope]
 
 
+def scope_markdown_paths(root: Path, scope: str) -> list[Path]:
+    pattern = "**/*.md" if scope in NESTED_SOURCE_SCOPES else "*.md"
+    return sorted(root.glob(pattern))
+
+
 def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
     root = scope_root(repo_root, scope)
     if not root.exists():
         raise ValueError(f"missing source root for scope {scope}: {root}")
 
     docs: list[ScopeDoc] = []
-    for path in sorted(root.glob("*.md")):
+    for path in scope_markdown_paths(root, scope):
         front_matter, body = parse_source(path)
         doc_id = str(front_matter.get("doc_id") or path.stem).strip()
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
@@ -352,13 +359,8 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
 
 
 def validate_scope_docs(docs: list[ScopeDoc]) -> None:
-    stem_seen: dict[str, ScopeDoc] = {}
     id_seen: dict[str, ScopeDoc] = {}
     for doc in docs:
-        stem = doc.path.stem
-        if stem in stem_seen:
-            raise ValueError(f"Duplicate filename stem {stem!r} in scope docs")
-        stem_seen[stem] = doc
         if doc.doc_id in id_seen:
             raise ValueError(f"Duplicate doc_id {doc.doc_id!r} in scope docs")
         id_seen[doc.doc_id] = doc
@@ -636,7 +638,14 @@ def perform_source_write_and_rebuild(
     include_search: bool = True,
     search_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
-    filenames = sorted({path.name for path in changed_paths if isinstance(path, Path)})
+    root = scope_root(repo_root, scope)
+    filenames = sorted(
+        {
+            path.resolve().relative_to(root.resolve()).as_posix()
+            for path in changed_paths
+            if isinstance(path, Path)
+        }
+    )
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -679,6 +688,7 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
         [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"],
         [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "studio", "--write"],
         [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "library", "--write"],
+        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "analysis", "--write"],
     ]
     steps = []
     for command in commands:
@@ -703,7 +713,7 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
     return {
         "ok": True,
         "steps": steps,
-        "summary_text": "Docs and docs search rebuilt for studio and library.",
+        "summary_text": "Docs and docs search rebuilt for studio, library, and analysis.",
     }
 
 
@@ -714,6 +724,8 @@ def relative_path(repo_root: Path, path: Path) -> str:
 def viewer_url_for(scope: str, doc_id: str) -> str:
     if scope == "studio":
         return f"/docs/?scope=studio&doc={doc_id}"
+    if scope == "analysis":
+        return f"/analysis/?doc={doc_id}&mode=manage"
     return f"/library/?doc={doc_id}&mode=manage"
 
 

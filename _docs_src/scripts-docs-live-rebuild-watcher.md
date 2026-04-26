@@ -2,7 +2,7 @@
 doc_id: scripts-docs-live-rebuild-watcher
 title: "Docs Live Rebuild Watcher"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: scripts
 sort_order: 18
 ---
@@ -25,6 +25,7 @@ It is intended as a local development helper for `bin/dev-studio`, not as the pr
 The watcher maps source roots directly onto docs scopes:
 
 - `_docs_src/*.md` -> `studio`
+- `_docs_src_analysis/**/*.md` -> `analysis`
 - `_docs_library_src/*.md` -> `library`
 
 It watches source roots only. It does not watch generated outputs under:
@@ -78,18 +79,19 @@ That means a source change under one docs root keeps both:
 - the current scope docs-viewer JSON
 - the current scope docs-search artifact
 
-in sync without touching the other docs scope.
+in sync without touching the other docs scopes.
 
 ## Change Types
 
-The watcher treats these root-level Markdown changes as rebuild triggers:
+The watcher treats these Markdown changes as rebuild triggers:
 
 - create
 - edit
 - delete
 - rename
 
-It does this by comparing the current root-level `.md` file set, file mtimes, and file sizes on each poll.
+It does this by comparing the current `.md` file set, file mtimes, and file sizes on each poll.
+Studio and Library watch only root-level `.md` files. Analysis watches nested `.md` files under `_docs_src_analysis/`.
 
 For targeted search, it also keeps a parsed per-scope source snapshot from the last successful watcher rebuild. The snapshot maps filenames to front-matter-derived values including `doc_id`, `title`, `parent_id`, `published`, and `viewable`. The watcher does not assume filename equals `doc_id`.
 

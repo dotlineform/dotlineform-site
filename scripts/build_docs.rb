@@ -18,6 +18,7 @@ ScopeConfig = Struct.new(
   :output,
   :viewer_base_url,
   :include_scope_param,
+  :allow_nested_source,
   :non_loadable_doc_ids,
   :manage_only_tree_root_ids,
   :show_updated_date,
@@ -52,6 +53,7 @@ class DocsDataBuilder
     output_dir:,
     viewer_base_url:,
     include_scope_param: false,
+    allow_nested_source: false,
     non_loadable_doc_ids: [],
     manage_only_tree_root_ids: [],
     show_updated_date: true
@@ -62,6 +64,7 @@ class DocsDataBuilder
     @items_dir = @output_dir.join("by-id")
     @viewer_base_url = normalize_viewer_base_url(viewer_base_url)
     @include_scope_param = include_scope_param
+    @allow_nested_source = allow_nested_source
     @non_loadable_doc_ids = normalize_doc_ids(non_loadable_doc_ids)
     @manage_only_tree_root_ids = normalize_doc_ids(manage_only_tree_root_ids)
     @show_updated_date = show_updated_date != false
@@ -125,7 +128,7 @@ class DocsDataBuilder
   def load_docs
     all_paths = Dir.glob(@source_dir.join("**/*.md").to_s).sort.map { |file_path| Pathname(file_path) }
     nested_paths = all_paths.select { |path| path.dirname != @source_dir }
-    unless nested_paths.empty?
+    if !@allow_nested_source && !nested_paths.empty?
       nested_list = nested_paths.map { |path| path.relative_path_from(@source_dir).to_s }.join(", ")
       raise "Nested markdown docs are not supported under #{@source_dir}; move these files to the scope root: #{nested_list}"
     end
@@ -335,7 +338,7 @@ class DocsDataBuilder
   end
 
   def viewer_path_match?(path_part)
-    path_part == @viewer_base_url || path_part == "/docs/" || path_part == "/library/"
+    path_part == @viewer_base_url || path_part == "/docs/" || path_part == "/library/" || path_part == "/analysis/"
   end
 
   def doc_sort_key(doc)
@@ -527,6 +530,7 @@ scope_configs = [
     output: "assets/data/docs/scopes/studio",
     viewer_base_url: "/docs/",
     include_scope_param: true,
+    allow_nested_source: false,
     non_loadable_doc_ids: ["_archive"],
     manage_only_tree_root_ids: [],
     show_updated_date: true
@@ -537,9 +541,21 @@ scope_configs = [
     output: "assets/data/docs/scopes/library",
     viewer_base_url: "/library/",
     include_scope_param: false,
+    allow_nested_source: false,
     non_loadable_doc_ids: ["_archive"],
     manage_only_tree_root_ids: ["_archive"],
     show_updated_date: false
+  ),
+  ScopeConfig.new(
+    scope_id: "analysis",
+    source: "_docs_src_analysis",
+    output: "assets/data/docs/scopes/analysis",
+    viewer_base_url: "/analysis/",
+    include_scope_param: false,
+    allow_nested_source: true,
+    non_loadable_doc_ids: ["_archive"],
+    manage_only_tree_root_ids: [],
+    show_updated_date: true
   )
 ]
 
@@ -560,6 +576,7 @@ selected_scopes.each do |config|
     output_dir: options[:output] || config.output,
     viewer_base_url: options[:viewer_base_url] || config.viewer_base_url,
     include_scope_param: config.include_scope_param,
+    allow_nested_source: config.allow_nested_source,
     non_loadable_doc_ids: config.non_loadable_doc_ids,
     manage_only_tree_root_ids: config.manage_only_tree_root_ids,
     show_updated_date: config.show_updated_date

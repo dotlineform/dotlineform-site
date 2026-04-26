@@ -2,7 +2,7 @@
 doc_id: docs-viewer-source-organisation
 title: "Source Organisation"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-04-26
 parent_id: docs-viewer
 sort_order: 20
 ---
@@ -23,11 +23,15 @@ It does not define the detailed schema of the generated JSON payloads.
 
 ## Current Source Roots
 
-The shared Docs Viewer currently serves two separate source trees.
+The shared Docs Viewer currently serves three separate source trees.
 
 Studio docs source root:
 
 - `_docs_src/`
+
+Analysis docs source root:
+
+- `_docs_src_analysis/`
 
 Library docs source root:
 
@@ -36,10 +40,16 @@ Library docs source root:
 Each scope owns its own source-doc tree and generated output tree.
 The shared viewer does not merge those scopes into one combined docs corpus.
 
-Both source roots are now flat:
+Studio and Library source roots are flat:
 
 - Studio docs: `_docs_src/*.md`
 - Library docs: `_docs_library_src/*.md`
+
+Analysis allows nested source folders:
+
+- Analysis docs: `_docs_src_analysis/**/*.md`
+
+Analysis folder names are source-organisation affordances for future helpers such as series/work analysis lookup. Viewer navigation still comes from `doc_id`, `parent_id`, and `sort_order`.
 
 ## Current Tree Model
 
@@ -124,6 +134,7 @@ Current runtime reason:
 The docs builder writes scope-owned viewer data under:
 
 - `assets/data/docs/scopes/studio/`
+- `assets/data/docs/scopes/analysis/`
 - `assets/data/docs/scopes/library/`
 
 At a high level, each scope currently has:

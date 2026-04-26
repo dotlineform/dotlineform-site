@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: scripts
 sort_order: 10
 ---
@@ -43,11 +43,12 @@ Exposed endpoints:
 Current behavior:
 
 - local-only write service for the shared Docs Viewer
-- used by `/docs/?mode=manage` and `/library/?mode=manage`
+- used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/library-import/` for staged-file listing and docs HTML import writes
-- creates, archives, and deletes flat source docs under the current scope root
+- creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
+- creates Analysis docs as `published: true`, `viewable: true`
 - creates Library docs as `published: true`, `viewable: false`
 - rebuilds scope-owned docs payloads after successful writes
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
@@ -80,10 +81,11 @@ Search update behavior:
 
 Request behavior:
 
-- `scope` must be `studio` or `library`
+- `scope` must be `studio`, `analysis`, or `library`
 - `title` defaults to `New Doc` when omitted or blank
 - new docs write `added_date` and `last_updated` to the current date
 - new Studio docs write `published: true`, `viewable: true`
+- new Analysis docs write `published: true`, `viewable: true`
 - new Library docs write `published: true`, `viewable: false`
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
@@ -111,7 +113,7 @@ Request behavior:
 
 Import behavior:
 
-- `scope` must be `studio` or `library`
+- `scope` must be `studio`, `analysis`, or `library`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
 - parses the full staged HTML file through the shared importer
 - escapes literal pipe characters from source text so mathematical notation such as `I(X;Y|Z)` does not become an accidental Markdown table
@@ -121,6 +123,7 @@ Import behavior:
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current date
 - new Studio imports write `published: true`, `viewable: true`
+- new Analysis imports write `published: true`, `viewable: true`
 - new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
 - reports collision details when the generated import target already matches an existing `doc_id`
@@ -140,7 +143,7 @@ Import behavior:
 
 Rebuild behavior:
 
-- `scope` must be `studio` or `library`
+- `scope` must be `studio`, `analysis`, or `library`
 - rebuilds generated docs payloads for the requested scope
 - rebuilds the docs-search artifact for the requested scope
 - is intended for local manage mode rather than the public hosted site
@@ -155,7 +158,7 @@ Rebuild behavior:
 
 Broken-links behavior:
 
-- `scope` must be `studio` or `library`
+- `scope` must be `studio`, `analysis`, or `library`
 - runs the shared docs broken-links audit for that scope
 - reports `not found` and strict `wrong title` issues
 - does not write source docs or generated outputs

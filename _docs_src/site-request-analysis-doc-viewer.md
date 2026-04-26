@@ -10,7 +10,7 @@ sort_order: 150
 
 Status:
 
-- proposed
+- implemented
 
 ## Summary
 
@@ -93,18 +93,16 @@ Example distinction:
 
 The exact model is open.
 
-Possible source root:
+Source root:
 
-- `_docs_analysis_src/`
+- `_docs_src_analysis/`
 
-Possible generated output:
+Generated output:
 
 - `assets/data/docs/scopes/analysis/index.json`
 - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 
-The first implementation can probably follow the existing Studio and Library docs model.
-
-Families may become useful later, but they do not need to be solved before the first content exists.
+The first implementation follows the existing Studio and Library docs model, with one source-layout exception: Analysis allows nested Markdown files under `_docs_src_analysis/`.
 
 ## Future Family Model
 
@@ -126,7 +124,7 @@ Example:
 - source folder: `series/`
 - doc ID: `series-001`
 
-This should be treated as a likely future requirement, not a blocker for the first viewer implementation.
+The source folders now exist as a future affordance, but viewer organisation remains controlled by front matter.
 
 ## Benefits
 
@@ -151,20 +149,15 @@ Main risks:
 
 The main tradeoff is between building a simple scope first and designing the family model upfront.
 
-The better first step is likely a simple Analysis docs scope with family requirements documented, then expand once real content proves the needed structure.
+The implemented first step is a simple Analysis docs scope with nested source folders allowed for future series/work helpers.
 
 ## Open Questions
 
-1. Should the first Analysis source root be flat like Studio and Library docs?
-2. If family folders are deferred, how should early doc IDs encode family intent?
-3. Should `/analysis/` have public search from the first implementation?
-4. Should Analysis docs appear in any global site search, or only in an Analysis-local search?
-5. Should Analysis support manage mode like Library?
-6. Should Analysis docs default to public-viewable, or support staged non-viewable review first?
-7. Should series analysis docs be generated from data, authored manually, or both?
-8. Should Analysis docs link back to catalogue routes using structured metadata?
-9. What source fields distinguish an analysis doc from canonical catalogue prose?
-10. Should internal Studio Analytics link to public Analysis once the viewer exists?
+1. Should series analysis docs be generated from data, authored manually, or both?
+2. Should Analysis docs link back to catalogue routes using structured metadata?
+3. What source fields distinguish an analysis doc from canonical catalogue prose?
+4. Should internal Studio Analytics link to public Analysis later?
+5. When real content exists, should Analysis need family-aware navigation beyond metadata-driven folders?
 
 ## Proposed Implementation Steps
 
@@ -172,7 +165,7 @@ The better first step is likely a simple Analysis docs scope with family require
 
 Status:
 
-- pending
+- implemented
 
 Define:
 
@@ -188,7 +181,7 @@ Define:
 
 Status:
 
-- pending
+- implemented
 
 Add a public route at:
 
@@ -200,7 +193,7 @@ The route should use the shared docs viewer runtime where practical.
 
 Status:
 
-- pending
+- implemented
 
 Configure the docs builder to support an `analysis` scope.
 
@@ -210,7 +203,7 @@ The first implementation should prefer the simplest model compatible with Studio
 
 Status:
 
-- pending
+- implemented
 
 Add a small seed set of Analysis docs so the route has real content to validate against.
 
@@ -237,7 +230,7 @@ After initial content exists, decide whether Analysis needs:
 
 Status:
 
-- pending
+- implemented
 
 Update relevant docs after implementation.
 

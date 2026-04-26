@@ -60,7 +60,7 @@ parse_startup_doc_scopes() {
     fi
 
     case "$normalized" in
-      studio|library)
+      studio|library|analysis)
         if [[ "$seen_scopes" != *" $normalized "* ]]; then
           STARTUP_DOC_SCOPES+=("$normalized")
           seen_scopes="$seen_scopes$normalized "
@@ -68,7 +68,7 @@ parse_startup_doc_scopes() {
         ;;
       *)
         echo "ERROR: Unsupported DOCS_STARTUP_REBUILD_SCOPES entry: $token" >&2
-        echo "Use a comma-separated list of: studio, library" >&2
+        echo "Use a comma-separated list of: studio, library, analysis" >&2
         exit 1
         ;;
     esac
@@ -167,7 +167,7 @@ else
   echo "Startup docs rebuild scopes: none"
 fi
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  echo "Docs Live Watcher: enabled (_docs_src + _docs_library_src)"
+  echo "Docs Live Watcher: enabled (_docs_src + _docs_library_src + _docs_src_analysis)"
 else
   echo "Docs Live Watcher: disabled"
 fi
@@ -184,6 +184,8 @@ else
   for scope in "${STARTUP_DOC_SCOPES[@]}"; do
     if [ "$scope" = "studio" ]; then
       scope_label="Studio"
+    elif [ "$scope" = "analysis" ]; then
+      scope_label="Analysis"
     else
       scope_label="Library"
     fi

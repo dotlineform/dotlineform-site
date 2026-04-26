@@ -29,7 +29,9 @@ from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppression
 SCOPE_ROOTS = {
     "studio": Path("_docs_src"),
     "library": Path("_docs_library_src"),
+    "analysis": Path("_docs_src_analysis"),
 }
+NESTED_SOURCE_SCOPES = {"analysis"}
 
 
 def log(message: str) -> None:
@@ -66,14 +68,15 @@ def detect_bundle_bin() -> Optional[str]:
     return shutil.which("bundle")
 
 
-def snapshot_scope(root: Path) -> Dict[str, tuple[int, int]]:
+def snapshot_scope(root: Path, scope: str) -> Dict[str, tuple[int, int]]:
     if not root.exists():
         raise FileNotFoundError(f"Source root not found: {root}")
 
     snapshot: Dict[str, tuple[int, int]] = {}
-    for path in sorted(root.glob("*.md")):
+    pattern = "**/*.md" if scope in NESTED_SOURCE_SCOPES else "*.md"
+    for path in sorted(root.glob(pattern)):
         stat = path.stat()
-        snapshot[path.name] = (stat.st_mtime_ns, stat.st_size)
+        snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
     return snapshot
 
 
@@ -101,9 +104,10 @@ def ordered_unique(values: list[str]) -> list[str]:
 
 def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]]:
     docs = load_scope_docs(repo_root, scope)
+    root = repo_root / SCOPE_ROOTS[scope]
     return {
-        doc.path.name: {
-            "filename": doc.path.name,
+        doc.path.relative_to(root).as_posix(): {
+            "filename": doc.path.relative_to(root).as_posix(),
             "doc_id": doc.doc_id,
             "title": doc.title,
             "parent_id": doc.parent_id,
@@ -261,24 +265,25 @@ def main() -> int:
             log(f"{scope} parsed docs snapshot unavailable at startup; watcher search will use full rebuilds: {snapshot_error}")
         states[scope] = {
             "root": root,
-            "snapshot": snapshot_scope(root),
+            "snapshot": snapshot_scope(root, scope),
             "doc_snapshot": doc_snapshot,
             "dirty_at": None,
             "changed_files": [],
         }
 
     log(
-        "Watching _docs_src/*.md -> studio and _docs_library_src/*.md -> library "
+        "Watching _docs_src/*.md -> studio, _docs_library_src/*.md -> library, "
+        "and _docs_src_analysis/**/*.md -> analysis "
         f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
     )
 
     try:
         while True:
             now = time.monotonic()
-            for scope in ("studio", "library"):
+            for scope in ("studio", "library", "analysis"):
                 state = states[scope]
                 previous_snapshot = state["snapshot"]
-                current_snapshot = snapshot_scope(state["root"])
+                current_snapshot = snapshot_scope(state["root"], scope)
                 if current_snapshot != previous_snapshot:
                     state["snapshot"] = current_snapshot
                     state["changed_files"] = changed_filenames(previous_snapshot, current_snapshot)
@@ -287,7 +292,7 @@ def main() -> int:
                     log(f"Detected source changes for {scope}: {changed_text}.")
 
             ready_scope = None
-            for scope in ("studio", "library"):
+            for scope in ("studio", "library", "analysis"):
                 dirty_at = states[scope]["dirty_at"]
                 if dirty_at is not None and (now - dirty_at) >= args.debounce_seconds:
                     ready_scope = scope
@@ -330,7 +335,7 @@ def main() -> int:
                         log(f"{ready_scope} targeted search fallback: {fallback_reason}")
 
                 rebuild_succeeded = rebuild_scope(repo_root, bundle_bin, ready_scope, search_doc_ids=search_doc_ids)
-                post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"])
+                post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"], ready_scope)
                 if post_rebuild_snapshot != states[ready_scope]["snapshot"]:
                     previous_snapshot = states[ready_scope]["snapshot"]
                     states[ready_scope]["snapshot"] = post_rebuild_snapshot

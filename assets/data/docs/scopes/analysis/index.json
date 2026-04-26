@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-04-26T15:33:40Z",
+  "viewer_options": {
+    "non_loadable_doc_ids": [
+      "_archive"
+    ],
+    "manage_only_tree_root_ids": [],
+    "show_updated_date": true
+  },
+  "docs": [
+    {
+      "scope": "analysis",
+      "doc_id": "analysis",
+      "title": "Analysis",
+      "added_date": "2026-04-26",
+      "last_updated": "2026-04-26",
+      "parent_id": "",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "analysis.md",
+      "viewer_url": "/analysis/?doc=analysis",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json"
+    }
+  ]
+}

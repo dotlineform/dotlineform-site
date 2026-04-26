@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "search_index_analysis_v1",
+    "scope": "analysis",
+    "version": "blake2b-b71da6b360d58a5cb653fe43b0508bbe",
+    "generated_at_utc": "2026-04-26T15:33:48Z",
+    "count": 1
+  },
+  "entries": [
+    {
+      "id": "analysis",
+      "kind": "doc",
+      "title": "Analysis",
+      "href": "/analysis/?doc=analysis",
+      "last_updated": "2026-04-26",
+      "display_meta": "2026-04-26",
+      "search_terms": [
+        "analysis",
+        "2026-04-26",
+        "2026",
+        "04",
+        "26"
+      ],
+      "search_text": "analysis 2026-04-26 2026 04 26"
+    }
+  ]
+}

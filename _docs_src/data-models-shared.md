@@ -2,7 +2,7 @@
 doc_id: data-models-shared
 title: "Shared Patterns"
 added_date: 2026-04-19
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: data-models
 sort_order: 10
 ---
@@ -25,6 +25,7 @@ Examples:
 - `_moments/*.md`
 - `_docs_src/*.md`
 - `_docs_library_src/*.md`
+- `_docs_src_analysis/**/*.md`
 
 Purpose:
 
@@ -79,6 +80,7 @@ Examples:
 
 - `assets/data/search/catalogue/index.json`
 - `assets/data/search/studio/index.json`
+- `assets/data/search/analysis/index.json`
 - `assets/data/search/library/index.json`
 
 Purpose:
@@ -143,7 +145,7 @@ Current enforcement layers:
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
   drives the live rebuild path that writes the main catalogue indexes and record payloads
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
-  documents the unified search builder that now owns `catalogue`, `studio`, and `library` search outputs from canonical repo JSON and published docs indexes
+  documents the unified search builder that now owns `catalogue`, `studio`, `analysis`, and `library` search outputs from canonical repo JSON and published docs indexes
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   validates duplicate `doc_id` values and unknown `parent_id` references before writing docs-scope payloads
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
