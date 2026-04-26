@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-04-26
 parent_id: studio
 sort_order: 70
 ---
@@ -102,7 +102,7 @@ Current save/rebuild flow:
 9. the same preview now also carries work media readiness and staged work prose readiness
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
-12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup for `_docs_src_catalogue/works/<work_id>.md` is handled by the next prose-source implementation task
+12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
 
 Bulk save flow:
 

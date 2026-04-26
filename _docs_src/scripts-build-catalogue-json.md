@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: "Scoped JSON Catalogue Build"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-26
 parent_id: scripts
 sort_order: 70
 ---
@@ -57,6 +57,7 @@ The helper:
 - reads canonical JSON source from `assets/studio/data/catalogue/`
 - resolves the current work record and its current series ids
 - unions any `--extra-series-ids`
+- lets the generator render optional work and series prose from `_docs_src_catalogue/works/<work_id>.md` and `_docs_src_catalogue/series/<series_id>.md`
 - runs the internal `generate_work_pages.py` JSON engine with a narrow `--only` selection:
   - `work-pages`
   - `work-json`

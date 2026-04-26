@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Switched work and series prose generation to repo-local sources
+
+**Status:** implemented
+
+**Area:** Catalogue pipeline
+
+**Summary:**
+Work and series prose rendering now uses ID-derived Markdown files under `_docs_src_catalogue/` while preserving the public JSON payload shape.
+
+**Reason:**
+The staged import flow writes permanent repo-local prose sources, so publication needs to read those files instead of legacy external prose filename fields.
+
+**Effect:**
+`generate_work_pages.py` reads `_docs_src_catalogue/works/<work_id>.md` and `_docs_src_catalogue/series/<series_id>.md` when rendering `content_html`. Missing prose stays optional. Planner prose fingerprinting now watches those same repo-local files, and `work_prose_file` / `series_prose_file` no longer control public prose rendering.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- `scripts/build_catalogue.py`
+- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+
 ## [2026-04-26] Added staged catalogue prose import
 
 **Status:** implemented
@@ -21,7 +45,7 @@ Added a work/series prose import step that reads ID-based staged Markdown from `
 Work and series prose source is moving out of externally resolved project folders and into a repo-managed Markdown source tree while keeping public work and series payloads stable.
 
 **Effect:**
-The work and series editors now expose `Import staged prose` when the matching staged Markdown file exists. The catalogue write server previews staged prose, rejects front matter, requires overwrite confirmation for different existing permanent prose, and writes without backup for this explicit prose flow. Generator lookup for the new permanent source roots remains the next prose-source implementation task.
+The work and series editors now expose `Import staged prose` when the matching staged Markdown file exists. The catalogue write server previews staged prose, rejects front matter, requires overwrite confirmation for different existing permanent prose, and writes without backup for this explicit prose flow. Generator lookup now reads the new permanent source roots.
 
 **Affected files/docs:**
 

@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue
 title: "Catalogue Scope"
 added_date: 2026-04-01
-last_updated: 2026-04-01
+last_updated: 2026-04-26
 parent_id: data-models
 sort_order: 20
 ---
@@ -246,7 +246,7 @@ Why it is the most important catalogue record:
 - the work page needs richer metadata than the index provides
 - the detail page derives its canonical title, ordering, and back-link context from the parent work record
 - avoiding a separate global detail index reduces duplication and keeps detail ordering local to the work that owns it
-- work prose is optional, so the record still exists even when no source Markdown is mapped for that work
+- work prose is optional, so the record still exists even when `_docs_src_catalogue/works/<work_id>.md` is missing
 
 ### `assets/moments/index/<moment_id>.json`
 

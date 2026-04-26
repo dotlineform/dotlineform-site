@@ -97,7 +97,6 @@ try:
         media_work_files_subdir,
         source_moments_images_subdir,
         source_moments_root_subdir,
-        source_works_prose_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -108,7 +107,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         media_work_files_subdir,
         source_moments_images_subdir,
         source_moments_root_subdir,
-        source_works_prose_subdir,
         source_works_root_subdir,
     )
 
@@ -165,6 +163,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
+CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
 
 
 # ----------------------------
@@ -1015,6 +1014,7 @@ def main() -> None:
         return
 
     repo_root = Path(__file__).resolve().parents[1]
+    catalogue_prose_source_root = repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR
     projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
     media_base_dir_display = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) else None
 
@@ -1514,11 +1514,9 @@ def main() -> None:
                 series_sort_value = f"{idx:0{rank_width}d}-{wid}"
                 series_sort_by_series_id.setdefault(sid, {})[wid] = series_sort_value
 
-    # Pre-index project folder and prose filename by work_id.
+    # Pre-index project folder by work_id for source media and dimension lookups.
     work_project_folder_by_id: Dict[str, str] = {}
     has_project_folder_col = "project_folder" in works_hi
-    if (run_work_pages or run_work_json) and not has_project_folder_col:
-        raise SystemExit("Works sheet missing required column for prose migration: project_folder")
     if has_project_folder_col:
         for wr in works_rows[1:]:
             wid_raw = cell(wr, works_hi, "work_id")
@@ -1527,41 +1525,11 @@ def main() -> None:
                 continue
             work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
 
-    work_prose_file_by_id: Dict[str, str] = {}
-    has_work_prose_file_col = "work_prose_file" in works_hi
-    if has_work_prose_file_col:
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
-            prose_raw = cell(wr, works_hi, "work_prose_file")
-            if is_empty(wid_raw) or is_empty(prose_raw):
-                continue
-            work_prose_file_by_id[slug_id(wid_raw)] = Path(normalize_text(prose_raw)).name
+    def resolve_work_prose_source_path(wid: str) -> Path:
+        return catalogue_prose_source_root / "works" / f"{wid}.md"
 
-    works_prose_subdir = source_works_prose_subdir(PIPELINE_CONFIG)
-
-    def resolve_work_prose_source_path(wid: str) -> Optional[Path]:
-        project_folder = work_project_folder_by_id.get(wid)
-        prose_filename = work_prose_file_by_id.get(wid)
-        if not project_folder or not prose_filename:
-            return None
-        return projects_root / project_folder / works_prose_subdir / prose_filename
-
-    has_series_prose_file_col = "series_prose_file" in series_hi
-    if run_series_pages and not has_series_prose_file_col:
-        raise SystemExit("Series sheet missing required column for prose migration: series_prose_file")
-
-    def resolve_series_prose_source_path(series_id: str, sr: tuple, *, ordered_work_ids: Optional[List[str]] = None) -> Optional[Path]:
-        primary_work_id = require_series_primary_work_id(
-            series_id,
-            sr,
-            ordered_work_ids=ordered_work_ids,
-        )
-        project_folder = work_project_folder_by_id.get(primary_work_id)
-        prose_raw = cell(sr, series_hi, "series_prose_file") if has_series_prose_file_col else None
-        prose_filename = Path(normalize_text(prose_raw)).name if not is_empty(prose_raw) else None
-        if not project_folder or not prose_filename:
-            return None
-        return projects_root / project_folder / works_prose_subdir / prose_filename
+    def resolve_series_prose_source_path(series_id: str) -> Path:
+        return catalogue_prose_source_root / "series" / f"{series_id}.md"
 
     work_file_entries_by_work_id: Dict[str, List[Dict[str, Any]]] = {}
     if len(work_files_rows) > 1:
@@ -2289,17 +2257,10 @@ def main() -> None:
                 })
 
                 public_series_record = build_series_json_record(series_record)
-                source_prose_path = resolve_series_prose_source_path(
-                    series_id,
-                    sr,
-                    ordered_work_ids=series_work_ids_sorted,
-                )
+                source_prose_path = resolve_series_prose_source_path(series_id)
                 content_html: Optional[str] = None
-                if source_prose_path is not None:
-                    if source_prose_path.exists():
-                        content_html = render_markdown_with_jekyll(source_prose_path)
-                    else:
-                        print(f"[series {series_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; omitting prose content.")
+                if source_prose_path.exists():
+                    content_html = render_markdown_with_jekyll(source_prose_path)
 
                 payload_version = compute_payload_version(
                     compact_json_object({"series": public_series_record, "content_html": content_html})
@@ -2835,7 +2796,7 @@ def main() -> None:
                 details_total = sum(len(s.get("details", [])) for s in sections)
                 work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
                 content_html: Optional[str] = None
-                if source_prose_path is not None and source_prose_path.exists():
+                if source_prose_path.exists():
                     content_html = render_markdown_with_jekyll(source_prose_path)
                 payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections, "content_html": content_html}))
 

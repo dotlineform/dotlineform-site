@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-04-19
+last_updated: 2026-04-26
 parent_id: _archive
 sort_order: 50
 ---
@@ -84,7 +84,7 @@ Moment canonical source model:
   - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
 - `--projects-base-dir`
   - defaults from `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - used for canonical work prose, work-detail and work-file sources, moment source files, and series prose source files
+  - used for work-detail and work-file sources, moment source files, and source media dimension lookups
   - refreshes work primary-image dimensions only when `work-json` is selected directly or indirectly via `work-pages`
 - `--media-base-dir`
   - defaults from `DOTLINEFORM_MEDIA_BASE_DIR`
@@ -99,14 +99,14 @@ Moment canonical source model:
   - existing ledgers can be seeded once from workbook git history with `scripts/backfill_recent_index_from_git_history.py`
 - `--series-json-dir` with default `assets/series/index`
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
-  - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`
-  - still writes JSON when `Series.series_prose_file` is empty, but omits `content_html`
+  - resolves canonical series prose from `_docs_src_catalogue/series/<series_id>.md`
+  - still writes JSON when the ID-derived prose source file is missing, but leaves `content_html` blank
 
 Work prose source path:
 
-- canonical Markdown lives at `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<project_folder>/<paths.source_subdirs.prose>/<work_prose_file>`
-- default `paths.source_subdirs.prose` value is `site text`
-- if `Works.work_prose_file` is empty, cannot be resolved, or points at a missing Markdown file, work page and work JSON generation still continue
+- canonical Markdown lives at `_docs_src_catalogue/works/<work_id>.md`
+- source filenames are ID-derived and do not depend on `Works.work_prose_file`
+- if the ID-derived source file is missing, work page and work JSON generation still continue
 - in that case the work record is written without prose content and `content_html` is omitted or empty at runtime
 
 ## `--only` Artifacts

@@ -246,13 +246,13 @@ Implemented behavior:
 - permanent source files are written to `_docs_src_catalogue/works/<work_id>.md` or `_docs_src_catalogue/series/<series_id>.md`
 - preview validates UTF-8 Markdown, rejects front matter, and reports overwrite requirements
 - apply requires overwrite confirmation when replacing different permanent prose content
-- runtime generator lookup for the permanent source roots remains Task 3
+- runtime generator lookup for the permanent source roots is implemented in Task 3
 
 ### Task 3. Update Generator Prose Lookup
 
 Status:
 
-- pending
+- complete
 
 Update the catalogue generator so work and series prose are read from the new repo-local source roots using ID-derived lookup.
 
@@ -262,6 +262,14 @@ The generator should continue to write:
 - `assets/series/index/<series_id>.json`
 
 The public payload shape should continue to include `content_html` where prose exists.
+
+Implemented behavior:
+
+- work prose is read from `_docs_src_catalogue/works/<work_id>.md`
+- series prose is read from `_docs_src_catalogue/series/<series_id>.md`
+- missing work or series prose remains optional and publishes as blank `content_html`
+- `work_prose_file` and `series_prose_file` no longer control public prose rendering
+- planner prose fingerprinting watches the same repo-local source files
 
 ### Task 4. Migrate Existing Work And Series Prose
 

@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: "Catalogue Series Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-04-26
 parent_id: studio
 sort_order: 120
 ---
@@ -75,7 +75,7 @@ Current save/rebuild flow:
 6. the page reloads its focused series lookup payload
 7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works and now also carries staged series prose readiness
 8. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_src_catalogue/series/<series_id>.md` after overwrite confirmation when needed
-9. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup for `_docs_src_catalogue/series/<series_id>.md` is handled by the next prose-source implementation task
+9. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup now reads `_docs_src_catalogue/series/<series_id>.md` for public series prose
 
 Delete flow:
 

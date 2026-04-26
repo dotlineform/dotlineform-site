@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0725092901a71e038f28508ee94ee02c",
-    "generated_at_utc": "2026-04-26T16:00:29Z",
+    "version": "blake2b-2f21895815c0b2fbd950c8293f8f96e4",
+    "generated_at_utc": "2026-04-26T17:48:44Z",
     "count": 137
   },
   "entries": [
@@ -504,10 +504,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-26",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-01 • Data Models",
+      "display_meta": "2026-04-26 • Data Models",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -516,12 +516,12 @@
         "catalogue scope",
         "scope",
         "data models",
-        "2026-04-01",
+        "2026-04-26",
         "2026",
         "04",
-        "01"
+        "26"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-01 2026 04 01"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-26 2026 04 26"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -1577,10 +1577,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-26",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-19 • Archive",
+      "display_meta": "2026-04-26 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -1589,12 +1589,12 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-04-19",
+        "2026-04-26",
         "2026",
         "04",
-        "19"
+        "26"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-19 2026 04 19"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-26 2026 04 26"
     },
     {
       "id": "search-normalisation-rules",
@@ -1975,10 +1975,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-22 • Studio",
+      "display_meta": "2026-04-26 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -1986,22 +1986,22 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-04-22",
+        "2026-04-26",
         "2026",
         "04",
-        "22"
+        "26"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-04-22 2026 04 22"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-04-26 2026 04 26"
     },
     {
       "id": "scripts-build-catalogue-json",
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-26",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-18 • Scripts",
+      "display_meta": "2026-04-26 • Scripts",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -2010,12 +2010,12 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-04-18",
+        "2026-04-26",
         "2026",
         "04",
-        "18"
+        "26"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-18 2026 04 18"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-26 2026 04 26"
     },
     {
       "id": "search-build-pipeline",
@@ -2359,10 +2359,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-22 • Studio",
+      "display_meta": "2026-04-26 • Studio",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -2370,12 +2370,12 @@
         "editor",
         "catalogue series editor",
         "studio",
-        "2026-04-22",
+        "2026-04-26",
         "2026",
         "04",
-        "22"
+        "26"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-04-22 2026 04 22"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-04-26 2026 04 26"
     },
     {
       "id": "config",

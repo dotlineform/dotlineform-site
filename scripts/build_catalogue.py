@@ -83,7 +83,6 @@ try:
         media_work_files_subdir,
         source_moments_images_subdir,
         source_moments_root_subdir,
-        source_works_prose_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -97,7 +96,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         media_work_files_subdir,
         source_moments_images_subdir,
         source_moments_root_subdir,
-        source_works_prose_subdir,
         source_works_root_subdir,
     )
 
@@ -133,13 +131,14 @@ SRCSET_SELECTED_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_selected_id
 SRCSET_SUCCESS_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_success_ids_file")
 BUILD_STATE_SCHEMA = "build_catalogue_state"
 LEGACY_BUILD_STATE_SCHEMAS = {"build_catalogue_state_v1"}
-BUILD_STATE_PLANNER_VERSION = 4
+BUILD_STATE_PLANNER_VERSION = 5
 BUILD_STATE_MIGRATION_NOTE = (
-    "planner_version 4 adds moment prose tracking. Legacy state files are "
+    "planner_version 5 moves work and series prose tracking to repo-local catalogue prose sources. Legacy state files are "
     "accepted and normalized in memory, then rewritten on the next successful write run."
 )
 DEFAULT_BUILD_STATE_PATH = Path("var/build_catalogue_state.json")
 REPO_ROOT = Path(__file__).resolve().parents[1]
+CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
 DEFAULT_PROJECTS_BASE_DIR = Path(projects_base).expanduser() if (projects_base := env_var_value(PIPELINE_CONFIG, "projects_base_dir")) else None
 DEFAULT_MEDIA_BASE_DIR = Path(media_base).expanduser() if (media_base := env_var_value(PIPELINE_CONFIG, "media_base_dir")) else None
 
@@ -573,7 +572,7 @@ def build_workbook_state(
     moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
     moment_source_index = moment_source_index if moment_source_index is not None else scan_moment_source_files(moments_root)
-    works_prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
+    catalogue_prose_source_root = REPO_ROOT / CATALOGUE_PROSE_SOURCE_REL_DIR
     work_project_folder_by_id: Dict[str, str] = {}
 
     if "Works" in wb.sheetnames:
@@ -608,20 +607,11 @@ def build_workbook_state(
                 previous_entry=previous_media_work.get(work_id),
                 missing_reason=missing_reason,
             )
-            prose_filename = Path(normalize_text(payload.get("work_prose_file"))).name if not is_empty(payload.get("work_prose_file")) else ""
-            prose_path: Path | None = None
-            prose_missing_reason: str | None = None
-            if project_folder and prose_filename:
-                prose_path = works_root / project_folder / works_prose_root / prose_filename
-            elif prose_filename:
-                prose_missing_reason = "missing_project_folder"
-            else:
-                prose_missing_reason = "missing_work_prose_file"
             prose_work[work_id] = fingerprint_media_path(
-                prose_path,
-                base_dir=projects_base_dir,
+                catalogue_prose_source_root / "works" / f"{work_id}.md",
+                base_dir=REPO_ROOT,
                 previous_entry=previous_prose_work.get(work_id),
-                missing_reason=prose_missing_reason,
+                missing_reason="missing_work_prose_source",
             )
 
     if "Series" in wb.sheetnames:
@@ -640,22 +630,11 @@ def build_workbook_state(
                 "hash": stable_payload_hash(payload),
                 "status": normalize_status(payload.get("status")),
             }
-            primary_work_id = slug_id(payload.get("primary_work_id")) if not is_empty(payload.get("primary_work_id")) else ""
-            project_folder = work_project_folder_by_id.get(primary_work_id, "")
-            prose_filename = Path(normalize_text(payload.get("series_prose_file"))).name if not is_empty(payload.get("series_prose_file")) else ""
-            prose_path = None
-            prose_missing_reason = None
-            if project_folder and prose_filename:
-                prose_path = works_root / project_folder / works_prose_root / prose_filename
-            elif prose_filename:
-                prose_missing_reason = "missing_project_folder"
-            else:
-                prose_missing_reason = "missing_series_prose_file"
             prose_series[series_id] = fingerprint_media_path(
-                prose_path,
-                base_dir=projects_base_dir,
+                catalogue_prose_source_root / "series" / f"{series_id}.md",
+                base_dir=REPO_ROOT,
                 previous_entry=previous_prose_series.get(series_id),
-                missing_reason=prose_missing_reason,
+                missing_reason="missing_series_prose_source",
             )
 
     if "WorkDetails" in wb.sheetnames:

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-26T16:00:27Z",
+  "generated_at": "2026-04-26T17:48:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -307,7 +307,7 @@
       "doc_id": "data-models-catalogue",
       "title": "Catalogue Scope",
       "added_date": "2026-04-01",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-26",
       "parent_id": "data-models",
       "sort_order": 20,
       "published": true,
@@ -951,7 +951,7 @@
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-26",
       "parent_id": "_archive",
       "sort_order": 50,
       "published": true,
@@ -1189,7 +1189,7 @@
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "sort_order": 70,
       "published": true,
@@ -1203,7 +1203,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-26",
       "parent_id": "scripts",
       "sort_order": 70,
       "published": true,
@@ -1427,7 +1427,7 @@
       "doc_id": "catalogue-series-editor",
       "title": "Catalogue Series Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "sort_order": 120,
       "published": true,
