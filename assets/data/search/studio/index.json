@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-766680bdbad1935479daa99cfa7374a4",
-    "generated_at_utc": "2026-04-26T14:16:22Z",
-    "count": 135
+    "version": "blake2b-4f98bd8c1eb60abed50bc3e7bb795bca",
+    "generated_at_utc": "2026-04-26T15:14:19Z",
+    "count": 136
   },
   "entries": [
     {
@@ -2507,32 +2507,6 @@
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-03-31 2026 03 31"
     },
     {
-      "id": "site-request-catalogue-prose-docs-model",
-      "kind": "doc",
-      "title": "Catalogue Prose Docs Model Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-prose-docs-model",
-      "last_updated": "2026-04-26",
-      "parent_id": "site-docs",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-04-26 • Site Docs",
-      "search_terms": [
-        "site-request-catalogue-prose-docs-model",
-        "site",
-        "request",
-        "catalogue",
-        "prose",
-        "docs",
-        "model",
-        "catalogue prose docs model request",
-        "site docs",
-        "2026-04-26",
-        "2026",
-        "04",
-        "26"
-      ],
-      "search_text": "site-request-catalogue-prose-docs-model site request catalogue prose docs model catalogue prose docs model request site docs 2026-04-26 2026 04 26"
-    },
-    {
       "id": "scripts-fix-missing-title-sort",
       "kind": "doc",
       "title": "Legacy Title Sort Fix",
@@ -2596,6 +2570,61 @@
         "17"
       ],
       "search_text": "servers 2026-04-17 2026 04 17"
+    },
+    {
+      "id": "site-request-work-series-prose-source-model",
+      "kind": "doc",
+      "title": "Work And Series Prose Source Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
+      "last_updated": "2026-04-26",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-26 • Site Docs",
+      "search_terms": [
+        "site-request-work-series-prose-source-model",
+        "site",
+        "request",
+        "work",
+        "series",
+        "prose",
+        "source",
+        "model",
+        "work and series prose source model request",
+        "and",
+        "site docs",
+        "docs",
+        "2026-04-26",
+        "2026",
+        "04",
+        "26"
+      ],
+      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and site docs docs 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "site-request-analysis-doc-viewer",
+      "kind": "doc",
+      "title": "Analysis Docs Viewer Request",
+      "href": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
+      "last_updated": "2026-04-26",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-26 • Site Docs",
+      "search_terms": [
+        "site-request-analysis-doc-viewer",
+        "site",
+        "request",
+        "analysis",
+        "doc",
+        "viewer",
+        "analysis docs viewer request",
+        "docs",
+        "site docs",
+        "2026-04-26",
+        "2026",
+        "04",
+        "26"
+      ],
+      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs site docs 2026-04-26 2026 04 26"
     },
     {
       "id": "llm",

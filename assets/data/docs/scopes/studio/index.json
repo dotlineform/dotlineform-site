@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-26T14:16:21Z",
+  "generated_at": "2026-04-26T15:14:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1522,20 +1522,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-catalogue-prose-docs-model",
-      "title": "Catalogue Prose Docs Model Request",
-      "added_date": "2026-04-26",
-      "last_updated": "2026-04-26",
-      "parent_id": "site-docs",
-      "sort_order": 140,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-catalogue-prose-docs-model.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-prose-docs-model",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-prose-docs-model.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-fix-missing-title-sort",
       "title": "Legacy Title Sort Fix",
       "added_date": "2026-03-31",
@@ -1575,6 +1561,34 @@
       "source_path": "servers.md",
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/assets/data/docs/scopes/studio/by-id/servers.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-work-series-prose-source-model",
+      "title": "Work And Series Prose Source Model Request",
+      "added_date": "2026-04-26",
+      "last_updated": "2026-04-26",
+      "parent_id": "site-docs",
+      "sort_order": 140,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-work-series-prose-source-model.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-series-prose-source-model.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-analysis-doc-viewer",
+      "title": "Analysis Docs Viewer Request",
+      "added_date": "2026-04-26",
+      "last_updated": "2026-04-26",
+      "parent_id": "site-docs",
+      "sort_order": 150,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-analysis-doc-viewer.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-analysis-doc-viewer.json"
     },
     {
       "scope": "studio",
