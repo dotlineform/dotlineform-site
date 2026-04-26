@@ -30,22 +30,20 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-analytics
       <p>These routes stay available while the broader Analytics dashboard definition is refined.</p>
     </div>
     <div class="studioCardGrid">
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/tag-registry/' | relative_url }}">
-        <h4>Tag registry</h4>
-        <p>Maintain the canonical registry of analytical tags.</p>
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/docs-import/?scope=analysis' | relative_url }}">
+        <h4>Import analysis doc</h4>
+        <p>Import staged HTML into the Analysis docs source for manage-mode review.</p>
       </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/tag-aliases/' | relative_url }}">
-        <h4>Tag aliases</h4>
-        <p>Manage alias mappings and promotion flows for analytical terms.</p>
-      </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/tag-groups/' | relative_url }}">
-        <h4>Tag groups</h4>
-        <p>Review and maintain the grouping structure used by tagging workflows.</p>
-      </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/series-tags/' | relative_url }}">
-        <h4>Series tags</h4>
-        <p>Review tag assignments across series and move into record-level editing.</p>
-      </a>
+      <div class="tagStudio__panel">
+        <h4>Tag tools</h4>
+        <p>Maintain analytical tags, aliases, groups, and series assignments.</p>
+        <ul class="studioLinkList">
+          <li><a class="studioLinkList__item" href="{{ '/studio/tag-registry/' | relative_url }}"><span class="studioLinkList__title">Tag registry</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/tag-aliases/' | relative_url }}"><span class="studioLinkList__title">Tag aliases</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/tag-groups/' | relative_url }}"><span class="studioLinkList__title">Tag groups</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/series-tags/' | relative_url }}"><span class="studioLinkList__title">Series tags</span></a></li>
+        </ul>
+      </div>
       <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/docs/?scope=studio&doc=new-pipeline-refine-analytics' | relative_url }}">
         <h4>Analytics plan</h4>
         <p>Parallel planning stub for the wider Analytics domain.</p>

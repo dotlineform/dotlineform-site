@@ -63,7 +63,7 @@ Current workflow/detail routes:
 
 - `/studio/build-activity/`
 - `/studio/docs-broken-links/`
-- `/studio/library-import/`
+- `/studio/docs-import/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
 - `/studio/bulk-add-work/`

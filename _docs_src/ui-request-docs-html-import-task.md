@@ -47,7 +47,7 @@ Completed now:
 - staged import preview now reports conversion summary plus `doc_id` collision detection
 - staged import preview now validates generated Markdown through the repo's Jekyll renderer helper before returning success
 - `POST /docs/import-html` now supports create and warned overwrite writes with backup/rebuild follow-through
-- Studio import page added at `/studio/library-import/`
+- Studio import page added at `/studio/docs-import/`
 - Library dashboard now links to the import page and drops the stale broken docs panel
 
 Not done yet:

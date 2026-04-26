@@ -29,9 +29,9 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
         <h4>Manage library</h4>
         <p>Open the Library viewer with local management controls enabled.</p>
       </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/library-import/' | relative_url }}">
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/docs-import/?scope=library' | relative_url }}">
         <h4>Import</h4>
-        <p>Import staged HTML into the published Library docs source, with optional Studio scope selection.</p>
+        <p>Import staged HTML into the published Library docs source for manage-mode review.</p>
       </a>
     </div>
   </section>

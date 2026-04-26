@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Renamed Docs Import Route and Cleaned Dashboard Panels
+
+**Status:** implemented
+
+**Area:** Studio / dashboards
+
+**Summary:**
+Renamed the shared docs HTML import page from `/studio/library-import/` to `/studio/docs-import/`, then updated Analytics and Library dashboard panels to enter that page with scope-specific defaults.
+
+**Reason:**
+The import workflow now supports Library, Analysis, and Studio docs, so the route should not imply that it belongs only to Library. The Analytics dashboard also had too many equal-weight tag panels for one related maintenance cluster.
+
+**Effect:**
+Analytics now has an import panel that opens `/studio/docs-import/?scope=analysis`, a single Tag tools panel with plain links to the four tag pages, and the existing Analytics plan panel. Library now opens `/studio/docs-import/?scope=library`, and its Import copy no longer mentions Studio scope selection. The old `/studio/library-import/` route is removed.
+
+**Affected files/docs:**
+
+- `studio/docs-import/index.md`
+- `studio/analytics/index.md`
+- `studio/library/index.md`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-26] Added Analysis to Docs HTML Import
 
 **Status:** implemented
@@ -15,7 +43,7 @@ sort_order: 270
 **Area:** Studio / Docs Viewer
 
 **Summary:**
-Extended `/studio/library-import/` so staged HTML imports can target the `analysis` docs scope as well as `library` and `studio`.
+Extended `/studio/docs-import/` so staged HTML imports can target the `analysis` docs scope as well as `library` and `studio`.
 
 **Reason:**
 The public `/analysis/` viewer already has generated docs and search artifacts, but the Studio import page still filtered valid `analysis` selections out of the workflow.
@@ -478,17 +506,17 @@ Successful docs-management source writes now leave a short-lived suppression mar
 **Area:** Studio / docs viewer
 
 **Summary:**
-Added `/studio/library-import/` as the user-facing Studio page for staged docs HTML import, linked it from the Library dashboard, removed the stale broken Library docs dashboard panel, and added a matching User Guide page for the workflow.
+Added `/studio/docs-import/` as the user-facing Studio page for staged docs HTML import, linked it from the Library dashboard, removed the stale broken Library docs dashboard panel, and added a matching User Guide page for the workflow.
 
 **Reason:**
 The server-side import contract was in place, but the workflow still had no actual Studio surface. The Library dashboard was also carrying a dead `Library docs` panel after docs reorganization, and its middle panel still pointed to an older planning stub instead of the new import tool.
 
 **Effect:**
-The Library dashboard now links directly to `Import`, the broken `Library docs` panel is gone, and `/studio/library-import/` lets the user choose a staged HTML file, pick `library` or `studio`, decide whether to keep prompt/meta blocks, and complete create-or-warned-overwrite imports through the localhost docs-management service. The page uses config-backed copy, reports result metadata and warnings, and links back to the imported viewer doc. The `i` link on the new page points to a practical User Guide doc rather than the lower-level implementation spec.
+The Library dashboard now links directly to `Import`, the broken `Library docs` panel is gone, and `/studio/docs-import/` lets the user choose a staged HTML file, pick a docs scope, decide whether to keep prompt/meta blocks, and complete create-or-warned-overwrite imports through the localhost docs-management service. The page uses config-backed copy, reports result metadata and warnings, and links back to the imported viewer doc. The `i` link on the new page points to a practical User Guide doc rather than the lower-level implementation spec.
 
 **Affected files/docs:**
 - `studio/library/index.md`
-- `studio/library-import/index.md`
+- `studio/docs-import/index.md`
 - `assets/studio/js/docs-html-import.js`
 - `assets/studio/js/studio-config.js`
 - `assets/studio/js/studio-transport.js`

@@ -1,7 +1,7 @@
 ---
 layout: studio
 title: "Docs HTML Import"
-permalink: /studio/library-import/
+permalink: /studio/docs-import/
 section: docs-html-import
 studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
 ---

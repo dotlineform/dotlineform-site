@@ -23,10 +23,37 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-26 / UI-036
+
+- status: adopted
+- route: `/studio/analytics/`, `/studio/library/`, `/studio/docs-import/`
+- issue: the shared docs HTML import page still had a Library-specific route name, and the Analytics dashboard represented one related tag-tool cluster as four equal route-entry panels.
+- triage: local dashboard information architecture refinement
+- reasoning: route names should describe the workflow rather than one default scope when the page supports multiple docs scopes. Dashboard panels should represent meaningful user choices; closely related maintenance links can live as plain links inside one panel when separate cards create visual noise.
+- outcome: the import route is now `/studio/docs-import/`, Analytics links to it with `scope=analysis`, Library links to it with `scope=library`, and the four Analytics tag route-entry panels were merged into one Tag tools panel with plain links.
+- files changed:
+  - `studio/docs-import/index.md`
+  - `studio/analytics/index.md`
+  - `studio/library/index.md`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/user-guide-docs-html-import.md`
+  - `_docs_src/studio-runtime.md`
+  - `_docs_src/studio.md`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/analytics/` and confirm it has one Analysis import panel, one Tag tools panel with four plain links, and one Analytics plan panel
+  - inspect `/studio/library/` and confirm its Import panel links to `/studio/docs-import/?scope=library`
+  - open `/studio/docs-import/?scope=analysis` and `/studio/docs-import/?scope=library` and confirm the selector defaults to the requested scope
+- follow-up:
+  - use scoped query defaults for future cross-scope command pages when a dashboard enters the command with a natural domain default
+
 ## UI Rule Log 2026-04-26 / UI-035
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/docs-import/`
 - issue: the Docs HTML Import page and importer helper only exposed `studio` and `library`, even though the shared docs-management server and public viewer now support the `analysis` docs scope.
 - triage: local allowlist drift with shared-scope impact
 - reasoning: scope selectors must stay aligned with the docs-management write allowlist and the generated viewer scopes. A Studio command page should not silently coerce a valid scope such as `analysis` back to `library`.
@@ -40,7 +67,7 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/scripts-docs-management-server.md`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - open `/studio/library-import/?scope=analysis` and confirm the scope selector remains on `analysis`
+  - open `/studio/docs-import/?scope=analysis` and confirm the scope selector remains on `analysis`
   - import a staged HTML file into `analysis` and confirm `Open viewer` opens `/analysis/?doc=<doc_id>&mode=manage`
 - follow-up:
   - add parent-placement controls later if Analysis imports need to land directly under a nested section instead of the root-level review queue
@@ -148,7 +175,7 @@ Use this as the single capture surface for Studio UI work:
 ## UI Rule Log 2026-04-24 / UI-029
 
 - status: adopted
-- route: `/studio/library/`, `/studio/library-import/`
+- route: `/studio/library/`, `/studio/docs-import/`
 - issue: Studio-originated links into the Library viewer opened the public read-only route, even though the user had entered from an admin workflow and usually needed manage-mode controls.
 - triage: local pattern refinement
 - reasoning: route context matters. Public navigation to `/library/` should remain user-facing, but links that start inside Studio are admin links and should preserve that operational context when crossing into the shared Library viewer.
@@ -160,14 +187,14 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - open `/studio/library/` and confirm the Library panel points to `/library/?mode=manage`
-  - complete a Library import on `/studio/library-import/` and confirm `Open viewer` opens `/library/?doc=<doc_id>&mode=manage`
+  - complete a Library import on `/studio/docs-import/` and confirm `Open viewer` opens `/library/?doc=<doc_id>&mode=manage`
 - follow-up:
   - keep public header/nav Library links read-only unless they are explicitly part of a Studio/admin workflow
 
 ## UI Rule Log 2026-04-24 / UI-028
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/docs-import/`
 - issue: the import result confirmed the imported `doc_id` and exposed a viewer link, but the post-import review actions were not optimized for the two natural follow-ups: opening the Markdown source in the editor and checking the rendered viewer without losing the import page.
 - triage: local pattern refinement
 - reasoning: result panels should turn stable identifiers into direct workflow actions when the action is unambiguous. For import completion, the `doc_id` identifies the source doc and should open that source through the existing local docs-management boundary, while viewer links should preserve the command page state by opening a separate tab.
@@ -178,7 +205,7 @@ Use this as the single capture surface for Studio UI work:
   - `assets/studio/data/studio_config.json`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - complete an import on `/studio/library-import/`
+  - complete an import on `/studio/docs-import/`
   - click the result `doc_id` and confirm the source Markdown opens in VS Code
   - click `Open viewer` and confirm the viewer opens in a new browser tab while the import page remains open
 - follow-up:
@@ -187,17 +214,17 @@ Use this as the single capture surface for Studio UI work:
 ## UI Rule Log 2026-04-23 / UI-014
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/docs-import/`
 - issue: after selecting a different staged HTML file, the page could still show the previous file's success result, overwrite state, or warnings, which made the new selection look as if it had already been imported.
 - triage: systemic
 - reasoning: this is a shared command-page state-boundary rule. When a primary source selector changes, any result state derived from the previous selection becomes stale and should be cleared immediately unless the page is explicitly designed for side-by-side comparison.
 - permanent rule: on Studio command pages, changing the primary selected source item must clear stale result, warning, and confirmation state from the prior selection. Keep durable user inputs such as toggles or scope selectors only when they are still valid across selections.
-- enforcement point: Studio command/result pages such as `/studio/library-import/` and future pages that load/apply one selected source item at a time
+- enforcement point: Studio command/result pages such as `/studio/docs-import/` and future pages that load/apply one selected source item at a time
 - files changed:
   - `assets/studio/js/docs-html-import.js`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - import one staged file on `/studio/library-import/`
+  - import one staged file on `/studio/docs-import/`
   - change the staged-file selector to a different file
   - confirm the prior result card, warnings list, and overwrite state clear immediately while the scope and prompt/meta toggles stay unchanged
 - follow-up:
@@ -206,18 +233,18 @@ Use this as the single capture surface for Studio UI work:
 ## UI Rule Log 2026-04-23 / UI-013
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/docs-import/`
 - issue: after an overwrite succeeded, the import page could still show the earlier collision warning in its final warnings list, which made the success state read as contradictory even though the write had already completed.
 - triage: systemic
 - reasoning: this is a command-feedback boundary issue, not just a wording glitch. Warning copy that belongs only to a pre-confirmation state must not leak into the final success state, otherwise the user cannot tell whether the action really completed.
 - permanent rule: for Studio command flows with preview or confirmation steps, the final success payload and final success UI must only show warnings that still apply after completion. Pre-confirmation blockers or overwrite warnings must be cleared or filtered once the action succeeds.
-- enforcement point: Studio command/result pages such as `/studio/library-import/` and the corresponding localhost server responses
+- enforcement point: Studio command/result pages such as `/studio/docs-import/` and the corresponding localhost server responses
 - files changed:
   - `scripts/docs/docs_management_server.py`
   - `scripts/docs/docs_html_import.py`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - run a collision import on `/studio/library-import/`
+  - run a collision import on `/studio/docs-import/`
   - confirm the overwrite-required warning appears before confirmation
   - confirm the final success state does not keep the same collision warning afterward
 - follow-up:
@@ -226,7 +253,7 @@ Use this as the single capture surface for Studio UI work:
 ## UI Rule Log 2026-04-23 / UI-012
 
 - status: adopted
-- route: `/studio/library/`, `/studio/library-import/`
+- route: `/studio/library/`, `/studio/docs-import/`
 - issue: the Library dashboard had drifted after docs reorganization. One panel still pointed to an older planning stub, and another panel linked to a nonexistent Library docs target instead of a valid current workflow.
 - triage: systemic
 - reasoning: dashboard entry cards are route-entry actions, not decorative placeholders. When a domain dashboard link no longer resolves to a real maintained route or live doc surface, the fix should happen at the dashboard contract level rather than leaving stale panels in place. The better route-entry action for Library admin work is the import workflow itself.
@@ -234,7 +261,7 @@ Use this as the single capture surface for Studio UI work:
 - enforcement point: Studio dashboard routes, especially `studio/library/index.md`, and future dashboard-panel reviews
 - files changed:
   - `studio/library/index.md`
-  - `studio/library-import/index.md`
+  - `studio/docs-import/index.md`
   - `assets/studio/js/docs-html-import.js`
   - `assets/studio/css/studio.css`
   - `assets/studio/data/studio_config.json`
@@ -243,7 +270,7 @@ Use this as the single capture surface for Studio UI work:
 - local verification:
   - inspect `/studio/library/` and confirm the dashboard now exposes `Published library` plus `Import`
   - confirm there is no remaining broken `Library docs` dashboard panel
-  - inspect `/studio/library-import/` and confirm the page uses shared Studio panel, field, button, and status patterns
+  - inspect `/studio/docs-import/` and confirm the page uses shared Studio panel, field, button, and status patterns
 - follow-up:
   - if another Studio dashboard still points at a stale plan/doc stub, replace it with a live workflow entry or remove it
 

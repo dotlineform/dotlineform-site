@@ -45,7 +45,7 @@ Current behavior:
 - local-only write service for the shared Docs Viewer
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
-- also used by `/studio/library-import/` for staged-file listing and docs HTML import writes
+- also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`

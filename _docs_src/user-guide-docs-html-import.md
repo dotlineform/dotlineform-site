@@ -12,7 +12,7 @@ Use this page when you have a staged self-contained HTML export that should beco
 
 The Studio route is:
 
-- `/studio/library-import/`
+- `/studio/docs-import/`
 
 ## Before You Start
 
@@ -37,7 +37,7 @@ The import page:
 
 ## Basic Workflow
 
-1. Open `/studio/library-import/`.
+1. Open `/studio/docs-import/`.
 2. Choose the staged HTML file.
 3. Choose the publish scope:
    - `library` for the public Library viewer

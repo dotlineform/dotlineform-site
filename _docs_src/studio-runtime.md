@@ -60,7 +60,7 @@ Current route inventory:
 - `studio/catalogue-activity/index.md`
 - `studio/build-activity/index.md`
 - `studio/docs-broken-links/index.md`
-- `studio/library-import/index.md`
+- `studio/docs-import/index.md`
 - `studio/catalogue-new-work/index.md`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment-import/index.md`
