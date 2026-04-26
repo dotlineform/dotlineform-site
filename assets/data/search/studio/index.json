@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-259ecfa076aec378d403e109c38be78b",
-    "generated_at_utc": "2026-04-26T10:54:32Z",
-    "count": 134
+    "version": "blake2b-766680bdbad1935479daa99cfa7374a4",
+    "generated_at_utc": "2026-04-26T14:16:22Z",
+    "count": 135
   },
   "entries": [
     {
@@ -2505,6 +2505,32 @@
         "31"
       ],
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "site-request-catalogue-prose-docs-model",
+      "kind": "doc",
+      "title": "Catalogue Prose Docs Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-prose-docs-model",
+      "last_updated": "2026-04-26",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-26 • Site Docs",
+      "search_terms": [
+        "site-request-catalogue-prose-docs-model",
+        "site",
+        "request",
+        "catalogue",
+        "prose",
+        "docs",
+        "model",
+        "catalogue prose docs model request",
+        "site docs",
+        "2026-04-26",
+        "2026",
+        "04",
+        "26"
+      ],
+      "search_text": "site-request-catalogue-prose-docs-model site request catalogue prose docs model catalogue prose docs model request site docs 2026-04-26 2026 04 26"
     },
     {
       "id": "scripts-fix-missing-title-sort",
