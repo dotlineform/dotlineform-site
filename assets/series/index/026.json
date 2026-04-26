@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-8b622686356b38401e52f32f3f193c83",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-cb921e9404a0f32f46cabe33302b5a05",
+    "generated_at_utc": "2026-04-26T21:17:43Z",
     "series_id": "026",
     "count": 167
   },
   "series": {
     "series_id": "026",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "collected 1989-1998",
     "sort_fields": "title,work_id",
     "series_type": "holding",
