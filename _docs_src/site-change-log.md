@@ -2,11 +2,35 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-26] Added the Studio list primitive catalogue page
+
+**Status:** implemented
+
+**Area:** Studio UI / design system
+
+**Summary:**
+Added a published list primitive page to the Studio UI catalogue covering simple, sortable, and thumbnail list versions, then tightened the contract for width, column sizing, row alignment, links, and primitive text scale.
+
+**Reason:**
+Studio already had shared `tagStudioList__*` shell classes, but the reusable list contract was not visible as a live primitive. Defining the versions first gives future list mapping and cleanup work a clearer baseline.
+
+**Effect:**
+The UI catalogue now links to `/studio/ui-catalogue/list/`, the shared list documentation names common cell, link, row-alignment, sort-indicator, width-wrapper, and thumbnail pieces, and the docs viewer explains when to use simple, sortable, or thumbnail list variants.
+
+**Affected files/docs:**
+
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- `studio/ui-catalogue/list/index.md`
+- `_includes/studio_ui_catalogue_list_demo.html`
+- `_includes/ui_catalogue_notes/list.md`
+- `assets/studio/css/studio.css`
 
 ## [2026-04-25] Hid Library document updated dates through docs scope options
 

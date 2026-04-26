@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2b0979d892e123ebbe640d35f7b5d86c",
-    "generated_at_utc": "2026-04-25T17:43:24Z",
+    "version": "blake2b-259ecfa076aec378d403e109c38be78b",
+    "generated_at_utc": "2026-04-26T10:54:32Z",
     "count": 134
   },
   "entries": [
@@ -850,10 +850,10 @@
       "kind": "doc",
       "title": "Studio UI Framework",
       "href": "/docs/?scope=studio&doc=studio-ui-framework",
-      "last_updated": "2026-04-21",
+      "last_updated": "2026-04-26",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-21 • Design",
+      "display_meta": "2026-04-26 • Design",
       "search_terms": [
         "studio-ui-framework",
         "studio",
@@ -861,12 +861,12 @@
         "framework",
         "studio ui framework",
         "design",
-        "2026-04-21",
+        "2026-04-26",
         "2026",
         "04",
-        "21"
+        "26"
       ],
-      "search_text": "studio-ui-framework studio ui framework studio ui framework design 2026-04-21 2026 04 21"
+      "search_text": "studio-ui-framework studio ui framework studio ui framework design 2026-04-26 2026 04 26"
     },
     {
       "id": "docs-viewer-management",
@@ -922,22 +922,22 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-04-21",
+      "last_updated": "2026-04-26",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-21 • Design",
+      "display_meta": "2026-04-26 • Design",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
         "design",
-        "2026-04-21",
+        "2026-04-26",
         "2026",
         "04",
-        "21"
+        "26"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-04-21 2026 04 21"
+      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-04-26 2026 04 26"
     },
     {
       "id": "scripts-copy-draft-media",
@@ -2961,20 +2961,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
+      "last_updated": "2026-04-26",
+      "display_meta": "2026-04-26",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-25 2026 04 25"
+      "search_text": "site-change-log site change log site change log 2026-04-26 2026 04 26"
     },
     {
       "id": "tiered-dimension-policy",

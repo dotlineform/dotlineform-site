@@ -1,0 +1,116 @@
+<div class="studioUiPrimitiveDemo studioUiPrimitiveListDemo">
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Simple List</h3>
+      <p class="studioUiPrimitiveExample__summary">Minimal row treatment without column headers.</p>
+    </header>
+    <div class="tagStudioList studioUiPrimitiveListDemo__example studioUiPrimitiveListDemo__list studioUiPrimitiveListDemo__list--simple">
+      <ul class="tagStudioList__rows">
+        <li class="tagStudioList__row tagStudioList__row--center studioUiPrimitiveListDemo__simpleRow">
+          <a class="tagStudioList__cellLink" href="#">source.md</a>
+          <a class="tagStudioList__cellLink" href="#">updated today</a>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--center studioUiPrimitiveListDemo__simpleRow">
+          <a class="tagStudioList__cellLink" href="#">detail-001.jpg</a>
+          <a class="tagStudioList__cellLink" href="#">ready</a>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--center studioUiPrimitiveListDemo__simpleRow">
+          <a class="tagStudioList__cellLink" href="#">notes.txt</a>
+          <a class="tagStudioList__cellLink" href="#">draft</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Sortable List</h3>
+      <p class="studioUiPrimitiveExample__summary">Column headers are command buttons when the list owns sorting.</p>
+    </header>
+    <div class="tagStudioList studioUiPrimitiveListDemo__example studioUiPrimitiveListDemo__list studioUiPrimitiveListDemo__list--sortable">
+      <div class="tagStudioList__head studioUiPrimitiveListDemo__sortableHead">
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="id" data-state="active" aria-pressed="true">
+          id <span class="tagStudioList__sortIndicator" aria-hidden="true">&uarr;</span>
+        </button>
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="title" aria-pressed="false">title</button>
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="status" aria-pressed="false">status</button>
+      </div>
+      <ol class="tagStudioList__rows">
+        <li class="tagStudioList__row tagStudioList__row--start studioUiPrimitiveListDemo__sortableRow">
+          <a class="tagStudioList__cellLink" href="#">01007</a>
+          <span class="tagStudioList__cell">
+            <a class="tagStudioList__cellLink" href="#">Soft geometry study</a>
+            <span class="tagStudioList__cellMeta">three related details</span>
+          </span>
+          <a class="tagStudioList__cellLink" href="#">published</a>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--start studioUiPrimitiveListDemo__sortableRow">
+          <a class="tagStudioList__cellLink" href="#">01008</a>
+          <span class="tagStudioList__cell">
+            <a class="tagStudioList__cellLink" href="#">Line weight test</a>
+            <span class="tagStudioList__cellMeta">needs source prose</span>
+          </span>
+          <a class="tagStudioList__cellLink" href="#">draft</a>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--start studioUiPrimitiveListDemo__sortableRow">
+          <a class="tagStudioList__cellLink" href="#">01009</a>
+          <span class="tagStudioList__cell">
+            <a class="tagStudioList__cellLink" href="#">Surface registration</a>
+            <span class="tagStudioList__cellMeta">ready for catalogue review</span>
+          </span>
+          <a class="tagStudioList__cellLink" href="#">review</a>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Thumbnail List</h3>
+      <p class="studioUiPrimitiveExample__summary">The first column is media. Sorting, when needed, can live in controls outside the list.</p>
+    </header>
+    <div class="tagStudioList studioUiPrimitiveListDemo__example studioUiPrimitiveListDemo__list">
+      <div class="studioUiPrimitiveListDemo__sortControls" aria-label="Thumbnail list sort controls">
+        <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Newest</button>
+        <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Title</button>
+      </div>
+      <div class="tagStudioList__head studioUiPrimitiveListDemo__thumbHead">
+        <span class="tagStudioList__headLabel">image</span>
+        <span class="tagStudioList__headLabel">work</span>
+        <span class="tagStudioList__headLabel">status</span>
+      </div>
+      <ul class="tagStudioList__rows">
+        <li class="tagStudioList__row tagStudioList__row--center studioUiPrimitiveListDemo__thumbRow">
+          <span class="tagStudioList__thumb">
+            <img class="tagStudioList__thumbImage" src="{{ '/assets/studio/img/panel-backgrounds/01007-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
+          </span>
+          <span class="tagStudioList__cell">
+            <a class="tagStudioList__cellLink" href="#">Soft geometry study</a>
+            <span class="tagStudioList__cellMeta">01007</span>
+          </span>
+          <a class="tagStudioList__cellLink" href="#">published</a>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--center studioUiPrimitiveListDemo__thumbRow">
+          <span class="tagStudioList__thumb">
+            <img class="tagStudioList__thumbImage" src="{{ '/assets/studio/img/panel-backgrounds/01008-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
+          </span>
+          <span class="tagStudioList__cell">
+            <a class="tagStudioList__cellLink" href="#">Line weight test</a>
+            <span class="tagStudioList__cellMeta">01008</span>
+          </span>
+          <a class="tagStudioList__cellLink" href="#">draft</a>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--center studioUiPrimitiveListDemo__thumbRow">
+          <span class="tagStudioList__thumb">
+            <img class="tagStudioList__thumbImage" src="{{ '/assets/studio/img/panel-backgrounds/01009-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
+          </span>
+          <span class="tagStudioList__cell">
+            <a class="tagStudioList__cellLink" href="#">Surface registration</a>
+            <span class="tagStudioList__cellMeta">01009</span>
+          </span>
+          <a class="tagStudioList__cellLink" href="#">review</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>

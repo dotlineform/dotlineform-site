@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: "UI Catalogue"
 added_date: 2026-04-21
-last_updated: 2026-04-21
+last_updated: 2026-04-26
 parent_id: design
 sort_order: 25
 ---
@@ -30,6 +30,7 @@ Current published primitive pages:
 
 - [Button primitive page](/studio/ui-catalogue/button/)
 - [Input primitive page](/studio/ui-catalogue/input/)
+- [List primitive page](/studio/ui-catalogue/list/)
 - [Panel primitive page](/studio/ui-catalogue/panel/)
 
 Add new links here when a primitive gets its own published reference page.
@@ -41,7 +42,7 @@ The current first-pass primitive set still includes:
 - panel
 - button
 - input
-- list shell
+- list
 - toolbar
 - modal shell
 
@@ -105,6 +106,24 @@ Include design guidance when the success of a primitive depends not just on CSS 
 
 Include common design-led overrides in the sample markup when those overrides are part of normal reuse rather than an edge case.
 
+## List Primitive Direction
+
+The list primitive currently defines three baseline versions:
+
+- simple list: minimal row treatment, no column headers, suitable for short lists where the surrounding page already explains the row context
+- sortable list: column headers become clickable buttons on sortable columns and show the active sort direction beside the label
+- thumbnail list: the first column is a fixed media thumbnail; sorting may still exist, but it can be controlled by buttons or other controls outside the list
+
+The shared `tagStudioList` / `tagStudioList__*` layer should own the optional width wrapper, row rhythm, header treatment, row-alignment modifiers, common cell text, cell links, sort indicator, and thumbnail frame. Page-specific classes should still own column templates, row actions, chips, and responsive data labels.
+
+By default, a list fills the available width. Constrain it by setting `--studio-list-width` on the `tagStudioList` wrapper. Column widths belong to page/demo-specific paired header and row classes so the list can display its actual content sensibly.
+
+Rows with one-line cells should center-align their contents. Rows that may contain multiline cells should top-align so secondary lines sit consistently beneath the first line.
+
+Studio UI primitives use the small type scale by default. Normal page prose outside primitives should remain at the body type scale.
+
+Current list-like Studio pages should be mapped to these versions before broad refactors. Existing pages may keep page-local row classes where the behavior is data-specific.
+
 If a primitive grows more complex, expand its published primitive page rather than rebuilding a second parallel doc in the docs viewer.
 
 ## Broader Design Direction
@@ -120,7 +139,7 @@ UI screenshots and reference images for this catalogue should live in the repo u
 - `assets/docs/ui-catalogue/panel/`
 - `assets/docs/ui-catalogue/button/`
 - `assets/docs/ui-catalogue/input/`
-- `assets/docs/ui-catalogue/list-shell/`
+- `assets/docs/ui-catalogue/list/`
 - `assets/docs/ui-catalogue/toolbar/`
 - `assets/docs/ui-catalogue/modal-shell/`
 

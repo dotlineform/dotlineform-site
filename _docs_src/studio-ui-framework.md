@@ -2,7 +2,7 @@
 doc_id: studio-ui-framework
 title: "Studio UI Framework"
 added_date: 2026-04-21
-last_updated: 2026-04-21
+last_updated: 2026-04-26
 parent_id: design
 sort_order: 20
 ---
@@ -71,6 +71,7 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__popupMore`
 - `tagStudio__popupInner`
 - `tagStudioField`, `tagStudioField--*`, `tagStudioField__*`
+- `tagStudioList__*`
 - `tagStudioForm__field--topAligned`
 - `tagStudioModal`, `tagStudioModal__*`
 
@@ -158,22 +159,53 @@ Use `tagStudioFilters__*` for shared list filtering controls:
 
 This pattern is intended for registry-, aliases-, and similar list pages.
 
-### List shell pattern
+### List primitive pattern
 
-Use `tagStudioList__*` for shared outer list structure on list-style Studio pages:
+Use `tagStudioList` and `tagStudioList__*` for shared outer list structure on list-style Studio pages:
 
+- `tagStudioList`
 - `tagStudioList__head`
 - `tagStudioList__headLabel`
+- `tagStudioList__sortBtn`
+- `tagStudioList__sortIndicator`
 - `tagStudioList__rows`
 - `tagStudioList__row`
+- `tagStudioList__row--center`
+- `tagStudioList__row--start`
+- `tagStudioList__cell`
+- `tagStudioList__cellTitle`
+- `tagStudioList__cellMeta`
+- `tagStudioList__cellLink`
+- `tagStudioList__thumb`
+- `tagStudioList__thumbImage`
 
 This pattern covers:
 
+- optional list width constraint through `--studio-list-width`
 - outer header row treatment
 - list container reset
 - shared row spacing and divider treatment
+- one-line row centering and multiline row top alignment
+- common title/meta cell stacking
+- common cell link treatment
+- sortable header-button treatment
+- fixed thumbnail frame geometry
 
-Page-specific row internals, columns, chips, and actions should stay in the page namespace.
+Page-specific row internals, column templates, chips, and actions should stay in the page namespace.
+
+Baseline versions:
+
+- simple list: no header row, used for short obvious collections
+- sortable list: sortable columns use `tagStudioList__sortBtn` and show direction with `tagStudioList__sortIndicator`
+- thumbnail list: first column uses `tagStudioList__thumb`; sorting may be controlled outside the list with separate buttons or segmented controls
+
+Alignment and width rules:
+
+- use `tagStudioList__row--center` for one-line rows
+- use `tagStudioList__row--start` for rows that may contain multiline cells
+- lists fill the available width by default
+- set `--studio-list-width` on `tagStudioList` when a list should be narrower than its parent
+- UI primitives use `--font-small`, mapped from `--text-sm`; normal page prose outside primitives should continue to use `--font-body`, mapped from `--text-md`
 
 ### Modal form pattern
 
@@ -412,7 +444,7 @@ Studio should continue to use these modal types rather than adding new one-off d
 
 - shared modal controller and shell renderer are in use across the editor, registry, and aliases pages
 - shared modal state now uses `data-state` rather than page-specific `.is-*` presentation classes
-- shared non-modal primitives cover toolbar, filters, list shell, and modal form internals
+- shared non-modal primitives cover toolbar, filters, list, and modal form internals
 - lighter Studio pages such as `series-tags`, `tag-groups`, and `studio-works` follow the same role/state contract where applicable
 - remaining work is manual browser verification of the current Studio pages, not more framework design
 
@@ -485,7 +517,7 @@ Current Studio cleanup standardizes:
 
 - list-page toolbar/import blocks on `tagStudioToolbar__*`
 - list-page search/filter controls on `tagStudioFilters__*`
-- shared list shells on `tagStudioList__*`
+- shared lists on `tagStudioList__*`
 - modal form internals on `tagStudioForm__*`
 - lighter pages bind through `data-role` and `data-state` instead of style-class behavior hooks where they expose interactive controls
 
