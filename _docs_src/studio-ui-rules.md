@@ -23,6 +23,22 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-26 / UI-037
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-series/`
+- issue: the catalogue prose import success message still said generator lookup was a future task after generator lookup had been implemented.
+- triage: local workflow copy correction
+- reasoning: command success copy must describe the current workflow state. Completed implementation notes should not remain visible in user-facing status messages because they make a successful action look incomplete.
+- outcome: work and series prose import success copy now says the imported source will publish on the next site update.
+- files changed:
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - import staged work or series prose and confirm the success message no longer refers to a future generator task
+
 ## UI Rule Log 2026-04-26 / UI-036
 
 - status: adopted

@@ -1599,7 +1599,7 @@ async function importWorkProse(state) {
     const completedAt = normalizeText(importResponse.imported_at_utc || utcTimestamp());
     setTextWithState(
       state.resultNode,
-      t(state, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. Generator lookup is handled by the next implementation task.", {
+      t(state, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
         completed_at: completedAt,
         target_path: normalizeText(importResponse.target_path)
       }),
