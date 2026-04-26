@@ -56,30 +56,39 @@ Current series prose flow is similar, but the source project folder is resolved 
 
 Work and series prose should use a repo-local source model.
 
-Proposed staging root:
+Staging root:
 
 - `var/docs/catalogue/import-staging/`
 
-Possible permanent source roots:
+Permanent source roots:
 
-- `_catalogue_prose/works/`
-- `_catalogue_prose/series/`
+- `_docs_src_catalogue/works/`
+- `_docs_src_catalogue/series/`
 
-The exact source-root name is open, but the source should be clearly separate from:
+The source root is repo-local and clearly separate from:
 
 - `_docs_src/`
 - `_docs_library_src/`
 - any future `_docs_analysis_src/`
 
-Recommended source IDs:
+Source filenames are ID-derived:
 
-- work prose source should be keyed by `work_id`
-- series prose source should be keyed by `series_id`
+- work prose source is keyed by `work_id`
+- series prose source is keyed by `series_id`
+- legacy prose filenames are not retained as permanent source names
 
 Examples:
 
-- `_catalogue_prose/works/00008.md`
-- `_catalogue_prose/series/001.md`
+- `_docs_src_catalogue/works/00008.md`
+- `_docs_src_catalogue/series/067.md`
+
+Prose source files are Markdown body files only. They do not need front matter for the first implementation because the catalogue record ID is derived from the filename stem and catalogue metadata remains canonical in the catalogue JSON source records.
+
+The `work_prose_file` and `series_prose_file` source fields should be replaced by ID-derived source lookup. If a staged Markdown file exists at the expected work or series ID filename, the Studio import flow should confirm that it has been picked up and import it into the permanent source root.
+
+The first import flow is Markdown-only. It does not reuse the docs HTML-to-Markdown conversion path.
+
+Missing prose is represented as blank optional prose in the editor and generator. Public work and series pages should cleanly accept no prose.
 
 The generated public payloads should stay as they are today:
 
@@ -87,6 +96,8 @@ The generated public payloads should stay as they are today:
 - `assets/series/index/<series_id>.json`
 
 Those payloads can continue to embed rendered prose as `content_html`.
+
+Generated public payloads should not store source provenance for the repo-local prose file.
 
 ## Why Works And Series Belong Together
 
@@ -153,7 +164,7 @@ Catalogue metadata should remain canonical for:
 - routes
 - media relationships
 
-Prose source should own the authored Markdown body and only minimal document metadata if needed.
+Prose source should own the authored Markdown body only. Front matter is intentionally omitted for the first implementation.
 
 ## Benefits
 
@@ -170,28 +181,29 @@ Expected benefits:
 
 Main risks:
 
-- the current `work_prose_file` and `series_prose_file` fields need a migration plan
+- the current `work_prose_file` and `series_prose_file` fields need to be removed or deprecated in favor of ID-derived lookup
 - existing generator code resolves prose through project folders and will need a new source lookup
-- source files keyed by ID are simpler, but may discard meaningful legacy prose filenames
-- source front matter can drift if it repeats catalogue metadata
+- source files keyed by ID are simpler, but existing legacy prose filenames need a small rename/copy migration
 - keeping `content_html` embedded in catalogue JSON preserves stability but leaves some duplication between rendered docs and page payloads
 
 The main tradeoff is migration clarity versus runtime normalization.
 
 For this phase, preserving existing runtime payloads is the better tradeoff because it isolates the change to source handling and generation.
 
-## Open Questions
+## Source Contract
 
-1. What should the permanent source root be called?
-2. Should source filenames always be ID-based, or should legacy prose filenames be retained where they exist?
-3. Should work and series prose source files have front matter at all?
-4. If front matter exists, which fields are allowed without duplicating catalogue metadata ownership?
-5. Should `work_prose_file` and `series_prose_file` remain as source fields, be repurposed, or be replaced by ID-derived source lookup?
-6. Should the import flow support Markdown only at first, or reuse the existing HTML-to-Markdown conversion path?
-7. What backup behavior should apply when importing over an existing work or series prose source file?
-8. How should missing prose be represented in the editor and generator?
-9. Should generated public payloads store any source provenance for the repo-local prose file?
-10. Should prose import be available from both work and series editors, or from one shared prose import page?
+Resolved decisions:
+
+1. Permanent source roots are `_docs_src_catalogue/works/` and `_docs_src_catalogue/series/`.
+2. Permanent source filenames are always ID-based: `<work_id>.md` and `<series_id>.md`.
+3. Work and series prose source files have no front matter in the first implementation.
+4. Catalogue metadata stays in catalogue JSON source records, not prose Markdown.
+5. `work_prose_file` and `series_prose_file` should be replaced by ID-derived source lookup.
+6. The import flow supports Markdown only at first.
+7. Import overwrite does not create a backup for this flow.
+8. Missing prose is blank and optional.
+9. Generated public payloads do not store repo-local prose source provenance.
+10. Prose import remains available from both work and series editors.
 
 ## Proposed Implementation Steps
 
@@ -199,14 +211,14 @@ For this phase, preserving existing runtime payloads is the better tradeoff beca
 
 Status:
 
-- pending
+- complete
 
-Define:
+Defined:
 
 - staging root
 - permanent source roots
 - source filename rules
-- allowed front matter
+- front matter policy
 - source ownership boundary
 - missing-prose behavior
 - relationship to existing `work_prose_file` and `series_prose_file` fields
@@ -222,9 +234,9 @@ Add or adapt a Studio import flow that:
 - reads staged files from `var/docs/catalogue/import-staging/`
 - targets one work or series record
 - previews the staged source
-- validates the generated Markdown
+- validates the staged Markdown
 - avoids silent overwrite
-- creates backups before overwrite
+- overwrites without creating backups for this prose flow
 - writes the permanent repo-local prose source file
 
 ### Task 3. Update Generator Prose Lookup
@@ -233,7 +245,7 @@ Status:
 
 - pending
 
-Update the catalogue generator so work and series prose are read from the new repo-local source roots.
+Update the catalogue generator so work and series prose are read from the new repo-local source roots using ID-derived lookup.
 
 The generator should continue to write:
 
@@ -254,7 +266,7 @@ The migration should:
 
 - identify all referenced work prose files
 - identify all referenced series prose files
-- copy or import them into the new repo-local source roots
+- copy or import them into the new repo-local source roots with ID-based filenames
 - report missing or ambiguous external sources
 - avoid deleting external source files
 - keep generated public pages stable
@@ -302,7 +314,8 @@ Manual checks should include:
 
 - import one work prose document from staging
 - import one series prose document from staging
-- verify overwrite confirmation and backup behavior
+- verify staged ID-based filenames are detected
+- verify overwrite behavior does not create backups
 - verify `/works/<work_id>/` still displays prose
 - verify `/series/<series_id>/` still displays prose
 - verify missing prose guidance in the editor is understandable
