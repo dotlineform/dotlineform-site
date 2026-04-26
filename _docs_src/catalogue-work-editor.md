@@ -170,10 +170,11 @@ These areas are intentionally summary/navigation surfaces in this phase, not inl
 - `width_cm`
 - `depth_cm`
 - `storage_location`
-- `work_prose_file`
 - `notes`
 - `provenance`
 - `artist`
+
+Work prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_src_catalogue/works/<work_id>.md`; the generator reads that ID-derived source file for public prose.
 
 ## Related References
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-26T17:48:43Z",
+  "generated_at": "2026-04-26T21:32:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1273,7 +1273,7 @@
       "doc_id": "catalogue-new-work-editor",
       "title": "New Catalogue Work",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "sort_order": 80,
       "published": true,
@@ -1553,7 +1553,7 @@
       "doc_id": "catalogue-new-series-editor",
       "title": "New Catalogue Series",
       "added_date": "2026-04-17",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "sort_order": 140,
       "published": true,

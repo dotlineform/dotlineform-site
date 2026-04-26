@@ -23,6 +23,23 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-26 / UI-038
+
+- status: adopted
+- route: `/studio/catalogue-new-work/`, `/studio/catalogue-work/`, `/studio/catalogue-new-series/`, `/studio/catalogue-series/`
+- issue: the work and series forms still exposed legacy prose filename fields after prose publication moved to ID-derived `_docs_src_catalogue/` Markdown.
+- triage: local workflow cleanup with shared editor-family impact
+- reasoning: fields that no longer control publication should not stay in main edit forms. Keeping them visible would imply that changing the value affects public prose, while the actual workflow is staged Markdown import plus scoped site update.
+- outcome: the new/edit work and series forms no longer render or submit `work_prose_file` or `series_prose_file`; prose remains available through the import readiness/action flow.
+- files changed:
+  - `assets/studio/js/catalogue-new-work-editor.js`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-new-series-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - inspect the four catalogue work/series routes and confirm the legacy prose filename fields are absent
+
 ## UI Rule Log 2026-04-26 / UI-037
 
 - status: adopted

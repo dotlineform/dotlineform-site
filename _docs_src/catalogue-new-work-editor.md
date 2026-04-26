@@ -2,7 +2,7 @@
 doc_id: catalogue-new-work-editor
 title: "New Catalogue Work"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-26
 parent_id: studio
 sort_order: 80
 ---
@@ -28,11 +28,12 @@ The first implementation is draft-first:
 
 This page does not upload or copy media.
 
-It only captures the source metadata fields that point at the existing media/prose conventions such as:
+It only captures the source metadata fields that point at the existing media conventions:
 
 - `project_folder`
 - `project_filename`
-- `work_prose_file`
+
+Work prose is imported separately through the staged Markdown flow and stored under `_docs_src_catalogue/works/<work_id>.md`.
 
 ## Related References
 

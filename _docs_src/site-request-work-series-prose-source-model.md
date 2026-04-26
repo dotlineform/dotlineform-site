@@ -275,7 +275,7 @@ Implemented behavior:
 
 Status:
 
-- pending
+- complete
 
 Create a migration plan for current referenced prose files.
 
@@ -288,15 +288,30 @@ The migration should:
 - avoid deleting external source files
 - keep generated public pages stable
 
+Implemented behavior:
+
+- existing work prose for `00008` was imported through the staged Markdown flow
+- permanent source now lives at `_docs_src_catalogue/works/00008.md`
+- no series prose sources were identified for migration in the current inventory
+- external source files were not deleted
+- public work payload generation was verified after import
+
 ### Task 5. Update Studio Readiness And Import UI
 
 Status:
 
-- pending
+- complete
 
 Update the work and series editors so prose readiness points at the repo-local source model.
 
 The UI should no longer imply that work and series prose must be resolved from external project folders.
+
+Implemented behavior:
+
+- new work and work editor forms no longer show or submit `work_prose_file`
+- new series and series editor forms no longer show or submit `series_prose_file`
+- work and series prose import remains available through the staged Markdown readiness/action flow
+- existing catalogue source records are preserved; the legacy fields are no longer publication controls
 
 ### Task 6. Update Docs And Verification
 
@@ -314,6 +329,19 @@ Likely docs:
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+### Task 7. Reduce Forced Scoped Build Noise
+
+Status:
+
+- pending
+
+Follow-up task:
+
+- split or narrow the current `--force` behavior so a scoped prose/site update can recompute target payloads without rewriting unchanged aggregate JSON solely for `generated_at_utc`
+- avoid refreshing `published_date` for already-published records when no publication transition occurred
+- keep prose-only updates focused on semantic payload changes, catalogue search when needed, build activity, and logs
+- preserve an explicit stronger force mode for intentional full rewrites
 
 ## Validation Plan
 

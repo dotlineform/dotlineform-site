@@ -17,7 +17,6 @@ const EDITABLE_FIELDS = [
   { key: "series_ids", label: "series ids", type: "text", description: "comma-separated series ids" },
   { key: "project_folder", label: "project folder", type: "text" },
   { key: "project_filename", label: "project filename", type: "text" },
-  { key: "work_prose_file", label: "work prose file", type: "text" },
   { key: "year", label: "year", type: "number", step: "1" },
   { key: "year_display", label: "year display", type: "text" },
   { key: "medium_type", label: "medium type", type: "text" },
@@ -206,7 +205,6 @@ function buildPayload(state) {
       width_cm: normalizeText(state.draft.width_cm) ? Number(state.draft.width_cm) : null,
       depth_cm: normalizeText(state.draft.depth_cm) ? Number(state.draft.depth_cm) : null,
       storage_location: normalizeText(state.draft.storage_location) || null,
-      work_prose_file: normalizeText(state.draft.work_prose_file) || null,
       notes: normalizeText(state.draft.notes) || null,
       provenance: normalizeText(state.draft.provenance) || null,
       artist: normalizeText(state.draft.artist) || null

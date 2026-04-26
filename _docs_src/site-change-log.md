@@ -8,6 +8,33 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Removed legacy prose filename fields from catalogue editors
+
+**Status:** implemented
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Removed `work_prose_file` and `series_prose_file` from the new/edit work and series Studio forms.
+
+**Reason:**
+Work and series prose publication now uses ID-derived Markdown under `_docs_src_catalogue/`, so the legacy filename fields should not remain editable publication controls.
+
+**Effect:**
+New work, work editor, new series, and series editor forms no longer render or submit the legacy prose filename fields. Existing source records are preserved, and prose import continues through the staged Markdown readiness/action flow.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-new-work-editor.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-new-series-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
+- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+
 ## [2026-04-26] Switched work and series prose generation to repo-local sources
 
 **Status:** implemented

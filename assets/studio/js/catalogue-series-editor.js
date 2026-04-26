@@ -22,7 +22,6 @@ const EDITABLE_FIELDS = [
   { key: "year", label: "year", type: "number", step: "1" },
   { key: "year_display", label: "year display", type: "text" },
   { key: "primary_work_id", label: "primary work id", type: "text" },
-  { key: "series_prose_file", label: "series prose file", type: "text" },
   { key: "sort_fields", label: "sort fields", type: "text" },
   { key: "notes", label: "notes", type: "textarea" }
 ];
@@ -388,7 +387,6 @@ function buildPayload(state, workUpdates) {
       year: normalizeText(state.draft.year) ? Number(state.draft.year) : null,
       year_display: normalizeText(state.draft.year_display) || null,
       primary_work_id: normalizeWorkId(state.draft.primary_work_id) || null,
-      series_prose_file: normalizeText(state.draft.series_prose_file) || null,
       sort_fields: normalizeText(state.draft.sort_fields) || null,
       notes: normalizeText(state.draft.notes) || null
     },

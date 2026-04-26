@@ -37,6 +37,8 @@ The first implementation covers:
 - save with an optional `Update site now` path through the local catalogue service
 - delete one series source record and remove its membership from affected works
 
+Series prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_src_catalogue/series/<series_id>.md`; the generator reads that ID-derived source file for public prose.
+
 Draft/publish rule:
 
 - draft series may be saved without `primary_work_id`

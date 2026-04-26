@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2f21895815c0b2fbd950c8293f8f96e4",
-    "generated_at_utc": "2026-04-26T17:48:44Z",
+    "version": "blake2b-78fdda956f1de07bbb67b9c56ffc8a70",
+    "generated_at_utc": "2026-04-26T21:32:34Z",
     "count": 137
   },
   "entries": [
@@ -2108,10 +2108,10 @@
       "kind": "doc",
       "title": "New Catalogue Work",
       "href": "/docs/?scope=studio&doc=catalogue-new-work-editor",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-26 • Studio",
       "search_terms": [
         "catalogue-new-work-editor",
         "catalogue",
@@ -2120,12 +2120,12 @@
         "editor",
         "new catalogue work",
         "studio",
-        "2026-04-18",
+        "2026-04-26",
         "2026",
         "04",
-        "18"
+        "26"
       ],
-      "search_text": "catalogue-new-work-editor catalogue new work editor new catalogue work studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-new-work-editor catalogue new work editor new catalogue work studio 2026-04-26 2026 04 26"
     },
     {
       "id": "search-validation-checklist",
@@ -2560,10 +2560,10 @@
       "kind": "doc",
       "title": "New Catalogue Series",
       "href": "/docs/?scope=studio&doc=catalogue-new-series-editor",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-26",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-17 • Studio",
+      "display_meta": "2026-04-26 • Studio",
       "search_terms": [
         "catalogue-new-series-editor",
         "catalogue",
@@ -2572,12 +2572,12 @@
         "editor",
         "new catalogue series",
         "studio",
-        "2026-04-17",
+        "2026-04-26",
         "2026",
         "04",
-        "17"
+        "26"
       ],
-      "search_text": "catalogue-new-series-editor catalogue new series editor new catalogue series studio 2026-04-17 2026 04 17"
+      "search_text": "catalogue-new-series-editor catalogue new series editor new catalogue series studio 2026-04-26 2026 04 26"
     },
     {
       "id": "servers",

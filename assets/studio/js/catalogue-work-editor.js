@@ -39,7 +39,6 @@ const EDITABLE_FIELDS = [
   { key: "width_cm", label: "width cm", type: "number", step: "any" },
   { key: "depth_cm", label: "depth cm", type: "number", step: "any" },
   { key: "storage_location", label: "storage location", type: "text" },
-  { key: "work_prose_file", label: "work prose file", type: "text" },
   { key: "notes", label: "notes", type: "textarea" },
   { key: "provenance", label: "provenance", type: "textarea" },
   { key: "artist", label: "artist", type: "text" }
@@ -1155,7 +1154,6 @@ function buildPayload(state) {
       width_cm: normalizeText(draft.width_cm) ? Number(draft.width_cm) : null,
       depth_cm: normalizeText(draft.depth_cm) ? Number(draft.depth_cm) : null,
       storage_location: normalizeText(draft.storage_location) || null,
-      work_prose_file: normalizeText(draft.work_prose_file) || null,
       notes: normalizeText(draft.notes) || null,
       provenance: normalizeText(draft.provenance) || null,
       artist: normalizeText(draft.artist) || null

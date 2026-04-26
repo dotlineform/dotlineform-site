@@ -2,7 +2,7 @@
 doc_id: catalogue-new-series-editor
 title: "New Catalogue Series"
 added_date: 2026-04-17
-last_updated: 2026-04-17
+last_updated: 2026-04-26
 parent_id: studio
 sort_order: 140
 ---
@@ -25,6 +25,8 @@ The first implementation is intentionally narrow:
 - redirect into the main series editor after create
 
 Member works and `primary_work_id` are completed in the standard series editor after the draft series exists.
+
+Series prose is imported separately through the staged Markdown flow and stored under `_docs_src_catalogue/series/<series_id>.md`.
 
 ## Draft And Publish Boundary
 
