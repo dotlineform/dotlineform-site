@@ -1,10 +1,10 @@
 ## General behaviour
 
-- when prompted to 'read Agents.md', note any actions needed before continuing. Specifically: always ask for confirmation before edits.
-- do not make code changes without first confirming what will be changed.
-- instructions like 'check' and 'confirm' DO NOT imply you carry out code changes. always ask for confirmation to proceed.
+- when prompted to 'read Agents.md', note any actions needed before continuing.
+- consider whether edits are implied by the current request. If the request is analysis-only, exploratory, uses words like 'check' or 'confirm', or includes a '?', do not make edits without asking first.
+- when edits are implied, briefly state the intended change set before editing unless the request is trivial or already specific.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
-- a ? in the prompt always indicates that some analysis is needed on reasons for observed behaviour of code, or clarification of the best course of action.
+- a ? in the prompt usually indicates that some analysis is needed on reasons for observed behaviour of code, or clarification of the best course of action.
 
 ## Runtime and Paths
 
