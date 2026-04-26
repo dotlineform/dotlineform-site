@@ -3,8 +3,8 @@ doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
 last_updated: 2026-04-26
-parent_id: studio
-sort_order: 70
+parent_id: user-guide
+sort_order: 30
 ---
 # Catalogue Work Editor
 

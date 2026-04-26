@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-04-26
 parent_id: ""
 sort_order: 20
 ---
@@ -34,7 +34,7 @@ Read this section in this order:
 1. **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for Studio UI preflight before implementing or revising a Studio page
 2. **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
 3. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
-4. Page-specific docs:
+4. Technical route and workflow docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
@@ -42,13 +42,14 @@ Read this section in this order:
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
    - **[Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)**
-   - **[Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
    - **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
    - **[Series Tags](/docs/?scope=studio&doc=series-tags)**
    - **[Tag Editor](/docs/?scope=studio&doc=tag-editor)**
    - **[Studio Works](/docs/?scope=studio&doc=studio-works)**
+
+Practical page-use guides, including the catalogue work/series editors, live under [User Guide](/docs/?scope=studio&doc=user-guide).
 
 Current Studio landing routes:
 

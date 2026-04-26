@@ -3,8 +3,8 @@ doc_id: catalogue-new-work-editor
 title: "New Catalogue Work"
 added_date: 2026-04-18
 last_updated: 2026-04-26
-parent_id: studio
-sort_order: 80
+parent_id: user-guide
+sort_order: 40
 ---
 # New Catalogue Work
 

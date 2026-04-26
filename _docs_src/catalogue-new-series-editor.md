@@ -3,8 +3,8 @@ doc_id: catalogue-new-series-editor
 title: "New Catalogue Series"
 added_date: 2026-04-17
 last_updated: 2026-04-26
-parent_id: studio
-sort_order: 140
+parent_id: user-guide
+sort_order: 80
 ---
 # New Catalogue Series
 

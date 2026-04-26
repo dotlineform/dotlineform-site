@@ -317,7 +317,7 @@ Implemented behavior:
 
 Status:
 
-- pending
+- complete
 
 Update the relevant docs after implementation.
 
@@ -329,6 +329,13 @@ Likely docs:
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+Implemented behavior:
+
+- prose source model docs were updated through the implementation tasks
+- catalogue work/series editor usage docs were moved under [User Guide](/docs/?scope=studio&doc=user-guide)
+- technical generator, data-model, script, and change-log docs remain under their existing Studio technical sections
+- Studio docs/search payloads were rebuilt after the documentation updates
 
 ### Task 7. Reduce Forced Scoped Build Noise
 

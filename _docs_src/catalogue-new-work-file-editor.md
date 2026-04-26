@@ -2,9 +2,9 @@
 doc_id: catalogue-new-work-file-editor
 title: "New Catalogue Work File"
 added_date: 2026-04-18
-last_updated: 2026-04-18
-parent_id: studio
-sort_order: 150
+last_updated: 2026-04-26
+parent_id: user-guide
+sort_order: 100
 ---
 # New Catalogue Work File
 

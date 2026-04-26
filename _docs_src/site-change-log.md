@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Moved catalogue editor usage docs under User Guide
+
+**Status:** implemented
+
+**Area:** Documentation
+
+**Summary:**
+Reparented the catalogue work, series, detail, file, and link editor docs from `Studio` to `User Guide`.
+
+**Reason:**
+Those documents primarily explain how to use Studio UI pages. Technical contracts, generated payload behavior, and implementation details should stay in Studio and data/script docs, while practical page workflows belong under User Guide.
+
+**Effect:**
+The User Guide now lists the catalogue editor docs alongside other task-focused guides. `Studio` remains the technical admin overview and points readers to User Guide for practical page-use docs.
+
+**Affected files/docs:**
+
+- [User Guide](/docs/?scope=studio&doc=user-guide)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+
 ## [2026-04-26] Removed legacy prose filename fields from catalogue editors
 
 **Status:** implemented

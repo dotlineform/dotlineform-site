@@ -2,9 +2,9 @@
 doc_id: catalogue-work-file-editor
 title: "Catalogue Work File Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-22
-parent_id: studio
-sort_order: 130
+last_updated: 2026-04-26
+parent_id: user-guide
+sort_order: 90
 ---
 # Catalogue Work File Editor
 

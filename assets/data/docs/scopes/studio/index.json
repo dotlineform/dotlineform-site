@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-26T21:32:33Z",
+  "generated_at": "2026-04-26T21:44:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -489,7 +489,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-26",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -567,6 +567,20 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-work-editor",
+      "title": "Catalogue Work Editor",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-work-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json"
     },
     {
       "scope": "studio",
@@ -713,7 +727,7 @@
       "doc_id": "user-guide",
       "title": "User Guide",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-26",
       "parent_id": "",
       "sort_order": 30,
       "published": true,
@@ -878,6 +892,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-new-work-editor",
+      "title": "New Catalogue Work",
+      "added_date": "2026-04-18",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 40,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-new-work-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-ranking-model",
       "title": "Search Ranking Model",
       "added_date": "2026-04-01",
@@ -917,6 +945,20 @@
       "source_path": "catalogue-status.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-status",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-status.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-work-detail-editor",
+      "title": "Catalogue Work Detail Editor",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 50,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-work-detail-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-detail-editor.json"
     },
     {
       "scope": "studio",
@@ -1102,6 +1144,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-new-work-detail-editor",
+      "title": "New Catalogue Work Detail",
+      "added_date": "2026-04-18",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 60,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-new-work-detail-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-detail-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-detail-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
       "added_date": "2026-03-31",
@@ -1186,17 +1242,17 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-work-editor",
-      "title": "Catalogue Work Editor",
+      "doc_id": "catalogue-series-editor",
+      "title": "Catalogue Series Editor",
       "added_date": "2026-04-22",
       "last_updated": "2026-04-26",
-      "parent_id": "studio",
+      "parent_id": "user-guide",
       "sort_order": 70,
       "published": true,
       "viewable": true,
-      "source_path": "catalogue-work-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json"
+      "source_path": "catalogue-series-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-series-editor.json"
     },
     {
       "scope": "studio",
@@ -1270,17 +1326,17 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-new-work-editor",
-      "title": "New Catalogue Work",
-      "added_date": "2026-04-18",
+      "doc_id": "catalogue-new-series-editor",
+      "title": "New Catalogue Series",
+      "added_date": "2026-04-17",
       "last_updated": "2026-04-26",
-      "parent_id": "studio",
+      "parent_id": "user-guide",
       "sort_order": 80,
       "published": true,
       "viewable": true,
-      "source_path": "catalogue-new-work-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-editor.json"
+      "source_path": "catalogue-new-series-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-series-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-series-editor.json"
     },
     {
       "scope": "studio",
@@ -1309,6 +1365,20 @@
       "source_path": "build-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=build-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/build-activity.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-work-file-editor",
+      "title": "Catalogue Work File Editor",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 90,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-work-file-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-file-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-file-editor.json"
     },
     {
       "scope": "studio",
@@ -1354,20 +1424,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-work-detail-editor",
-      "title": "Catalogue Work Detail Editor",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
-      "parent_id": "studio",
-      "sort_order": 100,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-work-detail-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-detail-editor.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-catalogue-write-server",
       "title": "Catalogue Write Server",
       "added_date": "2026-04-22",
@@ -1379,6 +1435,20 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-new-work-file-editor",
+      "title": "New Catalogue Work File",
+      "added_date": "2026-04-18",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 100,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-new-work-file-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-file-editor.json"
     },
     {
       "scope": "studio",
@@ -1396,6 +1466,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-work-link-editor",
+      "title": "Catalogue Work Link Editor",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 110,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-work-link-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-link-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-link-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "data-models",
       "title": "Data Models",
       "added_date": "2026-03-31",
@@ -1407,34 +1491,6 @@
       "source_path": "data-models.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-new-work-detail-editor",
-      "title": "New Catalogue Work Detail",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
-      "parent_id": "studio",
-      "sort_order": 110,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-detail-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-detail-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-detail-editor.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-series-editor",
-      "title": "Catalogue Series Editor",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-26",
-      "parent_id": "studio",
-      "sort_order": 120,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-series-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-series-editor.json"
     },
     {
       "scope": "studio",
@@ -1480,6 +1536,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-new-work-link-editor",
+      "title": "New Catalogue Work Link",
+      "added_date": "2026-04-18",
+      "last_updated": "2026-04-26",
+      "parent_id": "user-guide",
+      "sort_order": 120,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-new-work-link-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-link-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-catalogue-lookup-invalidation",
       "title": "Catalogue Lookup Invalidation Request",
       "added_date": "2026-04-22",
@@ -1491,20 +1561,6 @@
       "source_path": "site-request-catalogue-lookup-invalidation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-lookup-invalidation.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-work-file-editor",
-      "title": "Catalogue Work File Editor",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
-      "parent_id": "studio",
-      "sort_order": 130,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-work-file-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-file-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-file-editor.json"
     },
     {
       "scope": "studio",
@@ -1547,20 +1603,6 @@
       "source_path": "scripts-fix-missing-title-sort.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-fix-missing-title-sort.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-new-series-editor",
-      "title": "New Catalogue Series",
-      "added_date": "2026-04-17",
-      "last_updated": "2026-04-26",
-      "parent_id": "studio",
-      "sort_order": 140,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-series-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-series-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-series-editor.json"
     },
     {
       "scope": "studio",
@@ -1620,34 +1662,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-new-work-file-editor",
-      "title": "New Catalogue Work File",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
-      "parent_id": "studio",
-      "sort_order": 150,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-file-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-file-editor.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-work-link-editor",
-      "title": "Catalogue Work Link Editor",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
-      "parent_id": "studio",
-      "sort_order": 160,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-work-link-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-link-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-link-editor.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
@@ -1687,20 +1701,6 @@
       "source_path": "new-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-new-work-link-editor",
-      "title": "New Catalogue Work Link",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
-      "parent_id": "studio",
-      "sort_order": 170,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-link-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-link-editor.json"
     },
     {
       "scope": "studio",

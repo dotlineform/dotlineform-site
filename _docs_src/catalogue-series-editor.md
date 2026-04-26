@@ -3,8 +3,8 @@ doc_id: catalogue-series-editor
 title: "Catalogue Series Editor"
 added_date: 2026-04-22
 last_updated: 2026-04-26
-parent_id: studio
-sort_order: 120
+parent_id: user-guide
+sort_order: 70
 ---
 # Catalogue Series Editor
 
