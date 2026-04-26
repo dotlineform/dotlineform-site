@@ -42,8 +42,8 @@ The first implementation covers:
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
-- show work media and work prose readiness, including resolved source paths and missing-state guidance
-- run a narrow `Import prose + rebuild` action when the configured work prose file is ready
+- show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
+- run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
 - save with an optional `Update site now` path through the local catalogue service
 - delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
@@ -54,7 +54,7 @@ It does not yet:
 - edit work files inline on the work page
 - edit work links inline on the work page
 - edit series records directly
-- update prose or media files
+- update media files
 - paginate detail/member lists
 - generate media derivatives
 
@@ -99,9 +99,10 @@ Current save/rebuild flow:
 6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when the user chose `Update site now`
 7. the page reloads its focused work lookup payload for preview/detail/file/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
-9. the same preview now also carries work media/work prose readiness and source-path guidance
+9. the same preview now also carries work media readiness and staged work prose readiness
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
-11. `POST /catalogue/build-apply` remains available for explicit follow-up update actions and `Import prose + rebuild`
+11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
+12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup for `_docs_src_catalogue/works/<work_id>.md` is handled by the next prose-source implementation task
 
 Bulk save flow:
 

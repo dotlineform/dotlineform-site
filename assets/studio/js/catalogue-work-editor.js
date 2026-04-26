@@ -267,18 +267,20 @@ function renderReadiness(state) {
 
   const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
   state.readinessNode.innerHTML = items.map((item) => {
-    const tone = toneForReadinessStatus(normalizeText(item && item.status));
+    const itemStatus = normalizeText(item && item.status);
+    const tone = toneForReadinessStatus(itemStatus);
     const title = normalizeText(item && item.title) || "readiness";
     const summary = normalizeText(item && item.summary) || "—";
     const sourcePath = normalizeText(item && item.source_path);
     const nextStep = normalizeText(item && item.next_step);
-    const action = item && item.action && typeof item.action === "object" ? item.action : null;
-    const proseAction = action && action.kind === "prose-import" && normalizeText(action.target_kind) === "work";
+    const proseAction = normalizeText(item && item.key) === "work_prose";
+    const proseActionDisabled = actionDisabled || (proseAction && itemStatus !== "ready");
     const disabledNote = proseAction && actionDisabled
       ? (draftHasChanges(state)
         ? t(state, "readiness_save_first", "Save source changes before importing prose.")
         : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
       : "";
+    const proseActionLabel = t(state, "prose_import_button", "Import staged prose");
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(title)}</span>
@@ -286,7 +288,7 @@ function renderReadiness(state) {
           <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
           ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
           ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
-          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="work" ${actionDisabled ? "disabled" : ""}>${escapeHtml(normalizeText(action.label) || "Import prose + rebuild")}</button></div>` : ""}
+          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="work" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(proseActionLabel)}</button></div>` : ""}
           ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>
       </div>
@@ -1556,28 +1558,51 @@ async function importWorkProse(state) {
     setTextWithState(state.statusNode, t(state, "prose_import_save_first", "Save source changes before importing prose."), "error");
     return;
   }
-  const proseItem = getReadinessItems(state).find((item) => normalizeText(item && item.key) === "work_prose");
-  if (!proseItem || normalizeText(proseItem.status) !== "ready") {
-    setTextWithState(state.statusNode, t(state, "prose_import_not_ready", "No ready work prose source is configured for this record."), "error");
-    return;
-  }
 
   state.isBuilding = true;
   updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing prose and rebuilding…"));
+  setTextWithState(state.statusNode, t(state, "prose_import_preview_running", "Previewing staged prose…"));
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
-      work_id: state.currentWorkId,
-      extra_series_ids: state.pendingBuildExtraSeriesIds
+    const preview = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewProseImport, {
+      target_kind: "work",
+      work_id: state.currentWorkId
     });
-    state.rebuildPending = false;
-    state.pendingBuildExtraSeriesIds = [];
+    if (!preview.valid) {
+      const errors = Array.isArray(preview.errors) ? preview.errors.join(" ") : "";
+      throw new Error(errors || t(state, "prose_import_preview_invalid", "Staged prose is not ready to import."));
+    }
+    let confirmOverwrite = false;
+    if (preview.overwrite_required) {
+      const message = t(
+        state,
+        "prose_import_confirm_overwrite",
+        "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
+        {
+          target_path: normalizeText(preview.target_path),
+          staging_path: normalizeText(preview.staging_path)
+        }
+      );
+      confirmOverwrite = window.confirm(message);
+      if (!confirmOverwrite) {
+        setTextWithState(state.statusNode, t(state, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
+        return;
+      }
+    }
+    setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing staged prose…"));
+    const importResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyProseImport, {
+      target_kind: "work",
+      work_id: state.currentWorkId,
+      confirm_overwrite: confirmOverwrite
+    });
     await refreshBuildPreview(state);
-    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
+    const completedAt = normalizeText(importResponse.imported_at_utc || utcTimestamp());
     setTextWithState(
       state.resultNode,
-      t(state, "prose_import_result_success", "Prose imported and runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
+      t(state, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. Generator lookup is handled by the next implementation task.", {
+        completed_at: completedAt,
+        target_path: normalizeText(importResponse.target_path)
+      }),
       "success"
     );
     setTextWithState(state.statusNode, t(state, "prose_import_status_success", "Prose import completed."), "success");

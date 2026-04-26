@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Added staged catalogue prose import
+
+**Status:** implemented
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Added a work/series prose import step that reads ID-based staged Markdown from `var/docs/catalogue/import-staging/`, validates it, and writes permanent repo-local prose source under `_docs_src_catalogue/`.
+
+**Reason:**
+Work and series prose source is moving out of externally resolved project folders and into a repo-managed Markdown source tree while keeping public work and series payloads stable.
+
+**Effect:**
+The work and series editors now expose `Import staged prose` when the matching staged Markdown file exists. The catalogue write server previews staged prose, rejects front matter, requires overwrite confirmation for different existing permanent prose, and writes without backup for this explicit prose flow. Generator lookup for the new permanent source roots remains the next prose-source implementation task.
+
+**Affected files/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_json_build.py`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+
 ## [2026-04-26] Renamed Docs Import Route and Cleaned Dashboard Panels
 
 **Status:** implemented

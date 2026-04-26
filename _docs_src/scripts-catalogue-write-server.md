@@ -44,8 +44,10 @@ Exposed endpoints:
 - `POST /catalogue/series/save`
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
+- `POST /catalogue/prose/import-preview`
+- `POST /catalogue/prose/import-apply`
 
-The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, can bulk-save existing work/work-detail records, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files, write media files, or write back into Excel.
+The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, can import staged work/series prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write media files or write back into Excel.
 
 `POST /catalogue/bulk-save` expects:
 
@@ -161,6 +163,51 @@ Successful responses include:
 - `lookup_refresh` when the request changed the record
 - `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
+
+`POST /catalogue/prose/import-preview` expects either:
+
+```json
+{
+  "target_kind": "work",
+  "work_id": "00008"
+}
+```
+
+or:
+
+```json
+{
+  "target_kind": "series",
+  "series_id": "067"
+}
+```
+
+Request behavior:
+
+- `target_kind` must be `work` or `series`
+- work ids normalize to five digits and series ids normalize to three digits
+- the target work or series must exist in the canonical catalogue source JSON
+- work prose is staged at `var/docs/catalogue/import-staging/works/<work_id>.md`
+- series prose is staged at `var/docs/catalogue/import-staging/series/<series_id>.md`
+- the preview validates UTF-8 Markdown and rejects prose files with front matter
+- the preview reports whether the permanent target already exists and whether overwrite confirmation is required
+
+`POST /catalogue/prose/import-apply` accepts the same request shape plus:
+
+```json
+{
+  "confirm_overwrite": true
+}
+```
+
+Apply behavior:
+
+- re-runs the same preview validation before writing
+- writes work prose to `_docs_src_catalogue/works/<work_id>.md`
+- writes series prose to `_docs_src_catalogue/series/<series_id>.md`
+- refuses to overwrite different existing permanent prose content unless `confirm_overwrite` is true
+- intentionally does not create backup files for this prose import flow
+- records Catalogue Activity when a non-dry-run import writes changed prose
 
 ## Derived Lookup Refresh
 

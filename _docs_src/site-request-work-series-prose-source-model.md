@@ -227,7 +227,7 @@ Defined:
 
 Status:
 
-- pending
+- complete
 
 Add or adapt a Studio import flow that:
 
@@ -238,6 +238,15 @@ Add or adapt a Studio import flow that:
 - avoids silent overwrite
 - overwrites without creating backups for this prose flow
 - writes the permanent repo-local prose source file
+
+Implemented behavior:
+
+- work import reads `var/docs/catalogue/import-staging/works/<work_id>.md`
+- series import reads `var/docs/catalogue/import-staging/series/<series_id>.md`
+- permanent source files are written to `_docs_src_catalogue/works/<work_id>.md` or `_docs_src_catalogue/series/<series_id>.md`
+- preview validates UTF-8 Markdown, rejects front matter, and reports overwrite requirements
+- apply requires overwrite confirmation when replacing different permanent prose content
+- runtime generator lookup for the permanent source roots remains Task 3
 
 ### Task 3. Update Generator Prose Lookup
 

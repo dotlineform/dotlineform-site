@@ -22,7 +22,6 @@ from pipeline_config import (
     load_pipeline_config,
     source_moments_images_subdir,
     source_moments_root_subdir,
-    source_works_prose_subdir,
     source_works_root_subdir,
 )
 from series_ids import normalize_series_id
@@ -30,6 +29,7 @@ from series_ids import normalize_series_id
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
+CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 
 DEFAULT_ARTIFACTS = [
     "work-pages",
@@ -633,22 +633,8 @@ def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = 
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
 
-    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
-    prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
-    project_folder = str(work_record.get("project_folder") or "").strip()
-    project_filename = normalize_filename(work_record.get("project_filename"))
-    prose_filename = normalize_filename(work_record.get("work_prose_file"))
-
     media_path, media_missing_reason, _, _ = resolve_work_media_source(records, work_id, env=env)
-
-    prose_path: Path | None = None
-    prose_missing_reason = ""
-    if project_folder and prose_filename and works_root is not None:
-        prose_path = works_root / project_folder / prose_root / prose_filename
-    elif prose_filename:
-        prose_missing_reason = "missing_project_folder"
-    else:
-        prose_missing_reason = "missing_work_prose_file"
+    prose_path = repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / "works" / f"{work_id}.md"
 
     items = [
         build_media_readiness_item(
@@ -666,19 +652,16 @@ def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = 
             key="work_prose",
             title="work prose",
             path=prose_path,
-            projects_base_dir=projects_base_dir,
-            availability_error=availability_error,
-            missing_reason=prose_missing_reason,
-            ready_summary=f"Source prose is ready at {display_source_path(prose_path, projects_base_dir)}.",
-            missing_file_summary=f"Configured source prose is missing at {display_source_path(prose_path, projects_base_dir)}." if prose_path else "Configured source prose file is missing.",
-            next_step_ready="Use Import prose + rebuild to publish the current prose file.",
-            next_step_missing_file="Create or restore the prose file, then import prose from this page.",
-            next_step_missing_metadata="Set project_folder and work_prose_file, then save the source record.",
+            projects_base_dir=repo_root,
+            ready_summary=f"Staged prose is ready at {display_source_path(prose_path, repo_root)}.",
+            missing_file_summary=f"No staged prose file exists at {display_source_path(prose_path, repo_root)}.",
+            next_step_ready="Use Import staged prose to write the permanent source file.",
+            next_step_missing_file="Add staged Markdown at the expected ID-based path before importing prose.",
             action={
                 "kind": "prose-import",
                 "target_kind": "work",
                 "work_id": work_id,
-                "label": "Import prose + rebuild",
+                "label": "Import staged prose",
             },
         ),
     ]
@@ -686,49 +669,28 @@ def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = 
 
 
 def build_series_readiness(records, series_id: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
-    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    repo_root = detect_repo_root()
     series_record = records.series.get(series_id)
     if not isinstance(series_record, dict):
         raise ValueError(f"series_id not found: {series_id}")
 
-    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
-    prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
-    prose_filename = normalize_filename(series_record.get("series_prose_file"))
-    primary_work_id = slug_id(series_record.get("primary_work_id")) if series_record.get("primary_work_id") else ""
-    primary_work_record = records.works.get(primary_work_id) if primary_work_id else None
-    project_folder = str(primary_work_record.get("project_folder") or "").strip() if isinstance(primary_work_record, dict) else ""
-
-    prose_path: Path | None = None
-    prose_missing_reason = ""
-    if not prose_filename:
-        prose_missing_reason = "missing_series_prose_file"
-    elif not primary_work_id:
-        prose_missing_reason = "missing_primary_work_id"
-    elif not isinstance(primary_work_record, dict):
-        prose_missing_reason = "primary_work_missing"
-    elif not project_folder:
-        prose_missing_reason = "missing_project_folder"
-    elif works_root is not None:
-        prose_path = works_root / project_folder / prose_root / prose_filename
+    prose_path = repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / "series" / f"{series_id}.md"
 
     items = [
         build_readiness_item(
             key="series_prose",
             title="series prose",
             path=prose_path,
-            projects_base_dir=projects_base_dir,
-            availability_error=availability_error,
-            missing_reason=prose_missing_reason,
-            ready_summary=f"Source prose is ready at {display_source_path(prose_path, projects_base_dir)}.",
-            missing_file_summary=f"Configured source prose is missing at {display_source_path(prose_path, projects_base_dir)}." if prose_path else "Configured source prose file is missing.",
-            next_step_ready="Use Import prose + rebuild to publish the current prose file.",
-            next_step_missing_file="Create or restore the prose file, then import prose from this page.",
-            next_step_missing_metadata="Set primary_work_id and series_prose_file, then save the source record.",
+            projects_base_dir=repo_root,
+            ready_summary=f"Staged prose is ready at {display_source_path(prose_path, repo_root)}.",
+            missing_file_summary=f"No staged prose file exists at {display_source_path(prose_path, repo_root)}.",
+            next_step_ready="Use Import staged prose to write the permanent source file.",
+            next_step_missing_file="Add staged Markdown at the expected ID-based path before importing prose.",
             action={
                 "kind": "prose-import",
                 "target_kind": "series",
                 "series_id": series_id,
-                "label": "Import prose + rebuild",
+                "label": "Import staged prose",
             },
         ),
     ]

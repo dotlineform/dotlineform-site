@@ -35,6 +35,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveSeries: "http://127.0.0.1:8788/catalogue/series/save",
   buildPreview: "http://127.0.0.1:8788/catalogue/build-preview",
   buildApply: "http://127.0.0.1:8788/catalogue/build-apply",
+  previewProseImport: "http://127.0.0.1:8788/catalogue/prose/import-preview",
+  applyProseImport: "http://127.0.0.1:8788/catalogue/prose/import-apply",
   previewMomentImport: "http://127.0.0.1:8788/catalogue/moment/import-preview",
   applyMomentImport: "http://127.0.0.1:8788/catalogue/moment/import-apply",
   health: "http://127.0.0.1:8788/health"

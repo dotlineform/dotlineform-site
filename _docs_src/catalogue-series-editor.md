@@ -32,8 +32,8 @@ The first implementation covers:
 - remove a work from the current series
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
 - preview the scoped rebuild impact for the current series
-- show series prose readiness, including the resolved primary-work prose path or the metadata dependency blocking it
-- run a narrow `Import prose + rebuild` action when the configured series prose file is ready
+- show staged series prose readiness for `var/docs/catalogue/import-staging/series/<series_id>.md`
+- run a narrow `Import staged prose` action when the staged series prose Markdown file is ready
 - save with an optional `Update site now` path through the local catalogue service
 - delete one series source record and remove its membership from affected works
 
@@ -73,8 +73,9 @@ Current save/rebuild flow:
 4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, only the changed work membership rows, and optional `apply_build: true`
 5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested build status when requested
 6. the page reloads its focused series lookup payload
-7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works and now also carries series prose readiness
-8. `POST /catalogue/build-apply` remains available for explicit follow-up update actions and `Import prose + rebuild`
+7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works and now also carries staged series prose readiness
+8. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_src_catalogue/series/<series_id>.md` after overwrite confirmation when needed
+9. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup for `_docs_src_catalogue/series/<series_id>.md` is handled by the next prose-source implementation task
 
 Delete flow:
 

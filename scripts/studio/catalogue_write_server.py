@@ -122,7 +122,10 @@ from series_ids import normalize_series_id, parse_series_ids  # noqa: E402
 
 BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
+CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
+CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
 MAX_BODY_BYTES = 1024 * 1024
+MAX_PROSE_MARKDOWN_BYTES = 1024 * 1024
 WORK_SAVE_PATH = "/catalogue/work/save"
 WORK_CREATE_PATH = "/catalogue/work/create"
 DETAIL_SAVE_PATH = "/catalogue/work-detail/save"
@@ -139,6 +142,8 @@ SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
+PROSE_IMPORT_PREVIEW_PATH = "/catalogue/prose/import-preview"
+PROSE_IMPORT_APPLY_PATH = "/catalogue/prose/import-apply"
 MOMENT_IMPORT_PREVIEW_PATH = "/catalogue/moment/import-preview"
 MOMENT_IMPORT_APPLY_PATH = "/catalogue/moment/import-apply"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
@@ -684,6 +689,120 @@ def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, bool]:
         raise ValueError("moment_file is required")
     force = bool(body.get("force"))
     return moment_file, force
+
+
+def normalize_prose_import_target(body: Mapping[str, Any]) -> tuple[str, str, str]:
+    target_kind = str(body.get("target_kind") or body.get("kind") or "").strip().lower()
+    if target_kind not in {"work", "series"}:
+        raise ValueError("target_kind must be work or series")
+    raw_id = body.get("target_id")
+    if raw_id is None:
+        raw_id = body.get("work_id") if target_kind == "work" else body.get("series_id")
+    target_id = slug_id(raw_id) if target_kind == "work" else normalize_series_id(raw_id)
+    collection = "works" if target_kind == "work" else "series"
+    return target_kind, target_id, collection
+
+
+def ensure_direct_child(path: Path, allowed_parent: Path) -> None:
+    if path.resolve().parent != allowed_parent.resolve():
+        raise ValueError("write target is outside the allowlisted prose source root")
+
+
+def validate_prose_import_target_exists(source_dir: Path, target_kind: str, target_id: str) -> None:
+    records = records_from_json_source(source_dir)
+    if target_kind == "work" and target_id not in records.works:
+        raise ValueError(f"work_id not found: {target_id}")
+    if target_kind == "series" and target_id not in records.series:
+        raise ValueError(f"series_id not found: {target_id}")
+
+
+def read_staged_prose_markdown(staging_path: Path) -> tuple[str, list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not staging_path.exists():
+        return "", [f"Missing staged Markdown file: {staging_path.name}"], warnings
+    if not staging_path.is_file():
+        return "", [f"Staged Markdown path is not a file: {staging_path.name}"], warnings
+    try:
+        size = staging_path.stat().st_size
+    except OSError as exc:
+        return "", [f"Could not stat staged Markdown file: {exc}"], warnings
+    if size > MAX_PROSE_MARKDOWN_BYTES:
+        errors.append(f"Staged Markdown file is larger than {MAX_PROSE_MARKDOWN_BYTES} bytes.")
+    try:
+        text = staging_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return "", ["Staged Markdown file must be UTF-8 text."], warnings
+    except OSError as exc:
+        return "", [f"Could not read staged Markdown file: {exc}"], warnings
+    if "\x00" in text:
+        errors.append("Staged Markdown file contains a null byte.")
+    if text.startswith("---\n") or text.startswith("---\r\n"):
+        errors.append("Work and series prose source files must not include front matter.")
+    if not text.strip():
+        warnings.append("Staged Markdown file is blank; importing it will publish blank optional prose after the generator lookup is updated.")
+    return text, errors, warnings
+
+
+def build_prose_import_preview(
+    repo_root: Path,
+    source_dir: Path,
+    body: Mapping[str, Any],
+) -> Dict[str, Any]:
+    target_kind, target_id, collection = normalize_prose_import_target(body)
+    validate_prose_import_target_exists(source_dir, target_kind, target_id)
+    staging_path = repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / collection / f"{target_id}.md"
+    target_path = repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / collection / f"{target_id}.md"
+    text, errors, warnings = read_staged_prose_markdown(staging_path)
+    target_exists = target_path.exists()
+    target_text = ""
+    if target_exists:
+        try:
+            target_text = target_path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            warnings.append("Existing permanent prose file could not be read for content comparison.")
+    content_hash = hashlib.sha256(text.encode("utf-8")).hexdigest() if not errors else ""
+    target_hash = hashlib.sha256(target_text.encode("utf-8")).hexdigest() if target_text else ""
+    changed = not target_exists or text != target_text
+    return {
+        "ok": True,
+        "valid": not errors,
+        "target_kind": target_kind,
+        "target_id": target_id,
+        "staging_path": str((CATALOGUE_PROSE_STAGING_REL_DIR / collection / f"{target_id}.md")).replace(os.sep, "/"),
+        "target_path": str((CATALOGUE_PROSE_SOURCE_REL_DIR / collection / f"{target_id}.md")).replace(os.sep, "/"),
+        "staging_exists": staging_path.exists(),
+        "target_exists": target_exists,
+        "overwrite_required": bool(target_exists and changed),
+        "changed": changed,
+        "byte_count": len(text.encode("utf-8")) if not errors else 0,
+        "line_count": len(text.splitlines()) if not errors else 0,
+        "content_sha256": content_hash,
+        "target_sha256": target_hash,
+        "errors": errors,
+        "warnings": warnings,
+    }
+
+
+def atomic_write_text_no_backup(target_path: Path, text: str) -> None:
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(
+        prefix=f".{target_path.name}.",
+        suffix=".tmp",
+        dir=str(target_path.parent),
+        text=True,
+    )
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
+            handle.write(text)
+        os.replace(temp_path, target_path)
+    finally:
+        if temp_path.exists():
+            try:
+                temp_path.unlink()
+            except OSError:
+                pass
 
 
 def extract_import_mode(body: Mapping[str, Any]) -> str:
@@ -1451,6 +1570,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         work_links_path: Path,
         series_path: Path,
         allowed_write_paths: set[Path],
+        allowed_write_roots: set[Path],
         backups_dir: Path,
         dry_run: bool,
     ):
@@ -1464,6 +1584,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.work_links_path = work_links_path.resolve()
         self.series_path = series_path.resolve()
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
+        self.allowed_write_roots = {path.resolve() for path in allowed_write_roots}
         self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
 
@@ -1516,6 +1637,8 @@ class Handler(BaseHTTPRequestHandler):
             SERIES_CREATE_PATH,
             BUILD_PREVIEW_PATH,
             BUILD_APPLY_PATH,
+            PROSE_IMPORT_PREVIEW_PATH,
+            PROSE_IMPORT_APPLY_PATH,
             MOMENT_IMPORT_PREVIEW_PATH,
             MOMENT_IMPORT_APPLY_PATH,
         }:
@@ -1622,6 +1745,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == BUILD_APPLY_PATH:
                 self._handle_build_apply(allowed)
+                return
+            if self.path == PROSE_IMPORT_PREVIEW_PATH:
+                self._handle_prose_import_preview(allowed)
+                return
+            if self.path == PROSE_IMPORT_APPLY_PATH:
+                self._handle_prose_import_apply(allowed)
                 return
             if self.path == MOMENT_IMPORT_PREVIEW_PATH:
                 self._handle_moment_import_preview(allowed)
@@ -3663,6 +3792,86 @@ class Handler(BaseHTTPRequestHandler):
         )
         self._send_json(HTTPStatus.OK if success else HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
 
+    def _handle_prose_import_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        preview = build_prose_import_preview(self.server.repo_root, self.server.source_dir, body)
+        self._send_json(HTTPStatus.OK, preview, allowed)
+
+    def _handle_prose_import_apply(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        preview = build_prose_import_preview(self.server.repo_root, self.server.source_dir, body)
+        if not preview.get("valid"):
+            errors = preview.get("errors") if isinstance(preview.get("errors"), list) else []
+            raise ValueError("; ".join(str(error) for error in errors) or "prose import preview failed")
+        if preview.get("overwrite_required") and not bool(body.get("confirm_overwrite")):
+            self._send_json(
+                HTTPStatus.CONFLICT,
+                {"ok": False, "error": "overwrite confirmation required", "preview": preview},
+                allowed,
+            )
+            return
+
+        target_kind, target_id, collection = normalize_prose_import_target(body)
+        staging_path = self.server.repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / collection / f"{target_id}.md"
+        target_path = self.server.repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / collection / f"{target_id}.md"
+        target_root = (self.server.repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / collection).resolve()
+        if target_root not in self.server.allowed_write_roots:
+            raise ValueError("prose source root is not allowlisted")
+        ensure_direct_child(target_path, target_root)
+        text, errors, _warnings = read_staged_prose_markdown(staging_path)
+        if errors:
+            raise ValueError("; ".join(errors))
+
+        changed = bool(preview.get("changed"))
+        if changed and not self.server.dry_run:
+            atomic_write_text_no_backup(target_path, text)
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "target_kind": target_kind,
+            "target_id": target_id,
+            "changed": changed,
+            "staging_path": preview.get("staging_path"),
+            "target_path": preview.get("target_path"),
+            "target_exists": preview.get("target_exists"),
+            "content_sha256": preview.get("content_sha256"),
+            "warnings": preview.get("warnings", []),
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["imported_at_utc"] = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(response_payload["imported_at_utc"], "prose.import"),
+                    "time_utc": response_payload["imported_at_utc"],
+                    "kind": "source_import",
+                    "operation": "prose.import",
+                    "status": "completed",
+                    "summary": f"Imported {target_kind} prose source for {target_id}.",
+                    "affected": {
+                        "works": [target_id] if target_kind == "work" else [],
+                        "series": [target_id] if target_kind == "series" else [],
+                        "work_details": [],
+                        "work_files": [],
+                        "work_links": [],
+                        "moments": [],
+                    },
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self.server.log_event(
+            "catalogue_prose_import_apply",
+            {
+                "target_kind": target_kind,
+                "target_id": target_id,
+                "changed": changed,
+                "dry_run": self.server.dry_run,
+            },
+        )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
     def _handle_moment_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         moment_file, force = extract_moment_import_request(body)
@@ -4309,6 +4518,10 @@ def main() -> None:
         for kind, filename in SOURCE_FILES.items()
         if kind != "meta"
     }
+    allowed_write_roots = {
+        (repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
+        (repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
+    }
 
     server = CatalogueWriteServer(
         ("127.0.0.1", args.port),
@@ -4322,6 +4535,7 @@ def main() -> None:
         work_files_path=work_files_path,
         work_links_path=work_links_path,
         allowed_write_paths=allowed_paths,
+        allowed_write_roots=allowed_write_roots,
         backups_dir=backups_dir,
         dry_run=args.dry_run,
     )
