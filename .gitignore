@@ -31,7 +31,6 @@ logs/
 var/studio/backups/
 var/docs/backups/
 var/docs/logs/
-var/docs/import-staging/
 
 # Catalogue planner state
 var/build_catalogue_state.json
