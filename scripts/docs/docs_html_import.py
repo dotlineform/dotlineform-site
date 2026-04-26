@@ -21,6 +21,7 @@ from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 SCOPE_ROOTS = {
     "studio": Path("_docs_src"),
+    "analysis": Path("_docs_src_analysis"),
     "library": Path("_docs_library_src"),
 }
 STAGING_REL_DIR = Path("var/docs/import-staging")

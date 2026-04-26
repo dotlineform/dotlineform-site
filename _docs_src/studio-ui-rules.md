@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: 2026-04-26
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,28 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-26 / UI-035
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: the Docs HTML Import page and importer helper only exposed `studio` and `library`, even though the shared docs-management server and public viewer now support the `analysis` docs scope.
+- triage: local allowlist drift with shared-scope impact
+- reasoning: scope selectors must stay aligned with the docs-management write allowlist and the generated viewer scopes. A Studio command page should not silently coerce a valid scope such as `analysis` back to `library`.
+- outcome: the import scope selector now includes `analysis`, the page preserves `?scope=analysis`, the HTML import helper accepts `_docs_src_analysis`, and new Analysis imports follow Library import defaults with `published: true` and `viewable: false` for manage-mode review.
+- files changed:
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_html_import.py`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/user-guide-docs-html-import.md`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/library-import/?scope=analysis` and confirm the scope selector remains on `analysis`
+  - import a staged HTML file into `analysis` and confirm `Open viewer` opens `/analysis/?doc=<doc_id>&mode=manage`
+- follow-up:
+  - add parent-placement controls later if Analysis imports need to land directly under a nested section instead of the root-level review queue
 
 ## UI Rule Log 2026-04-25 / UI-034
 

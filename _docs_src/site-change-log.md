@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-26] Added Analysis to Docs HTML Import
+
+**Status:** implemented
+
+**Area:** Studio / Docs Viewer
+
+**Summary:**
+Extended `/studio/library-import/` so staged HTML imports can target the `analysis` docs scope as well as `library` and `studio`.
+
+**Reason:**
+The public `/analysis/` viewer already has generated docs and search artifacts, but the Studio import page still filtered valid `analysis` selections out of the workflow.
+
+**Effect:**
+The import page now preserves `?scope=analysis`, posts `analysis` to the docs-management server, and links import results to `/analysis/?doc=<doc_id>&mode=manage`. New Analysis imports use the same review-first visibility default as Library imports.
+
+**Affected files/docs:**
+
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/docs_management_server.py`
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-26] Added the public Analysis docs viewer
 
 **Status:** implemented

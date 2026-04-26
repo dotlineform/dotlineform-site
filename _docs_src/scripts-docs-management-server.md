@@ -48,7 +48,7 @@ Current behavior:
 - also used by `/studio/library-import/` for staged-file listing and docs HTML import writes
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
-- creates Analysis docs as `published: true`, `viewable: true`
+- creates Analysis docs as `published: true`, `viewable: false`
 - creates Library docs as `published: true`, `viewable: false`
 - rebuilds scope-owned docs payloads after successful writes
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
@@ -123,7 +123,7 @@ Import behavior:
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current date
 - new Studio imports write `published: true`, `viewable: true`
-- new Analysis imports write `published: true`, `viewable: true`
+- new Analysis imports write `published: true`, `viewable: false`
 - new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
 - reports collision details when the generated import target already matches an existing `doc_id`

@@ -42,7 +42,7 @@ function selectedScopeFromUrl() {
   try {
     const url = new URL(window.location.href);
     const scope = normalizeText(url.searchParams.get("scope")).toLowerCase();
-    return scope === "studio" ? "studio" : "library";
+    return ["analysis", "library", "studio"].includes(scope) ? scope : "library";
   } catch (_error) {
     return "library";
   }
@@ -232,7 +232,8 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
     return;
   }
 
-  const scope = normalizeText(state.scopeSelect.value).toLowerCase() === "studio" ? "studio" : "library";
+  const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
+  const scope = ["analysis", "library", "studio"].includes(selectedScope) ? selectedScope : "library";
   persistSelectedScope(scope);
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
@@ -372,7 +373,7 @@ async function init() {
       getStudioText(
         state.config,
         "docs_html_import.intro",
-        "Import a staged self-contained HTML file into the Studio or Library docs source as a best-attempt Markdown doc."
+        "Import a staged self-contained HTML file into the Studio, Analysis, or Library docs source as a best-attempt Markdown doc."
       )
     );
     setText(state.fileLabelNode, getStudioText(state.config, "docs_html_import.file_label", "staged file"));
@@ -404,6 +405,7 @@ async function init() {
     );
     state.scopeSelect.innerHTML = `
       <option value="library">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_library", "library"))}</option>
+      <option value="analysis">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_analysis", "analysis"))}</option>
       <option value="studio">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_studio", "studio"))}</option>
     `;
     state.scopeSelect.value = selectedScopeFromUrl();
@@ -457,7 +459,7 @@ async function init() {
       getStudioText(
         state.config,
         "docs_html_import.idle_status",
-        "Select a staged HTML file and import it into Studio or Library docs."
+        "Select a staged HTML file and import it into Studio, Analysis, or Library docs."
       )
     );
 
@@ -467,7 +469,7 @@ async function init() {
         getStudioText(
           state.config,
           "docs_html_import.idle_status",
-          "Select a staged HTML file and import it into Studio or Library docs."
+          "Select a staged HTML file and import it into Studio, Analysis, or Library docs."
         )
       );
     });

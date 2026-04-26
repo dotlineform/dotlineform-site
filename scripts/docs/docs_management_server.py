@@ -303,7 +303,7 @@ def normalize_summary(value: Any) -> str:
 
 
 def default_viewable_for_scope(scope: str) -> bool:
-    return scope != "library"
+    return scope not in {"analysis", "library"}
 
 
 def normalize_scope(scope: Any) -> str:

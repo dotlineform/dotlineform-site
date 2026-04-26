@@ -513,10 +513,11 @@
       "column_from_page": "from page"
     },
     "docs_html_import": {
-      "intro": "Import a staged self-contained HTML file into the Studio or Library docs source as a best-attempt Markdown doc.",
+      "intro": "Import a staged self-contained HTML file into the Studio, Analysis, or Library docs source as a best-attempt Markdown doc.",
       "file_label": "staged file",
       "scope_label": "publish into",
       "scope_option_studio": "studio",
+      "scope_option_analysis": "analysis",
       "scope_option_library": "library",
       "include_prompt_meta_label": "Include obvious prompt/meta blocks",
       "include_prompt_meta_hint": "When enabled, clearly identifiable prompt/meta sections are kept as wrapped quoted prose.",
@@ -525,7 +526,7 @@
       "cancel_overwrite_button": "Cancel",
       "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run imports.",
       "loading": "loading docs import…",
-      "idle_status": "Select a staged HTML file and import it into Studio or Library docs.",
+      "idle_status": "Select a staged HTML file and import it into Studio, Analysis, or Library docs.",
       "running_status": "Converting and validating staged HTML…",
       "load_files_failed": "Failed to load staged HTML files.",
       "no_files": "No staged HTML files found under var/docs/import-staging/.",

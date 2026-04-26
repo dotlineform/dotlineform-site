@@ -2,13 +2,13 @@
 doc_id: user-guide-docs-html-import
 title: "Docs HTML Import"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-26
 parent_id: user-guide
 sort_order: 20
 ---
 # Docs HTML Import
 
-Use this page when you have a staged self-contained HTML export that should become a Library or Studio docs source doc.
+Use this page when you have a staged self-contained HTML export that should become a Library, Analysis, or Studio docs source doc.
 
 The Studio route is:
 
@@ -27,7 +27,7 @@ This staging directory is repo-local and untracked, so it is a practical place t
 The import page:
 
 - lists staged `.html` files from `var/docs/import-staging/`
-- lets you choose whether the imported doc should publish into `library` or `studio`
+- lets you choose whether the imported doc should publish into `library`, `analysis`, or `studio`
 - optionally keeps clearly identifiable prompt/meta blocks
 - converts the HTML into a best-attempt Markdown source doc
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
@@ -41,11 +41,14 @@ The import page:
 2. Choose the staged HTML file.
 3. Choose the publish scope:
    - `library` for the public Library viewer
+   - `analysis` for the public Analysis viewer
    - `studio` for the Studio docs viewer
 4. Decide whether to include obvious prompt/meta blocks.
 5. Click `Import`.
 
 If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
+
+New `library` and `analysis` imports use the same default import behavior: they are generated and opened for review through manage-mode viewer links before becoming normal public tree items.
 
 ## Prompt / Meta Option
 

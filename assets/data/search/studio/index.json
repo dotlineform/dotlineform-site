@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a847908e0792849de9154f19455b068f",
-    "generated_at_utc": "2026-04-26T15:37:44Z",
+    "version": "blake2b-0725092901a71e038f28508ee94ee02c",
+    "generated_at_utc": "2026-04-26T16:00:29Z",
     "count": 137
   },
   "entries": [
@@ -528,10 +528,10 @@
       "kind": "doc",
       "title": "Docs HTML Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-26",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-24 • User Guide",
+      "display_meta": "2026-04-26 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -541,12 +541,12 @@
         "import",
         "docs html import",
         "user guide",
-        "2026-04-24",
+        "2026-04-26",
         "2026",
         "04",
-        "24"
+        "26"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs html import user guide 2026-04-24 2026 04 24"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs html import user guide 2026-04-26 2026 04 26"
     },
     {
       "id": "scripts-docs-builder",
@@ -1130,10 +1130,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-26",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-25 • Design",
+      "display_meta": "2026-04-26 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -1144,12 +1144,12 @@
         "decision",
         "log",
         "design",
-        "2026-04-25",
+        "2026-04-26",
         "2026",
         "04",
-        "25"
+        "26"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-25 2026 04 25"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-26 2026 04 26"
     },
     {
       "id": "tag-groups",
