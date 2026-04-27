@@ -22,6 +22,11 @@ import {
   buildWorkPrimaryPreview,
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
+import {
+  createStudioModalHost,
+  openConfirmModal,
+  renderStudioModalFrame
+} from "./studio-modal.js";
 
 const EDITABLE_FIELDS = [
   { key: "status", label: "status", type: "select", options: ["", "draft", "published"] },
@@ -56,6 +61,8 @@ const SERIES_ID_RE = /^\d+$/;
 const SEARCH_LIMIT = 20;
 const DETAIL_LIST_LIMIT = 10;
 const BULK_PREVIEW_LIMIT = 12;
+const DOWNLOAD_FIELDS = ["filename", "label"];
+const LINK_FIELDS = ["url", "label"];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -175,6 +182,26 @@ function formatNumberText(value) {
 function displayValue(value) {
   const text = normalizeText(value);
   return text || "—";
+}
+
+function normalizeEmbeddedEntries(value, fields) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => {
+    const entry = {};
+    fields.forEach((field) => {
+      const text = normalizeText(item && item[field]);
+      if (text) entry[field] = text;
+    });
+    return entry;
+  }).filter((entry) => fields.some((field) => normalizeText(entry[field])));
+}
+
+function cloneEmbeddedEntries(value, fields) {
+  return normalizeEmbeddedEntries(value, fields).map((entry) => ({ ...entry }));
+}
+
+function embeddedEntriesEqual(a, b, fields) {
+  return stableStringify(normalizeEmbeddedEntries(a, fields)) === stableStringify(normalizeEmbeddedEntries(b, fields));
 }
 
 function getReadinessItems(state) {
@@ -576,6 +603,8 @@ function buildDraftFromRecord(record) {
     }
     draft[field.key] = formatNumberText(record[field.key]);
   });
+  draft.downloads = cloneEmbeddedEntries(record && record.downloads, DOWNLOAD_FIELDS);
+  draft.links = cloneEmbeddedEntries(record && record.links, LINK_FIELDS);
   return draft;
 }
 
@@ -700,38 +729,46 @@ function renderDetailRows(state, details) {
 }
 
 function getWorkFiles(state, workId) {
-  if (!state.currentLookup || state.currentWorkId !== workId) return [];
-  const items = Array.isArray(state.currentLookup.work_files) ? state.currentLookup.work_files : [];
-  return items.slice().sort((a, b) => normalizeText(a && a.file_uid).localeCompare(normalizeText(b && b.file_uid), undefined, { numeric: true, sensitivity: "base" }));
+  if (!state.currentRecord || state.currentWorkId !== workId) return [];
+  return cloneEmbeddedEntries(state.draft.downloads, DOWNLOAD_FIELDS);
 }
 
 function getWorkLinks(state, workId) {
-  if (!state.currentLookup || state.currentWorkId !== workId) return [];
-  const items = Array.isArray(state.currentLookup.work_links) ? state.currentLookup.work_links : [];
-  return items.slice().sort((a, b) => normalizeText(a && a.link_uid).localeCompare(normalizeText(b && b.link_uid), undefined, { numeric: true, sensitivity: "base" }));
+  if (!state.currentRecord || state.currentWorkId !== workId) return [];
+  return cloneEmbeddedEntries(state.draft.links, LINK_FIELDS);
 }
 
 function renderWorkFileRows(state, items) {
-  return items.map((item) => {
+  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
+  return items.map((item, index) => {
     const filename = displayValue(item && item.filename);
     const label = displayValue(item && item.label);
     return `
-      <div class="catalogueWorkDetails__row">
-        <span class="catalogueWorkDetails__link">${escapeHtml(filename)}</span>
-        <span class="catalogueWorkDetails__title">${escapeHtml(label)}</span>
+      <div class="tagStudioList__row tagStudioList__row--start catalogueWorkDetails__row catalogueWorkDetails__row--metadata">
+        <span class="tagStudioList__cell catalogueWorkDetails__link">${escapeHtml(filename)}</span>
+        <span class="tagStudioList__cell catalogueWorkDetails__title">${escapeHtml(label)}</span>
+        <span class="tagStudioList__cell catalogueWorkDetails__rowActions">
+          <button type="button" class="tagStudio__button" data-download-edit="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "files_edit_button", "Edit"))}</button>
+          <button type="button" class="tagStudio__button" data-download-delete="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "files_delete_button", "Delete"))}</button>
+        </span>
       </div>
     `;
   }).join("");
 }
 
 function renderWorkLinkRows(state, items) {
-  return items.map((item) => {
+  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
+  return items.map((item, index) => {
     const url = displayValue(item && item.url);
     const label = displayValue(item && item.label);
     return `
-      <div class="catalogueWorkDetails__row">
-        <span class="catalogueWorkDetails__link">${escapeHtml(label)}</span>
-        <span class="catalogueWorkDetails__title">${escapeHtml(url)}</span>
+      <div class="tagStudioList__row tagStudioList__row--start catalogueWorkDetails__row catalogueWorkDetails__row--metadata">
+        <span class="tagStudioList__cell catalogueWorkDetails__link">${escapeHtml(label)}</span>
+        <span class="tagStudioList__cell catalogueWorkDetails__title">${escapeHtml(url)}</span>
+        <span class="tagStudioList__cell catalogueWorkDetails__rowActions">
+          <button type="button" class="tagStudio__button" data-link-edit="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "links_edit_button", "Edit"))}</button>
+          <button type="button" class="tagStudio__button" data-link-delete="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "links_delete_button", "Delete"))}</button>
+        </span>
       </div>
     `;
   }).join("");
@@ -813,15 +850,18 @@ function updateWorkFilesSection(state) {
     return;
   }
   const items = getWorkFiles(state, state.currentWorkId);
+  const error = state.validationErrors.get("downloads") || "";
+  if (error) state.filesMetaNode.dataset.state = "error";
+  else delete state.filesMetaNode.dataset.state;
   if (!items.length) {
-    state.filesMetaNode.textContent = "";
+    state.filesMetaNode.textContent = error;
     state.filesResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(t(state, "files_empty", "No work files for this work."))}</p>`;
     return;
   }
-  state.filesMetaNode.textContent = `${items.length} total`;
+  state.filesMetaNode.textContent = error || `${items.length} total`;
   state.filesResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="catalogueWorkDetails__rows">${renderWorkFileRows(state, items)}</div>
+      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkFileRows(state, items)}</div>
     </section>
   `;
 }
@@ -834,17 +874,159 @@ function updateWorkLinksSection(state) {
     return;
   }
   const items = getWorkLinks(state, state.currentWorkId);
+  const error = state.validationErrors.get("links") || "";
+  if (error) state.linksMetaNode.dataset.state = "error";
+  else delete state.linksMetaNode.dataset.state;
   if (!items.length) {
-    state.linksMetaNode.textContent = "";
+    state.linksMetaNode.textContent = error;
     state.linksResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(t(state, "links_empty", "No work links for this work."))}</p>`;
     return;
   }
-  state.linksMetaNode.textContent = `${items.length} total`;
+  state.linksMetaNode.textContent = error || `${items.length} total`;
   state.linksResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="catalogueWorkDetails__rows">${renderWorkLinkRows(state, items)}</div>
+      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkLinkRows(state, items)}</div>
     </section>
   `;
+}
+
+function closeEntryModal(state) {
+  if (state.modalHost) state.modalHost.innerHTML = "";
+  document.removeEventListener("keydown", state.activeModalKeydown);
+  state.activeModalKeydown = null;
+}
+
+function modalFieldHtml({ fieldId, label, value, type = "text" }) {
+  return `
+    <label class="tagStudioForm__field" for="${escapeHtml(fieldId)}">
+      <span class="tagStudioForm__label">${escapeHtml(label)}</span>
+      <input class="tagStudio__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}">
+    </label>
+  `;
+}
+
+function openEmbeddedEntryModal(state, kind, index = null) {
+  if (!state.currentRecord || state.mode === "bulk") return;
+  const isDownload = kind === "download";
+  const entriesKey = isDownload ? "downloads" : "links";
+  const fields = isDownload ? DOWNLOAD_FIELDS : LINK_FIELDS;
+  const entries = cloneEmbeddedEntries(state.draft[entriesKey], fields);
+  const editing = Number.isInteger(index) && index >= 0 && index < entries.length;
+  const current = editing ? entries[index] : {};
+  const title = isDownload
+    ? (editing ? t(state, "files_edit_modal_title", "Edit download") : t(state, "files_add_modal_title", "Add download"))
+    : (editing ? t(state, "links_edit_modal_title", "Edit link") : t(state, "links_add_modal_title", "Add link"));
+  const firstField = isDownload
+    ? { fieldId: "catalogueWorkDownloadFilename", label: t(state, "files_filename_label", "filename"), key: "filename", value: current.filename || "" }
+    : { fieldId: "catalogueWorkLinkUrl", label: t(state, "links_url_label", "URL"), key: "url", value: current.url || "", type: "url" };
+  const secondField = isDownload
+    ? { fieldId: "catalogueWorkDownloadLabel", label: t(state, "files_label_label", "label"), key: "label", value: current.label || "" }
+    : { fieldId: "catalogueWorkLinkLabel", label: t(state, "links_label_label", "label"), key: "label", value: current.label || "" };
+  const statusId = isDownload ? "catalogueWorkDownloadModalStatus" : "catalogueWorkLinkModalStatus";
+
+  closeEntryModal(state);
+  state.modalHost.innerHTML = renderStudioModalFrame({
+    hidden: false,
+    title,
+    titleId: isDownload ? "catalogueWorkDownloadModalTitle" : "catalogueWorkLinkModalTitle",
+    modalRole: isDownload ? "download-modal" : "link-modal",
+    backdropRole: "entry-modal-cancel",
+    bodyHtml: `
+      <div class="tagStudioForm__fields">
+        ${modalFieldHtml(firstField)}
+        ${modalFieldHtml(secondField)}
+      </div>
+      <p class="tagStudioForm__status" id="${escapeHtml(statusId)}"></p>
+    `,
+    actions: [
+      { role: "entry-modal-save", label: t(state, "entry_modal_save_button", "Save") },
+      { role: "entry-modal-cancel", label: t(state, "entry_modal_cancel_button", "Cancel") }
+    ]
+  });
+
+  const firstNode = state.modalHost.querySelector(`#${firstField.fieldId}`);
+  const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
+  const statusNode = state.modalHost.querySelector(`#${statusId}`);
+  const saveNode = state.modalHost.querySelector('[data-role="entry-modal-save"]');
+  const cancelNodes = state.modalHost.querySelectorAll('[data-role="entry-modal-cancel"]');
+
+  const setModalStatus = (message) => {
+    if (!statusNode) return;
+    statusNode.textContent = message || "";
+    if (message) {
+      statusNode.dataset.state = "error";
+    } else {
+      delete statusNode.dataset.state;
+    }
+  };
+
+  const submit = () => {
+    const firstValue = normalizeText(firstNode && firstNode.value);
+    const secondValue = normalizeText(secondNode && secondNode.value);
+    if (!firstValue) {
+      setModalStatus(isDownload
+        ? t(state, "files_invalid_filename", "Each download needs a filename.")
+        : t(state, "links_invalid_url", "Each link needs a URL."));
+      return;
+    }
+    if (!secondValue) {
+      setModalStatus(isDownload
+        ? t(state, "files_invalid_label", "Each download needs a label.")
+        : t(state, "links_invalid_label", "Each link needs a label."));
+      return;
+    }
+    const nextEntry = isDownload
+      ? { filename: firstValue, label: secondValue }
+      : { url: firstValue, label: secondValue };
+    if (editing) {
+      entries[index] = nextEntry;
+    } else {
+      entries.push(nextEntry);
+    }
+    state.draft[entriesKey] = entries;
+    closeEntryModal(state);
+    updateEditorState(state);
+  };
+
+  state.activeModalKeydown = (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeEntryModal(state);
+    }
+    if (event.key === "Enter" && event.target && event.target.tagName === "INPUT") {
+      event.preventDefault();
+      submit();
+    }
+  };
+  document.addEventListener("keydown", state.activeModalKeydown);
+  cancelNodes.forEach((button) => button.addEventListener("click", () => closeEntryModal(state)));
+  if (saveNode) saveNode.addEventListener("click", submit);
+  if (firstNode) firstNode.focus();
+}
+
+async function deleteEmbeddedEntry(state, kind, index) {
+  if (!state.currentRecord || state.mode === "bulk") return;
+  const isDownload = kind === "download";
+  const entriesKey = isDownload ? "downloads" : "links";
+  const fields = isDownload ? DOWNLOAD_FIELDS : LINK_FIELDS;
+  const entries = cloneEmbeddedEntries(state.draft[entriesKey], fields);
+  if (!Number.isInteger(index) || index < 0 || index >= entries.length) return;
+  const label = isDownload
+    ? normalizeText(entries[index].label || entries[index].filename)
+    : normalizeText(entries[index].label || entries[index].url);
+  const result = await openConfirmModal({
+    root: state.root,
+    title: isDownload ? t(state, "files_delete_modal_title", "Delete download") : t(state, "links_delete_modal_title", "Delete link"),
+    body: isDownload
+      ? t(state, "files_delete_modal_body", "Delete download {label}?", { label })
+      : t(state, "links_delete_modal_body", "Delete link {label}?", { label }),
+    primaryLabel: t(state, "entry_modal_delete_button", "Delete"),
+    cancelLabel: t(state, "entry_modal_cancel_button", "Cancel")
+  });
+  if (!result || !result.confirmed) return;
+  entries.splice(index, 1);
+  state.draft[entriesKey] = entries;
+  updateEditorState(state);
 }
 
 function updateSummary(state) {
@@ -878,10 +1060,10 @@ function updateSummary(state) {
       state.newDetailLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
     }
     if (state.newFileLinkNode) {
-      state.newFileLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_file_editor");
+      state.newFileLinkNode.disabled = true;
     }
     if (state.newLinkLinkNode) {
-      state.newLinkLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_link_editor");
+      state.newLinkLinkNode.disabled = true;
     }
     if (state.detailsPanelNode) state.detailsPanelNode.hidden = true;
     if (state.filesPanelNode) state.filesPanelNode.hidden = true;
@@ -920,12 +1102,10 @@ function updateSummary(state) {
     state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
   }
   if (state.newFileLinkNode) {
-    const base = getStudioRoute(state.config, "catalogue_new_work_file_editor");
-    state.newFileLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
+    state.newFileLinkNode.disabled = !record || state.isSaving || state.isBuilding || state.isDeleting;
   }
   if (state.newLinkLinkNode) {
-    const base = getStudioRoute(state.config, "catalogue_new_work_link_editor");
-    state.newLinkLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
+    state.newLinkLinkNode.disabled = !record || state.isSaving || state.isBuilding || state.isDeleting;
   }
   if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
   if (state.filesPanelNode) state.filesPanelNode.hidden = false;
@@ -984,7 +1164,11 @@ function draftHasChanges(state) {
     return state.bulkTouchedFields.size > 0;
   }
   if (!state.baselineDraft) return false;
-  return EDITABLE_FIELDS.some((field) => canonicalizeScalar(field, state.draft[field.key]) !== canonicalizeScalar(field, state.baselineDraft[field.key]));
+  return (
+    EDITABLE_FIELDS.some((field) => canonicalizeScalar(field, state.draft[field.key]) !== canonicalizeScalar(field, state.baselineDraft[field.key])) ||
+    !embeddedEntriesEqual(state.draft.downloads, state.baselineDraft.downloads, DOWNLOAD_FIELDS) ||
+    !embeddedEntriesEqual(state.draft.links, state.baselineDraft.links, LINK_FIELDS)
+  );
 }
 
 function validateDraft(state) {
@@ -1081,6 +1265,22 @@ function validateDraft(state) {
     }
   }
 
+  normalizeEmbeddedEntries(state.draft.downloads, DOWNLOAD_FIELDS).forEach((item, index) => {
+    if (!normalizeText(item.filename)) {
+      errors.set("downloads", t(state, "files_invalid_filename", "Each download needs a filename."));
+    } else if (!normalizeText(item.label)) {
+      errors.set("downloads", t(state, "files_invalid_label", "Each download needs a label."));
+    }
+  });
+
+  normalizeEmbeddedEntries(state.draft.links, LINK_FIELDS).forEach((item, index) => {
+    if (!normalizeText(item.url)) {
+      errors.set("links", t(state, "links_invalid_url", "Each link needs a URL."));
+    } else if (!normalizeText(item.label)) {
+      errors.set("links", t(state, "links_invalid_label", "Each link needs a label."));
+    }
+  });
+
   return errors;
 }
 
@@ -1162,7 +1362,9 @@ function buildPayload(state) {
       storage_location: normalizeText(draft.storage_location) || null,
       notes: normalizeText(draft.notes) || null,
       provenance: normalizeText(draft.provenance) || null,
-      artist: normalizeText(draft.artist) || null
+      artist: normalizeText(draft.artist) || null,
+      downloads: normalizeEmbeddedEntries(draft.downloads, DOWNLOAD_FIELDS),
+      links: normalizeEmbeddedEntries(draft.links, LINK_FIELDS)
     }
   };
 }
@@ -1899,6 +2101,7 @@ async function init() {
   }
 
   const state = {
+    root,
     config: null,
     mode: "single",
     workSearchById: new Map(),
@@ -1925,6 +2128,8 @@ async function init() {
     isBuilding: false,
     isDeleting: false,
     serverAvailable: false,
+    modalHost: createStudioModalHost({ root }),
+    activeModalKeydown: null,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),
@@ -1975,9 +2180,9 @@ async function init() {
     newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
     filesHeadingNode.textContent = t(state, "files_heading", "downloads");
-    newFileLinkNode.hidden = true;
+    newFileLinkNode.textContent = t(state, "files_add_button", "Add file");
     linksHeadingNode.textContent = t(state, "links_heading", "links");
-    newLinkLinkNode.hidden = true;
+    newLinkLinkNode.textContent = t(state, "links_add_button", "Add link");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
     buildButton.textContent = t(state, "build_button", "Update site now");
@@ -2040,6 +2245,37 @@ async function init() {
 
     detailSearchNode.addEventListener("input", () => {
       updateDetailSections(state);
+    });
+
+    newFileLinkNode.addEventListener("click", () => openEmbeddedEntryModal(state, "download"));
+    newLinkLinkNode.addEventListener("click", () => openEmbeddedEntryModal(state, "link"));
+
+    filesResultsNode.addEventListener("click", (event) => {
+      const editButton = event.target && event.target.closest ? event.target.closest("[data-download-edit]") : null;
+      if (editButton) {
+        openEmbeddedEntryModal(state, "download", Number(editButton.getAttribute("data-download-edit")));
+        return;
+      }
+      const deleteButtonNode = event.target && event.target.closest ? event.target.closest("[data-download-delete]") : null;
+      if (deleteButtonNode) {
+        deleteEmbeddedEntry(state, "download", Number(deleteButtonNode.getAttribute("data-download-delete"))).catch((error) => {
+          console.warn("catalogue_work_editor: failed to delete download", error);
+        });
+      }
+    });
+
+    linksResultsNode.addEventListener("click", (event) => {
+      const editButton = event.target && event.target.closest ? event.target.closest("[data-link-edit]") : null;
+      if (editButton) {
+        openEmbeddedEntryModal(state, "link", Number(editButton.getAttribute("data-link-edit")));
+        return;
+      }
+      const deleteButtonNode = event.target && event.target.closest ? event.target.closest("[data-link-delete]") : null;
+      if (deleteButtonNode) {
+        deleteEmbeddedEntry(state, "link", Number(deleteButtonNode.getAttribute("data-link-delete"))).catch((error) => {
+          console.warn("catalogue_work_editor: failed to delete link", error);
+        });
+      }
     });
 
     popupListNode.addEventListener("click", (event) => {

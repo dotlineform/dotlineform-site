@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added work-editor modals for files and links
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Added inline add/edit/delete interactions for work-owned `downloads` and `links` metadata on `/studio/catalogue-work/`.
+
+**Reason:**
+After files and links moved into `works.json`, the separate file/link pages no longer matched the source model. Editing should happen on the owning work record and save through the parent work draft.
+
+**Effect:**
+The work editor now renders downloads and links as editable list sections. Add/edit actions open shared Studio modal forms, delete uses the shared confirm modal, and changes are saved through `POST /catalogue/work/save` as `Works.downloads` and `Works.links`. Removing the final entry is now detected as a source change and normalized back to an omitted empty array.
+
+**Affected files/docs:**
+
+- `studio/catalogue-work/index.md`
+- `studio/catalogue/index.md`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `scripts/studio/catalogue_write_server.py`
+- [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [User Guide](/docs/?scope=studio&doc=user-guide)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-27] Added field-aware catalogue build scoping request
 
 **Status:** planned

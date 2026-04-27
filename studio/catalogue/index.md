@@ -37,8 +37,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work/' | relative_url }}"><span class="studioLinkList__title">Create New Work</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-series/' | relative_url }}"><span class="studioLinkList__title">Create New Series</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}"><span class="studioLinkList__title">Create New Detail</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}"><span class="studioLinkList__title">Create New File</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}"><span class="studioLinkList__title">Create New Link</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span></a></li>
         </ul>
       </section>
@@ -52,8 +50,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Edit Series</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment/' | relative_url }}"><span class="studioLinkList__title">Edit Moment</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-detail/' | relative_url }}"><span class="studioLinkList__title">Edit Work Detail</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-file/' | relative_url }}"><span class="studioLinkList__title">Edit Work File</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-link/' | relative_url }}"><span class="studioLinkList__title">Edit Work Link</span></a></li>
         </ul>
       </section>
       <section class="studioLinkGroup">

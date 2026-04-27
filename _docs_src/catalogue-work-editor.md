@@ -37,6 +37,8 @@ The first implementation covers:
 - provide a direct `new work detail →` entry link for the current work
 - list the current work's work-owned `downloads` metadata
 - list the current work's work-owned `links` metadata
+- add, edit, and delete work-owned downloads through modal forms
+- add, edit, and delete work-owned links through modal forms
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
@@ -51,8 +53,6 @@ The first implementation covers:
 It does not yet:
 
 - edit work details inline on the work page
-- edit work files inline on the work page; modal editing is planned as the next UI pass
-- edit work links inline on the work page; modal editing is planned as the next UI pass
 - edit series records directly
 - upload primary images to remote media storage
 - paginate detail/member lists
@@ -145,15 +145,20 @@ Locked constraints for this phase:
 
 ## Files And Links
 
-The work editor includes summary sections for work-owned files and links.
+The work editor includes editable sections for work-owned files and links.
 
 Current behavior:
 
 - list current `downloads` entries from the work source record
 - list current `links` entries from the work source record
-- keep the sections read-only until the modal editing pass lands
+- `Add file`, `Edit`, and `Delete` mutate the draft `downloads` array
+- `Add link`, `Edit`, and `Delete` mutate the draft `links` array
+- modal edits are local draft changes until the parent work is saved
+- clearing the final download or link omits the empty array from `works.json` after save
+- downloads require `filename` and `label`
+- links require `url` and `label`
 
-The retired standalone work-file and work-link editors no longer own canonical writes. The next UI pass should replace these read-only sections with add/edit/delete modals that participate in the parent work draft.
+The retired standalone work-file and work-link editors no longer own canonical writes. The work editor is the normal editing surface for work-owned file and link metadata.
 
 ## Current Editable Fields
 
@@ -175,6 +180,8 @@ The retired standalone work-file and work-link editors no longer own canonical w
 - `notes`
 - `provenance`
 - `artist`
+- `downloads`
+- `links`
 
 Work prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_src_catalogue/works/<work_id>.md`; the generator reads that ID-derived source file for public prose.
 

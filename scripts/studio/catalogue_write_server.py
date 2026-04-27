@@ -1173,7 +1173,7 @@ def normalize_moment_update(
 
 
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
-    return [field for field in after.keys() if before.get(field) != after.get(field)]
+    return [field for field in sorted(set(before.keys()) | set(after.keys())) if before.get(field) != after.get(field)]
 
 
 def validate_bulk_records(

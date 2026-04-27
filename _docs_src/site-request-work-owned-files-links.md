@@ -10,7 +10,7 @@ sort_order: 152
 
 Status:
 
-- stage 1 implemented; stage 2 pending
+- implemented
 
 ## Summary
 
@@ -156,13 +156,13 @@ This stage should avoid modal work unless a small compatibility edit is required
 
 After the source model is simple, replace the separate file/link pages with work-editor interactions.
 
-The likely UI direction is:
+Implemented UI direction:
 
 - work editor shows files and links as editable lists
 - `Add file`, `Edit file`, `Delete file` use a modal
 - `Add link`, `Edit link`, `Delete link` use a modal
 - file/link edits become part of the parent work draft and save flow
-- obsolete file/link routes redirect to the parent work editor or show a retirement notice
+- obsolete file/link write endpoints return retired-endpoint responses
 
 ## Stage 1 Task List
 
@@ -331,7 +331,7 @@ Manual checks:
 
 Status:
 
-- pending
+- implemented
 
 Specify how files and links behave inside the work editor:
 
@@ -349,7 +349,7 @@ File/link edits should participate in the parent work draft state.
 
 Status:
 
-- pending
+- implemented
 
 Add a work-editor modal for download metadata:
 
@@ -365,7 +365,7 @@ The modal should not imply upload or file copy behavior.
 
 Status:
 
-- pending
+- implemented
 
 Add a work-editor modal for link metadata:
 
@@ -379,7 +379,7 @@ Add a work-editor modal for link metadata:
 
 Status:
 
-- pending
+- implemented
 
 Replace current navigation rows with editable rows on the work editor.
 
@@ -394,7 +394,7 @@ Rows should support:
 
 Status:
 
-- pending
+- partially implemented
 
 Retire or redirect:
 
@@ -403,16 +403,17 @@ Retire or redirect:
 - `/studio/catalogue-work-link/`
 - `/studio/catalogue-new-work-link/`
 
-Route behavior should be explicit:
+Current route behavior:
 
-- redirect to the parent work editor when a parent work can be resolved
-- otherwise show a short retirement message with a work search/link
+- normal work-editor file/link creation and editing is now handled inline through modals
+- standalone write endpoints return retired-endpoint responses
+- retired route templates remain in place until a later cleanup removes or redirects them
 
 ### Task 6. Update Studio Config Copy
 
 Status:
 
-- pending
+- implemented
 
 Move any new UI copy into `assets/studio/data/studio_config.json`.
 
@@ -422,7 +423,7 @@ Remove obsolete file/link route labels once the routes are retired.
 
 Status:
 
-- pending
+- implemented
 
 Record the UI outcome in `studio-ui-rules.md` because this changes a repeated catalogue editor pattern:
 
@@ -433,7 +434,7 @@ Record the UI outcome in `studio-ui-rules.md` because this changes a repeated ca
 
 Status:
 
-- pending
+- implemented
 
 Codex-run checks:
 

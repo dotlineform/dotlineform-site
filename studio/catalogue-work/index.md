@@ -134,7 +134,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkFilesHeading">work files</h2>
-      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewFileLink" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}">new file →</a>
+      <button type="button" class="tagStudio__button" id="catalogueWorkNewFileLink">Add file</button>
     </div>
     <p class="tagStudioForm__meta" id="catalogueWorkFilesMeta"></p>
     <div class="catalogueWorkDetails__results" id="catalogueWorkFilesResults"></div>
@@ -143,7 +143,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkLinksHeading">work links</h2>
-      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewLinkLink" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}">new link →</a>
+      <button type="button" class="tagStudio__button" id="catalogueWorkNewLinkLink">Add link</button>
     </div>
     <p class="tagStudioForm__meta" id="catalogueWorkLinksMeta"></p>
     <div class="catalogueWorkDetails__results" id="catalogueWorkLinksResults"></div>

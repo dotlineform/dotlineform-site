@@ -23,6 +23,33 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-27 / UI-043
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: after files and links became work-owned metadata, the work editor still needed an inline edit interaction for these arrays.
+- triage: route-specific workflow completion using shared primitives
+- reasoning: files and links are now parent-record metadata, so add/edit/delete should mutate the current work draft rather than navigating to child-record pages. The current shared modal shell is sufficient for the form interaction, and the existing list primitive is the closest fit for the row display.
+- outcome: the work editor now renders downloads and links as editable lists. `Add`, `Edit`, and `Delete` open shared Studio modal/confirm shells, update the parent work draft, validate required fields, and save through the existing work save flow. Empty arrays are omitted by source normalization.
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `studio/catalogue/index.md`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/site-request-work-owned-files-links.md`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/user-guide.md`
+  - `_docs_src/site-change-log.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open a work with downloads and confirm add/edit/delete controls render in the work editor
+  - add and cancel modal edits and confirm the parent draft state is handled correctly
+  - save a file/link metadata change and confirm `works.json` is updated without standalone file/link writes
+- follow-up:
+  - review the visual design of the file/link list and modal composition after the workflow is functionally settled
+
 ## UI Rule Log 2026-04-27 / UI-042
 
 - status: adopted

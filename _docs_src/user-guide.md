@@ -32,9 +32,5 @@ Current guides:
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
-- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
-- [New Catalogue Work File](/docs/?scope=studio&doc=catalogue-new-work-file-editor)
-- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
-- [New Catalogue Work Link](/docs/?scope=studio&doc=catalogue-new-work-link-editor)
 
 When a practical workflow starts to feel buried inside a technical doc, prefer moving the how-to guidance here and leaving a short cross-reference behind in the technical reference.

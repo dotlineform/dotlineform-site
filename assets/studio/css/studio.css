@@ -2414,6 +2414,10 @@ button.tagStudioList__cellLink {
   align-items: center;
 }
 
+.catalogueWorkDetails__row--metadata {
+  grid-template-columns: minmax(6rem, 10rem) minmax(0, 1fr) auto;
+}
+
 .catalogueWorkDetails__link {
   color: inherit;
 }
@@ -2421,6 +2425,13 @@ button.tagStudioList__cellLink {
 .catalogueWorkDetails__title {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.catalogueWorkDetails__rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
 }
 
 .catalogueSeriesMembers {
@@ -2577,6 +2588,10 @@ button.tagStudioList__cellLink {
   }
 
   .catalogueWorkDetails__actions {
+    justify-content: flex-start;
+  }
+
+  .catalogueWorkDetails__rowActions {
     justify-content: flex-start;
   }
 
