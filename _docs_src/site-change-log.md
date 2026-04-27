@@ -8,6 +8,25 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added change request for a Catalogue Moment Editor
+
+**Status:** proposed
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Added a scoped implementation request for a first-class `/studio/catalogue-moment/` editor.
+
+**Reason:**
+Moments now have repo-local metadata, prose, and media generation sources, but there is still no normal Studio edit surface for reopening an existing moment and maintaining its metadata, prose readiness, media readiness, and scoped rebuild state.
+
+**Effect:**
+The request defines the target route, source contracts, editable fields, staged prose import behavior, scoped build/media behavior, non-goals, risks, and task-level acceptance checks. No editor route was implemented in this change.
+
+**Affected files/docs:**
+
+- [Catalogue Moment Editor Request](/docs/?scope=studio&doc=site-request-catalogue-moment-editor)
+
 ## [2026-04-27] Extended repo-local image srcset staging to moments
 
 **Status:** implemented

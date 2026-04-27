@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-85af7338a2b713525eadac12c7def7af",
-    "generated_at_utc": "2026-04-27T16:43:09Z",
-    "count": 138
+    "version": "blake2b-e2ea417d82bd9e9ea7124725625e6fb3",
+    "generated_at_utc": "2026-04-27T17:00:20Z",
+    "count": 139
   },
   "entries": [
     {
@@ -2770,6 +2770,32 @@
         "26"
       ],
       "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs site docs 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "site-request-catalogue-moment-editor",
+      "kind": "doc",
+      "title": "Catalogue Moment Editor Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-27 • Site Docs",
+      "search_terms": [
+        "site-request-catalogue-moment-editor",
+        "site",
+        "request",
+        "catalogue",
+        "moment",
+        "editor",
+        "catalogue moment editor request",
+        "site docs",
+        "docs",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request site docs docs 2026-04-27 2026 04 27"
     },
     {
       "id": "llm",
