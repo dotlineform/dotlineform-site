@@ -45,6 +45,7 @@ The first implementation covers:
 - show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
 - run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
 - save with an optional `Update site now` path through the local catalogue service
+- when `Update site now` runs, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
 - delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
 
@@ -54,9 +55,8 @@ It does not yet:
 - edit work files inline on the work page
 - edit work links inline on the work page
 - edit series records directly
-- update media files
+- upload primary images to remote media storage
 - paginate detail/member lists
-- generate media derivatives
 
 ## Bulk Mode
 
@@ -102,7 +102,8 @@ Current save/rebuild flow:
 9. the same preview now also carries work media readiness and staged work prose readiness
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
-12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
+12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
+13. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
 
 Bulk save flow:
 

@@ -33,6 +33,7 @@ The first implementation covers:
 - show a compact current-record image preview at the top of the summary rail
 - preview the scoped rebuild impact for the parent work
 - save with an optional `Update site now` path through the local catalogue service
+- when `Update site now` runs, stage the resolved detail source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/work_details/img/`
 - delete one work-detail source record in single-record mode
 
 The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
@@ -75,7 +76,7 @@ Current save/rebuild flow:
 7. the page reloads its focused detail lookup payload
 8. `POST /catalogue/build-preview` reports the parent-work rebuild impact and the current detail media readiness
 9. the current-record rail resolves a compact detail preview from the generated detail thumb assets when they are available
-10. `POST /catalogue/build-apply` remains available for explicit follow-up update actions
+10. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/work_details/img/`, and leaves primary derivatives staged for remote publishing
 
 Bulk save flow:
 

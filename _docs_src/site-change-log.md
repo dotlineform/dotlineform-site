@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Staged work image srcsets under repo-local var output
+
+**Status:** implemented
+
+**Area:** Catalogue pipeline / Studio
+
+**Summary:**
+Scoped work and work-detail rebuilds now copy source images into `var/catalogue/media/`, generate primary and thumbnail srcset derivatives there, and automatically copy generated thumbnails into the repo-owned `assets/` image folders.
+
+**Reason:**
+The legacy workflow already copied and renamed source images before srcset generation, but its staging area lived outside the repo and thumbnail promotion into `assets/` was manual. The Studio-driven workflow needs the same operational shape with local staging that is easy to inspect and with thumbnail publication handled by the build action.
+
+**Effect:**
+`Save + Rebuild` and explicit scoped build actions for works/details now prepare renamed source images, create local primary and thumbnail derivatives, and publish thumbnails to `assets/works/img/` or `assets/work_details/img/`. Primary derivatives remain staged in `var/catalogue/media/` for the existing remote media/R2 handoff; no remote upload is performed.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_json_build.py`
+- `.gitignore`
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
+
 ## [2026-04-27] Moved moment prose and metadata to repo-local catalogue sources
 
 **Status:** implemented

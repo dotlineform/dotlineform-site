@@ -36,6 +36,7 @@ var/docs/logs/
 # staging
 var/docs/import-staging/
 var/docs/catalogue/import-staging/
+var/catalogue/media/
 
 # Catalogue planner state
 var/build_catalogue_state.json

@@ -26,6 +26,8 @@ Preview the scoped build:
 ./scripts/catalogue_json_build.py --work-id 00001
 ```
 
+Preview output includes local media counts for the scoped work/detail media plan.
+
 Run the scoped build:
 
 ```bash
@@ -70,6 +72,9 @@ The helper:
 - resolves the current work record and its current series ids
 - unions any `--extra-series-ids`
 - lets the generator render optional work and series prose from `_docs_src_catalogue/works/<work_id>.md` and `_docs_src_catalogue/series/<series_id>.md`
+- stages in-scope work and work-detail source images under `var/catalogue/media/`
+- generates local primary and thumbnail srcset derivatives under `var/catalogue/media/`
+- copies generated thumbnail derivatives into `assets/works/img/` or `assets/work_details/img/`
 - passes the generator's narrow `--refresh-published` mode so selected published records can be recomputed without forcing unchanged writes
 - runs the internal `generate_work_pages.py` JSON engine with a narrow `--only` selection:
   - `work-pages`
@@ -97,9 +102,24 @@ Force behavior:
 The helper does not:
 
 - copy media for moment imports
-- build srcset derivatives
+- upload primary images to R2 or another remote media store
 - rebuild unrelated works
 - scan the moments folder for changes
+
+## Local Image Outputs
+
+Work and work-detail image generation uses the source-image metadata in canonical catalogue JSON:
+
+- works resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/projects/<project_folder>/<project_filename>`
+- work details resolve from the parent work project folder plus `<project_subfolder>/<project_filename>`
+- renamed source images are copied to `var/catalogue/media/works/make_srcset_images/<work_id>.<ext>` or `var/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`
+- primary derivatives are staged under `var/catalogue/media/<kind>/srcset_images/primary/`
+- thumbnail derivatives are staged under `var/catalogue/media/<kind>/srcset_images/thumb/`
+- thumbnail derivatives are also copied into the repo-owned public asset folders:
+  - `assets/works/img/`
+  - `assets/work_details/img/`
+
+The staged primary derivatives are the local handoff point for the remote media publishing step. The scoped helper does not upload or mutate remote R2 media.
 
 ## Purpose
 

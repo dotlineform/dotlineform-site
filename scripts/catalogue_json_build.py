@@ -41,6 +41,7 @@ PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 MOMENT_PROSE_STAGING_REL_DIR = CATALOGUE_PROSE_STAGING_REL_DIR / "moments"
+CATALOGUE_MEDIA_STAGING_REL_DIR = Path("var/catalogue/media")
 
 DEFAULT_ARTIFACTS = [
     "work-pages",
@@ -53,10 +54,13 @@ DEFAULT_ARTIFACTS = [
 DEFAULT_MOMENT_ARTIFACTS = ["moments"]
 THUMB_SIZES = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]})
 THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
+PRIMARY_WIDTHS = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["compatibility"]["generate_widths"]})
+PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
 ASSET_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
 ENCODER_CODEC = str(PIPELINE_CONFIG["encoding"]["codec"])
 WEBP_PRESET = str(PIPELINE_CONFIG["encoding"]["preset"])
 THUMB_Q = int(PIPELINE_CONFIG["encoding"]["thumb_quality"])
+PRIMARY_Q = int(PIPELINE_CONFIG["encoding"]["primary_quality"])
 COMPRESSION_LEVEL = int(PIPELINE_CONFIG["encoding"]["compression_level"])
 
 
@@ -172,12 +176,41 @@ def thumb_output_dir(repo_root: Path, kind: str) -> Path:
     raise ValueError(f"unsupported local media kind: {kind}")
 
 
+def media_staging_kind_dir(kind: str) -> str:
+    if kind == "work":
+        return "works"
+    if kind == "work_details":
+        return "work_details"
+    if kind == "moment":
+        return "moments"
+    raise ValueError(f"unsupported local media kind: {kind}")
+
+
+def media_staging_input_path(repo_root: Path, kind: str, item_id: str, source_path: Path | None) -> Path:
+    suffix = source_path.suffix if source_path is not None and source_path.suffix else ".jpg"
+    return repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / media_staging_kind_dir(kind) / "make_srcset_images" / f"{item_id}{suffix}"
+
+
+def media_srcset_root(repo_root: Path, kind: str) -> Path:
+    return repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / media_staging_kind_dir(kind) / "srcset_images"
+
+
+def staged_thumb_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
+    root = media_srcset_root(repo_root, kind) / "thumb"
+    return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
+
+
+def staged_primary_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
+    root = media_srcset_root(repo_root, kind) / "primary"
+    return [root / f"{item_id}-{PRIMARY_SUFFIX}-{width}.{ASSET_FORMAT}" for width in PRIMARY_WIDTHS]
+
+
 def thumb_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
     root = thumb_output_dir(repo_root, kind)
     return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
 
 
-def local_thumb_state(source_path: Path | None, output_paths: Sequence[Path]) -> str:
+def local_output_state(source_path: Path | None, output_paths: Sequence[Path]) -> str:
     if source_path is None or not source_path.exists():
         return "blocked"
     if not output_paths:
@@ -191,6 +224,24 @@ def local_thumb_state(source_path: Path | None, output_paths: Sequence[Path]) ->
     except OSError:
         return "pending"
     return "pending"
+
+
+def local_thumb_state(source_path: Path | None, output_paths: Sequence[Path]) -> str:
+    return local_output_state(source_path, output_paths)
+
+
+def local_media_state(source_path: Path | None, output_paths: Sequence[Path], staged_source_path: Path | None = None) -> str:
+    paths = list(output_paths)
+    if staged_source_path is not None:
+        paths = [staged_source_path, *paths]
+    return local_output_state(source_path, paths)
+
+
+def path_needs_refresh(path: Path, source_mtime: float) -> bool:
+    try:
+        return not path.exists() or path.stat().st_mtime < source_mtime
+    except OSError:
+        return True
 
 
 def build_media_readiness_item(
@@ -332,14 +383,23 @@ def build_local_media_task(
     blocked_reason: str = "",
     projects_base_dir: Path | None = None,
 ) -> Dict[str, Any]:
-    output_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
-    state = local_thumb_state(source_path, output_paths)
+    staged_source_path = media_staging_input_path(repo_root, kind, item_id, source_path)
+    staged_thumb_paths = staged_thumb_output_paths(repo_root, kind, item_id)
+    staged_primary_paths = staged_primary_output_paths(repo_root, kind, item_id)
+    asset_thumb_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
+    output_paths = [*staged_thumb_paths, *staged_primary_paths, *asset_thumb_paths]
+    state = local_media_state(source_path, output_paths, staged_source_path)
     task: Dict[str, Any] = {
         "kind": kind,
         "id": item_id,
         "source_path": display_source_path(source_path, projects_base_dir),
         "source_abs_path": str(source_path.resolve()) if source_path is not None else "",
+        "staged_source_path": repo_relative_path(staged_source_path, repo_root),
+        "staged_source_abs_path": str(staged_source_path.resolve()),
         "output_paths": [repo_relative_path(path, repo_root) for path in output_paths],
+        "staged_thumb_paths": [repo_relative_path(path, repo_root) for path in staged_thumb_paths],
+        "staged_primary_paths": [repo_relative_path(path, repo_root) for path in staged_primary_paths],
+        "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
         "status": state,
     }
     if availability_error:
@@ -351,27 +411,45 @@ def build_local_media_task(
         task["reason"] = media_blocked_reason_text(blocked_reason)
         return task
     if state == "pending":
-        pending_outputs: list[Dict[str, Any]] = []
         source_mtime = source_path.stat().st_mtime if source_path and source_path.exists() else 0.0
-        for size, path in zip(THUMB_SIZES, output_paths):
-            try:
-                if not path.exists() or path.stat().st_mtime < source_mtime:
-                    pending_outputs.append(
-                        {
-                            "size": size,
-                            "path": repo_relative_path(path, repo_root),
-                            "absolute_path": str(path.resolve()),
-                        }
-                    )
-            except OSError:
-                pending_outputs.append(
+        task["pending_staged_source"] = path_needs_refresh(staged_source_path, source_mtime)
+        pending_thumb_outputs: list[Dict[str, Any]] = []
+        pending_primary_outputs: list[Dict[str, Any]] = []
+        pending_asset_thumbs: list[Dict[str, Any]] = []
+        for size, path in zip(THUMB_SIZES, staged_thumb_paths):
+            if path_needs_refresh(path, source_mtime):
+                pending_thumb_outputs.append(
                     {
+                        "variant": "thumb",
                         "size": size,
                         "path": repo_relative_path(path, repo_root),
                         "absolute_path": str(path.resolve()),
                     }
                 )
-        task["pending_outputs"] = pending_outputs
+        for width, path in zip(PRIMARY_WIDTHS, staged_primary_paths):
+            if path_needs_refresh(path, source_mtime):
+                pending_primary_outputs.append(
+                    {
+                        "variant": "primary",
+                        "width": width,
+                        "path": repo_relative_path(path, repo_root),
+                        "absolute_path": str(path.resolve()),
+                    }
+                )
+        for size, path, staged_path in zip(THUMB_SIZES, asset_thumb_paths, staged_thumb_paths):
+            if path_needs_refresh(path, source_mtime):
+                pending_asset_thumbs.append(
+                    {
+                        "size": size,
+                        "path": repo_relative_path(path, repo_root),
+                        "absolute_path": str(path.resolve()),
+                        "staged_path": repo_relative_path(staged_path, repo_root),
+                        "staged_absolute_path": str(staged_path.resolve()),
+                    }
+                )
+        task["pending_thumb_outputs"] = pending_thumb_outputs
+        task["pending_primary_outputs"] = pending_primary_outputs
+        task["pending_asset_thumbs"] = pending_asset_thumbs
     return task
 
 
@@ -454,6 +532,34 @@ def run_ffmpeg_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
     return proc.returncode, (proc.stderr or proc.stdout or "").strip()
 
 
+def run_ffmpeg_primary(src: Path, width: int, dest: Path) -> tuple[int, str]:
+    cmd = [
+        "ffmpeg",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-nostdin",
+        "-y",
+        "-i",
+        str(src),
+        "-map_metadata",
+        "-1",
+        "-vf",
+        f"scale=w='min(iw,{width})':h=-2:flags=lanczos",
+        "-c:v",
+        ENCODER_CODEC,
+        "-preset",
+        WEBP_PRESET,
+        "-q:v",
+        str(PRIMARY_Q),
+        "-compression_level",
+        str(COMPRESSION_LEVEL),
+        str(dest),
+    ]
+    proc = subprocess.run(cmd, text=True, capture_output=True)
+    return proc.returncode, (proc.stderr or proc.stdout or "").strip()
+
+
 def execute_local_media_plan(
     repo_root: Path,
     *,
@@ -519,12 +625,20 @@ def execute_local_media_plan(
             blocked[kind].append(item_id)
             messages.append(f"{kind} {item_id}: {reason}")
             continue
-        pending_outputs = task.get("pending_outputs") if isinstance(task.get("pending_outputs"), list) else []
-        for output_spec in pending_outputs:
+        staged_source = Path(str(task.get("staged_source_abs_path") or "")).resolve()
+        if bool(task.get("pending_staged_source")):
+            staged_source.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(actual_source, staged_source)
+        if not staged_source.exists():
+            blocked[kind].append(item_id)
+            messages.append(f"{kind} {item_id}: staged source copy failed")
+            continue
+        pending_thumb_outputs = task.get("pending_thumb_outputs") if isinstance(task.get("pending_thumb_outputs"), list) else []
+        for output_spec in pending_thumb_outputs:
             output_path = Path(str(output_spec.get("absolute_path") or "")).resolve()
             size = int(output_spec.get("size") or THUMB_SIZES[0])
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            exit_code, stderr_tail = run_ffmpeg_thumb(actual_source, size, output_path)
+            exit_code, stderr_tail = run_ffmpeg_thumb(staged_source, size, output_path)
             if exit_code != 0:
                 return {
                     "label": "Generate Local Media Derivatives",
@@ -537,6 +651,42 @@ def execute_local_media_plan(
                     "exit_code": exit_code,
                     "stderr_tail": stderr_tail,
                 }
+        pending_primary_outputs = task.get("pending_primary_outputs") if isinstance(task.get("pending_primary_outputs"), list) else []
+        for output_spec in pending_primary_outputs:
+            output_path = Path(str(output_spec.get("absolute_path") or "")).resolve()
+            width = int(output_spec.get("width") or PRIMARY_WIDTHS[-1])
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            exit_code, stderr_tail = run_ffmpeg_primary(staged_source, width, output_path)
+            if exit_code != 0:
+                return {
+                    "label": "Generate Local Media Derivatives",
+                    "status": "failed",
+                    "summary": f"Local primary media generation failed for {kind} {item_id}.",
+                    "generated": generated,
+                    "planned": planned,
+                    "current": current,
+                    "blocked": blocked,
+                    "exit_code": exit_code,
+                    "stderr_tail": stderr_tail,
+                }
+        pending_asset_thumbs = task.get("pending_asset_thumbs") if isinstance(task.get("pending_asset_thumbs"), list) else []
+        for output_spec in pending_asset_thumbs:
+            staged_thumb = Path(str(output_spec.get("staged_absolute_path") or "")).resolve()
+            output_path = Path(str(output_spec.get("absolute_path") or "")).resolve()
+            if not staged_thumb.exists():
+                return {
+                    "label": "Generate Local Media Derivatives",
+                    "status": "failed",
+                    "summary": f"Local thumbnail staging failed for {kind} {item_id}.",
+                    "generated": generated,
+                    "planned": planned,
+                    "current": current,
+                    "blocked": blocked,
+                    "exit_code": 1,
+                    "stderr_tail": f"missing staged thumbnail: {repo_relative_path(staged_thumb, repo_root)}",
+                }
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(staged_thumb, output_path)
         generated[kind].append(item_id)
 
     summary_parts: list[str] = []
@@ -1432,6 +1582,15 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
         print(f"Series IDs: {', '.join(scope['series_ids']) if scope['series_ids'] else 'none'}")
     print("Published refresh: yes")
     print(f"Search rebuild: {'yes' if scope['rebuild_search'] else 'no'}")
+    media_plan = build_local_media_plan(repo_root, scope=scope)
+    media_counts = media_plan.get("counts", {})
+    print(
+        "Local media: "
+        f"pending {int(media_counts.get('pending', 0))}, "
+        f"current {int(media_counts.get('current', 0))}, "
+        f"blocked {int(media_counts.get('blocked', 0))}, "
+        f"unavailable {int(media_counts.get('unavailable', 0))}"
+    )
     print("Commands:")
     commands = (
         [

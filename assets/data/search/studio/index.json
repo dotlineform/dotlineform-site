@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-11db94208601d471355a1a9d5040da84",
-    "generated_at_utc": "2026-04-27T16:20:50Z",
+    "version": "blake2b-85af7338a2b713525eadac12c7def7af",
+    "generated_at_utc": "2026-04-27T16:43:09Z",
     "count": 138
   },
   "entries": [
@@ -1723,22 +1723,22 @@
       "kind": "doc",
       "title": "Srcset Builder",
       "href": "/docs/?scope=studio&doc=scripts-srcset-builder",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-27",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
+      "display_meta": "2026-04-27 • Scripts",
       "search_terms": [
         "scripts-srcset-builder",
         "scripts",
         "srcset",
         "builder",
         "srcset builder",
-        "2026-03-31",
+        "2026-04-27",
         "2026",
-        "03",
-        "31"
+        "04",
+        "27"
       ],
-      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder 2026-03-31 2026 03 31"
+      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder 2026-04-27 2026 04 27"
     },
     {
       "id": "new-pipeline-studio-implementation-plan",

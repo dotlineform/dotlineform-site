@@ -2,7 +2,7 @@
 doc_id: scripts-srcset-builder
 title: "Srcset Builder"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-04-27
 parent_id: scripts
 sort_order: 50
 ---
@@ -15,6 +15,8 @@ bash scripts/make_srcset_images.sh
 ```
 
 The shell entrypoint remains stable, but it delegates to the shared config-driven Python implementation.
+
+The current Studio scoped build path for work and work-detail images no longer requires this standalone entrypoint. It stages source images under `var/catalogue/media/`, generates primary and thumbnail derivatives there, and copies thumbnails into `assets/` automatically. This script remains available for explicit/manual srcset runs and deprecated pipeline compatibility.
 
 Works example:
 
