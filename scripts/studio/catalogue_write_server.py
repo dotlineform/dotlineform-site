@@ -1215,7 +1215,7 @@ def apply_work_bulk_series_operation(
     return next_series_ids
 
 
-def preview_work_delete(source_dir: Path, work_id: str) -> Dict[str, Any]:
+def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     source_records = records_from_json_source(source_dir)
     work_record = source_records.works.get(work_id)
     if not isinstance(work_record, dict):
@@ -1246,45 +1246,59 @@ def preview_work_delete(source_dir: Path, work_id: str) -> Dict[str, Any]:
         blockers.append(
             "Work is primary_work_id for series: " + ", ".join(primary_series_ids) + ". Reassign those series before deleting the work."
         )
+    affected = {
+        "works": [work_id],
+        "series": normalize_series_ids_value(work_record.get("series_ids")),
+        "work_details": dependent_detail_ids,
+        "work_files": dependent_file_ids,
+        "work_links": dependent_link_ids,
+    }
+    cleanup = catalogue_delete_preview_cleanup(repo_root, "work", work_id, affected) if repo_root is not None else {}
+    cleanup_count = sum(
+        int(cleanup.get(key, 0) or 0)
+        for key in ("repo_artifacts", "repo_media", "staged_media")
+    )
     return {
         "kind": "work",
         "id": work_id,
         "record": work_record,
         "blockers": blockers,
-        "affected": {
-            "works": [work_id],
-            "series": normalize_series_ids_value(work_record.get("series_ids")),
-            "work_details": dependent_detail_ids,
-            "work_files": dependent_file_ids,
-            "work_links": dependent_link_ids,
-        },
-        "summary": f"Delete work {work_id}, {len(dependent_detail_ids)} detail record(s), {len(dependent_file_ids)} file record(s), and {len(dependent_link_ids)} link record(s).",
+        "affected": affected,
+        "cleanup": cleanup,
+        "summary": f"Delete work {work_id}, {len(dependent_detail_ids)} detail record(s), {len(dependent_file_ids)} file record(s), {len(dependent_link_ids)} link record(s), and remove {cleanup_count} generated/media file(s).",
     }
 
 
-def preview_work_detail_delete(source_dir: Path, detail_uid: str) -> Dict[str, Any]:
+def preview_work_detail_delete(source_dir: Path, detail_uid: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     source_records = records_from_json_source(source_dir)
     detail_record = source_records.work_details.get(detail_uid)
     if not isinstance(detail_record, dict):
         raise ValueError(f"detail_uid not found: {detail_uid}")
     work_id = str(detail_record.get("work_id") or "")
+    affected = {
+        "works": [work_id] if work_id else [],
+        "series": [],
+        "work_details": [detail_uid],
+        "work_files": [],
+        "work_links": [],
+    }
+    cleanup = catalogue_delete_preview_cleanup(repo_root, "work_detail", detail_uid, affected) if repo_root is not None else {}
+    cleanup_count = sum(
+        int(cleanup.get(key, 0) or 0)
+        for key in ("repo_artifacts", "repo_media", "staged_media")
+    )
     return {
         "kind": "work_detail",
         "id": detail_uid,
         "record": detail_record,
         "blockers": [],
-        "affected": {
-            "works": [work_id] if work_id else [],
-            "series": [],
-            "work_details": [detail_uid],
-            "work_files": [],
-            "work_links": [],
-        },
-        "summary": f"Delete work detail {detail_uid}.",
+        "affected": affected,
+        "cleanup": cleanup,
+        "summary": f"Delete work detail {detail_uid} and remove {cleanup_count} generated/media file(s).",
     }
 
 
-def preview_series_delete(source_dir: Path, series_id: str) -> Dict[str, Any]:
+def preview_series_delete(source_dir: Path, series_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     source_records = records_from_json_source(source_dir)
     series_record = source_records.series.get(series_id)
     if not isinstance(series_record, dict):
@@ -1294,19 +1308,26 @@ def preview_series_delete(source_dir: Path, series_id: str) -> Dict[str, Any]:
         for work_id, work_record in source_records.works.items()
         if series_id in normalize_series_ids_value(work_record.get("series_ids"))
     )
+    affected = {
+        "works": member_work_ids,
+        "series": [series_id],
+        "work_details": [],
+        "work_files": [],
+        "work_links": [],
+    }
+    cleanup = catalogue_delete_preview_cleanup(repo_root, "series", series_id, affected) if repo_root is not None else {}
+    cleanup_count = sum(
+        int(cleanup.get(key, 0) or 0)
+        for key in ("repo_artifacts", "repo_media", "staged_media")
+    )
     return {
         "kind": "series",
         "id": series_id,
         "record": series_record,
         "blockers": [],
-        "affected": {
-            "works": member_work_ids,
-            "series": [series_id],
-            "work_details": [],
-            "work_files": [],
-            "work_links": [],
-        },
-        "summary": f"Delete series {series_id} and remove it from {len(member_work_ids)} member work record(s).",
+        "affected": affected,
+        "cleanup": cleanup,
+        "summary": f"Delete series {series_id}, remove it from {len(member_work_ids)} member work record(s), and remove {cleanup_count} generated/media file(s).",
     }
 
 
@@ -1418,13 +1439,13 @@ def validate_moment_delete_records(source_dir: Path, moment_id: str) -> list[str
 
 def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     if kind == "work":
-        preview = preview_work_delete(source_dir, record_id)
+        preview = preview_work_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_work_delete_records(source_dir, record_id)
     elif kind == "work_detail":
-        preview = preview_work_detail_delete(source_dir, record_id)
+        preview = preview_work_detail_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_work_detail_delete_records(source_dir, record_id)
     elif kind == "series":
-        preview = preview_series_delete(source_dir, record_id)
+        preview = preview_series_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
     else:
         preview = preview_moment_delete(source_dir, record_id, repo_root=repo_root)
@@ -1685,6 +1706,111 @@ def finalize_moments_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return payload
 
 
+def sorted_object_map(value: Mapping[str, Any]) -> Dict[str, Any]:
+    return {str(key): value[key] for key in sorted(value.keys(), key=lambda item: str(item))}
+
+
+def finalize_object_map_payload(payload: Dict[str, Any], map_key: str, default_schema: str) -> Dict[str, Any]:
+    records_map = payload.get(map_key)
+    if not isinstance(records_map, dict):
+        raise ValueError(f"payload must include a {map_key} object")
+    sorted_map = sorted_object_map(records_map)
+    schema = str((payload.get("header") or {}).get("schema") or default_schema)
+    payload["header"] = {
+        "schema": schema,
+        "version": compute_payload_version({"schema": schema, map_key: sorted_map}),
+        "generated_at_utc": utc_now(),
+        "count": len(sorted_map),
+    }
+    payload[map_key] = sorted_map
+    return payload
+
+
+def finalize_works_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    return finalize_object_map_payload(payload, "works", "works_index_v4")
+
+
+def finalize_series_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    return finalize_object_map_payload(payload, "series", "series_index_v2")
+
+
+def finalize_work_storage_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    return finalize_object_map_payload(payload, "works", "work_storage_index_v1")
+
+
+def work_record_detail_count(payload: Mapping[str, Any]) -> int:
+    count = 0
+    sections = payload.get("sections")
+    if not isinstance(sections, list):
+        return count
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        details = section.get("details")
+        if isinstance(details, list):
+            count += len(details)
+    return count
+
+
+def finalize_work_record_payload(payload: Dict[str, Any], work_id: str) -> Dict[str, Any]:
+    work_record = payload.get("work")
+    if not isinstance(work_record, dict):
+        raise ValueError("work record payload must include a work object")
+    sections = payload.get("sections")
+    if not isinstance(sections, list):
+        sections = []
+        payload["sections"] = sections
+    content_html = payload.get("content_html")
+    payload["header"] = {
+        "schema": str((payload.get("header") or {}).get("schema") or "work_record_v3"),
+        "version": compute_payload_version(
+            {
+                "work": work_record,
+                "sections": sections,
+                "content_html": content_html,
+            }
+        ),
+        "generated_at_utc": utc_now(),
+        "work_id": work_id,
+        "count": work_record_detail_count(payload),
+    }
+    return payload
+
+
+def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> Dict[str, Any]:
+    series_record = payload.get("series")
+    if not isinstance(series_record, dict):
+        raise ValueError("series record payload must include a series object")
+    works = series_record.get("works")
+    payload["header"] = {
+        "schema": str((payload.get("header") or {}).get("schema") or "series_record_v1"),
+        "version": compute_payload_version(
+            {
+                "series": series_record,
+                "content_html": payload.get("content_html"),
+            }
+        ),
+        "generated_at_utc": utc_now(),
+        "series_id": series_id,
+        "count": len(works) if isinstance(works, list) else 0,
+    }
+    return payload
+
+
+def finalize_recent_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("recent_index.json must include an entries array")
+    schema = str((payload.get("header") or {}).get("schema") or "recent_index_v1")
+    payload["header"] = {
+        "schema": schema,
+        "version": compute_payload_version({"schema": schema, "entries": entries}),
+        "generated_at_utc": utc_now(),
+        "count": len(entries),
+    }
+    return payload
+
+
 def collect_matching_paths(root: Path, patterns: Iterable[str]) -> list[Path]:
     collected: list[Path] = []
     seen: set[Path] = set()
@@ -1746,12 +1872,152 @@ def collect_moment_delete_cleanup(repo_root: Path, moment_id: str) -> Dict[str, 
     }
 
 
+def collect_work_repo_artifacts(repo_root: Path, work_id: str) -> list[Path]:
+    return unique_existing_paths(
+        [
+            repo_root / "_works" / f"{work_id}.md",
+            repo_root / "assets" / "works" / "index" / f"{work_id}.json",
+        ]
+    )
+
+
+def collect_work_repo_media_artifacts(repo_root: Path, work_id: str) -> list[Path]:
+    return collect_matching_paths(repo_root / "assets" / "works" / "img", [f"{work_id}-thumb-*.*"])
+
+
+def collect_work_staged_media_artifacts(repo_root: Path, work_id: str) -> list[Path]:
+    staging_root = repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "works"
+    paths: list[Path] = []
+    paths.extend(collect_matching_paths(staging_root / "make_srcset_images", [f"{work_id}.*"]))
+    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "primary", [f"{work_id}-primary-*.*"]))
+    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "thumb", [f"{work_id}-thumb-*.*"]))
+    return paths
+
+
+def collect_detail_repo_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
+    return unique_existing_paths([repo_root / "_work_details" / f"{detail_uid}.md"])
+
+
+def collect_detail_repo_media_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
+    return collect_matching_paths(repo_root / "assets" / "work_details" / "img", [f"{detail_uid}-thumb-*.*"])
+
+
+def collect_detail_staged_media_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
+    staging_root = repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "work_details"
+    paths: list[Path] = []
+    paths.extend(collect_matching_paths(staging_root / "make_srcset_images", [f"{detail_uid}.*"]))
+    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "primary", [f"{detail_uid}-primary-*.*"]))
+    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "thumb", [f"{detail_uid}-thumb-*.*"]))
+    return paths
+
+
+def collect_series_repo_artifacts(repo_root: Path, series_id: str) -> list[Path]:
+    return unique_existing_paths(
+        [
+            repo_root / "_series" / f"{series_id}.md",
+            repo_root / "assets" / "series" / "index" / f"{series_id}.json",
+        ]
+    )
+
+
 def path_is_under(path: Path, root: Path) -> bool:
     try:
         path.resolve().relative_to(root.resolve())
         return True
     except ValueError:
         return False
+
+
+def existing_repo_paths(repo_root: Path, rel_paths: Iterable[Path]) -> list[Path]:
+    return unique_existing_paths(repo_root / rel_path for rel_path in rel_paths)
+
+
+def rel_path_for_preview(repo_root: Path, path: Path) -> str:
+    return str(path.relative_to(repo_root)) if path_is_under(path, repo_root) else path.name
+
+
+def collect_catalogue_delete_cleanup(
+    repo_root: Path,
+    kind: str,
+    record_id: str,
+    affected: Mapping[str, Any],
+) -> Dict[str, Any]:
+    repo_artifacts: list[Path] = []
+    repo_media: list[Path] = []
+    staged_media: list[Path] = []
+    public_json_updates: list[Path] = []
+    studio_json_updates: list[Path] = []
+    rebuild_search = False
+
+    work_ids = [slug_id(value) for value in affected.get("works") or [] if str(value or "").strip()]
+    detail_uids = [normalize_detail_uid_value(value) for value in affected.get("work_details") or [] if str(value or "").strip()]
+    series_ids = [normalize_series_id(value) for value in affected.get("series") or [] if str(value or "").strip()]
+
+    if kind == "work":
+        repo_artifacts.extend(collect_work_repo_artifacts(repo_root, record_id))
+        repo_media.extend(collect_work_repo_media_artifacts(repo_root, record_id))
+        staged_media.extend(collect_work_staged_media_artifacts(repo_root, record_id))
+        for detail_uid in detail_uids:
+            repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, detail_uid))
+            repo_media.extend(collect_detail_repo_media_artifacts(repo_root, detail_uid))
+            staged_media.extend(collect_detail_staged_media_artifacts(repo_root, detail_uid))
+        public_json_updates.extend(
+            existing_repo_paths(
+                repo_root,
+                [
+                    Path("assets/data/works_index.json"),
+                    Path("assets/data/series_index.json"),
+                    Path("assets/data/recent_index.json"),
+                ],
+            )
+        )
+        public_json_updates.extend(
+            existing_repo_paths(repo_root, [Path("assets/series/index") / f"{series_id}.json" for series_id in series_ids])
+        )
+        studio_json_updates.extend(
+            existing_repo_paths(
+                repo_root,
+                [
+                    Path("assets/studio/data/work_storage_index.json"),
+                    Path("assets/studio/data/tag_assignments.json"),
+                ],
+            )
+        )
+        rebuild_search = True
+    elif kind == "work_detail":
+        repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, record_id))
+        repo_media.extend(collect_detail_repo_media_artifacts(repo_root, record_id))
+        staged_media.extend(collect_detail_staged_media_artifacts(repo_root, record_id))
+        public_json_updates.extend(existing_repo_paths(repo_root, [Path("assets/works/index") / f"{work_id}.json" for work_id in work_ids]))
+    elif kind == "series":
+        repo_artifacts.extend(collect_series_repo_artifacts(repo_root, record_id))
+        public_json_updates.extend(
+            existing_repo_paths(
+                repo_root,
+                [
+                    Path("assets/data/series_index.json"),
+                    Path("assets/data/works_index.json"),
+                    Path("assets/data/recent_index.json"),
+                ],
+            )
+        )
+        public_json_updates.extend(
+            existing_repo_paths(repo_root, [Path("assets/works/index") / f"{work_id}.json" for work_id in work_ids])
+        )
+        studio_json_updates.extend(existing_repo_paths(repo_root, [Path("assets/studio/data/tag_assignments.json")]))
+        rebuild_search = True
+    else:
+        raise ValueError(f"unsupported catalogue cleanup kind: {kind}")
+
+    return {
+        "repo_artifacts": unique_existing_paths(repo_artifacts),
+        "repo_media": unique_existing_paths(repo_media),
+        "staged_media": unique_existing_paths(staged_media),
+        "public_json_updates": unique_existing_paths(public_json_updates),
+        "studio_json_updates": unique_existing_paths(studio_json_updates),
+        "delete_paths": unique_existing_paths([*repo_artifacts, *repo_media, *staged_media]),
+        "catalogue_search": rebuild_search,
+    }
 
 
 def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
@@ -1765,6 +2031,329 @@ def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, An
         path = Path(raw_path)
         if not any(path_is_under(path, root) for root in roots):
             raise ValueError(f"delete target is outside allowlisted moment cleanup roots: {path.name}")
+
+
+def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
+    delete_roots = [
+        repo_root / "_works",
+        repo_root / "_work_details",
+        repo_root / "_series",
+        repo_root / "assets" / "works" / "index",
+        repo_root / "assets" / "series" / "index",
+        repo_root / "assets" / "works" / "img",
+        repo_root / "assets" / "work_details" / "img",
+        repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "works",
+        repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "work_details",
+    ]
+    update_roots = [
+        repo_root / "assets" / "works" / "index",
+        repo_root / "assets" / "series" / "index",
+    ]
+    update_paths = {
+        (repo_root / "assets" / "data" / "works_index.json").resolve(),
+        (repo_root / "assets" / "data" / "series_index.json").resolve(),
+        (repo_root / "assets" / "data" / "recent_index.json").resolve(),
+        (repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
+        (repo_root / "assets" / "studio" / "data" / "tag_assignments.json").resolve(),
+    }
+    for raw_path in cleanup.get("delete_paths") or []:
+        path = Path(raw_path)
+        if not any(path_is_under(path, root) for root in delete_roots):
+            raise ValueError(f"delete target is outside allowlisted catalogue cleanup roots: {path.name}")
+    for key in ("public_json_updates", "studio_json_updates"):
+        for raw_path in cleanup.get(key) or []:
+            path = Path(raw_path)
+            if path.resolve() in update_paths:
+                continue
+            if not any(path_is_under(path, root) for root in update_roots):
+                raise ValueError(f"update target is outside allowlisted catalogue cleanup roots: {path.name}")
+
+
+def catalogue_delete_preview_cleanup(
+    repo_root: Path,
+    kind: str,
+    record_id: str,
+    affected: Mapping[str, Any],
+) -> Dict[str, Any]:
+    cleanup = collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+    return {
+        "repo_artifacts": len(cleanup["repo_artifacts"]),
+        "repo_media": len(cleanup["repo_media"]),
+        "staged_media": len(cleanup["staged_media"]),
+        "public_json_updates": [rel_path_for_preview(repo_root, path) for path in cleanup["public_json_updates"]],
+        "studio_json_updates": [rel_path_for_preview(repo_root, path) for path in cleanup["studio_json_updates"]],
+        "delete_paths": [rel_path_for_preview(repo_root, path) for path in cleanup["delete_paths"]],
+        "catalogue_search": "assets/data/search/catalogue/index.json" if cleanup["catalogue_search"] else "",
+    }
+
+
+def remove_detail_from_work_record_payload(payload: Dict[str, Any], detail_uid: str) -> bool:
+    sections = payload.get("sections")
+    if not isinstance(sections, list):
+        return False
+    changed = False
+    next_sections: list[Dict[str, Any]] = []
+    for section in sections:
+        if not isinstance(section, dict):
+            next_sections.append(section)
+            continue
+        details = section.get("details")
+        if not isinstance(details, list):
+            next_sections.append(section)
+            continue
+        next_details = [
+            detail
+            for detail in details
+            if not (isinstance(detail, dict) and str(detail.get("detail_uid") or "") == detail_uid)
+        ]
+        if len(next_details) != len(details):
+            changed = True
+        if next_details:
+            next_section = dict(section)
+            next_section["details"] = next_details
+            next_sections.append(next_section)
+    if changed:
+        payload["sections"] = next_sections
+    return changed
+
+
+def remove_work_from_series_record_payload(payload: Dict[str, Any], series_id: str, work_id: str) -> bool:
+    series_record = payload.get("series")
+    if not isinstance(series_record, dict):
+        return False
+    works = series_record.get("works")
+    if not isinstance(works, list):
+        return False
+    next_works = [str(value) for value in works if str(value) != work_id]
+    if next_works == works:
+        return False
+    series_record["works"] = next_works
+    return True
+
+
+def remove_series_from_work_record_payload(payload: Dict[str, Any], work_id: str, series_id: str) -> bool:
+    work_record = payload.get("work")
+    if not isinstance(work_record, dict):
+        return False
+    series_ids = normalize_series_ids_value(work_record.get("series_ids"))
+    if series_id not in series_ids:
+        return False
+    work_record["series_ids"] = [value for value in series_ids if value != series_id]
+    return True
+
+
+def update_recent_entries_for_work_delete(payload: Dict[str, Any], work_id: str, series_index_payload: Mapping[str, Any]) -> bool:
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("recent_index.json must include an entries array")
+    series_map = series_index_payload.get("series")
+    if not isinstance(series_map, dict):
+        series_map = {}
+    changed = False
+    next_entries: list[Dict[str, Any]] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            next_entries.append(entry)
+            continue
+        kind = str(entry.get("kind") or "")
+        target_id = str(entry.get("target_id") or "")
+        if kind == "work" and target_id == work_id:
+            changed = True
+            continue
+        if kind == "series":
+            series_record = series_map.get(target_id)
+            if isinstance(series_record, dict):
+                works = [str(value) for value in series_record.get("works") or [] if str(value)]
+                next_entry = dict(entry)
+                next_entry["caption"] = f"{len(works)} work" if len(works) == 1 else f"{len(works)} works"
+                if str(next_entry.get("thumb_id") or "") == work_id:
+                    next_entry["thumb_id"] = str(series_record.get("primary_work_id") or (works[0] if works else ""))
+                if next_entry != entry:
+                    changed = True
+                next_entries.append(next_entry)
+                continue
+        next_entries.append(entry)
+    if changed:
+        payload["entries"] = next_entries
+    return changed
+
+
+def update_recent_entries_for_series_delete(payload: Dict[str, Any], series_id: str) -> bool:
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("recent_index.json must include an entries array")
+    next_entries = [
+        entry
+        for entry in entries
+        if not (isinstance(entry, dict) and str(entry.get("kind") or "") == "series" and str(entry.get("target_id") or "") == series_id)
+    ]
+    if len(next_entries) == len(entries):
+        return False
+    payload["entries"] = next_entries
+    return True
+
+
+def remove_work_overrides_from_tag_assignments(payload: Dict[str, Any], work_id: str) -> bool:
+    series_map = payload.get("series")
+    if not isinstance(series_map, dict):
+        raise ValueError("tag_assignments.json must include a series object")
+    changed = False
+    now_utc = utc_now()
+    for row in series_map.values():
+        if not isinstance(row, dict):
+            continue
+        works = row.get("works")
+        if not isinstance(works, dict) or work_id not in works:
+            continue
+        del works[work_id]
+        row["updated_at_utc"] = now_utc
+        changed = True
+    if changed:
+        payload["updated_at_utc"] = now_utc
+    if "tag_assignments_version" not in payload:
+        payload["tag_assignments_version"] = "tag_assignments_v1"
+    return changed
+
+
+def remove_series_from_tag_assignments(payload: Dict[str, Any], series_id: str) -> bool:
+    series_map = payload.get("series")
+    if not isinstance(series_map, dict):
+        raise ValueError("tag_assignments.json must include a series object")
+    if series_id not in series_map:
+        return False
+    del series_map[series_id]
+    payload["updated_at_utc"] = utc_now()
+    if "tag_assignments_version" not in payload:
+        payload["tag_assignments_version"] = "tag_assignments_v1"
+    return True
+
+
+def build_catalogue_delete_generated_payloads(
+    repo_root: Path,
+    kind: str,
+    record_id: str,
+    affected: Mapping[str, Any],
+) -> Dict[Path, Dict[str, Any]]:
+    payloads: Dict[Path, Dict[str, Any]] = {}
+
+    def load_existing(rel_path: Path) -> tuple[Path, Dict[str, Any]] | None:
+        path = (repo_root / rel_path).resolve()
+        if not path.exists():
+            return None
+        return path, load_json_file(path)
+
+    if kind == "work":
+        works_index = load_existing(Path("assets/data/works_index.json"))
+        if works_index is not None:
+            path, payload = works_index
+            works = payload.get("works")
+            if isinstance(works, dict) and record_id in works:
+                del works[record_id]
+                payloads[path] = finalize_works_index_payload(payload)
+
+        work_storage = load_existing(Path("assets/studio/data/work_storage_index.json"))
+        if work_storage is not None:
+            path, payload = work_storage
+            works = payload.get("works")
+            if isinstance(works, dict) and record_id in works:
+                del works[record_id]
+                payloads[path] = finalize_work_storage_index_payload(payload)
+
+        series_index_payload: Dict[str, Any] | None = None
+        series_index = load_existing(Path("assets/data/series_index.json"))
+        if series_index is not None:
+            path, payload = series_index
+            series_map = payload.get("series")
+            changed = False
+            if isinstance(series_map, dict):
+                for series_id in affected.get("series") or []:
+                    series_record = series_map.get(str(series_id))
+                    if not isinstance(series_record, dict):
+                        continue
+                    works = [str(value) for value in series_record.get("works") or [] if str(value) != record_id]
+                    if works != series_record.get("works"):
+                        series_record["works"] = works
+                        changed = True
+            if changed:
+                payloads[path] = finalize_series_index_payload(payload)
+            series_index_payload = payload
+
+        for series_id in affected.get("series") or []:
+            series_payload = load_existing(Path("assets/series/index") / f"{series_id}.json")
+            if series_payload is None:
+                continue
+            path, payload = series_payload
+            if remove_work_from_series_record_payload(payload, str(series_id), record_id):
+                payloads[path] = finalize_series_record_payload(payload, str(series_id))
+
+        recent_index = load_existing(Path("assets/data/recent_index.json"))
+        if recent_index is not None:
+            path, payload = recent_index
+            if update_recent_entries_for_work_delete(payload, record_id, series_index_payload or {}):
+                payloads[path] = finalize_recent_index_payload(payload)
+
+        tag_assignments = load_existing(Path("assets/studio/data/tag_assignments.json"))
+        if tag_assignments is not None:
+            path, payload = tag_assignments
+            if remove_work_overrides_from_tag_assignments(payload, record_id):
+                payloads[path] = payload
+
+    elif kind == "work_detail":
+        for work_id in affected.get("works") or []:
+            work_payload = load_existing(Path("assets/works/index") / f"{work_id}.json")
+            if work_payload is None:
+                continue
+            path, payload = work_payload
+            if remove_detail_from_work_record_payload(payload, record_id):
+                payloads[path] = finalize_work_record_payload(payload, str(work_id))
+
+    elif kind == "series":
+        series_index = load_existing(Path("assets/data/series_index.json"))
+        if series_index is not None:
+            path, payload = series_index
+            series_map = payload.get("series")
+            if isinstance(series_map, dict) and record_id in series_map:
+                del series_map[record_id]
+                payloads[path] = finalize_series_index_payload(payload)
+
+        works_index = load_existing(Path("assets/data/works_index.json"))
+        if works_index is not None:
+            path, payload = works_index
+            works = payload.get("works")
+            changed = False
+            if isinstance(works, dict):
+                for work_id in affected.get("works") or []:
+                    work_record = works.get(str(work_id))
+                    if not isinstance(work_record, dict):
+                        continue
+                    series_ids = normalize_series_ids_value(work_record.get("series_ids"))
+                    if record_id in series_ids:
+                        work_record["series_ids"] = [value for value in series_ids if value != record_id]
+                        changed = True
+            if changed:
+                payloads[path] = finalize_works_index_payload(payload)
+
+        for work_id in affected.get("works") or []:
+            work_payload = load_existing(Path("assets/works/index") / f"{work_id}.json")
+            if work_payload is None:
+                continue
+            path, payload = work_payload
+            if remove_series_from_work_record_payload(payload, str(work_id), record_id):
+                payloads[path] = finalize_work_record_payload(payload, str(work_id))
+
+        recent_index = load_existing(Path("assets/data/recent_index.json"))
+        if recent_index is not None:
+            path, payload = recent_index
+            if update_recent_entries_for_series_delete(payload, record_id):
+                payloads[path] = finalize_recent_index_payload(payload)
+
+        tag_assignments = load_existing(Path("assets/studio/data/tag_assignments.json"))
+        if tag_assignments is not None:
+            path, payload = tag_assignments
+            if remove_series_from_tag_assignments(payload, record_id):
+                payloads[path] = payload
+
+    return payloads
 
 
 def moment_delete_preview_cleanup(repo_root: Path, moment_id: str) -> Dict[str, Any]:
@@ -2539,6 +3128,78 @@ class Handler(BaseHTTPRequestHandler):
             allowed,
         )
 
+    def _ensure_delete_payload_scope(self, payloads: Mapping[Path, Dict[str, Any]]) -> None:
+        generated_roots = [
+            self.server.repo_root / "assets" / "works" / "index",
+            self.server.repo_root / "assets" / "series" / "index",
+        ]
+        generated_paths = {
+            (self.server.repo_root / "assets" / "data" / "works_index.json").resolve(),
+            (self.server.repo_root / "assets" / "data" / "series_index.json").resolve(),
+            (self.server.repo_root / "assets" / "data" / "recent_index.json").resolve(),
+            (self.server.repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
+            (self.server.repo_root / "assets" / "studio" / "data" / "tag_assignments.json").resolve(),
+        }
+        for target_path in payloads:
+            resolved = target_path.resolve()
+            if resolved in self.server.allowed_write_paths:
+                continue
+            if resolved in generated_paths:
+                continue
+            if any(path_is_under(resolved, root) for root in generated_roots):
+                continue
+            raise ValueError("write target not allowlisted")
+
+    def _apply_catalogue_delete_transaction(
+        self,
+        *,
+        backup_label: str,
+        payloads: Dict[Path, Dict[str, Any]],
+        cleanup: Mapping[str, Any],
+    ) -> Dict[str, Any]:
+        ensure_catalogue_delete_cleanup_scope(self.server.repo_root, cleanup)
+        self._ensure_delete_payload_scope(payloads)
+        search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+        rebuild_search = bool(cleanup.get("catalogue_search"))
+        transaction_backup_root: Path | None = None
+        deleted_file_count = 0
+        search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
+        transaction_backups: Dict[Path, Path] = {}
+        backup_paths: list[Path] = []
+
+        if not self.server.dry_run:
+            transaction_backup_root = self.server.backups_dir / f"{backup_label}-{backup_stamp_now()}"
+            touched_paths = unique_paths(
+                [
+                    *payloads.keys(),
+                    *(cleanup.get("delete_paths") or []),
+                    *([search_index_path] if rebuild_search else []),
+                ]
+            )
+            transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+            try:
+                backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+                backup_paths.extend(transaction_backups.values())
+                deleted_file_count = delete_existing_files(cleanup.get("delete_paths") or [])
+                if rebuild_search:
+                    search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
+                self._refresh_lookup_payloads()
+            except Exception:
+                restore_transaction_paths(touched_paths, transaction_backups)
+                raise
+
+        return {
+            "deleted_files": deleted_file_count,
+            "would_delete_files": len(cleanup.get("delete_paths") or []),
+            "updated_json_files": 0 if self.server.dry_run else len(payloads),
+            "would_update_json_files": len(payloads),
+            "catalogue_search_rebuilt": bool(not self.server.dry_run and rebuild_search and search_rebuild.get("ok")),
+            "would_rebuild_catalogue_search": rebuild_search,
+            "search_exit_code": search_rebuild.get("exit_code"),
+            "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
+            "backup_paths": backup_paths,
+        }
+
     def _handle_delete_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_delete_request(body)
@@ -2596,26 +3257,30 @@ class Handler(BaseHTTPRequestHandler):
                 for link_uid, link_record in links_payload["work_links"].items()
                 if str(link_record.get("work_id") or "") != record_id
             }
-            if not self.server.dry_run:
-                payloads = {
-                    self.server.works_path.resolve(): payload_for_map("works", updated_works),
-                    self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
-                    self.server.work_files_path.resolve(): payload_for_map("work_files", updated_files),
-                    self.server.work_links_path.resolve(): payload_for_map("work_links", updated_links),
-                }
-                for target_path in payloads:
-                    if target_path not in self.server.allowed_write_paths:
-                        raise ValueError("write target not allowlisted")
-                backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+            cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
+            generated_payloads = build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
+            payloads = {
+                self.server.works_path.resolve(): payload_for_map("works", updated_works),
+                self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
+                self.server.work_files_path.resolve(): payload_for_map("work_files", updated_files),
+                self.server.work_links_path.resolve(): payload_for_map("work_links", updated_links),
+                **generated_payloads,
+            }
+            cleanup_result = self._apply_catalogue_delete_transaction(
+                backup_label="catalogue-delete-work",
+                payloads=payloads,
+                cleanup=cleanup,
+            )
+            backup_paths = cleanup_result.pop("backup_paths")
             response_payload = {
                 "ok": True,
                 "kind": kind,
                 "id": record_id,
                 "deleted": True,
                 "preview": preview,
+                "cleanup": cleanup_result,
             }
             if not self.server.dry_run:
-                self._refresh_lookup_payloads()
                 now_utc = utc_now()
                 self.server.append_activity(
                     {
@@ -2624,7 +3289,7 @@ class Handler(BaseHTTPRequestHandler):
                         "kind": "source_save",
                         "operation": "work.delete",
                         "status": "completed",
-                        "summary": f"Deleted work {record_id} and dependent source records.",
+                        "summary": f"Deleted work {record_id}, dependent source records, generated artifacts, local media, and catalogue search record.",
                         "affected": preview["affected"],
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }
@@ -2644,20 +3309,27 @@ class Handler(BaseHTTPRequestHandler):
                 return
             updated_details = dict(details_payload["work_details"])
             del updated_details[record_id]
-            if not self.server.dry_run:
-                target_path = self.server.work_details_path.resolve()
-                if target_path not in self.server.allowed_write_paths:
-                    raise ValueError("write target not allowlisted")
-                backup_paths = atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+            cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
+            generated_payloads = build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
+            payloads = {
+                self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
+                **generated_payloads,
+            }
+            cleanup_result = self._apply_catalogue_delete_transaction(
+                backup_label="catalogue-delete-work-detail",
+                payloads=payloads,
+                cleanup=cleanup,
+            )
+            backup_paths = cleanup_result.pop("backup_paths")
             response_payload = {
                 "ok": True,
                 "kind": kind,
                 "id": record_id,
                 "deleted": True,
                 "preview": preview,
+                "cleanup": cleanup_result,
             }
             if not self.server.dry_run:
-                self._refresh_lookup_payloads()
                 now_utc = utc_now()
                 self.server.append_activity(
                     {
@@ -2666,7 +3338,7 @@ class Handler(BaseHTTPRequestHandler):
                         "kind": "source_save",
                         "operation": "work-detail.delete",
                         "status": "completed",
-                        "summary": f"Deleted work detail {record_id}.",
+                        "summary": f"Deleted work detail {record_id}, generated artifacts, and local media.",
                         "affected": preview["affected"],
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }
@@ -2694,24 +3366,28 @@ class Handler(BaseHTTPRequestHandler):
                     continue
                 next_series_ids = [value for value in normalize_series_ids_value(work_record.get("series_ids")) if value != record_id]
                 updated_works[work_id] = normalize_work_update(work_id, work_record, {"series_ids": next_series_ids})
-            if not self.server.dry_run:
-                payloads = {
-                    self.server.series_path.resolve(): payload_for_map("series", updated_series),
-                    self.server.works_path.resolve(): payload_for_map("works", updated_works),
-                }
-                for target_path in payloads:
-                    if target_path not in self.server.allowed_write_paths:
-                        raise ValueError("write target not allowlisted")
-                backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+            cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
+            generated_payloads = build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
+            payloads = {
+                self.server.series_path.resolve(): payload_for_map("series", updated_series),
+                self.server.works_path.resolve(): payload_for_map("works", updated_works),
+                **generated_payloads,
+            }
+            cleanup_result = self._apply_catalogue_delete_transaction(
+                backup_label="catalogue-delete-series",
+                payloads=payloads,
+                cleanup=cleanup,
+            )
+            backup_paths = cleanup_result.pop("backup_paths")
             response_payload = {
                 "ok": True,
                 "kind": kind,
                 "id": record_id,
                 "deleted": True,
                 "preview": preview,
+                "cleanup": cleanup_result,
             }
             if not self.server.dry_run:
-                self._refresh_lookup_payloads()
                 now_utc = utc_now()
                 self.server.append_activity(
                     {
@@ -2720,7 +3396,7 @@ class Handler(BaseHTTPRequestHandler):
                         "kind": "source_save",
                         "operation": "series.delete",
                         "status": "completed",
-                        "summary": f"Deleted series {record_id} and updated member work records.",
+                        "summary": f"Deleted series {record_id}, generated artifacts, related index records, and catalogue search record.",
                         "affected": preview["affected"],
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }

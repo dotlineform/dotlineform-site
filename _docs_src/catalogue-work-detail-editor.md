@@ -90,7 +90,8 @@ Delete flow:
 
 1. single-record mode requests `POST /catalogue/delete-preview`
 2. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
-3. the server deletes the detail source record and the page returns to the parent work editor
+3. the server deletes the detail source record, generated detail page/media artifacts, repo-local staged media, and the deleted detail from the parent work runtime JSON
+4. the page returns to the parent work editor
 
 ## Current Editable Fields
 

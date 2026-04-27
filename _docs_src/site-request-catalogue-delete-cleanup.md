@@ -10,7 +10,7 @@ sort_order: 151
 
 Status:
 
-- proposed
+- implemented
 
 ## Summary
 
@@ -18,7 +18,7 @@ This change request tracks the follow-up needed to make Studio deletes for works
 
 Moment delete now treats `Delete` as "delete the item from the repo-owned public surface": it removes the canonical source row, generated page/json artifacts, published thumbnails, repo-local staged media, aggregate public index entries, and the catalogue search record.
 
-The older work, work-detail, and series delete paths still follow the earlier source-record pattern. They remove canonical source rows and refresh Studio lookup payloads, but they do not yet clean all generated site artifacts and public search/index references.
+The older work, work-detail, and series delete paths previously followed the earlier source-record pattern. They removed canonical source rows and refreshed Studio lookup payloads, but did not clean all generated site artifacts and public search/index references.
 
 ## Goal
 
@@ -38,9 +38,9 @@ The implementation should preserve the current safety posture:
 - no remote media deletion
 - no canonical source-image or prose deletion unless a future request explicitly adds it
 
-## Current Behavior
+## Previous Behavior
 
-Current `work`, `work_detail`, and `series` deletes in `scripts/studio/catalogue_write_server.py`:
+Before this request was implemented, `work`, `work_detail`, and `series` deletes in `scripts/studio/catalogue_write_server.py`:
 
 - remove canonical catalogue source JSON records
 - cascade work deletes to dependent detail/file/link source rows
@@ -48,7 +48,7 @@ Current `work`, `work_detail`, and `series` deletes in `scripts/studio/catalogue
 - refresh Studio catalogue lookup payloads
 - write a Catalogue Activity entry
 
-Current gap:
+The gap was:
 
 - generated Jekyll stubs can remain
 - generated per-record runtime JSON can remain
@@ -57,6 +57,22 @@ Current gap:
 - aggregate public index JSON can retain stale entries or stale relationship metadata
 - catalogue search can retain stale records or stale related metadata until a later rebuild
 - tag assignment rows or per-work overrides can retain stale references
+
+## Implemented Behavior
+
+`POST /catalogue/delete-preview` now reports generated cleanup for works, work details, and series in the same response shape used by moment delete.
+
+`POST /catalogue/delete-apply` now removes or updates the repo-owned public surface for the deleted item in one transaction-style flow:
+
+- writes the affected canonical source JSON files
+- updates aggregate public indexes and affected per-record runtime JSON
+- updates Studio-only companion data where relevant
+- deletes generated stubs, runtime payloads, published thumbnails, and repo-local staged media that belong to the deleted item
+- rebuilds catalogue search for work and series deletes
+- refreshes Studio catalogue lookup payloads after successful writes
+- restores backed-up touched files if generated cleanup or search rebuild fails
+
+Work-detail delete updates the parent work runtime JSON and does not rebuild public catalogue search because work details are not first-class catalogue search records.
 
 ## Required Cleanup Scope
 
@@ -78,6 +94,8 @@ A work delete should remove or update:
 - `assets/data/works_index.json`
 - `assets/data/series_index.json`
 - affected `assets/series/index/<series_id>.json` records
+- `assets/data/recent_index.json`
+- `assets/studio/data/work_storage_index.json`
 - per-work tag overrides in `assets/studio/data/tag_assignments.json`
 - `assets/data/search/catalogue/index.json`
 
@@ -107,6 +125,7 @@ A series delete should remove or update:
 - `assets/data/series_index.json`
 - affected `assets/works/index/<work_id>.json` records
 - `assets/data/works_index.json`
+- `assets/data/recent_index.json`
 - the deleted series row in `assets/studio/data/tag_assignments.json`
 - work override rows under that deleted series assignment row
 - `assets/data/search/catalogue/index.json`
@@ -137,8 +156,11 @@ The apply path should ensure these public surfaces are current before returning 
 
 - `assets/data/works_index.json`
 - `assets/data/series_index.json`
+- `assets/data/recent_index.json`
 - affected `assets/works/index/<work_id>.json`
 - affected `assets/series/index/<series_id>.json`
+- `assets/studio/data/work_storage_index.json`
+- `assets/studio/data/tag_assignments.json`
 - `assets/data/search/catalogue/index.json`
 
 Catalogue search should be rebuilt after work and series deletes. For work-detail deletes, rebuild search only if the parent work search payload can change; otherwise refresh the parent work runtime payload and public indexes.

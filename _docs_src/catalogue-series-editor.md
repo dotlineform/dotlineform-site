@@ -85,6 +85,7 @@ Delete flow:
 2. preview reports affected member works and any validation blockers
 3. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
 4. the server deletes the series source record and removes that `series_id` from affected work records in one atomic write bundle
+5. the server removes generated series artifacts, updates affected work runtime/index records, removes the series tag-assignment row, updates public indexes, and rebuilds catalogue search
 
 ## Related References
 

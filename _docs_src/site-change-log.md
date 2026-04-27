@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Implemented catalogue delete cleanup for works, details, and series
+
+**Status:** implemented
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Extended `POST /catalogue/delete-apply` so work, work-detail, and series deletes now remove repo-owned generated artifacts, local media outputs, public index references, and search references where applicable.
+
+**Reason:**
+Moment delete had been upgraded to mean "delete the repo-owned public surface for this item", but the older delete paths still primarily removed source records and refreshed Studio lookup payloads.
+
+**Effect:**
+Work delete now removes generated work artifacts, dependent generated detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries. Work-detail delete now removes generated detail artifacts/media and updates the parent work runtime JSON. Series delete now removes generated series artifacts, removes the series from affected work runtime/index records, removes the series tag-assignment row, updates recent/public indexes, and rebuilds catalogue search. Canonical prose, canonical source images, remote media, and deprecated external media staging paths remain untouched.
+
+**Affected files/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Delete Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+
 ## [2026-04-27] Added change request for catalogue delete cleanup
 
 **Status:** proposed

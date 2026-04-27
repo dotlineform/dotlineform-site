@@ -120,6 +120,7 @@ Delete flow:
 2. the server returns blockers, validation errors, and dependent source-record impact
 3. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
 4. the server deletes the work plus dependent detail/file/link source records in one atomic write bundle
+5. the server removes generated work/detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries
 
 The current rebuild scope is intentionally narrow:
 
