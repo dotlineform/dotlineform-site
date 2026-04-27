@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T20:43:58Z",
+  "generated_at": "2026-04-27T21:29:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -934,6 +934,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "project-state-page",
+      "title": "Project State Page",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "studio",
+      "sort_order": 42,
+      "published": true,
+      "viewable": true,
+      "source_path": "project-state-page.md",
+      "viewer_url": "/docs/?scope=studio&doc=project-state-page",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/project-state-page.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-status",
       "title": "Catalogue Status",
       "added_date": "2026-04-18",
@@ -1239,6 +1253,20 @@
       "source_path": "refine-search.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-search.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-project-state-report",
+      "title": "Project State Report",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "scripts",
+      "sort_order": 65,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-project-state-report.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-project-state-report",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-project-state-report.json"
     },
     {
       "scope": "studio",

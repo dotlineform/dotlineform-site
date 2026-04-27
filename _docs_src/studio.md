@@ -40,6 +40,7 @@ Read this section in this order:
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
+   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
    - **[Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)**
    - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
@@ -68,6 +69,7 @@ Current workflow/detail routes:
 - `/studio/docs-import/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
+- `/studio/project-state/`
 - `/studio/bulk-add-work/`
 - `/studio/catalogue-moment-import/`
 - `/studio/catalogue-moment/?moment=<moment_id>`

@@ -23,7 +23,7 @@ Current responsibilities include:
 - JSON data paths used by Studio and search loaders
 - shared Docs Viewer settings used by `/docs/` and `/library/`
 - the route and feed path for the current Studio build-activity page
-- route and data paths for catalogue status, catalogue activity, and catalogue work-editor pages
+- route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
 - Studio analysis group and RAG settings
 - Studio-owned UI text, including search-shell text that is shared through the same loader
 
@@ -43,6 +43,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/build-activity.js`
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/project-state.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/js/search/search-page.js`
 - `assets/js/docs-viewer.js`

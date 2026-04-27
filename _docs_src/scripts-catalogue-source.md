@@ -8,7 +8,7 @@ sort_order: 60
 ---
 # Catalogue Source Utilities
 
-These utilities validate and compare the canonical catalogue source JSON.
+These utilities validate, compare, and inspect the canonical catalogue source JSON.
 
 They do not write runtime-critical public catalogue artifacts. They work against canonical source JSON under:
 
@@ -21,7 +21,7 @@ The Phase 0 workbook export fixture is now retired. Canonical source JSON is mai
 ## Validate
 
 ```bash
-python3 ./scripts/validate_catalogue_source.py
+./scripts/validate_catalogue_source.py
 ```
 
 Validation checks the source JSON for the same core relationship errors covered by the current catalogue validations:
@@ -36,7 +36,7 @@ Validation checks the source JSON for the same core relationship errors covered 
 ## Compare
 
 ```bash
-python3 ./scripts/compare_catalogue_sources.py
+./scripts/compare_catalogue_sources.py
 ```
 
 The comparison loads:
@@ -45,6 +45,16 @@ The comparison loads:
 - JSON-normalized records from `assets/studio/data/catalogue/`
 
 It reports count mismatches, missing IDs, extra IDs, and record differences. During the transition away from workbook-led maintenance, intentional JSON-side edits may also appear here and should be inspected case by case.
+
+## Project State Report
+
+```bash
+./scripts/project_state_report.py --write
+```
+
+The project-state report compares `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`, then writes `_docs_src/project-state.md`.
+
+Use this when you need to find source project folders or top-level primary-image candidates that have not yet been represented in `works.json`.
 
 ## Shared Module
 
@@ -60,4 +70,5 @@ This module is a migration fixture and compatibility adapter. It is not yet the 
 
 - [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
 - [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
+- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

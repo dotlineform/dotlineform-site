@@ -108,6 +108,8 @@ Catalogue/runtime maintenance:
   Preview or run the Phase 5 scoped JSON-source rebuild flow for one work.
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
   Validate and compare canonical catalogue source JSON during the transition away from workbook-led tooling.
+- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
+  Report source project folders and primary images that are not represented by `works.json`.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
   Export derived Studio lookup payloads for focused editor reads.
 - [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)

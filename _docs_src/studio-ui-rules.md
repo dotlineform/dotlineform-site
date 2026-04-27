@@ -23,6 +23,34 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-27 / UI-044
+
+- status: adopted
+- route: `/studio/project-state/`
+- issue: after `works.json` became the canonical work publication source, there was no Studio command surface for checking source project folders and primary image files that had not been represented in `works.json`.
+- triage: local catalogue workflow addition using shared command and readonly-display primitives
+- reasoning: this is an operational scan rather than a catalogue record status filter, so it belongs on a dedicated command page linked from the Catalogue dashboard. The report itself should remain a persistent Markdown source artifact with `published: false`, while the Studio page should expose only the run command, summary counts, and source-file access until an inline Markdown preview is explicitly designed.
+- outcome: added `/studio/project-state/`, a `Project State` Catalogue dashboard link, a local catalogue-server endpoint, and a script that writes `_docs_src/project-state.md`. Work details remain out of scope and detail folders are skipped by the report.
+- files changed:
+  - `studio/project-state/index.md`
+  - `studio/catalogue/index.md`
+  - `assets/studio/js/project-state.js`
+  - `assets/studio/js/studio-transport.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/project_state_report.py`
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/project-state.md`
+  - `_docs_src/project-state-page.md`
+  - `_docs_src/scripts-project-state-report.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - run the report script with `--write` and confirm it writes `_docs_src/project-state.md`
+  - run the Studio endpoint through the local catalogue server and confirm summary counts return
+  - inspect `/studio/project-state/` on desktop and mobile
+- follow-up:
+  - decide whether the page should render the Markdown report inline after the file-link workflow has been used for real import reviews
+
 ## UI Rule Log 2026-04-27 / UI-043
 
 - status: adopted

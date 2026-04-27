@@ -8,6 +8,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added project-state reporting for source imports
+
+**Status:** implemented
+
+**Area:** Studio / catalogue source review
+
+**Summary:**
+Added a project-state report that compares source project folders and primary image files against `assets/studio/data/catalogue/works.json`.
+
+**Reason:**
+After `data/works.xlsx` stopped being the canonical catalogue source, there was no direct way to identify source project folders or top-level primary-image candidates that still needed representation in `works.json`.
+
+**Effect:**
+`./scripts/project_state_report.py --write` now writes `_docs_src/project-state.md` with `published: false`. `/studio/project-state/` runs the same report through the local Catalogue Write Server and shows summary counts plus a local file-open command. Work details remain out of scope, and detail folders are skipped.
+
+**Affected files/docs:**
+
+- `scripts/project_state_report.py`
+- `scripts/studio/catalogue_write_server.py`
+- `studio/project-state/index.md`
+- `studio/catalogue/index.md`
+- `assets/studio/js/project-state.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- `_docs_src/project-state.md`
+- [Project State Page](/docs/?scope=studio&doc=project-state-page)
+- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-27] Removed retired work file and link Studio routes
 
 **Status:** implemented

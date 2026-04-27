@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1b3bf70f9942bb19fae2d4ee03b7108a",
-    "generated_at_utc": "2026-04-27T20:44:00Z",
-    "count": 139
+    "version": "blake2b-848007642cadefff3da440b083557509",
+    "generated_at_utc": "2026-04-27T21:29:11Z",
+    "count": 141
   },
   "entries": [
     {
@@ -1549,6 +1549,29 @@
       "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-04-01 2026 04 01"
     },
     {
+      "id": "project-state-page",
+      "kind": "doc",
+      "title": "Project State Page",
+      "href": "/docs/?scope=studio&doc=project-state-page",
+      "last_updated": "2026-04-27",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-04-27 • Studio",
+      "search_terms": [
+        "project-state-page",
+        "project",
+        "state",
+        "page",
+        "project state page",
+        "studio",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "project-state-page project state page project state page studio 2026-04-27 2026 04 27"
+    },
+    {
       "id": "catalogue-status",
       "kind": "doc",
       "title": "Catalogue Status",
@@ -2073,6 +2096,29 @@
         "18"
       ],
       "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan new cat pipeline cat 2026-04-18 2026 04 18"
+    },
+    {
+      "id": "scripts-project-state-report",
+      "kind": "doc",
+      "title": "Project State Report",
+      "href": "/docs/?scope=studio&doc=scripts-project-state-report",
+      "last_updated": "2026-04-27",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-04-27 • Scripts",
+      "search_terms": [
+        "scripts-project-state-report",
+        "scripts",
+        "project",
+        "state",
+        "report",
+        "project state report",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "scripts-project-state-report scripts project state report project state report 2026-04-27 2026 04 27"
     },
     {
       "id": "catalogue-series-editor",

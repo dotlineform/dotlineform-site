@@ -25,6 +25,7 @@ Endpoints:
   POST /catalogue/moment/save
   POST /catalogue/build-preview
   POST /catalogue/build-apply
+  POST /catalogue/project-state-report
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -128,6 +129,12 @@ from catalogue_workbook_import import (  # noqa: E402
     normalize_import_mode,
     plan_to_response,
 )
+from project_state_report import (  # noqa: E402
+    DEFAULT_OUTPUT_REL_PATH,
+    PROJECTS_BASE_DIR_ENV_NAME,
+    build_project_state_report,
+    resolve_projects_base_dir,
+)
 from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id, parse_series_ids  # noqa: E402
 
@@ -163,6 +170,7 @@ MOMENT_SAVE_PATH = "/catalogue/moment/save"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
+PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -2576,6 +2584,7 @@ class Handler(BaseHTTPRequestHandler):
             MOMENT_IMPORT_APPLY_PATH,
             MOMENT_PREVIEW_PATH,
             MOMENT_SAVE_PATH,
+            PROJECT_STATE_REPORT_PATH,
         }:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
@@ -2698,6 +2707,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == MOMENT_SAVE_PATH:
                 self._handle_moment_save(allowed)
+                return
+            if self.path == PROJECT_STATE_REPORT_PATH:
+                self._handle_project_state_report(allowed)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
@@ -5296,6 +5308,37 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        self._send_json(HTTPStatus.OK, payload, allowed)
+
+    def _handle_project_state_report(self, allowed: Optional[str]) -> None:
+        _body = self._read_json_body()
+        projects_base_dir = resolve_projects_base_dir()
+        result = build_project_state_report(
+            repo_root=self.server.repo_root,
+            projects_base_dir=projects_base_dir,
+            output_path=self.server.repo_root / DEFAULT_OUTPUT_REL_PATH,
+            write=not self.server.dry_run,
+        )
+        payload = {
+            "ok": True,
+            "generated_at_utc": result["generated_at_utc"],
+            "output_path": result["output_path"],
+            "projects_root": result["projects_root_display"],
+            "catalogue_source_path": result["catalogue_source_path"],
+            "summary": result["summary"],
+            "written": result["written"],
+            "dry_run": self.server.dry_run,
+        }
+        self.server.log_event(
+            "project_state_report",
+            {
+                "output_path": result["output_path"],
+                "written": result["written"],
+                "dry_run": self.server.dry_run,
+                "projects_base_env": PROJECTS_BASE_DIR_ENV_NAME,
+                "summary": result["summary"],
+            },
+        )
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _send_json(self, status: HTTPStatus, payload: Dict[str, Any], allowed: Optional[str] = None) -> None:

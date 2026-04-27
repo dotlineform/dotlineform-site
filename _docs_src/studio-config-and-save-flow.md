@@ -38,7 +38,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `project_state`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths

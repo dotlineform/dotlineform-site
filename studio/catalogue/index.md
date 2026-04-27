@@ -60,6 +60,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         <ul class="studioLinkList">
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}"><span class="studioLinkList__title">Review Catalogue Status</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-activity/' | relative_url }}"><span class="studioLinkList__title">Review Source Activity</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/project-state/' | relative_url }}"><span class="studioLinkList__title">Review Project State</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/build-activity/' | relative_url }}"><span class="studioLinkList__title">Review Build Activity</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/studio-works/' | relative_url }}"><span class="studioLinkList__title">Open Works View</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/bulk-add-work/' | relative_url }}"><span class="studioLinkList__title">Run Bulk Add Work</span></a></li>
