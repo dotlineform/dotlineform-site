@@ -42,5 +42,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 <section aria-labelledby="studioResourcesHeading">
   <h3 id="studioResourcesHeading">Resources</h3>
   <p><a href="{{ '/studio/ui-catalogue/' | relative_url }}">UI Catalogue</a></p>
+  <p><a href="{{ '/studio/project-state/' | relative_url }}">Project State</a></p>
   <p><a href="{{ '/studio/docs-broken-links/' | relative_url }}">Docs broken links</a></p>
 </section>
