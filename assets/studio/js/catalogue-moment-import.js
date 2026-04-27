@@ -43,6 +43,90 @@ function currentMomentFile(state) {
   return normalizeText(state.fileNode && state.fileNode.value);
 }
 
+const METADATA_FIELDS = [
+  { key: "title", type: "text", fallback: "title" },
+  { key: "status", type: "select", options: ["published", "draft"], fallback: "status" },
+  { key: "date", type: "date", fallback: "date" },
+  { key: "date_display", type: "text", fallback: "date display" },
+  { key: "published_date", type: "date", fallback: "published date" },
+  { key: "source_image_file", type: "text", fallback: "source image file" },
+  { key: "image_alt", type: "text", fallback: "image alt" }
+];
+
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function readMetadata(state) {
+  const metadata = {};
+  if (!state.metadataNodes) return metadata;
+  state.metadataNodes.forEach((node, key) => {
+    metadata[key] = normalizeText(node.value);
+  });
+  return metadata;
+}
+
+function fillMetadataFromPreview(state, preview) {
+  if (!preview || !state.metadataNodes) return;
+  const mapping = {
+    title: preview.title,
+    status: preview.status,
+    date: preview.date,
+    date_display: preview.date_display,
+    published_date: preview.published_date,
+    source_image_file: preview.image_file,
+    image_alt: preview.image_alt
+  };
+  Object.entries(mapping).forEach(([key, value]) => {
+    const node = state.metadataNodes.get(key);
+    if (node && !normalizeText(node.value) && normalizeText(value)) {
+      node.value = normalizeText(value);
+    }
+  });
+}
+
+function buildMetadataFields(state, container) {
+  state.metadataNodes = new Map();
+  container.innerHTML = "";
+  METADATA_FIELDS.forEach((field) => {
+    const wrapper = document.createElement("label");
+    wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
+    wrapper.setAttribute("for", `catalogueMomentImportMetadata-${field.key}`);
+
+    const label = document.createElement("span");
+    label.className = "tagStudioForm__label";
+    label.textContent = t(state, `metadata_field_${field.key}`, field.fallback);
+    wrapper.appendChild(label);
+
+    let input;
+    if (field.type === "select") {
+      input = document.createElement("select");
+      input.className = "tagStudio__input";
+      field.options.forEach((optionValue) => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = optionValue;
+        input.appendChild(option);
+      });
+    } else {
+      input = document.createElement("input");
+      input.className = "tagStudio__input";
+      input.type = field.type === "date" ? "date" : "text";
+      input.spellcheck = false;
+      input.autocomplete = "off";
+    }
+    input.id = `catalogueMomentImportMetadata-${field.key}`;
+    input.dataset.field = field.key;
+    if (field.key === "status") input.value = "published";
+    if (field.key === "published_date") input.value = todayIso();
+    input.addEventListener("input", () => clearPreview(state));
+    input.addEventListener("change", () => clearPreview(state));
+    wrapper.appendChild(input);
+    container.appendChild(wrapper);
+    state.metadataNodes.set(field.key, input);
+  });
+}
+
 function generatedStatusText(state, preview) {
   if (!preview) return t(state, "preview_missing_value", "none");
   const parts = [];
@@ -197,8 +281,9 @@ async function runPreview(state) {
   setTextWithState(state.warningNode, "");
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewMomentImport, { moment_file: momentFile });
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewMomentImport, { moment_file: momentFile, metadata: readMetadata(state) });
     state.preview = response && response.preview ? response.preview : null;
+    fillMetadataFromPreview(state, state.preview);
     state.build = response && response.build ? response.build : null;
     state.steps = [];
     state.publicUrl = normalizeText(response && response.preview && response.preview.public_url);
@@ -237,7 +322,7 @@ async function applyImport(state) {
   setTextWithState(state.warningNode, "");
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, { moment_file: momentFile });
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, { moment_file: momentFile, metadata: readMetadata(state) });
     state.preview = response && response.preview ? response.preview : state.preview;
     state.build = response && response.build ? response.build : state.build;
     state.steps = Array.isArray(response && response.steps) ? response.steps : [];
@@ -297,13 +382,14 @@ async function init() {
   const fileLabelNode = document.getElementById("catalogueMomentImportFileLabel");
   const fileNode = document.getElementById("catalogueMomentImportFile");
   const fileDescriptionNode = document.getElementById("catalogueMomentImportFileDescription");
+  const metadataFieldsNode = document.getElementById("catalogueMomentImportMetadataFields");
   const sourceSummaryNode = document.getElementById("catalogueMomentImportSourceSummary");
   const imageGuidanceNode = document.getElementById("catalogueMomentImportImageGuidance");
   const previewButton = document.getElementById("catalogueMomentImportPreview");
   const applyButton = document.getElementById("catalogueMomentImportApply");
   const summaryNode = document.getElementById("catalogueMomentImportSummary");
   const detailsNode = document.getElementById("catalogueMomentImportDetails");
-  if (!root || !loadingNode || !emptyNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !fileLabelNode || !fileNode || !fileDescriptionNode || !sourceSummaryNode || !imageGuidanceNode || !previewButton || !applyButton || !summaryNode || !detailsNode) {
+  if (!root || !loadingNode || !emptyNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !fileLabelNode || !fileNode || !fileDescriptionNode || !metadataFieldsNode || !sourceSummaryNode || !imageGuidanceNode || !previewButton || !applyButton || !summaryNode || !detailsNode) {
     return;
   }
 
@@ -322,7 +408,8 @@ async function init() {
     previewButton,
     applyButton,
     summaryNode,
-    detailsNode
+    detailsNode,
+    metadataNodes: new Map()
   };
 
   try {
@@ -334,9 +421,10 @@ async function init() {
     fileNode.placeholder = t(state, "file_placeholder", "keys.md");
     previewButton.textContent = t(state, "preview_button", "Preview Source File");
     applyButton.textContent = t(state, "import_button", "Import + Publish Moment");
-    setTextWithState(contextNode, t(state, "context_hint", "Enter a moment markdown filename from the canonical moments source folder. This page previews the existing file and then runs a targeted import/rebuild for that one moment."));
-    fileDescriptionNode.textContent = t(state, "file_description", "filename only; the source file is resolved from the canonical moments folder");
-    sourceSummaryNode.textContent = t(state, "source_summary", "This workflow reads metadata from the existing source markdown file. Edit the source file directly when prose or front matter needs to change.");
+    buildMetadataFields(state, metadataFieldsNode);
+    setTextWithState(contextNode, t(state, "context_hint", "Enter a staged moment markdown filename and the moment metadata. This page imports body-only prose and then runs a targeted import/rebuild for that one moment."));
+    fileDescriptionNode.textContent = t(state, "file_description", "filename only; the source file is resolved from var/docs/catalogue/import-staging/moments/");
+    sourceSummaryNode.textContent = t(state, "source_summary", "Moment prose is imported as body-only Markdown. Metadata is stored in catalogue source JSON, not prose front matter.");
     imageGuidanceNode.textContent = t(state, "image_guidance", "Missing images are acceptable in this phase. The public moment page already handles missing hero images cleanly.");
     if (!state.serverAvailable) {
       setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Moment import is disabled."), "warn");

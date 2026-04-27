@@ -82,8 +82,9 @@ The helper:
 
 For `--moment-file`, the helper:
 
-- resolves the canonical source file under `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/`
-- validates the source markdown filename plus required front matter
+- resolves moment metadata from `assets/studio/data/catalogue/moments.json`
+- resolves moment prose from `_docs_src_catalogue/moments/<moment_id>.md`
+- validates the moment filename, metadata, and required prose source
 - runs the internal `generate_work_pages.py` engine with `--only moments --moment-ids <moment_id> --refresh-published`
 - then runs `build_search.rb --scope catalogue`
 
@@ -95,7 +96,7 @@ Force behavior:
 
 The helper does not:
 
-- copy media
+- copy media for moment imports
 - build srcset derivatives
 - rebuild unrelated works
 - scan the moments folder for changes

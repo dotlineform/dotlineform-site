@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
 MOMENT_SOURCES_MANIFEST_SCHEMA = "moment_sources_manifest_v1"
+MOMENT_METADATA_SCHEMA = "catalogue_source_moments_v1"
+MOMENT_METADATA_FILENAME = "moments.json"
+CATALOGUE_MOMENT_PROSE_REL_DIR = Path("_docs_src_catalogue/moments")
 
 
 def normalize_text(value: Any) -> str:
@@ -109,6 +112,29 @@ def parse_front_matter(path: Path) -> Dict[str, Any]:
     return fm
 
 
+def split_front_matter_text(text: str) -> tuple[Dict[str, Any], str]:
+    if not text.startswith("---"):
+        return {}, text
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return {}, text
+    fm: Dict[str, Any] = {}
+    for line in parts[1].splitlines():
+        match = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", line)
+        if not match:
+            continue
+        fm[match.group(1)] = parse_scalar_from_fm_line(match.group(2))
+    body = parts[2]
+    if body.startswith("\n"):
+        body = body[1:]
+    return fm, body
+
+
+def has_front_matter_text(text: str) -> bool:
+    fm, _body = split_front_matter_text(text)
+    return bool(fm)
+
+
 def build_moment_source_entry(path: Path, *, moments_images_root: Optional[Path] = None) -> Dict[str, Any]:
     moment_id = path.stem.strip().lower()
     front_matter = parse_front_matter(path)
@@ -151,6 +177,110 @@ def validate_moment_source_entry(entry: Mapping[str, Any]) -> list[str]:
         errors.append("published moments require published_date")
 
     return errors
+
+
+def normalize_moment_metadata_record(moment_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
+    normalized_id = normalize_text(record.get("moment_id") or moment_id).lower()
+    source_image_file = coerce_string(record.get("source_image_file") or record.get("image_file"))
+    out: Dict[str, Any] = {
+        "moment_id": normalized_id,
+        "title": coerce_string(record.get("title")) or "",
+        "status": normalize_status(record.get("status")),
+        "published_date": parse_date(record.get("published_date")),
+        "date": parse_date(record.get("date")),
+        "date_display": coerce_string(record.get("date_display")),
+        "image_alt": coerce_string(record.get("image_alt")) or coerce_string(record.get("alt")),
+    }
+    if source_image_file and source_image_file != f"{normalized_id}.jpg":
+        out["source_image_file"] = source_image_file
+    return out
+
+
+def validate_moment_metadata_record(record: Mapping[str, Any]) -> list[str]:
+    return validate_moment_source_entry(record)
+
+
+def moments_metadata_path(source_dir: Path) -> Path:
+    return source_dir / MOMENT_METADATA_FILENAME
+
+
+def load_moment_metadata_records(source_dir: Path) -> Dict[str, Dict[str, Any]]:
+    path = moments_metadata_path(source_dir)
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, Mapping):
+        raise ValueError(f"Invalid moment metadata source: {path}")
+    header = payload.get("header")
+    if isinstance(header, Mapping) and header.get("schema") not in {MOMENT_METADATA_SCHEMA, None}:
+        raise ValueError(f"Unsupported moment metadata source schema: {path}")
+    raw_moments = payload.get("moments")
+    if not isinstance(raw_moments, Mapping):
+        raise ValueError(f"Invalid moment metadata source payload: {path}")
+    moments: Dict[str, Dict[str, Any]] = {}
+    for raw_moment_id, raw_record in raw_moments.items():
+        if not isinstance(raw_record, Mapping):
+            continue
+        moment_id = normalize_text(raw_record.get("moment_id") or raw_moment_id).lower()
+        if not moment_id:
+            continue
+        moments[moment_id] = normalize_moment_metadata_record(moment_id, raw_record)
+    return dict(sorted(moments.items()))
+
+
+def moment_metadata_payload(records: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
+    moments = {
+        moment_id: normalize_moment_metadata_record(moment_id, record)
+        for moment_id, record in sorted(records.items())
+    }
+    return {
+        "header": {
+            "schema": MOMENT_METADATA_SCHEMA,
+        },
+        "moments": moments,
+    }
+
+
+def write_moment_metadata_records(source_dir: Path, records: Mapping[str, Mapping[str, Any]]) -> Path:
+    path = moments_metadata_path(source_dir)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(moment_metadata_payload(records), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def build_moment_metadata_entry(
+    moment_id: str,
+    record: Mapping[str, Any],
+    *,
+    prose_root: Path,
+    moments_images_root: Optional[Path] = None,
+) -> Dict[str, Any]:
+    normalized = normalize_moment_metadata_record(moment_id, record)
+    normalized_id = normalized["moment_id"]
+    source_image_file = coerce_string(normalized.get("source_image_file")) or f"{normalized_id}.jpg"
+    source_image_path = (moments_images_root / source_image_file) if moments_images_root is not None else None
+    return {
+        **normalized,
+        "moment_file": f"{normalized_id}.md",
+        "image_file": f"{normalized_id}.jpg",
+        "source_image_file": source_image_file,
+        "source_prose_path": str(prose_root / f"{normalized_id}.md"),
+        "source_image_path": str(source_image_path) if source_image_path is not None else "",
+    }
+
+
+def build_moment_metadata_source_index(
+    source_dir: Path,
+    *,
+    repo_root: Path,
+    moments_images_root: Optional[Path] = None,
+) -> Dict[str, Dict[str, Any]]:
+    prose_root = repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR
+    records = load_moment_metadata_records(source_dir)
+    return {
+        moment_id: build_moment_metadata_entry(moment_id, record, prose_root=prose_root, moments_images_root=moments_images_root)
+        for moment_id, record in records.items()
+    }
 
 
 def yaml_scalar(value: Any) -> str:

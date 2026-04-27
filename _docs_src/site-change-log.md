@@ -8,6 +8,39 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Moved moment prose and metadata to repo-local catalogue sources
+
+**Status:** implemented
+
+**Area:** Catalogue pipeline / Studio
+
+**Summary:**
+Moment metadata now lives in `assets/studio/data/catalogue/moments.json`, and moment prose now lives as body-only Markdown under `_docs_src_catalogue/moments/`.
+
+**Reason:**
+Moments needed the same durable repo-local prose handling as work and series prose, but their previous source files also owned front matter metadata. Splitting metadata from prose keeps generated runtime JSON non-canonical and makes the source model easier to review.
+
+**Effect:**
+The moment import page now collects metadata fields, previews staged body-only prose from `var/docs/catalogue/import-staging/moments/`, writes metadata to canonical catalogue JSON, and writes prose to `_docs_src_catalogue/moments/`. The generator reads those canonical sources for moment payloads and no longer writes moment source front matter. Media image import/edit/srcset generation remains deferred to a future shared work/moment mechanism.
+
+**Affected files/docs:**
+
+- `assets/studio/data/catalogue/moments.json`
+- `_docs_src_catalogue/moments/`
+- `scripts/moment_sources.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/generate_work_pages.py`
+- `scripts/studio/catalogue_write_server.py`
+- `assets/studio/js/catalogue-moment-import.js`
+- `assets/studio/data/studio_config.json`
+- `studio/catalogue-moment-import/index.md`
+- [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
 ## [2026-04-27] Reduced forced scoped catalogue build noise
 
 **Status:** implemented

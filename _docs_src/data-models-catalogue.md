@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue
 title: "Catalogue Scope"
 added_date: 2026-04-01
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: data-models
 sort_order: 20
 ---
@@ -15,6 +15,17 @@ This document covers the current data model for the public catalogue: works, ser
 
 Current checked-in catalogue model families:
 
+- canonical source records:
+  - `assets/studio/data/catalogue/works.json`
+  - `assets/studio/data/catalogue/series.json`
+  - `assets/studio/data/catalogue/work_details.json`
+  - `assets/studio/data/catalogue/work_files.json`
+  - `assets/studio/data/catalogue/work_links.json`
+  - `assets/studio/data/catalogue/moments.json`
+- canonical prose sources:
+  - `_docs_src_catalogue/works/<work_id>.md`
+  - `_docs_src_catalogue/series/<series_id>.md`
+  - `_docs_src_catalogue/moments/<moment_id>.md`
 - route stubs:
   - `_works/*.md`
   - `_series/*.md`
@@ -103,8 +114,47 @@ Purpose:
 
 Design:
 
-- canonical moment metadata and prose live in `assets/moments/index/<moment_id>.json`
+- canonical moment metadata comes from `assets/studio/data/catalogue/moments.json`
+- canonical moment prose comes from `_docs_src_catalogue/moments/<moment_id>.md`
+- runtime moment metadata and rendered prose are generated into `assets/moments/index/<moment_id>.json`
 - the Markdown stub exists mainly for route generation and fallback text
+
+## Canonical Moment Source
+
+### `assets/studio/data/catalogue/moments.json`
+
+Purpose:
+
+- canonical source records for moment metadata
+
+Current content families:
+
+- `moment_id`
+- `title`
+- `status`
+- `published_date`
+- `date`
+- optional `date_display`
+- optional `source_image_file`
+- optional `image_alt`
+
+Notes:
+
+- this file is the metadata source of truth for moments
+- generated runtime payloads under `assets/moments/index/` are not canonical source
+- source images remain a separate media concern
+
+### `_docs_src_catalogue/moments/<moment_id>.md`
+
+Purpose:
+
+- canonical body-only moment prose source
+
+Notes:
+
+- files are ID-derived by `moment_id`
+- files do not own canonical metadata front matter
+- existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
 
 ## Shared Catalogue Indexes
 
@@ -256,7 +306,7 @@ Purpose:
 
 Current content families:
 
-- canonical moment metadata
+- generated runtime moment metadata
 - rendered prose as `content_html`
 - image list and dimensions
 

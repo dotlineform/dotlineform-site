@@ -38,6 +38,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-import
           <p class="tagStudioForm__meta" id="catalogueMomentImportFileDescription"></p>
         </label>
       </div>
+      <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueMomentImportMetadataFields"></div>
       <p class="tagStudioForm__meta" id="catalogueMomentImportSourceSummary"></p>
       <p class="tagStudioForm__meta" id="catalogueMomentImportImageGuidance"></p>
     </section>

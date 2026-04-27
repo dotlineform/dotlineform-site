@@ -15,7 +15,17 @@ from typing import Any, Dict, Iterable, Sequence
 
 from build_activity import append_build_activity
 from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
-from moment_sources import build_moment_source_entry, normalize_moment_filename, validate_moment_source_entry
+from moment_sources import (
+    CATALOGUE_MOMENT_PROSE_REL_DIR,
+    MOMENT_METADATA_FILENAME,
+    build_moment_metadata_entry,
+    has_front_matter_text,
+    load_moment_metadata_records,
+    moment_metadata_payload,
+    normalize_moment_filename,
+    normalize_moment_metadata_record,
+    validate_moment_metadata_record,
+)
 from pipeline_config import (
     env_var_name,
     env_var_value,
@@ -30,6 +40,7 @@ from series_ids import normalize_series_id
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
+MOMENT_PROSE_STAGING_REL_DIR = CATALOGUE_PROSE_STAGING_REL_DIR / "moments"
 
 DEFAULT_ARTIFACTS = [
     "work-pages",
@@ -276,12 +287,18 @@ def resolve_moment_media_source(
     if projects_base_dir is None:
         filename = normalize_moment_filename(moment_file)
         return filename[:-3], None, "", None, availability_error
-    paths = build_moment_paths(projects_base_dir, moment_file)
-    source_path = paths["source_path"]
-    moment_id = source_path.stem.strip().lower()
-    if not source_path.exists():
+    filename = normalize_moment_filename(moment_file)
+    moment_id = filename[:-3]
+    records = load_moment_metadata_records(repo_root / DEFAULT_SOURCE_DIR)
+    record = records.get(moment_id)
+    if not record:
         return moment_id, None, "missing_moment_file", projects_base_dir, availability_error
-    entry = build_moment_source_entry(source_path, moments_images_root=paths["moments_images_root"])
+    entry = build_moment_metadata_entry(
+        moment_id,
+        record,
+        prose_root=repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR,
+        moments_images_root=projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG),
+    )
     source_image_path = Path(str(entry.get("source_image_path") or "")).resolve() if entry.get("source_image_path") else None
     if source_image_path:
         return moment_id, source_image_path, "", projects_base_dir, availability_error
@@ -367,20 +384,7 @@ def build_local_media_plan(
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     tasks: list[Dict[str, Any]] = []
     if scope_kind == "moment":
-        moment_file = str(scope.get("moment_file") or "").strip()
-        if moment_file:
-            moment_id, source_path, missing_reason, projects_base_dir, availability_error = resolve_moment_media_source(repo_root, moment_file, env=env)
-            tasks.append(
-                build_local_media_task(
-                    repo_root=repo_root,
-                    kind="moment",
-                    item_id=moment_id,
-                    source_path=source_path,
-                    availability_error=availability_error,
-                    blocked_reason=missing_reason,
-                    projects_base_dir=projects_base_dir,
-                )
-            )
+        return {"tasks": [], "counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
     else:
         source_dir = Path(str(scope.get("source_dir") or "")).expanduser() if scope.get("source_dir") else None
         records = records_from_json_source(source_dir) if source_dir is not None else None
@@ -733,48 +737,73 @@ def build_moment_paths(projects_base_dir: Path, moment_file: str) -> Dict[str, P
     }
 
 
-def preview_moment_source(repo_root: Path, moment_file: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
-    projects_base_dir = detect_projects_base_dir(env)
-    paths = build_moment_paths(projects_base_dir, moment_file)
-    source_path = paths["source_path"]
-    moment_id = source_path.stem.strip().lower()
+def build_moment_import_metadata(
+    source_dir: Path,
+    moment_id: str,
+    metadata: Dict[str, Any] | None = None,
+) -> Dict[str, Any]:
+    records = load_moment_metadata_records(source_dir)
+    existing = records.get(moment_id, {})
+    merged = {**existing, **(metadata or {}), "moment_id": moment_id}
+    return normalize_moment_metadata_record(moment_id, merged)
+
+
+def preview_moment_source(
+    repo_root: Path,
+    moment_file: str,
+    *,
+    metadata: Dict[str, Any] | None = None,
+    staged: bool = False,
+    env: Dict[str, str] | None = None,
+) -> Dict[str, Any]:
+    filename = normalize_moment_filename(moment_file)
+    moment_id = filename[:-3]
+    source_dir = repo_root / DEFAULT_SOURCE_DIR
+    staging_path = repo_root / MOMENT_PROSE_STAGING_REL_DIR / filename
+    target_path = repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR / filename
+    source_path = staging_path if staged else target_path
+    source_rel_path = (MOMENT_PROSE_STAGING_REL_DIR if staged else CATALOGUE_MOMENT_PROSE_REL_DIR) / filename
+    metadata_record = build_moment_import_metadata(source_dir, moment_id, metadata)
     preview: Dict[str, Any] = {
         "kind": "moment",
         "moment_id": moment_id,
-        "moment_file": source_path.name,
-        "source_path": str(Path("moments") / source_path.name),
+        "moment_file": filename,
+        "source_path": str(source_rel_path),
+        "staging_path": str(MOMENT_PROSE_STAGING_REL_DIR / filename),
+        "target_path": str(CATALOGUE_MOMENT_PROSE_REL_DIR / filename),
+        "metadata_path": str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME),
         "public_url": f"/moments/{moment_id}/",
         "generated_page_path": str(Path("_moments") / f"{moment_id}.md"),
         "generated_json_path": str(Path("assets/moments/index") / f"{moment_id}.json"),
         "moments_index_path": "assets/data/moments_index.json",
         "search_scope": "catalogue",
         "source_exists": source_path.exists(),
+        "target_exists": target_path.exists(),
         "errors": [],
         "valid": False,
+        "title": metadata_record.get("title") or "",
+        "status": metadata_record.get("status") or "",
+        "date": metadata_record.get("date") or "",
+        "date_display": metadata_record.get("date_display") or "",
+        "published_date": metadata_record.get("published_date") or "",
+        "image_file": metadata_record.get("source_image_file") or f"{moment_id}.jpg",
+        "image_alt": metadata_record.get("image_alt") or "",
     }
 
     if not source_path.exists():
-        preview["errors"] = [f"Missing moment source file: moments/{source_path.name}"]
+        preview["errors"] = [f"Missing {'staged ' if staged else ''}moment prose file: {source_rel_path}"]
         return preview
 
-    entry = build_moment_source_entry(source_path, moments_images_root=paths["moments_images_root"])
-    preview.update(
-        {
-            "title": entry.get("title") or "",
-            "status": entry.get("status") or "",
-            "date": entry.get("date") or "",
-            "date_display": entry.get("date_display") or "",
-            "published_date": entry.get("published_date") or "",
-            "image_file": entry.get("source_image_file") or "",
-            "image_alt": entry.get("image_alt") or "",
-        }
-    )
-    source_image_path = Path(str(entry.get("source_image_path") or "")).resolve() if entry.get("source_image_path") else None
-    preview["source_image_path"] = (
-        str(Path("moments") / "images" / Path(str(entry.get("source_image_file") or "")).name)
-        if entry.get("source_image_file")
-        else ""
-    )
+    source_text = source_path.read_text(encoding="utf-8")
+    if has_front_matter_text(source_text):
+        prefix = "Staged moment prose" if staged else "Moment prose source"
+        preview["errors"] = [f"{prefix} must be body-only Markdown without front matter."]
+        return preview
+
+    projects_base_dir, _availability_error = detect_projects_base_dir_optional(env)
+    source_image_file = str(metadata_record.get("source_image_file") or f"{moment_id}.jpg")
+    source_image_path = (projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG) / source_image_file) if projects_base_dir else None
+    preview["source_image_path"] = str(Path("moments") / "images" / Path(source_image_file).name)
     preview["source_image_exists"] = bool(source_image_path and source_image_path.exists())
     preview["generated_page_exists"] = (repo_root / "_moments" / f"{moment_id}.md").exists()
     preview["generated_json_exists"] = (repo_root / "assets/moments/index" / f"{moment_id}.json").exists()
@@ -797,14 +826,14 @@ def preview_moment_source(repo_root: Path, moment_file: str, *, env: Dict[str, s
         except Exception:
             preview["in_moments_index"] = False
 
-    errors = validate_moment_source_entry(entry)
+    errors = validate_moment_metadata_record(metadata_record)
     preview["errors"] = errors
     preview["valid"] = not errors
     preview["effective_force"] = False
-    preview["refresh_published"] = bool(entry.get("status") == "published")
-    preview["summary"] = (
-        f"Import moment {moment_id} from moments/{source_path.name}, rebuild the moment payloads, and rebuild catalogue search."
-    )
+    preview["refresh_published"] = bool(metadata_record.get("status") == "published")
+    source_label = MOMENT_PROSE_STAGING_REL_DIR / filename if staged else CATALOGUE_MOMENT_PROSE_REL_DIR / filename
+    action = "Import" if staged else "Build"
+    preview["summary"] = f"{action} moment {moment_id} from {source_label}, rebuild the moment payloads, and rebuild catalogue search."
     return preview
 
 
@@ -960,10 +989,11 @@ def build_scope_for_moment(
     repo_root: Path,
     moment_file: str,
     *,
+    metadata: Dict[str, Any] | None = None,
     force: bool = False,
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
-    preview = preview_moment_source(repo_root, moment_file, env=env)
+    preview = preview_moment_source(repo_root, moment_file, metadata=metadata, env=env)
     if not preview.get("valid"):
         errors = preview.get("errors") or []
         raise ValueError("; ".join(str(error) for error in errors) or "moment source preview failed")
@@ -1254,12 +1284,13 @@ def run_moment_scoped_build(
     repo_root: Path,
     *,
     moment_file: str,
+    metadata: Dict[str, Any] | None = None,
     write: bool,
     force: bool = False,
     log_activity: bool = True,
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
-    scope = build_scope_for_moment(repo_root, moment_file, force=force, env=env)
+    scope = build_scope_for_moment(repo_root, moment_file, metadata=metadata, force=force, env=env)
     return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
 
 

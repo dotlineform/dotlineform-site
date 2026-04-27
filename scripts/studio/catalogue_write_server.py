@@ -107,6 +107,15 @@ from catalogue_json_build import (  # noqa: E402
     run_scoped_build,
     run_series_scoped_build,
 )
+from moment_sources import (  # noqa: E402
+    CATALOGUE_MOMENT_PROSE_REL_DIR,
+    MOMENT_METADATA_FILENAME,
+    has_front_matter_text,
+    load_moment_metadata_records,
+    moment_metadata_payload,
+    normalize_moment_filename,
+    normalize_moment_metadata_record,
+)
 from catalogue_workbook_import import (  # noqa: E402
     DEFAULT_IMPORT_WORKBOOK_PATH,
     IMPORT_MODE_WORKS,
@@ -683,12 +692,17 @@ def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, li
     return normalized_work_id, normalized_series_id, extra_series_ids, extra_work_ids, force
 
 
-def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, bool]:
+def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, Dict[str, Any], bool]:
     moment_file = str(body.get("moment_file") or body.get("file") or "").strip()
     if not moment_file:
         raise ValueError("moment_file is required")
+    metadata_value = body.get("metadata")
+    metadata: Dict[str, Any] = dict(metadata_value) if isinstance(metadata_value, Mapping) else {}
+    for key in ["title", "status", "published_date", "date", "date_display", "source_image_file", "image_file", "image_alt"]:
+        if key in body and key not in metadata:
+            metadata[key] = body.get(key)
     force = bool(body.get("force"))
-    return moment_file, force
+    return moment_file, metadata, force
 
 
 def normalize_prose_import_target(body: Mapping[str, Any]) -> tuple[str, str, str]:
@@ -3874,8 +3888,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_moment_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        moment_file, force = extract_moment_import_request(body)
-        preview = preview_moment_source(self.server.repo_root, moment_file)
+        moment_file, metadata, force = extract_moment_import_request(body)
+        preview = preview_moment_source(self.server.repo_root, moment_file, metadata=metadata, staged=True)
         payload: Dict[str, Any] = {
             "ok": True,
             "moment_file": preview.get("moment_file") or moment_file,
@@ -3883,7 +3897,7 @@ class Handler(BaseHTTPRequestHandler):
             "preview": preview,
         }
         if preview.get("valid"):
-            scope = build_scope_for_moment(self.server.repo_root, moment_file, force=force)
+            scope = build_scope_for_moment(self.server.repo_root, moment_file, metadata=metadata, force=force)
             scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
             payload["build"] = scope
             payload["effective_force"] = bool(force)
@@ -3895,15 +3909,45 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_moment_import_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        moment_file, force = extract_moment_import_request(body)
-        preview = preview_moment_source(self.server.repo_root, moment_file)
+        moment_file, metadata, force = extract_moment_import_request(body)
+        preview = preview_moment_source(self.server.repo_root, moment_file, metadata=metadata, staged=True)
         if not preview.get("valid"):
             errors = preview.get("errors") or []
             raise ValueError("; ".join(str(error) for error in errors) or "moment import preview failed")
 
+        moment_filename = normalize_moment_filename(moment_file)
+        moment_id_for_write = moment_filename[:-3]
+        staging_path = self.server.repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / "moments" / moment_filename
+        target_path = self.server.repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR / moment_filename
+        target_root = (self.server.repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve()
+        if target_root not in self.server.allowed_write_roots:
+            raise ValueError("moment prose source root is not allowlisted")
+        ensure_direct_child(target_path, target_root)
+        text = staging_path.read_text(encoding="utf-8")
+        if has_front_matter_text(text):
+            raise ValueError("staged moment prose must be body-only Markdown without front matter")
+        if not text.endswith("\n"):
+            text += "\n"
+
+        metadata_records = load_moment_metadata_records(self.server.source_dir)
+        merged_metadata = normalize_moment_metadata_record(
+            moment_id_for_write,
+            {**metadata_records.get(moment_id_for_write, {}), **metadata, "moment_id": moment_id_for_write},
+        )
+        metadata_records[moment_id_for_write] = merged_metadata
+        metadata_path = self.server.source_dir / MOMENT_METADATA_FILENAME
+        target_payloads: Dict[Path, Dict[str, Any]] = {
+            metadata_path: moment_metadata_payload(metadata_records),
+        }
+        backup_paths: list[Path] = []
+        if not self.server.dry_run:
+            atomic_write_text_no_backup(target_path, text)
+            backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
+
         result = run_moment_scoped_build(
             self.server.repo_root,
             moment_file=moment_file,
+            metadata=merged_metadata,
             write=not self.server.dry_run,
             force=force,
             log_activity=not self.server.dry_run,
@@ -3922,9 +3966,13 @@ class Handler(BaseHTTPRequestHandler):
             "build": scope,
             "steps": result.get("steps", []),
             "public_url": str(preview.get("public_url") or ""),
+            "metadata_path": str(preview.get("metadata_path") or ""),
+            "target_path": str(preview.get("target_path") or ""),
         }
         if self.server.dry_run:
             payload["dry_run"] = True
+        if backup_paths:
+            payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
         if result.get("status") != "completed":
             if not self.server.dry_run:
                 now_utc = utc_now()
@@ -4520,9 +4568,11 @@ def main() -> None:
         for kind, filename in SOURCE_FILES.items()
         if kind != "meta"
     }
+    allowed_paths.add((source_dir / MOMENT_METADATA_FILENAME).resolve())
     allowed_write_roots = {
         (repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
         (repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
+        (repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
     }
 
     server = CatalogueWriteServer(

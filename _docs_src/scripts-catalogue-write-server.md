@@ -209,6 +209,45 @@ Apply behavior:
 - intentionally does not create backup files for this prose import flow
 - records Catalogue Activity when a non-dry-run import writes changed prose
 
+## Moment Import
+
+`POST /catalogue/moment/import-preview` expects:
+
+```json
+{
+  "moment_file": "keys.md",
+  "metadata": {
+    "title": "keys",
+    "status": "published",
+    "published_date": "2026-02-15",
+    "date": "2024-01-01",
+    "date_display": "",
+    "source_image_file": "",
+    "image_alt": ""
+  }
+}
+```
+
+Request behavior:
+
+- `moment_file` must be a filename-only slug-safe Markdown filename
+- staged prose is resolved from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
+- permanent prose target is `_docs_src_catalogue/moments/<moment_id>.md`
+- metadata is validated from the submitted metadata plus any existing `assets/studio/data/catalogue/moments.json` record
+- staged prose must be body-only Markdown and must not contain canonical metadata front matter
+- existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
+
+`POST /catalogue/moment/import-apply` accepts the same request shape.
+
+Apply behavior:
+
+- writes body-only prose to `_docs_src_catalogue/moments/<moment_id>.md`
+- writes canonical moment metadata to `assets/studio/data/catalogue/moments.json`
+- creates the normal catalogue JSON backup bundle for the metadata write
+- runs the scoped moment generator and catalogue search rebuild
+- skips local media/srcset generation for this moment import flow
+- records Catalogue Activity when a non-dry-run import completes or fails
+
 ## Derived Lookup Refresh
 
 Current behavior after successful canonical writes:

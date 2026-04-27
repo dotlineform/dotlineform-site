@@ -19,7 +19,7 @@ Lightweight moments index JSON is written to assets/data/moments_index.json (obj
 - WorkDetails: additional detail images associated with a work
 - WorkFiles: downloadable files associated with a work
 - WorkLinks: published links associated with a work
-- Moments: standalone moment entries sourced from `moments/*.md` front matter
+- Moments: standalone moment entries sourced from catalogue moment metadata JSON plus repo-local body Markdown
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
@@ -50,12 +50,12 @@ Common flags:
 - --moments-output-dir: moment page destination
 - --moments-json-dir: moment JSON output destination
 - --moments-index-json-path: moments index JSON output destination
-- --projects-base-dir: base path used for work/work_details dimension lookups, WorkFiles source lookup, and moment source discovery
+- --projects-base-dir: base path used for work/work_details dimension lookups, WorkFiles source lookup, and moment source-image lookup
 - --media-base-dir: base path used for staging work download files into works/files
 
 Path variables used by the script:
 - projects_root = [projects-base-dir]/projects (work + work_details + work_files source lookup)
-- moments_root = [projects-base-dir]/moments (moment prose source lookup)
+- moment prose root = _docs_src_catalogue/moments
 - moments_images_root = [projects-base-dir]/moments/images (moment source image lookup)
 
 """
@@ -150,14 +150,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id
 
 try:
-    from moment_sources import load_moment_sources_manifest, scan_moment_source_files
+    from moment_sources import build_moment_metadata_source_index, load_moment_sources_manifest, scan_moment_source_files
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.moment_sources import load_moment_sources_manifest, scan_moment_source_files
-
-try:
-    from moment_sources import update_moment_source_front_matter
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.moment_sources import update_moment_source_front_matter
+    from scripts.moment_sources import build_moment_metadata_source_index, load_moment_sources_manifest, scan_moment_source_files
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -3143,7 +3138,13 @@ def main() -> None:
     projects_base_dir = Path(args.projects_base_dir).expanduser()
     moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
-    source_moment_index = scan_moment_source_files(moments_root)
+    source_moment_index = build_moment_metadata_source_index(
+        json_source_dir,
+        repo_root=repo_root,
+        moments_images_root=moments_images_root,
+    )
+    if not source_moment_index and not moment_sources_manifest_records:
+        source_moment_index = scan_moment_source_files(moments_root)
     if not run_moments and not run_moments_index_json:
         if selected_artifacts is not None and not run_moments_artifact and not run_moments_index_json:
             print("Moment pages/JSON skipped: not selected by --only.")
@@ -3219,7 +3220,6 @@ def main() -> None:
         moments_pages_skipped = 0
         moments_json_written = 0
         moments_json_skipped = 0
-        moments_source_metadata_updated = 0
         moment_json_generated_at_utc = utc_timestamp_now()
         moments_processed = 0
 
@@ -3348,18 +3348,6 @@ def main() -> None:
                         print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
                         moments_pages_written += 1
 
-                if args.write:
-                    image_override = source_image_file if source_image_file != default_moment_filename else None
-                    if update_moment_source_front_matter(
-                        source_prose_path,
-                        title=title,
-                        status="published",
-                        published_date=today.isoformat(),
-                        image_file=image_override,
-                        preserve_existing_published_date=True,
-                    ):
-                        moments_source_metadata_updated += 1
-
                 content_html = render_markdown_with_jekyll(source_prose_path)
                 moment_json_record = build_moment_json_record(moment_record)
                 payload_version = compute_payload_version(compact_json_object({"moment": moment_json_record, "content_html": content_html}))
@@ -3389,9 +3377,6 @@ def main() -> None:
                         print(f"{prefix_m}DRY-RUN: would write moment JSON {display_path(out_json_path)} (overwrite={exists})")
                         moments_json_written += 1
 
-        if args.write and moments_source_metadata_updated > 0:
-            print(f"Updated moment source front matter for {moments_source_metadata_updated} file(s).")
-
         if run_moments:
             print(
                 f"Moment pages done. {'Would write' if not args.write else 'Wrote'}: {moments_pages_written}. Skipped: {moments_pages_skipped}."
@@ -3402,7 +3387,6 @@ def main() -> None:
 
     moments_payload: Dict[str, Dict[str, Any]] = {}
     projects_base_dir = Path(args.projects_base_dir).expanduser()
-    moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
 
     for moment_entry in moment_source_records:

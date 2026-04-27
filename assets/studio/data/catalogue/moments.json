@@ -1,0 +1,511 @@
+{
+  "header": {
+    "schema": "catalogue_source_moments_v1"
+  },
+  "moments": {
+    "13-moments-in-october": {
+      "moment_id": "13-moments-in-october",
+      "title": "13 moments in october",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2024-10-23",
+      "date_display": null,
+      "image_alt": null
+    },
+    "4-stories": {
+      "moment_id": "4-stories",
+      "title": "4 stories",
+      "status": "published",
+      "published_date": "2026-04-01",
+      "date": "2020-01-01",
+      "date_display": "c. 2020?",
+      "image_alt": null
+    },
+    "a-beautiful-route": {
+      "moment_id": "a-beautiful-route",
+      "title": "a beautiful route",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2015-02-19",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-dance": {
+      "moment_id": "a-dance",
+      "title": "a dance",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-04-25",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-doll-story": {
+      "moment_id": "a-doll-story",
+      "title": "a doll story",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2025-06-14",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-feeling-of-free-will": {
+      "moment_id": "a-feeling-of-free-will",
+      "title": "a feeling of free will",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2024-10-23",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-lemon-tart-poem": {
+      "moment_id": "a-lemon-tart-poem",
+      "title": "a lemon tart poem",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2022-06-03",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-light-inside-a-flower": {
+      "moment_id": "a-light-inside-a-flower",
+      "title": "a light inside a flower",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-03-25",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-poem-about-love": {
+      "moment_id": "a-poem-about-love",
+      "title": "a poem about love",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-01-01",
+      "date_display": "c. 2018?",
+      "image_alt": null
+    },
+    "a-poem-about-purity": {
+      "moment_id": "a-poem-about-purity",
+      "title": "a poem about purity",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2017-12-20",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-question": {
+      "moment_id": "a-question",
+      "title": "a question",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2014-10-09",
+      "date_display": null,
+      "image_alt": null
+    },
+    "a-selina": {
+      "moment_id": "a-selina",
+      "title": "a selina",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2014-08-24",
+      "date_display": null,
+      "image_alt": null
+    },
+    "all-the-little-cracks": {
+      "moment_id": "all-the-little-cracks",
+      "title": "all the little cracks",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2015-01-01",
+      "date_display": "c. 2015",
+      "image_alt": null
+    },
+    "angels": {
+      "moment_id": "angels",
+      "title": "angels",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "1998-04-01",
+      "date_display": "c. Apr 1998",
+      "image_alt": null
+    },
+    "blue-sky": {
+      "moment_id": "blue-sky",
+      "title": "blue sky",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2012-01-01",
+      "date_display": "c. 2012?",
+      "image_alt": null
+    },
+    "boundary-conditions": {
+      "moment_id": "boundary-conditions",
+      "title": "boundary conditions",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2015-01-01",
+      "date_display": "c. 2015",
+      "image_alt": null
+    },
+    "cascading-waterfalls": {
+      "moment_id": "cascading-waterfalls",
+      "title": "cascading waterfalls",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2016-01-01",
+      "date_display": "c. 2016",
+      "image_alt": null
+    },
+    "circle": {
+      "moment_id": "circle",
+      "title": "circle",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-01-01",
+      "date_display": "c. 2019",
+      "image_alt": null
+    },
+    "clouds": {
+      "moment_id": "clouds",
+      "title": "clouds",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-01-01",
+      "date_display": "c. 2019?",
+      "image_alt": null
+    },
+    "compiled": {
+      "moment_id": "compiled",
+      "title": "compiled",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-09-25",
+      "date_display": null,
+      "image_alt": null
+    },
+    "creatures-who-understand-light": {
+      "moment_id": "creatures-who-understand-light",
+      "title": "creatures who understand light",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-01-01",
+      "date_display": "c. 2019",
+      "image_alt": null
+    },
+    "dream-sleep": {
+      "moment_id": "dream-sleep",
+      "title": "dream sleep",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-04-29",
+      "date_display": null,
+      "image_alt": null
+    },
+    "droplets": {
+      "moment_id": "droplets",
+      "title": "droplets",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2016-11-19",
+      "date_display": null,
+      "image_alt": null
+    },
+    "exit-dreams": {
+      "moment_id": "exit-dreams",
+      "title": "exit dreams",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2012-07-03",
+      "date_display": null,
+      "image_alt": null
+    },
+    "healing-forms": {
+      "moment_id": "healing-forms",
+      "title": "healing forms",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2016-06-07",
+      "date_display": "c. 2016",
+      "image_alt": null
+    },
+    "hi-honey": {
+      "moment_id": "hi-honey",
+      "title": "hi honey",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2024-10-23",
+      "date_display": "c. 2024",
+      "image_alt": null
+    },
+    "i-felt-my-self-sinking": {
+      "moment_id": "i-felt-my-self-sinking",
+      "title": "i felt my self sinking",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2015-01-01",
+      "date_display": "c. 2015",
+      "image_alt": null
+    },
+    "impenetrable": {
+      "moment_id": "impenetrable",
+      "title": "impenetrable",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-05-02",
+      "date_display": "c. 2018",
+      "image_alt": null
+    },
+    "keys": {
+      "moment_id": "keys",
+      "title": "keys",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-07-01",
+      "date_display": null,
+      "image_alt": null
+    },
+    "leaves": {
+      "moment_id": "leaves",
+      "title": "leaves",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-04-22",
+      "date_display": null,
+      "image_alt": null
+    },
+    "little-clear-vessel": {
+      "moment_id": "little-clear-vessel",
+      "title": "little clear vessel",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "1992-01-01",
+      "date_display": "c. 1992",
+      "image_alt": null
+    },
+    "lotus-pond": {
+      "moment_id": "lotus-pond",
+      "title": "lotus pond",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2024-10-23",
+      "date_display": "c. 2024",
+      "image_alt": null
+    },
+    "memory": {
+      "moment_id": "memory",
+      "title": "memory",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2025-08-09",
+      "date_display": null,
+      "image_alt": null
+    },
+    "occasionally": {
+      "moment_id": "occasionally",
+      "title": "occasionally",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-07-07",
+      "date_display": null,
+      "image_alt": null
+    },
+    "particles": {
+      "moment_id": "particles",
+      "title": "particles",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2013-01-01",
+      "date_display": "c. 2013",
+      "image_alt": null
+    },
+    "peace-of-mind": {
+      "moment_id": "peace-of-mind",
+      "title": "peace of mind",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-08-27",
+      "date_display": null,
+      "image_alt": null
+    },
+    "perfection-of-flowers": {
+      "moment_id": "perfection-of-flowers",
+      "title": "perfection of flowers",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2014-01-01",
+      "date_display": "c. 2014",
+      "image_alt": null
+    },
+    "rose": {
+      "moment_id": "rose",
+      "title": "rose",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-02-19",
+      "date_display": null,
+      "image_alt": null
+    },
+    "sadness-love": {
+      "moment_id": "sadness-love",
+      "title": "sadness love",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2010-01-23",
+      "date_display": null,
+      "image_alt": null
+    },
+    "samuel-beckett": {
+      "moment_id": "samuel-beckett",
+      "title": "Samuel Beckett",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "1992-01-01",
+      "date_display": "c. 1992",
+      "image_alt": null
+    },
+    "sleep": {
+      "moment_id": "sleep",
+      "title": "sleep",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-06-11",
+      "date_display": null,
+      "image_alt": null
+    },
+    "sleepy-moments": {
+      "moment_id": "sleepy-moments",
+      "title": "sleepy moments",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-04-02",
+      "date_display": null,
+      "image_alt": null
+    },
+    "snow": {
+      "moment_id": "snow",
+      "title": "snow",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-01-01",
+      "date_display": "2018-20",
+      "image_alt": null
+    },
+    "the-moment-collector": {
+      "moment_id": "the-moment-collector",
+      "title": "the moment collector",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-01-07",
+      "date_display": null,
+      "image_alt": null
+    },
+    "the-moon-and-the-sun": {
+      "moment_id": "the-moon-and-the-sun",
+      "title": "the moon and the sun",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2024-10-24",
+      "date_display": null,
+      "image_alt": null
+    },
+    "the-watch-keeper": {
+      "moment_id": "the-watch-keeper",
+      "title": "the watch keeper",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2014-01-28",
+      "date_display": null,
+      "image_alt": null
+    },
+    "timeless": {
+      "moment_id": "timeless",
+      "title": "timeless",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-05-01",
+      "date_display": null,
+      "image_alt": null
+    },
+    "vessels": {
+      "moment_id": "vessels",
+      "title": "vessels",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-05-15",
+      "date_display": null,
+      "image_alt": null
+    },
+    "warmth": {
+      "moment_id": "warmth",
+      "title": "warmth",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-11-25",
+      "date_display": null,
+      "image_alt": null
+    },
+    "we-are-the-vessel": {
+      "moment_id": "we-are-the-vessel",
+      "title": "we are the vessel",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-05-12",
+      "date_display": null,
+      "image_alt": null
+    },
+    "we-make-ghosts": {
+      "moment_id": "we-make-ghosts",
+      "title": "we make ghosts",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2014-01-01",
+      "date_display": "c. 2014",
+      "image_alt": null
+    },
+    "where": {
+      "moment_id": "where",
+      "title": "where",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-07-02",
+      "date_display": null,
+      "image_alt": null
+    },
+    "where-words-end": {
+      "moment_id": "where-words-end",
+      "title": "where words end",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-05-06",
+      "date_display": null,
+      "image_alt": null
+    },
+    "will-we-leave-residues": {
+      "moment_id": "will-we-leave-residues",
+      "title": "will we leave residues",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2022-01-01",
+      "date_display": "c. 2022",
+      "image_alt": null
+    },
+    "winter": {
+      "moment_id": "winter",
+      "title": "winter",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2018-05-16",
+      "date_display": null,
+      "image_alt": null
+    },
+    "without-words": {
+      "moment_id": "without-words",
+      "title": "without words",
+      "status": "published",
+      "published_date": "2026-02-15",
+      "date": "2019-09-12",
+      "date_display": null,
+      "image_alt": null
+    }
+  }
+}

@@ -2,7 +2,7 @@
 doc_id: new-pipeline-current-pipeline-map
 title: "Current Pipeline Map"
 added_date: 2026-04-17
-last_updated: 2026-04-17
+last_updated: 2026-04-27
 parent_id: new-pipeline
 sort_order: 10
 ---
@@ -22,12 +22,15 @@ Current canonical catalogue source:
   - `WorkDetails`
   - `WorkFiles`
   - `WorkLinks`
-- canonical source media and prose under `DOTLINEFORM_PROJECTS_BASE_DIR`
+- canonical source media and legacy prose under `DOTLINEFORM_PROJECTS_BASE_DIR`
   - work primary images
   - work detail images
+- current media source images
+- repo-local catalogue prose under `_docs_src_catalogue/`
   - work prose Markdown
   - series prose Markdown
-- moment source records under `moments/*.md`
+  - moment prose Markdown
+- moment metadata records under `assets/studio/data/catalogue/moments.json`
 
 The workbook is currently both an editing interface and a source database. The generator also writes operational state back into the workbook, including `status`, `published_date`, and image dimensions.
 
@@ -43,7 +46,7 @@ Primary responsibilities:
 
 - load `data/works.xlsx`
 - fingerprint workbook rows for works, series, work details, work files, and work links
-- fingerprint moment source records from `moments/*.md`
+- fingerprint moment metadata and repo-local moment prose sources
 - fingerprint source media and prose files
 - compare those fingerprints with `var/build_catalogue_state.json`
 - infer affected work IDs, detail UIDs, series IDs, and moment IDs

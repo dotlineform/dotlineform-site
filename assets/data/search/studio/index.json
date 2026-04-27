@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f9f92e359664d010bb456463a3120470",
-    "generated_at_utc": "2026-04-27T15:35:58Z",
+    "version": "blake2b-11db94208601d471355a1a9d5040da84",
+    "generated_at_utc": "2026-04-27T16:20:50Z",
     "count": 138
   },
   "entries": [
@@ -12,10 +12,10 @@
       "kind": "doc",
       "title": "Current Pipeline Map",
       "href": "/docs/?scope=studio&doc=new-pipeline-current-pipeline-map",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-27",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-17 • New Cat Pipeline",
+      "display_meta": "2026-04-27 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-current-pipeline-map",
         "new",
@@ -25,12 +25,12 @@
         "current pipeline map",
         "new cat pipeline",
         "cat",
-        "2026-04-17",
+        "2026-04-27",
         "2026",
         "04",
-        "17"
+        "27"
       ],
-      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map new cat pipeline cat 2026-04-17 2026 04 17"
+      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map new cat pipeline cat 2026-04-27 2026 04 27"
     },
     {
       "id": "data-flow",
@@ -504,10 +504,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-26 • Data Models",
+      "display_meta": "2026-04-27 • Data Models",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -516,12 +516,12 @@
         "catalogue scope",
         "scope",
         "data models",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-26 2026 04 26"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-27 2026 04 27"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -826,10 +826,10 @@
       "kind": "doc",
       "title": "Studio Config and Save Flow",
       "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-27",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-22 • Studio",
+      "display_meta": "2026-04-27 • Studio",
       "search_terms": [
         "studio-config-and-save-flow",
         "studio",
@@ -838,12 +838,12 @@
         "save",
         "flow",
         "studio config and save flow",
-        "2026-04-22",
+        "2026-04-27",
         "2026",
         "04",
-        "22"
+        "27"
       ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-04-22 2026 04 22"
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-04-27 2026 04 27"
     },
     {
       "id": "studio-ui-framework",
@@ -2885,10 +2885,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Import",
       "href": "/docs/?scope=studio&doc=catalogue-moment-import",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-27",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-27 • Studio",
       "search_terms": [
         "catalogue-moment-import",
         "catalogue",
@@ -2896,12 +2896,12 @@
         "import",
         "catalogue moment import",
         "studio",
-        "2026-04-18",
+        "2026-04-27",
         "2026",
         "04",
-        "18"
+        "27"
       ],
-      "search_text": "catalogue-moment-import catalogue moment import catalogue moment import studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-moment-import catalogue moment import catalogue moment import studio 2026-04-27 2026 04 27"
     },
     {
       "id": "tag-aliases",

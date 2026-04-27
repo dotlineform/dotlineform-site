@@ -33,29 +33,32 @@ Common runs:
 ./scripts/catalogue_json_build.py --moment-file keys.md --write
 ```
 
-Before any writes begin, the generator validates canonical source records and moment-source inputs before file writes or canonical source status/date updates start.
+Before any writes begin, the generator validates canonical source records and moment-source inputs before file writes or canonical source updates start.
 
 Generator log output also shortens local absolute paths for source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
 
-When `--write` is used, the generator writes mutable catalogue/source state back into canonical JSON and moment source front matter rather than into a workbook.
+When `--write` is used, the generator writes mutable catalogue/source state back into canonical JSON rather than into a workbook.
 
 Moment canonical source model:
 
-- source prose file: `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md`
+- metadata source: `assets/studio/data/catalogue/moments.json`
+- source prose file: `_docs_src_catalogue/moments/<moment_id>.md`
 - canonical `moment_id`: filename stem
-- required front matter:
+- required metadata:
   - `title`
   - `status`
   - `published_date`
   - `date`
-- optional front matter:
+- optional metadata:
   - `date_display`
-  - `image_file`
+  - `source_image_file`
+  - `image_alt`
 - default source image path:
   - `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/images/<moment_id>.jpg`
-- when `image_file` is present:
+- when `source_image_file` is present:
   - source image lookup uses that filename instead
 - public/generated moment image stem remains `<moment_id>`
+- moment prose Markdown is body-only; the generator no longer writes moment source front matter
 
 ## Useful Flags
 
@@ -79,7 +82,7 @@ Moment canonical source model:
 - `--moments-output-dir` with default `_moments`
 - `--moments-json-dir` with default `assets/moments/index`
   - writes per-moment JSON payloads at `assets/moments/index/<moment_id>.json`
-  - renders canonical moment prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md` using the local Jekyll markdown stack
+  - renders canonical moment prose from `_docs_src_catalogue/moments/<moment_id>.md` using the local Jekyll markdown stack
   - generated together with `_moments/<moment_id>.md` when `moments` is selected
   - JSON is now the canonical runtime source for moment date, image, and prose content
   - generated `_moments/<moment_id>.md` files are minimal stubs with `moment_id`, `title`, `layout`, and `checksum`
@@ -88,7 +91,7 @@ Moment canonical source model:
   - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
 - `--projects-base-dir`
   - defaults from `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - used for work-detail and work-file sources, moment source files, and source media dimension lookups
+  - used for work-detail and work-file sources plus source media dimension lookups
   - refreshes work primary-image dimensions only when `work-json` is selected directly or indirectly via `work-pages`
 - `--media-base-dir`
   - defaults from `DOTLINEFORM_MEDIA_BASE_DIR`
@@ -176,7 +179,7 @@ The internal generator currently stops the run when actionable canonical source 
 - `series.primary_work_id` values that do not resolve to a `works` record
 - `series.primary_work_id` values whose `works.series_ids` do not include that series
 - `work_details.work_id` values that do not resolve to `works`
-- non-slug-safe moment source filenames under `moments/*.md`
+- non-slug-safe moment ids in `assets/studio/data/catalogue/moments.json`
 
 This validation runs before generated files or canonical source status/date updates are written, so those failures no longer appear after a partially written run.
 

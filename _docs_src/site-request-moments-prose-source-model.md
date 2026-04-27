@@ -118,11 +118,11 @@ Moment metadata should move out of the moment prose Markdown source.
 
 The moment import page should collect the metadata needed to create or update the moment record. The prose Markdown file owns only the authored body content.
 
-Required metadata ownership details should be defined during implementation, including:
+Implemented metadata ownership:
 
-- where moment metadata is stored as canonical source after import
-- how existing front matter fields are migrated into that source
-- how draft, published, and `published_date` behavior works without writing front matter back to Markdown
+- moment metadata is stored in `assets/studio/data/catalogue/moments.json`
+- existing front matter metadata was migrated into that JSON source
+- draft, published, and `published_date` behavior now uses metadata JSON rather than prose front matter
 
 ## Benefits
 
@@ -140,9 +140,7 @@ Expected benefits:
 
 Main risks:
 
-- moving moment metadata out of front matter increases implementation scope
-- generator code currently scans external `moments/*.md` and writes front matter updates during publish flows
-- the current moment import UI copy and write-server endpoints assume an external canonical moments folder
+- moving moment metadata out of front matter increased implementation scope
 - the import page needs enough metadata fields to create or update a publishable moment safely
 - source-image lookup must not accidentally move into the prose-source tree
 - existing prose wrappers are accepted for migration, so cleanup to pure Markdown remains a later step
@@ -158,10 +156,7 @@ The media tradeoff is deliberate: moment images should not get a one-off solutio
 
 Open implementation details:
 
-1. Exact canonical storage shape for moment metadata after it leaves Markdown front matter.
-2. Exact `/studio/catalogue-moment-import/` metadata fields and validation rules.
-3. Whether existing external moment files are staged manually or by a one-off staging helper.
-4. How wrapper-preserving prose migration is reported and later cleaned up.
+1. How wrapper-preserving prose migration is reported and later cleaned up.
 
 ## Proposed Implementation Steps
 
@@ -187,7 +182,7 @@ Defined:
 
 Status:
 
-- proposed
+- complete
 
 Add or adapt a moment import path that:
 
@@ -201,11 +196,19 @@ Add or adapt a moment import path that:
 - writes the permanent repo-local source file
 - keeps external source files untouched
 
+Implemented behavior:
+
+- staged prose is read from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
+- permanent prose is written to `_docs_src_catalogue/moments/<moment_id>.md`
+- canonical metadata is written to `assets/studio/data/catalogue/moments.json`
+- the apply endpoint validates staged body-only Markdown before writing
+- local media/srcset generation is skipped for this pass
+
 ### Task 3. Update Moment Generator Source Lookup
 
 Status:
 
-- proposed
+- complete
 
 Update the catalogue generator so moment prose is read from the repo-local source root and moment metadata is read from the new canonical metadata source.
 
@@ -217,11 +220,18 @@ The generator should continue to write:
 
 Public runtime behavior should stay unchanged.
 
+Implemented behavior:
+
+- generator moment metadata lookup reads `assets/studio/data/catalogue/moments.json`
+- generator moment prose lookup reads `_docs_src_catalogue/moments/<moment_id>.md`
+- generated runtime payloads remain `_moments/<moment_id>.md`, `assets/moments/index/<moment_id>.json`, and `assets/data/moments_index.json`
+- generator no longer writes moment source front matter
+
 ### Task 4. Update Studio Moment Import UI
 
 Status:
 
-- proposed
+- complete
 
 Update `/studio/catalogue-moment-import/` so the UI reflects the new source model.
 
@@ -232,11 +242,17 @@ The UI should:
 - explain that staged prose comes from `var/docs/catalogue/import-staging/moments/`
 - avoid describing external moment Markdown as the permanent canonical source after migration
 
+Implemented behavior:
+
+- the page now renders metadata fields for title, status, date, date display, published date, source image file, and image alt
+- preview/apply requests send metadata alongside the staged filename
+- UI copy now describes staged body-only prose and catalogue JSON metadata ownership
+
 ### Task 5. Migrate Existing Moment Sources
 
 Status:
 
-- proposed
+- complete
 
 Create a migration pass for existing moment Markdown files.
 
@@ -250,11 +266,19 @@ The migration should:
 - avoid deleting external source files
 - keep generated public moment pages stable
 
+Implemented behavior:
+
+- current external moment front matter was migrated into `assets/studio/data/catalogue/moments.json`
+- current external moment prose bodies were copied into `_docs_src_catalogue/moments/<moment_id>.md`
+- source front matter was stripped from the repo-local prose files
+- existing `<pre class="moment-text">...</pre>` wrappers were preserved
+- external source files were not deleted
+
 ### Task 6. Update Docs And Verification
 
 Status:
 
-- proposed
+- complete
 
 Update relevant docs after implementation.
 
@@ -266,6 +290,11 @@ Likely docs:
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+Implemented behavior:
+
+- moment import, generator, scoped build, catalogue data-model, write-server, and change-log docs were updated
+- Studio docs and search payloads were rebuilt after source-doc updates
 
 ## Validation Plan
 

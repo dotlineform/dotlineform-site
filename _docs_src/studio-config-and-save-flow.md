@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: "Studio Config and Save Flow"
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-04-27
 parent_id: studio
 sort_order: 20
 ---
@@ -178,13 +178,14 @@ Catalogue workbook import behavior:
 Catalogue moment import behavior:
 
 - the moments page sends `POST /catalogue/moment/import-preview` and `POST /catalogue/moment/import-apply`
-- both endpoints resolve one explicit markdown filename from the canonical moments source folder under `DOTLINEFORM_PROJECTS_BASE_DIR`
-- this phase imports existing source files only; it does not create prose files in Studio
-- preview reads the source front matter, validates the required metadata, and reports current runtime/generated status
+- both endpoints resolve one explicit staged Markdown filename from `var/docs/catalogue/import-staging/moments/`
+- the page collects moment metadata and sends it with the filename
+- preview validates body-only staged prose, validates the required metadata, and reports current runtime/generated status
+- apply writes prose to `_docs_src_catalogue/moments/<moment_id>.md` and metadata to `assets/studio/data/catalogue/moments.json`
 - apply runs a targeted `generate_work_pages.py --only moments --moment-ids ... --write` flow and then rebuilds catalogue search
 - missing source images are allowed in this phase and do not block import
-- apply may update source front matter to published state and preserve or set `published_date` via the generator
-- the page does not edit moment prose or front matter fields directly; source-file editing remains external in this phase
+- apply does not update moment source front matter
+- media image import/edit/srcset behavior remains out of scope for this moment prose-source pass
 
 Catalogue work file local save behavior:
 
