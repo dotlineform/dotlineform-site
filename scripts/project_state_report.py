@@ -89,8 +89,7 @@ def iter_candidate_project_dirs(projects_root: Path, detail_dirs: set[str], incl
             rel = relative_posix(child.relative_to(projects_root))
             if is_detail_dir(rel, detail_dirs):
                 continue
-            if any(is_image_path(grandchild) for grandchild in child.iterdir()):
-                yield child
+            yield child
         return
 
     for current, dirnames, filenames in os.walk(projects_root):
@@ -105,7 +104,7 @@ def iter_candidate_project_dirs(projects_root: Path, detail_dirs: set[str], incl
             continue
         if rel and is_detail_dir(rel, detail_dirs):
             continue
-        if any(Path(filename).suffix.lower() in IMAGE_EXTENSIONS for filename in filenames):
+        if rel:
             yield current_path
 
 

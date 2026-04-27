@@ -56,7 +56,7 @@ The current implementation can create draft work, work-detail, and series record
 }
 ```
 
-It runs `./scripts/project_state_report.py` through its shared Python entrypoint. It writes `_docs_src/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path. `include_subfolders` defaults to `false`; when true, the report includes `/projects/<project_folder>/<sub-folder>` directories while still skipping detail folders.
+It runs `./scripts/project_state_report.py` through its shared Python entrypoint. It writes `_docs_src/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path. `include_subfolders` defaults to `false`; default mode counts every direct `/projects/<project_folder>` folder. When true, the report also includes `/projects/<project_folder>/<sub-folder>` directories while still skipping detail folders.
 
 `POST /catalogue/bulk-save` expects:
 

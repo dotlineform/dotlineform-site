@@ -32,7 +32,7 @@ The report currently includes:
 
 The page shows the output path and summary counts after a successful run. The Markdown file is intentionally `published: false`; use the page's file-open command to inspect the source document locally.
 
-The `include sub-folders` checkbox is off by default. When unchecked, the report scans only direct `/projects/<project_folder>` directories and their direct image files. When checked, the report also includes `/projects/<project_folder>/<sub-folder>` directories, while still skipping detail folders.
+The `include sub-folders` checkbox is off by default. When unchecked, the report scans every direct `/projects/<project_folder>` directory. Image mismatch sections still inspect only direct image files inside those folders. When checked, the report also includes `/projects/<project_folder>/<sub-folder>` directories, while still skipping detail folders.
 
 ## Related References
 

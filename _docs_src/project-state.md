@@ -9,7 +9,7 @@ sort_order: 999
 ---
 # Project State
 
-Generated at `2026-04-27T21:54:05Z`.
+Generated at `2026-04-27T22:05:56Z`.
 
 This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`.
 
@@ -20,9 +20,9 @@ Work details are intentionally out of scope. Known detail subfolders from `asset
 ## Summary
 
 - include subfolders: false
-- source folders scanned: 191
+- source folders scanned: 208
 - catalogue project folders: 145
-- source folders not in `works.json`: 46
+- source folders not in `works.json`: 63
 - source images scanned: 3464
 - primary work images in `works.json`: 1940
 - source images in represented folders but not in `works.json`: 49
@@ -33,10 +33,12 @@ Work details are intentionally out of scope. Known detail subfolders from `asset
 
 ## Source Folders Not In Works JSON
 
+- `3 symbols (book)`
 - `3 symbols (cards)` (45 top-level images)
 - `a drawing with a heart in it` (1 top-level image)
 - `a lovely residue` (1 top-level image)
 - `a painting with 2 hearts in it` (1 top-level image)
+- `a world of non-linearity`
 - `abstract painting (2024)` (1 top-level image)
 - `alkine symbols` (1 top-level image)
 - `all the little things` (1 top-level image)
@@ -53,6 +55,7 @@ Work details are intentionally out of scope. Known detail subfolders from `asset
 - `composites (book, 2023)` (8 top-level images)
 - `drawings 2024-2025` (126 top-level images)
 - `early drawings` (2 top-level images)
+- `fault line`
 - `finger tips` (21 top-level images)
 - `flowers and leaves` (1 top-level image)
 - `flowers for mum` (2 top-level images)
@@ -60,23 +63,37 @@ Work details are intentionally out of scope. Known detail subfolders from `asset
 - `formlinedot` (9 top-level images)
 - `forms moment` (7 top-level images)
 - `gena` (1 top-level image)
+- `green`
+- `home is where the light is`
+- `I Ching`
 - `impermance` (7 top-level images)
+- `ink engine`
 - `join the dots` (1 top-level image)
+- `living memory`
 - `lotus pond` (10 top-level images)
 - `mandala form` (9 top-level images)
 - `memorize` (1 top-level image)
+- `memory`
+- `memory words`
+- `moments`
+- `moments in an unfinished painting`
 - `natural kaleidoscope` (1 top-level image)
 - `numbers I` (12 top-level images)
 - `numbers II` (13 top-level images)
+- `observations (2025)`
 - `paths` (11 top-level images)
 - `primes` (5 top-level images)
+- `qrnt (book, 2009)`
 - `quiet night` (33 top-level images)
+- `rain`
 - `saturday night` (1 top-level image)
 - `selected moments` (3 top-level images)
 - `signal` (7 top-level images)
 - `signals` (4 top-level images)
 - `start with dot` (1 top-level image)
+- `tabula rasa (book, 2009)`
 - `trees` (926 top-level images)
+- `vessels`
 - `vogue` (1 top-level image)
 - `what do we do now` (1 top-level image)
 

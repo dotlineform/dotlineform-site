@@ -65,9 +65,9 @@ The report compares only primary work image data:
 
 Work details are out of scope. Known detail subfolders from `work_details.json` and folders named `details` are skipped.
 
-By default, the report scans only direct `/projects/<project_folder>` folders and their direct image files.
+By default, the report scans every direct `/projects/<project_folder>` folder. Image mismatch sections still inspect only direct image files inside those folders.
 
-With `--include-subfolders`, the report also includes `/projects/<project_folder>/<sub-folder>` directories. For image mismatches, the report lists direct source images only when their containing folder already matches a `Works.project_folder`. Folders that do not match `works.json` are reported once in the folder section with their direct image counts.
+With `--include-subfolders`, the report also includes `/projects/<project_folder>/<sub-folder>` directories. For image mismatches, the report lists direct source images only when their containing folder already matches a `Works.project_folder`. Folders that do not match `works.json` are reported once in the folder section with their direct image counts, which may be zero for non-image media folders.
 
 ## Studio Use
 
