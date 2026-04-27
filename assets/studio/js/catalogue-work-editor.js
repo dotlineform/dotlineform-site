@@ -273,13 +273,20 @@ function renderReadiness(state) {
     const sourcePath = normalizeText(item && item.source_path);
     const nextStep = normalizeText(item && item.next_step);
     const proseAction = normalizeText(item && item.key) === "work_prose";
+    const mediaAction = normalizeText(item && item.key) === "work_media";
     const proseActionDisabled = actionDisabled || (proseAction && itemStatus !== "ready");
+    const mediaActionDisabled = actionDisabled || !Boolean(item && item.exists);
     const disabledNote = proseAction && actionDisabled
       ? (draftHasChanges(state)
         ? t(state, "readiness_save_first", "Save source changes before importing prose.")
         : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+      : mediaAction && actionDisabled
+        ? (draftHasChanges(state)
+          ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.")
+          : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
       : "";
     const proseActionLabel = t(state, "prose_import_button", "Import staged prose");
+    const mediaActionLabel = t(state, "media_refresh_button", "Refresh media");
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(title)}</span>
@@ -288,6 +295,7 @@ function renderReadiness(state) {
           ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
           ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
           ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="work" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(proseActionLabel)}</button></div>` : ""}
+          ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="work" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(mediaActionLabel)}</button></div>` : ""}
           ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>
       </div>
@@ -1679,6 +1687,44 @@ async function buildCurrentWork(state) {
   }
 }
 
+function countMediaItems(media, group) {
+  const values = media && media[group] && typeof media[group] === "object" ? media[group] : {};
+  return Object.values(values).reduce((total, items) => total + (Array.isArray(items) ? items.length : 0), 0);
+}
+
+async function refreshWorkMedia(state) {
+  if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable || draftHasChanges(state)) return;
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media…"));
+  setTextWithState(state.resultNode, "");
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      work_id: state.currentWorkId,
+      media_only: true,
+      force: true
+    });
+    const blockedCount = countMediaItems(response && response.media, "blocked");
+    await refreshBuildPreview(state);
+    if (blockedCount > 0) {
+      setTextWithState(state.statusNode, t(state, "media_refresh_status_blocked", "Media refresh blocked."), "error");
+      setTextWithState(state.resultNode, normalizeText(response && response.media && response.media.summary), "error");
+      return;
+    }
+    setTextWithState(state.statusNode, t(state, "media_refresh_status_success", "Media refresh completed."), "success");
+    setTextWithState(state.resultNode, t(state, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
+  } catch (error) {
+    setTextWithState(
+      state.statusNode,
+      `${t(state, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
 async function deleteCurrentWork(state) {
   if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
   state.isDeleting = true;
@@ -2012,8 +2058,15 @@ async function init() {
       });
     });
     readinessNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
-      if (!button) return;
+      const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
+      if (mediaButton) {
+        refreshWorkMedia(state).catch((error) => {
+          console.warn("catalogue_work_editor: unexpected media refresh failure", error);
+        });
+        return;
+      }
+      const proseButton = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
+      if (!proseButton) return;
       importWorkProse(state).catch((error) => {
         console.warn("catalogue_work_editor: unexpected prose import failure", error);
       });

@@ -30,6 +30,7 @@ The first implementation covers:
 - bulk-edit those same fields across the selected detail records
 - show read-only fields for ids, published date, and dimensions
 - show detail media readiness, including the resolved expected source path and missing-state guidance
+- refresh local detail image derivatives from the displayed source image path without changing source metadata
 - show a compact current-record image preview at the top of the summary rail
 - preview the scoped rebuild impact for the parent work
 - save with an optional `Update site now` path through the local catalogue service
@@ -77,6 +78,8 @@ Current save/rebuild flow:
 8. `POST /catalogue/build-preview` reports the parent-work rebuild impact and the current detail media readiness
 9. the current-record rail resolves a compact detail preview from the generated detail thumb assets when they are available
 10. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/work_details/img/`, and leaves primary derivatives staged for remote publishing
+
+The detail media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true`, `force: true`, and the current `detail_uid`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 
 Bulk save flow:
 

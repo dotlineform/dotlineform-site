@@ -34,6 +34,18 @@ Run the scoped build:
 ./scripts/catalogue_json_build.py --work-id 00001 --write
 ```
 
+Refresh only local image derivatives for a work:
+
+```bash
+./scripts/catalogue_json_build.py --work-id 00001 --media-only --force --write
+```
+
+Refresh only local image derivatives for one work detail:
+
+```bash
+./scripts/catalogue_json_build.py --work-id 00001 --detail-uid 00001-003 --media-only --force --write
+```
+
 Include an additional series when membership changed and the previous series page also needs rebuild:
 
 ```bash
@@ -62,6 +74,12 @@ Run the moment import scope:
 
 ```bash
 ./scripts/catalogue_json_build.py --moment-file keys.md --write
+```
+
+Refresh only local image derivatives for one moment:
+
+```bash
+./scripts/catalogue_json_build.py --moment-file keys.md --media-only --force --write
 ```
 
 ## Current Behavior
@@ -99,8 +117,9 @@ For `--moment-file`, the helper:
 Force behavior:
 
 - normal scoped builds do not pass `--force`; unchanged generated payloads and aggregate indexes are skipped by content version
-- `--force` remains available for intentional full rewrites and also passes force through to catalogue search
+- `--force` remains available for intentional full rewrites, passes force through to catalogue search, and forces local media derivative regeneration
 - already-published records do not get a refreshed `published_date` unless they transition from `draft` to `published`
+- `--media-only` stops after source-image staging and local image derivative generation; it does not regenerate page/json payloads or catalogue search
 
 The helper does not:
 

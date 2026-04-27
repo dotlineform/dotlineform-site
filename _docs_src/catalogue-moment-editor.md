@@ -23,6 +23,7 @@ This page edits one existing canonical moment metadata record from `assets/studi
 - optionally running a scoped moment rebuild immediately
 - deleting one moment and its generated site artifacts after preview/confirmation
 - checking permanent prose, staged prose, and source-image readiness
+- refreshing local moment image derivatives from the displayed source image path without changing source metadata
 - importing staged moment prose from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 
 Use [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import) for introducing a moment from a staged prose file.
@@ -52,6 +53,8 @@ The scoped update rebuilds:
 - `assets/data/moments_index.json`
 - catalogue search
 - local moment media derivatives when the configured source image is available
+
+The moment media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the scoped build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 
 ## Delete
 

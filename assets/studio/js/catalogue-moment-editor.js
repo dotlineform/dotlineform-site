@@ -260,8 +260,14 @@ function renderReadiness(state) {
     const itemStatus = normalizeText(item && item.status);
     const tone = toneForReadinessStatus(itemStatus);
     const proseAction = normalizeText(item && item.key) === "moment_prose";
+    const mediaAction = normalizeText(item && item.key) === "moment_media";
     const proseActionDisabled = actionDisabled || (proseAction && itemStatus !== "ready");
-    const disabledNote = proseAction && actionDisabled ? t(state, "dirty_warning", "Unsaved source changes.") : "";
+    const mediaActionDisabled = actionDisabled || !Boolean(item && item.exists);
+    const disabledNote = actionDisabled && (proseAction || mediaAction)
+      ? (draftHasChanges(state)
+        ? (mediaAction ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.") : t(state, "dirty_warning", "Unsaved source changes."))
+        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+      : "";
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(item && item.title ? item.title : "readiness")}</span>
@@ -270,6 +276,7 @@ function renderReadiness(state) {
           ${item && item.source_path ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(item.source_path)}</span>` : ""}
           ${item && item.next_step ? `<span class="tagStudioForm__meta">${escapeHtml(item.next_step)}</span>` : ""}
           ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="moment" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "prose_import_button", "Import staged prose"))}</button></div>` : ""}
+          ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="moment" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "media_refresh_button", "Refresh media"))}</button></div>` : ""}
           ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>
       </div>
@@ -483,6 +490,41 @@ async function buildMoment(state) {
   }
 }
 
+function countMediaItems(media, group) {
+  const values = media && media[group] && typeof media[group] === "object" ? media[group] : {};
+  return Object.values(values).reduce((total, items) => total + (Array.isArray(items) ? items.length : 0), 0);
+}
+
+async function refreshMomentMedia(state) {
+  if (!state.currentMomentId || !state.serverAvailable || state.isBuilding || draftHasChanges(state)) return;
+  state.isBuilding = true;
+  updateDirtyState(state);
+  setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media..."), "pending");
+  setTextWithState(state.resultNode, "");
+  try {
+    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      moment_id: state.currentMomentId,
+      media_only: true,
+      force: true
+    });
+    const blockedCount = countMediaItems(payload && payload.media, "blocked");
+    await previewMoment(state, state.currentMomentId);
+    renderSummary(state);
+    if (blockedCount > 0) {
+      setTextWithState(state.statusNode, t(state, "media_refresh_status_blocked", "Media refresh blocked."), "error");
+      setTextWithState(state.resultNode, normalizeText(payload && payload.media && payload.media.summary), "error");
+      return;
+    }
+    setTextWithState(state.statusNode, t(state, "media_refresh_status_success", "Media refresh completed."), "success");
+    setTextWithState(state.resultNode, t(state, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
+  } catch (error) {
+    setTextWithState(state.statusNode, `${t(state, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+  } finally {
+    state.isBuilding = false;
+    updateDirtyState(state);
+  }
+}
+
 async function importMomentProse(state) {
   if (!state.currentMomentId || draftHasChanges(state)) {
     setTextWithState(state.statusNode, t(state, "dirty_warning", "Unsaved source changes."), "error");
@@ -615,6 +657,11 @@ function bindEvents(state) {
   state.deleteButton.addEventListener("click", () => deleteMoment(state).catch((error) => console.warn("catalogue_moment_editor: delete failed", error)));
   state.buildButton.addEventListener("click", () => buildMoment(state));
   state.readinessNode.addEventListener("click", (event) => {
+    const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
+    if (mediaButton) {
+      refreshMomentMedia(state).catch((error) => console.warn("catalogue_moment_editor: media refresh failed", error));
+      return;
+    }
     const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
     if (!button) return;
     importMomentProse(state).catch((error) => console.warn("catalogue_moment_editor: prose import failed", error));

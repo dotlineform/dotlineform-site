@@ -383,6 +383,7 @@ def build_local_media_task(
     availability_error: str = "",
     blocked_reason: str = "",
     projects_base_dir: Path | None = None,
+    force: bool = False,
 ) -> Dict[str, Any]:
     staged_source_path = media_staging_input_path(repo_root, kind, item_id, source_path)
     staged_thumb_paths = staged_thumb_output_paths(repo_root, kind, item_id)
@@ -390,6 +391,9 @@ def build_local_media_task(
     asset_thumb_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
     output_paths = [*staged_thumb_paths, *staged_primary_paths, *asset_thumb_paths]
     state = local_media_state(source_path, output_paths, staged_source_path)
+    force_refresh = bool(force and source_path is not None and source_path.exists())
+    if force_refresh and state == "current":
+        state = "pending"
     task: Dict[str, Any] = {
         "kind": kind,
         "id": item_id,
@@ -413,12 +417,12 @@ def build_local_media_task(
         return task
     if state == "pending":
         source_mtime = source_path.stat().st_mtime if source_path and source_path.exists() else 0.0
-        task["pending_staged_source"] = path_needs_refresh(staged_source_path, source_mtime)
+        task["pending_staged_source"] = force_refresh or path_needs_refresh(staged_source_path, source_mtime)
         pending_thumb_outputs: list[Dict[str, Any]] = []
         pending_primary_outputs: list[Dict[str, Any]] = []
         pending_asset_thumbs: list[Dict[str, Any]] = []
         for size, path in zip(THUMB_SIZES, staged_thumb_paths):
-            if path_needs_refresh(path, source_mtime):
+            if force_refresh or path_needs_refresh(path, source_mtime):
                 pending_thumb_outputs.append(
                     {
                         "variant": "thumb",
@@ -428,7 +432,7 @@ def build_local_media_task(
                     }
                 )
         for width, path in zip(PRIMARY_WIDTHS, staged_primary_paths):
-            if path_needs_refresh(path, source_mtime):
+            if force_refresh or path_needs_refresh(path, source_mtime):
                 pending_primary_outputs.append(
                     {
                         "variant": "primary",
@@ -438,7 +442,7 @@ def build_local_media_task(
                     }
                 )
         for size, path, staged_path in zip(THUMB_SIZES, asset_thumb_paths, staged_thumb_paths):
-            if path_needs_refresh(path, source_mtime):
+            if force_refresh or path_needs_refresh(path, source_mtime):
                 pending_asset_thumbs.append(
                     {
                         "size": size,
@@ -459,6 +463,7 @@ def build_local_media_plan(
     *,
     scope: Dict[str, Any],
     env: Dict[str, str] | None = None,
+    force: bool = False,
 ) -> Dict[str, Any]:
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     tasks: list[Dict[str, Any]] = []
@@ -481,6 +486,7 @@ def build_local_media_plan(
                     availability_error=availability_error,
                     blocked_reason=missing_reason,
                     projects_base_dir=projects_base_dir,
+                    force=force,
                 )
             )
     else:
@@ -499,6 +505,7 @@ def build_local_media_plan(
                     availability_error=availability_error,
                     blocked_reason=missing_reason,
                     projects_base_dir=projects_base_dir,
+                    force=force,
                 )
             )
         detail_uid = str(scope.get("detail_uid") or "").strip()
@@ -513,6 +520,7 @@ def build_local_media_plan(
                     availability_error=availability_error,
                     blocked_reason=missing_reason,
                     projects_base_dir=projects_base_dir,
+                    force=force,
                 )
             )
     counts = {
@@ -586,8 +594,9 @@ def execute_local_media_plan(
     scope: Dict[str, Any],
     write: bool,
     env: Dict[str, str] | None = None,
+    force: bool = False,
 ) -> Dict[str, Any]:
-    plan = build_local_media_plan(repo_root, scope=scope, env=env)
+    plan = build_local_media_plan(repo_root, scope=scope, env=env, force=force)
     tasks = plan["tasks"]
     if not tasks:
         return {
@@ -1341,13 +1350,14 @@ def run_scoped_build_scope(
     scope: Dict[str, Any],
     write: bool,
     force: bool = False,
+    media_only: bool = False,
     log_activity: bool = True,
 ) -> Dict[str, Any]:
     env = os.environ.copy()
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     refresh_published = True
     effective_force = bool(force)
-    media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env)
+    media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env, force=force)
     if scope_kind == "moment":
         commands = [
             (
@@ -1398,7 +1408,7 @@ def run_scoped_build_scope(
         failed_step = str(media_step.get("label") or "Generate Local Media Derivatives")
         failure_message = str(media_step.get("stderr_tail") or media_step.get("summary") or "Local media generation failed.")
 
-    if status != "failed":
+    if status != "failed" and not media_only:
         for label, cmd in commands:
             proc = subprocess.run(
                 cmd,
@@ -1427,6 +1437,7 @@ def run_scoped_build_scope(
         "status": status,
         "write": bool(write),
         "force": effective_force,
+        "media_only": bool(media_only),
         "refresh_published": refresh_published,
         "steps": steps,
         "media": {
@@ -1441,7 +1452,7 @@ def run_scoped_build_scope(
         response["failed_step"] = failed_step
         response["error"] = failure_message
 
-    if write and log_activity:
+    if write and log_activity and not media_only:
         if scope_kind == "moment":
             append_build_activity(
                 repo_root,
@@ -1482,10 +1493,11 @@ def run_scoped_build(
     detail_uid: str = "",
     write: bool,
     force: bool = False,
+    media_only: bool = False,
     log_activity: bool = True,
 ) -> Dict[str, Any]:
     scope = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids, detail_uid=detail_uid)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only, log_activity=log_activity)
 
 
 def run_series_scoped_build(
@@ -1496,10 +1508,11 @@ def run_series_scoped_build(
     extra_work_ids: Sequence[Any] | None = None,
     write: bool,
     force: bool = False,
+    media_only: bool = False,
     log_activity: bool = True,
 ) -> Dict[str, Any]:
     scope = build_scope_for_series(source_dir, series_id, extra_work_ids=extra_work_ids)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only, log_activity=log_activity)
 
 
 def run_moment_scoped_build(
@@ -1509,11 +1522,12 @@ def run_moment_scoped_build(
     metadata: Dict[str, Any] | None = None,
     write: bool,
     force: bool = False,
+    media_only: bool = False,
     log_activity: bool = True,
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
     scope = build_scope_for_moment(repo_root, moment_file, metadata=metadata, force=force, env=env)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only, log_activity=log_activity)
 
 
 def build_activity_entry_for_scoped_json_build(
@@ -1643,8 +1657,18 @@ def build_activity_entry_for_scoped_moment_build(
     }
 
 
-def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, force: bool) -> None:
-    print(scope["summary"])
+def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, force: bool, media_only: bool) -> None:
+    if media_only:
+        if scope.get("kind") == "moment":
+            ids = ", ".join(scope.get("moment_ids", [])) or "none"
+            print(f"Refresh local media derivatives for moments [{ids}].")
+        else:
+            ids = ", ".join(scope.get("work_ids", [])) or "none"
+            detail_uid = str(scope.get("detail_uid") or "").strip()
+            suffix = f", detail {detail_uid}" if detail_uid else ""
+            print(f"Refresh local media derivatives for works [{ids}]{suffix}.")
+    else:
+        print(scope["summary"])
     print(f"Source mode: {scope['source_mode']}")
     if scope.get("kind") == "moment":
         print(f"Moment IDs: {', '.join(scope['moment_ids']) if scope['moment_ids'] else 'none'}")
@@ -1652,9 +1676,10 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
     else:
         print(f"Work IDs: {', '.join(scope['work_ids']) if scope['work_ids'] else 'none'}")
         print(f"Series IDs: {', '.join(scope['series_ids']) if scope['series_ids'] else 'none'}")
-    print("Published refresh: yes")
-    print(f"Search rebuild: {'yes' if scope['rebuild_search'] else 'no'}")
-    media_plan = build_local_media_plan(repo_root, scope=scope)
+    print(f"Published refresh: {'no' if media_only else 'yes'}")
+    print(f"Search rebuild: {'no' if media_only else 'yes' if scope['rebuild_search'] else 'no'}")
+    print(f"Media only: {'yes' if media_only else 'no'}")
+    media_plan = build_local_media_plan(repo_root, scope=scope, force=force)
     media_counts = media_plan.get("counts", {})
     print(
         "Local media: "
@@ -1663,6 +1688,9 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
         f"blocked {int(media_counts.get('blocked', 0))}, "
         f"unavailable {int(media_counts.get('unavailable', 0))}"
     )
+    if media_only:
+        print("Commands: media-only internal derivative refresh")
+        return
     print("Commands:")
     commands = (
         [
@@ -1691,12 +1719,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--work-id", default="", help="Target work_id")
     parser.add_argument("--series-id", default="", help="Target series_id")
     parser.add_argument("--moment-file", default="", help="Target moment markdown filename, for example keys.md")
+    parser.add_argument("--detail-uid", default="", help="Optional work detail uid to include in a work-scoped media plan")
     parser.add_argument("--extra-series-ids", default="", help="Additional series ids to include")
     parser.add_argument("--extra-work-ids", default="", help="Additional work ids to include for a series scope")
     parser.add_argument("--repo-root", default="", help="Repo root (auto-detected when omitted)")
     parser.add_argument("--source-dir", default=str(DEFAULT_SOURCE_DIR), help="Canonical JSON source dir")
     parser.add_argument("--write", action="store_true", help="Run generation and search rebuild")
     parser.add_argument("--force", action="store_true", help="Force generation and search rewrites even when content versions match")
+    parser.add_argument("--media-only", action="store_true", help="Only stage source media and regenerate local image derivatives")
     return parser.parse_args()
 
 
@@ -1714,9 +1744,9 @@ def main() -> None:
     elif series_id:
         scope = build_scope_for_series(source_dir, series_id, extra_work_ids=args.extra_work_ids.split(","))
     else:
-        scope = build_scope_for_work(source_dir, work_id, extra_series_ids=args.extra_series_ids.split(","))
+        scope = build_scope_for_work(source_dir, work_id, extra_series_ids=args.extra_series_ids.split(","), detail_uid=args.detail_uid)
     if not args.write:
-        print_preview(scope, repo_root, source_dir, force=args.force)
+        print_preview(scope, repo_root, source_dir, force=args.force, media_only=args.media_only)
         return
 
     result = (
@@ -1725,6 +1755,7 @@ def main() -> None:
             moment_file=moment_file,
             write=True,
             force=args.force,
+            media_only=args.media_only,
             log_activity=True,
         )
         if moment_file
@@ -1735,6 +1766,7 @@ def main() -> None:
             extra_work_ids=args.extra_work_ids.split(","),
             write=True,
             force=args.force,
+            media_only=args.media_only,
             log_activity=True,
         )
         if series_id
@@ -1743,14 +1775,19 @@ def main() -> None:
             source_dir=source_dir,
             work_id=work_id,
             extra_series_ids=args.extra_series_ids.split(","),
+            detail_uid=args.detail_uid,
             write=True,
             force=args.force,
+            media_only=args.media_only,
             log_activity=True,
         )
     )
     if result["status"] != "completed":
         raise SystemExit(str(result.get("error") or "Scoped JSON build failed."))
-    print(scope["summary"])
+    if args.media_only:
+        print("Media-only derivative refresh completed.")
+    else:
+        print(scope["summary"])
 
 
 if __name__ == "__main__":

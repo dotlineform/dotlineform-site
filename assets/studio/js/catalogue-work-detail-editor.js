@@ -185,12 +185,22 @@ function renderReadiness(state) {
     state.readinessNode.innerHTML = "";
     return;
   }
+  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
   state.readinessNode.innerHTML = items.map((item) => {
-    const tone = toneForReadinessStatus(normalizeText(item && item.status));
+    const itemStatus = normalizeText(item && item.status);
+    const tone = toneForReadinessStatus(itemStatus);
     const title = normalizeText(item && item.title) || "readiness";
     const summary = normalizeText(item && item.summary) || "—";
     const sourcePath = normalizeText(item && item.source_path);
     const nextStep = normalizeText(item && item.next_step);
+    const mediaAction = normalizeText(item && item.key) === "detail_media";
+    const mediaActionDisabled = actionDisabled || !Boolean(item && item.exists);
+    const disabledNote = mediaAction && actionDisabled
+      ? (draftHasChanges(state)
+        ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.")
+        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+      : "";
+    const mediaActionLabel = t(state, "media_refresh_button", "Refresh media");
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(title)}</span>
@@ -198,6 +208,8 @@ function renderReadiness(state) {
           <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
           ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
           ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
+          ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="detail" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(mediaActionLabel)}</button></div>` : ""}
+          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>
       </div>
     `;
@@ -1039,6 +1051,45 @@ async function buildCurrentDetail(state) {
   }
 }
 
+function countMediaItems(media, group) {
+  const values = media && media[group] && typeof media[group] === "object" ? media[group] : {};
+  return Object.values(values).reduce((total, items) => total + (Array.isArray(items) ? items.length : 0), 0);
+}
+
+async function refreshDetailMedia(state) {
+  if (!state.currentRecord || !state.currentWorkId || !state.currentDetailUid || !state.serverAvailable || draftHasChanges(state)) return;
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media…"));
+  setTextWithState(state.resultNode, "");
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      work_id: state.currentWorkId,
+      detail_uid: state.currentDetailUid,
+      media_only: true,
+      force: true
+    });
+    const blockedCount = countMediaItems(response && response.media, "blocked");
+    await refreshBuildPreview(state);
+    if (blockedCount > 0) {
+      setTextWithState(state.statusNode, t(state, "media_refresh_status_blocked", "Media refresh blocked."), "error");
+      setTextWithState(state.resultNode, normalizeText(response && response.media && response.media.summary), "error");
+      return;
+    }
+    setTextWithState(state.statusNode, t(state, "media_refresh_status_success", "Media refresh completed."), "success");
+    setTextWithState(state.resultNode, t(state, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
+  } catch (error) {
+    setTextWithState(
+      state.statusNode,
+      `${t(state, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
 async function deleteCurrentDetail(state) {
   if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
   state.isDeleting = true;
@@ -1307,6 +1358,13 @@ async function init() {
     openButton.addEventListener("click", () => {
       openDetailSelection(state, searchNode.value).catch((error) => {
         console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
+      });
+    });
+    readinessNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
+      if (!button) return;
+      refreshDetailMedia(state).catch((error) => {
+        console.warn("catalogue_work_detail_editor: unexpected media refresh failure", error);
       });
     });
     saveButton.addEventListener("click", () => saveCurrentDetail(state).catch((error) => {

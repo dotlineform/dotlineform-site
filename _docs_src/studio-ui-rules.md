@@ -23,6 +23,34 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-27 / UI-041
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, `/studio/catalogue-moment/`
+- issue: replacing an existing source image and regenerating srcset derivatives was still possible through scripts, but the Studio editor pages only exposed media generation as part of save/update flows.
+- triage: repeated catalogue-editor workflow gap
+- reasoning: media readiness panels already show the resolved source path, so the refresh command belongs beside that path rather than behind a fake metadata edit or a broader site update action. The command should describe the local derivative boundary and avoid implying remote primary upload.
+- outcome: added `Refresh media` to work, detail, and moment media readiness panels. The action calls `POST /catalogue/build-apply` with `media_only: true` and `force: true`, refreshes thumbnails, stages primary variants for publishing, and leaves metadata/page/json/search outputs unchanged.
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `assets/studio/js/catalogue-moment-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/catalogue_json_build.py`
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/catalogue-work-detail-editor.md`
+  - `_docs_src/catalogue-moment-editor.md`
+  - `_docs_src/scripts-build-catalogue-json.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+  - `_docs_src/site-change-log.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open each editor with an existing record, confirm `Refresh media` appears in the media readiness panel when source media exists, and confirm dirty forms disable the action
+  - run a media-only build request and confirm only local image derivative steps run
+- follow-up:
+  - define a separate R2 publishing workflow before using this action to imply remote primary image replacement
+
 ## UI Rule Log 2026-04-27 / UI-040
 
 - status: adopted

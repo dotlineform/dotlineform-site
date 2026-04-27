@@ -43,6 +43,7 @@ The first implementation covers:
 - save source JSON only
 - preview the scoped rebuild impact for the current work
 - show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
+- refresh local work image derivatives from the displayed source image path without changing source metadata
 - run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
 - save with an optional `Update site now` path through the local catalogue service
 - when `Update site now` runs, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
@@ -104,6 +105,8 @@ Current save/rebuild flow:
 11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
 12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
 13. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
+
+The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 
 Bulk save flow:
 

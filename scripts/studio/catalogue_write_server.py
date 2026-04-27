@@ -4742,6 +4742,7 @@ class Handler(BaseHTTPRequestHandler):
         extra_work_ids: list[str],
         detail_uid: str,
         force: bool,
+        media_only: bool = False,
     ) -> tuple[bool, Dict[str, Any]]:
         if work_id:
             result = run_scoped_build(
@@ -4752,6 +4753,7 @@ class Handler(BaseHTTPRequestHandler):
                 detail_uid=detail_uid,
                 write=not self.server.dry_run,
                 force=force,
+                media_only=media_only,
                 log_activity=not self.server.dry_run,
             )
         elif series_id:
@@ -4762,6 +4764,7 @@ class Handler(BaseHTTPRequestHandler):
                 extra_work_ids=extra_work_ids,
                 write=not self.server.dry_run,
                 force=force,
+                media_only=media_only,
                 log_activity=not self.server.dry_run,
             )
         else:
@@ -4770,6 +4773,7 @@ class Handler(BaseHTTPRequestHandler):
                 moment_file=f"{moment_id}.md",
                 write=not self.server.dry_run,
                 force=force,
+                media_only=media_only,
                 log_activity=not self.server.dry_run,
             )
 
@@ -4780,6 +4784,7 @@ class Handler(BaseHTTPRequestHandler):
             "moment_id": moment_id,
             "detail_uid": detail_uid,
             "force": force,
+            "media_only": media_only,
             "build": result.get("scope"),
             "media": result.get("media"),
             "steps": result.get("steps", []),
@@ -4795,9 +4800,9 @@ class Handler(BaseHTTPRequestHandler):
                         "id": activity_id(now_utc, "build.apply_failed"),
                         "time_utc": now_utc,
                         "kind": "build",
-                        "operation": "build.apply",
+                        "operation": "media.refresh" if media_only else "build.apply",
                         "status": "failed",
-                        "summary": f"Scoped rebuild failed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
+                        "summary": f"{'Media refresh' if media_only else 'Scoped rebuild'} failed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
                         "affected": {
                             "works": list((result.get("scope") or {}).get("work_ids", [])),
                             "series": list((result.get("scope") or {}).get("series_ids", [])),
@@ -4818,9 +4823,9 @@ class Handler(BaseHTTPRequestHandler):
                     "id": activity_id(payload["completed_at_utc"], "build.apply"),
                     "time_utc": payload["completed_at_utc"],
                     "kind": "build",
-                    "operation": "build.apply",
+                    "operation": "media.refresh" if media_only else "build.apply",
                     "status": "completed",
-                    "summary": f"Scoped rebuild completed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
+                    "summary": f"{'Media refresh' if media_only else 'Scoped rebuild'} completed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
                     "affected": {
                         "works": list((result.get("scope") or {}).get("work_ids", [])),
                         "series": list((result.get("scope") or {}).get("series_ids", [])),
@@ -4888,6 +4893,7 @@ class Handler(BaseHTTPRequestHandler):
         body = self._read_json_body()
         work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
         detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
+        media_only = bool(body.get("media_only"))
         if work_id:
             scope = build_scope_for_work(
                 self.server.source_dir,
@@ -4899,7 +4905,8 @@ class Handler(BaseHTTPRequestHandler):
             scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
         else:
             scope = build_scope_for_moment(self.server.repo_root, f"{moment_id}.md", force=force)
-        scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
+        scope["media_only"] = media_only
+        scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope, force=force)
         self._send_json(
             HTTPStatus.OK,
             {
@@ -4909,6 +4916,7 @@ class Handler(BaseHTTPRequestHandler):
                 "moment_id": moment_id,
                 "detail_uid": detail_uid,
                 "force": force,
+                "media_only": media_only,
                 "build": scope,
             },
             allowed,
@@ -4918,6 +4926,7 @@ class Handler(BaseHTTPRequestHandler):
         body = self._read_json_body()
         work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
         detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
+        media_only = bool(body.get("media_only"))
         success, payload = self._run_build_operation(
             work_id=work_id,
             series_id=series_id,
@@ -4926,6 +4935,7 @@ class Handler(BaseHTTPRequestHandler):
             extra_work_ids=extra_work_ids,
             detail_uid=detail_uid,
             force=force,
+            media_only=media_only,
         )
         self._send_json(HTTPStatus.OK if success else HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
 

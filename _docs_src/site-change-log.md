@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added media-only image refresh in Studio editors
+
+**Status:** implemented
+
+**Area:** Studio / catalogue media
+
+**Summary:**
+Added a `Refresh media` action to work, work-detail, and moment media readiness panels. The action regenerates local thumbnails and staged primary image variants from the displayed source image path without saving metadata.
+
+**Reason:**
+The legacy script workflow allowed replacing a source image and regenerating srcset outputs with scoped flags. Studio showed the resolved source media path but did not provide a metadata-neutral way to refresh derivatives from that path.
+
+**Effect:**
+`POST /catalogue/build-apply` now supports `media_only: true`. Studio sends `media_only: true` with `force: true` from the media readiness panel, so derivative generation runs even when existing outputs appear current. The media-only path stops after local image staging and derivative generation; it does not regenerate page/json/search outputs and it does not upload primary images to R2.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_json_build.py`
+- `scripts/studio/catalogue_write_server.py`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/data/studio_config.json`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
 ## [2026-04-27] Implemented catalogue delete cleanup for works, details, and series
 
 **Status:** implemented

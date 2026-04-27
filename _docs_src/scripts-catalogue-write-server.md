@@ -243,6 +243,8 @@ For work, work-detail, and moment scopes, the build helper:
 
 The write server reports generated/current/blocked media ids in the nested build response. It does not upload primary images to R2.
 
+`POST /catalogue/build-apply` also accepts `media_only: true` for work, work-detail, and moment image refreshes. In media-only mode the helper stages the configured source image, regenerates local thumbnails and staged primary variants, and then stops before page/json generation and catalogue search. Studio sends `force: true` for the readiness-panel refresh action so the derivatives are regenerated even when current output timestamps already look fresh.
+
 ## Moment Import
 
 `POST /catalogue/moment/import-preview` expects:
