@@ -8,6 +8,25 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added field-aware catalogue build scoping request
+
+**Status:** planned
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Documented the follow-up request to make catalogue scoped builds depend on changed fields rather than always selecting the conservative work-plus-series artifact set.
+
+**Reason:**
+Work-owned files and links exposed that some work metadata changes do not affect related series output. The current scope is safe, but broader than the true dependency graph for local metadata such as `downloads` and `links`.
+
+**Effect:**
+No runtime behavior changed. The request defines the planned dependency registry, planner integration, dry-run explanations, verification cases, benefits, and risks for a later implementation pass.
+
+**Affected files/docs:**
+
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+
 ## [2026-04-27] Made catalogue files and links work-owned metadata
 
 **Status:** implemented

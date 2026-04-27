@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-32fdf3c7d2ae0e912cbcdb91ff9634ea",
-    "generated_at_utc": "2026-04-27T19:55:15Z",
-    "count": 142
+    "version": "blake2b-c8af493a94d97beeca21ebdffbe53c21",
+    "generated_at_utc": "2026-04-27T20:06:20Z",
+    "count": 143
   },
   "entries": [
     {
@@ -2866,6 +2866,34 @@
         "27"
       ],
       "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and site docs docs 2026-04-27 2026 04 27"
+    },
+    {
+      "id": "site-request-field-aware-build-scoping",
+      "kind": "doc",
+      "title": "Field-Aware Catalogue Build Scoping Request",
+      "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-27 • Site Docs",
+      "search_terms": [
+        "site-request-field-aware-build-scoping",
+        "site",
+        "request",
+        "field",
+        "aware",
+        "build",
+        "scoping",
+        "field-aware catalogue build scoping request",
+        "catalogue",
+        "site docs",
+        "docs",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue site docs docs 2026-04-27 2026 04 27"
     },
     {
       "id": "docs-viewer",

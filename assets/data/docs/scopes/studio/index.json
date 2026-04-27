@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T19:55:08Z",
+  "generated_at": "2026-04-27T20:06:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1715,6 +1715,20 @@
       "source_path": "site-request-work-owned-files-links.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-owned-files-links.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-field-aware-build-scoping",
+      "title": "Field-Aware Catalogue Build Scoping Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "sort_order": 153,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-field-aware-build-scoping.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping.json"
     },
     {
       "scope": "studio",
