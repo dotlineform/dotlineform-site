@@ -54,7 +54,7 @@ It reports count mismatches, missing IDs, extra IDs, and record differences. Dur
 
 The project-state report compares `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`, then writes `_docs_src/project-state.md`.
 
-Use this when you need to find source project folders or top-level primary-image candidates that have not yet been represented in `works.json`.
+Use this when you need to find source project folders or primary-image candidates that have not yet been represented in `works.json`. By default it scans only direct project folders; pass `--include-subfolders` when the review should include nested source folders too.
 
 ## Shared Module
 

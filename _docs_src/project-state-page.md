@@ -32,6 +32,8 @@ The report currently includes:
 
 The page shows the output path and summary counts after a successful run. The Markdown file is intentionally `published: false`; use the page's file-open command to inspect the source document locally.
 
+The `include sub-folders` checkbox is off by default. When unchecked, the report scans only direct `/projects/<project_folder>` directories and their direct image files. When checked, the report also includes `/projects/<project_folder>/<sub-folder>` directories, while still skipping detail folders.
+
 ## Related References
 
 - [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)

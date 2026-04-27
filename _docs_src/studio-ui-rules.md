@@ -30,7 +30,7 @@ Use this as the single capture surface for Studio UI work:
 - issue: after `works.json` became the canonical work publication source, there was no Studio command surface for checking source project folders and primary image files that had not been represented in `works.json`.
 - triage: local catalogue workflow addition using shared command and readonly-display primitives
 - reasoning: this is an operational scan rather than a catalogue record status filter, so it belongs on a dedicated command page linked from the Catalogue dashboard. The report itself should remain a persistent Markdown source artifact with `published: false`, while the Studio page should expose only the run command, summary counts, and source-file access until an inline Markdown preview is explicitly designed.
-- outcome: added `/studio/project-state/`, a `Project State` Catalogue dashboard link, a local catalogue-server endpoint, and a script that writes `_docs_src/project-state.md`. Work details remain out of scope and detail folders are skipped by the report.
+- outcome: added `/studio/project-state/`, a `Project State` Catalogue dashboard link, a local catalogue-server endpoint, and a script that writes `_docs_src/project-state.md`. The page now includes a default-off `include sub-folders` checkbox for adding `/projects/<project_folder>/<sub-folder>` entries to the report. Work details remain out of scope and detail folders are skipped by the report.
 - files changed:
   - `studio/project-state/index.md`
   - `studio/catalogue/index.md`

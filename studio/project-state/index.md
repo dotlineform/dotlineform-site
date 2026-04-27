@@ -37,6 +37,10 @@ studio_page_doc: /docs/?scope=studio&doc=project-state-page
           <span class="tagStudioForm__label" id="projectStateSourceLabel">source</span>
           <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateSourceRoot">$DOTLINEFORM_PROJECTS_BASE_DIR/projects</span>
         </div>
+        <label class="catalogueWorkPage__updateToggle" for="projectStateIncludeSubfolders">
+          <input type="checkbox" id="projectStateIncludeSubfolders">
+          <span id="projectStateIncludeSubfoldersLabel">include sub-folders</span>
+        </label>
       </div>
     </section>
 

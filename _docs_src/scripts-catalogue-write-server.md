@@ -48,7 +48,15 @@ Exposed endpoints:
 
 The current implementation can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, and can write the local project-state report. It does not write back into Excel.
 
-`POST /catalogue/project-state-report` accepts an empty JSON object and runs `./scripts/project_state_report.py` through its shared Python entrypoint. It writes `_docs_src/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path.
+`POST /catalogue/project-state-report` accepts:
+
+```json
+{
+  "include_subfolders": false
+}
+```
+
+It runs `./scripts/project_state_report.py` through its shared Python entrypoint. It writes `_docs_src/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path. `include_subfolders` defaults to `false`; when true, the report includes `/projects/<project_folder>/<sub-folder>` directories while still skipping detail folders.
 
 `POST /catalogue/bulk-save` expects:
 

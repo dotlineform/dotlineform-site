@@ -21,7 +21,7 @@ Added a project-state report that compares source project folders and primary im
 After `data/works.xlsx` stopped being the canonical catalogue source, there was no direct way to identify source project folders or top-level primary-image candidates that still needed representation in `works.json`.
 
 **Effect:**
-`./scripts/project_state_report.py --write` now writes `_docs_src/project-state.md` with `published: false`. `/studio/project-state/` runs the same report through the local Catalogue Write Server and shows summary counts plus a local file-open command. Work details remain out of scope, and detail folders are skipped.
+`./scripts/project_state_report.py --write` now writes `_docs_src/project-state.md` with `published: false`. `/studio/project-state/` runs the same report through the local Catalogue Write Server and shows summary counts plus a local file-open command. The page has a default-off `include sub-folders` checkbox that includes `/projects/<project_folder>/<sub-folder>` entries when needed. Work details remain out of scope, and detail folders are skipped.
 
 **Affected files/docs:**
 

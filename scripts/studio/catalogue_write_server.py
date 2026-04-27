@@ -5311,13 +5311,15 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _handle_project_state_report(self, allowed: Optional[str]) -> None:
-        _body = self._read_json_body()
+        body = self._read_json_body()
+        include_subfolders = bool(body.get("include_subfolders"))
         projects_base_dir = resolve_projects_base_dir()
         result = build_project_state_report(
             repo_root=self.server.repo_root,
             projects_base_dir=projects_base_dir,
             output_path=self.server.repo_root / DEFAULT_OUTPUT_REL_PATH,
             write=not self.server.dry_run,
+            include_subfolders=include_subfolders,
         )
         payload = {
             "ok": True,
@@ -5325,6 +5327,7 @@ class Handler(BaseHTTPRequestHandler):
             "output_path": result["output_path"],
             "projects_root": result["projects_root_display"],
             "catalogue_source_path": result["catalogue_source_path"],
+            "include_subfolders": result["include_subfolders"],
             "summary": result["summary"],
             "written": result["written"],
             "dry_run": self.server.dry_run,
@@ -5335,6 +5338,7 @@ class Handler(BaseHTTPRequestHandler):
                 "output_path": result["output_path"],
                 "written": result["written"],
                 "dry_run": self.server.dry_run,
+                "include_subfolders": result["include_subfolders"],
                 "projects_base_env": PROJECTS_BASE_DIR_ENV_NAME,
                 "summary": result["summary"],
             },

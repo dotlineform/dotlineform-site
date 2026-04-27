@@ -81,7 +81,18 @@ def is_image_path(path: Path) -> bool:
     return path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS
 
 
-def iter_candidate_project_dirs(projects_root: Path, detail_dirs: set[str]) -> Iterable[Path]:
+def iter_candidate_project_dirs(projects_root: Path, detail_dirs: set[str], include_subfolders: bool = False) -> Iterable[Path]:
+    if not include_subfolders:
+        for child in sorted(projects_root.iterdir(), key=lambda value: value.name.lower()):
+            if not child.is_dir() or child.name.startswith("."):
+                continue
+            rel = relative_posix(child.relative_to(projects_root))
+            if is_detail_dir(rel, detail_dirs):
+                continue
+            if any(is_image_path(grandchild) for grandchild in child.iterdir()):
+                yield child
+        return
+
     for current, dirnames, filenames in os.walk(projects_root):
         current_path = Path(current)
         rel = relative_posix(current_path.relative_to(projects_root))
@@ -145,12 +156,16 @@ def collect_detail_dirs(records: Any, works_by_id: Mapping[str, Mapping[str, Any
     return detail_dirs
 
 
-def collect_source_state(projects_root: Path, detail_dirs: set[str]) -> tuple[set[str], set[str], Dict[str, list[str]]]:
+def collect_source_state(
+    projects_root: Path,
+    detail_dirs: set[str],
+    include_subfolders: bool = False,
+) -> tuple[set[str], set[str], Dict[str, list[str]]]:
     source_folders: set[str] = set()
     source_images: set[str] = set()
     images_by_folder: Dict[str, list[str]] = {}
 
-    for folder_path in iter_candidate_project_dirs(projects_root, detail_dirs):
+    for folder_path in iter_candidate_project_dirs(projects_root, detail_dirs, include_subfolders=include_subfolders):
         folder_rel = relative_posix(folder_path.relative_to(projects_root))
         if not folder_rel:
             continue
@@ -170,6 +185,7 @@ def build_project_state_report(
     projects_base_dir: Path,
     output_path: Path | None = None,
     write: bool = False,
+    include_subfolders: bool = False,
 ) -> Dict[str, Any]:
     repo_root = repo_root.resolve()
     projects_base_dir = projects_base_dir.resolve()
@@ -182,7 +198,11 @@ def build_project_state_report(
     works_by_id = records.works
     project_folders, project_images, works_by_image, incomplete_works = collect_work_project_references(records)
     detail_dirs = collect_detail_dirs(records, works_by_id)
-    source_folders, source_images, images_by_folder = collect_source_state(projects_root, detail_dirs)
+    source_folders, source_images, images_by_folder = collect_source_state(
+        projects_root,
+        detail_dirs,
+        include_subfolders=include_subfolders,
+    )
 
     unrepresented_folders = sorted(source_folders - project_folders, key=str.lower)
     unrepresented_images = sorted(
@@ -204,6 +224,7 @@ def build_project_state_report(
     markdown = render_report_markdown(
         generated_at_utc=generated_at_utc,
         added_date=added_date,
+        include_subfolders=include_subfolders,
         source_folders=source_folders,
         project_folders=project_folders,
         source_images=source_images,
@@ -229,7 +250,9 @@ def build_project_state_report(
         "catalogue_source_path": str((DEFAULT_SOURCE_DIR / SOURCE_FILES["works"]).as_posix()),
         "output_path": str(output.relative_to(repo_root).as_posix()),
         "written": bool(write),
+        "include_subfolders": bool(include_subfolders),
         "summary": {
+            "include_subfolders": bool(include_subfolders),
             "source_folder_count": len(source_folders),
             "catalogue_project_folder_count": len(project_folders),
             "unrepresented_folder_count": len(unrepresented_folders),
@@ -255,6 +278,7 @@ def render_report_markdown(
     *,
     generated_at_utc: str,
     added_date: str,
+    include_subfolders: bool,
     source_folders: set[str],
     project_folders: set[str],
     source_images: set[str],
@@ -268,6 +292,9 @@ def render_report_markdown(
     works_by_image: Mapping[str, list[str]],
 ) -> str:
     grouped_unrepresented = group_images_by_folder(unrepresented_images)
+    scan_scope = "direct source folders and their direct images"
+    if include_subfolders:
+        scan_scope = "direct source folders, subfolders, and each scanned folder's direct images"
     lines = [
         "---",
         "doc_id: project-state",
@@ -282,12 +309,15 @@ def render_report_markdown(
         "",
         f"Generated at `{generated_at_utc}`.",
         "",
-        "This report compares top-level source images under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`.",
+        "This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`.",
+        "",
+        f"Scan mode: {scan_scope}.",
         "",
         "Work details are intentionally out of scope. Known detail subfolders from `assets/studio/data/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.",
         "",
         "## Summary",
         "",
+        f"- include subfolders: {'true' if include_subfolders else 'false'}",
         f"- source folders scanned: {len(source_folders)}",
         f"- catalogue project folders: {len(project_folders)}",
         f"- source folders not in `works.json`: {len(unrepresented_folders)}",
@@ -406,6 +436,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT_REL_PATH), help="Markdown output path for --write")
     parser.add_argument("--write", action="store_true", help="Write the Markdown report instead of previewing only")
+    parser.add_argument(
+        "--include-subfolders",
+        action="store_true",
+        help="Include source subfolders under projects/ folders in the report",
+    )
     parser.add_argument("--json", action="store_true", help="Print a JSON summary instead of Markdown")
     return parser.parse_args()
 
@@ -420,6 +455,7 @@ def main() -> None:
         projects_base_dir=projects_base_dir,
         output_path=output_path,
         write=bool(args.write),
+        include_subfolders=bool(args.include_subfolders),
     )
     if args.json:
         printable = {

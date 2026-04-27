@@ -42,6 +42,7 @@ function summaryValue(summary, key) {
 function renderSummary(state) {
   const summary = state.summary || {};
   const fields = [
+    { label: t(state, "summary_include_subfolders", "include sub-folders"), value: summary && summary.include_subfolders ? "true" : "false" },
     { label: t(state, "summary_source_folders", "source folders"), value: summaryValue(summary, "source_folder_count") },
     { label: t(state, "summary_catalogue_folders", "catalogue folders"), value: summaryValue(summary, "catalogue_project_folder_count") },
     { label: t(state, "summary_unrepresented_folders", "folders not in works.json"), value: summaryValue(summary, "unrepresented_folder_count") },
@@ -59,6 +60,7 @@ function renderSummary(state) {
 
 function updateState(state) {
   state.runButton.disabled = state.isBusy || !state.catalogueServerAvailable;
+  state.includeSubfoldersNode.disabled = state.isBusy;
   state.openButton.disabled = state.isBusy || !state.docsServerAvailable;
   renderSummary(state);
 }
@@ -70,7 +72,9 @@ async function runReport(state) {
   setTextWithState(state.warningNode, "");
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.projectStateReport, {});
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.projectStateReport, {
+      include_subfolders: Boolean(state.includeSubfoldersNode.checked)
+    });
     state.summary = response && response.summary ? response.summary : {};
     state.outputPath = normalizeText(response && response.output_path) || state.outputPath;
     state.sourceRoot = normalizeText(response && response.projects_root) || state.sourceRoot;
@@ -130,11 +134,13 @@ async function init() {
   const sourceLabelNode = document.getElementById("projectStateSourceLabel");
   const outputPathNode = document.getElementById("projectStateOutputPath");
   const sourceRootNode = document.getElementById("projectStateSourceRoot");
+  const includeSubfoldersNode = document.getElementById("projectStateIncludeSubfolders");
+  const includeSubfoldersLabelNode = document.getElementById("projectStateIncludeSubfoldersLabel");
   const summaryHeadingNode = document.getElementById("projectStateSummaryHeading");
   const summaryNode = document.getElementById("projectStateSummary");
   const runButton = document.getElementById("projectStateRunButton");
   const openButton = document.getElementById("projectStateOpenButton");
-  if (!root || !loadingNode || !emptyNode || !pageHeadingNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !runHeadingNode || !outputLabelNode || !sourceLabelNode || !outputPathNode || !sourceRootNode || !summaryHeadingNode || !summaryNode || !runButton || !openButton) {
+  if (!root || !loadingNode || !emptyNode || !pageHeadingNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !runHeadingNode || !outputLabelNode || !sourceLabelNode || !outputPathNode || !sourceRootNode || !includeSubfoldersNode || !includeSubfoldersLabelNode || !summaryHeadingNode || !summaryNode || !runButton || !openButton) {
     return;
   }
 
@@ -155,6 +161,7 @@ async function init() {
       resultNode,
       outputPathNode,
       sourceRootNode,
+      includeSubfoldersNode,
       summaryNode,
       runButton,
       openButton
@@ -164,13 +171,14 @@ async function init() {
     runHeadingNode.textContent = t(state, "run_heading", "report");
     outputLabelNode.textContent = t(state, "output_label", "output");
     sourceLabelNode.textContent = t(state, "source_label", "source");
+    includeSubfoldersLabelNode.textContent = t(state, "include_subfolders_label", "include sub-folders");
     summaryHeadingNode.textContent = t(state, "summary_heading", "summary");
     loadingNode.textContent = t(state, "loading", "loading project state...");
     emptyNode.textContent = t(state, "empty_state", "");
     runButton.textContent = t(state, "run_button", "Run");
     openButton.textContent = t(state, "open_button", "Open file");
     saveModeNode.textContent = buildSaveModeText(config, catalogueServerAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `project_state.${key}`, fallback, tokens));
-    setTextWithState(contextNode, t(state, "context_hint", "Scan source project folders and primary images against works.json, then write the Markdown report."));
+    setTextWithState(contextNode, t(state, "context_hint", "Scan source project folders and primary images against works.json, then write the Markdown report. Include sub-folders only when you want nested project folders in the review."));
     if (!catalogueServerAvailable) {
       setTextWithState(statusNode, t(state, "server_unavailable_hint", "Local catalogue server unavailable. Report generation is disabled."), "warn");
     }

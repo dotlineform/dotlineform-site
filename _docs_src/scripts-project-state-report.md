@@ -42,6 +42,12 @@ Write the persistent Markdown report:
 ./scripts/project_state_report.py --write
 ```
 
+Include source subfolders in the report:
+
+```bash
+./scripts/project_state_report.py --write --include-subfolders
+```
+
 The write target is:
 
 ```text
@@ -59,11 +65,13 @@ The report compares only primary work image data:
 
 Work details are out of scope. Known detail subfolders from `work_details.json` and folders named `details` are skipped.
 
-For image mismatches, the report lists top-level source images only when their containing folder already matches a `Works.project_folder`. Folders that do not match `works.json` are reported once in the folder section with their top-level image counts.
+By default, the report scans only direct `/projects/<project_folder>` folders and their direct image files.
+
+With `--include-subfolders`, the report also includes `/projects/<project_folder>/<sub-folder>` directories. For image mismatches, the report lists direct source images only when their containing folder already matches a `Works.project_folder`. Folders that do not match `works.json` are reported once in the folder section with their direct image counts.
 
 ## Studio Use
 
-`/studio/project-state/` runs the same script through `POST /catalogue/project-state-report` on the local Catalogue Write Server.
+`/studio/project-state/` runs the same script through `POST /catalogue/project-state-report` on the local Catalogue Write Server. The page's `include sub-folders` checkbox sends `include_subfolders: true`; the default request sends `false`.
 
 ## Related References
 
