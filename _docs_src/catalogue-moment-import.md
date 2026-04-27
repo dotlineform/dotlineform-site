@@ -23,9 +23,9 @@ It is intentionally file-driven:
 - the user specifies one staged moment Markdown filename such as `keys.md`
 - Studio collects the moment metadata on the page
 - Studio previews the staged body-only prose source
-- apply imports prose, writes canonical moment metadata, runs a targeted moment rebuild, and rebuilds catalogue search
+- apply imports prose, writes canonical moment metadata, stages/generates local moment media when the source image exists, runs a targeted moment rebuild, and rebuilds catalogue search
 
-This page does not scan external moment folders for changes and does not manage moment media/srcset generation.
+This page does not scan external moment folders for changes.
 
 ## Current Behavior
 
@@ -46,7 +46,7 @@ Current page flow:
 2. accept a filename-only input
 3. accept moment metadata fields
 4. call `POST /catalogue/moment/import-preview`
-5. show resolved source metadata, staged prose state, and validation errors
+5. show resolved source metadata, staged prose state, local media state, and validation errors
 6. call `POST /catalogue/moment/import-apply`
 7. show the targeted build result and link to the public moment page
 
@@ -70,9 +70,10 @@ Current assumptions:
 - staged and permanent prose files are body-only Markdown with no canonical metadata front matter
 - required metadata is entered on the Studio page
 - existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
-- missing source images are acceptable in this phase
+- source images resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/moments/images/<source_image_file>`
+- missing source images block local media generation for the moment but do not block prose/metadata import
 
-The page uses the existing runtime behavior where missing images produce no hero image on the public moment page.
+The page uses the existing runtime behavior where missing images produce no hero image on the public moment page until the image source is restored and the scoped build is rerun.
 
 ## Apply Behavior
 
@@ -92,13 +93,17 @@ This means:
 - source Markdown no longer owns canonical moment metadata
 - generated runtime JSON remains generated, not canonical
 - the generator does not write moment prose front matter
-- local media generation is skipped for this import path
+- local moment media generation uses the same scoped build path as works and work details
+- renamed source images are staged under `var/catalogue/media/moments/make_srcset_images/`
+- primary and thumbnail derivatives are generated under `var/catalogue/media/moments/srcset_images/`
+- generated thumbnails are copied into `assets/moments/img/`
+- generated primary derivatives remain staged for remote media publishing
 
 ## Out Of Scope
 
 - folder scanning for new or changed moments
 - browser-side prose editing beyond importing staged Markdown
-- srcset generation or media-image import/edit behavior
+- browser-side image upload/edit behavior
 - R2-backed or cloud-native media handling
 
 ## Related References

@@ -291,7 +291,7 @@ These files are generated public/runtime artifacts. They should not become the e
 | publish state updates | generator writes workbook | generator or write service updates source JSON |
 | dimension updates | generator writes workbook | generator or media probe updates source JSON |
 | public route and JSON generation | `generate_work_pages.py` | refactored generator using JSON source adapter |
-| media copy/srcset | `copy_draft_media_files.py`, `make_srcset_images.sh`, orchestrated by `build_catalogue.py` | scoped JSON build stages work/detail source images under `var/catalogue/media/`, generates srcset derivatives there, copies thumbnails into `assets/`, and leaves primary derivatives staged for remote publishing |
+| media copy/srcset | `copy_draft_media_files.py`, `make_srcset_images.sh`, orchestrated by `build_catalogue.py` | scoped JSON build stages work/detail/moment source images under `var/catalogue/media/`, generates srcset derivatives there, copies thumbnails into `assets/`, and leaves primary derivatives staged for remote publishing |
 | catalogue search rebuild | `build_catalogue.py` tail | explicit local build action after source/generation changes |
 | planner state | `var/build_catalogue_state.json` based on workbook fingerprints | new planner state based on canonical source JSON fingerprints |
 

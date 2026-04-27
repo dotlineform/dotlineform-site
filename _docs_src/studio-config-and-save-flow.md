@@ -182,10 +182,10 @@ Catalogue moment import behavior:
 - the page collects moment metadata and sends it with the filename
 - preview validates body-only staged prose, validates the required metadata, and reports current runtime/generated status
 - apply writes prose to `_docs_src_catalogue/moments/<moment_id>.md` and metadata to `assets/studio/data/catalogue/moments.json`
-- apply runs a targeted `generate_work_pages.py --only moments --moment-ids ... --write` flow and then rebuilds catalogue search
-- missing source images are allowed in this phase and do not block import
+- apply stages/generates local moment media when the source image exists, runs a targeted `generate_work_pages.py --only moments --moment-ids ... --write` flow, and then rebuilds catalogue search
+- missing source images block local media generation for the moment but do not block prose/metadata import
 - apply does not update moment source front matter
-- media image import/edit/srcset behavior remains out of scope for this moment prose-source pass
+- browser-side media image upload/edit behavior remains out of scope for this moment import pass
 
 Catalogue work file local save behavior:
 

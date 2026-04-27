@@ -211,14 +211,14 @@ Apply behavior:
 
 ## Scoped Build Media
 
-`POST /catalogue/build-preview` and `POST /catalogue/build-apply` use the scoped JSON catalogue build helper for work and work-detail media tasks.
+`POST /catalogue/build-preview`, `POST /catalogue/build-apply`, and the moment import apply path use the scoped JSON catalogue build helper for work, work-detail, and moment media tasks.
 
-For work and work-detail scopes, the build helper:
+For work, work-detail, and moment scopes, the build helper:
 
 - resolves the source image from canonical catalogue JSON and `DOTLINEFORM_PROJECTS_BASE_DIR`
 - copies the source image into `var/catalogue/media/<kind>/make_srcset_images/` using the public catalogue id as the filename stem
 - generates primary and thumbnail srcset derivatives into `var/catalogue/media/<kind>/srcset_images/`
-- copies generated thumbnail derivatives into `assets/works/img/` or `assets/work_details/img/`
+- copies generated thumbnail derivatives into `assets/works/img/`, `assets/work_details/img/`, or `assets/moments/img/`
 - leaves generated primary derivatives staged under `var/catalogue/media/` for remote media publishing
 
 The write server reports generated/current/blocked media ids in the nested build response. It does not upload primary images to R2.
@@ -258,8 +258,7 @@ Apply behavior:
 - writes body-only prose to `_docs_src_catalogue/moments/<moment_id>.md`
 - writes canonical moment metadata to `assets/studio/data/catalogue/moments.json`
 - creates the normal catalogue JSON backup bundle for the metadata write
-- runs the scoped moment generator and catalogue search rebuild
-- skips local media/srcset generation for this moment import flow
+- runs local media generation, the scoped moment generator, and the catalogue search rebuild
 - records Catalogue Activity when a non-dry-run import completes or fails
 
 ## Derived Lookup Refresh

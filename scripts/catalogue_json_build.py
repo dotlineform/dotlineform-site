@@ -332,6 +332,7 @@ def resolve_moment_media_source(
     repo_root: Path,
     moment_file: str,
     *,
+    metadata: Dict[str, Any] | None = None,
     env: Dict[str, str] | None = None,
 ) -> tuple[str, Path | None, str, Path | None, str]:
     projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
@@ -341,7 +342,7 @@ def resolve_moment_media_source(
     filename = normalize_moment_filename(moment_file)
     moment_id = filename[:-3]
     records = load_moment_metadata_records(repo_root / DEFAULT_SOURCE_DIR)
-    record = records.get(moment_id)
+    record = metadata if metadata is not None else records.get(moment_id)
     if not record:
         return moment_id, None, "missing_moment_file", projects_base_dir, availability_error
     entry = build_moment_metadata_entry(
@@ -462,7 +463,26 @@ def build_local_media_plan(
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     tasks: list[Dict[str, Any]] = []
     if scope_kind == "moment":
-        return {"tasks": [], "counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
+        metadata = scope.get("moment_metadata") if isinstance(scope.get("moment_metadata"), dict) else None
+        for moment_id in scope.get("moment_ids", []):
+            moment_file = str(scope.get("moment_file") or f"{moment_id}.md")
+            resolved_moment_id, source_path, missing_reason, projects_base_dir, availability_error = resolve_moment_media_source(
+                repo_root,
+                moment_file,
+                metadata=metadata,
+                env=env,
+            )
+            tasks.append(
+                build_local_media_task(
+                    repo_root=repo_root,
+                    kind="moment",
+                    item_id=resolved_moment_id,
+                    source_path=source_path,
+                    availability_error=availability_error,
+                    blocked_reason=missing_reason,
+                    projects_base_dir=projects_base_dir,
+                )
+            )
     else:
         source_dir = Path(str(scope.get("source_dir") or "")).expanduser() if scope.get("source_dir") else None
         records = records_from_json_source(source_dir) if source_dir is not None else None
@@ -1148,10 +1168,12 @@ def build_scope_for_moment(
         errors = preview.get("errors") or []
         raise ValueError("; ".join(str(error) for error in errors) or "moment source preview failed")
     moment_id = str(preview.get("moment_id") or "").strip().lower()
+    moment_metadata = build_moment_import_metadata(repo_root / DEFAULT_SOURCE_DIR, moment_id, metadata)
     return {
         "kind": "moment",
         "moment_ids": [moment_id],
         "moment_file": str(preview.get("moment_file") or ""),
+        "moment_metadata": moment_metadata,
         "work_ids": [],
         "series_ids": [],
         "generate_only": list(DEFAULT_MOMENT_ARTIFACTS),

@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Extended repo-local image srcset staging to moments
+
+**Status:** implemented
+
+**Area:** Catalogue pipeline / Studio
+
+**Summary:**
+Moment imports now use the same repo-local image staging and thumbnail promotion workflow as work and work-detail scoped builds.
+
+**Reason:**
+Moments were the remaining catalogue image path still excluded from the new local media workflow. Their source metadata now lives in canonical catalogue JSON, so the build can resolve `source_image_file`, stage the renamed source image, create srcset derivatives, and publish thumbnails consistently.
+
+**Effect:**
+`/studio/catalogue-moment-import/` preview/apply now reports and runs local moment media generation. Source images are staged under `var/catalogue/media/moments/make_srcset_images/`, primary and thumbnail derivatives are generated under `var/catalogue/media/moments/srcset_images/`, generated thumbnails are copied into `assets/moments/img/`, and generated primary derivatives remain staged for remote publishing. Missing moment images block only the media step, not prose/metadata import.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_json_build.py`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
 ## [2026-04-27] Staged work image srcsets under repo-local var output
 
 **Status:** implemented

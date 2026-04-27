@@ -90,6 +90,9 @@ For `--moment-file`, the helper:
 - resolves moment metadata from `assets/studio/data/catalogue/moments.json`
 - resolves moment prose from `_docs_src_catalogue/moments/<moment_id>.md`
 - validates the moment filename, metadata, and required prose source
+- stages the configured moment source image under `var/catalogue/media/moments/`
+- generates local moment primary and thumbnail srcset derivatives under `var/catalogue/media/moments/`
+- copies generated moment thumbnails into `assets/moments/img/`
 - runs the internal `generate_work_pages.py` engine with `--only moments --moment-ids <moment_id> --refresh-published`
 - then runs `build_search.rb --scope catalogue`
 
@@ -101,23 +104,24 @@ Force behavior:
 
 The helper does not:
 
-- copy media for moment imports
 - upload primary images to R2 or another remote media store
 - rebuild unrelated works
 - scan the moments folder for changes
 
 ## Local Image Outputs
 
-Work and work-detail image generation uses the source-image metadata in canonical catalogue JSON:
+Work, work-detail, and moment image generation uses the source-image metadata in canonical catalogue JSON:
 
 - works resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/projects/<project_folder>/<project_filename>`
 - work details resolve from the parent work project folder plus `<project_subfolder>/<project_filename>`
-- renamed source images are copied to `var/catalogue/media/works/make_srcset_images/<work_id>.<ext>` or `var/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`
+- moments resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/moments/images/<source_image_file>`
+- renamed source images are copied to `var/catalogue/media/works/make_srcset_images/<work_id>.<ext>`, `var/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`, or `var/catalogue/media/moments/make_srcset_images/<moment_id>.<ext>`
 - primary derivatives are staged under `var/catalogue/media/<kind>/srcset_images/primary/`
 - thumbnail derivatives are staged under `var/catalogue/media/<kind>/srcset_images/thumb/`
 - thumbnail derivatives are also copied into the repo-owned public asset folders:
   - `assets/works/img/`
   - `assets/work_details/img/`
+  - `assets/moments/img/`
 
 The staged primary derivatives are the local handoff point for the remote media publishing step. The scoped helper does not upload or mutate remote R2 media.
 
