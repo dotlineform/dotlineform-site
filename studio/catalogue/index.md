@@ -50,6 +50,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         <ul class="studioLinkList">
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work/' | relative_url }}"><span class="studioLinkList__title">Edit Work</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Edit Series</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment/' | relative_url }}"><span class="studioLinkList__title">Edit Moment</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-detail/' | relative_url }}"><span class="studioLinkList__title">Edit Work Detail</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-file/' | relative_url }}"><span class="studioLinkList__title">Edit Work File</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-link/' | relative_url }}"><span class="studioLinkList__title">Edit Work Link</span></a></li>

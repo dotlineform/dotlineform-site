@@ -21,6 +21,8 @@ Endpoints:
   POST /catalogue/import-apply
   POST /catalogue/series/create
   POST /catalogue/series/save
+  POST /catalogue/moment/preview
+  POST /catalogue/moment/save
   POST /catalogue/build-preview
   POST /catalogue/build-apply
 
@@ -99,6 +101,7 @@ from catalogue_lookup import (  # noqa: E402
 )
 from catalogue_json_build import (  # noqa: E402
     build_local_media_plan,
+    build_moment_readiness,
     build_scope_for_moment,
     build_scope_for_series,
     build_scope_for_work,
@@ -115,6 +118,7 @@ from moment_sources import (  # noqa: E402
     moment_metadata_payload,
     normalize_moment_filename,
     normalize_moment_metadata_record,
+    validate_moment_metadata_record,
 )
 from catalogue_workbook_import import (  # noqa: E402
     DEFAULT_IMPORT_WORKBOOK_PATH,
@@ -155,6 +159,8 @@ PROSE_IMPORT_PREVIEW_PATH = "/catalogue/prose/import-preview"
 PROSE_IMPORT_APPLY_PATH = "/catalogue/prose/import-apply"
 MOMENT_IMPORT_PREVIEW_PATH = "/catalogue/moment/import-preview"
 MOMENT_IMPORT_APPLY_PATH = "/catalogue/moment/import-apply"
+MOMENT_PREVIEW_PATH = "/catalogue/moment/preview"
+MOMENT_SAVE_PATH = "/catalogue/moment/save"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
@@ -488,7 +494,19 @@ LOOKUP_INVALIDATION_FULL_FALLBACK_OPERATIONS = {
     "catalogue.work_file_create",
     "catalogue.work_link_create",
     "catalogue.series_create",
+    "catalogue.moment_save",
 }
+
+MOMENT_FIELDS = [
+    "moment_id",
+    "title",
+    "status",
+    "published_date",
+    "date",
+    "date_display",
+    "source_image_file",
+    "image_alt",
+]
 
 
 def utc_now() -> str:
@@ -677,19 +695,28 @@ def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool
     return work_id, extra_series_ids, force
 
 
-def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, list[str], list[str], bool]:
+def normalize_moment_id_value(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        raise ValueError("moment_id is required")
+    return normalize_moment_filename(text if text.endswith(".md") else f"{text}.md")[:-3]
+
+
+def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, str, list[str], list[str], bool]:
     work_id = str(body.get("work_id") or "").strip()
     series_id = str(body.get("series_id") or "").strip()
-    if bool(work_id) == bool(series_id):
-        raise ValueError("build request must include exactly one of work_id or series_id")
+    moment_value = str(body.get("moment_id") or body.get("moment_file") or "").strip()
+    if sum(1 for value in (work_id, series_id, moment_value) if value) != 1:
+        raise ValueError("build request must include exactly one of work_id, series_id, or moment_id")
     normalized_work_id = slug_id(work_id) if work_id else ""
     normalized_series_id = normalize_series_id(series_id) if series_id else ""
+    normalized_moment_id = normalize_moment_id_value(moment_value) if moment_value else ""
     extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
     extra_work_ids: list[str] = []
     for raw in body.get("extra_work_ids") or []:
         extra_work_ids.append(slug_id(raw))
     force = bool(body.get("force"))
-    return normalized_work_id, normalized_series_id, extra_series_ids, extra_work_ids, force
+    return normalized_work_id, normalized_series_id, normalized_moment_id, extra_series_ids, extra_work_ids, force
 
 
 def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, Dict[str, Any], bool]:
@@ -707,13 +734,13 @@ def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, Dict[st
 
 def normalize_prose_import_target(body: Mapping[str, Any]) -> tuple[str, str, str]:
     target_kind = str(body.get("target_kind") or body.get("kind") or "").strip().lower()
-    if target_kind not in {"work", "series"}:
-        raise ValueError("target_kind must be work or series")
+    if target_kind not in {"work", "series", "moment"}:
+        raise ValueError("target_kind must be work, series, or moment")
     raw_id = body.get("target_id")
     if raw_id is None:
-        raw_id = body.get("work_id") if target_kind == "work" else body.get("series_id")
-    target_id = slug_id(raw_id) if target_kind == "work" else normalize_series_id(raw_id)
-    collection = "works" if target_kind == "work" else "series"
+        raw_id = body.get("work_id") if target_kind == "work" else body.get("series_id") if target_kind == "series" else body.get("moment_id")
+    target_id = slug_id(raw_id) if target_kind == "work" else normalize_series_id(raw_id) if target_kind == "series" else normalize_moment_id_value(raw_id)
+    collection = "works" if target_kind == "work" else "series" if target_kind == "series" else "moments"
     return target_kind, target_id, collection
 
 
@@ -728,6 +755,10 @@ def validate_prose_import_target_exists(source_dir: Path, target_kind: str, targ
         raise ValueError(f"work_id not found: {target_id}")
     if target_kind == "series" and target_id not in records.series:
         raise ValueError(f"series_id not found: {target_id}")
+    if target_kind == "moment":
+        moments = load_moment_metadata_records(source_dir)
+        if target_id not in moments:
+            raise ValueError(f"moment_id not found: {target_id}")
 
 
 def read_staged_prose_markdown(staging_path: Path) -> tuple[str, list[str], list[str]]:
@@ -752,7 +783,7 @@ def read_staged_prose_markdown(staging_path: Path) -> tuple[str, list[str], list
     if "\x00" in text:
         errors.append("Staged Markdown file contains a null byte.")
     if text.startswith("---\n") or text.startswith("---\r\n"):
-        errors.append("Work and series prose source files must not include front matter.")
+        errors.append("Staged prose source files must not include front matter.")
     if not text.strip():
         warnings.append("Staged Markdown file is blank; importing it will publish blank optional prose after the generator lookup is updated.")
     return text, errors, warnings
@@ -1011,6 +1042,20 @@ def extract_work_link_update(body: Mapping[str, Any]) -> Dict[str, Any]:
     return dict(raw_record)
 
 
+def extract_moment_update(body: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_record = body.get("record", body.get("moment"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in MOMENT_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in MOMENT_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one moment field")
+    return dict(raw_record)
+
+
 def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
     merged = dict(current_record)
     merged.update(update)
@@ -1099,6 +1144,19 @@ def normalize_work_link_update(
     if "status" in update:
         merged["status"] = normalize_status(update.get("status")) or None
     return normalize_source_record(merged, LINK_FIELDS, text_fields=LINK_TEXT_FIELDS)
+
+
+def normalize_moment_update(
+    moment_id: str,
+    current_record: Mapping[str, Any],
+    update: Mapping[str, Any],
+) -> Dict[str, Any]:
+    merged = dict(current_record)
+    merged.update(update)
+    merged["moment_id"] = normalize_moment_id_value(merged.get("moment_id") or moment_id)
+    if merged["moment_id"] != moment_id:
+        raise ValueError("record.moment_id must match moment_id")
+    return normalize_moment_metadata_record(moment_id, merged)
 
 
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
@@ -1482,6 +1540,14 @@ def validate_created_series_records(
     return validate_source_records(normalized_records)
 
 
+def validate_updated_moment_record(moment_id: str, moment_record: Dict[str, Any]) -> list[str]:
+    errors = validate_moment_metadata_record(moment_record)
+    normalized_id = normalize_moment_id_value(moment_record.get("moment_id") or moment_id)
+    if normalized_id != moment_id:
+        errors.append("record.moment_id must match moment_id")
+    return errors
+
+
 def load_works_payload(path: Path) -> Dict[str, Any]:
     payload = load_json_file(path)
     works = payload.get("works")
@@ -1519,6 +1585,14 @@ def load_work_links_payload(path: Path) -> Dict[str, Any]:
     work_links = payload.get("work_links")
     if not isinstance(work_links, dict):
         raise ValueError("work links source file must include a work_links object")
+    return payload
+
+
+def load_moments_payload(path: Path) -> Dict[str, Any]:
+    payload = load_json_file(path)
+    moments = payload.get("moments")
+    if not isinstance(moments, dict):
+        raise ValueError("moments source file must include a moments object")
     return payload
 
 
@@ -1583,6 +1657,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         work_files_path: Path,
         work_links_path: Path,
         series_path: Path,
+        moments_path: Path,
         allowed_write_paths: set[Path],
         allowed_write_roots: set[Path],
         backups_dir: Path,
@@ -1597,6 +1672,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.work_files_path = work_files_path.resolve()
         self.work_links_path = work_links_path.resolve()
         self.series_path = series_path.resolve()
+        self.moments_path = moments_path.resolve()
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.allowed_write_roots = {path.resolve() for path in allowed_write_roots}
         self.backups_dir = backups_dir.resolve()
@@ -1655,6 +1731,8 @@ class Handler(BaseHTTPRequestHandler):
             PROSE_IMPORT_APPLY_PATH,
             MOMENT_IMPORT_PREVIEW_PATH,
             MOMENT_IMPORT_APPLY_PATH,
+            MOMENT_PREVIEW_PATH,
+            MOMENT_SAVE_PATH,
         }:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
@@ -1771,6 +1849,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == MOMENT_IMPORT_APPLY_PATH:
                 self._handle_moment_import_apply(allowed)
+                return
+            if self.path == MOMENT_PREVIEW_PATH:
+                self._handle_moment_preview(allowed)
+                return
+            if self.path == MOMENT_SAVE_PATH:
+                self._handle_moment_save(allowed)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
@@ -3631,6 +3715,7 @@ class Handler(BaseHTTPRequestHandler):
         *,
         work_id: str,
         series_id: str,
+        moment_id: str = "",
         extra_series_ids: list[str],
         extra_work_ids: list[str],
         detail_uid: str,
@@ -3647,7 +3732,7 @@ class Handler(BaseHTTPRequestHandler):
                 force=force,
                 log_activity=not self.server.dry_run,
             )
-        else:
+        elif series_id:
             result = run_series_scoped_build(
                 self.server.repo_root,
                 source_dir=self.server.source_dir,
@@ -3657,11 +3742,20 @@ class Handler(BaseHTTPRequestHandler):
                 force=force,
                 log_activity=not self.server.dry_run,
             )
+        else:
+            result = run_moment_scoped_build(
+                self.server.repo_root,
+                moment_file=f"{moment_id}.md",
+                write=not self.server.dry_run,
+                force=force,
+                log_activity=not self.server.dry_run,
+            )
 
         payload: Dict[str, Any] = {
             "ok": result.get("status") == "completed",
             "work_id": work_id,
             "series_id": series_id,
+            "moment_id": moment_id,
             "detail_uid": detail_uid,
             "force": force,
             "build": result.get("scope"),
@@ -3681,11 +3775,12 @@ class Handler(BaseHTTPRequestHandler):
                         "kind": "build",
                         "operation": "build.apply",
                         "status": "failed",
-                        "summary": f"Scoped rebuild failed for {'work ' + work_id if work_id else 'series ' + series_id}.",
+                        "summary": f"Scoped rebuild failed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
                         "affected": {
                             "works": list((result.get("scope") or {}).get("work_ids", [])),
                             "series": list((result.get("scope") or {}).get("series_ids", [])),
                             "work_details": [],
+                            "moments": list((result.get("scope") or {}).get("moment_ids", [])),
                         },
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }
@@ -3703,11 +3798,12 @@ class Handler(BaseHTTPRequestHandler):
                     "kind": "build",
                     "operation": "build.apply",
                     "status": "completed",
-                    "summary": f"Scoped rebuild completed for {'work ' + work_id if work_id else 'series ' + series_id}.",
+                    "summary": f"Scoped rebuild completed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
                     "affected": {
                         "works": list((result.get("scope") or {}).get("work_ids", [])),
                         "series": list((result.get("scope") or {}).get("series_ids", [])),
                         "work_details": [],
+                        "moments": list((result.get("scope") or {}).get("moment_ids", [])),
                     },
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
@@ -3731,6 +3827,7 @@ class Handler(BaseHTTPRequestHandler):
             success, payload = self._run_build_operation(
                 work_id=work_id,
                 series_id="",
+                moment_id="",
                 extra_series_ids=extra_series_ids,
                 extra_work_ids=[],
                 detail_uid="",
@@ -3767,7 +3864,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_build_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+        work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
         detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
         if work_id:
             scope = build_scope_for_work(
@@ -3776,8 +3873,10 @@ class Handler(BaseHTTPRequestHandler):
                 extra_series_ids=extra_series_ids,
                 detail_uid=detail_uid,
             )
-        else:
+        elif series_id:
             scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
+        else:
+            scope = build_scope_for_moment(self.server.repo_root, f"{moment_id}.md", force=force)
         scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
         self._send_json(
             HTTPStatus.OK,
@@ -3785,6 +3884,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": True,
                 "work_id": work_id,
                 "series_id": series_id,
+                "moment_id": moment_id,
                 "detail_uid": detail_uid,
                 "force": force,
                 "build": scope,
@@ -3794,17 +3894,157 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_build_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+        work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
         detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
         success, payload = self._run_build_operation(
             work_id=work_id,
             series_id=series_id,
+            moment_id=moment_id,
             extra_series_ids=extra_series_ids,
             extra_work_ids=extra_work_ids,
             detail_uid=detail_uid,
             force=force,
         )
         self._send_json(HTTPStatus.OK if success else HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
+
+    def _handle_moment_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        moment_id = normalize_moment_id_value(body.get("moment_id") or body.get("moment_file"))
+        moments_payload = load_moments_payload(self.server.moments_path)
+        current_record = moments_payload["moments"].get(moment_id)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"moment_id not found: {moment_id}")
+        normalized_record = normalize_moment_metadata_record(moment_id, current_record)
+        preview = preview_moment_source(self.server.repo_root, f"{moment_id}.md", metadata=normalized_record)
+        payload: Dict[str, Any] = {
+            "ok": True,
+            "moment_id": moment_id,
+            "record": normalized_record,
+            "record_hash": record_hash(normalized_record),
+            "preview": preview,
+            "readiness": build_moment_readiness(self.server.repo_root, f"{moment_id}.md", metadata=normalized_record),
+        }
+        if preview.get("valid"):
+            scope = build_scope_for_moment(self.server.repo_root, f"{moment_id}.md", metadata=normalized_record)
+            scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
+            payload["build"] = scope
+        self._send_json(HTTPStatus.OK, payload, allowed)
+
+    def _handle_moment_save(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        apply_build = extract_apply_build(body)
+        requested_moment_id = body.get("moment_id")
+        moment_update = extract_moment_update(body)
+        if requested_moment_id is None:
+            requested_moment_id = moment_update.get("moment_id")
+        moment_id = normalize_moment_id_value(requested_moment_id)
+
+        moments_payload = load_moments_payload(self.server.moments_path)
+        moments = moments_payload["moments"]
+        current_record = moments.get(moment_id)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"moment_id not found: {moment_id}")
+
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        normalized_current = normalize_moment_metadata_record(moment_id, current_record)
+        current_hash = record_hash(normalized_current)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(
+                HTTPStatus.CONFLICT,
+                {
+                    "ok": False,
+                    "error": "record changed since loaded",
+                    "moment_id": moment_id,
+                    "current_record_hash": current_hash,
+                },
+                allowed,
+            )
+            return
+
+        updated_record = normalize_moment_update(moment_id, normalized_current, moment_update)
+        fields_changed = changed_fields(normalized_current, updated_record)
+        validation_errors = validate_updated_moment_record(moment_id, updated_record)
+        if validation_errors:
+            raise ValueError("moment source validation failed: " + "; ".join(validation_errors[:20]))
+
+        changed = bool(fields_changed)
+        backup_paths: list[Path] = []
+        if changed:
+            updated_moments = dict(moments)
+            updated_moments[moment_id] = updated_record
+            target_path = self.server.moments_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            if not self.server.dry_run:
+                backup_paths = atomic_write_many({target_path: moment_metadata_payload(updated_moments)}, self.server.backups_dir)
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "moment_id": moment_id,
+            "changed": changed,
+            "changed_fields": fields_changed,
+            "record_hash": record_hash(updated_record),
+            "record": updated_record,
+        }
+        if changed:
+            invalidation = moment_lookup_invalidation_for_fields(fields_changed)
+            response_payload["lookup_refresh"] = {
+                "mode": "moment-scoped-build",
+                "invalidation_class": invalidation["class"],
+                "artifacts": invalidation["artifacts"],
+                "unknown_fields": invalidation["unknown_fields"],
+            }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+
+        self.server.log_event(
+            "catalogue_moment_save",
+            {
+                "moment_id": moment_id,
+                "changed": changed,
+                "changed_fields": fields_changed,
+                "dry_run": self.server.dry_run,
+            },
+        )
+        if changed and not self.server.dry_run:
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "moment.save"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "moment.save",
+                    "status": "completed",
+                    "summary": f"Saved moment source metadata for {moment_id}.",
+                    "affected": {
+                        "works": [],
+                        "series": [],
+                        "work_details": [],
+                        "work_files": [],
+                        "work_links": [],
+                        "moments": [moment_id],
+                    },
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        response_payload["build_requested"] = bool(apply_build and changed)
+        if apply_build and changed:
+            _build_success, build_payload = self._run_build_operation(
+                work_id="",
+                series_id="",
+                moment_id=moment_id,
+                extra_series_ids=[],
+                extra_work_ids=[],
+                detail_uid="",
+                force=False,
+            )
+            response_payload["build"] = build_payload
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_prose_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
@@ -3870,7 +4110,7 @@ class Handler(BaseHTTPRequestHandler):
                         "work_details": [],
                         "work_files": [],
                         "work_links": [],
-                        "moments": [],
+                        "moments": [target_id] if target_kind == "moment" else [],
                     },
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
@@ -4562,6 +4802,7 @@ def main() -> None:
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
     work_files_path = (source_dir / SOURCE_FILES["work_files"]).resolve()
     work_links_path = (source_dir / SOURCE_FILES["work_links"]).resolve()
+    moments_path = (source_dir / MOMENT_METADATA_FILENAME).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_paths = {
         (source_dir / filename).resolve()
@@ -4586,6 +4827,7 @@ def main() -> None:
         series_path=series_path,
         work_files_path=work_files_path,
         work_links_path=work_links_path,
+        moments_path=moments_path,
         allowed_write_paths=allowed_paths,
         allowed_write_roots=allowed_write_roots,
         backups_dir=backups_dir,

@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,24 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-27 / UI-039
+
+- status: adopted
+- route: `/studio/catalogue-moment/`
+- issue: existing moments had no normal editor surface, so routine metadata changes depended on the import page or direct JSON edits.
+- triage: local workflow completion for the catalogue editor family
+- reasoning: import and edit are different workflows. The import page should stay file-driven for introducing staged prose, while the editor should reopen one canonical source record, show readiness, save metadata, and run the same scoped update model as work and series editors.
+- outcome: added a dedicated moment editor with search/open, source metadata fields, save plus optional site update, readiness panels, and staged prose import.
+- files changed:
+  - `studio/catalogue-moment/index.md`
+  - `assets/studio/js/catalogue-moment-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-moment-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-moment/?moment=keys` and confirm the record loads, save controls are disabled when the local server is unavailable, and readiness sections render without overlapping the summary rail
 
 ## UI Rule Log 2026-04-26 / UI-038
 

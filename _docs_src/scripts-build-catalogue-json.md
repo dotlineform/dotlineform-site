@@ -14,7 +14,7 @@ Script:
 ./scripts/catalogue_json_build.py --work-id 00001
 ```
 
-This helper is the Phase 5 JSON-source rebuild entrypoint for focused work and series scopes.
+This helper is the Phase 5 JSON-source rebuild entrypoint for focused work, series, and moment scopes.
 
 It also supports a focused moment scope used by the first Studio moments import page.
 
@@ -127,7 +127,7 @@ The staged primary derivatives are the local handoff point for the remote media 
 
 ## Purpose
 
-This is the command-path companion to the Studio `Save + Rebuild` action on `/studio/catalogue-work/` and the file-driven moments import flow on `/studio/catalogue-moment-import/`.
+This is the command-path companion to the Studio `Save + Rebuild` action on `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-moment/`, and the file-driven moments import flow on `/studio/catalogue-moment-import/`.
 
 It keeps Phase 5 narrow:
 
@@ -140,4 +140,5 @@ It keeps Phase 5 narrow:
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Build Activity](/docs/?scope=studio&doc=build-activity)
 - [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

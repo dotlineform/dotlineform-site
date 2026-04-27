@@ -895,6 +895,55 @@ def build_detail_readiness(records, detail_uid: str, *, env: Dict[str, str] | No
     return {"items": items}
 
 
+def build_moment_readiness(
+    repo_root: Path,
+    moment_file: str,
+    *,
+    metadata: Dict[str, Any] | None = None,
+    env: Dict[str, str] | None = None,
+) -> Dict[str, Any]:
+    filename = normalize_moment_filename(moment_file)
+    moment_id = filename[:-3]
+    _resolved_id, media_path, media_missing_reason, projects_base_dir, availability_error = resolve_moment_media_source(
+        repo_root,
+        filename,
+        metadata=metadata,
+        env=env,
+    )
+    prose_path = repo_root / MOMENT_PROSE_STAGING_REL_DIR / filename
+
+    items = [
+        build_media_readiness_item(
+            repo_root=repo_root,
+            kind="moment",
+            item_id=moment_id,
+            key="moment_media",
+            title="moment media",
+            source_path=media_path,
+            missing_reason=media_missing_reason,
+            projects_base_dir=projects_base_dir,
+            availability_error=availability_error,
+        ),
+        build_readiness_item(
+            key="moment_prose",
+            title="moment prose",
+            path=prose_path,
+            projects_base_dir=repo_root,
+            ready_summary=f"Staged prose is ready at {display_source_path(prose_path, repo_root)}.",
+            missing_file_summary=f"No staged prose file exists at {display_source_path(prose_path, repo_root)}.",
+            next_step_ready="Use Import staged prose to write the permanent source file.",
+            next_step_missing_file="Add staged Markdown at the expected ID-based path before importing prose.",
+            action={
+                "kind": "prose-import",
+                "target_kind": "moment",
+                "moment_id": moment_id,
+                "label": "Import staged prose",
+            },
+        ),
+    ]
+    return {"items": items}
+
+
 def build_moment_paths(projects_base_dir: Path, moment_file: str) -> Dict[str, Path]:
     filename = normalize_moment_filename(moment_file)
     moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
@@ -1184,6 +1233,7 @@ def build_scope_for_moment(
         "effective_force": bool(force),
         "refresh_published": True,
         "preview": preview,
+        "readiness": build_moment_readiness(repo_root, moment_file, metadata=moment_metadata, env=env),
     }
 
 

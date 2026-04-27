@@ -42,6 +42,7 @@ Read this section in this order:
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
    - **[Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)**
+   - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
    - **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
@@ -69,6 +70,7 @@ Current workflow/detail routes:
 - `/studio/catalogue-activity/`
 - `/studio/bulk-add-work/`
 - `/studio/catalogue-moment-import/`
+- `/studio/catalogue-moment/?moment=<moment_id>`
 - `/studio/catalogue-work/?work=<work_id>`
 - `/studio/tag-groups/`
 - `/studio/tag-registry/`

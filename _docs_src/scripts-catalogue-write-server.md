@@ -46,8 +46,12 @@ Exposed endpoints:
 - `POST /catalogue/build-apply`
 - `POST /catalogue/prose/import-preview`
 - `POST /catalogue/prose/import-apply`
+- `POST /catalogue/moment/preview`
+- `POST /catalogue/moment/save`
+- `POST /catalogue/moment/import-preview`
+- `POST /catalogue/moment/import-apply`
 
-The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, can import staged work/series prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write media files or write back into Excel.
+The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/work-file/work-link/series/moment records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work, one series, or one moment scope. It does not write back into Excel.
 
 `POST /catalogue/bulk-save` expects:
 

@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added the Catalogue Moment Editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Added `/studio/catalogue-moment/` as the first normal editor for existing moment records.
+
+**Reason:**
+Moment metadata now lives in canonical catalogue JSON, but existing moments still needed a purpose-built Studio maintenance surface separate from the file-driven import page.
+
+**Effect:**
+The Catalogue dashboard now links to `Edit Moment`. The page opens one existing moment, edits metadata in `assets/studio/data/catalogue/moments.json`, protects saves with record hashes, can optionally run the scoped moment rebuild, shows prose/media readiness, and imports staged body-only moment prose through the shared prose import endpoints.
+
+**Affected files/docs:**
+
+- `studio/catalogue-moment/index.md`
+- `studio/catalogue/index.md`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_json_build.py`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+
 ## [2026-04-27] Added change request for a Catalogue Moment Editor
 
 **Status:** proposed

@@ -27,6 +27,8 @@ It is intentionally file-driven:
 
 This page does not scan external moment folders for changes.
 
+For routine metadata maintenance on an existing moment, use [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor).
+
 ## Current Behavior
 
 The page is implemented by:
@@ -109,5 +111,6 @@ This means:
 ## Related References
 
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)

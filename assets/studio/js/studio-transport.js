@@ -39,6 +39,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   applyProseImport: "http://127.0.0.1:8788/catalogue/prose/import-apply",
   previewMomentImport: "http://127.0.0.1:8788/catalogue/moment/import-preview",
   applyMomentImport: "http://127.0.0.1:8788/catalogue/moment/import-apply",
+  previewMoment: "http://127.0.0.1:8788/catalogue/moment/preview",
+  saveMoment: "http://127.0.0.1:8788/catalogue/moment/save",
   health: "http://127.0.0.1:8788/health"
 });
 

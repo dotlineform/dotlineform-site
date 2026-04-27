@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e2ea417d82bd9e9ea7124725625e6fb3",
-    "generated_at_utc": "2026-04-27T17:00:20Z",
-    "count": 139
+    "version": "blake2b-8b8b6a72066b50862ed9d400c3dfed9f",
+    "generated_at_utc": "2026-04-27T17:26:45Z",
+    "count": 140
   },
   "entries": [
     {
@@ -1155,10 +1155,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-26 • Design",
+      "display_meta": "2026-04-27 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -1169,12 +1169,12 @@
         "decision",
         "log",
         "design",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-26 2026 04 26"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-27 2026 04 27"
     },
     {
       "id": "tag-groups",
@@ -2905,6 +2905,31 @@
         "31"
       ],
       "search_text": "tag-registry tag registry tag registry studio 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "catalogue-moment-editor",
+      "kind": "doc",
+      "title": "Catalogue Moment Editor",
+      "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
+      "last_updated": "2026-04-27",
+      "parent_id": "user-guide",
+      "parent_title": "User Guide",
+      "display_meta": "2026-04-27 • User Guide",
+      "search_terms": [
+        "catalogue-moment-editor",
+        "catalogue",
+        "moment",
+        "editor",
+        "catalogue moment editor",
+        "user guide",
+        "user",
+        "guide",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "catalogue-moment-import",

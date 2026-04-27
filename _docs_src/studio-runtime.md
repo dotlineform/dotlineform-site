@@ -64,6 +64,7 @@ Current route inventory:
 - `studio/catalogue-new-work/index.md`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment-import/index.md`
+- `studio/catalogue-moment/index.md`
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-new-work-detail/index.md`
 - `studio/catalogue-work-detail/index.md`
@@ -88,6 +89,7 @@ Current page-level doc links:
 - Docs HTML Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import`
+- Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
@@ -128,6 +130,7 @@ Current page controllers:
 - `assets/studio/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-import.js`
+- `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-activity.js`
 - `assets/studio/js/catalogue-new-work-editor.js`

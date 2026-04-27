@@ -31,6 +31,7 @@ Current guides:
 - [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
 - [New Catalogue Work File](/docs/?scope=studio&doc=catalogue-new-work-file-editor)
 - [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)

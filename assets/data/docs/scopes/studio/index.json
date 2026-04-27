@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T17:00:18Z",
+  "generated_at": "2026-04-27T17:26:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -699,7 +699,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "design",
       "sort_order": 30,
       "published": true,
@@ -1757,6 +1757,20 @@
       "source_path": "tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-moment-editor",
+      "title": "Catalogue Moment Editor",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "user-guide",
+      "sort_order": 182,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue-moment-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json"
     },
     {
       "scope": "studio",
