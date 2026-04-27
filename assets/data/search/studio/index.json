@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8b8b6a72066b50862ed9d400c3dfed9f",
-    "generated_at_utc": "2026-04-27T17:26:45Z",
-    "count": 140
+    "version": "blake2b-ff6857c8493e9b56f984d01ae9b1969d",
+    "generated_at_utc": "2026-04-27T18:12:01Z",
+    "count": 141
   },
   "entries": [
     {
@@ -2812,6 +2812,32 @@
         "24"
       ],
       "search_text": "llm 2026-04-24 2026 04 24"
+    },
+    {
+      "id": "site-request-catalogue-delete-cleanup",
+      "kind": "doc",
+      "title": "Catalogue Delete Cleanup Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-27 • Site Docs",
+      "search_terms": [
+        "site-request-catalogue-delete-cleanup",
+        "site",
+        "request",
+        "catalogue",
+        "delete",
+        "cleanup",
+        "catalogue delete cleanup request",
+        "site docs",
+        "docs",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request site docs docs 2026-04-27 2026 04 27"
     },
     {
       "id": "docs-viewer",

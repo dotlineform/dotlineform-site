@@ -8,6 +8,25 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added change request for catalogue delete cleanup
+
+**Status:** proposed
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Added a scoped request for making work, work-detail, and series deletes remove repo-owned public artifacts, media, indexes, and search references with the same semantics now used by moment delete.
+
+**Reason:**
+Moment delete now removes the generated/site surface for a deleted moment, but the older work, detail, and series delete paths still primarily remove source records and refresh Studio lookup payloads.
+
+**Effect:**
+The request captures the expected cleanup scope, non-goals, safety model, acceptance checks, benefits, and risks for a future implementation. No runtime delete behavior changed in this documentation-only step.
+
+**Affected files/docs:**
+
+- [Catalogue Delete Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup)
+
 ## [2026-04-27] Added Moment Delete To The Catalogue Moment Editor
 
 **Status:** implemented
