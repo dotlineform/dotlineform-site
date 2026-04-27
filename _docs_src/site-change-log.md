@@ -21,7 +21,7 @@ Added source-record delete support for `/studio/catalogue-moment/`.
 The new moment editor could reopen, save, rebuild, and import prose for existing moments, but it still lacked the delete action already present in the work, detail, and series editors.
 
 **Effect:**
-The moment editor now exposes `Delete`, previews impact through `POST /catalogue/delete-preview`, confirms in the browser, and applies through `POST /catalogue/delete-apply` with record-hash conflict protection. The operation removes the canonical moment metadata record from `assets/studio/data/catalogue/moments.json`; prose, generated artifacts, and media remain under the existing cleanup workflow.
+The moment editor now exposes `Delete`, previews impact through `POST /catalogue/delete-preview`, confirms in the browser, and applies through `POST /catalogue/delete-apply` with record-hash conflict protection. The operation removes the canonical moment metadata record, generated moment page/json artifacts, published thumbnails, repo-local staged media, the moments-index entry, and the catalogue search record. Canonical prose, canonical source images, and remote uploaded media remain untouched.
 
 **Affected files/docs:**
 

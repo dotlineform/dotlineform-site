@@ -42,12 +42,13 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, Dict, Mapping, Optional
+from typing import Any, Dict, Iterable, Mapping, Optional
 from urllib.parse import urlparse
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
@@ -100,6 +101,8 @@ from catalogue_lookup import (  # noqa: E402
     write_work_link_lookup_payload,
 )
 from catalogue_json_build import (  # noqa: E402
+    CATALOGUE_MEDIA_STAGING_REL_DIR,
+    build_search_command,
     build_local_media_plan,
     build_moment_readiness,
     build_scope_for_moment,
@@ -1307,11 +1310,16 @@ def preview_series_delete(source_dir: Path, series_id: str) -> Dict[str, Any]:
     }
 
 
-def preview_moment_delete(source_dir: Path, moment_id: str) -> Dict[str, Any]:
+def preview_moment_delete(source_dir: Path, moment_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     moment_records = load_moment_metadata_records(source_dir)
     moment_record = moment_records.get(moment_id)
     if not isinstance(moment_record, dict):
         raise ValueError(f"moment_id not found: {moment_id}")
+    cleanup = moment_delete_preview_cleanup(repo_root, moment_id) if repo_root is not None else {}
+    cleanup_count = sum(
+        int(cleanup.get(key, 0) or 0)
+        for key in ("repo_artifacts", "repo_media", "staged_media")
+    )
     return {
         "kind": "moment",
         "id": moment_id,
@@ -1325,7 +1333,8 @@ def preview_moment_delete(source_dir: Path, moment_id: str) -> Dict[str, Any]:
             "work_links": [],
             "moments": [moment_id],
         },
-        "summary": f"Delete moment {moment_id} from source metadata.",
+        "cleanup": cleanup,
+        "summary": f"Delete moment {moment_id}, remove {cleanup_count} generated/media file(s), update the moments index, and rebuild catalogue search.",
     }
 
 
@@ -1407,7 +1416,7 @@ def validate_moment_delete_records(source_dir: Path, moment_id: str) -> list[str
     return errors
 
 
-def build_delete_preview(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
+def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     if kind == "work":
         preview = preview_work_delete(source_dir, record_id)
         preview["validation_errors"] = validate_work_delete_records(source_dir, record_id)
@@ -1418,7 +1427,7 @@ def build_delete_preview(source_dir: Path, kind: str, record_id: str) -> Dict[st
         preview = preview_series_delete(source_dir, record_id)
         preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
     else:
-        preview = preview_moment_delete(source_dir, record_id)
+        preview = preview_moment_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_moment_delete_records(source_dir, record_id)
     blockers = list(preview.get("blockers") or [])
     validation_errors = list(preview.get("validation_errors") or [])
@@ -1632,6 +1641,212 @@ def load_moments_payload(path: Path) -> Dict[str, Any]:
     moments = payload.get("moments")
     if not isinstance(moments, dict):
         raise ValueError("moments source file must include a moments object")
+    return payload
+
+
+def canonicalize_for_hash(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): canonicalize_for_hash(value[key]) for key in sorted(value.keys(), key=lambda item: str(item))}
+    if isinstance(value, list):
+        return [canonicalize_for_hash(item) for item in value]
+    if isinstance(value, tuple):
+        return [canonicalize_for_hash(item) for item in value]
+    if isinstance(value, float):
+        if value == 0.0:
+            return 0
+        if value.is_integer():
+            return int(value)
+        return float(f"{value:.15g}")
+    return value
+
+
+def compute_payload_version(payload: Any) -> str:
+    canonical = json.dumps(
+        canonicalize_for_hash(payload),
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return f"blake2b-{hashlib.blake2b(canonical, digest_size=16).hexdigest()}"
+
+
+def finalize_moments_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    moments_map = payload.get("moments")
+    if not isinstance(moments_map, dict):
+        raise ValueError("moments_index.json must include a moments object")
+    schema = str((payload.get("header") or {}).get("schema") or "moments_index_v1")
+    payload["header"] = {
+        "schema": schema,
+        "version": compute_payload_version({"schema": schema, "moments": moments_map}),
+        "generated_at_utc": utc_now(),
+        "count": len(moments_map),
+    }
+    return payload
+
+
+def collect_matching_paths(root: Path, patterns: Iterable[str]) -> list[Path]:
+    collected: list[Path] = []
+    seen: set[Path] = set()
+    if not root.exists():
+        return collected
+    for pattern in patterns:
+        for path in sorted(root.glob(pattern)):
+            if path in seen or not path.is_file():
+                continue
+            seen.add(path)
+            collected.append(path)
+    return collected
+
+
+def unique_existing_paths(paths: Iterable[Path]) -> list[Path]:
+    seen: set[Path] = set()
+    out: list[Path] = []
+    for path in paths:
+        resolved = path.resolve()
+        if resolved in seen or not path.exists() or not path.is_file():
+            continue
+        seen.add(resolved)
+        out.append(path)
+    return out
+
+
+def collect_moment_repo_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
+    return unique_existing_paths(
+        [
+            repo_root / "_moments" / f"{moment_id}.md",
+            repo_root / "assets" / "moments" / "index" / f"{moment_id}.json",
+        ]
+    )
+
+
+def collect_moment_repo_media_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
+    return collect_matching_paths(repo_root / "assets" / "moments" / "img", [f"{moment_id}-thumb-*.*"])
+
+
+def collect_moment_staged_media_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
+    staging_root = repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "moments"
+    paths: list[Path] = []
+    paths.extend(collect_matching_paths(staging_root / "make_srcset_images", [f"{moment_id}.*"]))
+    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "primary", [f"{moment_id}-primary-*.*"]))
+    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "thumb", [f"{moment_id}-thumb-*.*"]))
+    return paths
+
+
+def collect_moment_delete_cleanup(repo_root: Path, moment_id: str) -> Dict[str, Any]:
+    repo_artifacts = collect_moment_repo_artifacts(repo_root, moment_id)
+    repo_media = collect_moment_repo_media_artifacts(repo_root, moment_id)
+    staged_media = collect_moment_staged_media_artifacts(repo_root, moment_id)
+    delete_paths = unique_existing_paths([*repo_artifacts, *repo_media, *staged_media])
+    return {
+        "repo_artifacts": repo_artifacts,
+        "repo_media": repo_media,
+        "staged_media": staged_media,
+        "delete_paths": delete_paths,
+    }
+
+
+def path_is_under(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
+    roots = [
+        repo_root / "_moments",
+        repo_root / "assets" / "moments" / "index",
+        repo_root / "assets" / "moments" / "img",
+        repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "moments",
+    ]
+    for raw_path in cleanup.get("delete_paths") or []:
+        path = Path(raw_path)
+        if not any(path_is_under(path, root) for root in roots):
+            raise ValueError(f"delete target is outside allowlisted moment cleanup roots: {path.name}")
+
+
+def moment_delete_preview_cleanup(repo_root: Path, moment_id: str) -> Dict[str, Any]:
+    cleanup = collect_moment_delete_cleanup(repo_root, moment_id)
+    return {
+        "repo_artifacts": len(cleanup["repo_artifacts"]),
+        "repo_media": len(cleanup["repo_media"]),
+        "staged_media": len(cleanup["staged_media"]),
+        "delete_paths": [str(path.relative_to(repo_root)) if path_is_under(path, repo_root) else path.name for path in cleanup["delete_paths"]],
+        "moments_index": "assets/data/moments_index.json",
+        "catalogue_search": "assets/data/search/catalogue/index.json",
+    }
+
+
+def backup_transaction_paths(paths: Iterable[Path], backup_root: Path, repo_root: Path) -> Dict[Path, Path]:
+    backups: Dict[Path, Path] = {}
+    for path in unique_existing_paths(paths):
+        resolved = path.resolve()
+        if resolved in backups:
+            continue
+        try:
+            rel_path = Path("repo") / resolved.relative_to(repo_root.resolve())
+        except ValueError:
+            rel_path = Path("external") / path.name
+        backup_path = backup_root / rel_path
+        backup_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, backup_path)
+        backups[resolved] = backup_path
+    return backups
+
+
+def restore_transaction_paths(touched_paths: Iterable[Path], backups: Mapping[Path, Path]) -> None:
+    for path in unique_paths(touched_paths):
+        resolved = path.resolve()
+        backup_path = backups.get(resolved)
+        try:
+            if backup_path and backup_path.exists():
+                path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(backup_path, path)
+            elif path.exists() and path.is_file():
+                path.unlink()
+        except OSError:
+            pass
+
+
+def unique_paths(paths: Iterable[Path]) -> list[Path]:
+    seen: set[Path] = set()
+    out: list[Path] = []
+    for path in paths:
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        out.append(path)
+    return out
+
+
+def delete_existing_files(paths: Iterable[Path]) -> int:
+    deleted = 0
+    for path in unique_existing_paths(paths):
+        path.unlink()
+        deleted += 1
+    return deleted
+
+
+def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> Dict[str, Any]:
+    proc = subprocess.run(
+        build_search_command(repo_root, write=write, force=False, env=os.environ.copy()),
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    payload = {
+        "ok": proc.returncode == 0,
+        "exit_code": proc.returncode,
+        "stdout_tail": "\n".join(proc.stdout.strip().splitlines()[-8:]) if proc.stdout else "",
+        "stderr_tail": "\n".join(proc.stderr.strip().splitlines()[-8:]) if proc.stderr else "",
+    }
+    if proc.returncode != 0:
+        detail = payload["stderr_tail"] or payload["stdout_tail"] or "catalogue search rebuild failed"
+        raise RuntimeError(str(detail))
     return payload
 
 
@@ -2312,7 +2527,7 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_delete_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_delete_request(body)
-        preview = build_delete_preview(self.server.source_dir, request["kind"], request["id"])
+        preview = build_delete_preview(self.server.source_dir, request["kind"], request["id"], repo_root=self.server.repo_root)
         self._send_json(
             HTTPStatus.OK,
             {
@@ -2330,7 +2545,7 @@ class Handler(BaseHTTPRequestHandler):
         kind = request["kind"]
         record_id = request["id"]
         expected_hash = request["expected_record_hash"]
-        preview = build_delete_preview(self.server.source_dir, kind, record_id)
+        preview = build_delete_preview(self.server.source_dir, kind, record_id, repo_root=self.server.repo_root)
         if preview.get("blocked"):
             self._send_json(
                 HTTPStatus.BAD_REQUEST,
@@ -2526,17 +2741,67 @@ class Handler(BaseHTTPRequestHandler):
                 return
             updated_moments = dict(moments_payload["moments"])
             del updated_moments[record_id]
+            cleanup = collect_moment_delete_cleanup(self.server.repo_root, record_id)
+            ensure_moment_delete_cleanup_scope(self.server.repo_root, cleanup)
+            moments_index_path = (self.server.repo_root / "assets" / "data" / "moments_index.json").resolve()
+            search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+            allowed_generated_paths = {
+                moments_index_path,
+                search_index_path,
+            }
+            if moments_index_path not in allowed_generated_paths or search_index_path not in allowed_generated_paths:
+                raise ValueError("generated write target not allowlisted")
+            deleted_file_count = 0
+            search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
+            transaction_backup_root: Path | None = None
             if not self.server.dry_run:
-                target_path = self.server.moments_path.resolve()
-                if target_path not in self.server.allowed_write_paths:
+                metadata_path = self.server.moments_path.resolve()
+                if metadata_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-                backup_paths = atomic_write_many({target_path: moment_metadata_payload(updated_moments)}, self.server.backups_dir)
+                transaction_backup_root = self.server.backups_dir / f"catalogue-delete-moment-{backup_stamp_now()}"
+                touched_paths = unique_paths(
+                    [
+                        metadata_path,
+                        moments_index_path,
+                        search_index_path,
+                        *cleanup["delete_paths"],
+                    ]
+                )
+                transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+                try:
+                    payloads: Dict[Path, Dict[str, Any]] = {
+                        metadata_path: moment_metadata_payload(updated_moments),
+                    }
+                    if moments_index_path.exists():
+                        moments_index_payload = load_json_file(moments_index_path)
+                        moments_map = moments_index_payload.get("moments")
+                        if not isinstance(moments_map, dict):
+                            raise ValueError("moments_index.json must include a moments object")
+                        moments_map.pop(record_id, None)
+                        payloads[moments_index_path] = finalize_moments_index_payload(moments_index_payload)
+                    backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+                    backup_paths.extend(transaction_backups.values())
+                    deleted_file_count = delete_existing_files(cleanup["delete_paths"])
+                    search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
+                except Exception:
+                    restore_transaction_paths(touched_paths, transaction_backups)
+                    raise
             response_payload = {
                 "ok": True,
                 "kind": kind,
                 "id": record_id,
                 "deleted": True,
                 "preview": preview,
+                "cleanup": {
+                    "deleted_files": deleted_file_count,
+                    "would_delete_files": len(cleanup["delete_paths"]),
+                    "moments_index_updated": bool(not self.server.dry_run and moments_index_path.exists()),
+                    "would_update_moments_index": moments_index_path.exists(),
+                    "catalogue_search_rebuilt": bool(not self.server.dry_run and search_rebuild.get("ok")),
+                    "would_rebuild_catalogue_search": True,
+                    "search_exit_code": search_rebuild.get("exit_code"),
+                    "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
+                },
             }
             if not self.server.dry_run:
                 now_utc = utc_now()
@@ -2547,7 +2812,7 @@ class Handler(BaseHTTPRequestHandler):
                         "kind": "source_save",
                         "operation": "moment.delete",
                         "status": "completed",
-                        "summary": f"Deleted moment source metadata for {record_id}.",
+                        "summary": f"Deleted moment {record_id}, generated artifacts, local media, and catalogue search record.",
                         "affected": preview["affected"],
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }

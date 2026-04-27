@@ -130,12 +130,14 @@ Request behavior:
 - work delete preview includes dependent detail/file/link source records
 - work delete blocks when the work is still used as `primary_work_id` by a series
 - series delete preview includes affected member works
-- moment delete preview covers the canonical source metadata record in `assets/studio/data/catalogue/moments.json`
+- moment delete preview covers the canonical source metadata record plus generated moment artifacts, repo/local media cleanup, moments index update, and catalogue search rebuild
 
 `POST /catalogue/delete-apply` accepts the same shape plus optional `expected_record_hash` and then:
 
 - re-runs delete preview and blocks when preview is not clean
 - writes the canonical source JSON files needed for that delete
+- for moment deletes, removes generated moment page/json artifacts, published thumbnails, and repo-local staged media
+- for moment deletes, removes the moment from `assets/data/moments_index.json` and rebuilds catalogue search so the search record disappears
 - refreshes derived lookup payloads after non-dry-run writes
 - records one aggregated Catalogue Activity entry for the delete operation
 

@@ -27,10 +27,10 @@ Use this as the single capture surface for Studio UI work:
 
 - status: adopted
 - route: `/studio/catalogue-moment/`
-- issue: the moment editor could save and rebuild existing moments but could not delete a moment source metadata record.
+- issue: the moment editor could save and rebuild existing moments but delete only removed source metadata, leaving generated artifacts, media, and search records behind.
 - triage: local workflow completion for the catalogue editor family
-- reasoning: moment delete should follow the existing work/detail/series source-delete pattern: preview server-side impact, block on validation issues, confirm in the browser, and apply through the shared write service with record-hash conflict protection.
-- outcome: added a Delete command to the moment editor and extended the shared catalogue delete preview/apply endpoints to support `kind: "moment"`.
+- reasoning: moment delete should match the user-facing meaning of deleting the item. The write service should preview server-side impact, block on validation issues, confirm in the browser, apply with record-hash conflict protection, and remove generated/site artifacts plus search entries in the same operation.
+- outcome: added a Delete command to the moment editor and extended the shared catalogue delete preview/apply endpoints to support `kind: "moment"` with generated artifact cleanup, local media cleanup, moments-index update, and catalogue search rebuild.
 - files changed:
   - `studio/catalogue-moment/index.md`
   - `assets/studio/js/catalogue-moment-editor.js`
@@ -40,9 +40,9 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/scripts-catalogue-write-server.md`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - open `/studio/catalogue-moment/?moment=keys`, confirm Delete is disabled when the local catalogue server is unavailable, then run a delete preview against the write server for a known moment in dry-run mode
+  - open `/studio/catalogue-moment/?moment=keys`, confirm Delete is disabled when the local catalogue server is unavailable, then run delete preview/apply against the write server in dry-run mode for a known moment
 - follow-up:
-  - decide whether Studio source-delete actions should optionally invoke the fuller generated/prose/media cleanup workflow or remain source-only for all catalogue record kinds
+  - decide whether work/detail/series Studio deletes should adopt the same generated-artifact/search cleanup boundary
 
 ## UI Rule Log 2026-04-27 / UI-039
 

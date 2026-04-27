@@ -21,7 +21,7 @@ This page edits one existing canonical moment metadata record from `assets/studi
 - editing moment metadata fields
 - saving source JSON only
 - optionally running a scoped moment rebuild immediately
-- deleting one moment source metadata record after preview/confirmation
+- deleting one moment and its generated site artifacts after preview/confirmation
 - checking permanent prose, staged prose, and source-image readiness
 - importing staged moment prose from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 
@@ -58,8 +58,17 @@ The scoped update rebuilds:
 `Delete` calls `POST /catalogue/delete-preview` with `kind: "moment"` and the current record hash.
 If the preview has no blockers or validation errors, the page asks for confirmation and then calls `POST /catalogue/delete-apply`.
 
-The Studio delete removes the canonical moment metadata record from `assets/studio/data/catalogue/moments.json`.
-It does not delete moment prose, generated runtime artifacts, or media files; use the existing cleanup pipeline/script path when those files should also be removed.
+The Studio delete removes:
+
+- the canonical moment metadata record from `assets/studio/data/catalogue/moments.json`
+- `_moments/<moment_id>.md`
+- `assets/moments/index/<moment_id>.json`
+- matching published moment thumbnails under `assets/moments/img/`
+- matching repo-local staged media under `var/catalogue/media/moments/`
+- the moment entry from `assets/data/moments_index.json`
+- the catalogue search record, by rebuilding catalogue search after the delete
+
+It does not delete canonical prose under `_docs_src_catalogue/moments/`, canonical source images under `DOTLINEFORM_PROJECTS_BASE_DIR`, or remote media already uploaded outside the repo.
 
 ## Staged Prose Import
 
