@@ -29,8 +29,13 @@ logs/
 
 # Studio local backup output
 var/studio/backups/
+var/studio/catalogue/backups/
 var/docs/backups/
 var/docs/logs/
+
+# staging
+var/docs/import-staging/
+var/docs/catalogue/import-staging/
 
 # Catalogue planner state
 var/build_catalogue_state.json
