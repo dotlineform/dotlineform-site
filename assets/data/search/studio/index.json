@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3798b93a0a7f6dca09c26dd9af8ca135",
-    "generated_at_utc": "2026-04-27T14:29:12Z",
-    "count": 137
+    "version": "blake2b-f9f92e359664d010bb456463a3120470",
+    "generated_at_utc": "2026-04-27T15:35:58Z",
+    "count": 138
   },
   "entries": [
     {
@@ -2717,6 +2717,33 @@
         "27"
       ],
       "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and site docs docs 2026-04-27 2026 04 27"
+    },
+    {
+      "id": "site-request-moments-prose-source-model",
+      "kind": "doc",
+      "title": "Moments Prose Source Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-27 • Site Docs",
+      "search_terms": [
+        "site-request-moments-prose-source-model",
+        "site",
+        "request",
+        "moments",
+        "prose",
+        "source",
+        "model",
+        "moments prose source model request",
+        "site docs",
+        "docs",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request site docs docs 2026-04-27 2026 04 27"
     },
     {
       "id": "site-request-analysis-doc-viewer",

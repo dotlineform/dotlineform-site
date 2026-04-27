@@ -119,6 +119,8 @@ Moments are different enough to handle later:
 - moments do not have the same membership relationship with works or series
 - moment migration can be planned as a separate, self-contained change
 
+The separate planning request is [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model).
+
 ## Review Suggestions
 
 ### Keep This Separate From Public Analysis Docs
@@ -392,3 +394,4 @@ Manual checks should include:
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)

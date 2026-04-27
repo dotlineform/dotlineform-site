@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T14:29:01Z",
+  "generated_at": "2026-04-27T15:35:56Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1631,6 +1631,20 @@
       "source_path": "site-request-work-series-prose-source-model.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-series-prose-source-model.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-moments-prose-source-model",
+      "title": "Moments Prose Source Model Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "sort_order": 145,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-moments-prose-source-model.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moments-prose-source-model.json"
     },
     {
       "scope": "studio",
