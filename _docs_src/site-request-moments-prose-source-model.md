@@ -86,6 +86,8 @@ Publish-state writes should not update moment source front matter. A publishable
 
 Existing `<pre class="moment-text">...</pre>` wrappers should remain accepted during the migration so current prose can move without a formatting cleanup being bundled into the source-model change.
 
+Media image import and srcset generation are intentionally out of scope for this pass. Moment source-image lookup should remain a metadata/runtime concern, not part of the prose-source migration.
+
 The first implementation should preserve the public generated artifacts:
 
 - `_moments/<moment_id>.md`
@@ -108,6 +110,7 @@ Resolved decisions:
 8. A source prose file is required for a publishable moment.
 9. Existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration.
 10. Source-image lookup remains separate from prose source lookup.
+11. Media image import/edit/srcset work is deferred to a future shared mechanism across works and moments.
 
 ## Metadata Ownership
 
@@ -143,10 +146,13 @@ Main risks:
 - the import page needs enough metadata fields to create or update a publishable moment safely
 - source-image lookup must not accidentally move into the prose-source tree
 - existing prose wrappers are accepted for migration, so cleanup to pure Markdown remains a later step
+- deferring image import/edit/srcset work keeps this pass focused, but leaves a known workflow gap for both works and moments
 
 The main tradeoff is implementation scope versus long-term model consistency.
 
 This request chooses the more consistent long-term model: body-only prose source, with moment metadata owned outside the prose Markdown.
+
+The media tradeoff is deliberate: moment images should not get a one-off solution here. A later task should define one shared import/edit/srcset mechanism that works consistently for works and moments.
 
 ## Source Contract Notes
 
@@ -174,6 +180,7 @@ Defined:
 - metadata entry surface: `/studio/catalogue-moment-import/`
 - missing-prose behavior: source prose file is required for a publishable moment
 - source-image lookup boundary
+- media image import/edit/srcset work deferred to a future shared work/moment mechanism
 - compatibility with existing `<pre class="moment-text">...</pre>` wrappers during migration
 
 ### Task 2. Add Moment Source Import Or Migration
@@ -280,16 +287,30 @@ Manual checks should include:
 - verify existing public `/moments/<moment_id>/` still renders title, date, image, and prose
 - verify `/moments/` card metadata is unchanged except for intentional updates
 - verify source image lookup still uses the expected external media/source image path
+- verify the change does not add moment-specific media import/edit/srcset behavior
 
 ## Out Of Scope
 
 - changing public moment page layout
 - changing moment srcset variant policy
+- adding media image import, edit, or srcset generation to the moment import flow
 - moving moment prose into Library
 - publishing moment prose through the public analysis viewer
 - deleting external moment source files
 - cleaning up existing `<pre class="moment-text">...</pre>` wrappers beyond accepting them during migration
 - redesigning all catalogue metadata storage beyond the moment metadata needed for this request
+
+## Future Follow-Up
+
+A later request should define a consistent media import/edit/srcset mechanism across works and moments.
+
+That future work should cover:
+
+- how Studio work and moment flows declare image readiness
+- when source images are copied or staged
+- when srcset variants are generated
+- how generated image metadata is reflected in runtime payloads
+- how the UI reports missing, stale, or regenerated media consistently
 
 ## Related References
 
