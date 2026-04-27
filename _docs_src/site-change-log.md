@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Added Moment Delete To The Catalogue Moment Editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue
+
+**Summary:**
+Added source-record delete support for `/studio/catalogue-moment/`.
+
+**Reason:**
+The new moment editor could reopen, save, rebuild, and import prose for existing moments, but it still lacked the delete action already present in the work, detail, and series editors.
+
+**Effect:**
+The moment editor now exposes `Delete`, previews impact through `POST /catalogue/delete-preview`, confirms in the browser, and applies through `POST /catalogue/delete-apply` with record-hash conflict protection. The operation removes the canonical moment metadata record from `assets/studio/data/catalogue/moments.json`; prose, generated artifacts, and media remain under the existing cleanup workflow.
+
+**Affected files/docs:**
+
+- `studio/catalogue-moment/index.md`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-27] Added the Catalogue Moment Editor
 
 **Status:** implemented

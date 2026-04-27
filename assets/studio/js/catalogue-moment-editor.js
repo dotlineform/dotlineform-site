@@ -313,8 +313,9 @@ function renderSummary(state) {
 function updateDirtyState(state) {
   const dirty = draftHasChanges(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "", dirty ? "warning" : "");
-  state.saveButton.disabled = !state.serverAvailable || state.isSaving || !state.currentRecord;
-  state.buildButton.disabled = !state.serverAvailable || state.isBuilding || dirty || !state.currentRecord;
+  state.saveButton.disabled = !state.serverAvailable || state.isSaving || state.isDeleting || !state.currentRecord;
+  state.deleteButton.disabled = !state.serverAvailable || state.isSaving || state.isBuilding || state.isDeleting || !state.currentRecord;
+  state.buildButton.disabled = !state.serverAvailable || state.isBuilding || state.isDeleting || dirty || !state.currentRecord;
   renderReadiness(state);
 }
 
@@ -532,6 +533,53 @@ async function importMomentProse(state) {
   }
 }
 
+async function deleteMoment(state) {
+  if (!state.currentRecord || !state.serverAvailable || state.isDeleting) return;
+  state.isDeleting = true;
+  updateDirtyState(state);
+  setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview..."), "pending");
+  setTextWithState(state.resultNode, "");
+  try {
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, {
+      kind: "moment",
+      moment_id: state.currentMomentId,
+      expected_record_hash: state.expectedRecordHash
+    });
+    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
+    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
+    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
+    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
+      const message = blockers[0] || validationErrors[0] || t(state, "delete_status_blocked", "Delete is blocked.");
+      setTextWithState(state.statusNode, message, "error");
+      state.isDeleting = false;
+      updateDirtyState(state);
+      return;
+    }
+    const summary = normalizeText(preview && preview.summary) || t(state, "delete_confirm_default", "Delete this source record?");
+    if (!window.confirm(summary)) {
+      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."), "warning");
+      state.isDeleting = false;
+      updateDirtyState(state);
+      return;
+    }
+    setTextWithState(state.statusNode, t(state, "delete_status_deleting", "Deleting source record..."), "pending");
+    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, {
+      kind: "moment",
+      moment_id: state.currentMomentId,
+      expected_record_hash: state.expectedRecordHash
+    });
+    const route = getStudioRoute(state.config, "catalogue_status");
+    window.location.assign(route);
+  } catch (error) {
+    const message = Number(error && error.status) === 409
+      ? t(state, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
+      : `${t(state, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
+    state.isDeleting = false;
+    updateDirtyState(state);
+  }
+}
+
 function buildMomentRows(payload) {
   const moments = payload && payload.moments && typeof payload.moments === "object" ? payload.moments : {};
   return Object.entries(moments).map(([momentId, record]) => {
@@ -564,6 +612,7 @@ function bindEvents(state) {
     openMoment(state, match || value).catch((error) => console.warn("catalogue_moment_editor: open failed", error));
   });
   state.saveButton.addEventListener("click", () => saveMoment(state));
+  state.deleteButton.addEventListener("click", () => deleteMoment(state).catch((error) => console.warn("catalogue_moment_editor: delete failed", error)));
   state.buildButton.addEventListener("click", () => buildMoment(state));
   state.readinessNode.addEventListener("click", (event) => {
     const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
@@ -591,6 +640,7 @@ async function init() {
     warningNode: document.getElementById("catalogueMomentWarning"),
     resultNode: document.getElementById("catalogueMomentResult"),
     saveButton: document.getElementById("catalogueMomentSave"),
+    deleteButton: document.getElementById("catalogueMomentDelete"),
     buildButton: document.getElementById("catalogueMomentBuild"),
     applyBuildNode: document.getElementById("catalogueMomentApplyBuild"),
     fieldsNode: document.getElementById("catalogueMomentFields"),
@@ -613,6 +663,7 @@ async function init() {
     needsBuild: false,
     serverAvailable: false,
     isSaving: false,
+    isDeleting: false,
     isBuilding: false
   };
 
@@ -626,6 +677,7 @@ async function init() {
     state.searchNode.placeholder = t(state, "search_placeholder", "find moment by id or title");
     state.openButton.textContent = t(state, "open_button", "Open");
     state.saveButton.textContent = t(state, "save_button", "Save");
+    state.deleteButton.textContent = t(state, "delete_button", "Delete");
     state.buildButton.textContent = t(state, "build_button", "Update site now");
     document.getElementById("catalogueMomentApplyBuildLabel").textContent = t(state, "build_button", "Update site now");
 

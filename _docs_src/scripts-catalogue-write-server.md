@@ -115,12 +115,22 @@ or:
 }
 ```
 
+or:
+
+```json
+{
+  "kind": "moment",
+  "moment_id": "keys"
+}
+```
+
 Request behavior:
 
 - returns a delete summary, affected records, blockers, and validation errors
 - work delete preview includes dependent detail/file/link source records
 - work delete blocks when the work is still used as `primary_work_id` by a series
 - series delete preview includes affected member works
+- moment delete preview covers the canonical source metadata record in `assets/studio/data/catalogue/moments.json`
 
 `POST /catalogue/delete-apply` accepts the same shape plus optional `expected_record_hash` and then:
 

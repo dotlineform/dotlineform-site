@@ -927,15 +927,17 @@ def extract_apply_build(body: Mapping[str, Any]) -> bool:
 
 def extract_delete_request(body: Mapping[str, Any]) -> Dict[str, str]:
     kind = str(body.get("kind") or "").strip().lower()
-    if kind not in {"work", "work_detail", "series"}:
-        raise ValueError("delete kind must be work, work_detail, or series")
+    if kind not in {"work", "work_detail", "series", "moment"}:
+        raise ValueError("delete kind must be work, work_detail, series, or moment")
 
     if kind == "work":
         record_id = slug_id(body.get("work_id") or body.get("id"))
     elif kind == "work_detail":
         record_id = normalize_detail_uid_value(body.get("detail_uid") or body.get("id"))
-    else:
+    elif kind == "series":
         record_id = normalize_series_id(body.get("series_id") or body.get("id"))
+    else:
+        record_id = normalize_moment_id_value(body.get("moment_id") or body.get("id"))
     expected_record_hash = str(body.get("expected_record_hash") or "").strip()
     return {
         "kind": kind,
@@ -1305,6 +1307,28 @@ def preview_series_delete(source_dir: Path, series_id: str) -> Dict[str, Any]:
     }
 
 
+def preview_moment_delete(source_dir: Path, moment_id: str) -> Dict[str, Any]:
+    moment_records = load_moment_metadata_records(source_dir)
+    moment_record = moment_records.get(moment_id)
+    if not isinstance(moment_record, dict):
+        raise ValueError(f"moment_id not found: {moment_id}")
+    return {
+        "kind": "moment",
+        "id": moment_id,
+        "record": moment_record,
+        "blockers": [],
+        "affected": {
+            "works": [],
+            "series": [],
+            "work_details": [],
+            "work_files": [],
+            "work_links": [],
+            "moments": [moment_id],
+        },
+        "summary": f"Delete moment {moment_id} from source metadata.",
+    }
+
+
 def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
     source_records = records_from_json_source(source_dir)
     updated_works = dict(source_records.works)
@@ -1371,6 +1395,18 @@ def validate_series_delete_records(source_dir: Path, series_id: str) -> list[str
     return validate_source_records(normalized_records)
 
 
+def validate_moment_delete_records(source_dir: Path, moment_id: str) -> list[str]:
+    moment_records = load_moment_metadata_records(source_dir)
+    moment_records.pop(moment_id, None)
+    errors: list[str] = []
+    for remaining_moment_id, moment_record in sorted(moment_records.items()):
+        errors.extend(
+            f"{remaining_moment_id}: {error}"
+            for error in validate_updated_moment_record(remaining_moment_id, moment_record)
+        )
+    return errors
+
+
 def build_delete_preview(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
     if kind == "work":
         preview = preview_work_delete(source_dir, record_id)
@@ -1378,9 +1414,12 @@ def build_delete_preview(source_dir: Path, kind: str, record_id: str) -> Dict[st
     elif kind == "work_detail":
         preview = preview_work_detail_delete(source_dir, record_id)
         preview["validation_errors"] = validate_work_detail_delete_records(source_dir, record_id)
-    else:
+    elif kind == "series":
         preview = preview_series_delete(source_dir, record_id)
         preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
+    else:
+        preview = preview_moment_delete(source_dir, record_id)
+        preview["validation_errors"] = validate_moment_delete_records(source_dir, record_id)
     blockers = list(preview.get("blockers") or [])
     validation_errors = list(preview.get("validation_errors") or [])
     preview["blockers"] = blockers
@@ -2417,7 +2456,7 @@ class Handler(BaseHTTPRequestHandler):
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }
                 )
-        else:
+        elif kind == "series":
             series_payload = load_series_payload(self.server.series_path)
             works_payload = load_works_payload(self.server.works_path)
             current_record = series_payload["series"].get(record_id)
@@ -2467,6 +2506,48 @@ class Handler(BaseHTTPRequestHandler):
                         "operation": "series.delete",
                         "status": "completed",
                         "summary": f"Deleted series {record_id} and updated member work records.",
+                        "affected": preview["affected"],
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+        else:
+            moments_payload = load_moments_payload(self.server.moments_path)
+            current_record = moments_payload["moments"].get(record_id)
+            if not isinstance(current_record, dict):
+                raise ValueError(f"moment_id not found: {record_id}")
+            normalized_current = normalize_moment_metadata_record(record_id, current_record)
+            current_hash = record_hash(normalized_current)
+            if expected_hash and expected_hash != current_hash:
+                self._send_json(
+                    HTTPStatus.CONFLICT,
+                    {"ok": False, "error": "record changed since loaded", "moment_id": record_id, "current_record_hash": current_hash},
+                    allowed,
+                )
+                return
+            updated_moments = dict(moments_payload["moments"])
+            del updated_moments[record_id]
+            if not self.server.dry_run:
+                target_path = self.server.moments_path.resolve()
+                if target_path not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+                backup_paths = atomic_write_many({target_path: moment_metadata_payload(updated_moments)}, self.server.backups_dir)
+            response_payload = {
+                "ok": True,
+                "kind": kind,
+                "id": record_id,
+                "deleted": True,
+                "preview": preview,
+            }
+            if not self.server.dry_run:
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "moment.delete"),
+                        "time_utc": now_utc,
+                        "kind": "source_save",
+                        "operation": "moment.delete",
+                        "status": "completed",
+                        "summary": f"Deleted moment source metadata for {record_id}.",
                         "affected": preview["affected"],
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }

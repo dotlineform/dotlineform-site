@@ -40,6 +40,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
         <h2 class="tagStudio__heading">moment metadata</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentDelete">Delete</button>
           <label class="catalogueWorkPage__updateToggle" for="catalogueMomentApplyBuild">
             <input type="checkbox" id="catalogueMomentApplyBuild" checked>
             <span id="catalogueMomentApplyBuildLabel">Update site now</span>

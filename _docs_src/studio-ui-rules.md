@@ -23,6 +23,27 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-27 / UI-040
+
+- status: adopted
+- route: `/studio/catalogue-moment/`
+- issue: the moment editor could save and rebuild existing moments but could not delete a moment source metadata record.
+- triage: local workflow completion for the catalogue editor family
+- reasoning: moment delete should follow the existing work/detail/series source-delete pattern: preview server-side impact, block on validation issues, confirm in the browser, and apply through the shared write service with record-hash conflict protection.
+- outcome: added a Delete command to the moment editor and extended the shared catalogue delete preview/apply endpoints to support `kind: "moment"`.
+- files changed:
+  - `studio/catalogue-moment/index.md`
+  - `assets/studio/js/catalogue-moment-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/catalogue-moment-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-moment/?moment=keys`, confirm Delete is disabled when the local catalogue server is unavailable, then run a delete preview against the write server for a known moment in dry-run mode
+- follow-up:
+  - decide whether Studio source-delete actions should optionally invoke the fuller generated/prose/media cleanup workflow or remain source-only for all catalogue record kinds
+
 ## UI Rule Log 2026-04-27 / UI-039
 
 - status: adopted
