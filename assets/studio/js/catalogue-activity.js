@@ -71,8 +71,10 @@ function scopeLink(config, entry) {
   if (scopeKind === "work" && scopeId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(scopeId)}`;
   if (scopeKind === "series" && scopeId) href = `${getStudioRoute(config, "catalogue_series_editor")}?series=${encodeURIComponent(scopeId)}`;
   if (scopeKind === "work_detail" && scopeId) href = `${getStudioRoute(config, "catalogue_work_detail_editor")}?detail=${encodeURIComponent(scopeId)}`;
-  if (scopeKind === "work_file" && scopeId) href = `${getStudioRoute(config, "catalogue_work_file_editor")}?file=${encodeURIComponent(scopeId)}`;
-  if (scopeKind === "work_link" && scopeId) href = `${getStudioRoute(config, "catalogue_work_link_editor")}?link=${encodeURIComponent(scopeId)}`;
+  if ((scopeKind === "work_file" || scopeKind === "work_link") && scopeId) {
+    const workId = scopeId.split(":")[0];
+    if (workId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(workId)}`;
+  }
   if (scopeKind === "bulk_works" || scopeKind === "bulk_work_details") href = getStudioRoute(config, "bulk_add_work");
   if (scopeKind === "moment") href = getStudioRoute(config, "catalogue_moment_import");
   return { href, label: scopeLabel };

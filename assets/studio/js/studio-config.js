@@ -19,10 +19,6 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_new_work_editor: "/studio/catalogue-new-work/",
       catalogue_work_detail_editor: "/studio/catalogue-work-detail/",
       catalogue_new_work_detail_editor: "/studio/catalogue-new-work-detail/",
-      catalogue_work_file_editor: "/studio/catalogue-work-file/",
-      catalogue_new_work_file_editor: "/studio/catalogue-new-work-file/",
-      catalogue_work_link_editor: "/studio/catalogue-work-link/",
-      catalogue_new_work_link_editor: "/studio/catalogue-new-work-link/",
       catalogue_series_editor: "/studio/catalogue-series/",
       catalogue_new_series_editor: "/studio/catalogue-new-series/",
       tag_registry: "/studio/tag-registry/",
@@ -47,8 +43,6 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_works: "/assets/studio/data/catalogue/works.json",
         catalogue_work_details: "/assets/studio/data/catalogue/work_details.json",
         catalogue_series: "/assets/studio/data/catalogue/series.json",
-        catalogue_work_files: "/assets/studio/data/catalogue/work_files.json",
-        catalogue_work_links: "/assets/studio/data/catalogue/work_links.json",
         catalogue_moments: "/assets/studio/data/catalogue/moments.json",
         catalogue_lookup_work_search: "/assets/studio/data/catalogue_lookup/work_search.json",
         catalogue_lookup_series_search: "/assets/studio/data/catalogue_lookup/series_search.json",
@@ -56,8 +50,6 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_lookup_meta: "/assets/studio/data/catalogue_lookup/meta.json",
         catalogue_lookup_work_base: "/assets/studio/data/catalogue_lookup/works/",
         catalogue_lookup_work_detail_base: "/assets/studio/data/catalogue_lookup/work_details/",
-        catalogue_lookup_work_file_base: "/assets/studio/data/catalogue_lookup/work_files/",
-        catalogue_lookup_work_link_base: "/assets/studio/data/catalogue_lookup/work_links/",
         catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/"
       },
       site: {
@@ -539,46 +531,6 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     catalogue_new_work_detail_editor: {
       create_button: "Create"
-    },
-    catalogue_new_work_file_editor: {
-      create_button: "Create"
-    },
-    catalogue_new_work_link_editor: {
-      create_button: "Create"
-    },
-    catalogue_work_file_editor: {
-      search_placeholder: "find work file by id, filename, or work id",
-      open_button: "Open",
-      save_button: "Save",
-      build_button: "Update site now",
-      delete_button: "Delete",
-      save_status_saving_and_updating: "Saving source record and updating site…",
-      save_result_success: "Source saved at {saved_at}. Public catalogue update still pending.",
-      save_result_success_applied: "Saved source changes and updated the public catalogue at {saved_at}.",
-      save_result_success_partial: "Source changes were saved at {saved_at}, but the public catalogue update failed. Retry Update site now.",
-      build_status_running: "Updating site…",
-      build_status_success: "Site update completed.",
-      build_status_failed: "Site update failed.",
-      build_result_success: "Public catalogue updated at {completed_at}. Build Activity updated.",
-      summary_rebuild_needed: "source saved; site update pending",
-      summary_rebuild_current: "source and public catalogue are aligned in this session"
-    },
-    catalogue_work_link_editor: {
-      search_placeholder: "find work link by id, label, URL, or work id",
-      open_button: "Open",
-      save_button: "Save",
-      build_button: "Update site now",
-      delete_button: "Delete",
-      save_status_saving_and_updating: "Saving source record and updating site…",
-      save_result_success: "Source saved at {saved_at}. Public catalogue update still pending.",
-      save_result_success_applied: "Saved source changes and updated the public catalogue at {saved_at}.",
-      save_result_success_partial: "Source changes were saved at {saved_at}, but the public catalogue update failed. Retry Update site now.",
-      build_status_running: "Updating site…",
-      build_status_success: "Site update completed.",
-      build_status_failed: "Site update failed.",
-      build_result_success: "Public catalogue updated at {completed_at}. Build Activity updated.",
-      summary_rebuild_needed: "source saved; site update pending",
-      summary_rebuild_current: "source and public catalogue are aligned in this session"
     },
     catalogue_series_editor: {
       load_failed_error: "Failed to load catalogue source data for the series editor.",

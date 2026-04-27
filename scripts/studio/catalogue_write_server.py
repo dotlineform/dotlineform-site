@@ -89,16 +89,12 @@ from catalogue_lookup import (  # noqa: E402
     build_series_lookup_payload,
     build_work_detail_search_payload,
     build_work_detail_lookup_payload,
-    build_work_file_lookup_payload,
     build_work_lookup_payload,
-    build_work_link_lookup_payload,
     build_work_search_payload,
     write_detail_lookup_payload,
     write_lookup_root_payload,
     write_series_lookup_payload,
     write_work_lookup_payload,
-    write_work_file_lookup_payload,
-    write_work_link_lookup_payload,
 )
 from catalogue_json_build import (  # noqa: E402
     CATALOGUE_MEDIA_STAGING_REL_DIR,
@@ -2505,8 +2501,6 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         lookup_dir: Path,
         works_path: Path,
         work_details_path: Path,
-        work_files_path: Path,
-        work_links_path: Path,
         series_path: Path,
         moments_path: Path,
         allowed_write_paths: set[Path],
@@ -2520,8 +2514,6 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.lookup_dir = lookup_dir.resolve()
         self.works_path = works_path.resolve()
         self.work_details_path = work_details_path.resolve()
-        self.work_files_path = work_files_path.resolve()
-        self.work_links_path = work_links_path.resolve()
         self.series_path = series_path.resolve()
         self.moments_path = moments_path.resolve()
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
@@ -5848,8 +5840,6 @@ def main() -> None:
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
     work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
-    work_files_path = (source_dir / SOURCE_FILES["work_files"]).resolve()
-    work_links_path = (source_dir / SOURCE_FILES["work_links"]).resolve()
     moments_path = (source_dir / MOMENT_METADATA_FILENAME).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_paths = {
@@ -5873,8 +5863,6 @@ def main() -> None:
         works_path=works_path,
         work_details_path=work_details_path,
         series_path=series_path,
-        work_files_path=work_files_path,
-        work_links_path=work_links_path,
         moments_path=moments_path,
         allowed_write_paths=allowed_paths,
         allowed_write_roots=allowed_write_roots,

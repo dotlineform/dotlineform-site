@@ -8,6 +8,43 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Removed retired work file and link Studio routes
+
+**Status:** implemented
+
+**Area:** Studio / catalogue cleanup
+
+**Summary:**
+Removed the retired standalone work-file and work-link Studio pages, route scripts, old source JSON files, focused file/link lookup payloads, and generator artifact switches.
+
+**Reason:**
+Files and links are now work-owned `downloads` and `links` metadata in `works.json`. Keeping the old source files, focused lookup records, and Studio pages made the retired child-record pattern look partially supported.
+
+**Effect:**
+Normal file/link editing now lives only on `/studio/catalogue-work/`. The lookup builder no longer emits `catalogue_lookup/work_files/` or `catalogue_lookup/work_links/` payloads, `studio_config.json` no longer advertises the retired routes or data files, and `generate_work_pages.py` no longer accepts `work-files` or `work-links` as independent artifacts. External referenced files are untouched.
+
+**Affected files/docs:**
+
+- `studio/catalogue-work-file/index.md`
+- `studio/catalogue-new-work-file/index.md`
+- `studio/catalogue-work-link/index.md`
+- `studio/catalogue-new-work-link/index.md`
+- `assets/studio/js/catalogue-work-file-editor.js`
+- `assets/studio/js/catalogue-new-work-file-editor.js`
+- `assets/studio/js/catalogue-work-link-editor.js`
+- `assets/studio/js/catalogue-new-work-link-editor.js`
+- `assets/studio/data/catalogue/work_files.json`
+- `assets/studio/data/catalogue/work_links.json`
+- `scripts/generate_work_pages.py`
+- `scripts/build_catalogue.py`
+- `scripts/catalogue_source.py`
+- `scripts/catalogue_lookup.py`
+- `assets/studio/data/studio_config.json`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
+- [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+
 ## [2026-04-27] Added work-editor modals for files and links
 
 **Status:** implemented

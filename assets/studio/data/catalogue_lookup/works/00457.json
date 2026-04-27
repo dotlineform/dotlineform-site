@@ -37,14 +37,11 @@
   },
   "record_hash": "3dde2cbc4aa4eb548068a8b6805dc501d4104fa4f7337d8be3cd237c1acebec7",
   "detail_sections": [],
-  "work_files": [],
-  "work_links": [
+  "downloads": [],
+  "links": [
     {
-      "link_uid": "00457:bandcamp",
-      "work_id": "00457",
       "url": "https://dotlineform.bandcamp.com/album/intuition",
-      "label": "Bandcamp",
-      "status": "published"
+      "label": "Bandcamp"
     }
   ],
   "series_summary": [

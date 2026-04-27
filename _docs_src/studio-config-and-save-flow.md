@@ -38,7 +38,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, `catalogue_work_file_editor`, `catalogue_work_link_editor`, and `catalogue_series_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -94,12 +94,6 @@ Current write endpoints include:
 - `http://127.0.0.1:8788/catalogue/import-apply`
 - `http://127.0.0.1:8788/catalogue/moment/import-preview`
 - `http://127.0.0.1:8788/catalogue/moment/import-apply`
-- `http://127.0.0.1:8788/catalogue/work-file/create`
-- `http://127.0.0.1:8788/catalogue/work-file/save`
-- `http://127.0.0.1:8788/catalogue/work-file/delete`
-- `http://127.0.0.1:8788/catalogue/work-link/create`
-- `http://127.0.0.1:8788/catalogue/work-link/save`
-- `http://127.0.0.1:8788/catalogue/work-link/delete`
 - `http://127.0.0.1:8788/catalogue/series/create`
 - `http://127.0.0.1:8788/catalogue/series/save`
 - `http://127.0.0.1:8788/catalogue/build-preview`
@@ -187,23 +181,11 @@ Catalogue moment import behavior:
 - apply does not update moment source front matter
 - browser-side media image upload/edit behavior remains out of scope for this moment import pass
 
-Catalogue work file local save behavior:
+Catalogue work-owned files and links behavior:
 
-- the file editor sends `POST /catalogue/work-file/save` to the same local catalogue write service
-- the request includes `file_uid`, a browser-computed record hash, a normalized file patch, and optional `apply_build: true`
-- draft create uses `POST /catalogue/work-file/create`
-- delete uses `POST /catalogue/work-file/delete`
-- the server validates the parent work reference before writing
-- the server writes `work_files.json` only after full-source validation succeeds
-
-Catalogue work link local save behavior:
-
-- the link editor sends `POST /catalogue/work-link/save` to the same local catalogue write service
-- the request includes `link_uid`, a browser-computed record hash, a normalized link patch, and optional `apply_build: true`
-- draft create uses `POST /catalogue/work-link/create`
-- delete uses `POST /catalogue/work-link/delete`
-- the server validates the parent work reference before writing
-- the server writes `work_links.json` only after full-source validation succeeds
+- the work editor saves `downloads` and `links` as arrays on the work record through `POST /catalogue/work/save`
+- standalone work-file and work-link routes and source JSON files are retired
+- the local write service validates the complete work source payload before writing `works.json`
 
 Catalogue series local save behavior:
 

@@ -188,8 +188,6 @@ Work prose is no longer edited through a source filename field. Use `Import stag
 ## Related References
 
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
-- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

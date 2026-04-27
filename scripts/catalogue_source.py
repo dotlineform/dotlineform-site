@@ -32,8 +32,6 @@ SOURCE_FILES = {
     "works": "works.json",
     "work_details": "work_details.json",
     "series": "series.json",
-    "work_files": "work_files.json",
-    "work_links": "work_links.json",
     "meta": "meta.json",
 }
 
@@ -661,7 +659,7 @@ def payloads_from_records(records: CatalogueSourceRecords, *, workbook_path: Pat
 def write_payloads(source_dir: Path, payloads: Mapping[str, Mapping[str, Any]]) -> list[Path]:
     source_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
-    for kind in ["works", "work_details", "series", "work_files", "work_links", "meta"]:
+    for kind in ["works", "work_details", "series", "meta"]:
         path = source_dir / SOURCE_FILES[kind]
         path.write_text(json.dumps(payloads[kind], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         written.append(path)

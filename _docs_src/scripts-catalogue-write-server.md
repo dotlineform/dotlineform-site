@@ -34,12 +34,6 @@ Exposed endpoints:
 - `POST /catalogue/work-detail/save`
 - `POST /catalogue/import-preview`
 - `POST /catalogue/import-apply`
-- `POST /catalogue/work-file/create`
-- `POST /catalogue/work-file/save`
-- `POST /catalogue/work-file/delete`
-- `POST /catalogue/work-link/create`
-- `POST /catalogue/work-link/save`
-- `POST /catalogue/work-link/delete`
 - `POST /catalogue/series/create`
 - `POST /catalogue/series/save`
 - `POST /catalogue/build-preview`
@@ -51,7 +45,7 @@ Exposed endpoints:
 - `POST /catalogue/moment/import-preview`
 - `POST /catalogue/moment/import-apply`
 
-The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/work-file/work-link/series/moment records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work, one series, or one moment scope. It does not write back into Excel.
+The current implementation can create draft work, work-detail, and series records, can import new work/work-detail records from `data/works.xlsx`, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work, one series, or one moment scope. It does not write back into Excel.
 
 `POST /catalogue/bulk-save` expects:
 
@@ -291,7 +285,7 @@ Current behavior after successful canonical writes:
 - `POST /catalogue/work/save` now uses the invalidation registry for the first live incremental slice
 - when the changed work fields stay within the locked `single-record` first-pass set, the server rewrites only `works/<work_id>.json`
 - when work changes resolve to `targeted-multi-record`, the server rewrites only the focused derived payload set needed for those fields
-- `POST /catalogue/work-detail/save`, `POST /catalogue/work-file/save`, `POST /catalogue/work-link/save`, and `POST /catalogue/series/save` now also use focused incremental refresh where their dependency set is explicit
+- `POST /catalogue/work-detail/save` and `POST /catalogue/series/save` now also use focused incremental refresh where their dependency set is explicit
 - other writes still use a full lookup refresh
 
 Why the current refresh is broad:
@@ -448,86 +442,7 @@ Request behavior:
 - refreshes derived lookup payloads after non-dry-run writes
 - writes one aggregated Catalogue Activity entry that records import counts rather than one entry per imported record
 
-`POST /catalogue/work-file/save` expects:
-
-```json
-{
-  "file_uid": "00008:nerve",
-  "expected_record_hash": "optional-current-record-sha256",
-  "record": {
-    "filename": "nerve.pdf",
-    "label": "nerve.pdf",
-    "status": "published",
-    "published_date": "2026-04-01"
-  }
-}
-```
-
-Request behavior:
-
-- `file_uid` must resolve to an existing canonical file record
-- optional `apply_build: true` requests a parent-work site update as part of the save response
-- `filename` and `label` are required
-- `record` may be partial, but all keys must be known work-file source fields
-- the parent `work_id` must remain valid
-- `expected_record_hash`, when provided, must match the current stored file hash or the server returns `409 Conflict`
-
-`POST /catalogue/work-file/create` expects:
-
-```json
-{
-  "work_id": "01942",
-  "record": {
-    "filename": "new-file.pdf",
-    "label": "new-file.pdf",
-    "status": "draft"
-  }
-}
-```
-
-Request behavior:
-
-- parent `work_id` must already exist
-- blank or missing `status` is normalized to `draft`
-- `filename` and `label` are required
-- the server derives and validates the normalized `file_uid`
-
-`POST /catalogue/work-link/save` expects:
-
-```json
-{
-  "link_uid": "00457:bandcamp",
-  "expected_record_hash": "optional-current-record-sha256",
-  "record": {
-    "url": "https://dotlineform.bandcamp.com/album/intuition",
-    "label": "Bandcamp",
-    "status": "published",
-    "published_date": "2026-04-01"
-  }
-}
-```
-
-Request behavior:
-
-- `link_uid` must resolve to an existing canonical link record
-- optional `apply_build: true` requests a parent-work site update as part of the save response
-- `url` and `label` are required
-- `record` may be partial, but all keys must be known work-link source fields
-- the parent `work_id` must remain valid
-- `expected_record_hash`, when provided, must match the current stored link hash or the server returns `409 Conflict`
-
-`POST /catalogue/work-link/create` expects:
-
-```json
-{
-  "work_id": "01942",
-  "record": {
-    "url": "https://example.com/work",
-    "label": "Reference link",
-    "status": "draft"
-  }
-}
-```
+Work-owned files and links are saved through `POST /catalogue/work/save` as the work record's `downloads` and `links` arrays. The standalone work-file and work-link write endpoints are retired and return `410 Gone`.
 
 Request behavior:
 

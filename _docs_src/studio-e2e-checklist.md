@@ -29,7 +29,7 @@ Complete these before running the checklist:
 - confirm the site is available at `http://127.0.0.1:4000/`
 - confirm the local catalogue write server is available on `http://127.0.0.1:8788/`
 - confirm `DOTLINEFORM_PROJECTS_BASE_DIR` points to the current source tree used for prose, work media, and moments
-- confirm `DOTLINEFORM_MEDIA_BASE_DIR` is set if work-file staging or media-generation behavior is being checked
+- confirm `DOTLINEFORM_MEDIA_BASE_DIR` is set if media-generation behavior is being checked
 - confirm `assets/studio/data/catalogue/` is present and current
 - confirm `data/works_bulk_import.xlsx` is present if bulk import is in scope for the run
 - confirm at least one representative source case exists for each required state:
@@ -143,14 +143,10 @@ Checks:
   - `/studio/catalogue-new-work/`
   - `/studio/catalogue-new-series/`
   - `/studio/catalogue-new-work-detail/`
-  - `/studio/catalogue-new-work-file/`
-  - `/studio/catalogue-new-work-link/`
   - `/studio/catalogue-moment-import/`
   - `/studio/catalogue-work/`
   - `/studio/catalogue-series/`
   - `/studio/catalogue-work-detail/`
-  - `/studio/catalogue-work-file/`
-  - `/studio/catalogue-work-link/`
   - `/studio/catalogue-status/`
   - `/studio/catalogue-activity/`
   - `/studio/build-activity/`
@@ -240,14 +236,11 @@ Expected results:
 - bulk edit works only on the selected details
 - parent work output updates as expected after detail rebuild
 
-## 7. File And Link Create, Edit, And Rebuild
+## 7. Work-Owned Files And Links
 
 Route:
 
-- `/studio/catalogue-new-work-file/`
-- `/studio/catalogue-work-file/`
-- `/studio/catalogue-new-work-link/`
-- `/studio/catalogue-work-link/`
+- `/studio/catalogue-work/`
 
 Owner:
 
@@ -255,16 +248,17 @@ Owner:
 
 Checks:
 
-- create one draft file record for a work
-- create one draft link record for a work
-- edit each in its focused editor
-- rebuild from the parent work flow or from the relevant follow-through path
-- confirm the work editor summaries update
+- add one download entry from the work editor
+- add one link entry from the work editor
+- edit each entry from the parent work draft
+- cancel one modal and confirm the parent draft does not change
+- delete one entry and confirm the parent draft becomes dirty
+- save from the parent work flow
 - confirm the public work page metadata updates if the record is published/in scope
 
 Expected results:
 
-- file/link child records remain navigable from both the dashboard and the parent work
+- files and links are not standalone child records
 - saved file/link metadata appears in the expected parent work runtime context after rebuild
 
 ## 8. Series Create, Edit, Delete, And Rebuild

@@ -243,19 +243,16 @@ Affected areas are expected to include:
 
 Status:
 
-- partially implemented
+- implemented
 
 Update lookup generation so work lookup payloads include embedded file/link summaries from the work record.
 
-Current Stage 1 behavior keeps synthetic focused lookup payloads for compatibility while work-editor modal editing is pending.
-These payloads are derived from `Works.downloads` and `Works.links`; they are no longer canonical source.
-
-Later retirement should remove focused lookup payloads for:
+Focused lookup payloads for the old child-record routes have been retired:
 
 - `catalogue_lookup/work_files/<file_uid>.json`
 - `catalogue_lookup/work_links/<link_uid>.json`
 
-Keep work-editor summary data available from the focused work lookup payload.
+The work editor now reads editable file/link metadata from the canonical work record. The focused work lookup payload keeps work-owned `downloads` and `links` summaries only as part of the owning work payload.
 
 ### Task 6. Update Write Server Source Boundary
 
@@ -394,7 +391,7 @@ Rows should support:
 
 Status:
 
-- partially implemented
+- implemented
 
 Retire or redirect:
 
@@ -407,7 +404,7 @@ Current route behavior:
 
 - normal work-editor file/link creation and editing is now handled inline through modals
 - standalone write endpoints return retired-endpoint responses
-- retired route templates remain in place until a later cleanup removes or redirects them
+- retired route templates and route scripts have been removed
 
 ### Task 6. Update Studio Config Copy
 

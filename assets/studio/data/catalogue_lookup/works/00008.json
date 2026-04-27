@@ -38,16 +38,13 @@
   },
   "record_hash": "194f6ca8d1fa19e40dc082d79862ec1cadc72ee132ccdba4c4cabc702db48c2d",
   "detail_sections": [],
-  "work_files": [
+  "downloads": [
     {
-      "file_uid": "00008:nerve",
-      "work_id": "00008",
       "filename": "nerve.pdf",
-      "label": "nerve.pdf",
-      "status": "published"
+      "label": "nerve.pdf"
     }
   ],
-  "work_links": [],
+  "links": [],
   "series_summary": [
     {
       "series_id": "105",

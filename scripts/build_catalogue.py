@@ -2153,7 +2153,7 @@ def main() -> int:
             generate_cmd += ["--moment-sources-manifest", str(moment_sources_manifest_file)]
             generate_only_artifacts: list[str] = []
             if generate_ids:
-                generate_only_artifacts.extend(["work-pages", "work-files", "work-links", "work-json"])
+                generate_only_artifacts.extend(["work-pages", "work-json"])
             if selected_series_for_generate:
                 generate_only_artifacts.append("series-pages")
             detail_pages_needed = bool(

@@ -114,16 +114,13 @@
       ]
     }
   ],
-  "work_files": [
+  "downloads": [
     {
-      "file_uid": "00163:nerve-abattoir",
-      "work_id": "00163",
       "filename": "nerve (abattoir).pdf",
-      "label": "nerve (abattoir).pdf",
-      "status": "published"
+      "label": "nerve (abattoir).pdf"
     }
   ],
-  "work_links": [],
+  "links": [],
   "series_summary": [
     {
       "series_id": "105",

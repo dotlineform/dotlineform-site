@@ -20,8 +20,7 @@ Current canonical catalogue source:
   - `Series`
   - `SeriesSort`
   - `WorkDetails`
-  - `WorkFiles`
-  - `WorkLinks`
+  - file/link metadata now lives on work records as `downloads` and `links`
 - canonical source media and legacy prose under `DOTLINEFORM_PROJECTS_BASE_DIR`
   - work primary images
   - work detail images
@@ -96,7 +95,6 @@ Primary responsibilities:
   - `published_date`
   - `width_px`
   - `height_px`
-- stage work download files from `WorkFiles`
 - sync missing series rows into `assets/studio/data/tag_assignments.json`
 
 The generator is the main source-to-runtime transformation layer. The new system should preserve most transformation logic while replacing its workbook reader/writer with a JSON source adapter.
@@ -218,40 +216,17 @@ Replacement note:
 
 - this should become a `sort_fields` property on the canonical series JSON record unless keeping it separate materially improves editing or import behavior
 
-### `WorkFiles`
+### Work-Owned Files And Links
 
 Role:
 
-- optional downloadable files for a work
-- sourced from the work project folder
-- staged under media storage during generation
-
-Important current fields:
-
-- `work_id`
-- `filename`
-- `label`
-- `status`
-- `published_date`
+- optional downloadable files and published links for a work
+- stored directly on the work record as `downloads` and `links`
+- edited in the work editor rather than standalone workflows
 
 Current generated outputs:
 
-- staged files under `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
-- `work.downloads` inside `assets/works/index/<work_id>.json`
-
-### `WorkLinks`
-
-Role:
-
-- optional published links for a work
-
-Important current fields:
-
-- `work_id`
-- `URL`
-- `label`
-- `status`
-- `published_date`
+- `work.downloads` and `work.links` inside `assets/works/index/<work_id>.json`
 
 Current generated outputs:
 

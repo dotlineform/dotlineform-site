@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T20:06:14Z",
+  "generated_at": "2026-04-27T20:43:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -293,7 +293,7 @@
       "doc_id": "scripts-main-pipeline",
       "title": "Build Catalogue",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-27",
       "parent_id": "_archive",
       "sort_order": 20,
       "published": true,
@@ -461,7 +461,7 @@
       "doc_id": "new-pipeline-source-model",
       "title": "Source Model",
       "added_date": "2026-04-17",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-27",
       "parent_id": "new-pipeline",
       "sort_order": 20,
       "published": true,
@@ -1368,20 +1368,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-work-file-editor",
-      "title": "Catalogue Work File Editor",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "sort_order": 90,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-work-file-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-file-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-file-editor.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-incremental-orchestration-plan",
       "title": "Incremental Search Orchestration Plan",
       "added_date": "2026-04-24",
@@ -1438,20 +1424,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-new-work-file-editor",
-      "title": "New Catalogue Work File",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "sort_order": 100,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-file-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-file-editor.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-catalogue-lookup",
       "title": "Catalogue Lookup Export",
       "added_date": "2026-04-17",
@@ -1463,20 +1435,6 @@
       "source_path": "scripts-catalogue-lookup.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-lookup.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-work-link-editor",
-      "title": "Catalogue Work Link Editor",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "sort_order": 110,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-work-link-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-link-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-link-editor.json"
     },
     {
       "scope": "studio",
@@ -1533,20 +1491,6 @@
       "source_path": "site-request-docs-build-incremental.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-new-work-link-editor",
-      "title": "New Catalogue Work Link",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "sort_order": 120,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-link-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-link-editor.json"
     },
     {
       "scope": "studio",

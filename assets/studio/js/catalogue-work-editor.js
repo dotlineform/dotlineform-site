@@ -688,16 +688,6 @@ function buildDetailEditorHref(state, detailUid) {
   return `${route}?detail=${encodeURIComponent(detailUid)}`;
 }
 
-function buildWorkFileEditorHref(state, fileUid) {
-  const route = getStudioRoute(state.config, "catalogue_work_file_editor");
-  return `${route}?file=${encodeURIComponent(fileUid)}`;
-}
-
-function buildWorkLinkEditorHref(state, linkUid) {
-  const route = getStudioRoute(state.config, "catalogue_work_link_editor");
-  return `${route}?link=${encodeURIComponent(linkUid)}`;
-}
-
 async function loadWorkLookupRecord(state, workId) {
   return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_base", workId, { cache: "no-store" });
 }

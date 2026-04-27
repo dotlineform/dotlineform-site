@@ -37,16 +37,13 @@
   },
   "record_hash": "6309feaf1dfc48608fa136dccfb76dd9b655b34d3a8175ca76bfd10fc2484d56",
   "detail_sections": [],
-  "work_files": [
+  "downloads": [
     {
-      "file_uid": "00161:mouse-story-extended-version",
-      "work_id": "00161",
       "filename": "mouse story (extended version).pdf",
-      "label": "mouse story (extended version).pdf",
-      "status": "published"
+      "label": "mouse story (extended version).pdf"
     }
   ],
-  "work_links": [],
+  "links": [],
   "series_summary": [
     {
       "series_id": "104",

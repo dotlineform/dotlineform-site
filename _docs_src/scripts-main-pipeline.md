@@ -2,7 +2,7 @@
 doc_id: scripts-main-pipeline
 title: "Build Catalogue"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-27
 parent_id: _archive
 sort_order: 20
 ---
@@ -152,8 +152,7 @@ Primary target artifacts:
   - `Works`
   - `Series`
   - `WorkDetails`
-  - `WorkFiles`
-  - `WorkLinks`
+  - work-owned `downloads` and `links`
 - Moment records are tracked from source front matter in `moments/*.md`, including:
   - `title`
   - `status`

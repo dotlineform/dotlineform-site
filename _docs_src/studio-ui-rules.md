@@ -53,11 +53,11 @@ Use this as the single capture surface for Studio UI work:
 ## UI Rule Log 2026-04-27 / UI-042
 
 - status: adopted
-- route: `/studio/catalogue-work/`, `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`
+- route: `/studio/catalogue-work/`
 - issue: work files and links no longer have independent workflows, but the work editor still presented them as child records with separate add/edit routes.
 - triage: repeated catalogue-editor source-model mismatch
 - reasoning: child metadata should not get separate editor routes unless it has an independent lifecycle or workflow. Files and links are now work-owned metadata, so the work editor should be the owning surface.
-- outcome: Stage 1 makes file/link source metadata work-owned, removes file/link lifecycle meaning, makes the work-editor sections read-only summaries pending modal editing, and retires the standalone write endpoints.
+- outcome: file/link source metadata is work-owned, file/link lifecycle status is retired, file/link add/edit/delete runs in the work editor, and the standalone pages/scripts/source JSON files have been removed.
 - files changed:
   - `assets/studio/data/catalogue/works.json`
   - `assets/studio/js/catalogue-work-editor.js`
@@ -67,10 +67,6 @@ Use this as the single capture surface for Studio UI work:
   - `scripts/studio/catalogue_write_server.py`
   - `_docs_src/site-request-work-owned-files-links.md`
   - `_docs_src/catalogue-work-editor.md`
-  - `_docs_src/catalogue-work-file-editor.md`
-  - `_docs_src/catalogue-work-link-editor.md`
-  - `_docs_src/catalogue-new-work-file-editor.md`
-  - `_docs_src/catalogue-new-work-link-editor.md`
   - `_docs_src/data-models-catalogue.md`
   - `_docs_src/scripts-generate-work-pages.md`
   - `_docs_src/scripts-catalogue-write-server.md`

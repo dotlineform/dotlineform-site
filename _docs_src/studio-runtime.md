@@ -68,10 +68,6 @@ Current route inventory:
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-new-work-detail/index.md`
 - `studio/catalogue-work-detail/index.md`
-- `studio/catalogue-new-work-file/index.md`
-- `studio/catalogue-work-file/index.md`
-- `studio/catalogue-new-work-link/index.md`
-- `studio/catalogue-work-link/index.md`
 - `studio/catalogue-series/index.md`
 - `studio/catalogue-new-series/index.md`
 - `studio/tag-groups/index.md`
@@ -94,10 +90,6 @@ Current page-level doc links:
 - New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor`
-- Catalogue Work File Editor -> `/docs/?scope=studio&doc=catalogue-work-file-editor`
-- New Catalogue Work File -> `/docs/?scope=studio&doc=catalogue-new-work-file-editor`
-- Catalogue Work Link Editor -> `/docs/?scope=studio&doc=catalogue-work-link-editor`
-- New Catalogue Work Link -> `/docs/?scope=studio&doc=catalogue-new-work-link-editor`
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
 - New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
@@ -137,10 +129,6 @@ Current page controllers:
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
-- `assets/studio/js/catalogue-new-work-file-editor.js`
-- `assets/studio/js/catalogue-work-file-editor.js`
-- `assets/studio/js/catalogue-new-work-link-editor.js`
-- `assets/studio/js/catalogue-work-link-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/js/catalogue-new-series-editor.js`
 - `assets/studio/js/tag-groups.js`
@@ -226,8 +214,8 @@ After Phase 3, the current Catalogue shell conventions are:
 - work detail rows on the work editor now use thumbnail-led navigation rather than text-only rows
 - the Catalogue dashboard uses grouped directional link lists rather than card panels
 - metadata editors use a shared single-column row layout with labels on the left
-- Catalogue Status is a sortable list and now links directly into work, series, detail, file, and link editors
-- work-file and work-link editors are now standalone search-and-open pages as well as deep-link targets from the work editor
+- Catalogue Status is a sortable list and now links directly into work, series, and detail editors
+- work-owned downloads and links are edited from the work editor rather than standalone child-record pages
 
 After Phase 4, the current operational reporting conventions are:
 

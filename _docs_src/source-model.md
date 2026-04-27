@@ -2,7 +2,7 @@
 doc_id: new-pipeline-source-model
 title: "Source Model"
 added_date: 2026-04-17
-last_updated: 2026-04-17
+last_updated: 2026-04-27
 parent_id: new-pipeline
 sort_order: 20
 ---
@@ -35,8 +35,6 @@ Recommended files:
 assets/studio/data/catalogue/works.json
 assets/studio/data/catalogue/work_details.json
 assets/studio/data/catalogue/series.json
-assets/studio/data/catalogue/work_files.json
-assets/studio/data/catalogue/work_links.json
 assets/studio/data/catalogue/meta.json
 ```
 
@@ -212,62 +210,32 @@ Field notes:
 - `primary_work_id` must reference a work whose `series_ids` includes this series when the series is publishable; draft source records may omit it temporarily.
 - `series_type` should remain explicit because Studio currently distinguishes primary series from other holdings/curated groups.
 
-## `work_files.json`
+## Work-Owned Files And Links
 
-Primary map:
+Files and links are work-owned metadata in `works.json`, not separate source files.
 
 ```json
 {
-  "header": {
-    "schema": "catalogue_source_work_files_v1",
-    "count": 1
-  },
-  "work_files": {
-    "00456:example-pdf": {
-      "file_uid": "00456:example-pdf",
-      "work_id": "00456",
+  "downloads": [
+    {
       "filename": "example.pdf",
-      "label": "PDF",
-      "status": "published",
-      "published_date": "2026-04-17"
+      "label": "PDF"
     }
-  }
-}
-```
-
-Field notes:
-
-- The current workbook does not have a stable row ID for files. Add `file_uid` so updates/deletes are unambiguous.
-- `filename` remains the source filename in the work project folder.
-- The generator should continue to derive the staged URL-safe filename.
-
-## `work_links.json`
-
-Primary map:
-
-```json
-{
-  "header": {
-    "schema": "catalogue_source_work_links_v1",
-    "count": 1
-  },
-  "work_links": {
-    "00456:publisher": {
-      "link_uid": "00456:publisher",
-      "work_id": "00456",
+  ],
+  "links": [
+    {
       "url": "https://example.com",
-      "label": "publisher",
-      "status": "published",
-      "published_date": "2026-04-17"
+      "label": "publisher"
     }
-  }
+  ]
 }
 ```
 
 Field notes:
 
-- Normalize the workbook `URL` column to JSON key `url`.
-- Add `link_uid` for stable updates/deletes.
+- empty `downloads` and `links` arrays may be omitted
+- file/link `status` and `published_date` are retired because publishing is owned by the parent work record
+- external file storage is unchanged; the source model stores metadata references only
 
 ## `meta.json`
 

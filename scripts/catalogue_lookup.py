@@ -30,8 +30,6 @@ SCHEMAS = {
     "work_detail_search": "studio_catalogue_lookup_work_detail_search_v1",
     "work_record": "studio_catalogue_lookup_work_record_v1",
     "work_detail_record": "studio_catalogue_lookup_work_detail_record_v1",
-    "work_file_record": "studio_catalogue_lookup_work_file_record_v1",
-    "work_link_record": "studio_catalogue_lookup_work_link_record_v1",
     "series_record": "studio_catalogue_lookup_series_record_v1",
     "meta": "studio_catalogue_lookup_meta_v1",
 }
@@ -78,36 +76,6 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
             }
         )
 
-    work_files = []
-    for file_uid, file_record in records.work_files.items():
-        if normalize_text(file_record.get("work_id")) != work_id:
-            continue
-        work_files.append(
-            {
-                "file_uid": file_uid,
-                "work_id": work_id,
-                "filename": normalize_text(file_record.get("filename")),
-                "label": normalize_text(file_record.get("label")),
-                "status": normalize_text(file_record.get("status")),
-            }
-        )
-    work_files.sort(key=lambda item: item["file_uid"])
-
-    work_links = []
-    for link_uid, link_record in records.work_links.items():
-        if normalize_text(link_record.get("work_id")) != work_id:
-            continue
-        work_links.append(
-            {
-                "link_uid": link_uid,
-                "work_id": work_id,
-                "url": normalize_text(link_record.get("url")),
-                "label": normalize_text(link_record.get("label")),
-                "status": normalize_text(link_record.get("status")),
-            }
-        )
-    work_links.sort(key=lambda item: item["link_uid"])
-
     series_summary = [
         {
             "series_id": series_id,
@@ -123,8 +91,8 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
         "work": dict(record),
         "record_hash": record_hash(record),
         "detail_sections": detail_sections,
-        "work_files": work_files,
-        "work_links": work_links,
+        "downloads": list(record.get("downloads", [])) if isinstance(record.get("downloads"), list) else [],
+        "links": list(record.get("links", [])) if isinstance(record.get("links"), list) else [],
         "series_summary": series_summary,
     }
 
@@ -140,44 +108,6 @@ def build_work_detail_lookup_payload(records: CatalogueSourceRecords, detail_uid
             "schema": SCHEMAS["work_detail_record"],
         },
         "work_detail": dict(record),
-        "record_hash": record_hash(record),
-        "work_summary": {
-            "work_id": work_id,
-            "title": normalize_text(work_record.get("title")),
-        },
-    }
-
-
-def build_work_file_lookup_payload(records: CatalogueSourceRecords, file_uid: str) -> Dict[str, Any]:
-    record = records.work_files.get(file_uid)
-    if not isinstance(record, Mapping):
-        raise KeyError(f"file_uid not found: {file_uid}")
-    work_id = normalize_text(record.get("work_id"))
-    work_record = records.works.get(work_id) or {}
-    return {
-        "header": {
-            "schema": SCHEMAS["work_file_record"],
-        },
-        "work_file": dict(record),
-        "record_hash": record_hash(record),
-        "work_summary": {
-            "work_id": work_id,
-            "title": normalize_text(work_record.get("title")),
-        },
-    }
-
-
-def build_work_link_lookup_payload(records: CatalogueSourceRecords, link_uid: str) -> Dict[str, Any]:
-    record = records.work_links.get(link_uid)
-    if not isinstance(record, Mapping):
-        raise KeyError(f"link_uid not found: {link_uid}")
-    work_id = normalize_text(record.get("work_id"))
-    work_record = records.works.get(work_id) or {}
-    return {
-        "header": {
-            "schema": SCHEMAS["work_link_record"],
-        },
-        "work_link": dict(record),
         "record_hash": record_hash(record),
         "work_summary": {
             "work_id": work_id,
@@ -291,8 +221,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
     detail_search_items = []
     works_by_id: Dict[str, Dict[str, Any]] = {}
     work_details_by_uid: Dict[str, Dict[str, Any]] = {}
-    work_files_by_uid: Dict[str, Dict[str, Any]] = {}
-    work_links_by_uid: Dict[str, Dict[str, Any]] = {}
     series_by_id: Dict[str, Dict[str, Any]] = {}
 
     series_title_by_id = {
@@ -317,50 +245,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                 "schema": SCHEMAS["work_detail_record"],
             },
             "work_detail": record,
-            "record_hash": record_hash(record),
-            "work_summary": {
-                "work_id": work_id,
-                "title": normalize_text(work_record.get("title")),
-            },
-        }
-
-    for file_uid, record in records.work_files.items():
-        work_id = normalize_text(record.get("work_id"))
-        file_item = {
-            "file_uid": file_uid,
-            "work_id": work_id,
-            "filename": normalize_text(record.get("filename")),
-            "label": normalize_text(record.get("label")),
-            "status": normalize_text(record.get("status")),
-        }
-        work_record = records.works.get(work_id) or {}
-        work_files_by_uid[file_uid] = {
-            "header": {
-                "schema": SCHEMAS["work_file_record"],
-            },
-            "work_file": record,
-            "record_hash": record_hash(record),
-            "work_summary": {
-                "work_id": work_id,
-                "title": normalize_text(work_record.get("title")),
-            },
-        }
-
-    for link_uid, record in records.work_links.items():
-        work_id = normalize_text(record.get("work_id"))
-        link_item = {
-            "link_uid": link_uid,
-            "work_id": work_id,
-            "url": normalize_text(record.get("url")),
-            "label": normalize_text(record.get("label")),
-            "status": normalize_text(record.get("status")),
-        }
-        work_record = records.works.get(work_id) or {}
-        work_links_by_uid[link_uid] = {
-            "header": {
-                "schema": SCHEMAS["work_link_record"],
-            },
-            "work_link": record,
             "record_hash": record_hash(record),
             "work_summary": {
                 "work_id": work_id,
@@ -455,8 +339,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
         },
         "works": works_by_id,
         "work_details": work_details_by_uid,
-        "work_files": work_files_by_uid,
-        "work_links": work_links_by_uid,
         "series": series_by_id,
     }
 
@@ -471,7 +353,21 @@ def write_catalogue_lookup_payloads(lookup_dir: Path, payloads: Mapping[str, Any
         _atomic_write_json(path, payload)
         written.append(path)
 
-    for folder in ["works", "work_details", "work_files", "work_links", "series"]:
+    for retired_folder in ["work_files", "work_links"]:
+        target_dir = lookup_dir / retired_folder
+        if target_dir.exists():
+            for stale_path in target_dir.glob("*.json"):
+                if stale_path.is_file():
+                    try:
+                        stale_path.unlink()
+                    except OSError:
+                        pass
+            try:
+                target_dir.rmdir()
+            except OSError:
+                pass
+
+    for folder in ["works", "work_details", "series"]:
         target_dir = lookup_dir / folder
         target_dir.mkdir(parents=True, exist_ok=True)
         current_files = {
@@ -519,22 +415,6 @@ def write_detail_lookup_payload(lookup_dir: Path, detail_uid: str, payload: Mapp
     target_dir = lookup_dir / "work_details"
     target_dir.mkdir(parents=True, exist_ok=True)
     path = target_dir / f"{detail_uid}.json"
-    _atomic_write_json(path, payload)
-    return path
-
-
-def write_work_file_lookup_payload(lookup_dir: Path, file_uid: str, payload: Mapping[str, Any]) -> Path:
-    target_dir = lookup_dir / "work_files"
-    target_dir.mkdir(parents=True, exist_ok=True)
-    path = target_dir / f"{file_uid}.json"
-    _atomic_write_json(path, payload)
-    return path
-
-
-def write_work_link_lookup_payload(lookup_dir: Path, link_uid: str, payload: Mapping[str, Any]) -> Path:
-    target_dir = lookup_dir / "work_links"
-    target_dir.mkdir(parents=True, exist_ok=True)
-    path = target_dir / f"{link_uid}.json"
     _atomic_write_json(path, payload)
     return path
 

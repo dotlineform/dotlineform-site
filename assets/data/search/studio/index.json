@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c8af493a94d97beeca21ebdffbe53c21",
-    "generated_at_utc": "2026-04-27T20:06:20Z",
-    "count": 143
+    "version": "blake2b-1b3bf70f9942bb19fae2d4ee03b7108a",
+    "generated_at_utc": "2026-04-27T20:44:00Z",
+    "count": 139
   },
   "entries": [
     {
@@ -479,10 +479,10 @@
       "kind": "doc",
       "title": "Build Catalogue",
       "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-27",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-18 • Archive",
+      "display_meta": "2026-04-27 • Archive",
       "search_terms": [
         "scripts-main-pipeline",
         "scripts",
@@ -492,12 +492,12 @@
         "build",
         "catalogue",
         "archive",
-        "2026-04-18",
+        "2026-04-27",
         "2026",
         "04",
-        "18"
+        "27"
       ],
-      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-04-18 2026 04 18"
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-04-27 2026 04 27"
     },
     {
       "id": "data-models-catalogue",
@@ -761,10 +761,10 @@
       "kind": "doc",
       "title": "Source Model",
       "href": "/docs/?scope=studio&doc=new-pipeline-source-model",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-27",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-17 • New Cat Pipeline",
+      "display_meta": "2026-04-27 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-source-model",
         "new",
@@ -774,12 +774,12 @@
         "source model",
         "new cat pipeline",
         "cat",
-        "2026-04-17",
+        "2026-04-27",
         "2026",
         "04",
-        "17"
+        "27"
       ],
-      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-04-17 2026 04 17"
+      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-04-27 2026 04 27"
     },
     {
       "id": "docs-viewer-source-organisation",
@@ -2280,32 +2280,6 @@
       "search_text": "build-activity build activity build activity studio 2026-04-18 2026 04 18"
     },
     {
-      "id": "catalogue-work-file-editor",
-      "kind": "doc",
-      "title": "Catalogue Work File Editor",
-      "href": "/docs/?scope=studio&doc=catalogue-work-file-editor",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "parent_title": "User Guide",
-      "display_meta": "2026-04-27 • User Guide",
-      "search_terms": [
-        "catalogue-work-file-editor",
-        "catalogue",
-        "work",
-        "file",
-        "editor",
-        "catalogue work file editor",
-        "user guide",
-        "user",
-        "guide",
-        "2026-04-27",
-        "2026",
-        "04",
-        "27"
-      ],
-      "search_text": "catalogue-work-file-editor catalogue work file editor catalogue work file editor user guide user guide 2026-04-27 2026 04 27"
-    },
-    {
       "id": "search-incremental-orchestration-plan",
       "kind": "doc",
       "title": "Incremental Search Orchestration Plan",
@@ -2398,33 +2372,6 @@
       "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-27 2026 04 27"
     },
     {
-      "id": "catalogue-new-work-file-editor",
-      "kind": "doc",
-      "title": "New Catalogue Work File",
-      "href": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "parent_title": "User Guide",
-      "display_meta": "2026-04-27 • User Guide",
-      "search_terms": [
-        "catalogue-new-work-file-editor",
-        "catalogue",
-        "new",
-        "work",
-        "file",
-        "editor",
-        "new catalogue work file",
-        "user guide",
-        "user",
-        "guide",
-        "2026-04-27",
-        "2026",
-        "04",
-        "27"
-      ],
-      "search_text": "catalogue-new-work-file-editor catalogue new work file editor new catalogue work file user guide user guide 2026-04-27 2026 04 27"
-    },
-    {
       "id": "scripts-catalogue-lookup",
       "kind": "doc",
       "title": "Catalogue Lookup Export",
@@ -2446,32 +2393,6 @@
         "17"
       ],
       "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export 2026-04-17 2026 04 17"
-    },
-    {
-      "id": "catalogue-work-link-editor",
-      "kind": "doc",
-      "title": "Catalogue Work Link Editor",
-      "href": "/docs/?scope=studio&doc=catalogue-work-link-editor",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "parent_title": "User Guide",
-      "display_meta": "2026-04-27 • User Guide",
-      "search_terms": [
-        "catalogue-work-link-editor",
-        "catalogue",
-        "work",
-        "link",
-        "editor",
-        "catalogue work link editor",
-        "user guide",
-        "user",
-        "guide",
-        "2026-04-27",
-        "2026",
-        "04",
-        "27"
-      ],
-      "search_text": "catalogue-work-link-editor catalogue work link editor catalogue work link editor user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "data-models",
@@ -2555,33 +2476,6 @@
         "22"
       ],
       "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-22 2026 04 22"
-    },
-    {
-      "id": "catalogue-new-work-link-editor",
-      "kind": "doc",
-      "title": "New Catalogue Work Link",
-      "href": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
-      "last_updated": "2026-04-27",
-      "parent_id": "user-guide",
-      "parent_title": "User Guide",
-      "display_meta": "2026-04-27 • User Guide",
-      "search_terms": [
-        "catalogue-new-work-link-editor",
-        "catalogue",
-        "new",
-        "work",
-        "link",
-        "editor",
-        "new catalogue work link",
-        "user guide",
-        "user",
-        "guide",
-        "2026-04-27",
-        "2026",
-        "04",
-        "27"
-      ],
-      "search_text": "catalogue-new-work-link-editor catalogue new work link editor new catalogue work link user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",

@@ -65,7 +65,7 @@ Moment canonical source model:
 - `--internal-json-source-run`
   - internal-only flag used by `catalogue_json_build.py`
   - direct manual use is not part of the supported workflow
-- `--write`: persist generated file changes plus canonical-source work/work-detail/link/series updates
+- `--write`: persist generated file changes plus canonical-source work/work-detail/series updates
 - `--source-dir` with default `assets/studio/data/catalogue`
   - canonical source JSON directory for the internal run
 - `--force`: force rewrites even when checksums or content versions match
@@ -77,8 +77,6 @@ Moment canonical source model:
 - `--series-ids`, `--series-ids-file`
   - accepts numeric series IDs and current legacy slug-style series IDs during transition
 - `--moment-ids`, `--moment-ids-file`
-- `--work-files-sheet` with default `WorkFiles`
-- `--work-links-sheet` with default `WorkLinks`
 - `--moments-output-dir` with default `_moments`
 - `--moments-json-dir` with default `assets/moments/index`
   - writes per-moment JSON payloads at `assets/moments/index/<moment_id>.json`
@@ -91,11 +89,8 @@ Moment canonical source model:
   - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
 - `--projects-base-dir`
   - defaults from `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - used for work-detail and work-file sources plus source media dimension lookups
+  - used for work-detail sources plus source media dimension lookups
   - refreshes work primary-image dimensions only when `work-json` is selected directly or indirectly via `work-pages`
-- `--media-base-dir`
-  - defaults from `DOTLINEFORM_MEDIA_BASE_DIR`
-  - stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` with default `assets/data/series_index.json`
 - `--works-index-json-path` with default `assets/data/works_index.json`
 - `--recent-index-json-path` with default `assets/data/recent_index.json`
@@ -123,8 +118,6 @@ Work prose source path:
 Allowed values:
 
 - `work-pages`
-- `work-files`
-- `work-links`
 - `series-pages`
 - `series-index-json`
 - `work-details-pages`
@@ -137,10 +130,6 @@ Artifact behavior:
 
 - `work-pages`
   writes `_works/<work_id>.md` as lightweight stubs with `work_id`, `title`, `layout`, and `checksum`
-- `work-files`
-  stages work-owned `downloads` metadata for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
-- `work-links`
-  compatibility artifact for work-owned `links` metadata; no independent source status is updated
 - `series-pages`
   writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json`
 - `work-details-pages`
@@ -215,9 +204,8 @@ Current behavior:
   - work `status`, `published_date`, `width_px`, `height_px`
   - work-detail `status`, `published_date`, `width_px`, `height_px`
   - series `status`, `published_date`
-  - work-file and work-link `status`, `published_date`
 
-This keeps the public runtime JSON contracts stable while the generator is being refactored toward a native JSON source adapter.
+Work-owned `downloads` and `links` are preserved from `works.json` during generator write-back; they are not processed as separate artifacts.
 
 Validation note:
 
