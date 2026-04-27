@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff6857c8493e9b56f984d01ae9b1969d",
-    "generated_at_utc": "2026-04-27T18:12:01Z",
-    "count": 141
+    "version": "blake2b-e4214ffa69d00246fe989372979e7db4",
+    "generated_at_utc": "2026-04-27T19:37:36Z",
+    "count": 142
   },
   "entries": [
     {
@@ -2838,6 +2838,34 @@
         "27"
       ],
       "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request site docs docs 2026-04-27 2026 04 27"
+    },
+    {
+      "id": "site-request-work-owned-files-links",
+      "kind": "doc",
+      "title": "Work-Owned Files And Links Request",
+      "href": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
+      "last_updated": "2026-04-27",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-27 • Site Docs",
+      "search_terms": [
+        "site-request-work-owned-files-links",
+        "site",
+        "request",
+        "work",
+        "owned",
+        "files",
+        "links",
+        "work-owned files and links request",
+        "and",
+        "site docs",
+        "docs",
+        "2026-04-27",
+        "2026",
+        "04",
+        "27"
+      ],
+      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and site docs docs 2026-04-27 2026 04 27"
     },
     {
       "id": "docs-viewer",
