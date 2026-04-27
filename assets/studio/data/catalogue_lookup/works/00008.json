@@ -5,7 +5,7 @@
   "work": {
     "work_id": "00008",
     "status": "published",
-    "published_date": "2026-04-01",
+    "published_date": "2026-04-26",
     "series_ids": [
       "105",
       "026"
@@ -30,7 +30,7 @@
     "provenance": null,
     "artist": null
   },
-  "record_hash": "f2665165e1c3fc836ecb9c515ad05091746787cd2d6ce9233e604e5a796b9d6e",
+  "record_hash": "5a03230a5de7f35b14531d4abb577dfcc98bf3ff5791cf27f45caacc2b032833",
   "detail_sections": [],
   "work_files": [
     {

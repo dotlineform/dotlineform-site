@@ -7,7 +7,7 @@
     "title": "nerve",
     "series_type": "primary",
     "status": "published",
-    "published_date": "2026-04-01",
+    "published_date": "2026-04-26",
     "year": 1995,
     "year_display": "1990-95",
     "primary_work_id": "00008",
@@ -15,7 +15,7 @@
     "notes": "works and details to publish",
     "sort_fields": "work_id"
   },
-  "record_hash": "d30659b63193f480b1dabac6d27f0f7c6138ab92c256df136835a614cb24a799",
+  "record_hash": "bf2709e692e3e37b6a33333d6ab15e186ccbd835186bb6e96421402f7b810c0d",
   "member_works": [
     {
       "work_id": "00008",
@@ -26,7 +26,7 @@
         "105",
         "026"
       ],
-      "record_hash": "f2665165e1c3fc836ecb9c515ad05091746787cd2d6ce9233e604e5a796b9d6e"
+      "record_hash": "5a03230a5de7f35b14531d4abb577dfcc98bf3ff5791cf27f45caacc2b032833"
     },
     {
       "work_id": "00163",
