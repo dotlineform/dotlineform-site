@@ -956,6 +956,11 @@ def main() -> None:
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
     ap.add_argument("--force", action="store_true", help="Overwrite existing files")
     ap.add_argument(
+        "--refresh-published",
+        action="store_true",
+        help="Process selected published records without forcing unchanged writes",
+    )
+    ap.add_argument(
         "--work-ids",
         default="",
         help=(
@@ -1050,9 +1055,11 @@ def main() -> None:
             "argv": sys.argv[1:],
             "write": bool(args.write),
             "force": bool(args.force),
+            "refresh_published": bool(args.refresh_published),
             "source": "json",
         },
     )
+    refresh_published = bool(args.refresh_published or args.force)
 
     valid_artifacts = {
         "work-pages",
@@ -1764,7 +1771,7 @@ def main() -> None:
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
             return True
-        if status_value == "published" and args.force:
+        if status_value == "published" and refresh_published:
             return True
         return False
 
@@ -2015,7 +2022,7 @@ def main() -> None:
                         if status_was != "published":
                             row_cells[status_idx].value = "published"
                             status_updated += 1
-                        if (status_was != "published") or args.force:
+                        if status_was != "published":
                             if published_date_idx is not None:
                                 row_cells[published_date_idx].value = today
                                 published_date_updated += 1
@@ -2075,7 +2082,7 @@ def main() -> None:
                             if status_was != "published":
                                 row_cells[work_files_status_idx].value = "published"
                                 work_files_status_updated += 1
-                            if (status_was != "published") or args.force:
+                            if status_was != "published":
                                 if work_files_published_date_idx is not None:
                                     row_cells[work_files_published_date_idx].value = today
                                     work_files_published_date_updated += 1
@@ -2096,7 +2103,7 @@ def main() -> None:
                             if status_was != "published":
                                 row_cells[work_links_status_idx].value = "published"
                                 work_links_status_updated += 1
-                            if (status_was != "published") or args.force:
+                            if status_was != "published":
                                 if work_links_published_date_idx is not None:
                                     row_cells[work_links_published_date_idx].value = today
                                     work_links_published_date_updated += 1
@@ -2167,7 +2174,7 @@ def main() -> None:
         def is_actionable_series_status(status_value: str) -> bool:
             if status_value == "draft":
                 return True
-            if status_value == "published" and args.force:
+            if status_value == "published" and refresh_published:
                 return True
             return False
 
@@ -2296,7 +2303,7 @@ def main() -> None:
                             if status_was != "published":
                                 sr_cells[status_idx].value = "published"
                                 series_status_updated += 1
-                            if (status_was != "published") or args.force:
+                            if status_was != "published":
                                 if series_published_date_idx is not None:
                                     sr_cells[series_published_date_idx].value = today
                                     series_published_date_updated += 1
@@ -2585,7 +2592,7 @@ def main() -> None:
         def is_actionable_detail_status(status_value: str) -> bool:
             if status_value == "draft":
                 return True
-            if status_value == "published" and args.force:
+            if status_value == "published" and refresh_published:
                 return True
             return False
 
@@ -2706,7 +2713,7 @@ def main() -> None:
                         if status_was != "published":
                             dr_cells[status_idx].value = "published"
                             details_status_updated += 1
-                        if (status_was != "published") or args.force:
+                        if status_was != "published":
                             if details_published_date_idx is not None:
                                 dr_cells[details_published_date_idx].value = today
                                 details_published_date_updated += 1
@@ -3191,7 +3198,7 @@ def main() -> None:
         def is_actionable_moment_status(status_value: str) -> bool:
             if status_value == "draft":
                 return True
-            if status_value == "published" and args.force:
+            if status_value == "published" and refresh_published:
                 return True
             return False
 
@@ -3505,6 +3512,7 @@ def main() -> None:
         {
             "write": bool(args.write),
             "force": bool(args.force),
+            "refresh_published": bool(args.refresh_published),
             "source": "json",
         },
     )

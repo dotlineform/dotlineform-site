@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-26T21:44:28Z",
+  "generated_at": "2026-04-27T14:29:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -993,7 +993,7 @@
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "_archive",
       "sort_order": 50,
       "published": true,
@@ -1259,7 +1259,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "scripts",
       "sort_order": 70,
       "published": true,
@@ -1427,7 +1427,7 @@
       "doc_id": "scripts-catalogue-write-server",
       "title": "Catalogue Write Server",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-27",
       "parent_id": "scripts",
       "sort_order": 100,
       "published": true,
@@ -1623,7 +1623,7 @@
       "doc_id": "site-request-work-series-prose-source-model",
       "title": "Work And Series Prose Source Model Request",
       "added_date": "2026-04-26",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "site-docs",
       "sort_order": 140,
       "published": true,
@@ -1875,7 +1875,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

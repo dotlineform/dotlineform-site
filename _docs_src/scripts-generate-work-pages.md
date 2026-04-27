@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: _archive
 sort_order: 50
 ---
@@ -27,10 +27,10 @@ Common runs:
 ```bash
 ./scripts/generate_work_pages.py
 ./scripts/generate_work_pages.py --write
-python3 ./scripts/catalogue_json_build.py --work-id 00456
-python3 ./scripts/catalogue_json_build.py --work-id 00456 --write
-python3 ./scripts/catalogue_json_build.py --moment-file keys.md
-python3 ./scripts/catalogue_json_build.py --moment-file keys.md --write
+./scripts/catalogue_json_build.py --work-id 00456
+./scripts/catalogue_json_build.py --work-id 00456 --write
+./scripts/catalogue_json_build.py --moment-file keys.md
+./scripts/catalogue_json_build.py --moment-file keys.md --write
 ```
 
 Before any writes begin, the generator validates canonical source records and moment-source inputs before file writes or canonical source status/date updates start.
@@ -65,7 +65,11 @@ Moment canonical source model:
 - `--write`: persist generated file changes plus canonical-source work/work-detail/link/series updates
 - `--source-dir` with default `assets/studio/data/catalogue`
   - canonical source JSON directory for the internal run
-- `--force`: regenerate even when checksums match
+- `--force`: force rewrites even when checksums or content versions match
+- `--refresh-published`
+  - internal narrow refresh mode used by `catalogue_json_build.py`
+  - lets selected published records be processed for prose/runtime payload recomputation without forcing unchanged aggregate JSON or catalogue search rewrites
+  - does not refresh `published_date` for already-published records
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
   - accepts numeric series IDs and current legacy slug-style series IDs during transition
@@ -154,6 +158,13 @@ Artifact behavior:
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 
 There is no separate `works-prose` artifact; use `work-json` for prose-only refreshes.
+
+Scoped refresh behavior:
+
+- selected published records are processed when `--refresh-published` or `--force` is present
+- unchanged generated artifacts still skip under `--refresh-published` when their content version matches
+- `published_date` updates are reserved for first-time `draft -> published` transitions
+- `--force` remains the explicit stronger mode for full rewrites and timestamp refreshes in generated payload headers
 
 ## Source Validation
 

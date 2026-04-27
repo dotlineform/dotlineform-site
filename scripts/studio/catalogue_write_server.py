@@ -3886,9 +3886,11 @@ class Handler(BaseHTTPRequestHandler):
             scope = build_scope_for_moment(self.server.repo_root, moment_file, force=force)
             scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
             payload["build"] = scope
-            payload["effective_force"] = bool(scope.get("effective_force"))
+            payload["effective_force"] = bool(force)
+            payload["refresh_published"] = True
         else:
-            payload["effective_force"] = bool(preview.get("effective_force"))
+            payload["effective_force"] = bool(force)
+            payload["refresh_published"] = True
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _handle_moment_import_apply(self, allowed: Optional[str]) -> None:
@@ -3907,7 +3909,6 @@ class Handler(BaseHTTPRequestHandler):
             log_activity=not self.server.dry_run,
         )
         scope = result.get("scope") or {}
-        effective_force = bool(scope.get("effective_force")) or bool(force)
         moment_ids = list(scope.get("moment_ids", []))
         moment_id = str(moment_ids[0] if moment_ids else preview.get("moment_id") or "").strip().lower()
         payload: Dict[str, Any] = {
@@ -3915,7 +3916,8 @@ class Handler(BaseHTTPRequestHandler):
             "moment_file": preview.get("moment_file") or moment_file,
             "moment_id": moment_id,
             "force": bool(force),
-            "effective_force": effective_force,
+            "effective_force": bool(force),
+            "refresh_published": bool(result.get("refresh_published")),
             "preview": preview,
             "build": scope,
             "steps": result.get("steps", []),

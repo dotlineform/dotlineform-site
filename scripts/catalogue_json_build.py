@@ -800,7 +800,8 @@ def preview_moment_source(repo_root: Path, moment_file: str, *, env: Dict[str, s
     errors = validate_moment_source_entry(entry)
     preview["errors"] = errors
     preview["valid"] = not errors
-    preview["effective_force"] = bool(entry.get("status") == "published")
+    preview["effective_force"] = False
+    preview["refresh_published"] = bool(entry.get("status") == "published")
     preview["summary"] = (
         f"Import moment {moment_id} from moments/{source_path.name}, rebuild the moment payloads, and rebuild catalogue search."
     )
@@ -887,6 +888,7 @@ def build_scope_for_work(
         "search_scope": "catalogue",
         "source_mode": "json",
         "source_dir": str(source_dir),
+        "refresh_published": True,
         "summary": summarize_scope([normalized_work_id], series_ids),
     }
     readiness = build_work_readiness(records, normalized_work_id, env=env)
@@ -947,6 +949,7 @@ def build_scope_for_series(
         "search_scope": "catalogue",
         "source_mode": "json",
         "source_dir": str(source_dir),
+        "refresh_published": True,
         "summary": summarize_scope(work_ids, [normalized_series_id]),
     }
     scope["readiness"] = build_series_readiness(records, normalized_series_id, env=env)
@@ -965,7 +968,6 @@ def build_scope_for_moment(
         errors = preview.get("errors") or []
         raise ValueError("; ".join(str(error) for error in errors) or "moment source preview failed")
     moment_id = str(preview.get("moment_id") or "").strip().lower()
-    effective_force = bool(force) or bool(preview.get("effective_force"))
     return {
         "kind": "moment",
         "moment_ids": [moment_id],
@@ -977,7 +979,8 @@ def build_scope_for_moment(
         "search_scope": "catalogue",
         "source_mode": "moment-source",
         "summary": summarize_moment_scope([moment_id]),
-        "effective_force": effective_force,
+        "effective_force": bool(force),
+        "refresh_published": True,
         "preview": preview,
     }
 
@@ -1002,7 +1005,15 @@ def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:
     return env.get("BUNDLE_BIN", "bundle")
 
 
-def build_generate_command(repo_root: Path, source_dir: Path, scope: Dict[str, Any], *, write: bool, force: bool) -> list[str]:
+def build_generate_command(
+    repo_root: Path,
+    source_dir: Path,
+    scope: Dict[str, Any],
+    *,
+    write: bool,
+    force: bool,
+    refresh_published: bool,
+) -> list[str]:
     cmd = [
         sys.executable,
         str(repo_root / "scripts" / "generate_work_pages.py"),
@@ -1019,12 +1030,22 @@ def build_generate_command(repo_root: Path, source_dir: Path, scope: Dict[str, A
         cmd += ["--only", str(artifact)]
     if write:
         cmd.append("--write")
+    if refresh_published:
+        cmd.append("--refresh-published")
     if force:
         cmd.append("--force")
     return cmd
 
 
-def build_generate_moment_command(repo_root: Path, source_dir: Path, scope: Dict[str, Any], *, write: bool, force: bool) -> list[str]:
+def build_generate_moment_command(
+    repo_root: Path,
+    source_dir: Path,
+    scope: Dict[str, Any],
+    *,
+    write: bool,
+    force: bool,
+    refresh_published: bool,
+) -> list[str]:
     cmd = [
         sys.executable,
         str(repo_root / "scripts" / "generate_work_pages.py"),
@@ -1038,6 +1059,8 @@ def build_generate_moment_command(repo_root: Path, source_dir: Path, scope: Dict
     ]
     if write:
         cmd.append("--write")
+    if refresh_published:
+        cmd.append("--refresh-published")
     if force:
         cmd.append("--force")
     return cmd
@@ -1070,19 +1093,37 @@ def run_scoped_build_scope(
 ) -> Dict[str, Any]:
     env = os.environ.copy()
     scope_kind = str(scope.get("kind") or "work").strip().lower()
-    effective_force = bool(scope.get("effective_force")) or bool(force)
+    refresh_published = True
+    effective_force = bool(force)
     media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env)
     if scope_kind == "moment":
         commands = [
             (
                 "Generate Moment Pages",
-                build_generate_moment_command(repo_root, repo_root / DEFAULT_SOURCE_DIR, scope, write=write, force=effective_force),
+                build_generate_moment_command(
+                    repo_root,
+                    repo_root / DEFAULT_SOURCE_DIR,
+                    scope,
+                    write=write,
+                    force=effective_force,
+                    refresh_published=refresh_published,
+                ),
             ),
             ("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=effective_force, env=env)),
         ]
     else:
         commands = [
-            ("Generate Work Pages", build_generate_command(repo_root, Path(scope["source_dir"]), scope, write=write, force=effective_force)),
+            (
+                "Generate Work Pages",
+                build_generate_command(
+                    repo_root,
+                    Path(scope["source_dir"]),
+                    scope,
+                    write=write,
+                    force=effective_force,
+                    refresh_published=refresh_published,
+                ),
+            ),
             ("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=effective_force, env=env)),
         ]
     steps: list[Dict[str, Any]] = []
@@ -1134,6 +1175,7 @@ def run_scoped_build_scope(
         "status": status,
         "write": bool(write),
         "force": effective_force,
+        "refresh_published": refresh_published,
         "steps": steps,
         "media": {
             "generated": media_step.get("generated", {"work": [], "work_details": [], "moment": []}),
@@ -1158,6 +1200,7 @@ def run_scoped_build_scope(
                     generated_moment_ids=(response.get("media") or {}).get("generated", {}).get("moment", []),
                     failed_step=failed_step,
                     force=effective_force,
+                    refresh_published=refresh_published,
                 ),
             )
         else:
@@ -1172,6 +1215,7 @@ def run_scoped_build_scope(
                     generated_detail_uids=(response.get("media") or {}).get("generated", {}).get("work_details", []),
                     failed_step=failed_step,
                     force=effective_force,
+                    refresh_published=refresh_published,
                 ),
             )
     return response
@@ -1216,7 +1260,7 @@ def run_moment_scoped_build(
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
     scope = build_scope_for_moment(repo_root, moment_file, force=force, env=env)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=scope.get("effective_force", force), log_activity=log_activity)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
 
 
 def build_activity_entry_for_scoped_json_build(
@@ -1229,6 +1273,7 @@ def build_activity_entry_for_scoped_json_build(
     generated_detail_uids: Sequence[str] = (),
     failed_step: str = "",
     force: bool = False,
+    refresh_published: bool = False,
 ) -> Dict[str, Any]:
     work_ids_list = list(work_ids)
     series_ids_list = list(series_ids)
@@ -1272,6 +1317,7 @@ def build_activity_entry_for_scoped_json_build(
             "generate_local_media": media_generated_count > 0,
             "rebuild_search": True,
             "force_generate": bool(force),
+            "refresh_published": bool(refresh_published),
         },
         "results": {
             "source_mode": "json",
@@ -1291,6 +1337,7 @@ def build_activity_entry_for_scoped_moment_build(
     generated_moment_ids: Sequence[str] = (),
     failed_step: str = "",
     force: bool = False,
+    refresh_published: bool = False,
 ) -> Dict[str, Any]:
     moment_ids_list = sorted(str(moment_id) for moment_id in moment_ids if str(moment_id).strip())
     generated_moment_ids_list = sorted(str(moment_id) for moment_id in generated_moment_ids if str(moment_id).strip())
@@ -1332,6 +1379,7 @@ def build_activity_entry_for_scoped_moment_build(
             "generate_local_media": bool(generated_moment_ids_list),
             "rebuild_search": True,
             "force_generate": bool(force),
+            "refresh_published": bool(refresh_published),
         },
         "results": {
             "source_mode": "moment-source",
@@ -1351,6 +1399,7 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
     else:
         print(f"Work IDs: {', '.join(scope['work_ids']) if scope['work_ids'] else 'none'}")
         print(f"Series IDs: {', '.join(scope['series_ids']) if scope['series_ids'] else 'none'}")
+    print("Published refresh: yes")
     print(f"Search rebuild: {'yes' if scope['rebuild_search'] else 'no'}")
     print("Commands:")
     commands = (
@@ -1360,13 +1409,14 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
                 repo_root / DEFAULT_SOURCE_DIR,
                 scope,
                 write=False,
-                force=bool(scope.get("effective_force")) or bool(force),
+                force=bool(force),
+                refresh_published=True,
             ),
-            build_search_command(repo_root, write=False, force=bool(scope.get("effective_force")) or bool(force)),
+            build_search_command(repo_root, write=False, force=bool(force)),
         ]
         if scope.get("kind") == "moment"
         else [
-            build_generate_command(repo_root, source_dir, scope, write=False, force=force),
+            build_generate_command(repo_root, source_dir, scope, write=False, force=force, refresh_published=True),
             build_search_command(repo_root, write=False, force=force),
         ]
     )
@@ -1377,12 +1427,14 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Scoped JSON-source catalogue build helper.")
     parser.add_argument("--work-id", default="", help="Target work_id")
+    parser.add_argument("--series-id", default="", help="Target series_id")
     parser.add_argument("--moment-file", default="", help="Target moment markdown filename, for example keys.md")
     parser.add_argument("--extra-series-ids", default="", help="Additional series ids to include")
+    parser.add_argument("--extra-work-ids", default="", help="Additional work ids to include for a series scope")
     parser.add_argument("--repo-root", default="", help="Repo root (auto-detected when omitted)")
     parser.add_argument("--source-dir", default=str(DEFAULT_SOURCE_DIR), help="Canonical JSON source dir")
     parser.add_argument("--write", action="store_true", help="Run generation and search rebuild")
-    parser.add_argument("--force", action="store_true", help="Pass --force to generation and search rebuild")
+    parser.add_argument("--force", action="store_true", help="Force generation and search rewrites even when content versions match")
     return parser.parse_args()
 
 
@@ -1391,11 +1443,14 @@ def main() -> None:
     repo_root = Path(args.repo_root).expanduser().resolve() if args.repo_root else detect_repo_root()
     source_dir = (repo_root / args.source_dir).resolve()
     work_id = str(args.work_id or "").strip()
+    series_id = str(args.series_id or "").strip()
     moment_file = str(args.moment_file or "").strip()
-    if bool(work_id) == bool(moment_file):
-        raise SystemExit("Pass exactly one of --work-id or --moment-file.")
+    if sum(1 for value in (work_id, series_id, moment_file) if value) != 1:
+        raise SystemExit("Pass exactly one of --work-id, --series-id, or --moment-file.")
     if moment_file:
         scope = build_scope_for_moment(repo_root, moment_file, force=args.force)
+    elif series_id:
+        scope = build_scope_for_series(source_dir, series_id, extra_work_ids=args.extra_work_ids.split(","))
     else:
         scope = build_scope_for_work(source_dir, work_id, extra_series_ids=args.extra_series_ids.split(","))
     if not args.write:
@@ -1411,6 +1466,16 @@ def main() -> None:
             log_activity=True,
         )
         if moment_file
+        else run_series_scoped_build(
+            repo_root,
+            source_dir=source_dir,
+            series_id=series_id,
+            extra_work_ids=args.extra_work_ids.split(","),
+            write=True,
+            force=args.force,
+            log_activity=True,
+        )
+        if series_id
         else run_scoped_build(
             repo_root,
             source_dir=source_dir,

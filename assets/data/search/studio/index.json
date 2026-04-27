@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4a044243a41a9fc29f656e0f9ce1f6dd",
-    "generated_at_utc": "2026-04-26T21:44:30Z",
+    "version": "blake2b-3798b93a0a7f6dca09c26dd9af8ca135",
+    "generated_at_utc": "2026-04-27T14:29:12Z",
     "count": 137
   },
   "entries": [
@@ -1654,10 +1654,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-26 • Archive",
+      "display_meta": "2026-04-27 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -1666,12 +1666,12 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-26 2026 04 26"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-27 2026 04 27"
     },
     {
       "id": "search-normalisation-rules",
@@ -2104,10 +2104,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-26 • Scripts",
+      "display_meta": "2026-04-27 • Scripts",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -2116,12 +2116,12 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-26 2026 04 26"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-27 2026 04 27"
     },
     {
       "id": "search-build-pipeline",
@@ -2379,10 +2379,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-04-27",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-22 • Scripts",
+      "display_meta": "2026-04-27 • Scripts",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -2390,12 +2390,12 @@
         "write",
         "server",
         "catalogue write server",
-        "2026-04-22",
+        "2026-04-27",
         "2026",
         "04",
-        "22"
+        "27"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-22 2026 04 22"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-27 2026 04 27"
     },
     {
       "id": "catalogue-new-work-file-editor",
@@ -2694,10 +2694,10 @@
       "kind": "doc",
       "title": "Work And Series Prose Source Model Request",
       "href": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-04-26 • Site Docs",
+      "display_meta": "2026-04-27 • Site Docs",
       "search_terms": [
         "site-request-work-series-prose-source-model",
         "site",
@@ -2711,12 +2711,12 @@
         "and",
         "site docs",
         "docs",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and site docs docs 2026-04-26 2026 04 26"
+      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and site docs docs 2026-04-27 2026 04 27"
     },
     {
       "id": "site-request-analysis-doc-viewer",
@@ -3060,20 +3060,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-26",
-      "display_meta": "2026-04-26",
+      "last_updated": "2026-04-27",
+      "display_meta": "2026-04-27",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-26 2026 04 26"
+      "search_text": "site-change-log site change log site change log 2026-04-27 2026 04 27"
     },
     {
       "id": "tiered-dimension-policy",

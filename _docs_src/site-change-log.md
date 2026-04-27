@@ -2,11 +2,35 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-27] Reduced forced scoped catalogue build noise
+
+**Status:** implemented
+
+**Area:** Catalogue pipeline
+
+**Summary:**
+Added a narrow published-record refresh mode for scoped catalogue builds and kept broad force behavior reserved for intentional rewrites.
+
+**Reason:**
+Work, series, and moment scoped updates need to recompute selected published payloads, especially prose payloads, without rewriting unchanged aggregate JSON or catalogue search output solely because `generated_at_utc` changed.
+
+**Effect:**
+Normal scoped catalogue builds now pass `--refresh-published` to the internal generator instead of broad `--force`. Unchanged payloads still skip by content version, catalogue search is only forced when an explicit force run is requested, and already-published records keep their existing `published_date` unless they transition from `draft` to `published`. The scoped helper also now supports direct `--series-id` preview/write runs.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 
 ## [2026-04-26] Moved catalogue editor usage docs under User Guide
 

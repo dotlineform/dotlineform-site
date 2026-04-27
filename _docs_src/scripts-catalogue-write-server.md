@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: "Catalogue Write Server"
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-04-27
 parent_id: scripts
 sort_order: 100
 ---
@@ -549,9 +549,11 @@ Scoped build preconditions:
 
 `POST /catalogue/build-apply` accepts the same shapes and then runs:
 
-- `generate_work_pages.py --source json` for the selected work and affected series ids
-- or `generate_work_pages.py --source json` for the selected series and affected works
+- `generate_work_pages.py --internal-json-source-run --refresh-published` for the selected work and affected series ids
+- or `generate_work_pages.py --internal-json-source-run --refresh-published` for the selected series and affected works
 - `build_search.rb --scope catalogue --write`
+
+The apply path uses refresh mode rather than broad force mode. That allows selected published records to be recomputed while unchanged generated payloads and catalogue search output still skip by content version. A request-level `force` value remains the explicit stronger rewrite path.
 
 The apply endpoint updates:
 

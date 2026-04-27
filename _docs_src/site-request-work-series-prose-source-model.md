@@ -2,7 +2,7 @@
 doc_id: site-request-work-series-prose-source-model
 title: "Work And Series Prose Source Model Request"
 added_date: 2026-04-26
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: site-docs
 sort_order: 140
 ---
@@ -341,14 +341,17 @@ Implemented behavior:
 
 Status:
 
-- pending
+- complete
 
-Follow-up task:
+Implemented behavior:
 
-- split or narrow the current `--force` behavior so a scoped prose/site update can recompute target payloads without rewriting unchanged aggregate JSON solely for `generated_at_utc`
-- avoid refreshing `published_date` for already-published records when no publication transition occurred
-- keep prose-only updates focused on semantic payload changes, catalogue search when needed, build activity, and logs
-- preserve an explicit stronger force mode for intentional full rewrites
+- the internal generator now has `--refresh-published` for scoped runtime recomputation of selected published records
+- `catalogue_json_build.py` uses that narrow refresh mode for normal work, series, and moment scopes
+- normal scoped builds no longer pass broad `--force` into generator/search just to process already-published records
+- unchanged aggregate JSON and catalogue search payloads continue to skip by content version instead of rewriting only for `generated_at_utc`
+- already-published records no longer receive a fresh `published_date` unless they transition from `draft` to `published`
+- explicit `--force` remains available for intentional full rewrites
+- the scoped CLI now supports `--series-id` for direct series preview/write runs
 
 ## Validation Plan
 
