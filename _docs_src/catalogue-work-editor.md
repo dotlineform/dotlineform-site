@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: user-guide
 sort_order: 30
 ---
@@ -35,10 +35,8 @@ The first implementation covers:
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
 - provide a direct `new work detail →` entry link for the current work
-- list the current work's file records
-- list the current work's link records
-- link into the dedicated work-file and work-link editors
-- provide direct `new file →` and `new link →` entry links for the current work
+- list the current work's work-owned `downloads` metadata
+- list the current work's work-owned `links` metadata
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
@@ -53,8 +51,8 @@ The first implementation covers:
 It does not yet:
 
 - edit work details inline on the work page
-- edit work files inline on the work page
-- edit work links inline on the work page
+- edit work files inline on the work page; modal editing is planned as the next UI pass
+- edit work links inline on the work page; modal editing is planned as the next UI pass
 - edit series records directly
 - upload primary images to remote media storage
 - paginate detail/member lists
@@ -98,7 +96,7 @@ Current save/rebuild flow:
 4. user edits form fields
 5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and optional `apply_build: true`
 6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when the user chose `Update site now`
-7. the page reloads its focused work lookup payload for preview/detail/file/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
+7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
 9. the same preview now also carries work media readiness and staged work prose readiness
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
@@ -145,18 +143,17 @@ Locked constraints for this phase:
 - works with multiple detail sections render as multiple grouped lists
 - this area is navigation into the detail editor, not inline editing
 
-## File And Link Navigation Surface
+## Files And Links
 
-The work editor now also includes file and link summary sections.
+The work editor includes summary sections for work-owned files and links.
 
 Current behavior:
 
-- list current `WorkFiles` records for the work
-- list current `WorkLinks` records for the work
-- open focused file and link editors from each row
-- provide direct `new file →` and `new link →` entry links from the current work
+- list current `downloads` entries from the work source record
+- list current `links` entries from the work source record
+- keep the sections read-only until the modal editing pass lands
 
-These areas are intentionally summary/navigation surfaces in this phase, not inline editors.
+The retired standalone work-file and work-link editors no longer own canonical writes. The next UI pass should replace these read-only sections with add/edit/delete modals that participate in the parent work draft.
 
 ## Current Editable Fields
 

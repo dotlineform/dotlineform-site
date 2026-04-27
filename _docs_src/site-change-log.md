@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-27] Made catalogue files and links work-owned metadata
+
+**Status:** implemented
+
+**Area:** Studio / catalogue source model
+
+**Summary:**
+Moved work file/link metadata into `assets/studio/data/catalogue/works.json` as work-owned `downloads` and `links` arrays. Empty arrays are omitted from source records.
+
+**Reason:**
+Files and links no longer need independent draft/published workflows, published dates, or standalone editor routes. Keeping separate source files made small work metadata look like first-class catalogue records.
+
+**Effect:**
+Catalogue source loading now treats `Works.downloads` and `Works.links` as canonical while deriving compatibility rows for existing generator and lookup surfaces. The public `work.downloads` and `work.links` output shape is preserved. The work editor now shows files and links as read-only work-owned summaries pending the modal editing pass, Catalogue Status no longer lists file/link families, and the old standalone work-file/work-link write endpoints return a retired-endpoint response instead of writing `work_files.json` or `work_links.json`.
+
+**Affected files/docs:**
+
+- `assets/studio/data/catalogue/works.json`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-status.js`
+- `scripts/catalogue_source.py`
+- `scripts/generate_work_pages.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
 ## [2026-04-27] Added media-only image refresh in Studio editors
 
 **Status:** implemented

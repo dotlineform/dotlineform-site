@@ -27,9 +27,15 @@
     "width_px": 2472,
     "height_px": 3498,
     "provenance": null,
-    "artist": null
+    "artist": null,
+    "downloads": [
+      {
+        "filename": "mouse story.pdf",
+        "label": "mouse story.pdf"
+      }
+    ]
   },
-  "record_hash": "e18e9a31ba9960423ed785c33cc0c2b6f6cd322dbe531a73c3cd8ee74daf946f",
+  "record_hash": "896ee3314c9d63e0b9e58e52cd4802a4d6fa14ff39dbafc79a6a0cf5bc48d504",
   "detail_sections": [
     {
       "project_subfolder": "details",

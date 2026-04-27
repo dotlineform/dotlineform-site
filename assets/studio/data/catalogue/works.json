@@ -219,7 +219,13 @@
       "width_px": 1600,
       "height_px": 2263,
       "provenance": null,
-      "artist": null
+      "artist": null,
+      "downloads": [
+        {
+          "filename": "nerve.pdf",
+          "label": "nerve.pdf"
+        }
+      ]
     },
     "00009": {
       "work_id": "00009",
@@ -4323,7 +4329,13 @@
       "width_px": 2472,
       "height_px": 3498,
       "provenance": null,
-      "artist": null
+      "artist": null,
+      "downloads": [
+        {
+          "filename": "mouse story.pdf",
+          "label": "mouse story.pdf"
+        }
+      ]
     },
     "00161": {
       "work_id": "00161",
@@ -4350,7 +4362,13 @@
       "width_px": 3115,
       "height_px": 4405,
       "provenance": null,
-      "artist": null
+      "artist": null,
+      "downloads": [
+        {
+          "filename": "mouse story (extended version).pdf",
+          "label": "mouse story (extended version).pdf"
+        }
+      ]
     },
     "00162": {
       "work_id": "00162",
@@ -4404,7 +4422,13 @@
       "width_px": 1545,
       "height_px": 2193,
       "provenance": null,
-      "artist": null
+      "artist": null,
+      "downloads": [
+        {
+          "filename": "nerve (abattoir).pdf",
+          "label": "nerve (abattoir).pdf"
+        }
+      ]
     },
     "00164": {
       "work_id": "00164",
@@ -12343,7 +12367,13 @@
       "width_px": 3543,
       "height_px": 3543,
       "provenance": null,
-      "artist": null
+      "artist": null,
+      "links": [
+        {
+          "url": "https://dotlineform.bandcamp.com/album/intuition",
+          "label": "Bandcamp"
+        }
+      ]
     },
     "00458": {
       "work_id": "00458",
@@ -33727,7 +33757,13 @@
       "width_px": 3543,
       "height_px": 3543,
       "provenance": null,
-      "artist": null
+      "artist": null,
+      "links": [
+        {
+          "url": "https://dotlineform.bandcamp.com/album/genetic",
+          "label": "Bandcamp"
+        }
+      ]
     },
     "01251": {
       "work_id": "01251",

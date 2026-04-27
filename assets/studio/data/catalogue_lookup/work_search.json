@@ -83,7 +83,7 @@
         "105",
         "026"
       ],
-      "record_hash": "5a03230a5de7f35b14531d4abb577dfcc98bf3ff5791cf27f45caacc2b032833"
+      "record_hash": "194f6ca8d1fa19e40dc082d79862ec1cadc72ee132ccdba4c4cabc702db48c2d"
     },
     {
       "work_id": "00009",
@@ -1603,7 +1603,7 @@
       "series_ids": [
         "104"
       ],
-      "record_hash": "e18e9a31ba9960423ed785c33cc0c2b6f6cd322dbe531a73c3cd8ee74daf946f"
+      "record_hash": "896ee3314c9d63e0b9e58e52cd4802a4d6fa14ff39dbafc79a6a0cf5bc48d504"
     },
     {
       "work_id": "00161",
@@ -1613,7 +1613,7 @@
       "series_ids": [
         "104"
       ],
-      "record_hash": "5a0bbbc6ad307bd29d66b7355846561d8771b4c26e6b01030a3d7e1a8f045b82"
+      "record_hash": "6309feaf1dfc48608fa136dccfb76dd9b655b34d3a8175ca76bfd10fc2484d56"
     },
     {
       "work_id": "00162",
@@ -1633,7 +1633,7 @@
       "series_ids": [
         "105"
       ],
-      "record_hash": "53c45a59648664a2e1501b5193033eee0f31ba7b433936adfa3efc9cec17dc61"
+      "record_hash": "f1322fd7b3d191450a4f0a197841bbe27e436de9778cf3429eaa19e44f18e462"
     },
     {
       "work_id": "00164",
@@ -4574,7 +4574,7 @@
       "series_ids": [
         "081"
       ],
-      "record_hash": "62c5795be6804ecdfdb4dd4453074002181d9d09e8f0bcae86e3936f7e6a4823"
+      "record_hash": "3dde2cbc4aa4eb548068a8b6805dc501d4104fa4f7337d8be3cd237c1acebec7"
     },
     {
       "work_id": "00458",
@@ -12494,7 +12494,7 @@
       "series_ids": [
         "069"
       ],
-      "record_hash": "83c177159b1ebb9525df2609b7b1d51f6f30d5d01592b527dafe8f22efde1206"
+      "record_hash": "7c3a738b74901f53ab0bf821a4b5ca941eebc3f144b791cb2deae5e2657aa118"
     },
     {
       "work_id": "01251",

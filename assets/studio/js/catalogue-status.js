@@ -11,9 +11,7 @@ import {
 const FAMILIES = [
   { key: "works", label: "works", pathKey: "catalogue_works", objectKey: "works", idField: "work_id", routeKey: "catalogue_work_editor", paramKey: "work" },
   { key: "work_details", label: "work details", pathKey: "catalogue_work_details", objectKey: "work_details", idField: "detail_uid", routeKey: "catalogue_work_detail_editor", paramKey: "detail" },
-  { key: "series", label: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" },
-  { key: "work_files", label: "work files", pathKey: "catalogue_work_files", objectKey: "work_files", idField: "file_uid", routeKey: "catalogue_work_file_editor", paramKey: "file" },
-  { key: "work_links", label: "work links", pathKey: "catalogue_work_links", objectKey: "work_links", idField: "link_uid", routeKey: "catalogue_work_link_editor", paramKey: "link" }
+  { key: "series", label: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" }
 ];
 
 const SORT_KEYS = ["id", "type", "status", "title", "reference"];

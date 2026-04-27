@@ -27,9 +27,15 @@
     "width_px": 1545,
     "height_px": 2193,
     "provenance": null,
-    "artist": null
+    "artist": null,
+    "downloads": [
+      {
+        "filename": "nerve (abattoir).pdf",
+        "label": "nerve (abattoir).pdf"
+      }
+    ]
   },
-  "record_hash": "53c45a59648664a2e1501b5193033eee0f31ba7b433936adfa3efc9cec17dc61",
+  "record_hash": "f1322fd7b3d191450a4f0a197841bbe27e436de9778cf3429eaa19e44f18e462",
   "detail_sections": [
     {
       "project_subfolder": "pages",

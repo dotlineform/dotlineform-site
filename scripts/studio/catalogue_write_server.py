@@ -270,6 +270,14 @@ WORK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
         "artifacts": ["work_record"],
     },
+    "downloads": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
+    "links": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
     "title": {
         "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
         "artifacts": [
@@ -3227,8 +3235,6 @@ class Handler(BaseHTTPRequestHandler):
         if kind == "work":
             works_payload = load_works_payload(self.server.works_path)
             details_payload = load_work_details_payload(self.server.work_details_path)
-            files_payload = load_work_files_payload(self.server.work_files_path)
-            links_payload = load_work_links_payload(self.server.work_links_path)
             current_record = works_payload["works"].get(record_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"work_id not found: {record_id}")
@@ -3247,23 +3253,11 @@ class Handler(BaseHTTPRequestHandler):
                 for detail_uid, detail_record in details_payload["work_details"].items()
                 if str(detail_record.get("work_id") or "") != record_id
             }
-            updated_files = {
-                file_uid: file_record
-                for file_uid, file_record in files_payload["work_files"].items()
-                if str(file_record.get("work_id") or "") != record_id
-            }
-            updated_links = {
-                link_uid: link_record
-                for link_uid, link_record in links_payload["work_links"].items()
-                if str(link_record.get("work_id") or "") != record_id
-            }
             cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
             generated_payloads = build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
             payloads = {
                 self.server.works_path.resolve(): payload_for_map("works", updated_works),
                 self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
-                self.server.work_files_path.resolve(): payload_for_map("work_files", updated_files),
-                self.server.work_links_path.resolve(): payload_for_map("work_links", updated_links),
                 **generated_payloads,
             }
             cleanup_result = self._apply_catalogue_delete_transaction(
@@ -3809,7 +3803,19 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
+    def _send_retired_work_child_metadata_response(self, allowed: Optional[str]) -> None:
+        self._send_json(
+            HTTPStatus.GONE,
+            {
+                "ok": False,
+                "error": "Work files and links are now work-owned metadata. Edit downloads and links through the work record.",
+            },
+            allowed,
+        )
+
     def _handle_work_file_create(self, allowed: Optional[str]) -> None:
+        self._send_retired_work_child_metadata_response(allowed)
+        return
         body = self._read_json_body()
         file_update = extract_work_file_update(body)
         work_id = slug_id(body.get("work_id", file_update.get("work_id")))
@@ -3882,6 +3888,8 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_file_save(self, allowed: Optional[str]) -> None:
+        self._send_retired_work_child_metadata_response(allowed)
+        return
         body = self._read_json_body()
         apply_build = extract_apply_build(body)
         requested_uid = str(body.get("file_uid") or "").strip()
@@ -4006,6 +4014,8 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_file_delete(self, allowed: Optional[str]) -> None:
+        self._send_retired_work_child_metadata_response(allowed)
+        return
         body = self._read_json_body()
         file_uid = str(body.get("file_uid") or "").strip()
         if not file_uid:
@@ -4059,6 +4069,8 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_link_create(self, allowed: Optional[str]) -> None:
+        self._send_retired_work_child_metadata_response(allowed)
+        return
         body = self._read_json_body()
         link_update = extract_work_link_update(body)
         work_id = slug_id(body.get("work_id", link_update.get("work_id")))
@@ -4131,6 +4143,8 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_link_save(self, allowed: Optional[str]) -> None:
+        self._send_retired_work_child_metadata_response(allowed)
+        return
         body = self._read_json_body()
         apply_build = extract_apply_build(body)
         requested_uid = str(body.get("link_uid") or "").strip()
@@ -4255,6 +4269,8 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_link_delete(self, allowed: Optional[str]) -> None:
+        self._send_retired_work_child_metadata_response(allowed)
+        return
         body = self._read_json_body()
         link_uid = str(body.get("link_uid") or "").strip()
         if not link_uid:

@@ -116,6 +116,7 @@ try:
         CatalogueSourceRecords,
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
         WORKBOOK_HEADERS,
+        attach_work_owned_files_and_links,
         build_detail_record,
         build_file_record,
         build_link_record,
@@ -132,6 +133,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         CatalogueSourceRecords,
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
         WORKBOOK_HEADERS,
+        attach_work_owned_files_and_links,
         build_detail_record,
         build_file_record,
         build_link_record,
@@ -1326,8 +1328,9 @@ def main() -> None:
             record = build_link_record(row, work_links_hi, used_link_uids)
             work_link_records[str(record["link_uid"])] = record
 
+        works_records = attach_work_owned_files_and_links(works_records, work_file_records, work_link_records)
         rebuilt_records = CatalogueSourceRecords(
-            works=sort_record_map(works_records),
+            works=works_records,
             work_details=sort_record_map(detail_records),
             series=sort_record_map(series_records),
             work_files=sort_record_map(work_file_records),

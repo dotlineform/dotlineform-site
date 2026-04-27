@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e4214ffa69d00246fe989372979e7db4",
-    "generated_at_utc": "2026-04-27T19:37:36Z",
+    "version": "blake2b-32fdf3c7d2ae0e912cbcdb91ff9634ea",
+    "generated_at_utc": "2026-04-27T19:55:15Z",
     "count": 142
   },
   "entries": [
@@ -944,10 +944,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-27 • User Guide",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -957,12 +957,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "scripts-copy-draft-media",
@@ -1553,22 +1553,22 @@
       "kind": "doc",
       "title": "Catalogue Status",
       "href": "/docs/?scope=studio&doc=catalogue-status",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-27",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-27 • Studio",
       "search_terms": [
         "catalogue-status",
         "catalogue",
         "status",
         "catalogue status",
         "studio",
-        "2026-04-18",
+        "2026-04-27",
         "2026",
         "04",
-        "18"
+        "27"
       ],
-      "search_text": "catalogue-status catalogue status catalogue status studio 2026-04-18 2026 04 18"
+      "search_text": "catalogue-status catalogue status catalogue status studio 2026-04-27 2026 04 27"
     },
     {
       "id": "catalogue-work-detail-editor",
@@ -2284,10 +2284,10 @@
       "kind": "doc",
       "title": "Catalogue Work File Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-file-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-27 • User Guide",
       "search_terms": [
         "catalogue-work-file-editor",
         "catalogue",
@@ -2298,12 +2298,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "catalogue-work-file-editor catalogue work file editor catalogue work file editor user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-work-file-editor catalogue work file editor catalogue work file editor user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "search-incremental-orchestration-plan",
@@ -2402,10 +2402,10 @@
       "kind": "doc",
       "title": "New Catalogue Work File",
       "href": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-27 • User Guide",
       "search_terms": [
         "catalogue-new-work-file-editor",
         "catalogue",
@@ -2417,12 +2417,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "catalogue-new-work-file-editor catalogue new work file editor new catalogue work file user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-new-work-file-editor catalogue new work file editor new catalogue work file user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -2452,10 +2452,10 @@
       "kind": "doc",
       "title": "Catalogue Work Link Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-link-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-27 • User Guide",
       "search_terms": [
         "catalogue-work-link-editor",
         "catalogue",
@@ -2466,12 +2466,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "catalogue-work-link-editor catalogue work link editor catalogue work link editor user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-work-link-editor catalogue work link editor catalogue work link editor user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "data-models",
@@ -2561,10 +2561,10 @@
       "kind": "doc",
       "title": "New Catalogue Work Link",
       "href": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-27",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-27 • User Guide",
       "search_terms": [
         "catalogue-new-work-link-editor",
         "catalogue",
@@ -2576,12 +2576,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-27",
         "2026",
         "04",
-        "26"
+        "27"
       ],
-      "search_text": "catalogue-new-work-link-editor catalogue new work link editor new catalogue work link user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-new-work-link-editor catalogue new work link editor new catalogue work link user guide user guide 2026-04-27 2026 04 27"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",

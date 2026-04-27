@@ -61,6 +61,8 @@ WORK_FIELDS = [
     "height_px",
     "provenance",
     "artist",
+    "downloads",
+    "links",
 ]
 
 SERIES_FIELDS = [
@@ -108,8 +110,11 @@ LINK_FIELDS = [
     "published_date",
 ]
 
+DOWNLOAD_FIELDS = ["filename", "label"]
+WORK_LINK_ENTRY_FIELDS = ["url", "label"]
+
 WORKBOOK_HEADERS = {
-    "Works": WORK_FIELDS,
+    "Works": [field for field in WORK_FIELDS if field not in {"downloads", "links"}],
     "Series": [
         "series_id",
         "title",
@@ -140,6 +145,8 @@ WORKBOOK_HEADERS = {
 
 WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "series_ids",
+    "downloads",
+    "links",
     "width_cm",
     "height_cm",
     "year",
@@ -220,6 +227,39 @@ def normalize_json_value(value: Any) -> Any:
     return text if text else None
 
 
+def normalize_embedded_entry(value: Any, fields: Iterable[str]) -> Dict[str, Any] | None:
+    if not isinstance(value, Mapping):
+        return None
+    out: Dict[str, Any] = {}
+    for field in fields:
+        normalized = normalize_scalar_text(value.get(field))
+        if normalized is not None:
+            out[field] = normalized
+    return out if out else None
+
+
+def normalize_downloads(value: Any) -> list[Dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    out: list[Dict[str, Any]] = []
+    for item in value:
+        entry = normalize_embedded_entry(item, DOWNLOAD_FIELDS)
+        if entry is not None:
+            out.append(entry)
+    return out
+
+
+def normalize_links(value: Any) -> list[Dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    out: list[Dict[str, Any]] = []
+    for item in value:
+        entry = normalize_embedded_entry(item, WORK_LINK_ENTRY_FIELDS)
+        if entry is not None:
+            out.append(entry)
+    return out
+
+
 def normalize_scalar_text(value: Any) -> str | None:
     text = normalize_text(value)
     return text if text else None
@@ -235,7 +275,15 @@ def normalize_source_record(
     out: Dict[str, Any] = {}
     for field in field_order:
         value = record.get(field)
-        if isinstance(value, list):
+        if field == "downloads":
+            entries = normalize_downloads(value)
+            if entries:
+                out[field] = entries
+        elif field == "links":
+            entries = normalize_links(value)
+            if entries:
+                out[field] = entries
+        elif isinstance(value, list):
             out[field] = [normalize_json_value(item) for item in value]
         elif field in text_fields:
             out[field] = normalize_scalar_text(value)
@@ -410,6 +458,100 @@ def build_link_record(
     return normalize_source_record(record, LINK_FIELDS, text_fields=LINK_TEXT_FIELDS)
 
 
+def build_work_file_records_from_downloads(
+    works: Mapping[str, Mapping[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    used_uids: set[str] = set()
+    out: Dict[str, Dict[str, Any]] = {}
+    for work_id in sorted(works):
+        work_record = works[work_id]
+        for download in normalize_downloads(work_record.get("downloads")):
+            filename = normalize_scalar_text(download.get("filename"))
+            label = normalize_scalar_text(download.get("label"))
+            if not filename and not label:
+                continue
+            fragment = safe_uid_fragment(Path(filename or "").stem or label, "file")
+            file_uid = unique_uid(f"{work_id}:{fragment}", used_uids)
+            out[file_uid] = normalize_source_record(
+                {
+                    "file_uid": file_uid,
+                    "work_id": work_id,
+                    "filename": filename,
+                    "label": label,
+                    "status": "published",
+                    "published_date": None,
+                },
+                FILE_FIELDS,
+                text_fields=FILE_TEXT_FIELDS,
+            )
+    return sort_record_map(out)
+
+
+def build_work_link_records_from_links(
+    works: Mapping[str, Mapping[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    used_uids: set[str] = set()
+    out: Dict[str, Dict[str, Any]] = {}
+    for work_id in sorted(works):
+        work_record = works[work_id]
+        for link in normalize_links(work_record.get("links")):
+            url = normalize_scalar_text(link.get("url"))
+            label = normalize_scalar_text(link.get("label"))
+            if not url and not label:
+                continue
+            fragment = safe_uid_fragment(label or url, "link")
+            link_uid = unique_uid(f"{work_id}:{fragment}", used_uids)
+            out[link_uid] = normalize_source_record(
+                {
+                    "link_uid": link_uid,
+                    "work_id": work_id,
+                    "url": url,
+                    "label": label,
+                    "status": "published",
+                    "published_date": None,
+                },
+                LINK_FIELDS,
+                text_fields=LINK_TEXT_FIELDS,
+            )
+    return sort_record_map(out)
+
+
+def attach_work_owned_files_and_links(
+    works: Mapping[str, Dict[str, Any]],
+    work_files: Mapping[str, Mapping[str, Any]],
+    work_links: Mapping[str, Mapping[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    out = {work_id: dict(record) for work_id, record in works.items()}
+    files_by_work_id: Dict[str, list[Dict[str, Any]]] = {}
+    for file_uid, file_record in sorted(work_files.items()):
+        work_id = normalize_text(file_record.get("work_id"))
+        if not work_id or work_id not in out:
+            continue
+        entry = normalize_embedded_entry(file_record, DOWNLOAD_FIELDS)
+        if entry is None:
+            continue
+        files_by_work_id.setdefault(work_id, []).append(entry)
+    links_by_work_id: Dict[str, list[Dict[str, Any]]] = {}
+    for link_uid, link_record in sorted(work_links.items()):
+        work_id = normalize_text(link_record.get("work_id"))
+        if not work_id or work_id not in out:
+            continue
+        entry = normalize_embedded_entry(link_record, WORK_LINK_ENTRY_FIELDS)
+        if entry is None:
+            continue
+        links_by_work_id.setdefault(work_id, []).append(entry)
+    for work_id, entries in files_by_work_id.items():
+        if not normalize_downloads(out[work_id].get("downloads")):
+            out[work_id]["downloads"] = entries
+    for work_id, entries in links_by_work_id.items():
+        if not normalize_links(out[work_id].get("links")):
+            out[work_id]["links"] = entries
+    return sort_record_map({
+        work_id: normalize_source_record(record, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
+        for work_id, record in out.items()
+    })
+
+
 def records_from_workbook(
     workbook_path: Path,
     *,
@@ -468,12 +610,16 @@ def records_from_workbook(
         record = build_link_record(row, links_headers, used_link_uids)
         work_links[str(record["link_uid"])] = record
 
+    works = attach_work_owned_files_and_links(works, work_files, work_links)
+    work_files = build_work_file_records_from_downloads(works)
+    work_links = build_work_link_records_from_links(works)
+
     return CatalogueSourceRecords(
-        works=sort_record_map(works),
+        works=works,
         work_details=sort_record_map(work_details),
         series=sort_record_map(series),
-        work_files=sort_record_map(work_files),
-        work_links=sort_record_map(work_links),
+        work_files=work_files,
+        work_links=work_links,
     )
 
 
@@ -526,7 +672,7 @@ def write_source_record_payloads(
     source_dir: Path,
     records: CatalogueSourceRecords,
     *,
-    kinds: Iterable[str] = ("works", "work_details", "series", "work_files", "work_links"),
+    kinds: Iterable[str] = ("works", "work_details", "series"),
 ) -> list[Path]:
     source_dir.mkdir(parents=True, exist_ok=True)
     record_maps = records.as_maps()
@@ -555,7 +701,7 @@ def load_json_file(path: Path) -> Dict[str, Any]:
 
 def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
     maps: Dict[str, Dict[str, Dict[str, Any]]] = {}
-    for kind in ["works", "work_details", "series", "work_files", "work_links"]:
+    for kind in ["works", "work_details", "series"]:
         path = source_dir / SOURCE_FILES[kind]
         payload = load_json_file(path)
         record_map = payload.get(kind)
@@ -566,12 +712,16 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
             for record_id, record in record_map.items()
             if isinstance(record, dict)
         }
+    works = sort_record_map({
+        work_id: normalize_source_record(record, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
+        for work_id, record in maps["works"].items()
+    })
     return CatalogueSourceRecords(
-        works=sort_record_map(maps["works"]),
+        works=works,
         work_details=sort_record_map(maps["work_details"]),
         series=sort_record_map(maps["series"]),
-        work_files=sort_record_map(maps["work_files"]),
-        work_links=sort_record_map(maps["work_links"]),
+        work_files=build_work_file_records_from_downloads(works),
+        work_links=build_work_link_records_from_links(works),
     )
 
 
@@ -705,6 +855,32 @@ def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
             except ValueError as exc:
                 errors.append(f"works {key}: {exc}")
         work_series_ids_by_work_id[work_id] = parsed_series_ids
+        downloads = record.get("downloads")
+        if downloads is not None:
+            if not isinstance(downloads, list):
+                errors.append(f"works {key}: downloads must be an array")
+            else:
+                for idx, download in enumerate(downloads, start=1):
+                    if not isinstance(download, Mapping):
+                        errors.append(f"works {key}: downloads item {idx} must be an object")
+                        continue
+                    if is_empty(download.get("filename")):
+                        errors.append(f"works {key}: downloads item {idx} missing filename")
+                    if is_empty(download.get("label")):
+                        errors.append(f"works {key}: downloads item {idx} missing label")
+        links = record.get("links")
+        if links is not None:
+            if not isinstance(links, list):
+                errors.append(f"works {key}: links must be an array")
+            else:
+                for idx, link in enumerate(links, start=1):
+                    if not isinstance(link, Mapping):
+                        errors.append(f"works {key}: links item {idx} must be an object")
+                        continue
+                    if is_empty(link.get("url")):
+                        errors.append(f"works {key}: links item {idx} missing url")
+                    if is_empty(link.get("label")):
+                        errors.append(f"works {key}: links item {idx} missing label")
 
     for key, record in records.series.items():
         try:

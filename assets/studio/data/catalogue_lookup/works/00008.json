@@ -28,9 +28,15 @@
     "width_px": 1600,
     "height_px": 2263,
     "provenance": null,
-    "artist": null
+    "artist": null,
+    "downloads": [
+      {
+        "filename": "nerve.pdf",
+        "label": "nerve.pdf"
+      }
+    ]
   },
-  "record_hash": "5a03230a5de7f35b14531d4abb577dfcc98bf3ff5791cf27f45caacc2b032833",
+  "record_hash": "194f6ca8d1fa19e40dc082d79862ec1cadc72ee132ccdba4c4cabc702db48c2d",
   "detail_sections": [],
   "work_files": [
     {

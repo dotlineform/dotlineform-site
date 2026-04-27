@@ -2,7 +2,7 @@
 doc_id: catalogue-status
 title: "Catalogue Status"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-27
 parent_id: studio
 sort_order: 50
 ---
@@ -23,8 +23,6 @@ The page reads canonical source JSON directly:
 - `assets/studio/data/catalogue/works.json`
 - `assets/studio/data/catalogue/work_details.json`
 - `assets/studio/data/catalogue/series.json`
-- `assets/studio/data/catalogue/work_files.json`
-- `assets/studio/data/catalogue/work_links.json`
 
 The browser paths are configured through `assets/studio/data/studio_config.json`.
 
@@ -32,15 +30,17 @@ The browser paths are configured through `assets/studio/data/studio_config.json`
 
 The page:
 
-- loads all five source record families
+- loads the source record families that still own publication status
 - filters to rows where normalized status is not `published`
 - groups counts by record family
 - supports a simple search across id, status, title, and parent/reference fields
 - shows id, type, status, title, and reference columns
 - supports header-click sorting on `id`, `type`, `status`, `title`, and `reference`
-- links each row into the focused editor for its record family when that editor exists
+- links each row into the focused editor for its record family
 
 It remains a review surface rather than an editor. Editing still happens on the focused record pages.
+
+Work-owned `downloads` and `links` are not listed here because they no longer have independent `status` or `published_date` fields.
 
 ## Boundaries
 

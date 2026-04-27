@@ -8,9 +8,9 @@
     "url": "https://dotlineform.bandcamp.com/album/genetic",
     "label": "Bandcamp",
     "status": "published",
-    "published_date": "2026-04-01"
+    "published_date": null
   },
-  "record_hash": "28cc8d9e26d4cb9595106d7ae75bc20860084e44c5cba02197a4a1f8e4c460f7",
+  "record_hash": "0b154a463400b65fd24769aa32b98b247fb219f599fda7ff7d52e6cb48bb2b5f",
   "work_summary": {
     "work_id": "01250",
     "title": "genetic"

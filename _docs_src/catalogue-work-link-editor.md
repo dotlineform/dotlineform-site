@@ -2,7 +2,7 @@
 doc_id: catalogue-work-link-editor
 title: "Catalogue Work Link Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: user-guide
 sort_order: 110
 ---
@@ -13,11 +13,16 @@ Route:
 - `/studio/catalogue-work-link/`
 - focused record selection uses `?link=<link_uid>`
 
-This page edits one canonical work-link source record from `assets/studio/data/catalogue/work_links.json` and writes changes through the local catalogue write service.
+This page is retired.
+
+Work links are now work-owned `links` metadata in `assets/studio/data/catalogue/works.json`.
+The old local write endpoints for standalone work-link create/save/delete now return a retired-endpoint response instead of writing `work_links.json`.
+
+Use the owning work record as the source boundary. A follow-up Studio UI pass will add link add/edit/delete modals to the work editor.
 
 ## Current Scope
 
-The first implementation covers:
+Historical scope:
 
 - search for a work-link record by link id, label, URL, or work id
 - open one work-link record from either the dashboard route or the work editor
@@ -31,9 +36,9 @@ The first implementation covers:
 - save with an optional `Update site now` path through the local catalogue service
 - delete one source record and return to the parent work editor
 
-## Save Boundary
+## Retired Save Boundary
 
-Current action labels:
+Historical action labels:
 
 - `Save`
   writes work-link source JSON and can optionally also update the public catalogue immediately
@@ -42,7 +47,7 @@ Current action labels:
 - `Delete`
   removes the current work-link source record and returns to the parent work editor
 
-Current save/rebuild flow:
+Historical save/rebuild flow:
 
 1. opening a work-link record fetches one focused lookup record from `assets/studio/data/catalogue_lookup/work_links/<link_uid>.json`
 2. browser uses the lookup-provided record hash for stale-write protection
@@ -53,7 +58,7 @@ Current save/rebuild flow:
 7. `POST /catalogue/build-preview` reports the parent-work rebuild impact
 8. `POST /catalogue/build-apply` remains available for explicit follow-up update actions
 
-Delete flow:
+Historical delete flow:
 
 1. `POST /catalogue/work-link/delete` sends `link_uid` and the expected record hash
 2. the local write server validates the full source set after removal and writes `work_links.json`

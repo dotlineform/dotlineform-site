@@ -10,7 +10,7 @@ sort_order: 152
 
 Status:
 
-- proposed
+- stage 1 implemented; stage 2 pending
 
 ## Summary
 
@@ -170,7 +170,7 @@ The likely UI direction is:
 
 Status:
 
-- pending
+- implemented
 
 Lock the embedded array schema for:
 
@@ -183,13 +183,14 @@ Confirm validation rules:
 - labels are required for downloads
 - URLs are required for links
 - labels are required for links
-- empty arrays may be omitted or normalized to empty arrays, but output should be deterministic
+- empty arrays should be omitted from `works.json` to avoid unnecessary source bulk
+- generated output should remain deterministic whether arrays are present or omitted
 
 ### Task 2. Migrate Source Data
 
 Status:
 
-- pending
+- implemented
 
 Write a deterministic migration from:
 
@@ -201,14 +202,14 @@ Migration behavior:
 - preserve existing sort order deterministically
 - drop file/link lifecycle fields
 - keep only public metadata fields
-- create backups before write
-- leave retired source files untouched until removal is explicitly included in the same reviewed change
+- do not move or back up referenced file assets; this request migrates metadata only
+- leave retired source metadata files untouched until removal is explicitly included in the same reviewed change
 
 ### Task 3. Update Source Readers And Validators
 
 Status:
 
-- pending
+- implemented
 
 Update catalogue source helpers so canonical records are read from `works.json`.
 
@@ -226,7 +227,7 @@ Validation should no longer require separate file/link maps.
 
 Status:
 
-- pending
+- implemented
 
 Update generation so public work metadata reads `downloads` and `links` directly from work source records.
 
@@ -242,11 +243,14 @@ Affected areas are expected to include:
 
 Status:
 
-- pending
+- partially implemented
 
 Update lookup generation so work lookup payloads include embedded file/link summaries from the work record.
 
-Retire focused lookup payloads for:
+Current Stage 1 behavior keeps synthetic focused lookup payloads for compatibility while work-editor modal editing is pending.
+These payloads are derived from `Works.downloads` and `Works.links`; they are no longer canonical source.
+
+Later retirement should remove focused lookup payloads for:
 
 - `catalogue_lookup/work_files/<file_uid>.json`
 - `catalogue_lookup/work_links/<link_uid>.json`
@@ -257,7 +261,7 @@ Keep work-editor summary data available from the focused work lookup payload.
 
 Status:
 
-- pending
+- implemented
 
 Update the catalogue write server so file/link changes are work-record changes.
 
@@ -273,7 +277,7 @@ Expected changes:
 
 Status:
 
-- pending
+- implemented
 
 Update activity summaries so file/link changes are reported as work source changes, not independent child-record operations.
 
@@ -283,7 +287,7 @@ Build impact should remain work-scoped.
 
 Status:
 
-- pending
+- implemented
 
 Update docs that currently describe file/link records as separate source families.
 
@@ -303,7 +307,7 @@ Docs should clearly state that files and links are work-owned metadata.
 
 Status:
 
-- pending
+- implemented
 
 Codex-run checks:
 
@@ -466,8 +470,7 @@ Manual checks:
 ## Open Questions
 
 - Should embedded arrays preserve the source order from existing file/link maps, or should Studio expose explicit reordering?
-- Should empty `downloads` and `links` arrays be omitted from source records or stored as empty arrays?
-- Should retired file/link source files be deleted in Stage 1, or kept for one release as migration evidence?
+- Should retired file/link source metadata files be deleted in Stage 1, or kept for one release as migration evidence?
 - Should old file/link URLs redirect to the work editor indefinitely or only during the migration window?
 
 ## Related References

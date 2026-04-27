@@ -301,7 +301,8 @@ Why the current refresh is broad:
   - the focused work lookup record
   - work search
   - series member summaries
-  - detail/file/link work summaries
+  - detail summaries
+  - work-owned download/link summaries
 - series saves can affect:
   - the focused series lookup record
   - series search
@@ -319,19 +320,18 @@ Follow-on direction:
 - the canonical invalidation registry currently lives in the write-server code by design
 - keep that registry in code unless a second consumer appears that justifies a shared JSON/config contract
 - the current dependency mapping now also explicitly includes moments, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
-- the current registry now also maps detail, file, link, and series fields to their actual derived outputs:
+- the current registry maps detail and series fields to their actual derived outputs:
   - detail fields can affect `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records
-  - file fields can affect `work_files/<file_uid>.json` and related work lookup records
-  - link fields can affect `work_links/<link_uid>.json` and related work lookup records
   - series fields can affect `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the series title
+  - work-owned `downloads` and `links` changes refresh the focused work lookup record through the work-save path
 - the locked first live incremental slice is narrower than the full registry:
   - start with `POST /catalogue/work/save` only
   - allow incremental writes only for work fields currently classified as `single-record`
   - work `title`, `year_display`, `status`, and `series_ids` now use the targeted-multi-record path rather than `full`
-  - detail, file, link, and series saves now also use targeted incremental refresh where their dependency set is explicit
+  - detail and series saves now also use targeted incremental refresh where their dependency set is explicit
   - keep parent/id move-style cases and moment writes on `full` fallback until later tasks
 - changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record`, `targeted-multi-record`, or `full`
-- changed detail/file/link/series save responses now include the same `lookup_refresh` metadata
+- changed detail/series save responses now include the same `lookup_refresh` metadata
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:
@@ -643,7 +643,8 @@ The server validates the proposed update through the shared catalogue source loa
 - binds to `127.0.0.1` only
 - CORS allows loopback origins only
 - write target is allowlisted to canonical catalogue source JSON files under `assets/studio/data/catalogue/`
-- current save endpoints write only canonical catalogue source JSON under `assets/studio/data/catalogue/`, including `works.json`, `work_details.json`, `work_files.json`, `work_links.json`, and `series.json`
+- current save endpoints write only canonical catalogue source JSON under `assets/studio/data/catalogue/`, including `works.json`, `work_details.json`, `series.json`, and `moments.json`
+- standalone work-file and work-link write endpoints are retired; files and links are saved as work-owned metadata through `POST /catalogue/work/save`
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records

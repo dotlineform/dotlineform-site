@@ -19,8 +19,6 @@ Current checked-in catalogue model families:
   - `assets/studio/data/catalogue/works.json`
   - `assets/studio/data/catalogue/series.json`
   - `assets/studio/data/catalogue/work_details.json`
-  - `assets/studio/data/catalogue/work_files.json`
-  - `assets/studio/data/catalogue/work_links.json`
   - `assets/studio/data/catalogue/moments.json`
 - canonical prose sources:
   - `_docs_src_catalogue/works/<work_id>.md`
@@ -51,6 +49,21 @@ Primary writers:
 Primary validator:
 
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+
+## Work-Owned Files And Links
+
+Files and links are now work-owned metadata in `assets/studio/data/catalogue/works.json`.
+
+The current source fields are:
+
+- `downloads`
+  optional array of `{ "filename": "...", "label": "..." }`
+- `links`
+  optional array of `{ "url": "...", "label": "..." }`
+
+Empty arrays are omitted from source records.
+
+The retired `work_files.json` and `work_links.json` files are no longer canonical source. Existing pipeline helpers may still derive in-memory compatibility rows from `Works.downloads` and `Works.links` while older generator surfaces are simplified.
 
 ## Why The Model Is Split This Way
 

@@ -2,7 +2,7 @@
 doc_id: catalogue-new-work-link-editor
 title: "New Catalogue Work Link"
 added_date: 2026-04-18
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 parent_id: user-guide
 sort_order: 120
 ---
@@ -13,11 +13,14 @@ Route:
 - `/studio/catalogue-new-work-link/`
 - current work may be preselected with `?work=<work_id>`
 
-This page creates one draft `WorkLinks` source record in `assets/studio/data/catalogue/work_links.json`.
+This page is retired.
+
+Work links are now work-owned `links` metadata in `assets/studio/data/catalogue/works.json`.
+The old standalone create endpoint no longer writes `work_links.json`.
 
 ## Current Scope
 
-The first implementation covers:
+Historical scope:
 
 - enter parent `work_id`
 - enter `url`

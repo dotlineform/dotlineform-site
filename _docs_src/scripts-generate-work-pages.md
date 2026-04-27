@@ -138,9 +138,9 @@ Artifact behavior:
 - `work-pages`
   writes `_works/<work_id>.md` as lightweight stubs with `work_id`, `title`, `layout`, and `checksum`
 - `work-files`
-  stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` and `published_date` on `--write`
+  stages work-owned `downloads` metadata for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `work-links`
-  updates `WorkLinks.status` and `published_date` for in-scope works on `--write`
+  compatibility artifact for work-owned `links` metadata; no independent source status is updated
 - `series-pages`
   writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json`
 - `work-details-pages`
@@ -226,7 +226,7 @@ Validation note:
 
 ## Works Download Files
 
-If `WorkFiles` contains rows for a work, generation stages those files and exposes them as `work.downloads` in per-work JSON.
+If `Works.downloads` contains entries for a work, generation stages those files and exposes them as `work.downloads` in per-work JSON.
 
 - source path:
   - `[projects-base-dir]/projects/[project_folder]/[filename]`
@@ -235,19 +235,19 @@ If `WorkFiles` contains rows for a work, generation stages those files and expos
   - staged filenames preserve the extension and normalize the basename for URLs
 - work page link:
   - label is `download` or `downloads`
-  - link text comes from `WorkFiles.label`
+  - link text comes from `downloads[].label`
   - rendered before `cat. <work_id>`
 
 ## Works Published Links
 
-If `WorkLinks` contains rows for a work, generation exposes them as `work.links` in per-work JSON.
+If `Works.links` contains entries for a work, generation exposes them as `work.links` in per-work JSON.
 
 - source fields:
-  - `WorkLinks.URL`
-  - `WorkLinks.label`
+  - `links[].url`
+  - `links[].label`
 - work page row:
   - caption stays `published on`
-  - links render as a comma-delimited list using `WorkLinks.label`
+  - links render as a comma-delimited list using `links[].label`
 
 ## Related References
 

@@ -713,12 +713,11 @@ function getWorkLinks(state, workId) {
 
 function renderWorkFileRows(state, items) {
   return items.map((item) => {
-    const fileUid = normalizeText(item && item.file_uid);
+    const filename = displayValue(item && item.filename);
     const label = displayValue(item && item.label);
-    const href = buildWorkFileEditorHref(state, fileUid);
     return `
       <div class="catalogueWorkDetails__row">
-        <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(fileUid)}</a>
+        <span class="catalogueWorkDetails__link">${escapeHtml(filename)}</span>
         <span class="catalogueWorkDetails__title">${escapeHtml(label)}</span>
       </div>
     `;
@@ -727,13 +726,12 @@ function renderWorkFileRows(state, items) {
 
 function renderWorkLinkRows(state, items) {
   return items.map((item) => {
-    const linkUid = normalizeText(item && item.link_uid);
+    const url = displayValue(item && item.url);
     const label = displayValue(item && item.label);
-    const href = buildWorkLinkEditorHref(state, linkUid);
     return `
       <div class="catalogueWorkDetails__row">
-        <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(linkUid)}</a>
-        <span class="catalogueWorkDetails__title">${escapeHtml(label)}</span>
+        <span class="catalogueWorkDetails__link">${escapeHtml(label)}</span>
+        <span class="catalogueWorkDetails__title">${escapeHtml(url)}</span>
       </div>
     `;
   }).join("");
@@ -1976,10 +1974,10 @@ async function init() {
     detailsHeadingNode.textContent = t(state, "details_heading", "work details");
     newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
-    filesHeadingNode.textContent = t(state, "files_heading", "work files");
-    newFileLinkNode.textContent = t(state, "files_new_link", "new file →");
-    linksHeadingNode.textContent = t(state, "links_heading", "work links");
-    newLinkLinkNode.textContent = t(state, "links_new_link", "new link →");
+    filesHeadingNode.textContent = t(state, "files_heading", "downloads");
+    newFileLinkNode.hidden = true;
+    linksHeadingNode.textContent = t(state, "links_heading", "links");
+    newLinkLinkNode.hidden = true;
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
     buildButton.textContent = t(state, "build_button", "Update site now");
