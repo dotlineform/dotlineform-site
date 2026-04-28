@@ -2185,9 +2185,43 @@ button.tagStudioList__cellLink {
 
 .catalogueWorkForm__field > .tagStudio__input,
 .catalogueWorkForm__field > .tagStudioForm__readonly,
+.catalogueWorkForm__field > .catalogueWorkSeriesPicker__control,
 .catalogueWorkForm__field > .tagStudioForm__meta,
 .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
   grid-column: 2;
+}
+
+.catalogueWorkSeriesPicker__control {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.catalogueWorkSeriesPicker__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: var(--studio-pill-height);
+  align-items: center;
+}
+
+.catalogueWorkSeriesPicker__chipId {
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-caption);
+}
+
+.catalogueWorkSeriesPicker__searchWrap {
+  position: relative;
+}
+
+.catalogueWorkSeriesPicker__popup {
+  top: calc(100% + 0.25rem);
+  display: grid;
+  gap: 0.35rem;
+  width: min(30rem, 100%);
+}
+
+.catalogueWorkSeriesPicker__option {
+  width: 100%;
 }
 
 .catalogueWorkForm__fieldMeta {

@@ -65,6 +65,27 @@ Use this as the single capture surface for Studio UI work:
 - local verification:
   - open `/studio/catalogue-work/?mode=new` and confirm only the create-mode context appears in the status stack when the local server is available
 
+## UI Rule Log 2026-04-28 / UI-047
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: the required work `series_ids` field asked for raw ids even though the works UI primarily exposes series titles; ids are mostly visible only in URLs.
+- triage: systemic catalogue editor usability issue
+- reasoning: user-facing relationship fields should use the human-visible record label as the primary input, while still storing canonical ids in source data. Showing ids as secondary context is useful for disambiguation, but typing ids should not be the normal workflow.
+- permanent rule: Studio relationship fields should prefer search/select controls over raw id text boxes when the related record has a stable human label available in lookup data.
+- outcome: single-work edit and new mode now render the work `series` field as a title-search picker that stores canonical `series_ids`; bulk mode keeps the raw id/diff input until bulk add/remove semantics are designed.
+- files changed:
+  - `assets/studio/js/catalogue-work-fields.js`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/site-request-catalogue-work-unified-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-work/?mode=new`, search by series title, add a series chip, remove it, and confirm validation responds without typing a series id
+
 ## UI Rule Log 2026-04-27 / UI-044
 
 - status: adopted

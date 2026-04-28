@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-28] Added title-search series selection to the work editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Replaced raw user-facing `series_ids` entry with a title-search series picker for single-work edit and new mode.
+
+**Reason:**
+Series ids are not normally visible in the works UI, so requiring raw ids made a required create/edit field depend on hidden knowledge.
+
+**Effect:**
+The work editor now searches series by title, displays selected series as title-first chips with ids as secondary context, and still saves canonical `series_ids` to work source records. Bulk mode keeps the existing raw id/diff input until bulk add/remove picker semantics are designed.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-fields.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-28] Retired the standalone new-work route in favor of work-editor new mode
 
 **Status:** implemented

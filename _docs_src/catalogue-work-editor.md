@@ -29,7 +29,7 @@ The first implementation covers:
 - open multiple work records by comma-delimited `work_id` values and `start-end` ranges
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit core scalar metadata fields
-- edit ordered `series_ids`
+- edit ordered work series through a title-search series picker
 - bulk-edit core scalar metadata across the selected works
 - bulk-change `series_ids` by exact replacement or `+series_id` / `-series_id` diff entries
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
@@ -80,6 +80,19 @@ In new mode:
 - after create, the page opens the new work in normal edit mode
 
 Draft works can be found later from Catalogue Status using `/studio/catalogue-status/?view=draft-works`.
+
+## Series Picker
+
+For single-work edit and new mode, the `series` field is a title-search picker backed by `assets/studio/data/catalogue_lookup/series_search.json`.
+
+The picker:
+
+- searches by series title, with ids also accepted as a fallback search term
+- shows selected series as chips with the title first and the id as secondary context
+- stores canonical `series_ids` in the work source record
+- blocks create/save when no series is selected
+
+Bulk mode keeps the existing raw `series_ids` input for now because bulk add/remove semantics still use the `+id` / `-id` diff form.
 
 Required create fields:
 

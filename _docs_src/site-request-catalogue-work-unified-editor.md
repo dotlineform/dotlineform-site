@@ -535,7 +535,33 @@ Implemented:
 - dashboard `Review Draft Works` opens the draft-focused view
 - the Catalogue Status implementation does not duplicate an existing list pattern unnecessarily
 
-### Task 5. Verify Create/Edit/Bulk Paths
+### Task 5. Replace User-Facing Work Series Id Entry With Series Title Search
+
+Status:
+
+- implemented for single-work edit and new mode
+
+Problem:
+
+The work editor required `series_ids`, but series ids are not normally visible in the works UI. Users mostly see series names, with ids only exposed indirectly in URLs. Raw id entry therefore made create/edit fragile and inconsistent with the visible catalogue model.
+
+Implemented:
+
+- the work editor renders the `series` field as a title-search picker in single-work edit and new mode
+- selected series display as title-first chips with the id shown only as secondary context
+- saves still write canonical `series_ids` to `works.json`
+- the picker uses the existing `catalogue_lookup/series_search.json` payload
+- bulk mode keeps the raw `series_ids` field until add/remove picker semantics are designed
+
+Acceptance checks:
+
+- searching by visible series title can add a series to a new or edited work
+- selected series can be removed without typing an id
+- create validation still blocks when no series is selected
+- save payloads continue to store `series_ids`
+- bulk `+id` / `-id` behavior is not regressed
+
+### Task 6. Verify Create/Edit/Bulk Paths
 
 Status:
 
