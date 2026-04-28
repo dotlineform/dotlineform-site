@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-848007642cadefff3da440b083557509",
-    "generated_at_utc": "2026-04-27T21:29:11Z",
-    "count": 141
+    "version": "blake2b-5fbd91fe68aa5d007e0e391c974a2a3b",
+    "generated_at_utc": "2026-04-28T10:37:01Z",
+    "count": 142
   },
   "entries": [
     {
@@ -2834,6 +2834,33 @@
         "27"
       ],
       "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue site docs docs 2026-04-27 2026 04 27"
+    },
+    {
+      "id": "site-request-catalogue-work-unified-editor",
+      "kind": "doc",
+      "title": "Catalogue Work Unified Editor Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
+      "last_updated": "2026-04-28",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-28 • Site Docs",
+      "search_terms": [
+        "site-request-catalogue-work-unified-editor",
+        "site",
+        "request",
+        "catalogue",
+        "work",
+        "unified",
+        "editor",
+        "catalogue work unified editor request",
+        "site docs",
+        "docs",
+        "2026-04-28",
+        "2026",
+        "04",
+        "28"
+      ],
+      "search_text": "site-request-catalogue-work-unified-editor site request catalogue work unified editor catalogue work unified editor request site docs docs 2026-04-28 2026 04 28"
     },
     {
       "id": "docs-viewer",

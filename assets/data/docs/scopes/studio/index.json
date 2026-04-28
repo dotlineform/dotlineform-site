@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T21:29:09Z",
+  "generated_at": "2026-04-28T10:37:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1701,6 +1701,20 @@
       "source_path": "site-request-field-aware-build-scoping.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-work-unified-editor",
+      "title": "Catalogue Work Unified Editor Request",
+      "added_date": "2026-04-28",
+      "last_updated": "2026-04-28",
+      "parent_id": "site-docs",
+      "sort_order": 154,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-work-unified-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-unified-editor.json"
     },
     {
       "scope": "studio",
