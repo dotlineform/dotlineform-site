@@ -3,7 +3,7 @@ doc_id: site-request-work-owned-files-links
 title: "Work-Owned Files And Links Request"
 added_date: 2026-04-27
 last_updated: 2026-04-27
-parent_id: site-docs
+parent_id: change-requests
 sort_order: 152
 ---
 # Work-Owned Files And Links Request

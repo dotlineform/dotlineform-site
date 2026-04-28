@@ -3,7 +3,7 @@ doc_id: site-request-catalogue-moment-editor
 title: "Catalogue Moment Editor Request"
 added_date: 2026-04-27
 last_updated: 2026-04-27
-parent_id: site-docs
+parent_id: change-requests
 sort_order: 150
 ---
 # Catalogue Moment Editor Request

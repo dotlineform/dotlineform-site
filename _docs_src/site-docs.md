@@ -18,8 +18,8 @@ Use it as the default entry point for `/docs/`.
   Studio routes, page wiring, and Studio-specific behavior.
 - **[Design](/docs/?scope=studio&doc=design)**
   site-wide UI rules, docs-viewer/search UI standards, Studio UI patterns, and CSS guidance.
-- **[UI Requests](/docs/?scope=studio&doc=ui-requests)**
-  working specs and task docs for UI-driven feature requests.
+- **[Change Requests](/docs/?scope=studio&doc=change-requests)**
+  proposed and in-progress request docs, including UI request specs and task breakdowns.
 - **[Architecture](/docs/?scope=studio&doc=architecture)**
   route/runtime building blocks, shared shell behavior, and generated-artifact flow into the live site.
 - **[Config](/docs/?scope=studio&doc=config)**

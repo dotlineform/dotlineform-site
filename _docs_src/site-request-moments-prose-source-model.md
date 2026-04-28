@@ -3,7 +3,7 @@ doc_id: site-request-moments-prose-source-model
 title: "Moments Prose Source Model Request"
 added_date: 2026-04-27
 last_updated: 2026-04-27
-parent_id: site-docs
+parent_id: change-requests
 sort_order: 145
 ---
 # Moments Prose Source Model Request

@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-28] Added Change Requests docs root
+
+**Status:** implemented
+
+**Area:** Studio docs
+
+**Summary:**
+Added a dedicated Change Requests root and moved site request docs plus UI Requests under it.
+
+**Reason:**
+Request docs were split between Site Docs and the top-level UI Requests section, which made active planning material harder to scan as one group.
+
+**Effect:**
+The docs viewer now has one top-level Change Requests section for proposed and in-progress request docs. UI Requests remains a subgroup, while site request docs now sit directly under Change Requests.
+
+**Affected files/docs:**
+
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [UI Requests](/docs/?scope=studio&doc=ui-requests)
+- [Site Docs](/docs/?scope=studio&doc=site-docs)
+
 ## [2026-04-28] Added work-detail unified editor request
 
 **Status:** planned

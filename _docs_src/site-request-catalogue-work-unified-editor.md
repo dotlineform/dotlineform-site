@@ -3,7 +3,7 @@ doc_id: site-request-catalogue-work-unified-editor
 title: "Catalogue Work Unified Editor Request"
 added_date: 2026-04-28
 last_updated: 2026-04-28
-parent_id: site-docs
+parent_id: change-requests
 sort_order: 154
 ---
 # Catalogue Work Unified Editor Request
