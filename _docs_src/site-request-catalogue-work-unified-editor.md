@@ -477,7 +477,7 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented
 
 Update route references after the unified page is stable:
 
@@ -498,11 +498,19 @@ Acceptance checks:
 - `catalogue_new_work_editor` is retired from active config
 - draft works are visible from an obvious Studio catalogue navigation point
 
+Implemented:
+
+- `/studio/catalogue-new-work/` now redirects immediately to `/studio/catalogue-work/?mode=new`
+- Catalogue dashboard uses one `Work Editor` entry instead of separate create/edit work entries
+- Catalogue dashboard links to `Review Draft Works`
+- `catalogue_new_work_editor` route and UI text keys were removed from active Studio config
+- compatibility documentation replaces the old standalone new-work editor guide
+
 ### Task 4a. Add Draft Works Visibility
 
 Status:
 
-- proposed
+- implemented
 
 Add a draft-focused list so source-only draft creates can be found after the current session.
 
@@ -518,6 +526,13 @@ Acceptance checks:
 - a newly created draft work appears in the draft list after source data refresh
 - selecting a row opens `/studio/catalogue-work/?work=<work_id>`
 - published works do not appear in the draft-focused list
+
+Implemented:
+
+- added `/studio/catalogue-status/?view=draft-works`
+- added a `draft works` filter pill to Catalogue Status
+- work rows link into `/studio/catalogue-work/?work=<work_id>`
+- dashboard `Review Draft Works` opens the draft-focused view
 - the Catalogue Status implementation does not duplicate an existing list pattern unnecessarily
 
 ### Task 5. Verify Create/Edit/Bulk Paths

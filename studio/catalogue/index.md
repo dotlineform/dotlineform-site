@@ -34,7 +34,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Create draft records and import new source content.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work/' | relative_url }}"><span class="studioLinkList__title">Create New Work</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-series/' | relative_url }}"><span class="studioLinkList__title">Create New Series</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}"><span class="studioLinkList__title">Create New Detail</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span></a></li>
@@ -46,7 +45,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Open an editor route, then search for the record you need.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work/' | relative_url }}"><span class="studioLinkList__title">Edit Work</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work/' | relative_url }}"><span class="studioLinkList__title">Work Editor</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Edit Series</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment/' | relative_url }}"><span class="studioLinkList__title">Edit Moment</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-detail/' | relative_url }}"><span class="studioLinkList__title">Edit Work Detail</span></a></li>
@@ -59,6 +58,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         </div>
         <ul class="studioLinkList">
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}"><span class="studioLinkList__title">Review Catalogue Status</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}?view=draft-works"><span class="studioLinkList__title">Review Draft Works</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-activity/' | relative_url }}"><span class="studioLinkList__title">Review Source Activity</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/project-state/' | relative_url }}"><span class="studioLinkList__title">Review Project State</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/build-activity/' | relative_url }}"><span class="studioLinkList__title">Review Build Activity</span></a></li>
@@ -88,7 +88,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
     <div class="studioInfoGrid">
       <article class="studioInfoCard">
         <h4>Work records</h4>
-        <p>Create new work records from the dedicated create flow, then use Catalogue Status to review and reopen records for editing.</p>
+        <p>Create and edit work records from the Work Editor, then use Catalogue Status to review and reopen draft records.</p>
       </article>
       <article class="studioInfoCard">
         <h4>Series records</h4>

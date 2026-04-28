@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: "Studio Runtime"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-28
 parent_id: studio
 sort_order: 10
 ---
@@ -61,7 +61,7 @@ Current route inventory:
 - `studio/build-activity/index.md`
 - `studio/docs-broken-links/index.md`
 - `studio/docs-import/index.md`
-- `studio/catalogue-new-work/index.md`
+- `studio/catalogue-new-work/index.md` redirects to `/studio/catalogue-work/?mode=new`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment-import/index.md`
 - `studio/catalogue-moment/index.md`
@@ -87,7 +87,7 @@ Current page-level doc links:
 - Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
-- New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor`
+- New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor` compatibility redirect note
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor`
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
@@ -127,7 +127,6 @@ Current page controllers:
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-activity.js`
-- `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
@@ -139,6 +138,10 @@ Current page controllers:
 - `assets/studio/js/series-tags.js`
 - `assets/studio/js/tag-studio.js`
 - `assets/studio/js/studio-works.js`
+
+Retired compatibility controllers:
+
+- `assets/studio/js/catalogue-new-work-editor.js` is no longer loaded by `/studio/catalogue-new-work/`; the route redirects to `/studio/catalogue-work/?mode=new`.
 
 Controller splits that are already live:
 

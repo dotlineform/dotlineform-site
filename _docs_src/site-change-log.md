@@ -8,6 +8,33 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-28] Retired the standalone new-work route in favor of work-editor new mode
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Migrated the Catalogue dashboard and Studio config to the unified work editor, made `/studio/catalogue-new-work/` redirect to `/studio/catalogue-work/?mode=new`, and added a draft-work view to Catalogue Status.
+
+**Reason:**
+After new mode landed in the work editor, keeping a separate create route active would split testing and let field structure drift again.
+
+**Effect:**
+Work creation and editing now share one active route. Draft works created without publishing can be found from `Review Draft Works`, which opens `/studio/catalogue-status/?view=draft-works` and links rows back into the work editor.
+
+**Affected files/docs:**
+
+- `studio/catalogue-new-work/index.md`
+- `studio/catalogue/index.md`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
+- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
+- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
+
 ## [2026-04-28] Added new-work mode to the catalogue work editor
 
 **Status:** implemented

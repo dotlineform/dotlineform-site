@@ -140,7 +140,6 @@ Checks:
 
 - confirm the dashboard signposts create, edit, review, maintenance, and guidance flows
 - open each linked Catalogue route at least once:
-  - `/studio/catalogue-new-work/`
   - `/studio/catalogue-new-series/`
   - `/studio/catalogue-new-work-detail/`
   - `/studio/catalogue-moment-import/`
@@ -148,6 +147,7 @@ Checks:
   - `/studio/catalogue-series/`
   - `/studio/catalogue-work-detail/`
   - `/studio/catalogue-status/`
+  - `/studio/catalogue-status/?view=draft-works`
   - `/studio/catalogue-activity/`
   - `/studio/build-activity/`
   - `/studio/bulk-add-work/`
@@ -161,8 +161,8 @@ Expected results:
 
 Route:
 
-- `/studio/catalogue-new-work/`
-- `/studio/catalogue-work/`
+- `/studio/catalogue-work/?mode=new`
+- `/studio/catalogue-work/?work=<work_id>`
 
 Owner:
 
@@ -171,7 +171,7 @@ Owner:
 Checks:
 
 - create one draft work record
-- confirm the create page redirects or links cleanly into the work editor
+- confirm `/studio/catalogue-new-work/` redirects to `/studio/catalogue-work/?mode=new`
 - open the new or selected work in `/studio/catalogue-work/`
 - edit several scalar metadata fields and save source only
 - confirm rebuild-needed state appears after save

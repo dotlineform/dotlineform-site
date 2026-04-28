@@ -2,7 +2,7 @@
 doc_id: catalogue-new-work-editor
 title: "New Catalogue Work"
 added_date: 2026-04-18
-last_updated: 2026-04-26
+last_updated: 2026-04-28
 parent_id: user-guide
 sort_order: 40
 ---
@@ -12,32 +12,34 @@ Route:
 
 - `/studio/catalogue-new-work/`
 
-This page creates a new canonical work source record in `assets/studio/data/catalogue/works.json`.
+This route is now a compatibility redirect to `/studio/catalogue-work/?mode=new`.
 
-## Current Scope
+The standalone new-work editor surface is retired. New work creation now happens in the unified [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor), which shares the normal work metadata form and switches between open/edit and new draft modes.
 
-The first implementation is draft-first:
+## Current Behavior
 
-- create a new `work_id`
-- enter core draft metadata
-- save the new work with `status = draft`
-- keep media placement in the existing folder/filename workflow
-- redirect into the main work editor after create
+The route:
 
-## Media Boundary
+- redirects immediately to `/studio/catalogue-work/?mode=new`
+- does not load the old `assets/studio/js/catalogue-new-work-editor.js` controller
+- is no longer represented by a `catalogue_new_work_editor` route key or UI text block in `studio_config.json`
 
-This page does not upload or copy media.
+## Replacement Workflow
 
-It only captures the source metadata fields that point at the existing media conventions:
+Use `/studio/catalogue-work/?mode=new` or the `New` button on `/studio/catalogue-work/`.
 
-- `project_folder`
-- `project_filename`
+The unified new mode:
 
-Work prose is imported separately through the staged Markdown flow and stored under `_docs_src_catalogue/works/<work_id>.md`.
+- creates draft work source records
+- keeps `status` visible and fixed to `draft` while creating
+- requires `work_id`, `title`, `year`, `year_display`, and `series_ids`
+- opens the created record in normal edit mode after create
+- leaves public-site update unavailable until the draft exists
 
 ## Related References
 
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

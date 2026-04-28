@@ -2,7 +2,7 @@
 doc_id: user-guide
 title: "User Guide"
 added_date: 2026-04-23
-last_updated: 2026-04-26
+last_updated: 2026-04-28
 parent_id: ""
 sort_order: 30
 ---
@@ -26,7 +26,6 @@ Current guides:
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
 - [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)

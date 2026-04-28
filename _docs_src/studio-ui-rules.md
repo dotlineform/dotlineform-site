@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,32 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-28 / UI-045
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-new-work/`, `/studio/catalogue-status/`, `/studio/catalogue/`
+- issue: work creation and work editing used separate Studio surfaces, which made field consistency and follow-up draft discovery harder to reason about.
+- triage: systemic catalogue editor workflow cleanup
+- reasoning: create/edit should be explicit modes of the same record editor when they share the same source schema. The mode switch can be a command button, but the route, field renderer, validation helpers, and page docs should converge so future series and moments work can reuse the pattern.
+- permanent rule: when a Studio record family adopts unified create/edit, use one editor route with an explicit `new` mode, redirect the old create route immediately, retire the old create route key from active config, and provide an obvious draft/status recovery view from Catalogue navigation.
+- outcome: `/studio/catalogue-work/` owns work create/edit through `?mode=new` and `?work=<work_id>`, `/studio/catalogue-new-work/` redirects to the unified route, and Catalogue Status now has `?view=draft-works`.
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `studio/catalogue-new-work/index.md`
+  - `studio/catalogue/index.md`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-status.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/catalogue-new-work-editor.md`
+  - `_docs_src/catalogue-status.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-work/?mode=new` and confirm the editor is in create mode
+  - open `/studio/catalogue-new-work/` and confirm it redirects to the unified new mode
+  - open `/studio/catalogue-status/?view=draft-works` and confirm only draft works are listed
 
 ## UI Rule Log 2026-04-27 / UI-044
 

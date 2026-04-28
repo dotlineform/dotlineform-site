@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 parent_id: user-guide
 sort_order: 30
 ---
@@ -15,6 +15,8 @@ Route:
 - new draft mode uses `?mode=new`
 
 This page edits canonical work source records from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
+
+The retired `/studio/catalogue-new-work/` route redirects immediately to `/studio/catalogue-work/?mode=new`.
 
 ## Current Scope
 
@@ -76,6 +78,8 @@ In new mode:
 - `Create` writes source JSON only through `POST /catalogue/work/create`
 - no public site update runs during create
 - after create, the page opens the new work in normal edit mode
+
+Draft works can be found later from Catalogue Status using `/studio/catalogue-status/?view=draft-works`.
 
 Required create fields:
 

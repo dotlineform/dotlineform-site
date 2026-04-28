@@ -17,7 +17,6 @@
       "catalogue_moment_import": "/studio/catalogue-moment-import/",
       "catalogue_moment_editor": "/studio/catalogue-moment/",
       "catalogue_work_editor": "/studio/catalogue-work/",
-      "catalogue_new_work_editor": "/studio/catalogue-new-work/",
       "catalogue_work_detail_editor": "/studio/catalogue-work-detail/",
       "catalogue_new_work_detail_editor": "/studio/catalogue-new-work-detail/",
       "catalogue_series_editor": "/studio/catalogue-series/",
@@ -549,7 +548,10 @@
       "load_failed_error": "Failed to load catalogue status.",
       "empty_state": "No non-published catalogue source records.",
       "meta_summary": "{count} non-published source records",
-      "meta_summary_one": "1 non-published source record"
+      "meta_summary_one": "1 non-published source record",
+      "draft_works_empty_state": "No draft work records.",
+      "draft_works_summary": "{count} draft work records",
+      "draft_works_summary_one": "1 draft work record"
     },
     "catalogue_activity": {
       "load_failed_error": "Failed to load catalogue activity.",
@@ -774,29 +776,6 @@
       "summary_rebuild_label": "runtime",
       "summary_rebuild_needed": "source saved; site update pending",
       "summary_rebuild_current": "source and public catalogue are aligned in this session"
-    },
-    "catalogue_new_work_editor": {
-      "create_button": "Create",
-      "save_mode_template": "Save mode: {mode}",
-      "save_mode_local_server": "Local server",
-      "save_mode_offline": "Unavailable",
-      "context_hint": "Create a draft work first. Media files remain in the existing source path workflow and can be added later.",
-      "save_mode_unavailable_hint": "Local catalogue server unavailable. Create is disabled.",
-      "dirty_warning": "Unsaved draft work metadata.",
-      "field_required_work_id": "Enter a work id.",
-      "field_duplicate_work_id": "Work id already exists.",
-      "field_required_title": "Enter a title.",
-      "field_invalid_year": "Use a whole year or leave blank.",
-      "field_invalid_series_id": "Use comma-separated numeric series ids.",
-      "field_unknown_series_id": "Unknown series id: {series_id}.",
-      "suggested_work_id": "Suggested next id: {work_id}.",
-      "draft_summary": "New works are saved as draft. After create, open the work editor to add remaining metadata, details, and rebuild when ready.",
-      "media_guidance": "Source media placement stays unchanged. Use the existing project folder and filename conventions rather than uploading media here.",
-      "create_status_validation_error": "Fix validation errors before creating the draft work.",
-      "create_status_saving": "Creating draft work…",
-      "create_status_success": "Created draft work {work_id}.",
-      "create_status_failed": "Draft work create failed.",
-      "create_result_success": "Created draft work {work_id}. Opening work editor…"
     },
     "catalogue_moment_import": {
       "preview_button": "Preview",

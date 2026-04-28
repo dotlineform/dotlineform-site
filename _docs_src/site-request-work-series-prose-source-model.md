@@ -42,7 +42,7 @@ The desired end state is:
 
 Current work prose flow:
 
-- the source prose filename is recorded on `/studio/catalogue-new-work/` or the work editor
+- the source prose filename is recorded on the work editor
 - the generator resolves it through `DOTLINEFORM_PROJECTS_BASE_DIR`
 - the resolved path is shaped as `projects/<project_folder>/<prose_subdir>/<work_prose_file>`
 - the default prose subdirectory is currently `site text`

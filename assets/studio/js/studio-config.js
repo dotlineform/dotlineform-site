@@ -16,7 +16,6 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_moment_import: "/studio/catalogue-moment-import/",
       catalogue_moment_editor: "/studio/catalogue-moment/",
       catalogue_work_editor: "/studio/catalogue-work/",
-      catalogue_new_work_editor: "/studio/catalogue-new-work/",
       catalogue_work_detail_editor: "/studio/catalogue-work-detail/",
       catalogue_new_work_detail_editor: "/studio/catalogue-new-work-detail/",
       catalogue_series_editor: "/studio/catalogue-series/",
@@ -229,7 +228,10 @@ const DEFAULT_STUDIO_CONFIG = {
       load_failed_error: "Failed to load catalogue status.",
       empty_state: "No non-published catalogue source records.",
       meta_summary: "{count} non-published source records",
-      meta_summary_one: "1 non-published source record"
+      meta_summary_one: "1 non-published source record",
+      draft_works_empty_state: "No draft work records.",
+      draft_works_summary: "{count} draft work records",
+      draft_works_summary_one: "1 draft work record"
     },
     catalogue_activity: {
       load_failed_error: "Failed to load catalogue activity.",
@@ -381,9 +383,6 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_rebuild_label: "runtime",
       summary_rebuild_needed: "source saved; site update pending",
       summary_rebuild_current: "source and public catalogue are aligned in this session"
-    },
-    catalogue_new_work_editor: {
-      create_button: "Create"
     },
     catalogue_moment_import: {
       preview_button: "Preview Source File",
