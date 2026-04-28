@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-28] Added work-detail unified editor request
+
+**Status:** planned
+
+**Area:** Studio / catalogue work details
+
+**Summary:**
+Added a separate request for unifying work-detail create/edit implementation while keeping work-detail navigation parent-work-context-driven.
+
+**Reason:**
+Work details differ from works and series because users normally find and create them from the parent work page, not as isolated dashboard records.
+
+**Effect:**
+The new request documents a parent-scoped route contract, migration plan, implementation tasks, benefits, and risks for eventually retiring the standalone new-work-detail implementation without changing the intended user workflow.
+
+**Affected files/docs:**
+
+- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
+- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
+
 ## [2026-04-28] Added title-search series selection to the work editor
 
 **Status:** implemented

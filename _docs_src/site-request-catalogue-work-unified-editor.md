@@ -25,6 +25,8 @@ The desired direction is a unified work editor where the user can switch between
 
 If this works well for works, the intended follow-up direction is to reuse the same explicit mode pattern for series and moments rather than treating the work editor as a one-off.
 
+Work details are related but not identical. Their create/edit consolidation is tracked separately in [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor) because work details should remain parent-work-context-driven rather than adopting the same dashboard/search-first `New` mode pattern.
+
 ## Goal
 
 Unify the work create and edit workflows around `/studio/catalogue-work/`.
@@ -625,6 +627,7 @@ Expected benefits:
 
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
+- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
