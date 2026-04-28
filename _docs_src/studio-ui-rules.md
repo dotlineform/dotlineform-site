@@ -49,6 +49,22 @@ Use this as the single capture surface for Studio UI work:
   - open `/studio/catalogue-new-work/` and confirm it redirects to the unified new mode
   - open `/studio/catalogue-status/?view=draft-works` and confirm only draft works are listed
 
+## UI Rule Log 2026-04-28 / UI-046
+
+- status: adopted
+- route: `/studio/catalogue-work/?mode=new`
+- issue: entering new mode showed three stacked messages with overlapping meaning: the context line, an idle create-ready status, and the generic unsaved-source warning caused by the prefilled suggested id.
+- triage: route-specific UI copy cleanup for the unified mode pattern
+- reasoning: mode context should not be repeated as a status message. In create mode, a prefilled suggested id is expected initial state rather than a useful dirty-warning condition, so warning space should stay clear until validation, server availability, or create results need it.
+- outcome: new mode keeps the context line, suppresses the idle create-ready status when the local server is available, and suppresses the generic dirty warning while still showing the server-unavailable warning.
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-work/?mode=new` and confirm only the create-mode context appears in the status stack when the local server is available
+
 ## UI Rule Log 2026-04-27 / UI-044
 
 - status: adopted

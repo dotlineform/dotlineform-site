@@ -1598,13 +1598,11 @@ function updateEditorState(state) {
   }
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
+  setTextWithState(state.warningNode, dirty && state.mode !== "new" ? t(state, "dirty_warning", "Unsaved source changes.") : "");
   if (state.mode === "new" && !state.resultNode.textContent) {
     setTextWithState(
       state.statusNode,
-      state.serverAvailable
-        ? t(state, "new_status_ready", "Create a draft work source record.")
-        : t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."),
+      state.serverAvailable ? "" : t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."),
       state.serverAvailable ? "" : "warn"
     );
   } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {

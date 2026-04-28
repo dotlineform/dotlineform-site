@@ -659,7 +659,6 @@
       "new_work_id_label": "New work id",
       "new_work_id_placeholder": "new work id",
       "new_meta": "Creating a draft work.",
-      "new_status_ready": "Create a draft work source record.",
       "new_runtime_state": "Public site update is unavailable until the draft exists.",
       "new_summary_status_label": "status",
       "new_summary_status": "draft source record; not published",
