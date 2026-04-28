@@ -51,9 +51,10 @@ Target route contract:
 
 - `/studio/catalogue-work-detail/?detail=<detail_uid>` opens existing detail edit mode
 - `/studio/catalogue-work-detail/?work=<work_id>&mode=new` opens new detail mode for that parent work
+- `/studio/catalogue-work-detail/` opens an empty exact-detail search surface for maintenance cases where the public work-detail page already exposes the detail id
 - `/studio/catalogue-new-work-detail/?work=<work_id>` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
 
-The unified detail editor may support an empty state for direct route loads, but it should not become a dashboard-first global detail creation workflow.
+The direct empty state should include a clear navigation link back to the work editor. This keeps direct correction workflows available without turning detail creation into a dashboard-first global workflow.
 
 ## UX Principles
 
@@ -62,6 +63,8 @@ The unified detail editor may support an empty state for direct route loads, but
 - The parent work context should be visible and locked in new mode.
 - The detail editor should not require the user to search globally for a parent work during normal create.
 - The route can still support focused edit loads by `detail_uid` for direct links and activity/status navigation.
+- The direct empty route remains valid for exact-id maintenance edits because `detail_id` is surfaced on public work detail pages.
+- The direct empty route should also provide an obvious path back to the parent work editor.
 - The dashboard should not promote `Create New Detail` as a primary workflow once the parent-driven route is unified.
 
 ## New Mode Behavior
@@ -118,22 +121,24 @@ The main mitigation is to treat route unification as an implementation consolida
 
 Status:
 
-- proposed
+- specified
 
 Lock the route and mode contract before code changes.
 
 Expected outputs:
 
-- confirm `?detail=<detail_uid>` edit mode
-- confirm `?work=<work_id>&mode=new` create mode
-- decide whether direct `/studio/catalogue-work-detail/` remains empty search mode or redirects to the work editor
+- `?detail=<detail_uid>` opens existing detail edit mode
+- `?work=<work_id>&mode=new` opens parent-scoped create mode
+- direct `/studio/catalogue-work-detail/` remains an empty exact-detail search mode for maintenance edits
+- the direct empty route includes a navigation link to the work editor
 - document disabled/read-only surfaces in new mode
-- document whether detail `status` is exposed and draft-defaulted during create
+- detail `status` is exposed and draft-defaulted during create
 
 Acceptance checks:
 
 - parent work context is required for new mode
 - existing direct detail links remain valid
+- direct exact-id maintenance editing remains available
 - no global detail-create workflow is introduced
 
 ### Task 2. Factor Shared Detail Editor Helpers
@@ -240,7 +245,6 @@ Out of scope:
 
 ## Open Questions
 
-- Should direct `/studio/catalogue-work-detail/` stay as a search/open surface for maintenance, or should it guide users back to the work editor?
 - Should new mode prefill the suggested next `detail_id`, or show it as a selectable suggestion?
 - Should the legacy `/studio/catalogue-new-work-detail/` route preserve `?work=<work_id>` only, or also handle missing `work` by redirecting to the work editor?
 - Should dashboard detail links move entirely under work editor guidance, or keep a secondary maintenance link to the detail editor?
