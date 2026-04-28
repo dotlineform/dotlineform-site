@@ -76,14 +76,16 @@ Make `/studio/catalogue-work/` the normal work route for both create and edit.
 
 The page mode should be explicit rather than inferred only from whether a current record exists.
 
-Suggested mode transitions:
+Locked mode contract:
 
-- opening the page with no query starts in an empty edit/search state
-- opening `?work=<work_id>` loads edit mode for that work
-- opening a comma/range selection enters bulk mode
+- `/studio/catalogue-work/` opens the unified editor in empty edit/search state
+- `/studio/catalogue-work/?work=<work_id>` opens existing single-work edit mode
+- `/studio/catalogue-work/?work=<comma_or_range_selection>` opens existing bulk mode
+- `/studio/catalogue-work/?mode=new` opens new-work mode
+- `/studio/catalogue-new-work/` redirects immediately to `/studio/catalogue-work/?mode=new`
 - clicking `New` enters new mode
-- clicking `Open` from new mode returns the input to open/search behavior
-- creating a draft work loads the new record into edit mode on the same route
+- clicking `Open` from new mode exits new mode and interprets the input as normal work search/open input
+- creating a draft work loads `/studio/catalogue-work/?work=<work_id>` in edit mode
 
 The existing `/studio/catalogue-new-work/` route should redirect immediately to the unified work editor once the implementation lands. The legacy new-work surface should not remain functional in parallel, so testing stays focused on the new surface rather than comparing new and legacy behavior.
 
@@ -131,7 +133,10 @@ Implementation options:
 - add a small dedicated Draft Works route
 - add a draft section to the catalogue dashboard if the list stays compact
 
-The preferred option should be decided during implementation based on which route gives the clearest workflow with the least duplicated list UI.
+Preferred first implementation:
+
+- extend Catalogue Status with a draft-focused filter/view, because it is already the catalogue record status surface
+- add a dashboard link or count later only if drafts need a stronger first-viewport reminder
 
 ## New Mode Behavior
 
@@ -144,7 +149,8 @@ In new mode:
 - the input should default to the suggested next work id when available
 - duplicate work ids should be rejected before create
 - `title`, `year`, `year_display`, and `series_ids` are required
-- `status` should be visible in the field structure, with `draft` as the create default
+- `status` should be visible in the field structure, with `draft` as the create value
+- `status` should be fixed to `draft` during create so visible status does not imply that new mode can publish directly
 - the create action itself should still create a draft source record and should not update the public site
 - `published_date` should default to blank/null
 - `Create` should replace `Save` as the primary mutation command
@@ -227,7 +233,7 @@ Decisions from the initial review:
 - use `New` as a command button, not a segmented control
 - keep bulk mode reachable from the same input
 - require `work_id`, `title`, `year`, `year_display`, and `series_ids`
-- expose `status` in new mode, with draft as the create default
+- expose `status` in new mode, fixed to draft for create
 - disable edit-only surfaces in new mode rather than hiding them
 - redirect `/studio/catalogue-new-work/` immediately once the unified route is implemented
 - collapse dashboard entries to one work-editor entry
@@ -235,6 +241,7 @@ Decisions from the initial review:
 - do not keep the legacy new-work page functional for smoke testing
 - keep new-mode create as source-only draft creation with no automatic site update
 - add a draft-works listing surface so unpublished draft works remain visible after the create session
+- start draft-work visibility by extending Catalogue Status with a draft-focused view/filter
 
 Endpoint decision:
 
@@ -304,7 +311,8 @@ Decisions:
 - title should be required for all works, not only new draft works
 - `work_id`, `title`, `year`, `year_display`, and `series_ids` should be required fields
 - create mode should expose `status`
-- new-mode create should still produce a draft and should not update the public site
+- new-mode create should keep `status` fixed to draft
+- new-mode create should produce a source-only draft and should not update the public site
 
 ### Hidden Versus Disabled Controls
 
@@ -362,7 +370,8 @@ Discussion point:
 Decision:
 
 - provide a draft-works list that links back into the unified work editor
-- decide during implementation whether this belongs in Catalogue Status, a dedicated Draft Works route, or the catalogue dashboard
+- start by extending Catalogue Status with a draft-focused view/filter
+- add a dashboard link or count later if draft visibility is not discoverable enough
 
 ## Proposed Implementation Tasks
 
@@ -370,21 +379,29 @@ Decision:
 
 Status:
 
-- decisions recorded
+- locked
 
-Decide the route and UI contract before editing code:
+Route and UI contract:
 
-- supported query shape for new mode, such as `?mode=new`
-- initial no-query behavior
-- `New` and `Open` control behavior
-- hidden versus disabled edit-only surfaces
-- compatibility behavior for `/studio/catalogue-new-work/`
+- `/studio/catalogue-work/` starts in empty edit/search state
+- `/studio/catalogue-work/?work=<work_id>` opens single-work edit mode
+- `/studio/catalogue-work/?work=<comma_or_range_selection>` opens bulk mode
+- `/studio/catalogue-work/?mode=new` opens new-work mode
+- `/studio/catalogue-new-work/` redirects immediately to `/studio/catalogue-work/?mode=new`
+- one top input is shared across open/new/bulk, with clear mode labeling
+- `New` is a command button
+- `Open` exits new mode and interprets the input as normal work search/open input
+- edit-only surfaces are disabled, not hidden, while in new mode
+- create is source-only and does not update the public site
+- after create, the new work opens in normal edit mode
+- draft visibility starts in Catalogue Status through a draft-focused view/filter
 
 Acceptance checks:
 
-- mode transitions are documented before implementation
+- mode transitions match the locked contract above
 - risks above have explicit decisions or accepted follow-up tasks
 - required-field and create-endpoint questions have implementation notes
+- Catalogue Status draft visibility is included in the implementation scope
 
 ### Task 2. Factor Shared Work Editor Logic
 
@@ -473,14 +490,14 @@ Expected behavior:
 - list work source records with `status = draft`
 - show identifying fields such as `work_id`, `title`, `year_display`, and `series_ids`
 - link each draft work into the unified work editor
-- place the entry point where catalogue workflow users will naturally see it
+- place the first implementation in Catalogue Status as a draft-focused view/filter
 
 Acceptance checks:
 
 - a newly created draft work appears in the draft list after source data refresh
 - selecting a row opens `/studio/catalogue-work/?work=<work_id>`
 - published works do not appear in the draft-focused list
-- the chosen location does not duplicate an existing list pattern unnecessarily
+- the Catalogue Status implementation does not duplicate an existing list pattern unnecessarily
 
 ### Task 5. Verify Create/Edit/Bulk Paths
 
@@ -540,7 +557,7 @@ Expected benefits:
 - Should this pattern later apply to series and work-detail create/edit flows?
 - How should the pattern adapt to moments, where staged import and routine metadata editing are related but not identical workflows?
 - Does `POST /catalogue/work/create` need server-side validation updates for the required-field invariant?
-- Should draft-work visibility live inside Catalogue Status, a dedicated route, or the catalogue dashboard?
+- After Catalogue Status gains draft visibility, is a dashboard draft count or link needed for stronger discoverability?
 
 ## Related References
 
