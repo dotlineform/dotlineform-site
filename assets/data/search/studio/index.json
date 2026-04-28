@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5fbd91fe68aa5d007e0e391c974a2a3b",
-    "generated_at_utc": "2026-04-28T10:37:01Z",
+    "version": "blake2b-288976f115af7f61e4d8536a7e54ce47",
+    "generated_at_utc": "2026-04-28T18:43:58Z",
     "count": 142
   },
   "entries": [
@@ -3187,20 +3187,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-27",
-      "display_meta": "2026-04-27",
+      "last_updated": "2026-04-28",
+      "display_meta": "2026-04-28",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-27",
+        "2026-04-28",
         "2026",
         "04",
-        "27"
+        "28"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-27 2026 04 27"
+      "search_text": "site-change-log site change log site change log 2026-04-28 2026 04 28"
     },
     {
       "id": "tiered-dimension-policy",

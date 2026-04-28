@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-28T10:37:00Z",
+  "generated_at": "2026-04-28T18:43:50Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1945,7 +1945,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-28",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

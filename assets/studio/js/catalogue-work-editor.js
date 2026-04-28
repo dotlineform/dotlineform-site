@@ -27,46 +27,31 @@ import {
   openConfirmModal,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  WORK_DATE_RE as DATE_RE,
+  WORK_DIMENSION_FIELD_KEYS,
+  WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  WORK_READONLY_FIELDS as READONLY_FIELDS,
+  WORK_SERIES_ID_RE as SERIES_ID_RE,
+  WORK_STATUS_OPTIONS as STATUS_OPTIONS,
+  buildWorkDraftFromRecord,
+  buildWorkRecordFromDraft,
+  canonicalizeWorkScalar as canonicalizeScalar,
+  cloneEmbeddedEntries,
+  dedupeSeriesIds,
+  embeddedEntriesEqual,
+  normalizeEmbeddedEntries,
+  normalizeSeriesId,
+  normalizeText,
+  normalizeWorkId,
+  parseSeriesIds
+} from "./catalogue-work-fields.js";
 
-const EDITABLE_FIELDS = [
-  { key: "status", label: "status", type: "select", options: ["", "draft", "published"] },
-  { key: "published_date", label: "published date", type: "date" },
-  { key: "series_ids", label: "series ids", type: "text", description: "comma-separated series ids" },
-  { key: "project_folder", label: "project folder", type: "text" },
-  { key: "project_filename", label: "project filename", type: "text" },
-  { key: "title", label: "title", type: "text" },
-  { key: "year", label: "year", type: "number", step: "1" },
-  { key: "year_display", label: "year display", type: "text" },
-  { key: "medium_type", label: "medium type", type: "text" },
-  { key: "medium_caption", label: "medium caption", type: "text" },
-  { key: "duration", label: "duration", type: "text" },
-  { key: "height_cm", label: "height cm", type: "number", step: "any" },
-  { key: "width_cm", label: "width cm", type: "number", step: "any" },
-  { key: "depth_cm", label: "depth cm", type: "number", step: "any" },
-  { key: "storage_location", label: "storage location", type: "text" },
-  { key: "notes", label: "notes", type: "textarea" },
-  { key: "provenance", label: "provenance", type: "textarea" },
-  { key: "artist", label: "artist", type: "text" }
-];
-
-const READONLY_FIELDS = [
-  { key: "work_id", label: "work id" },
-  { key: "width_px", label: "width px" },
-  { key: "height_px", label: "height px" }
-];
-
-const STATUS_OPTIONS = new Set(["", "draft", "published"]);
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const SERIES_ID_RE = /^\d+$/;
 const SEARCH_LIMIT = 20;
 const DETAIL_LIST_LIMIT = 10;
 const BULK_PREVIEW_LIMIT = 12;
 const DOWNLOAD_FIELDS = ["filename", "label"];
 const LINK_FIELDS = ["url", "label"];
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -81,18 +66,6 @@ function toneForReadinessStatus(status) {
   if (status === "ready") return "ready";
   if (status === "unavailable") return "error";
   return "warning";
-}
-
-function normalizeWorkId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(5, "0");
-}
-
-function normalizeSeriesId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(3, "0");
 }
 
 function normalizeDetailId(value) {
@@ -135,73 +108,9 @@ function stableStringify(value) {
   return JSON.stringify(value);
 }
 
-function seriesIdsToText(value) {
-  if (!Array.isArray(value)) return "";
-  return value.map((item) => normalizeSeriesId(item)).filter(Boolean).join(", ");
-}
-
-function canonicalizeScalar(field, value) {
-  const text = normalizeText(value);
-  if (field.key === "status") {
-    return text.toLowerCase();
-  }
-  if (field.key === "series_ids") {
-    return seriesIdsToText(parseSeriesIds(value));
-  }
-  if (field.type === "number") {
-    return text;
-  }
-  return text;
-}
-
-function parseSeriesIds(value) {
-  if (Array.isArray(value)) {
-    return dedupeSeriesIds(value.map((item) => normalizeSeriesId(item)).filter(Boolean));
-  }
-  const text = normalizeText(value);
-  if (!text) return [];
-  return dedupeSeriesIds(text.split(",").map((item) => normalizeSeriesId(item)).filter(Boolean));
-}
-
-function dedupeSeriesIds(items) {
-  const seen = new Set();
-  const out = [];
-  items.forEach((item) => {
-    if (!item || seen.has(item)) return;
-    seen.add(item);
-    out.push(item);
-  });
-  return out;
-}
-
-function formatNumberText(value) {
-  const text = normalizeText(value);
-  return text;
-}
-
 function displayValue(value) {
   const text = normalizeText(value);
   return text || "—";
-}
-
-function normalizeEmbeddedEntries(value, fields) {
-  if (!Array.isArray(value)) return [];
-  return value.map((item) => {
-    const entry = {};
-    fields.forEach((field) => {
-      const text = normalizeText(item && item[field]);
-      if (text) entry[field] = text;
-    });
-    return entry;
-  }).filter((entry) => fields.some((field) => normalizeText(entry[field])));
-}
-
-function cloneEmbeddedEntries(value, fields) {
-  return normalizeEmbeddedEntries(value, fields).map((entry) => ({ ...entry }));
-}
-
-function embeddedEntriesEqual(a, b, fields) {
-  return stableStringify(normalizeEmbeddedEntries(a, fields)) === stableStringify(normalizeEmbeddedEntries(b, fields));
 }
 
 function getReadinessItems(state) {
@@ -595,17 +504,11 @@ function buildSourceWorkMap(payload) {
 }
 
 function buildDraftFromRecord(record) {
-  const draft = {};
-  EDITABLE_FIELDS.forEach((field) => {
-    if (field.key === "series_ids") {
-      draft[field.key] = seriesIdsToText(record[field.key]);
-      return;
-    }
-    draft[field.key] = formatNumberText(record[field.key]);
+  return buildWorkDraftFromRecord(record, {
+    fields: EDITABLE_FIELDS,
+    downloadFields: DOWNLOAD_FIELDS,
+    linkFields: LINK_FIELDS
   });
-  draft.downloads = cloneEmbeddedEntries(record && record.downloads, DOWNLOAD_FIELDS);
-  draft.links = cloneEmbeddedEntries(record && record.links, LINK_FIELDS);
-  return draft;
 }
 
 function applyDraftToInputs(state) {
@@ -1185,7 +1088,7 @@ function validateDraft(state) {
       }
     }
 
-    ["height_cm", "width_cm", "depth_cm"].forEach((fieldKey) => {
+    WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
       if (!state.bulkTouchedFields.has(fieldKey)) return;
       const value = normalizeText(state.draft[fieldKey]);
       if (value && !Number.isFinite(Number(value))) {
@@ -1232,7 +1135,7 @@ function validateDraft(state) {
     errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
   }
 
-  ["height_cm", "width_cm", "depth_cm"].forEach((fieldKey) => {
+  WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
     const value = normalizeText(state.draft[fieldKey]);
     if (value && !Number.isFinite(Number(value))) {
       errors.set(fieldKey, t(state, "field_invalid_number", "Use a number or leave blank."));
@@ -1303,7 +1206,7 @@ function buildPayload(state) {
         setFields.year = normalizeText(value) ? Number(value) : null;
         return;
       }
-      if (["height_cm", "width_cm", "depth_cm"].includes(field.key)) {
+      if (WORK_DIMENSION_FIELD_KEYS.includes(field.key)) {
         setFields[field.key] = normalizeText(value) ? Number(value) : null;
         return;
       }
@@ -1334,28 +1237,10 @@ function buildPayload(state) {
     expected_record_hash: state.currentRecordHash,
     apply_build: applyBuildRequested(state),
     extra_series_ids: state.pendingBuildExtraSeriesIds.slice(),
-    record: {
-      status: normalizeText(draft.status).toLowerCase() || null,
-      published_date: normalizeText(draft.published_date) || null,
-      series_ids: parseSeriesIds(draft.series_ids),
-      project_folder: normalizeText(draft.project_folder) || null,
-      project_filename: normalizeText(draft.project_filename) || null,
-      title: normalizeText(draft.title) || null,
-      year: normalizeText(draft.year) ? Number(draft.year) : null,
-      year_display: normalizeText(draft.year_display) || null,
-      medium_type: normalizeText(draft.medium_type) || null,
-      medium_caption: normalizeText(draft.medium_caption) || null,
-      duration: normalizeText(draft.duration) || null,
-      height_cm: normalizeText(draft.height_cm) ? Number(draft.height_cm) : null,
-      width_cm: normalizeText(draft.width_cm) ? Number(draft.width_cm) : null,
-      depth_cm: normalizeText(draft.depth_cm) ? Number(draft.depth_cm) : null,
-      storage_location: normalizeText(draft.storage_location) || null,
-      notes: normalizeText(draft.notes) || null,
-      provenance: normalizeText(draft.provenance) || null,
-      artist: normalizeText(draft.artist) || null,
-      downloads: normalizeEmbeddedEntries(draft.downloads, DOWNLOAD_FIELDS),
-      links: normalizeEmbeddedEntries(draft.links, LINK_FIELDS)
-    }
+    record: buildWorkRecordFromDraft(draft, {
+      downloadFields: DOWNLOAD_FIELDS,
+      linkFields: LINK_FIELDS
+    })
   };
 }
 

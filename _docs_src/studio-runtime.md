@@ -114,6 +114,8 @@ Shared Studio runtime and wiring currently live in:
   hydrates lightweight dashboard metrics for the new domain landing pages
 - `assets/studio/js/docs-rebuild-button.js`
   wires the docs rebuild action beside the Studio docs search input
+- `assets/studio/js/catalogue-work-fields.js`
+  provides shared work-editor field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers for work create/edit surfaces
 
 Current page controllers:
 

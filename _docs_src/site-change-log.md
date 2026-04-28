@@ -2,11 +2,34 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-28] Factored shared catalogue work-editor field helpers
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Added a shared work-editor field/model helper module and updated the existing work create/edit scripts to consume it.
+
+**Reason:**
+The planned unified work editor needs common field metadata, id normalization, series parsing, draft shaping, and source-record payload construction before `new` mode is folded into `/studio/catalogue-work/`.
+
+**Effect:**
+`assets/studio/js/catalogue-work-fields.js` now owns the shared work field definitions and core work-record helpers. The current `/studio/catalogue-work/` and `/studio/catalogue-new-work/` scripts use those helpers without adding unified new mode yet.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-fields.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-new-work-editor.js`
+- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 
 ## [2026-04-27] Added project-state reporting for source imports
 

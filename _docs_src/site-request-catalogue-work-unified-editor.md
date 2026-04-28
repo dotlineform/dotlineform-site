@@ -407,7 +407,7 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented infrastructure pass
 
 Create a shared work-editor field/model layer before merging page behavior.
 
@@ -419,6 +419,16 @@ Candidate shared responsibilities:
 - series parsing
 - scalar validation helpers
 - create/edit payload shaping helpers
+
+Implemented first pass:
+
+- added `assets/studio/js/catalogue-work-fields.js`
+- moved shared work field metadata into that module
+- moved work id and series id normalization into that module
+- moved series parsing and deduplication into that module
+- moved draft-from-record and source-record payload shaping into that module
+- updated `assets/studio/js/catalogue-work-editor.js` and `assets/studio/js/catalogue-new-work-editor.js` to consume the shared helpers
+- kept mode behavior unchanged; `new` mode has not been added to the unified route yet
 
 Acceptance checks:
 

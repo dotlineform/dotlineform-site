@@ -10,55 +10,15 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
-
-const EDITABLE_FIELDS = [
-  { key: "work_id", label: "work id", type: "text" },
-  { key: "title", label: "title", type: "text" },
-  { key: "series_ids", label: "series ids", type: "text", description: "comma-separated series ids" },
-  { key: "project_folder", label: "project folder", type: "text" },
-  { key: "project_filename", label: "project filename", type: "text" },
-  { key: "year", label: "year", type: "number", step: "1" },
-  { key: "year_display", label: "year display", type: "text" },
-  { key: "medium_type", label: "medium type", type: "text" },
-  { key: "medium_caption", label: "medium caption", type: "text" },
-  { key: "duration", label: "duration", type: "text" },
-  { key: "height_cm", label: "height cm", type: "number", step: "any" },
-  { key: "width_cm", label: "width cm", type: "number", step: "any" },
-  { key: "depth_cm", label: "depth cm", type: "number", step: "any" },
-  { key: "storage_location", label: "storage location", type: "text" },
-  { key: "notes", label: "notes", type: "textarea" },
-  { key: "provenance", label: "provenance", type: "textarea" },
-  { key: "artist", label: "artist", type: "text" }
-];
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
-
-function normalizeWorkId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(5, "0");
-}
-
-function normalizeSeriesId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(3, "0");
-}
-
-function parseSeriesIds(value) {
-  const text = normalizeText(value);
-  if (!text) return [];
-  const seen = new Set();
-  const out = [];
-  text.split(",").map((item) => normalizeSeriesId(item)).filter(Boolean).forEach((seriesId) => {
-    if (seen.has(seriesId)) return;
-    seen.add(seriesId);
-    out.push(seriesId);
-  });
-  return out;
-}
+import {
+  NEW_WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  WORK_DIMENSION_FIELD_KEYS,
+  buildCreateWorkPayload,
+  normalizeSeriesId,
+  normalizeText,
+  normalizeWorkId,
+  suggestNextWorkId
+} from "./catalogue-work-fields.js";
 
 function setTextWithState(node, text, state = "") {
   if (!node) return;
@@ -140,7 +100,7 @@ function validateDraft(state) {
   if (year && !/^-?\d+$/.test(year)) {
     errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
   }
-  ["height_cm", "width_cm", "depth_cm"].forEach((fieldKey) => {
+  WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
     const value = normalizeText(state.draft[fieldKey]);
     if (value && !Number.isFinite(Number(value))) {
       errors.set(fieldKey, "Use a number or leave blank.");
@@ -174,42 +134,8 @@ function updateFieldMessages(state, errors) {
   });
 }
 
-function suggestNextWorkId(workItems) {
-  let maxNumericId = 0;
-  workItems.forEach((record) => {
-    const workId = normalizeWorkId(record && record.work_id);
-    if (!/^\d+$/.test(workId)) return;
-    maxNumericId = Math.max(maxNumericId, Number(workId));
-  });
-  if (maxNumericId <= 0) return "00001";
-  return String(maxNumericId + 1).padStart(5, "0");
-}
-
 function buildPayload(state) {
-  return {
-    work_id: normalizeWorkId(state.draft.work_id),
-    record: {
-      work_id: normalizeWorkId(state.draft.work_id),
-      status: "draft",
-      published_date: null,
-      series_ids: parseSeriesIds(state.draft.series_ids),
-      project_folder: normalizeText(state.draft.project_folder) || null,
-      project_filename: normalizeText(state.draft.project_filename) || null,
-      title: normalizeText(state.draft.title) || null,
-      year: normalizeText(state.draft.year) ? Number(state.draft.year) : null,
-      year_display: normalizeText(state.draft.year_display) || null,
-      medium_type: normalizeText(state.draft.medium_type) || null,
-      medium_caption: normalizeText(state.draft.medium_caption) || null,
-      duration: normalizeText(state.draft.duration) || null,
-      height_cm: normalizeText(state.draft.height_cm) ? Number(state.draft.height_cm) : null,
-      width_cm: normalizeText(state.draft.width_cm) ? Number(state.draft.width_cm) : null,
-      depth_cm: normalizeText(state.draft.depth_cm) ? Number(state.draft.depth_cm) : null,
-      storage_location: normalizeText(state.draft.storage_location) || null,
-      notes: normalizeText(state.draft.notes) || null,
-      provenance: normalizeText(state.draft.provenance) || null,
-      artist: normalizeText(state.draft.artist) || null
-    }
-  };
+  return buildCreateWorkPayload(state.draft);
 }
 
 function updateEditorState(state) {
