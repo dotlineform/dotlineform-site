@@ -23,6 +23,8 @@ The current split creates two related but separate surfaces:
 
 The desired direction is a unified work editor where the user can switch between opening existing works and creating a new draft work without leaving the page.
 
+If this works well for works, the intended follow-up direction is to reuse the same explicit mode pattern for series and moments rather than treating the work editor as a one-off.
+
 ## Goal
 
 Unify the work create and edit workflows around `/studio/catalogue-work/`.
@@ -84,6 +86,24 @@ Suggested mode transitions:
 - creating a draft work loads the new record into edit mode on the same route
 
 The existing `/studio/catalogue-new-work/` route should remain temporarily as a compatibility entry point. It can either redirect to `/studio/catalogue-work/?mode=new` or render a lightweight link/redirect page until dashboard and docs references are fully migrated.
+
+## Pattern Rollout
+
+Works should be the proving ground for the explicit mode pattern.
+
+After the work editor has a stable create/edit/bulk mode contract, the same approach should be considered for:
+
+- series create/edit flows
+- moment import/edit flows, if the product distinction between import and routine metadata editing remains clear
+
+The rollout should not automatically merge every create route. Each catalogue family should first check whether `new` means the same thing as routine create, staged import, or a more specialized ingestion flow.
+
+For example:
+
+- series has a closer match to the work create/edit split and may be a straightforward candidate
+- moments currently have a staged-import workflow as well as an edit route, so the mode pattern may need to distinguish `new` from `import`
+
+The goal is to establish a shared Studio mode pattern without hiding meaningful workflow differences between catalogue record families.
 
 ## New Mode Behavior
 
@@ -377,6 +397,7 @@ Expected benefits:
 - Should create mode expose `status`, or should status be fixed to draft until the work is created?
 - Should the old `/studio/catalogue-new-work/` route redirect, stay as a compatibility wrapper, or remain fully functional for one release window?
 - Should this pattern later apply to series and work-detail create/edit flows?
+- How should the pattern adapt to moments, where staged import and routine metadata editing are related but not identical workflows?
 
 ## Related References
 
