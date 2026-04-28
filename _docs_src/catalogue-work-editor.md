@@ -12,14 +12,17 @@ Route:
 
 - `/studio/catalogue-work/`
 - focused record selection uses `?work=<work_id>`
+- new draft mode uses `?mode=new`
 
-This page edits canonical work source records from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service. It now supports both focused single-record edit and bulk edit mode on the same route.
+This page edits canonical work source records from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
 
 ## Current Scope
 
 The first implementation covers:
 
 - search by `work_id`
+- switch to `new` mode from the same top control row
+- create a draft work source record from the work editor route
 - open one work record
 - open multiple work records by comma-delimited `work_id` values and `start-end` ranges
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
@@ -56,6 +59,42 @@ It does not yet:
 - edit series records directly
 - upload primary images to remote media storage
 - paginate detail/member lists
+
+## New Mode
+
+New mode is entered from either:
+
+- `/studio/catalogue-work/?mode=new`
+- the `New` button beside `Open`
+
+In new mode:
+
+- the top input becomes the new `work_id` input
+- the suggested next id is prefilled when available
+- `status` is visible but fixed to `draft`
+- `published_date` is unavailable until the record exists
+- `Create` writes source JSON only through `POST /catalogue/work/create`
+- no public site update runs during create
+- after create, the page opens the new work in normal edit mode
+
+Required create fields:
+
+- `work_id`
+- `title`
+- `year`
+- `year_display`
+- `series_ids`
+
+Edit-only surfaces are disabled while the draft does not yet exist:
+
+- `Delete`
+- `Update site now`
+- generated dimensions
+- public work link
+- preview and readiness panels
+- details
+- downloads
+- links
 
 ## Bulk Mode
 

@@ -441,7 +441,7 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented for work editor route
 
 Add new mode to `/studio/catalogue-work/`.
 
@@ -452,6 +452,17 @@ Expected behavior:
 - `Create` appears as the primary mutation action
 - edit-only panels are disabled according to the decided contract
 - successful create loads the created work into edit mode on the same route
+
+Implemented first pass:
+
+- added `New` beside `Open` on `/studio/catalogue-work/`
+- added `?mode=new` support
+- reused the shared metadata form for create mode
+- keeps `status` visible and fixed to `draft` during create
+- keeps `published_date` unavailable until the record exists
+- calls `POST /catalogue/work/create` through the existing local write service endpoint
+- opens the created work in normal edit mode after create
+- keeps `/studio/catalogue-new-work/` unchanged until Task 4 handles route migration
 
 Acceptance checks:
 

@@ -70,6 +70,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
         </div>
       </div>
       <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkNew">New</button>
       <span class="tagStudio__saveMode" id="catalogueWorkSaveMode"></span>
     </div>
 

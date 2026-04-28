@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-28] Added new-work mode to the catalogue work editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Added `new` mode to `/studio/catalogue-work/`, including a `New` command beside `Open`, route support for `?mode=new`, draft-only create behavior, and post-create loading into normal edit mode.
+
+**Reason:**
+Creating and editing works should converge on one surface so field structure, validation, and workflow stay consistent.
+
+**Effect:**
+The work editor can now create draft work source records through the existing `POST /catalogue/work/create` endpoint. Create mode uses the same metadata form, keeps `status` fixed to `draft`, disables edit-only surfaces until the source record exists, and does not update the public site during create.
+
+**Affected files/docs:**
+
+- `studio/catalogue-work/index.md`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
+
 ## [2026-04-28] Factored shared catalogue work-editor field helpers
 
 **Status:** implemented

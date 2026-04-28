@@ -34,6 +34,7 @@ import {
   WORK_READONLY_FIELDS as READONLY_FIELDS,
   WORK_SERIES_ID_RE as SERIES_ID_RE,
   WORK_STATUS_OPTIONS as STATUS_OPTIONS,
+  buildCreateWorkPayload,
   buildWorkDraftFromRecord,
   buildWorkRecordFromDraft,
   canonicalizeWorkScalar as canonicalizeScalar,
@@ -44,7 +45,8 @@ import {
   normalizeSeriesId,
   normalizeText,
   normalizeWorkId,
-  parseSeriesIds
+  parseSeriesIds,
+  suggestNextWorkId
 } from "./catalogue-work-fields.js";
 
 const SEARCH_LIMIT = 20;
@@ -52,6 +54,7 @@ const DETAIL_LIST_LIMIT = 10;
 const BULK_PREVIEW_LIMIT = 12;
 const DOWNLOAD_FIELDS = ["filename", "label"];
 const LINK_FIELDS = ["url", "label"];
+const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -438,6 +441,17 @@ function renderReadonlyField(field, readonlyNode, state) {
   state.readonlyNodes.set(field.key, value);
 }
 
+function setModeFieldAvailability(state) {
+  const statusNode = state.fieldNodes.get("status");
+  if (statusNode) {
+    statusNode.disabled = state.mode === "new";
+  }
+  const publishedDateNode = state.fieldNodes.get("published_date");
+  if (publishedDateNode) {
+    publishedDateNode.disabled = state.mode === "new";
+  }
+}
+
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -450,6 +464,11 @@ function setTextWithState(node, text, state = "") {
 
 function setPopupVisibility(state, visible) {
   state.popupNode.hidden = !visible;
+}
+
+function setOpenInputMode(state) {
+  state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
+  state.searchNode.setAttribute("aria-label", t(state, "search_label", "Find work by id"));
 }
 
 function getSearchMatches(state, rawQuery) {
@@ -923,6 +942,41 @@ async function deleteEmbeddedEntry(state, kind, index) {
 }
 
 function updateSummary(state) {
+  if (state.mode === "new") {
+    state.metaNode.textContent = t(state, "new_meta", "Creating a draft work.");
+    state.summaryNode.innerHTML = `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_status_label", "status"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_status", "draft source record; not published"))}</div>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_next_label", "next step"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_next", "Create the draft, then continue editing or publish from edit mode."))}</div>
+      </div>
+    `;
+    state.runtimeStateNode.textContent = t(state, "new_runtime_state", "public site update is unavailable until the draft exists");
+    setTextWithState(state.buildImpactNode, "");
+    if (state.newDetailLinkNode) {
+      state.newDetailLinkNode.removeAttribute("href");
+      state.newDetailLinkNode.setAttribute("aria-disabled", "true");
+    }
+    if (state.newFileLinkNode) {
+      state.newFileLinkNode.disabled = true;
+    }
+    if (state.newLinkLinkNode) {
+      state.newLinkLinkNode.disabled = true;
+    }
+    if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
+    if (state.filesPanelNode) state.filesPanelNode.hidden = false;
+    if (state.linksPanelNode) state.linksPanelNode.hidden = false;
+    updateDetailSections(state);
+    updateWorkFilesSection(state);
+    updateWorkLinksSection(state);
+    renderCurrentPreview(state);
+    renderReadiness(state);
+    return;
+  }
+
   if (state.mode === "bulk") {
     const selectedCount = state.bulkWorkIds.length;
     const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
@@ -950,6 +1004,7 @@ function updateSummary(state) {
       ? t(state, "summary_rebuild_needed", "source saved; site update pending")
       : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
     if (state.newDetailLinkNode) {
+      state.newDetailLinkNode.removeAttribute("aria-disabled");
       state.newDetailLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
     }
     if (state.newFileLinkNode) {
@@ -992,6 +1047,7 @@ function updateSummary(state) {
     : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
   if (state.newDetailLinkNode) {
     const base = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
+    state.newDetailLinkNode.removeAttribute("aria-disabled");
     state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
   }
   if (state.newFileLinkNode) {
@@ -1042,17 +1098,28 @@ function formatBuildPreview(state, build) {
   return mediaParts.length ? `${baseText} ${mediaParts.join("; ")}.` : baseText;
 }
 
-function syncUrl(workValue) {
+function syncUrl(workValue, mode = "") {
   const url = new URL(window.location.href);
-  if (workValue) {
+  if (mode === "new") {
+    url.searchParams.delete("work");
+    url.searchParams.set("mode", "new");
+  } else if (workValue) {
+    url.searchParams.delete("mode");
     url.searchParams.set("work", workValue);
   } else {
+    url.searchParams.delete("mode");
     url.searchParams.delete("work");
   }
   window.history.replaceState({}, "", url.toString());
 }
 
 function draftHasChanges(state) {
+  if (state.mode === "new") {
+    return Boolean(
+      normalizeWorkId(state.draft.work_id) ||
+      EDITABLE_FIELDS.some((field) => normalizeText(state.draft[field.key]))
+    );
+  }
   if (state.mode === "bulk") {
     return state.bulkTouchedFields.size > 0;
   }
@@ -1065,6 +1132,58 @@ function draftHasChanges(state) {
 }
 
 function validateDraft(state) {
+  if (state.mode === "new") {
+    const errors = new Map();
+    const workId = normalizeWorkId(state.draft.work_id);
+    if (!workId) {
+      errors.set("work_id", t(state, "field_required_work_id", "Enter a work id."));
+    } else if (state.workSearchById.has(workId) || state.sourceWorkRecordsById.has(workId)) {
+      errors.set("work_id", t(state, "field_duplicate_work_id", "Work id already exists."));
+    }
+
+    REQUIRED_WORK_FIELDS.forEach((fieldKey) => {
+      if (fieldKey === "series_ids") {
+        if (!parseSeriesIds(state.draft.series_ids).length) {
+          errors.set("series_ids", t(state, "field_required_series_ids", "Enter at least one series id."));
+        }
+        return;
+      }
+      if (!normalizeText(state.draft[fieldKey])) {
+        const label = fieldKey.replace(/_/g, " ");
+        errors.set(fieldKey, t(state, `field_required_${fieldKey}`, "Enter {field}.", { field: label }));
+      }
+    });
+
+    const year = normalizeText(state.draft.year);
+    if (year && !/^-?\d+$/.test(year)) {
+      errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
+    }
+
+    WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
+      const value = normalizeText(state.draft[fieldKey]);
+      if (value && !Number.isFinite(Number(value))) {
+        errors.set(fieldKey, t(state, "field_invalid_number", "Use a number or leave blank."));
+      }
+    });
+
+    const seriesText = normalizeText(state.draft.series_ids);
+    if (seriesText) {
+      const parts = seriesText.split(",").map((item) => normalizeText(item)).filter(Boolean);
+      for (const part of parts) {
+        if (!SERIES_ID_RE.test(part)) {
+          errors.set("series_ids", t(state, "field_invalid_series_id", "Use comma-separated numeric series ids."));
+          break;
+        }
+        const normalizedId = normalizeSeriesId(part);
+        if (!state.seriesById.has(normalizedId)) {
+          errors.set("series_ids", t(state, "field_unknown_series_id", "Unknown series id: {series_id}.", { series_id: normalizedId }));
+          break;
+        }
+      }
+    }
+    return errors;
+  }
+
   if (state.mode === "bulk") {
     const errors = new Map();
     if (state.bulkTouchedFields.has("status")) {
@@ -1249,12 +1368,12 @@ function applyBuildRequested(state) {
 }
 
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const showUpdate = hasRecord && state.rebuildPending;
+  const showUpdate = state.mode !== "new" && hasRecord && state.rebuildPending;
   state.buildButton.hidden = !showUpdate;
   state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
   if (state.applyBuildNode) {
-    state.applyBuildNode.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+    state.applyBuildNode.disabled = state.mode === "new" || !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 }
 
@@ -1312,6 +1431,7 @@ function setLoadedRecord(state, workId, record, options = {}) {
   state.bulkBuildTargets = [];
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
+  setOpenInputMode(state);
   if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);
   applyReadonly(state);
@@ -1341,6 +1461,7 @@ function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options =
   state.draft = { ...bulkDraft.draft };
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
+  setOpenInputMode(state);
   if (state.applyBuildNode) state.applyBuildNode.checked = false;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
@@ -1366,11 +1487,101 @@ function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options =
   updateEditorState(state);
 }
 
+function setNewWorkMode(state, options = {}) {
+  state.mode = "new";
+  state.currentWorkId = "";
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.bulkWorkIds = [];
+  state.bulkRecords = new Map();
+  state.bulkRecordHashes = new Map();
+  state.bulkMixedFields = new Set();
+  state.bulkTouchedFields = new Set();
+  state.bulkBuildTargets = [];
+  state.baselineDraft = {};
+  state.draft = {};
+  EDITABLE_FIELDS.forEach((field) => {
+    state.draft[field.key] = "";
+  });
+  state.draft.status = "draft";
+  state.draft.published_date = "";
+  state.draft.downloads = [];
+  state.draft.links = [];
+  state.draft.work_id = normalizeWorkId(options.workId) || state.nextSuggestedWorkId || suggestNextWorkId(Array.from(state.workSearchById.values()));
+  state.searchNode.value = state.draft.work_id;
+  state.searchNode.placeholder = t(state, "new_work_id_placeholder", "new work id");
+  state.searchNode.setAttribute("aria-label", t(state, "new_work_id_label", "New work id"));
+  state.detailSearchNode.value = "";
+  state.pendingBuildExtraSeriesIds = [];
+  state.rebuildPending = false;
+  state.buildPreview = null;
+  if (state.applyBuildNode) state.applyBuildNode.checked = false;
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+  setPopupVisibility(state, false);
+  syncUrl("", "new");
+  setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft work source record."));
+  setTextWithState(state.statusNode, "");
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) {
+    setTextWithState(state.resultNode, "");
+  }
+  updateEditorState(state);
+}
+
+function setEmptySearchMode(state, options = {}) {
+  state.mode = "single";
+  state.currentWorkId = "";
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.bulkWorkIds = [];
+  state.bulkRecords = new Map();
+  state.bulkRecordHashes = new Map();
+  state.bulkMixedFields = new Set();
+  state.bulkTouchedFields = new Set();
+  state.bulkBuildTargets = [];
+  state.baselineDraft = null;
+  state.draft = {};
+  EDITABLE_FIELDS.forEach((field) => {
+    state.draft[field.key] = "";
+  });
+  state.draft.downloads = [];
+  state.draft.links = [];
+  state.detailSearchNode.value = "";
+  state.pendingBuildExtraSeriesIds = [];
+  state.rebuildPending = false;
+  state.buildPreview = null;
+  setOpenInputMode(state);
+  if (!options.keepSearchValue) {
+    state.searchNode.value = "";
+  }
+  if (state.applyBuildNode) state.applyBuildNode.checked = true;
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+  setPopupVisibility(state, false);
+  syncUrl("");
+  setTextWithState(state.contextNode, t(state, "missing_work_param", "Search for a work by work id."));
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) {
+    setTextWithState(state.resultNode, "");
+  }
+  updateEditorState(state);
+}
+
 function updateEditorState(state) {
-  const hasRecord = state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
+  const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
   updateFieldMessages(state, errors);
+  setModeFieldAvailability(state);
   updateSummary(state);
   if (!hasRecord) {
     setTextWithState(state.buildImpactNode, "");
@@ -1388,7 +1599,15 @@ function updateEditorState(state) {
 
   const dirty = hasRecord && draftHasChanges(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
-  if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
+  if (state.mode === "new" && !state.resultNode.textContent) {
+    setTextWithState(
+      state.statusNode,
+      state.serverAvailable
+        ? t(state, "new_status_ready", "Create a draft work source record.")
+        : t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."),
+      state.serverAvailable ? "" : "warn"
+    );
+  } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
     setTextWithState(
       state.statusNode,
       state.mode === "bulk"
@@ -1397,6 +1616,9 @@ function updateEditorState(state) {
     );
   }
 
+  state.saveButton.textContent = state.mode === "new"
+    ? t(state, "create_button", "Create")
+    : t(state, "save_button", "Save");
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   updatePublishControls(state, { hasRecord, dirty, errors });
@@ -1406,6 +1628,18 @@ function updateEditorState(state) {
 function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
+  if (state.mode === "new" && fieldKey === "status") {
+    state.draft.status = "draft";
+    node.value = "draft";
+    updateEditorState(state);
+    return;
+  }
+  if (state.mode === "new" && fieldKey === "published_date") {
+    state.draft.published_date = "";
+    node.value = "";
+    updateEditorState(state);
+    return;
+  }
   state.draft[fieldKey] = node.value;
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
@@ -1418,6 +1652,10 @@ function t(state, key, fallback, tokens = null) {
 }
 
 async function saveCurrentWork(state) {
+  if (state.mode === "new") {
+    await createCurrentWork(state);
+    return;
+  }
   if (state.mode === "bulk") {
     if (!state.bulkWorkIds.length) return;
   } else if (!state.currentRecord) {
@@ -1582,6 +1820,55 @@ async function saveCurrentWork(state) {
       : `${t(state, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim();
     setTextWithState(state.statusNode, message, "error");
   } finally {
+    state.isSaving = false;
+    updateEditorState(state);
+  }
+}
+
+async function createCurrentWork(state) {
+  if (state.mode !== "new") return;
+  const errors = validateDraft(state);
+  updateFieldMessages(state, errors);
+  if (errors.size > 0) {
+    const workIdError = errors.get("work_id") || "";
+    setTextWithState(
+      state.statusNode,
+      workIdError || t(state, "create_status_validation_error", "Fix validation errors before creating the draft work."),
+      "error"
+    );
+    updateEditorState(state);
+    return;
+  }
+
+  state.isSaving = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "create_status_saving", "Creating draft work..."));
+  setTextWithState(state.resultNode, "");
+
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createWork, buildCreateWorkPayload(state.draft));
+    const workId = normalizeWorkId(response && response.work_id);
+    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    if (!workId) {
+      throw new Error("create response missing work id");
+    }
+    if (record) {
+      state.sourceWorkRecordsById.set(workId, record);
+      state.workSearchById.set(workId, {
+        work_id: workId,
+        title: normalizeText(record.title),
+        year_display: normalizeText(record.year_display),
+        status: normalizeText(record.status),
+        series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
+        record_hash: normalizeText(response.record_hash)
+      });
+    }
+    state.isSaving = false;
+    await openWorkById(state, workId);
+    setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft work {work_id}. Opening edit mode...", { work_id: workId }), "success");
+    setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft work {work_id}.", { work_id: workId }), "success");
+  } catch (error) {
+    setTextWithState(state.statusNode, `${t(state, "create_status_failed", "Draft work create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
     state.isSaving = false;
     updateEditorState(state);
   }
@@ -1959,6 +2246,7 @@ async function init() {
   const popupNode = document.getElementById("catalogueWorkPopup");
   const popupListNode = document.getElementById("catalogueWorkPopupList");
   const openButton = document.getElementById("catalogueWorkOpen");
+  const newButton = document.getElementById("catalogueWorkNew");
   const saveButton = document.getElementById("catalogueWorkSave");
   const buildButton = document.getElementById("catalogueWorkBuild");
   const deleteButton = document.getElementById("catalogueWorkDelete");
@@ -1971,7 +2259,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchRowNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchRowNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -1986,6 +2274,7 @@ async function init() {
     currentWorkId: "",
     currentRecord: null,
     currentRecordHash: "",
+    nextSuggestedWorkId: "",
     bulkWorkIds: [],
     bulkRecords: new Map(),
     bulkRecordHashes: new Map(),
@@ -2011,6 +2300,8 @@ async function init() {
     searchNode,
     popupNode,
     popupListNode,
+    openButton,
+    newButton,
     saveButton,
     buildButton,
     deleteButton,
@@ -2050,7 +2341,7 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
-    searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
+    setOpenInputMode(state);
     detailsHeadingNode.textContent = t(state, "details_heading", "work details");
     newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
@@ -2059,6 +2350,7 @@ async function init() {
     linksHeadingNode.textContent = t(state, "links_heading", "links");
     newLinkLinkNode.textContent = t(state, "links_add_button", "Add link");
     openButton.textContent = t(state, "open_button", "Open");
+    newButton.textContent = t(state, "new_button", "New");
     saveButton.textContent = t(state, "save_button", "Save");
     buildButton.textContent = t(state, "build_button", "Update site now");
     applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
@@ -2072,6 +2364,7 @@ async function init() {
     ]);
 
     const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
+    state.nextSuggestedWorkId = suggestNextWorkId(workItems);
     workItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
       const workId = normalizeWorkId(record.work_id);
@@ -2094,6 +2387,12 @@ async function init() {
 
     searchNode.addEventListener("input", () => {
       const query = searchNode.value;
+      if (state.mode === "new") {
+        state.draft.work_id = normalizeWorkId(query);
+        setPopupVisibility(state, false);
+        updateEditorState(state);
+        return;
+      }
       if (!normalizeText(query)) {
         renderSearchMatches(state, [], "");
         return;
@@ -2113,6 +2412,12 @@ async function init() {
     searchNode.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
+      if (state.mode === "new") {
+        saveCurrentWork(state).catch((error) => {
+          console.warn("catalogue_work_editor: unexpected create failure", error);
+        });
+        return;
+      }
       openWorkSelection(state, searchNode.value).catch((error) => {
         console.warn("catalogue_work_editor: failed to open requested work selection", error);
       });
@@ -2162,9 +2467,15 @@ async function init() {
     });
 
     openButton.addEventListener("click", () => {
+      if (state.mode === "new") {
+        setEmptySearchMode(state, { keepSearchValue: true });
+      }
       openWorkSelection(state, searchNode.value).catch((error) => {
         console.warn("catalogue_work_editor: failed to open requested work selection", error);
       });
+    });
+    newButton.addEventListener("click", () => {
+      setNewWorkMode(state);
     });
     readinessNode.addEventListener("click", (event) => {
       const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
@@ -2195,15 +2506,17 @@ async function init() {
       setPopupVisibility(state, false);
     });
 
-    const requestedWorkValue = normalizeText(new URLSearchParams(window.location.search).get("work"));
+    const params = new URLSearchParams(window.location.search);
+    const requestedMode = normalizeText(params.get("mode")).toLowerCase();
+    const requestedWorkValue = normalizeText(params.get("work"));
     if (requestedWorkValue) {
       openWorkSelection(state, requestedWorkValue).catch((error) => {
         console.warn("catalogue_work_editor: failed to open requested work selection", error);
       });
+    } else if (requestedMode === "new") {
+      setNewWorkMode(state);
     } else {
-      setTextWithState(contextNode, t(state, "missing_work_param", "Search for a work by work id."));
-      updateSummary(state);
-      updateEditorState(state);
+      setEmptySearchMode(state);
     }
 
     root.hidden = false;
