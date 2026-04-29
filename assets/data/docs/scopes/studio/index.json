@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T14:58:58Z",
+  "generated_at": "2026-04-29T15:32:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -923,7 +923,7 @@
       "doc_id": "catalogue-status",
       "title": "Catalogue Status",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "studio",
       "sort_order": 50,
       "published": true,

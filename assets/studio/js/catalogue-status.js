@@ -126,7 +126,7 @@ function renderList(listNode, entries, state) {
   }
   const rows = entries.map((entry) => `
     <li class="tagStudioList__row catalogueStatusRow">
-      <span class="catalogueStatusRow__id">${entry.editorHref ? `<a href="${escapeHtml(entry.editorHref)}">${escapeHtml(entry.id)}</a>` : escapeHtml(entry.id)}</span>
+      <span class="catalogueStatusRow__id">${entry.editorHref ? `<a href="${escapeHtml(entry.editorHref)}" target="_blank" rel="noopener">${escapeHtml(entry.id)}</a>` : escapeHtml(entry.id)}</span>
       <span class="catalogueStatusRow__family">${escapeHtml(entry.familyLabel)}</span>
       <span class="catalogueStatusRow__status">${escapeHtml(entry.status)}</span>
       <span class="catalogueStatusRow__title">${escapeHtml(entry.title)}</span>

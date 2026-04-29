@@ -2,7 +2,7 @@
 doc_id: catalogue-status
 title: "Catalogue Status"
 added_date: 2026-04-18
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: studio
 sort_order: 50
 ---
@@ -46,7 +46,7 @@ The page:
 - supports a simple search across id, status, title, and parent/reference fields
 - shows id, type, status, title, and reference columns
 - supports header-click sorting on `id`, `type`, `status`, `title`, and `reference`
-- links each row into the focused editor for its record family
+- links each row into the focused editor for its record family, opening those editor links in a new browser tab so the status report stays available
 
 It remains a review surface rather than an editor. Editing still happens on the focused record pages.
 
@@ -54,13 +54,13 @@ Work-owned `downloads` and `links` are not listed here because they no longer ha
 
 ## Draft Works View
 
-The `?view=draft-works` view narrows the table to draft work source records only. It shows each draft work's id, title, status, and assigned series ids in the reference column, and links the id to `/studio/catalogue-work/?work=<work_id>`.
+The `?view=draft-works` view narrows the table to draft work source records only. It shows each draft work's id, title, status, and assigned series ids in the reference column, and links the id to `/studio/catalogue-work/?work=<work_id>` in a new browser tab.
 
 This view is the recovery surface for draft works created in the unified work editor but not published in the same session.
 
 ## Draft Series View
 
-The `?view=draft-series` view narrows the table to draft series source records only. It shows each draft series id, title, status, and `primary_work_id` when present in the reference column, and links the id to `/studio/catalogue-series/?series=<series_id>`.
+The `?view=draft-series` view narrows the table to draft series source records only. It shows each draft series id, title, status, and `primary_work_id` when present in the reference column, and links the id to `/studio/catalogue-series/?series=<series_id>` in a new browser tab.
 
 This view is the recovery surface for draft series created in the unified series editor but not published in the same session.
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4f4c018821394c590ed694ceecc3b539",
-    "generated_at_utc": "2026-04-29T14:59:05Z",
+    "version": "blake2b-f37a12a700abfb67d18813542150c5c7",
+    "generated_at_utc": "2026-04-29T15:32:30Z",
     "count": 146
   },
   "entries": [
@@ -1527,22 +1527,22 @@
       "kind": "doc",
       "title": "Catalogue Status",
       "href": "/docs/?scope=studio&doc=catalogue-status",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-28 • Studio",
+      "display_meta": "2026-04-29 • Studio",
       "search_terms": [
         "catalogue-status",
         "catalogue",
         "status",
         "catalogue status",
         "studio",
-        "2026-04-28",
+        "2026-04-29",
         "2026",
         "04",
-        "28"
+        "29"
       ],
-      "search_text": "catalogue-status catalogue status catalogue status studio 2026-04-28 2026 04 28"
+      "search_text": "catalogue-status catalogue status catalogue status studio 2026-04-29 2026 04 29"
     },
     {
       "id": "catalogue-work-detail-editor",

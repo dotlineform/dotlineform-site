@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Opened Catalogue Status editor links in new tabs
+
+**Status:** implemented
+
+**Area:** Studio / catalogue status
+
+**Summary:**
+Changed Catalogue Status row links so opening a work, work detail, or series editor preserves the report in the current tab.
+
+**Reason:**
+Catalogue Status is used as a review queue. Replacing the report when opening a draft work or series interrupted the review workflow.
+
+**Effect:**
+Row id links still route to the focused editor for the record family, but now open in a new browser tab with `rel="noopener"`.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-status.js`
+- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Fixed per-series JSON member filtering
 
 **Status:** implemented

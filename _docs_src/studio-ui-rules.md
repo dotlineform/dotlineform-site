@@ -23,6 +23,22 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-058
+
+- status: adopted
+- route: `/studio/catalogue-status/`
+- issue: opening a work or series from Catalogue Status replaced the status report, making it awkward to continue reviewing the remaining non-published records.
+- triage: reporting-to-editor navigation
+- reasoning: Catalogue Status is a review/reporting surface, while the work, work-detail, and series pages are editing surfaces. Keeping the report tab open preserves the review workflow without adding duplicate navigation controls.
+- permanent rule: Catalogue Status row id links should open the focused editor route in a new browser tab.
+- outcome: row id links in Catalogue Status now use `target="_blank"` with `rel="noopener"`.
+- files changed:
+  - `assets/studio/js/catalogue-status.js`
+  - `_docs_src/catalogue-status.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-status/`, click a work or series id, and confirm the editor opens in a separate tab while the status report remains available
+
 ## UI Rule Log 2026-04-29 / UI-057
 
 - status: adopted
