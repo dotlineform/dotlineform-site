@@ -67,5 +67,5 @@ What it is not for:
 
 - **[Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)**
 - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
-- **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
+- **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
 - **[New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)**

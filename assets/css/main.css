@@ -528,9 +528,76 @@ th{ background: var(--panel-2); }
   color: var(--muted);
 }
 
+.catalogueDashboardRoutes{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: start;
+  justify-content: start;
+  width: calc((100% - 0.85rem) / 2);
+  max-width: 100%;
+}
+
+.catalogueDashboardColumn{
+  display: grid;
+  gap: 0.7rem;
+}
+
+.catalogueDashboardColumn h3{
+  margin: 0;
+}
+
+.catalogueDashboardPills{
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.catalogueDashboardPills li{
+  margin: 0;
+}
+
+.catalogueDashboardPills a{
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--studio-pill-height, 1.95rem);
+  padding: var(--studio-pill-padding-y, 0.28rem) var(--studio-pill-padding-x, 0.72rem);
+  border: 1px solid var(--line, var(--border));
+  border-radius: 999px;
+  color: var(--text);
+  text-align: center;
+  text-decoration: none;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+  background: var(--panel);
+}
+
+.catalogueDashboardPills a:visited{
+  color: var(--text);
+}
+
+.catalogueDashboardPills a:hover{
+  border-color: var(--border-strong);
+}
+
+.catalogueDashboardPills a:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
 @media (max-width: 720px) {
   .cataloguePageNav{
     padding: 0.8rem 0.85rem;
+  }
+
+  .catalogueDashboardRoutes{
+    grid-template-columns: 1fr;
+    width: 100%;
   }
 }
 

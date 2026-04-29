@@ -9,14 +9,13 @@ import {
 } from "./studio-data.js";
 
 const FAMILIES = [
-  { key: "works", label: "works", pathKey: "catalogue_works", objectKey: "works", idField: "work_id", routeKey: "catalogue_work_editor", paramKey: "work" },
-  { key: "work_details", label: "work details", pathKey: "catalogue_work_details", objectKey: "work_details", idField: "detail_uid", routeKey: "catalogue_work_detail_editor", paramKey: "detail" },
-  { key: "series", label: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" }
+  { key: "series", label: "series", singular: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" },
+  { key: "works", label: "works", singular: "work", pathKey: "catalogue_works", objectKey: "works", idField: "work_id", routeKey: "catalogue_work_editor", paramKey: "work" },
+  { key: "work_details", label: "work details", singular: "work detail", pathKey: "catalogue_work_details", objectKey: "work_details", idField: "detail_uid", routeKey: "catalogue_work_detail_editor", paramKey: "detail" },
+  { key: "moments", label: "moments", singular: "moment", pathKey: "catalogue_moments", objectKey: "moments", idField: "moment_id", routeKey: "catalogue_moment_editor", paramKey: "moment" }
 ];
 
 const SORT_KEYS = ["id", "type", "status", "title", "reference"];
-const DRAFT_WORKS_VIEW = "draft-works";
-const DRAFT_SERIES_VIEW = "draft-series";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -53,6 +52,9 @@ function recordReference(record, family) {
   } else if (family.key === "work_details") {
     if (record.work_id) parts.push(`work ${record.work_id}`);
     if (record.detail_id) parts.push(`detail ${record.detail_id}`);
+  } else if (family.key === "moments") {
+    const date = normalizeText(record.date || record.date_display);
+    if (date) parts.push(date);
   }
   return parts.join(" · ");
 }
@@ -72,8 +74,6 @@ function makeEntry(family, key, record) {
     title,
     reference,
     editorHref: "",
-    isDraftWork: family.key === "works" && normalizedStatus === "draft",
-    isDraftSeries: family.key === "series" && normalizedStatus === "draft",
     searchText: normalizeSearch(`${family.label} ${id} ${status} ${title} ${reference}`)
   };
 }
@@ -88,7 +88,7 @@ async function loadFamily(config, family) {
   return Object.keys(records).map((key) => {
     const record = records[key] && typeof records[key] === "object" ? records[key] : {};
     return makeEntry(family, key, record);
-  }).filter((entry) => normalizeSearch(entry.status) !== "published");
+  }).filter((entry) => entry.normalizedStatus === "draft");
 }
 
 function buildFamilyCounts(entries) {
@@ -102,21 +102,11 @@ function buildFamilyCounts(entries) {
   return counts;
 }
 
-function renderKey(keyNode, counts, activeFamily, activeView, draftWorkCount, draftSeriesCount, config) {
-  const total = Object.values(counts).reduce((sum, value) => sum + Number(value || 0), 0);
-  const draftWorksLabel = getStudioText(config, "catalogue_status.draft_works_filter_label", "draft works");
-  const draftSeriesLabel = getStudioText(config, "catalogue_status.draft_series_filter_label", "draft series");
-  const allLabel = getStudioText(config, "catalogue_status.all_filter_label", "all");
-  const buttons = [
-    `<button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-view="${DRAFT_WORKS_VIEW}" data-state="${activeView === DRAFT_WORKS_VIEW ? "active" : ""}">${escapeHtml(draftWorksLabel)} ${draftWorkCount}</button>`,
-    `<button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-view="${DRAFT_SERIES_VIEW}" data-state="${activeView === DRAFT_SERIES_VIEW ? "active" : ""}">${escapeHtml(draftSeriesLabel)} ${draftSeriesCount}</button>`,
-    `<button type="button" class="tagStudio__keyPill tagStudioFilters__allBtn" data-family="all" data-state="${activeView === "all" && activeFamily === "all" ? "active" : ""}">${escapeHtml(allLabel)} ${total}</button>`
-  ];
-  FAMILIES.forEach((family) => {
+function renderKey(keyNode, counts, activeFamily) {
+  keyNode.innerHTML = FAMILIES.map((family) => {
     const count = Number(counts[family.key] || 0);
-    buttons.push(`<button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-family="${family.key}" data-state="${activeView === "all" && activeFamily === family.key ? "active" : ""}">${escapeHtml(family.label)} ${count}</button>`);
-  });
-  keyNode.innerHTML = buttons.join("");
+    return `<button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-family="${family.key}" data-state="${activeFamily === family.key ? "active" : ""}">${escapeHtml(family.label)} ${count}</button>`;
+  }).join("");
 }
 
 function renderList(listNode, entries, state) {
@@ -166,50 +156,44 @@ function compareEntries(a, b, sortKey, sortDir) {
 function applyFilters(state) {
   const query = normalizeSearch(state.searchNode.value);
   const filtered = state.entries.filter((entry) => {
-    if (state.activeView === DRAFT_WORKS_VIEW && !entry.isDraftWork) return false;
-    if (state.activeView === DRAFT_SERIES_VIEW && !entry.isDraftSeries) return false;
-    if (state.activeFamily !== "all" && entry.family !== state.activeFamily) return false;
+    if (entry.family !== state.activeFamily) return false;
     if (query && !entry.searchText.includes(query)) return false;
     return true;
   });
   const sorted = filtered.slice().sort((a, b) => compareEntries(a, b, state.sortKey, state.sortDir));
+  const activeFamily = FAMILIES.find((family) => family.key === state.activeFamily) || FAMILIES[0];
+  const familyLabel = sorted.length === 1 ? activeFamily.singular : activeFamily.label;
 
-  if (state.activeView === DRAFT_WORKS_VIEW) {
-    state.metaNode.textContent = sorted.length === 1
-      ? getStudioText(state.config, "catalogue_status.draft_works_summary_one", "1 draft work record")
-      : getStudioText(state.config, "catalogue_status.draft_works_summary", "{count} draft work records", { count: sorted.length });
-  } else if (state.activeView === DRAFT_SERIES_VIEW) {
-    state.metaNode.textContent = sorted.length === 1
-      ? getStudioText(state.config, "catalogue_status.draft_series_summary_one", "1 draft series record")
-      : getStudioText(state.config, "catalogue_status.draft_series_summary", "{count} draft series records", { count: sorted.length });
-  } else {
-    state.metaNode.textContent = sorted.length === 1
-      ? getStudioText(state.config, "catalogue_status.meta_summary_one", "1 non-published source record")
-      : getStudioText(state.config, "catalogue_status.meta_summary", "{count} non-published source records", { count: sorted.length });
-  }
-  renderKey(state.keyNode, state.counts, state.activeFamily, state.activeView, state.draftWorkCount, state.draftSeriesCount, state.config);
+  state.metaNode.textContent = sorted.length === 1
+    ? getStudioText(state.config, "catalogue_status.meta_summary_one", "1 draft {family} record", { family: familyLabel })
+    : getStudioText(state.config, "catalogue_status.meta_summary", "{count} draft {family} records", { count: sorted.length, family: familyLabel });
+  renderKey(state.keyNode, state.counts, state.activeFamily);
   renderList(state.listNode, sorted, state);
-  if (state.activeView === DRAFT_WORKS_VIEW) {
-    state.emptyNode.textContent = getStudioText(state.config, "catalogue_status.draft_works_empty_state", "No draft work records.");
-  } else if (state.activeView === DRAFT_SERIES_VIEW) {
-    state.emptyNode.textContent = getStudioText(state.config, "catalogue_status.draft_series_empty_state", "No draft series records.");
-  } else {
-    state.emptyNode.textContent = getStudioText(state.config, "catalogue_status.empty_state", "No non-published catalogue source records.");
-  }
+  state.emptyNode.textContent = getStudioText(state.config, "catalogue_status.empty_state", "No draft {family} records.", { family: activeFamily.label });
   state.emptyNode.hidden = sorted.length > 0;
 }
 
-function initialViewFromUrl() {
-  const view = normalizeText(new URLSearchParams(window.location.search).get("view"));
-  return view === DRAFT_WORKS_VIEW || view === DRAFT_SERIES_VIEW ? view : "all";
+function normalizeFamilyKey(value) {
+  const key = normalizeText(value).replace(/-/g, "_");
+  if (key === "draft_works") return "works";
+  if (key === "draft_series") return "series";
+  if (key === "draft_work_details") return "work_details";
+  if (key === "draft_moments") return "moments";
+  return FAMILIES.some((family) => family.key === key) ? key : "";
+}
+
+function initialFamilyFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeFamilyKey(params.get("family")) || normalizeFamilyKey(params.get("view")) || FAMILIES[0].key;
 }
 
 function syncStatusUrl(state) {
   const url = new URL(window.location.href);
-  if (state.activeView === DRAFT_WORKS_VIEW || state.activeView === DRAFT_SERIES_VIEW) {
-    url.searchParams.set("view", state.activeView);
+  url.searchParams.delete("view");
+  if (state.activeFamily && state.activeFamily !== FAMILIES[0].key) {
+    url.searchParams.set("family", state.activeFamily);
   } else {
-    url.searchParams.delete("view");
+    url.searchParams.delete("family");
   }
   window.history.replaceState({}, "", url.toString());
 }
@@ -242,10 +226,7 @@ async function init() {
       config,
       entries,
       counts: buildFamilyCounts(entries),
-      draftWorkCount: entries.filter((entry) => entry.isDraftWork).length,
-      draftSeriesCount: entries.filter((entry) => entry.isDraftSeries).length,
-      activeView: initialViewFromUrl(),
-      activeFamily: "all",
+      activeFamily: initialFamilyFromUrl(),
       sortKey: "type",
       sortDir: "asc",
       keyNode,
@@ -256,16 +237,9 @@ async function init() {
     };
 
     keyNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-family],[data-view]") : null;
+      const button = event.target && event.target.closest ? event.target.closest("[data-family]") : null;
       if (!button) return;
-      const view = normalizeText(button.getAttribute("data-view"));
-      if (view === DRAFT_WORKS_VIEW || view === DRAFT_SERIES_VIEW) {
-        state.activeView = view;
-        state.activeFamily = "all";
-      } else {
-        state.activeView = "all";
-        state.activeFamily = normalizeText(button.getAttribute("data-family")) || "all";
-      }
+      state.activeFamily = normalizeFamilyKey(button.getAttribute("data-family")) || FAMILIES[0].key;
       syncStatusUrl(state);
       applyFilters(state);
     });
@@ -291,9 +265,9 @@ async function init() {
     console.warn("catalogue_status: load failed", error);
     try {
       const config = await loadStudioConfig();
-      loadingNode.textContent = getStudioText(config, "catalogue_status.load_failed_error", "Failed to load catalogue status.");
+      loadingNode.textContent = getStudioText(config, "catalogue_status.load_failed_error", "Failed to load catalogue drafts.");
     } catch (_configError) {
-      loadingNode.textContent = "Failed to load catalogue status.";
+      loadingNode.textContent = "Failed to load catalogue drafts.";
     }
   }
 }

@@ -8,6 +8,52 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Renamed Catalogue Status to Catalogue Drafts
+
+**Status:** implemented
+
+**Area:** Studio / catalogue drafts
+
+**Summary:**
+Changed `/studio/catalogue-status/` into a draft-only Catalogue Drafts page.
+
+**Reason:**
+The older status page mixed draft recovery with broader non-published status filters. The active workflow now needs a concise draft queue across the source families that support draft records.
+
+**Effect:**
+The page title is now `Catalogue Drafts`. The visible filter pills are `series`, `works`, `work details`, and `moments`, in that order. The older `all`, `works`, `work details`, and `series` non-published-family pills were removed, and draft work-detail and draft moment filters were added. Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.
+
+**Affected files/docs:**
+
+- `studio/catalogue-status/index.md`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+## [2026-04-29] Simplified the Catalogue dashboard
+
+**Status:** implemented
+
+**Area:** Studio / catalogue dashboard
+
+**Summary:**
+Reduced `/studio/catalogue/` to catalogue counts, compact Edit and Review route pills, and a plain Admin link stack.
+
+**Reason:**
+The Catalogue dashboard had accumulated explanatory text, guidance links, and workflow summary cards that slowed down routine navigation.
+
+**Effect:**
+The dashboard no longer shows descriptive intro, route descriptions, guidance, or workflow summary cards. It now shows series, works, work-detail, and moment counts; two fixed-width route columns for `Edit` and `Review`; and an `Admin` section with stacked links to Catalogue Activity and Build Activity.
+
+**Affected files/docs:**
+
+- `studio/catalogue/index.md`
+- `assets/css/main.css`
+- `assets/studio/js/studio-dashboard.js`
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Merged moment import into the Moment editor
 
 **Status:** implemented

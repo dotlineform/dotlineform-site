@@ -38,7 +38,7 @@ Read this section in this order:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
-   - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
+   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**

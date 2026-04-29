@@ -28,6 +28,14 @@ async function initStudioDashboard() {
     loadJson("/assets/data/series_index.json").then((payload) => {
       setMetric("series-count", formatNumber(Number(payload?.header?.count || 0)));
     }),
+    loadJson("/assets/studio/data/catalogue/work_details.json").then((payload) => {
+      const count = Number(payload?.header?.count || 0) || Object.keys(payload?.work_details || {}).length;
+      setMetric("work-details-count", formatNumber(count));
+    }),
+    loadJson("/assets/studio/data/catalogue/moments.json").then((payload) => {
+      const count = Number(payload?.header?.count || 0) || Object.keys(payload?.moments || {}).length;
+      setMetric("moments-count", formatNumber(count));
+    }),
     loadJson("/assets/data/docs/scopes/library/index.json").then((payload) => {
       const count = Array.isArray(payload?.docs) ? payload.docs.length : 0;
       setMetric("library-doc-count", formatNumber(count));

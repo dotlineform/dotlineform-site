@@ -81,7 +81,7 @@ In new mode:
 - no public site update runs during create
 - after create, the page opens the new work in normal edit mode
 
-Draft works can be found later from Catalogue Status using `/studio/catalogue-status/?view=draft-works`.
+Draft works can be found later from Catalogue Drafts using `/studio/catalogue-status/?family=works`.
 
 ## Series Picker
 

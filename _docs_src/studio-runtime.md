@@ -217,7 +217,7 @@ After Phase 3, the current Catalogue shell conventions are:
 - work detail rows on the work editor now use thumbnail-led navigation rather than text-only rows
 - the Catalogue dashboard uses grouped directional link lists rather than card panels
 - metadata editors use a shared single-column row layout with labels on the left
-- Catalogue Status is a sortable list and now links directly into work, series, and detail editors
+- Catalogue Drafts is a sortable draft-record list and links directly into work, series, detail, and moment editors
 - work-owned downloads and links are edited from the work editor rather than standalone child-record pages
 
 After Phase 4, the current operational reporting conventions are:

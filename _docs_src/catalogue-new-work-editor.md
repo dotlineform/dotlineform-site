@@ -39,7 +39,7 @@ The unified new mode:
 ## Related References
 
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
+- [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

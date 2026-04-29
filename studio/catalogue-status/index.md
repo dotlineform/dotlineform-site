@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: "Catalogue Status"
+title: "Catalogue Drafts"
 permalink: /studio/catalogue-status/
 section: catalogue-status
 studio_page_doc: /docs/?scope=studio&doc=catalogue-status
@@ -13,7 +13,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-status
     <div class="tagStudioFilters catalogueStatusPage__filters">
       <div class="tagStudio__key tagStudioFilters__key" id="catalogueStatusKey"></div>
       <label class="tagStudioFilters__searchWrap catalogueStatusPage__searchWrap">
-        <span class="visually-hidden">Search catalogue source status rows</span>
+        <span class="visually-hidden">Search catalogue draft rows</span>
         <input
           type="text"
           class="tagStudio__input tagStudioFilters__searchInput"
@@ -29,7 +29,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-status
   </section>
 </div>
 
-<p class="tagStudio__status" id="catalogueStatusLoading">loading catalogue status…</p>
-<p class="tagStudio__empty" id="catalogueStatusEmpty" hidden>No non-published catalogue source records.</p>
+<p class="tagStudio__status" id="catalogueStatusLoading">loading catalogue drafts…</p>
+<p class="tagStudio__empty" id="catalogueStatusEmpty" hidden>No draft catalogue source records.</p>
 
 <script type="module" src="{{ '/assets/studio/js/catalogue-status.js' | relative_url }}"></script>

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T18:18:15Z",
+  "generated_at": "2026-04-29T19:26:05Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -921,7 +921,7 @@
     {
       "scope": "studio",
       "doc_id": "catalogue-status",
-      "title": "Catalogue Status",
+      "title": "Catalogue Drafts",
       "added_date": "2026-04-18",
       "last_updated": "2026-04-29",
       "parent_id": "studio",

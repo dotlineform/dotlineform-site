@@ -23,6 +23,44 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-065
+
+- status: adopted
+- route: `/studio/catalogue-status/`
+- issue: the Catalogue Status page still exposed a mixed non-published status model with `all` and source-family pills after the active workflow had shifted toward draft recovery.
+- triage: workflow naming and filter model
+- reasoning: draft recovery is now the useful operational queue. A page named Catalogue Drafts with one draft-family pill per source family is simpler than mixing all non-published statuses with separate draft-work and draft-series shortcuts.
+- permanent rule: catalogue draft recovery should use draft-only family filters named by family (`series`, `works`, `work details`, `moments`) and should keep legacy draft-view URLs working as compatibility inputs when routes have already been linked from docs or activity.
+- outcome: renamed the page title to `Catalogue Drafts`, removed the old `all` and non-published family pills, added draft work-detail and draft moment filters, and kept legacy `?view=draft-works` / `?view=draft-series` mapping.
+- files changed:
+  - `studio/catalogue-status/index.md`
+  - `assets/studio/js/catalogue-status.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-status.md`
+- verification:
+  - open `/studio/catalogue-status/` and confirm the page title reads `Catalogue Drafts`
+  - confirm visible pills are `series`, `works`, `work details`, `moments` in that order
+  - confirm old `?view=draft-works` and `?view=draft-series` URLs still select the matching family
+
+## UI Rule Log 2026-04-29 / UI-064
+
+- status: adopted
+- route: `/studio/catalogue/`
+- issue: the Catalogue dashboard had too much explanatory text and too many card-style route groups for a routine operational entry page.
+- triage: page-specific navigation simplification
+- reasoning: Catalogue is a repeated-use admin surface. The useful first scan is counts plus direct route entry, not instructional copy. Static route-entry links can use compact pill styling when they are simple navigation choices rather than rich panels.
+- permanent rule: domain dashboards may use terse metric cards and fixed-width pill-link columns for high-frequency route entry. Reserve descriptive panels and guidance links for pages where they materially help orientation.
+- outcome: removed descriptive dashboard copy, Guidance, and Workflow Summary; added series/work/work-detail/moment counts; replaced route panels with two compact `Edit` and `Review` pill columns; and added a plain `Admin` stacked-link section.
+- files changed:
+  - `studio/catalogue/index.md`
+  - `assets/css/main.css`
+  - `assets/studio/js/studio-dashboard.js`
+- verification:
+  - open `/studio/catalogue/` on desktop and mobile and confirm the counts load
+  - confirm `Edit` and `Review` render as two equal-width pill columns on desktop and stack on mobile
+  - confirm the only lower text header is `Admin` with links to Catalogue Activity and Build Activity
+
 ## UI Rule Log 2026-04-29 / UI-063
 
 - status: adopted
