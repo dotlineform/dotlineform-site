@@ -11,6 +11,7 @@ sort_order: 130
 Status:
 
 - specified
+- task 1 locked
 
 ## Summary
 
@@ -266,7 +267,7 @@ Mitigations:
 
 Status:
 
-- specified
+- locked
 
 Lock route and UI behavior before code changes.
 
@@ -286,6 +287,14 @@ Acceptance checks:
 - mode contract is documented before implementation
 - no current edit-mode behavior is removed from scope
 - publish validation remains explicit
+
+Implementation notes:
+
+- Series follows the work-editor `New` command pattern because it is a top-level catalogue record.
+- Series does not inherit the work-detail parent-scoped create pattern because it is not owned by a parent work.
+- Series does not add bulk mode in this request; preserving the current single-series membership workflow is part of the locked scope.
+- New mode creates only a draft source record. Publication readiness remains an edit-mode concern controlled by member works, `primary_work_id`, status, and the existing save/update flow.
+- Draft-series visibility is in scope after unified create mode lands, with `/studio/catalogue-status/?view=draft-series` as the preferred first implementation unless implementation review shows the existing status page is enough.
 
 ### Task 2. Factor Shared Series Editor Helpers
 

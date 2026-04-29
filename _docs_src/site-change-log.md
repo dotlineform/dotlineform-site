@@ -21,7 +21,7 @@ Added a change-request spec and task list for unifying new-series and edit-serie
 Work and work-detail route unification established the shared create/edit direction. Series is the next parent-record editor to align before a later catalogue-wide cleanup pass.
 
 **Effect:**
-The series implementation now has a documented route contract, new-mode behavior, draft-series visibility plan, risks, non-goals, and six implementation tasks. New-mode create is specified with `series_type` defaulting to `primary`, `series_type` rendered as a config-backed Studio select initially offering `primary` and `holding`, and `title`, `series_type`, `year`, and `year_display` required.
+The series implementation now has a locked Task 1 route/mode contract, documented new-mode behavior, draft-series visibility plan, risks, non-goals, and six implementation tasks. New-mode create is specified with `series_type` defaulting to `primary`, `series_type` rendered as a config-backed Studio select initially offering `primary` and `holding`, and `title`, `series_type`, `year`, and `year_display` required.
 
 **Affected files/docs:**
 
