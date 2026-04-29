@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Limited work detail creation to published works
+
+**Status:** implemented
+
+**Area:** Studio / catalogue detail workflow
+
+**Summary:**
+Changed work-detail creation so details can only be added after the parent work is published.
+
+**Reason:**
+Series publish now bootstraps attached draft works. Details should remain a separate follow-up process rather than becoming another cascading publication level.
+
+**Effect:**
+Draft works no longer expose an active `new work detail` link. Work Detail new mode blocks draft parents, direct work-detail create rejects unpublished parents, and workbook detail import preview blocks draft-parent rows.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-work-detail-fields.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/css/studio.css`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_workbook_import.py`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Added series publish bootstrap for draft works
 
 **Status:** implemented

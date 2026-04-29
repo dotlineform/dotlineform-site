@@ -53,6 +53,7 @@ New mode is entered with:
 In new mode:
 
 - the parent work id is required in the URL
+- the parent work must already be published
 - the parent work is shown as locked read-only context
 - the suggested next `detail_id` is prefilled when available
 - `status` is visible and fixed to `draft` for create
@@ -61,6 +62,8 @@ In new mode:
 - `Create` writes source JSON only through `POST /catalogue/work-detail/create`
 - no public site update runs during create
 - after create, the page opens the new detail in normal edit mode with `?detail=<detail_uid>`
+
+Draft works cannot receive work details. Publish the parent work first, then add draft details as a separate follow-up process.
 
 ## Bulk Mode
 

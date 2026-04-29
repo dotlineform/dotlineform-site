@@ -633,6 +633,7 @@ function validateDraft(state) {
     return validateCreateWorkDetailDraft(state.draft, {
       workById: state.workSearchById,
       detailByUid: state.detailSearchByUid,
+      requirePublishedParent: true,
       t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
     });
   }
@@ -813,6 +814,8 @@ function setNewDetailMode(state, workId, options = {}) {
     setTextWithState(state.contextNode, t(state, "new_context_parent_missing", "Open new detail mode from a parent work editor or provide a work id."));
   } else if (!state.workSearchById.has(normalizedWorkId)) {
     setTextWithState(state.contextNode, t(state, "new_context_parent_unknown", "Cannot create a detail because parent work {work_id} was not found.", { work_id: normalizedWorkId }), "error");
+  } else if (normalizeText(state.workSearchById.get(normalizedWorkId) && state.workSearchById.get(normalizedWorkId).status).toLowerCase() !== "published") {
+    setTextWithState(state.contextNode, t(state, "new_context_parent_unpublished", "Publish work {work_id} before adding work details.", { work_id: normalizedWorkId }), "error");
   } else {
     setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft detail under work {work_id}.", { work_id: normalizedWorkId }));
   }

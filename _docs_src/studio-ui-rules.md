@@ -23,6 +23,32 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-071
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, bulk work-detail import
+- issue: series publish now bootstraps attached draft works, but that bootstrap should not cascade into work details.
+- triage: publication workflow boundary
+- reasoning: details are a separate follow-up process after a work is visible. Allowing details on draft works would create another publication cascade or leave hidden child records attached to not-yet-visible works.
+- permanent rule: work details may only be added to published works. Draft works do not expose the new-detail entry link, Work Detail new mode rejects draft parents, and server-side work-detail create/import validates that the parent work is published.
+- outcome: disabled the Work editor `new work detail` link for draft works, added parent-published validation to Work Detail new mode, rejected direct detail create for unpublished parent works, and blocked workbook detail import rows whose parent work is draft.
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `assets/studio/js/catalogue-work-detail-fields.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/css/studio.css`
+  - `scripts/studio/catalogue_write_server.py`
+  - `scripts/catalogue_workbook_import.py`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/catalogue-work-detail-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+- verification:
+  - open a draft work and confirm the `new work detail` link is disabled
+  - open `/studio/catalogue-work-detail/?work=<draft_work_id>&mode=new` and confirm create is disabled with parent-published validation
+  - attempt `POST /catalogue/work-detail/create` for a draft parent and confirm the server rejects it
+  - preview workbook detail import with draft-parent rows and confirm they are blocked as `parent_work_unpublished`
+
 ## UI Rule Log 2026-04-29 / UI-070
 
 - status: adopted

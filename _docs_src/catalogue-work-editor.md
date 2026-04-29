@@ -40,7 +40,7 @@ The first implementation covers:
 - cap visible detail rows at 10 per section
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
-- provide a direct `new work detail →` entry link to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` for the current work
+- provide a direct `new work detail →` entry link to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` for the current work when the work is published
 - list the current work's work-owned `downloads` metadata
 - list the current work's work-owned `links` metadata
 - add, edit, and delete work-owned downloads through modal forms
@@ -82,6 +82,8 @@ In new mode:
 - after create, the page opens the new work in normal edit mode
 
 Draft works can be found later from Catalogue Drafts using `/studio/catalogue-status/?family=works`.
+
+Work details are added only after the parent work is published. The `new work detail →` link is disabled while the current work is still draft.
 
 ## Series Picker
 

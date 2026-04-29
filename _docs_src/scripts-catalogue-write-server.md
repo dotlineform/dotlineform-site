@@ -464,10 +464,13 @@ Request behavior:
 Request behavior:
 
 - parent `work_id` must already exist
+- parent `work_id` must already be published
 - `detail_id` must be unique within that work
 - blank or missing `status` is normalized to `draft`
 - `title` is required
 - the server derives and validates the normalized `detail_uid`
+
+Bulk workbook imports in `work_details` mode apply the same parent-published rule. Rows whose parent work is still draft are blocked in preview with `parent_work_unpublished`.
 
 `POST /catalogue/import-preview` expects:
 

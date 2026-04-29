@@ -1275,8 +1275,15 @@ function updateSummary(state) {
     : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
   if (state.newDetailLinkNode) {
     const base = getStudioRoute(state.config, "catalogue_work_detail_editor");
-    state.newDetailLinkNode.removeAttribute("aria-disabled");
-    state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}&mode=new` : base;
+    if (record && currentWorkIsPublished(state)) {
+      state.newDetailLinkNode.removeAttribute("aria-disabled");
+      state.newDetailLinkNode.removeAttribute("title");
+      state.newDetailLinkNode.href = `${base}?work=${encodeURIComponent(record.work_id)}&mode=new`;
+    } else {
+      state.newDetailLinkNode.setAttribute("aria-disabled", "true");
+      state.newDetailLinkNode.title = t(state, "details_new_unavailable_draft", "Publish this work before adding work details.");
+      state.newDetailLinkNode.removeAttribute("href");
+    }
   }
   if (state.newFileLinkNode) {
     state.newFileLinkNode.disabled = !record || state.isSaving || state.isBuilding || state.isDeleting;

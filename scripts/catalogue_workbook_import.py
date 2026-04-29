@@ -21,6 +21,7 @@ try:
         normalize_json_value,
         normalize_scalar_text,
         normalize_source_record,
+        normalize_status,
         parse_series_ids,
         records_from_json_source,
         slug_id,
@@ -39,6 +40,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         normalize_json_value,
         normalize_scalar_text,
         normalize_source_record,
+        normalize_status,
         parse_series_ids,
         records_from_json_source,
         slug_id,
@@ -322,8 +324,6 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
     blocked_reason_counts: Dict[str, int] = {}
     seen_detail_uids: set[str] = set()
     total_candidate_rows = 0
-    known_work_ids = set(source_records.works.keys())
-
     for row_number, row in enumerate(rows[1:], start=2):
         if _row_has_no_value(row):
             continue
@@ -350,8 +350,12 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
             duplicate_ids.append(detail_uid)
             continue
 
-        if work_id not in known_work_ids:
+        parent_work = source_records.works.get(work_id)
+        if not isinstance(parent_work, dict):
             _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="unknown_work", message=f"parent work_id not found: {work_id}")
+            continue
+        if normalize_status(parent_work.get("status")) != "published":
+            _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="parent_work_unpublished", message=f"parent work {work_id} must be published before adding work details")
             continue
 
         title = normalize_scalar_text(cell(row, headers, "title"))

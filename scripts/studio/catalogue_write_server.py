@@ -4298,8 +4298,11 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError(f"detail_uid already exists: {detail_uid}")
 
         source_records = records_from_json_source(self.server.source_dir)
-        if work_id not in source_records.works:
+        parent_work = source_records.works.get(work_id)
+        if not isinstance(parent_work, dict):
             raise ValueError(f"parent work_id not found: {work_id}")
+        if normalize_status(parent_work.get("status")) != "published":
+            raise ValueError(f"parent work {work_id} must be published before adding work details")
 
         blank_detail_record = {field: None for field in DETAIL_FIELDS}
         blank_detail_record["detail_uid"] = detail_uid

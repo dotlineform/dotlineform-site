@@ -164,6 +164,8 @@ function validateCreateWorkDetailDraft(draft, options = {}) {
     errors.set("work_id", t("field_required_work_id", "Enter a parent work id."));
   } else if (!workById.has(workId)) {
     errors.set("work_id", t("field_unknown_work_id", "Unknown work id: {work_id}.", { work_id: workId }));
+  } else if (options.requirePublishedParent && normalizeText(workById.get(workId) && workById.get(workId).status).toLowerCase() !== "published") {
+    errors.set("work_id", t("field_parent_work_unpublished", "Publish the parent work before adding work details."));
   }
 
   const detailId = normalizeDetailId(draft && draft.detail_id);

@@ -593,6 +593,12 @@ span.tagStudio__input--readonlyDisplay {
   cursor: not-allowed;
 }
 
+.tagStudio__button[aria-disabled="true"] {
+  color: var(--muted, var(--studio-muted));
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .tagStudio__chipList {
   list-style: none;
   padding: 0;
