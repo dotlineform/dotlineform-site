@@ -128,7 +128,8 @@ In new mode:
 - duplicate series ids are rejected before create
 - `title` is required
 - `series_type` is visible, defaults to `primary`, and is required
-- `series_type` is treated as a Studio enum with the current allowed values `primary` and `holding`
+- `series_type` renders as a config-backed Studio select with initial values `primary` and `holding`
+- `series_type` is a client-side Studio constraint for now; the server remains permissive unless this becomes a formal data-model enum later
 - `year` is required and must be a whole year
 - `year_display` is required
 - `status` is visible and fixed to `draft`
@@ -196,7 +197,7 @@ Mode rules:
 
 - `series_id` is editable only in new mode
 - `series_id` is read-only identity context in edit mode
-- `series_type` should render as a select control with `primary` and `holding`
+- `series_type` should render as a select control using config-backed options
 - `series_type` should default to `primary` in new mode
 - `status` is fixed to `draft` during create
 - `published_date` and `primary_work_id` are edit-mode fields
@@ -211,12 +212,12 @@ Required create fields:
 - `year`
 - `year_display`
 
-Current source data only uses two `series_type` values:
+Initial config values should reflect the two values currently present in source data:
 
 - `primary`
 - `holding`
 
-The write server does not currently enforce those as an enum, so the implementation should add client-side validation first and review whether server-side validation should also reject unknown values.
+Adding a future option should be a Studio config change. The write server does not currently enforce `series_type` as an enum, and that should remain acceptable for this phase because the field is rarely changed and can be made stricter later if needed.
 
 ## Accepted Decisions
 
@@ -228,7 +229,7 @@ Initial decisions for implementation:
 - prefill the suggested next `series_id` in new mode
 - default `series_type` to `primary` in new mode
 - require `title`, `series_type`, `year`, and `year_display` during create
-- restrict Studio `series_type` entry to `primary` and `holding`
+- restrict Studio `series_type` entry to config-backed options, initially `primary` and `holding`
 - create source-only draft series records
 - do not update the public site during create
 - keep member editing, prose import, build, and delete disabled until the series exists
@@ -239,7 +240,7 @@ Initial decisions for implementation:
 Endpoint decision:
 
 - keep the existing `POST /catalogue/series/create` endpoint
-- review server-side validation during implementation so required `series_type`, `year`, `year_display`, and allowed `series_type` values stay aligned with the visible new-mode field contract
+- keep server-side `series_type` permissive for this phase; review only the required `series_type`, `year`, and `year_display` create-field contract if endpoint behavior needs adjustment
 
 ## Risks
 
@@ -452,7 +453,7 @@ Expected benefits:
 ## Open Questions
 
 - Should `title`, `series_type`, `year`, and `year_display` also become required for edit-mode saves, or only for create in this phase?
-- Should the server reject unknown `series_type` values, or should the enum initially remain a Studio UI constraint?
+- If `series_type` becomes operationally important later, should the config-backed client options be promoted into a formal server-side data-model enum?
 - Should `sort_fields` become required for create, or remain optional draft metadata?
 - Should draft-series recovery get a dedicated `?view=draft-series` view immediately, or rely on the existing series status filter until usage proves it is needed?
 - Should the series editor keep the suggested id as a prefilled input or present it as a selectable suggestion?
