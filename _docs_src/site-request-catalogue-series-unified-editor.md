@@ -127,7 +127,10 @@ In new mode:
 - the input defaults to the suggested next series id when available
 - duplicate series ids are rejected before create
 - `title` is required
-- `year` is optional but must be a whole year if supplied
+- `series_type` is visible, defaults to `primary`, and is required
+- `series_type` is treated as a Studio enum with the current allowed values `primary` and `holding`
+- `year` is required and must be a whole year
+- `year_display` is required
 - `status` is visible and fixed to `draft`
 - `published_date` is blank and unavailable until edit mode
 - `primary_work_id` is unavailable until the series exists and has member works
@@ -193,10 +196,27 @@ Mode rules:
 
 - `series_id` is editable only in new mode
 - `series_id` is read-only identity context in edit mode
+- `series_type` should render as a select control with `primary` and `holding`
+- `series_type` should default to `primary` in new mode
 - `status` is fixed to `draft` during create
 - `published_date` and `primary_work_id` are edit-mode fields
 - published edit-mode saves require a valid `primary_work_id` that belongs to the series
 - draft series may be saved without `primary_work_id`
+
+Required create fields:
+
+- `series_id`
+- `title`
+- `series_type`
+- `year`
+- `year_display`
+
+Current source data only uses two `series_type` values:
+
+- `primary`
+- `holding`
+
+The write server does not currently enforce those as an enum, so the implementation should add client-side validation first and review whether server-side validation should also reject unknown values.
 
 ## Accepted Decisions
 
@@ -206,6 +226,9 @@ Initial decisions for implementation:
 - keep `/studio/catalogue-series/?series=<series_id>` for edit mode
 - add a `New` command next to `Open`
 - prefill the suggested next `series_id` in new mode
+- default `series_type` to `primary` in new mode
+- require `title`, `series_type`, `year`, and `year_display` during create
+- restrict Studio `series_type` entry to `primary` and `holding`
 - create source-only draft series records
 - do not update the public site during create
 - keep member editing, prose import, build, and delete disabled until the series exists
@@ -216,7 +239,7 @@ Initial decisions for implementation:
 Endpoint decision:
 
 - keep the existing `POST /catalogue/series/create` endpoint
-- review server-side validation during implementation so the visible new-mode field contract and create payload stay aligned
+- review server-side validation during implementation so required `series_type`, `year`, `year_display`, and allowed `series_type` values stay aligned with the visible new-mode field contract
 
 ## Risks
 
@@ -307,7 +330,10 @@ Acceptance checks:
 - missing series id is blocked
 - duplicate series id is blocked
 - missing title is blocked
+- missing or unknown `series_type` is blocked
+- missing year is blocked
 - invalid year is blocked
+- missing `year_display` is blocked
 - successful create writes a draft series source record
 - create does not update the public site
 - post-create edit mode allows member work assignment and normal publication preparation
@@ -425,8 +451,9 @@ Expected benefits:
 
 ## Open Questions
 
-- Should `title` become required for edit-mode saves as well as create?
-- Should `series_type` or `sort_fields` become required for create, or remain optional draft metadata?
+- Should `title`, `series_type`, `year`, and `year_display` also become required for edit-mode saves, or only for create in this phase?
+- Should the server reject unknown `series_type` values, or should the enum initially remain a Studio UI constraint?
+- Should `sort_fields` become required for create, or remain optional draft metadata?
 - Should draft-series recovery get a dedicated `?view=draft-series` view immediately, or rely on the existing series status filter until usage proves it is needed?
 - Should the series editor keep the suggested id as a prefilled input or present it as a selectable suggestion?
 - Should the stale-after-save response-state rule fixed for work details also be applied to series during this implementation?
