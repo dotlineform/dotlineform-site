@@ -4,7 +4,7 @@
   },
   "work": {
     "work_id": "00377",
-    "status": null,
+    "status": "draft",
     "published_date": null,
     "series_ids": [
       "102"
@@ -15,8 +15,8 @@
     "title": "00377 - residue - monoprint",
     "width_cm": 29.4,
     "height_cm": 21,
-    "year": null,
-    "year_display": null,
+    "year": 2024,
+    "year_display": "2024?",
     "medium_type": null,
     "medium_caption": null,
     "storage_location": "13",
@@ -29,7 +29,7 @@
     "provenance": null,
     "artist": null
   },
-  "record_hash": "5a0cd0413b64b460c7837ba9135cea791483e37f16b02a726608adbf8ac4c27e",
+  "record_hash": "2359ec9992de3813e5abc04212e4434632c767fca1177ab72a7c7c32aa38da3e",
   "detail_sections": [],
   "downloads": [],
   "links": [],

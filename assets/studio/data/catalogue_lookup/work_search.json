@@ -3730,11 +3730,11 @@
       "work_id": "00373",
       "title": "00373 - monoprint",
       "year_display": "2024?",
-      "status": "published",
+      "status": "draft",
       "series_ids": [
         "102"
       ],
-      "record_hash": "65e7a98360902a524a62b8d37f0ded392b40e412c72e418d6f741bb00f38face"
+      "record_hash": "cadde0d269bd6d44ecde1f93e8cd1e6fa596b43ed5c7db53a1d122e00826001b"
     },
     {
       "work_id": "00374",
@@ -3759,22 +3759,22 @@
     {
       "work_id": "00376",
       "title": "00376 - residues",
-      "year_display": "",
-      "status": "",
+      "year_display": "2024?",
+      "status": "draft",
       "series_ids": [
         "102"
       ],
-      "record_hash": "6e5cc0598de20c26db30ad99a1bc16af02813fbe7f1d09ac8f3fda36d3f23b63"
+      "record_hash": "3f38b1cf86d8c406855debb2f637a5dce501a30038a85f7c350b5c316d14e5b7"
     },
     {
       "work_id": "00377",
       "title": "00377 - residue - monoprint",
-      "year_display": "",
-      "status": "",
+      "year_display": "2024?",
+      "status": "draft",
       "series_ids": [
         "102"
       ],
-      "record_hash": "5a0cd0413b64b460c7837ba9135cea791483e37f16b02a726608adbf8ac4c27e"
+      "record_hash": "2359ec9992de3813e5abc04212e4434632c767fca1177ab72a7c7c32aa38da3e"
     },
     {
       "work_id": "00378",

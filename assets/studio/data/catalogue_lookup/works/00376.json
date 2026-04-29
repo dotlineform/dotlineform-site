@@ -4,7 +4,7 @@
   },
   "work": {
     "work_id": "00376",
-    "status": null,
+    "status": "draft",
     "published_date": null,
     "series_ids": [
       "102"
@@ -15,8 +15,8 @@
     "title": "00376 - residues",
     "width_cm": 40.5,
     "height_cm": 30.5,
-    "year": null,
-    "year_display": null,
+    "year": 2024,
+    "year_display": "2024?",
     "medium_type": null,
     "medium_caption": null,
     "storage_location": "13",
@@ -29,7 +29,7 @@
     "provenance": null,
     "artist": null
   },
-  "record_hash": "6e5cc0598de20c26db30ad99a1bc16af02813fbe7f1d09ac8f3fda36d3f23b63",
+  "record_hash": "3f38b1cf86d8c406855debb2f637a5dce501a30038a85f7c350b5c316d14e5b7",
   "detail_sections": [],
   "downloads": [],
   "links": [],

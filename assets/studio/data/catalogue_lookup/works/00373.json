@@ -5,7 +5,7 @@
   "work": {
     "work_id": "00373",
     "status": "draft",
-    "published_date": null,
+    "published_date": "2026-04-29",
     "series_ids": [
       "102"
     ],
@@ -24,12 +24,12 @@
     "notes": null,
     "duration": null,
     "depth_cm": null,
-    "width_px": null,
-    "height_px": null,
+    "width_px": 2953,
+    "height_px": 2953,
     "provenance": null,
     "artist": null
   },
-  "record_hash": "6c7006b4c3d42dc2fb277ca513fcaa0b1d1ba62ed0d82ad504856be3a9a784eb",
+  "record_hash": "cadde0d269bd6d44ecde1f93e8cd1e6fa596b43ed5c7db53a1d122e00826001b",
   "detail_sections": [],
   "downloads": [],
   "links": [],
