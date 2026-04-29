@@ -16,6 +16,7 @@ Status:
 - task 3 implemented
 - task 4 implemented
 - task 5 implemented
+- task 6 paused
 
 ## Summary
 
@@ -435,7 +436,9 @@ Implementation notes:
 
 Status:
 
-- proposed
+- paused
+
+Task 6 is paused rather than treated as complete. The remaining documentation and verification cleanup depends on the next catalogue-wide publication workflow pass, where save-time `Update site now` behavior is expected to become explicit publish/unpublish or rebuild commands.
 
 Update docs and verification around the unified series route.
 
