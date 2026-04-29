@@ -3320,7 +3320,8 @@ class Handler(BaseHTTPRequestHandler):
                 previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
                 next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
                 extra_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
-                build_targets.append({"work_id": work_id, "extra_series_ids": extra_series_ids})
+                if normalize_status(updated_record.get("status")) == "published":
+                    build_targets.append({"work_id": work_id, "extra_series_ids": extra_series_ids})
                 affected_work_ids.append(work_id)
                 affected_series_ids.update(previous_series_ids)
                 affected_series_ids.update(next_series_ids)
@@ -3382,8 +3383,8 @@ class Handler(BaseHTTPRequestHandler):
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                         }
                     )
-            response_payload["build_requested"] = bool(apply_build and changed)
-            if apply_build and changed:
+            response_payload["build_requested"] = bool(apply_build and changed and build_targets)
+            if apply_build and changed and build_targets:
                 response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
             self._send_json(HTTPStatus.OK, response_payload, allowed)
             return

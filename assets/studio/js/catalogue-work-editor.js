@@ -219,11 +219,11 @@ function renderReadiness(state) {
     const disabledNote = proseAction && actionDisabled
       ? (draftHasChanges(state)
         ? t(state, "readiness_save_first", "Save source changes before importing prose.")
-        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+        : t(state, "readiness_action_busy", "Wait for the current save or public update to finish."))
       : mediaAction && actionDisabled
         ? (draftHasChanges(state)
           ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.")
-          : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+          : t(state, "readiness_action_busy", "Wait for the current save or public update to finish."))
       : "";
     const proseActionLabel = t(state, "prose_import_button", "Import staged prose");
     const mediaActionLabel = t(state, "media_refresh_button", "Refresh media");
@@ -632,7 +632,7 @@ function renderReadonlyField(field, readonlyNode, state) {
 function setModeFieldAvailability(state) {
   const statusNode = state.fieldNodes.get("status");
   if (statusNode) {
-    statusNode.disabled = state.mode === "new";
+    statusNode.disabled = true;
   }
   const publishedDateNode = state.fieldNodes.get("published_date");
   if (publishedDateNode) {
@@ -1209,7 +1209,7 @@ function updateSummary(state) {
       </div>
     `;
     state.runtimeStateNode.textContent = state.rebuildPending
-      ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+      ? t(state, "summary_rebuild_needed", "public update failed in this session")
       : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
     if (state.newDetailLinkNode) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");
@@ -1251,7 +1251,7 @@ function updateSummary(state) {
   `;
 
   state.runtimeStateNode.textContent = state.rebuildPending
-    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+    ? t(state, "summary_rebuild_needed", "public update failed in this session")
     : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
   if (state.newDetailLinkNode) {
     const base = getStudioRoute(state.config, "catalogue_work_detail_editor");
@@ -1286,7 +1286,7 @@ function formatBuildPreview(state, build) {
   const baseText = t(
     state,
     "build_preview_template",
-    "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
+    "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
     {
       work_ids: workText,
       series_ids: seriesText,
@@ -1549,7 +1549,7 @@ function buildPayload(state) {
       kind: "works",
       ids: state.bulkWorkIds.slice(),
       expected_record_hashes: expectedRecordHashes,
-      apply_build: applyBuildRequested(state),
+      apply_build: bulkSelectionHasPublishedRecords(state),
       set_fields: setFields
     };
     if (state.bulkTouchedFields.has("series_ids")) {
@@ -1562,7 +1562,7 @@ function buildPayload(state) {
   return {
     work_id: state.currentWorkId,
     expected_record_hash: state.currentRecordHash,
-    apply_build: applyBuildRequested(state),
+    apply_build: currentWorkIsPublished(state),
     extra_series_ids: state.pendingBuildExtraSeriesIds.slice(),
     record: buildWorkRecordFromDraft(draft, {
       downloadFields: DOWNLOAD_FIELDS,
@@ -1575,25 +1575,42 @@ function currentWorkIsPublished(state) {
   return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
 }
 
-function applyBuildRequested(state) {
-  if (state.mode === "bulk") {
-    return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
-  }
-  return Boolean(state.applyBuildNode && state.applyBuildNode.checked && currentWorkIsPublished(state));
+function currentWorkIsDraft(state) {
+  return normalizeText(state.draft && state.draft.status).toLowerCase() === "draft";
+}
+
+function bulkSelectionHasPublishedRecords(state) {
+  if (state.mode !== "bulk") return false;
+  return state.bulkWorkIds.some((workId) => {
+    const record = state.bulkRecords.get(workId);
+    return normalizeText(record && record.status).toLowerCase() === "published";
+  });
+}
+
+function bulkPublishedBuildTargets(state) {
+  return state.bulkWorkIds
+    .filter((workId) => {
+      const record = state.bulkRecords.get(workId);
+      return normalizeText(record && record.status).toLowerCase() === "published";
+    })
+    .map((workId) => ({ work_id: workId, extra_series_ids: [] }));
 }
 
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const canUpdateSite = state.mode === "bulk"
-    ? state.mode !== "new" && hasRecord
-    : state.mode !== "new" && hasRecord && currentWorkIsPublished(state);
-  const showUpdate = canUpdateSite && state.rebuildPending;
-  state.buildButton.hidden = !showUpdate;
-  state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
-  if (state.applyBuildNode) {
-    if (!canUpdateSite) state.applyBuildNode.checked = false;
-    state.applyBuildNode.disabled = !canUpdateSite || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  }
+  const canPublish = state.mode === "single" && hasRecord && currentWorkIsDraft(state);
+  const canUnpublish = state.mode === "single" && hasRecord && currentWorkIsPublished(state);
+  const label = canUnpublish
+    ? t(state, "unpublish_button", "Unpublish")
+    : t(state, "publish_button", "Publish");
+  state.publicationButton.textContent = label;
+  state.publicationButton.hidden = !(canPublish || canUnpublish);
+  state.publicationButton.disabled = !(canPublish || canUnpublish)
+    || (canPublish && dirty)
+    || (canPublish && errors.size > 0)
+    || state.isSaving
+    || state.isBuilding
+    || state.isDeleting
+    || !state.serverAvailable;
 }
 
 function applySingleSaveBuildOutcome(state, response) {
@@ -1656,7 +1673,6 @@ function setLoadedRecord(state, workId, record, options = {}) {
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   setOpenInputMode(state);
-  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);
   applyReadonly(state);
   syncUrl(workId);
@@ -1686,7 +1702,6 @@ function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options =
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
   setOpenInputMode(state);
-  if (state.applyBuildNode) state.applyBuildNode.checked = false;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -1740,7 +1755,6 @@ function setNewWorkMode(state, options = {}) {
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
-  if (state.applyBuildNode) state.applyBuildNode.checked = false;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -1784,7 +1798,6 @@ function setEmptySearchMode(state, options = {}) {
   if (!options.keepSearchValue) {
     state.searchNode.value = "";
   }
-  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -1812,10 +1825,10 @@ function updateEditorState(state) {
   } else if (state.mode === "bulk") {
     const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
       ? state.bulkBuildTargets
-      : state.bulkWorkIds.map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+      : bulkPublishedBuildTargets(state);
     setTextWithState(
       state.buildImpactNode,
-      t(state, "bulk_build_preview", "Build preview: {count} work scopes will be rebuilt.", {
+      t(state, "bulk_build_preview", "Public update preview: {count} published work scope(s) will be updated.", {
         count: String(previewTargets.length)
       })
     );
@@ -1892,10 +1905,6 @@ async function saveCurrentWork(state) {
   }
 
   if (!draftHasChanges(state)) {
-    if (applyBuildRequested(state) && state.rebuildPending) {
-      await buildCurrentWork(state);
-      return;
-    }
     setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
     setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
     updateEditorState(state);
@@ -1904,10 +1913,9 @@ async function saveCurrentWork(state) {
 
   state.isSaving = true;
   state.saveButton.disabled = true;
-  state.buildButton.disabled = true;
   setTextWithState(
     state.statusNode,
-    applyBuildRequested(state)
+    (state.mode === "bulk" ? bulkSelectionHasPublishedRecords(state) : currentWorkIsPublished(state))
       ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
       : t(state, "save_status_saving", "Saving source record…")
   );
@@ -1942,7 +1950,7 @@ async function saveCurrentWork(state) {
       if (outcome.kind === "saved_and_updated") {
         setTextWithState(
           state.resultNode,
-          t(state, "bulk_save_result_success_applied", "Saved {count} work records and updated the public catalogue at {saved_at}.", {
+          t(state, "bulk_save_result_success_applied", "Saved {count} work records and updated public catalogue output for published records at {saved_at}.", {
             count: String(response.changed_count || 0),
             saved_at: outcome.stamp
           }),
@@ -1952,7 +1960,7 @@ async function saveCurrentWork(state) {
       } else if (outcome.kind === "saved_update_failed") {
         setTextWithState(
           state.resultNode,
-          t(state, "bulk_save_result_success_partial", "Saved {count} work records at {saved_at}, but the site update failed. Retry Update site now.", {
+          t(state, "bulk_save_result_success_partial", "Saved {count} work records at {saved_at}, but the public update failed.", {
             count: String(response.changed_count || 0),
             saved_at: outcome.stamp
           }),
@@ -1963,7 +1971,7 @@ async function saveCurrentWork(state) {
         setTextWithState(
           state.resultNode,
           response.changed
-            ? t(state, "bulk_save_result_success", "Saved {count} work records at {saved_at}. Public catalogue update still pending.", {
+            ? t(state, "bulk_save_result_success", "Saved {count} work records at {saved_at}.", {
               count: String(response.changed_count || 0),
               saved_at: outcome.stamp
             })
@@ -2021,7 +2029,7 @@ async function saveCurrentWork(state) {
     } else if (outcome.kind === "saved_update_failed") {
       setTextWithState(
         state.resultNode,
-        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the site update failed. Retry Update site now.", { saved_at: outcome.stamp }),
+        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
         "warn"
       );
       setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
@@ -2036,7 +2044,7 @@ async function saveCurrentWork(state) {
       setTextWithState(
         state.resultNode,
         response.changed
-          ? t(state, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", { saved_at: outcome.stamp })
+          ? t(state, "save_result_success", "Source saved at {saved_at}.", { saved_at: outcome.stamp })
           : t(state, "save_result_unchanged", "Source already matches the current form values."),
         response.changed ? "success" : ""
       );
@@ -2107,11 +2115,11 @@ async function refreshBuildPreview(state) {
   if (state.mode === "bulk") {
     const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
       ? state.bulkBuildTargets
-      : state.bulkWorkIds.map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+      : bulkPublishedBuildTargets(state);
     setTextWithState(
       state.buildImpactNode,
       previewTargets.length
-        ? t(state, "bulk_build_preview", "Build preview: {count} work scopes will be rebuilt.", {
+        ? t(state, "bulk_build_preview", "Public update preview: {count} published work scope(s) will be updated.", {
           count: String(previewTargets.length)
         })
         : ""
@@ -2148,7 +2156,7 @@ async function refreshBuildPreview(state) {
     state.buildPreview = null;
     setTextWithState(
       state.buildImpactNode,
-      `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
+      `${t(state, "build_preview_failed", "Public update preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
     renderCurrentPreview(state);
@@ -2236,7 +2244,7 @@ async function buildCurrentWork(state) {
     if (state.mode === "bulk") {
       const buildTargets = state.rebuildPending && state.bulkBuildTargets.length
         ? state.bulkBuildTargets
-        : state.bulkWorkIds.map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+        : bulkPublishedBuildTargets(state);
       for (const target of buildTargets) {
         await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
           work_id: target.work_id,
@@ -2279,6 +2287,119 @@ async function buildCurrentWork(state) {
       `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
+async function applyPublicationChange(state) {
+  if (state.mode !== "single" || !state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
+  const action = currentWorkIsPublished(state) ? "unpublish" : currentWorkIsDraft(state) ? "publish" : "";
+  if (!action) {
+    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published works."), "error");
+    return;
+  }
+  if (action === "publish" && draftHasChanges(state)) {
+    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
+    return;
+  }
+
+  if (action === "publish") {
+    const errors = validateDraft(state);
+    updateFieldMessages(state, errors);
+    if (errors.size > 0) {
+      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
+      updateEditorState(state);
+      return;
+    }
+  }
+
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(
+    state.statusNode,
+    action === "publish"
+      ? t(state, "publication_preview_publish_running", "Preparing publish preview…")
+      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview…")
+  );
+  setTextWithState(state.resultNode, "");
+
+  try {
+    const request = {
+      kind: "work",
+      action,
+      work_id: state.currentWorkId,
+      expected_record_hash: state.currentRecordHash
+    };
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
+    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
+    if ((preview && preview.blocked) || blockers.length) {
+      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
+      setTextWithState(state.statusNode, message, "error");
+      return;
+    }
+
+    if (action === "unpublish") {
+      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this work?");
+      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
+      if (!window.confirm(`${summary}${dirtyNote}`)) {
+        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
+        return;
+      }
+    }
+
+    setTextWithState(
+      state.statusNode,
+      action === "publish"
+        ? t(state, "publication_publish_running", "Publishing work…")
+        : t(state, "publication_unpublish_running", "Unpublishing work…")
+    );
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    if (!record) throw new Error("publication response missing record");
+
+    const workId = state.currentWorkId;
+    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
+    state.sourceWorkRecordsById.set(workId, record);
+    state.workSearchById.set(workId, {
+      work_id: workId,
+      title: normalizeText(record.title),
+      year_display: normalizeText(record.year_display),
+      status: normalizeText(record.status),
+      series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
+      record_hash: recordHash
+    });
+    state.rebuildPending = response.status === "public_update_failed";
+    state.pendingBuildExtraSeriesIds = [];
+    const lookup = await loadWorkLookupRecord(state, workId).catch(() => null);
+    setLoadedRecord(state, workId, record, {
+      recordHash,
+      keepResult: true,
+      lookup
+    });
+    await refreshBuildPreview(state);
+
+    if (response.status === "public_update_failed") {
+      const error = normalizeText(response.public_update && response.public_update.error);
+      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
+      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
+      return;
+    }
+
+    if (action === "publish") {
+      setTextWithState(state.statusNode, t(state, "publication_status_published", "Work published."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_published", "Work is published and public catalogue output has been updated."), "success");
+    } else {
+      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Work unpublished."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Work is draft again and public catalogue output has been cleaned up."), "success");
+    }
+  } catch (error) {
+    const message = Number(error && error.status) === 409
+      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
+      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
   } finally {
     state.isBuilding = false;
     updateEditorState(state);
@@ -2484,18 +2605,15 @@ async function init() {
   const openButton = document.getElementById("catalogueWorkOpen");
   const newButton = document.getElementById("catalogueWorkNew");
   const saveButton = document.getElementById("catalogueWorkSave");
-  const buildButton = document.getElementById("catalogueWorkBuild");
+  const publicationButton = document.getElementById("catalogueWorkPublication");
   const deleteButton = document.getElementById("catalogueWorkDelete");
-  const runtimeActionsNode = buildButton ? buildButton.closest(".catalogueWorkPage__runtimeActions") : null;
-  const applyBuildNode = document.getElementById("catalogueWorkApplyBuild");
-  const applyBuildLabelNode = document.getElementById("catalogueWorkApplyBuildLabel");
   const saveModeNode = document.getElementById("catalogueWorkSaveMode");
   const contextNode = document.getElementById("catalogueWorkContext");
   const statusNode = document.getElementById("catalogueWorkStatus");
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchRowNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchRowNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !publicationButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -2539,11 +2657,8 @@ async function init() {
     openButton,
     newButton,
     saveButton,
-    buildButton,
+    publicationButton,
     deleteButton,
-    applyBuildNode,
-    applyBuildLabelNode,
-    runtimeActionsNode,
     saveModeNode,
     contextNode,
     statusNode,
@@ -2592,8 +2707,7 @@ async function init() {
     openButton.textContent = t(state, "open_button", "Open");
     newButton.textContent = t(state, "new_button", "New");
     saveButton.textContent = t(state, "save_button", "Save");
-    buildButton.textContent = t(state, "build_button", "Update site now");
-    applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
+    publicationButton.textContent = t(state, "publish_button", "Publish");
     deleteButton.textContent = t(state, "delete_button", "Delete");
 
     const [worksPayload, worksSourcePayload, seriesPayload, serverAvailable] = await Promise.all([
@@ -2734,8 +2848,8 @@ async function init() {
     saveButton.addEventListener("click", () => saveCurrentWork(state).catch((error) => {
       console.warn("catalogue_work_editor: unexpected save failure", error);
     }));
-    buildButton.addEventListener("click", () => buildCurrentWork(state).catch((error) => {
-      console.warn("catalogue_work_editor: unexpected save/build failure", error);
+    publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => {
+      console.warn("catalogue_work_editor: unexpected publication failure", error);
     }));
     deleteButton.addEventListener("click", () => deleteCurrentWork(state).catch((error) => {
       console.warn("catalogue_work_editor: unexpected delete failure", error);

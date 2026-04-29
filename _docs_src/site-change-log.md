@@ -8,6 +8,33 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Converted work editor to explicit Publish and Unpublish commands
+
+**Status:** implemented for works
+
+**Area:** Studio / catalogue works / publication workflow
+
+**Summary:**
+Updated the Work editor so single-work publication is controlled by `Publish` / `Unpublish` instead of save-time public update controls.
+
+**Reason:**
+The publication workflow request defines `Save`, `Publish`, and `Unpublish` as separate user intentions. Works needed the same command model as Series, with the added wrinkle that bulk saves should update public output only for changed records that are already published.
+
+**Effect:**
+The work status field is now read-only in single, bulk, and new modes. Single-work `Save` never changes publication status, draft saves stay source-only, and published saves request the internal public catalogue update without showing a rebuild/update command. Saved draft works expose `Publish`; published works expose `Unpublish`, which ignores unsaved form edits after confirmation and uses the shared publication preview/apply endpoints to clean public output. Bulk work saves no longer expose an update checkbox and only run public-update targets for changed published records.
+
+**Affected files/docs:**
+
+- `studio/catalogue-work/index.md`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Converted series editor to explicit Publish and Unpublish commands
 
 **Status:** implemented

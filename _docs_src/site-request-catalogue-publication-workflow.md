@@ -226,9 +226,18 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- partially implemented for works; work-detail conversion remains
 
 Apply the same command model to work and work-detail editors, including parent-runtime follow-through for details.
+
+Work-editor implementation:
+
+- `/studio/catalogue-work/` no longer exposes save-time public update controls
+- the work status field is read-only in single, bulk, and new modes
+- published work saves request the internal public update path automatically
+- bulk saves internally update public output only for changed published work records
+- saved draft works expose `Publish`; published works expose `Unpublish`
+- work `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
 
 Acceptance checks:
 

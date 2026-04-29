@@ -92,8 +92,9 @@ Request behavior:
 - work bulk save may also include `series_operation`
 - work bulk `series_operation.mode` may be `replace` or `add_remove`
 - the server validates the combined source write before writing the canonical JSON file once
-- successful response includes changed counts, changed ids, normalized changed records, and rebuild targets
-- optional `apply_build: true` runs the same scoped update sequence immediately and returns nested build status plus any remaining targets when that update sequence fails part-way through
+- successful response includes changed counts, changed ids, normalized changed records, and public-update targets
+- optional `apply_build: true` runs the same scoped update sequence immediately for changed work records whose saved status is `published`; draft work changes remain source-only
+- nested build status includes any remaining published targets when that update sequence fails part-way through
 
 `POST /catalogue/delete-preview` expects:
 

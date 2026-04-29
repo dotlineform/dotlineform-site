@@ -45,15 +45,16 @@ The first implementation covers:
 - add, edit, and delete work-owned downloads through modal forms
 - add, edit, and delete work-owned links through modal forms
 - validate basic field format before save
-- save source JSON only
-- preview the scoped rebuild impact for the current work
+- save metadata, with published-work saves updating the public catalogue internally
+- preview the scoped public update impact for the current work
 - show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
 - refresh local work image derivatives from the displayed source image path without changing source metadata
 - run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
-- save with an optional `Update site now` path through the local catalogue service
-- when `Update site now` runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
+- publish draft works through a dedicated `Publish` command
+- unpublish public works through a dedicated `Unpublish` command
+- when the public update path runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
 - delete one work source record in single-record mode
-- show saved-state feedback and rebuild-needed state after save
+- show saved-state feedback and public-update failure state after save
 
 It does not yet:
 
@@ -105,7 +106,7 @@ Required create fields:
 Edit-only surfaces are disabled while the draft does not yet exist:
 
 - `Delete`
-- `Update site now`
+- `Publish`
 - generated dimensions
 - public work link
 - preview and readiness panels
@@ -127,10 +128,11 @@ Current bulk-edit behavior:
 
 - the page stays on `/studio/catalogue-work/`
 - untouched fields preserve per-record values
+- `status` remains read-only
 - an empty touched field clears that field across the selected works
 - `series_ids` accepts either a plain comma-delimited replacement list or only `+id` / `-id` diff entries
 - detail, file, and link sections are hidden while bulk mode is active
-- `Save` can optionally run one scoped work rebuild per affected work scope after the bulk source save
+- `Save` internally updates public catalogue output for changed records that are already published
 - delete is disabled in bulk mode
 
 ## Save Boundary
@@ -138,27 +140,30 @@ Current bulk-edit behavior:
 Current action labels:
 
 - `Save`
-  writes source JSON and can optionally also update the public catalogue immediately when the saved work is published
-- `Update site now`
-  appears only when a published source record has been saved but runtime publication is still pending
+  writes work source JSON. If the work is already `published`, the save also runs the internal public catalogue update.
+- `Publish`
+  appears for saved draft works when the form is clean and required publication fields are valid
+- `Unpublish`
+  appears for published works, ignores unsaved form edits after confirmation, changes source status back to `draft`, and cleans public catalogue output
 - `Delete`
   removes the current source record in single-record mode after preview/confirmation
 
-Current save/rebuild flow:
+Current save/publication flow:
 
 1. page loads derived lookup payloads for work search and series lookup, plus the canonical `assets/studio/data/catalogue/works.json` source map for editable work fields
 2. opening a work fetches one focused work lookup record from `assets/studio/data/catalogue_lookup/works/<work_id>.json` for generated runtime context, but the editable form baseline comes from the canonical source record
 3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
-5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and optional `apply_build: true`; the editor and write server ignore `apply_build` unless the saved work status is `published`
-6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when the user chose `Update site now` for a published work
+5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`
+6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
 7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
-8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
+8. `POST /catalogue/build-preview` reports the scoped public-update impact for the saved work record
 9. the same preview now also carries work media readiness and staged work prose readiness
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
-12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions on published works; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
-13. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
+12. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
+13. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
+14. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
 
 The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 
@@ -167,9 +172,9 @@ Bulk save flow:
 1. page expands the requested work selection in the browser
 2. page uses canonical source records for the bulk-edit baseline and only uses focused lookup records for generated runtime context
 3. user edits only the fields that should apply across the selection
-4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, optional series membership operations, and optional `apply_build: true`
-5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus rebuild targets
-6. when `apply_build` is true, the same save response also reports the nested site-update result; otherwise the page leaves `Update site now` available as a follow-up action
+4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, optional series membership operations, and internal `apply_build: true` when the selection includes published records
+5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus published-record public-update targets
+6. changed draft records remain source-only; changed published records update public catalogue output in the same save response
 
 Delete flow:
 
@@ -179,7 +184,7 @@ Delete flow:
 4. the server deletes the work plus dependent detail/file/link source records in one atomic write bundle
 5. the server removes generated work/detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries
 
-The current rebuild scope is intentionally narrow:
+The current public update scope is intentionally narrow:
 
 - the current work page/json
 - affected series pages

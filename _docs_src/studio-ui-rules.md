@@ -23,6 +23,29 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-060
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: the work editor still exposed publication as a save-time `Update site now` checkbox plus a follow-up update button, even after the publication workflow separated source saves from visibility changes.
+- triage: command model / publication workflow
+- reasoning: work metadata saves, bulk work edits, and public visibility changes are separate user intentions. A published-work save should update public output internally, while `Publish` and `Unpublish` should be the only visible controls that change source status.
+- permanent rule: work publication state changes happen through the single publication command. `Save` does not change status; saved published works run the internal public update; saved draft works remain source-only; bulk saves update public output only for changed records that are already published; `Publish` moves a clean draft to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated public output.
+- outcome: removed the visible work save-time public update checkbox and follow-up update button, added a config-backed `Publish` / `Unpublish` command for single-work mode, made status read-only in single, bulk, and new modes, and wired work publication state changes through the shared catalogue publication preview/apply endpoints.
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+  - `_docs_src/site-request-catalogue-publication-workflow.md`
+- verification:
+  - open `/studio/catalogue-work/?work=<draft_work_id>` and confirm a saved draft shows `Publish`, no `Update site now` checkbox, and disabled status editing
+  - open `/studio/catalogue-work/?work=<published_work_id>` and confirm `Unpublish` remains available even with dirty form edits
+  - publish preview/apply for a valid draft work and confirm the form reloads as `published`
+  - unpublish dry-run or test record and confirm source status returns to `draft` and public cleanup impact is reported by the server
+
 ## UI Rule Log 2026-04-29 / UI-059
 
 - status: adopted
@@ -63,13 +86,14 @@ Use this as the single capture surface for Studio UI work:
 
 ## UI Rule Log 2026-04-29 / UI-057
 
-- status: adopted
+- status: superseded by UI-060 for the visible Work editor command model
 - route: `/studio/catalogue-work/`
 - issue: changing work `00375` from blank status to `draft` could still run the checked save-time public update, and the build path rewrote the work as `published`.
 - triage: publication-boundary mismatch
 - reasoning: work save-time public update controls had not yet adopted the same published-only boundary as series. A draft source save must not be able to publish the record just because `Update site now` remained checked.
 - permanent rule: Studio save-time public update controls are available for works only when the current form status is `published`; draft work saves remain source-only, and runtime work builds require a published work.
 - outcome: `Update site now` is disabled and unchecked for draft works, save-time `apply_build` is skipped server-side when the saved work is draft, and JSON-source work builds reject non-published works.
+- superseded note: the published-only backend guardrail still applies, but `/studio/catalogue-work/` no longer exposes save-time public update controls after UI-060.
 - files changed:
   - `assets/studio/js/catalogue-work-editor.js`
   - `assets/studio/data/studio_config.json`
