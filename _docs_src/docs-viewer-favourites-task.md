@@ -1,10 +1,10 @@
 ---
 doc_id: ui-request-docs-viewer-favourites-task
-title: "Docs Viewer Favourites"
+title: Docs Viewer Favourites
 added_date: 2026-04-19
 last_updated: 2026-04-24
-parent_id: ui-requests
-sort_order: 20
+parent_id: change-requests
+sort_order: 140
 ---
 # Docs Viewer Favourites Task
 

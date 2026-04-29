@@ -1,10 +1,10 @@
 ---
 doc_id: site-request-moments-prose-source-model
-title: "Moments Prose Source Model Request"
+title: Moments Prose Source Model Request
 added_date: 2026-04-27
 last_updated: 2026-04-27
 parent_id: change-requests
-sort_order: 145
+sort_order: 50
 ---
 # Moments Prose Source Model Request
 

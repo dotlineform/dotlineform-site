@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-28T21:34:28Z",
+  "generated_at": "2026-04-29T08:01:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -63,20 +63,6 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-request-docs-viewer-favourites-spec",
-      "title": "Docs Viewer Favourites Spec",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-requests",
-      "sort_order": 10,
-      "published": true,
-      "viewable": true,
-      "source_path": "docs-viewer-favourites-spec.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-spec.json"
     },
     {
       "scope": "studio",
@@ -220,20 +206,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-requests",
-      "title": "UI Requests",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
-      "parent_id": "change-requests",
-      "sort_order": 10,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui-requests.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-requests",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-requests.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "generic-llm-helper-pattern",
       "title": "Generic LLM Helper Pattern",
       "added_date": "2026-04-16",
@@ -332,6 +304,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-build-incremental",
+      "title": "Docs Build Incremental Request",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-22",
+      "parent_id": "change-requests",
+      "sort_order": 20,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-docs-build-incremental.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "user-guide-docs-html-import",
       "title": "Docs HTML Import",
       "added_date": "2026-04-24",
@@ -357,20 +343,6 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-request-docs-viewer-favourites-task",
-      "title": "Docs Viewer Favourites",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-04-24",
-      "parent_id": "ui-requests",
-      "sort_order": 20,
-      "published": true,
-      "viewable": true,
-      "source_path": "docs-viewer-favourites-task.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json"
     },
     {
       "scope": "studio",
@@ -542,20 +514,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "docs-viewer-management",
-      "title": "Docs Viewer Management",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-25",
-      "parent_id": "ui-requests",
-      "sort_order": 21,
-      "published": true,
-      "viewable": true,
-      "source_path": "docs-viewer-management.md",
-      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "studio-ui-conformance",
       "title": "Studio UI Conformance Spec",
       "added_date": "2026-04-21",
@@ -584,6 +542,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-catalogue-lookup-invalidation",
+      "title": "Catalogue Lookup Invalidation Request",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-22",
+      "parent_id": "change-requests",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-lookup-invalidation.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-lookup-invalidation.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
@@ -609,20 +581,6 @@
       "source_path": "scripts-copy-draft-media.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-request-docs-html-import-spec",
-      "title": "Docs HTML Import Spec",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
-      "parent_id": "ui-requests",
-      "sort_order": 30,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui-request-docs-html-import-spec.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-spec.json"
     },
     {
       "scope": "studio",
@@ -864,20 +822,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-request-docs-html-import-task",
-      "title": "Docs HTML Import Task",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
-      "parent_id": "ui-requests",
-      "sort_order": 40,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui-request-docs-html-import-task.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-task.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "new-pipeline-implementation-plan",
       "title": "Implementation Plan",
       "added_date": "2026-04-18",
@@ -948,6 +892,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-work-series-prose-source-model",
+      "title": "Work And Series Prose Source Model Request",
+      "added_date": "2026-04-26",
+      "last_updated": "2026-04-27",
+      "parent_id": "change-requests",
+      "sort_order": 40,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-work-series-prose-source-model.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-series-prose-source-model.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "project-state-page",
       "title": "Project State Page",
       "added_date": "2026-04-27",
@@ -1004,20 +962,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-request-docs-viewer-index-drag-undo-task",
-      "title": "Docs Viewer Index Drag Undo",
-      "added_date": "2026-04-25",
-      "last_updated": "2026-04-25",
-      "parent_id": "ui-requests",
-      "sort_order": 50,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui-request-docs-viewer-index-drag-undo-task.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
@@ -1029,6 +973,20 @@
       "source_path": "scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-moments-prose-source-model",
+      "title": "Moments Prose Source Model Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "change-requests",
+      "sort_order": 50,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-moments-prose-source-model.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moments-prose-source-model.json"
     },
     {
       "scope": "studio",
@@ -1116,6 +1074,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-analysis-doc-viewer",
+      "title": "Analysis Docs Viewer Request",
+      "added_date": "2026-04-26",
+      "last_updated": "2026-04-26",
+      "parent_id": "change-requests",
+      "sort_order": 60,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-analysis-doc-viewer.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-analysis-doc-viewer.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-activity",
       "title": "Catalogue Activity",
       "added_date": "2026-04-18",
@@ -1141,20 +1113,6 @@
       "source_path": "scripts-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-source.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "change-requests",
-      "title": "Change Requests",
-      "added_date": "2026-04-28",
-      "last_updated": "2026-04-28",
-      "parent_id": "",
-      "sort_order": 60,
-      "published": true,
-      "viewable": true,
-      "source_path": "change-requests.md",
-      "viewer_url": "/docs/?scope=studio&doc=change-requests",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json"
     },
     {
       "scope": "studio",
@@ -1284,6 +1242,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-catalogue-moment-editor",
+      "title": "Catalogue Moment Editor Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "change-requests",
+      "sort_order": 70,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-moment-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-moment-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-series-editor",
       "title": "Catalogue Series Editor",
       "added_date": "2026-04-22",
@@ -1351,6 +1323,20 @@
       "source_path": "architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/architecture.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-delete-cleanup",
+      "title": "Catalogue Delete Cleanup Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "change-requests",
+      "sort_order": 80,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-delete-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-delete-cleanup.json"
     },
     {
       "scope": "studio",
@@ -1438,6 +1424,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-work-owned-files-links",
+      "title": "Work-Owned Files And Links Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "change-requests",
+      "sort_order": 90,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-work-owned-files-links.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-owned-files-links.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-catalogue-targeted-plan",
       "title": "Catalogue Targeted Search Plan",
       "added_date": "2026-04-25",
@@ -1466,6 +1466,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-field-aware-build-scoping",
+      "title": "Field-Aware Catalogue Build Scoping Request",
+      "added_date": "2026-04-27",
+      "last_updated": "2026-04-27",
+      "parent_id": "change-requests",
+      "sort_order": 100,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-field-aware-build-scoping.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-catalogue-lookup",
       "title": "Catalogue Lookup Export",
       "added_date": "2026-04-17",
@@ -1480,6 +1494,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-catalogue-work-unified-editor",
+      "title": "Catalogue Work Unified Editor Request",
+      "added_date": "2026-04-28",
+      "last_updated": "2026-04-28",
+      "parent_id": "change-requests",
+      "sort_order": 110,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-work-unified-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-unified-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "data-models",
       "title": "Data Models",
       "added_date": "2026-03-31",
@@ -1491,6 +1519,20 @@
       "source_path": "data-models.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-work-detail-unified-editor",
+      "title": "Catalogue Work Detail Unified Editor Request",
+      "added_date": "2026-04-28",
+      "last_updated": "2026-04-28",
+      "parent_id": "change-requests",
+      "sort_order": 120,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-work-detail-unified-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-detail-unified-editor.json"
     },
     {
       "scope": "studio",
@@ -1522,31 +1564,17 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-docs-build-incremental",
-      "title": "Docs Build Incremental Request",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
-      "parent_id": "change-requests",
-      "sort_order": 120,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-docs-build-incremental.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-catalogue-lookup-invalidation",
-      "title": "Catalogue Lookup Invalidation Request",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-04-22",
+      "doc_id": "ui-request-docs-viewer-favourites-spec",
+      "title": "Docs Viewer Favourites Spec",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-04-19",
       "parent_id": "change-requests",
       "sort_order": 130,
       "published": true,
       "viewable": true,
-      "source_path": "site-request-catalogue-lookup-invalidation.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-lookup-invalidation.json"
+      "source_path": "docs-viewer-favourites-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-spec.json"
     },
     {
       "scope": "studio",
@@ -1578,6 +1606,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-request-docs-viewer-favourites-task",
+      "title": "Docs Viewer Favourites",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-04-24",
+      "parent_id": "change-requests",
+      "sort_order": 140,
+      "published": true,
+      "viewable": true,
+      "source_path": "docs-viewer-favourites-task.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-fix-missing-title-sort",
       "title": "Legacy Title Sort Fix",
       "added_date": "2026-03-31",
@@ -1606,59 +1648,17 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-work-series-prose-source-model",
-      "title": "Work And Series Prose Source Model Request",
-      "added_date": "2026-04-26",
-      "last_updated": "2026-04-27",
-      "parent_id": "change-requests",
-      "sort_order": 140,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-work-series-prose-source-model.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-series-prose-source-model.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-moments-prose-source-model",
-      "title": "Moments Prose Source Model Request",
-      "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
-      "parent_id": "change-requests",
-      "sort_order": 145,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-moments-prose-source-model.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moments-prose-source-model.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-analysis-doc-viewer",
-      "title": "Analysis Docs Viewer Request",
-      "added_date": "2026-04-26",
-      "last_updated": "2026-04-26",
+      "doc_id": "docs-viewer-management",
+      "title": "Docs Viewer Management",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-04-25",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
       "viewable": true,
-      "source_path": "site-request-analysis-doc-viewer.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-analysis-doc-viewer.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-catalogue-moment-editor",
-      "title": "Catalogue Moment Editor Request",
-      "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
-      "parent_id": "change-requests",
-      "sort_order": 150,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-catalogue-moment-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-moment-editor.json"
+      "source_path": "docs-viewer-management.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json"
     },
     {
       "scope": "studio",
@@ -1676,73 +1676,17 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-catalogue-delete-cleanup",
-      "title": "Catalogue Delete Cleanup Request",
-      "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
+      "doc_id": "ui-request-docs-html-import-spec",
+      "title": "Docs HTML Import Spec",
+      "added_date": "2026-04-23",
+      "last_updated": "2026-04-23",
       "parent_id": "change-requests",
-      "sort_order": 151,
+      "sort_order": 160,
       "published": true,
       "viewable": true,
-      "source_path": "site-request-catalogue-delete-cleanup.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-delete-cleanup.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-work-owned-files-links",
-      "title": "Work-Owned Files And Links Request",
-      "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
-      "parent_id": "change-requests",
-      "sort_order": 152,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-work-owned-files-links.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-owned-files-links.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-field-aware-build-scoping",
-      "title": "Field-Aware Catalogue Build Scoping Request",
-      "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
-      "parent_id": "change-requests",
-      "sort_order": 153,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-field-aware-build-scoping.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-catalogue-work-unified-editor",
-      "title": "Catalogue Work Unified Editor Request",
-      "added_date": "2026-04-28",
-      "last_updated": "2026-04-28",
-      "parent_id": "change-requests",
-      "sort_order": 154,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-catalogue-work-unified-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-unified-editor.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-catalogue-work-detail-unified-editor",
-      "title": "Catalogue Work Detail Unified Editor Request",
-      "added_date": "2026-04-28",
-      "last_updated": "2026-04-28",
-      "parent_id": "change-requests",
-      "sort_order": 155,
-      "published": true,
-      "viewable": true,
-      "source_path": "site-request-catalogue-work-detail-unified-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-detail-unified-editor.json"
+      "source_path": "ui-request-docs-html-import-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-spec.json"
     },
     {
       "scope": "studio",
@@ -1774,6 +1718,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-request-docs-html-import-task",
+      "title": "Docs HTML Import Task",
+      "added_date": "2026-04-23",
+      "last_updated": "2026-04-23",
+      "parent_id": "change-requests",
+      "sort_order": 170,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-request-docs-html-import-task.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-task.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "new-pipeline",
       "title": "New Cat Pipeline",
       "added_date": "2026-04-19",
@@ -1785,6 +1743,20 @@
       "source_path": "new-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-request-docs-viewer-index-drag-undo-task",
+      "title": "Docs Viewer Index Drag Undo",
+      "added_date": "2026-04-25",
+      "last_updated": "2026-04-25",
+      "parent_id": "change-requests",
+      "sort_order": 180,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-request-docs-viewer-index-drag-undo-task.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json"
     },
     {
       "scope": "studio",
@@ -1883,6 +1855,34 @@
       "source_path": "series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-audits",
+      "title": "UI Audits",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-04-21",
+      "parent_id": "",
+      "sort_order": 210,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-audits.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-audits",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "change-requests",
+      "title": "Change Requests",
+      "added_date": "2026-04-28",
+      "last_updated": "2026-04-29",
+      "parent_id": "",
+      "sort_order": 220,
+      "published": true,
+      "viewable": true,
+      "source_path": "change-requests.md",
+      "viewer_url": "/docs/?scope=studio&doc=change-requests",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json"
     },
     {
       "scope": "studio",
@@ -1995,20 +1995,6 @@
       "source_path": "tiered-dimension-policy.md",
       "viewer_url": "/docs/?scope=studio&doc=tiered-dimension-policy",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tiered-dimension-policy.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-audits",
-      "title": "UI Audits",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-04-21",
-      "parent_id": "",
-      "sort_order": 275,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui-audits.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-audits",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json"
     },
     {
       "scope": "studio",

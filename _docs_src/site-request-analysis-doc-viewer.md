@@ -1,10 +1,10 @@
 ---
 doc_id: site-request-analysis-doc-viewer
-title: "Analysis Docs Viewer Request"
+title: Analysis Docs Viewer Request
 added_date: 2026-04-26
 last_updated: 2026-04-26
 parent_id: change-requests
-sort_order: 150
+sort_order: 60
 ---
 # Analysis Docs Viewer Request
 

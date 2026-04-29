@@ -1,10 +1,10 @@
 ---
 doc_id: site-request-catalogue-delete-cleanup
-title: "Catalogue Delete Cleanup Request"
+title: Catalogue Delete Cleanup Request
 added_date: 2026-04-27
 last_updated: 2026-04-27
 parent_id: change-requests
-sort_order: 151
+sort_order: 80
 ---
 # Catalogue Delete Cleanup Request
 

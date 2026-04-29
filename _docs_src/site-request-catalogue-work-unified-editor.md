@@ -1,10 +1,10 @@
 ---
 doc_id: site-request-catalogue-work-unified-editor
-title: "Catalogue Work Unified Editor Request"
+title: Catalogue Work Unified Editor Request
 added_date: 2026-04-28
 last_updated: 2026-04-28
 parent_id: change-requests
-sort_order: 154
+sort_order: 110
 ---
 # Catalogue Work Unified Editor Request
 

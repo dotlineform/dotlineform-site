@@ -1,10 +1,10 @@
 ---
 doc_id: docs-viewer-management
-title: "Docs Viewer Management"
+title: Docs Viewer Management
 added_date: 2026-04-22
 last_updated: 2026-04-25
-parent_id: ui-requests
-sort_order: 21
+parent_id: change-requests
+sort_order: 150
 ---
 # Docs Viewer Management
 

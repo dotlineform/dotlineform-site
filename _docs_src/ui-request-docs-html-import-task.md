@@ -1,12 +1,11 @@
 ---
 doc_id: ui-request-docs-html-import-task
-title: "Docs HTML Import Task"
+title: Docs HTML Import Task
 added_date: 2026-04-23
 last_updated: 2026-04-23
-parent_id: ui-requests
-sort_order: 40
+parent_id: change-requests
+sort_order: 170
 ---
-
 # Docs HTML Import Task
 
 Status:

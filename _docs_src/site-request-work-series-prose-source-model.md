@@ -1,10 +1,10 @@
 ---
 doc_id: site-request-work-series-prose-source-model
-title: "Work And Series Prose Source Model Request"
+title: Work And Series Prose Source Model Request
 added_date: 2026-04-26
 last_updated: 2026-04-27
 parent_id: change-requests
-sort_order: 140
+sort_order: 40
 ---
 # Work And Series Prose Source Model Request
 

@@ -1,12 +1,11 @@
 ---
 doc_id: ui-request-docs-viewer-index-drag-undo-task
-title: "Docs Viewer Index Drag Undo"
+title: Docs Viewer Index Drag Undo
 added_date: 2026-04-25
 last_updated: 2026-04-25
-parent_id: ui-requests
-sort_order: 50
+parent_id: change-requests
+sort_order: 180
 ---
-
 # Docs Viewer Index Drag Undo Task
 
 Status:

@@ -1,12 +1,11 @@
 ---
 doc_id: ui-request-docs-html-import-spec
-title: "Docs HTML Import Spec"
+title: Docs HTML Import Spec
 added_date: 2026-04-23
 last_updated: 2026-04-23
-parent_id: ui-requests
-sort_order: 30
+parent_id: change-requests
+sort_order: 160
 ---
-
 # Docs HTML Import Spec
 
 Status:
