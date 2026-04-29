@@ -2,11 +2,35 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-29] Factored shared work-detail editor helpers
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work details
+
+**Summary:**
+Added a shared work-detail source helper module and moved existing new-detail and edit-detail controllers onto the same field definitions, id normalization, draft shaping, validation, and payload helpers.
+
+**Reason:**
+The work-detail unified editor request needs one source-field contract before the parent-scoped new mode can be added to the main detail editor.
+
+**Effect:**
+The current `/studio/catalogue-work-detail/` and `/studio/catalogue-new-work-detail/` route behavior remains unchanged, but both paths now depend on the same work-detail helper surface.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-detail-fields.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-new-work-detail-editor.js`
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
+- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 
 ## [2026-04-28] Added Change Requests docs root
 

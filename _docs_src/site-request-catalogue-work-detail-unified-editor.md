@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-work-detail-unified-editor
 title: Catalogue Work Detail Unified Editor Request
 added_date: 2026-04-28
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: change-requests
 sort_order: 120
 ---
@@ -145,7 +145,7 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented
 
 Extract shared detail field metadata, draft shaping, id normalization, validation, and create/save payload helpers before adding new mode.
 
@@ -160,6 +160,11 @@ Acceptance checks:
 - create and edit paths consume the same field definitions
 - helper extraction does not change route behavior
 - JS syntax checks pass
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-detail-fields.js` now owns shared work-detail source field definitions, id normalization, draft shaping, create validation, next-detail-id suggestion, and create/save payload builders.
+- `assets/studio/js/catalogue-work-detail-editor.js` and `assets/studio/js/catalogue-new-work-detail-editor.js` consume the shared helper while preserving their existing route behavior.
 
 ### Task 3. Add New Mode To Work Detail Editor
 

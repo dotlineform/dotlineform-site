@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c4fa379acea3845cfe6b8dd10ff80780",
-    "generated_at_utc": "2026-04-29T08:01:35Z",
+    "version": "blake2b-9d2f22e9478569fbf29a71f1c8593e39",
+    "generated_at_utc": "2026-04-29T08:07:04Z",
     "count": 143
   },
   "entries": [
@@ -1549,10 +1549,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-29 • User Guide",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -1563,12 +1563,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-29",
         "2026",
         "04",
-        "26"
+        "29"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "css-audit-spec",
@@ -1908,10 +1908,10 @@
       "kind": "doc",
       "title": "New Catalogue Work Detail",
       "href": "/docs/?scope=studio&doc=catalogue-new-work-detail-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-29 • User Guide",
       "search_terms": [
         "catalogue-new-work-detail-editor",
         "catalogue",
@@ -1923,12 +1923,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-29",
         "2026",
         "04",
-        "26"
+        "29"
       ],
-      "search_text": "catalogue-new-work-detail-editor catalogue new work detail editor new catalogue work detail user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-new-work-detail-editor catalogue new work detail editor new catalogue work detail user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "search-ui-behaviour",
@@ -2563,10 +2563,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Unified Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-28 • Change Requests",
+      "display_meta": "2026-04-29 • Change Requests",
       "search_terms": [
         "site-request-catalogue-work-detail-unified-editor",
         "site",
@@ -2580,12 +2580,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-28",
+        "2026-04-29",
         "2026",
         "04",
-        "28"
+        "29"
       ],
-      "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request change requests change requests 2026-04-28 2026 04 28"
+      "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "config",
@@ -3252,20 +3252,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-28",
-      "display_meta": "2026-04-28",
+      "last_updated": "2026-04-29",
+      "display_meta": "2026-04-29",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-28",
+        "2026-04-29",
         "2026",
         "04",
-        "28"
+        "29"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-28 2026 04 28"
+      "search_text": "site-change-log site change log site change log 2026-04-29 2026 04 29"
     },
     {
       "id": "tiered-dimension-policy",

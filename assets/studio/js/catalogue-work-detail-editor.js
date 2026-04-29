@@ -18,30 +18,21 @@ import {
   buildDetailThumbPreview,
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
+import {
+  WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  WORK_DETAIL_READONLY_FIELDS as READONLY_FIELDS,
+  WORK_DETAIL_STATUS_OPTIONS as STATUS_OPTIONS,
+  buildSaveWorkDetailPayload,
+  buildWorkDetailDraftFromRecord,
+  canonicalizeWorkDetailScalar as canonicalizeScalar,
+  normalizeDetailId,
+  normalizeDetailUid,
+  normalizeText,
+  normalizeWorkId
+} from "./catalogue-work-detail-fields.js";
 
-const EDITABLE_FIELDS = [
-  { key: "project_subfolder", label: "project subfolder", type: "text" },
-  { key: "project_filename", label: "project filename", type: "text" },
-  { key: "title", label: "title", type: "text" },
-  { key: "status", label: "status", type: "select", options: ["", "draft", "published"] }
-];
-
-const READONLY_FIELDS = [
-  { key: "detail_uid", label: "detail id" },
-  { key: "work_id", label: "work id" },
-  { key: "detail_id", label: "detail row id" },
-  { key: "published_date", label: "published date" },
-  { key: "width_px", label: "width px" },
-  { key: "height_px", label: "height px" }
-];
-
-const STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const SEARCH_LIMIT = 20;
 const BULK_PREVIEW_LIMIT = 12;
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -56,30 +47,6 @@ function toneForReadinessStatus(status) {
   if (status === "ready") return "ready";
   if (status === "unavailable") return "error";
   return "warning";
-}
-
-function normalizeWorkId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(5, "0");
-}
-
-function normalizeDetailId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(3, "0");
-}
-
-function normalizeDetailUid(value) {
-  const text = normalizeText(value);
-  if (!text) return "";
-  const match = text.match(/^(\d{5})-(\d{3})$/);
-  if (match) return `${match[1]}-${match[2]}`;
-  const digits = text.replace(/\D/g, "");
-  if (digits.length === 8) {
-    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
-  }
-  return "";
 }
 
 function stableStringify(value) {
@@ -216,10 +183,6 @@ function renderReadiness(state) {
   }).join("");
 }
 
-function canonicalizeScalar(field, value) {
-  return normalizeText(value);
-}
-
 function parseDetailSelection(rawValue) {
   const text = normalizeText(rawValue);
   if (!text) return [];
@@ -270,7 +233,7 @@ function formatSelectionList(items) {
 }
 
 function buildBulkDraftFromRecords(records) {
-  const drafts = records.map((record) => buildDraftFromRecord(record));
+  const drafts = records.map((record) => buildWorkDetailDraftFromRecord(record));
   const draft = {};
   const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
@@ -415,14 +378,6 @@ async function loadDetailLookupRecord(state, detailUid) {
   return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_detail_base", detailUid, { cache: "no-store" });
 }
 
-function buildDraftFromRecord(record) {
-  const draft = {};
-  EDITABLE_FIELDS.forEach((field) => {
-    draft[field.key] = normalizeText(record[field.key]);
-  });
-  return draft;
-}
-
 function applyDraftToInputs(state) {
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
@@ -462,20 +417,7 @@ function buildPayload(state) {
   }
 
   const draft = state.draft;
-  return {
-    detail_uid: state.currentDetailUid,
-    expected_record_hash: state.currentRecordHash,
-    apply_build: applyBuildRequested(state),
-    record: {
-      detail_uid: state.currentDetailUid,
-      work_id: state.currentWorkId,
-      detail_id: state.currentRecord.detail_id,
-      project_subfolder: normalizeText(draft.project_subfolder) || null,
-      project_filename: normalizeText(draft.project_filename) || null,
-      title: normalizeText(draft.title) || null,
-      status: normalizeText(draft.status).toLowerCase() || null
-    }
-  };
+  return buildSaveWorkDetailPayload({ ...state, draft });
 }
 
 function applyBuildRequested(state) {
@@ -676,7 +618,7 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   state.bulkMixedFields = new Set();
   state.bulkTouchedFields = new Set();
   state.bulkBuildTargets = [];
-  state.baselineDraft = buildDraftFromRecord(record);
+  state.baselineDraft = buildWorkDetailDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);

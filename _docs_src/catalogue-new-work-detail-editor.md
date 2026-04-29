@@ -2,7 +2,7 @@
 doc_id: catalogue-new-work-detail-editor
 title: "New Catalogue Work Detail"
 added_date: 2026-04-18
-last_updated: 2026-04-26
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 60
 ---
@@ -14,6 +14,8 @@ Route:
 - focused create flow accepts `?work=<work_id>`
 
 This page creates a new canonical work-detail source record in `assets/studio/data/catalogue/work_details.json`.
+
+Implementation note: this legacy create route now consumes the same work-detail field definitions, id normalization, draft validation, next-id suggestion, and create payload helper as the main work-detail editor.
 
 ## Current Scope
 

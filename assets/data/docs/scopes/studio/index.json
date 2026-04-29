@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T08:01:34Z",
+  "generated_at": "2026-04-29T08:07:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -937,7 +937,7 @@
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 50,
       "published": true,
@@ -1147,7 +1147,7 @@
       "doc_id": "catalogue-new-work-detail-editor",
       "title": "New Catalogue Work Detail",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 60,
       "published": true,
@@ -1525,7 +1525,7 @@
       "doc_id": "site-request-catalogue-work-detail-unified-editor",
       "title": "Catalogue Work Detail Unified Editor Request",
       "added_date": "2026-04-28",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "change-requests",
       "sort_order": 120,
       "published": true,
@@ -1973,7 +1973,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

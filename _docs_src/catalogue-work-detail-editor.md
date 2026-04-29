@@ -2,7 +2,7 @@
 doc_id: catalogue-work-detail-editor
 title: "Catalogue Work Detail Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-26
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 50
 ---
@@ -38,6 +38,8 @@ The first implementation covers:
 - delete one work-detail source record in single-record mode
 
 The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
+
+Implementation note: the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
 
 ## Bulk Mode
 

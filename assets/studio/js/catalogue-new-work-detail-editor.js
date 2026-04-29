@@ -10,37 +10,15 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
-
-const EDITABLE_FIELDS = [
-  { key: "work_id", label: "work id", type: "text" },
-  { key: "detail_id", label: "detail id", type: "text" },
-  { key: "title", label: "title", type: "text" },
-  { key: "project_subfolder", label: "project subfolder", type: "text" },
-  { key: "project_filename", label: "project filename", type: "text" }
-];
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
-
-function normalizeWorkId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(5, "0");
-}
-
-function normalizeDetailId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(3, "0");
-}
-
-function normalizeDetailUid(workId, detailId) {
-  const normalizedWorkId = normalizeWorkId(workId);
-  const normalizedDetailId = normalizeDetailId(detailId);
-  if (!normalizedWorkId || !normalizedDetailId) return "";
-  return `${normalizedWorkId}-${normalizedDetailId}`;
-}
+import {
+  NEW_WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  buildCreateWorkDetailPayload,
+  normalizeDetailUid,
+  normalizeText,
+  normalizeWorkId,
+  suggestNextDetailId as suggestNextDetailIdFromRecords,
+  validateCreateWorkDetailDraft
+} from "./catalogue-work-detail-fields.js";
 
 function setTextWithState(node, text, state = "") {
   if (!node) return;
@@ -95,15 +73,7 @@ function renderField(field, fieldsNode, state) {
 }
 
 function suggestNextDetailId(state, workId) {
-  const normalizedWorkId = normalizeWorkId(workId);
-  if (!normalizedWorkId) return "";
-  let maxDetailId = 0;
-  state.detailByUid.forEach((record, detailUid) => {
-    if (!detailUid.startsWith(`${normalizedWorkId}-`)) return;
-    const detailId = Number(normalizeDetailId(record && record.detail_id));
-    maxDetailId = Math.max(maxDetailId, detailId);
-  });
-  return String(maxDetailId + 1).padStart(3, "0");
+  return suggestNextDetailIdFromRecords(state.detailByUid, workId);
 }
 
 function updateSuggestedDetailId(state) {
@@ -117,26 +87,11 @@ function updateSuggestedDetailId(state) {
 }
 
 function validateDraft(state) {
-  const errors = new Map();
-  const workId = normalizeWorkId(state.draft.work_id);
-  if (!workId) {
-    errors.set("work_id", t(state, "field_required_work_id", "Enter a parent work id."));
-  } else if (!state.workById.has(workId)) {
-    errors.set("work_id", t(state, "field_unknown_work_id", "Unknown work id: {work_id}.", { work_id }));
-  }
-
-  const detailId = normalizeDetailId(state.draft.detail_id);
-  if (!detailId) {
-    errors.set("detail_id", t(state, "field_required_detail_id", "Enter a detail id."));
-  } else if (workId && state.detailByUid.has(`${workId}-${detailId}`)) {
-    errors.set("detail_id", t(state, "field_duplicate_detail_id", "Detail id already exists for this work."));
-  }
-
-  if (!normalizeText(state.draft.title)) {
-    errors.set("title", t(state, "field_required_title", "Enter a title."));
-  }
-
-  return errors;
+  return validateCreateWorkDetailDraft(state.draft, {
+    workById: state.workById,
+    detailByUid: state.detailByUid,
+    t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+  });
 }
 
 function updateFieldMessages(state, errors) {
@@ -150,23 +105,7 @@ function updateFieldMessages(state, errors) {
 }
 
 function buildPayload(state) {
-  const workId = normalizeWorkId(state.draft.work_id);
-  const detailId = normalizeDetailId(state.draft.detail_id);
-  const detailUid = normalizeDetailUid(workId, detailId);
-  return {
-    work_id: workId,
-    detail_id: detailId,
-    detail_uid: detailUid,
-    record: {
-      detail_uid: detailUid,
-      work_id: workId,
-      detail_id: detailId,
-      title: normalizeText(state.draft.title) || null,
-      project_subfolder: normalizeText(state.draft.project_subfolder) || null,
-      project_filename: normalizeText(state.draft.project_filename) || null,
-      status: "draft"
-    }
-  };
+  return buildCreateWorkDetailPayload(state.draft);
 }
 
 function updateEditorState(state) {
