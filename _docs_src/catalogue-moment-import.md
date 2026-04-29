@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-import
 title: "Catalogue Moment Import"
 added_date: 2026-04-18
-last_updated: 2026-04-27
+last_updated: 2026-04-29
 parent_id: studio
 sort_order: 190
 ---
@@ -23,7 +23,7 @@ It is intentionally file-driven:
 - the user specifies one staged moment Markdown filename such as `keys.md`
 - Studio collects the moment metadata on the page
 - Studio previews the staged body-only prose source
-- apply imports prose, writes canonical moment metadata, stages/generates local moment media when the source image exists, runs a targeted moment rebuild, and rebuilds catalogue search
+- apply imports prose and writes canonical draft moment metadata
 
 This page does not scan external moment folders for changes.
 
@@ -50,7 +50,7 @@ Current page flow:
 4. call `POST /catalogue/moment/import-preview`
 5. show resolved source metadata, staged prose state, local media state, and validation errors
 6. call `POST /catalogue/moment/import-apply`
-7. show the targeted build result and link to the public moment page
+7. show the imported draft source result
 
 ## Source Model
 
@@ -71,6 +71,7 @@ Current assumptions:
 - `moment_id` is the filename stem
 - staged and permanent prose files are body-only Markdown with no canonical metadata front matter
 - required metadata is entered on the Studio page
+- imported moments are always written with `status: draft`
 - existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
 - source images resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/moments/images/<source_image_file>`
 - missing source images block local media generation for the moment but do not block prose/metadata import
@@ -82,9 +83,11 @@ The page uses the existing runtime behavior where missing images produce no hero
 Apply writes:
 
 - body-only prose to `_docs_src_catalogue/moments/<moment_id>.md`
-- moment metadata to `assets/studio/data/catalogue/moments.json`
+- draft moment metadata to `assets/studio/data/catalogue/moments.json`
 
-Then it delegates to the existing generator path:
+Apply does not publish the moment and does not run the scoped public update. Open [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor) afterward to review the draft and use `Publish` when it is ready.
+
+Publishing later delegates to the existing generator path:
 
 - `catalogue_json_build.py --moment-file <filename> --write`
 - `generate_work_pages.py --only moments --moment-ids <moment_id> --write`

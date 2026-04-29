@@ -48,7 +48,7 @@ Exposed endpoints:
 - `POST /catalogue/moment/import-apply`
 - `POST /catalogue/project-state-report`
 
-The current implementation can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, and can write the local project-state report. It does not write back into Excel.
+The current implementation can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, can apply shared publication preview/apply actions for works, work details, series, and moments, and can write the local project-state report. It does not write back into Excel.
 
 `POST /catalogue/project-state-report` accepts:
 
@@ -190,6 +190,7 @@ Preview behavior:
 - runs deterministic generated-artifact cleanup for `unpublish`
 - returns `status: "public_update_failed"` when a source write succeeds but the internal public update fails
 - records Catalogue Activity with `publication` operation names such as `series.publish`, `series.unpublish`, and `series.save_published`
+- moment `unpublish` also removes generated moment page/json artifacts, published thumbnails, repo-local staged media, the `assets/data/moments_index.json` entry, and the catalogue search record
 
 `POST /catalogue/work/save` expects:
 
@@ -276,7 +277,7 @@ Apply behavior:
 
 ## Scoped Build Media
 
-`POST /catalogue/build-preview`, `POST /catalogue/build-apply`, and the moment import apply path use the scoped JSON catalogue build helper for work, work-detail, and moment media tasks.
+`POST /catalogue/build-preview`, `POST /catalogue/build-apply`, and the shared publication apply path use the scoped JSON catalogue build helper for work, work-detail, and moment media tasks.
 
 For work, work-detail, and moment scopes, the build helper:
 
@@ -292,6 +293,8 @@ The write server reports generated/current/blocked media ids in the nested build
 
 ## Moment Import
 
+`POST /catalogue/moment/save` saves existing moment metadata in `assets/studio/data/catalogue/moments.json`. Optional `apply_build: true` requests the same-scope public update only when the saved moment status is `published`; draft moment saves remain source-only and return a `build_skipped` reason if a public update was requested.
+
 `POST /catalogue/moment/import-preview` expects:
 
 ```json
@@ -299,8 +302,8 @@ The write server reports generated/current/blocked media ids in the nested build
   "moment_file": "keys.md",
   "metadata": {
     "title": "keys",
-    "status": "published",
-    "published_date": "2026-02-15",
+    "status": "draft",
+    "published_date": "",
     "date": "2024-01-01",
     "date_display": "",
     "source_image_file": "",
@@ -315,6 +318,7 @@ Request behavior:
 - staged prose is resolved from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 - permanent prose target is `_docs_src_catalogue/moments/<moment_id>.md`
 - metadata is validated from the submitted metadata plus any existing `assets/studio/data/catalogue/moments.json` record
+- submitted import status is normalized to `draft`; publishing happens through `POST /catalogue/publication-apply` after import
 - staged prose must be body-only Markdown and must not contain canonical metadata front matter
 - existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
 
@@ -323,10 +327,10 @@ Request behavior:
 Apply behavior:
 
 - writes body-only prose to `_docs_src_catalogue/moments/<moment_id>.md`
-- writes canonical moment metadata to `assets/studio/data/catalogue/moments.json`
+- writes canonical draft moment metadata to `assets/studio/data/catalogue/moments.json`
 - creates the normal catalogue JSON backup bundle for the metadata write
-- runs local media generation, the scoped moment generator, and the catalogue search rebuild
-- records Catalogue Activity when a non-dry-run import completes or fails
+- does not run local media generation, the scoped moment generator, or the catalogue search rebuild
+- records Catalogue Activity when a non-dry-run import writes source
 
 ## Derived Lookup Refresh
 

@@ -171,7 +171,7 @@ Moments:
 
 Status:
 
-- proposed
+- implemented
 
 Define the shared command names, state labels, Activity operation names, and result text for source save, publish, and unpublish.
 
@@ -270,6 +270,15 @@ Acceptance checks:
 - published moment saves internally update public artifacts
 - moment index/search cleanup is part of unpublish
 - import flows do not imply publication unless they explicitly run a publish command
+
+Moment implementation:
+
+- `/studio/catalogue-moment/` no longer exposes save-time public update controls
+- the moment status field is read-only in existing-record edit mode
+- published moment saves request the internal public update path automatically
+- saved draft moments expose `Publish`; published moments expose `Unpublish`
+- moment `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
+- `/studio/catalogue-moment-import/` remains separate for now, but imports draft source/prose only and no longer runs the scoped public update
 
 ### Task 6. Update Docs And E2E Checklist
 

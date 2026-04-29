@@ -8,6 +8,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Converted moment publication to explicit Publish and Unpublish commands
+
+**Status:** implemented
+
+**Area:** Studio / catalogue moments / publication workflow
+
+**Summary:**
+Updated the Moment editor so moment publication is controlled by `Publish` / `Unpublish`, and changed file-driven moment import to create draft source without publishing.
+
+**Reason:**
+Moments still used the older save-time `Update site now` model after Work, Series, and Work Detail moved to explicit publication commands. The import page also implied publication by writing source and immediately running the scoped public update.
+
+**Effect:**
+The moment status field is now a non-input Readonly Display surface. `Save` never changes publication status; draft saves stay source-only; published saves request the internal public moment update. Saved draft moments expose `Publish`; published moments expose `Unpublish`, which uses the shared publication preview/apply endpoints and cleans generated moment output, moments index entries, and catalogue search records. Moment import now writes draft source/prose only so publishing remains an explicit editor action.
+
+**Affected files/docs:**
+
+- `studio/catalogue-moment/index.md`
+- `studio/catalogue-moment-import/index.md`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-moment-import.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Converted work-detail editor to explicit Publish and Unpublish commands
 
 **Status:** implemented

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T15:38:10Z",
+  "generated_at": "2026-04-29T18:18:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1833,7 +1833,7 @@
       "doc_id": "catalogue-moment-editor",
       "title": "Catalogue Moment Editor",
       "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 182,
       "published": true,
@@ -1847,7 +1847,7 @@
       "doc_id": "catalogue-moment-import",
       "title": "Catalogue Moment Import",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "studio",
       "sort_order": 190,
       "published": true,

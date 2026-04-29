@@ -28,7 +28,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-import
         <h2 class="tagStudio__heading">source file</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button" id="catalogueMomentImportPreview">Preview Source File</button>
-          <button type="button" class="tagStudio__button" id="catalogueMomentImportApply">Import + Publish Moment</button>
+          <button type="button" class="tagStudio__button" id="catalogueMomentImportApply">Import</button>
         </div>
       </div>
       <div class="tagStudioForm__fields">

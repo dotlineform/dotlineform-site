@@ -14,7 +14,7 @@ import { buildSaveModeText, utcTimestamp } from "./tag-studio-save.js";
 
 const EDITABLE_FIELDS = [
   { key: "title", label: "title", type: "text" },
-  { key: "status", label: "status", type: "select", options: ["draft", "published"] },
+  { key: "status", label: "status", type: "text", readonly: true },
   { key: "date", label: "date", type: "date" },
   { key: "date_display", label: "date display", type: "text" },
   { key: "published_date", label: "published date", type: "date" },
@@ -49,6 +49,20 @@ function normalizeMomentId(value) {
 function displayValue(value) {
   const text = normalizeText(value);
   return text || "-";
+}
+
+function setFieldNodeValue(node, value) {
+  const text = normalizeText(value);
+  if ("value" in node) {
+    node.value = text;
+  } else {
+    node.textContent = displayValue(text);
+  }
+}
+
+function getFieldNodeValue(node) {
+  if ("value" in node) return node.value;
+  return normalizeText(node.textContent);
 }
 
 function setTextWithState(node, text, state = "") {
@@ -102,7 +116,7 @@ function readDraft(state) {
   const record = { moment_id: state.currentMomentId };
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
-    record[field.key] = node ? normalizeText(node.value) : "";
+    record[field.key] = node ? normalizeText(getFieldNodeValue(node)) : "";
   });
   return normalizeRecord(state.currentMomentId, record);
 }
@@ -145,9 +159,9 @@ function renderPopup(state) {
 }
 
 function renderField(field, state) {
-  const wrapper = document.createElement("label");
+  const wrapper = document.createElement(field.readonly ? "div" : "label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  wrapper.htmlFor = `catalogueMomentField-${field.key}`;
+  if (!field.readonly) wrapper.htmlFor = `catalogueMomentField-${field.key}`;
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
@@ -155,7 +169,10 @@ function renderField(field, state) {
   wrapper.appendChild(label);
 
   let input;
-  if (field.type === "select") {
+  if (field.readonly) {
+    input = document.createElement("span");
+    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  } else if (field.type === "select") {
     input = document.createElement("select");
     input.className = "tagStudio__input";
     field.options.forEach((optionValue) => {
@@ -174,8 +191,10 @@ function renderField(field, state) {
 
   input.id = `catalogueMomentField-${field.key}`;
   input.dataset.field = field.key;
-  input.addEventListener("input", () => onFieldInput(state, field.key));
-  input.addEventListener("change", () => onFieldInput(state, field.key));
+  if (!field.readonly) {
+    input.addEventListener("input", () => onFieldInput(state, field.key));
+    input.addEventListener("change", () => onFieldInput(state, field.key));
+  }
   wrapper.appendChild(input);
 
   const message = document.createElement("span");
@@ -203,7 +222,7 @@ function fillForm(state, record) {
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
-    node.value = normalizeText(record[field.key]);
+    setFieldNodeValue(node, normalizeText(record[field.key]));
   });
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -265,8 +284,8 @@ function renderReadiness(state) {
     const mediaActionDisabled = actionDisabled || !Boolean(item && item.exists);
     const disabledNote = actionDisabled && (proseAction || mediaAction)
       ? (draftHasChanges(state)
-        ? (mediaAction ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.") : t(state, "dirty_warning", "Unsaved source changes."))
-        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+	      ? (mediaAction ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.") : t(state, "dirty_warning", "Unsaved source changes."))
+        : t(state, "readiness_action_busy", "Wait for the current save or public update to finish."))
       : "";
     return `
       <div class="tagStudioForm__field">
@@ -312,18 +331,59 @@ function renderSummary(state) {
     <p class="tagStudioForm__impact"><a href="${escapeHtml(publicUrl)}">${escapeHtml(t(state, "summary_public_link", "Open public moment page"))}</a></p>
   `;
   state.runtimeStateNode.textContent = state.needsBuild
-    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+    ? t(state, "summary_rebuild_needed", "public update failed in this session")
     : t(state, "summary_rebuild_current", "source and public moment are aligned in this session");
   renderReadiness(state);
 }
 
+function currentMomentIsPublished(state) {
+  return normalizeText(readDraft(state).status).toLowerCase() === "published";
+}
+
+function currentMomentIsDraft(state) {
+  return normalizeText(readDraft(state).status).toLowerCase() === "draft";
+}
+
+function updatePublicationControls(state, { dirty, validation }) {
+  const hasRecord = Boolean(state.currentRecord);
+  const canPublish = hasRecord && currentMomentIsDraft(state);
+  const canUnpublish = hasRecord && currentMomentIsPublished(state);
+  const label = canUnpublish
+    ? t(state, "unpublish_button", "Unpublish")
+    : t(state, "publish_button", "Publish");
+  state.publicationButton.textContent = label;
+  state.publicationButton.hidden = !(canPublish || canUnpublish);
+  state.publicationButton.disabled = !(canPublish || canUnpublish)
+    || (canPublish && dirty)
+    || (canPublish && validation && !validation.valid)
+    || state.isSaving
+    || state.isBuilding
+    || state.isDeleting
+    || !state.serverAvailable;
+}
+
 function updateDirtyState(state) {
   const dirty = draftHasChanges(state);
+  const validation = state.currentRecord ? validateDraft(state) : { valid: true, draft: null };
+  if (!state.currentRecord) clearFieldMessages(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "", dirty ? "warning" : "");
   state.saveButton.disabled = !state.serverAvailable || state.isSaving || state.isDeleting || !state.currentRecord;
   state.deleteButton.disabled = !state.serverAvailable || state.isSaving || state.isBuilding || state.isDeleting || !state.currentRecord;
-  state.buildButton.disabled = !state.serverAvailable || state.isBuilding || state.isDeleting || dirty || !state.currentRecord;
+  updatePublicationControls(state, { dirty, validation });
   renderReadiness(state);
+}
+
+function applySaveBuildOutcome(state, payload) {
+  if (!currentMomentIsPublished(state)) {
+    state.needsBuild = false;
+    return payload && payload.changed ? "saved_unpublished" : "unchanged";
+  }
+  if (payload && payload.build && !payload.build.ok) {
+    state.needsBuild = true;
+    return "partial";
+  }
+  state.needsBuild = false;
+  return payload && payload.changed ? "applied" : "unchanged";
 }
 
 function onFieldInput(state) {
@@ -385,6 +445,10 @@ async function openMoment(state, momentId, options = {}) {
 }
 
 function renderBuildImpact(state) {
+  if (!currentMomentIsPublished(state)) {
+    state.buildImpactNode.textContent = t(state, "build_preview_unpublished", "Public update unavailable while the moment is not published.");
+    return;
+  }
   if (!state.buildPreview) {
     state.buildImpactNode.textContent = "";
     return;
@@ -396,13 +460,19 @@ function renderBuildImpact(state) {
   state.buildImpactNode.textContent = t(
     state,
     "build_preview_template",
-    "Site update preview: moment {moment_ids}; catalogue search {search_rebuild}.",
+    "Public update preview: moment {moment_ids}; catalogue search {search_rebuild}.",
     { moment_ids: momentIds || "none", search_rebuild: search }
   );
 }
 
 async function refreshBuildPreview(state) {
   if (!state.currentMomentId || !state.serverAvailable) return;
+  if (!currentMomentIsPublished(state)) {
+    state.buildPreview = null;
+    renderBuildImpact(state);
+    renderSummary(state);
+    return;
+  }
   try {
     const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, { moment_id: state.currentMomentId });
     state.buildPreview = payload.build || null;
@@ -429,10 +499,10 @@ async function saveMoment(state) {
 
   state.isSaving = true;
   updateDirtyState(state);
-  const applyBuild = Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+  const applyBuild = currentMomentIsPublished(state);
   setTextWithState(
     state.statusNode,
-    applyBuild ? t(state, "save_status_saving_and_updating", "Saving source record and updating site...") : t(state, "save_status_saving", "Saving source record..."),
+    applyBuild ? t(state, "save_status_saving_and_updating", "Saving source record and updating public moment...") : t(state, "save_status_saving", "Saving source record..."),
     "pending"
   );
   try {
@@ -445,14 +515,15 @@ async function saveMoment(state) {
     state.currentRecord = payload.record || validation.draft;
     state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
     state.moments.set(state.currentMomentId, state.currentRecord);
-    state.needsBuild = Boolean(payload.changed && !applyBuild);
-    if (payload.build && !payload.build.ok) {
-      state.needsBuild = true;
-      setTextWithState(state.resultNode, t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the site update failed. Retry Update site now.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "warning");
-    } else if (payload.changed && applyBuild) {
+    const outcome = applySaveBuildOutcome(state, payload);
+    if (outcome === "partial") {
+      setTextWithState(state.resultNode, t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "warning");
+    } else if (outcome === "applied") {
       setTextWithState(state.resultNode, t(state, "save_result_success_applied", "Saved source changes and updated the public moment at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
+    } else if (outcome === "saved_unpublished") {
+      setTextWithState(state.resultNode, t(state, "save_result_success_unpublished", "Source saved at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
     } else {
-      setTextWithState(state.resultNode, t(state, "save_result_success", "Source saved at {saved_at}. Public moment update still pending.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
+      setTextWithState(state.resultNode, t(state, "save_result_success", "Source saved at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
     }
     setTextWithState(state.statusNode, "Saved.", "success");
     await previewMoment(state, state.currentMomentId);
@@ -469,21 +540,100 @@ async function saveMoment(state) {
   }
 }
 
-async function buildMoment(state) {
-  if (!state.currentMomentId || state.isBuilding || draftHasChanges(state)) return;
+async function applyPublicationChange(state) {
+  if (!state.currentRecord || !state.currentMomentId || !state.serverAvailable || state.isBuilding) return;
+  const action = currentMomentIsPublished(state) ? "unpublish" : currentMomentIsDraft(state) ? "publish" : "";
+  if (!action) {
+    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published moments."), "error");
+    return;
+  }
+  if (action === "publish" && draftHasChanges(state)) {
+    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
+    return;
+  }
+  if (action === "publish") {
+    const validation = validateDraft(state);
+    if (!validation.valid) {
+      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
+      updateDirtyState(state);
+      return;
+    }
+  }
   state.isBuilding = true;
   updateDirtyState(state);
-  setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site..."), "pending");
+  setTextWithState(
+    state.statusNode,
+    action === "publish"
+      ? t(state, "publication_preview_publish_running", "Preparing publish preview...")
+      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview..."),
+    "pending"
+  );
+  setTextWithState(state.resultNode, "");
   try {
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, { moment_id: state.currentMomentId });
-    state.needsBuild = false;
-    state.buildPreview = payload.build || state.buildPreview;
-    setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-    setTextWithState(state.resultNode, t(state, "build_result_success", "Public moment updated at {completed_at}. Build Activity updated.", { completed_at: payload.completed_at_utc || utcTimestamp() }), "success");
+    const request = {
+      kind: "moment",
+      action,
+      moment_id: state.currentMomentId,
+      expected_record_hash: state.expectedRecordHash
+    };
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
+    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
+    if ((preview && preview.blocked) || blockers.length) {
+      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
+      setTextWithState(state.statusNode, message, "error");
+      return;
+    }
+    if (action === "unpublish") {
+      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this moment?");
+      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
+      if (!window.confirm(`${summary}${dirtyNote}`)) {
+        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."), "warning");
+        return;
+      }
+    }
+
+    setTextWithState(
+      state.statusNode,
+      action === "publish"
+        ? t(state, "publication_publish_running", "Publishing moment...")
+        : t(state, "publication_unpublish_running", "Unpublishing moment..."),
+      "pending"
+    );
+    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const record = payload && payload.record && typeof payload.record === "object" ? payload.record : null;
+    if (!record) throw new Error("publication response missing record");
+    state.currentRecord = normalizeRecord(state.currentMomentId, record);
+    state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
+    state.moments.set(state.currentMomentId, state.currentRecord);
+    const row = state.momentRows.find((item) => item.moment_id === state.currentMomentId);
+    if (row) {
+      Object.assign(row, state.currentRecord, {
+        search: `${state.currentMomentId} ${normalizeText(state.currentRecord.title).toLowerCase()}`
+      });
+    }
+    fillForm(state, state.currentRecord);
+    state.needsBuild = payload.status === "public_update_failed";
     await previewMoment(state, state.currentMomentId);
     renderSummary(state);
+    if (payload.status === "public_update_failed") {
+      const error = normalizeText(payload.public_update && payload.public_update.error);
+      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
+      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warning");
+      return;
+    }
+    if (action === "publish") {
+      setTextWithState(state.statusNode, t(state, "publication_status_published", "Moment published."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_published", "Moment is published and public output has been updated."), "success");
+    } else {
+      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Moment unpublished."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Moment is draft again and public output has been cleaned up."), "success");
+    }
   } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    const message = Number(error && error.status) === 409
+      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
+      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
   } finally {
     state.isBuilding = false;
     updateDirtyState(state);
@@ -654,8 +804,8 @@ function bindEvents(state) {
     openMoment(state, match || value).catch((error) => console.warn("catalogue_moment_editor: open failed", error));
   });
   state.saveButton.addEventListener("click", () => saveMoment(state));
+  state.publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => console.warn("catalogue_moment_editor: publication failed", error)));
   state.deleteButton.addEventListener("click", () => deleteMoment(state).catch((error) => console.warn("catalogue_moment_editor: delete failed", error)));
-  state.buildButton.addEventListener("click", () => buildMoment(state));
   state.readinessNode.addEventListener("click", (event) => {
     const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
     if (mediaButton) {
@@ -687,9 +837,8 @@ async function init() {
     warningNode: document.getElementById("catalogueMomentWarning"),
     resultNode: document.getElementById("catalogueMomentResult"),
     saveButton: document.getElementById("catalogueMomentSave"),
+    publicationButton: document.getElementById("catalogueMomentPublication"),
     deleteButton: document.getElementById("catalogueMomentDelete"),
-    buildButton: document.getElementById("catalogueMomentBuild"),
-    applyBuildNode: document.getElementById("catalogueMomentApplyBuild"),
     fieldsNode: document.getElementById("catalogueMomentFields"),
     readonlyNode: document.getElementById("catalogueMomentReadonly"),
     summaryNode: document.getElementById("catalogueMomentSummary"),
@@ -724,9 +873,8 @@ async function init() {
     state.searchNode.placeholder = t(state, "search_placeholder", "find moment by id or title");
     state.openButton.textContent = t(state, "open_button", "Open");
     state.saveButton.textContent = t(state, "save_button", "Save");
+    state.publicationButton.textContent = t(state, "publish_button", "Publish");
     state.deleteButton.textContent = t(state, "delete_button", "Delete");
-    state.buildButton.textContent = t(state, "build_button", "Update site now");
-    document.getElementById("catalogueMomentApplyBuildLabel").textContent = t(state, "build_button", "Update site now");
 
     EDITABLE_FIELDS.forEach((field) => renderField(field, state));
     READONLY_FIELDS.forEach((field) => renderReadonlyField(field, state));

@@ -45,7 +45,7 @@ function currentMomentFile(state) {
 
 const METADATA_FIELDS = [
   { key: "title", type: "text", fallback: "title" },
-  { key: "status", type: "select", options: ["published", "draft"], fallback: "status" },
+  { key: "status", type: "text", readonly: true, fallback: "status" },
   { key: "date", type: "date", fallback: "date" },
   { key: "date_display", type: "text", fallback: "date display" },
   { key: "published_date", type: "date", fallback: "published date" },
@@ -53,17 +53,26 @@ const METADATA_FIELDS = [
   { key: "image_alt", type: "text", fallback: "image alt" }
 ];
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 function readMetadata(state) {
   const metadata = {};
   if (!state.metadataNodes) return metadata;
   state.metadataNodes.forEach((node, key) => {
-    metadata[key] = normalizeText(node.value);
+    metadata[key] = readMetadataNode(node);
   });
+  metadata.status = "draft";
   return metadata;
+}
+
+function readMetadataNode(node) {
+  if (!node) return "";
+  return "value" in node ? normalizeText(node.value) : normalizeText(node.textContent);
+}
+
+function writeMetadataNode(node, value) {
+  if (!node) return;
+  const text = normalizeText(value);
+  if ("value" in node) node.value = text;
+  else node.textContent = text || "draft";
 }
 
 function fillMetadataFromPreview(state, preview) {
@@ -79,8 +88,8 @@ function fillMetadataFromPreview(state, preview) {
   };
   Object.entries(mapping).forEach(([key, value]) => {
     const node = state.metadataNodes.get(key);
-    if (node && !normalizeText(node.value) && normalizeText(value)) {
-      node.value = normalizeText(value);
+    if (node && !readMetadataNode(node) && normalizeText(value)) {
+      writeMetadataNode(node, key === "status" ? "draft" : value);
     }
   });
 }
@@ -89,9 +98,9 @@ function buildMetadataFields(state, container) {
   state.metadataNodes = new Map();
   container.innerHTML = "";
   METADATA_FIELDS.forEach((field) => {
-    const wrapper = document.createElement("label");
+    const wrapper = document.createElement(field.readonly ? "div" : "label");
     wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-    wrapper.setAttribute("for", `catalogueMomentImportMetadata-${field.key}`);
+    if (!field.readonly) wrapper.setAttribute("for", `catalogueMomentImportMetadata-${field.key}`);
 
     const label = document.createElement("span");
     label.className = "tagStudioForm__label";
@@ -99,7 +108,11 @@ function buildMetadataFields(state, container) {
     wrapper.appendChild(label);
 
     let input;
-    if (field.type === "select") {
+    if (field.readonly) {
+      input = document.createElement("span");
+      input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+      input.textContent = "draft";
+    } else if (field.type === "select") {
       input = document.createElement("select");
       input.className = "tagStudio__input";
       field.options.forEach((optionValue) => {
@@ -117,10 +130,11 @@ function buildMetadataFields(state, container) {
     }
     input.id = `catalogueMomentImportMetadata-${field.key}`;
     input.dataset.field = field.key;
-    if (field.key === "status") input.value = "published";
-    if (field.key === "published_date") input.value = todayIso();
-    input.addEventListener("input", () => clearPreview(state));
-    input.addEventListener("change", () => clearPreview(state));
+    if (field.key === "status") writeMetadataNode(input, "draft");
+    if (!field.readonly) {
+      input.addEventListener("input", () => clearPreview(state));
+      input.addEventListener("change", () => clearPreview(state));
+    }
     wrapper.appendChild(input);
     container.appendChild(wrapper);
     state.metadataNodes.set(field.key, input);
@@ -199,7 +213,9 @@ function buildDetailSections(state) {
   const sections = [];
   const errors = Array.isArray(preview.errors) ? preview.errors : [];
   const build = state.build || {};
-  const publicUrl = normalizeText(state.publicUrl || preview.public_url);
+  const publicUrl = normalizeText(preview.status).toLowerCase() === "published" ? normalizeText(state.publicUrl || preview.public_url) : "";
+  const sourceResultSummary = normalizeText(build.summary || preview.summary)
+    || t(state, "source_result_summary", "Import writes draft prose and metadata only. Publish from the Moment editor when ready.");
 
   sections.push(`
     <section class="catalogueWorkDetails__section">
@@ -225,9 +241,9 @@ function buildDetailSections(state) {
   sections.push(`
     <section class="catalogueWorkDetails__section">
       <div class="tagStudio__headingRow">
-        <h3 class="tagStudioForm__key">build scope</h3>
+        <h3 class="tagStudioForm__key">source result</h3>
       </div>
-      <p class="tagStudioForm__meta">${escapeHtml(normalizeText(build.summary || preview.summary))}</p>
+      <p class="tagStudioForm__meta">${escapeHtml(sourceResultSummary)}</p>
       ${publicUrl ? `
         <p class="tagStudioForm__meta">
           <a href="${escapeHtml(publicUrl)}">${escapeHtml(t(state, "import_result_success_link", "Open public moment"))}</a>
@@ -240,7 +256,7 @@ function buildDetailSections(state) {
     sections.push(`
       <section class="catalogueWorkDetails__section">
         <div class="tagStudio__headingRow">
-          <h3 class="tagStudioForm__key">build steps</h3>
+        <h3 class="tagStudioForm__key">import steps</h3>
         </div>
         ${buildStepRows(state.steps)}
       </section>
@@ -286,7 +302,9 @@ async function runPreview(state) {
     fillMetadataFromPreview(state, state.preview);
     state.build = response && response.build ? response.build : null;
     state.steps = [];
-    state.publicUrl = normalizeText(response && response.preview && response.preview.public_url);
+    state.publicUrl = normalizeText(response && response.preview && response.preview.status).toLowerCase() === "published"
+      ? normalizeText(response && response.preview && response.preview.public_url)
+      : "";
     if (state.preview && state.preview.valid) {
       setTextWithState(state.statusNode, t(state, "preview_status_ready", "Moment source preview ready."), "success");
     } else {
@@ -318,7 +336,7 @@ async function applyImport(state) {
 
   state.isBusy = true;
   updateState(state);
-  setTextWithState(state.statusNode, t(state, "import_status_running", "Importing moment and rebuilding catalogue search…"));
+  setTextWithState(state.statusNode, t(state, "import_status_running", "Importing draft moment source…"));
   setTextWithState(state.warningNode, "");
   setTextWithState(state.resultNode, "");
   try {
@@ -330,7 +348,7 @@ async function applyImport(state) {
     setTextWithState(state.statusNode, t(state, "import_status_success", "Moment import completed."), "success");
     setTextWithState(
       state.resultNode,
-      t(state, "import_result_success", "Imported {moment_id}. Open the public moment page to confirm the runtime output.", {
+      t(state, "import_result_success", "Imported draft moment {moment_id}. Open the Moment editor to review and publish it.", {
         moment_id: normalizeText(response && response.moment_id) || normalizeText(state.preview && state.preview.moment_id)
       }),
       "success"
@@ -420,9 +438,9 @@ async function init() {
     fileLabelNode.textContent = t(state, "file_label", "moment file");
     fileNode.placeholder = t(state, "file_placeholder", "keys.md");
     previewButton.textContent = t(state, "preview_button", "Preview Source File");
-    applyButton.textContent = t(state, "import_button", "Import + Publish Moment");
+    applyButton.textContent = t(state, "import_button", "Import");
     buildMetadataFields(state, metadataFieldsNode);
-    setTextWithState(contextNode, t(state, "context_hint", "Enter a staged moment markdown filename and the moment metadata. This page imports body-only prose and then runs a targeted import/rebuild for that one moment."));
+    setTextWithState(contextNode, t(state, "context_hint", "Enter a staged moment markdown filename and the moment metadata. This page imports body-only prose as draft source."));
     fileDescriptionNode.textContent = t(state, "file_description", "filename only; the source file is resolved from var/docs/catalogue/import-staging/moments/");
     sourceSummaryNode.textContent = t(state, "source_summary", "Moment prose is imported as body-only Markdown. Metadata is stored in catalogue source JSON, not prose front matter.");
     imageGuidanceNode.textContent = t(state, "image_guidance", "Missing images are acceptable in this phase. The public moment page already handles missing hero images cleanly.");

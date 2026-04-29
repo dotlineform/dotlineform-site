@@ -40,11 +40,8 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
         <h2 class="tagStudio__heading">moment metadata</h2>
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentPublication">Publish</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentDelete">Delete</button>
-          <label class="catalogueWorkPage__updateToggle" for="catalogueMomentApplyBuild">
-            <input type="checkbox" id="catalogueMomentApplyBuild" checked>
-            <span id="catalogueMomentApplyBuildLabel">Update site now</span>
-          </label>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueMomentMeta"></p>
@@ -56,9 +53,6 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
       <div class="tagStudioForm__fields" id="catalogueMomentReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueMomentRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueMomentBuildImpact"></p>
-      <div class="catalogueWorkPage__runtimeActions">
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentBuild">Update site now</button>
-      </div>
       <div class="tagStudioForm__fields" id="catalogueMomentSummary"></div>
       <div class="tagStudioForm__fields" id="catalogueMomentReadiness"></div>
     </aside>

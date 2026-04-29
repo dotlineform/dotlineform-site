@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bf95999d480996fc512d89bca967eb94",
-    "generated_at_utc": "2026-04-29T15:38:12Z",
+    "version": "blake2b-9b4d83a1d88ca4cb0b05c15fe7a502fd",
+    "generated_at_utc": "2026-04-29T18:18:17Z",
     "count": 146
   },
   "entries": [
@@ -3070,10 +3070,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-27 • User Guide",
+      "display_meta": "2026-04-29 • User Guide",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -3083,22 +3083,22 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-27",
+        "2026-04-29",
         "2026",
         "04",
-        "27"
+        "29"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-04-27 2026 04 27"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "catalogue-moment-import",
       "kind": "doc",
       "title": "Catalogue Moment Import",
       "href": "/docs/?scope=studio&doc=catalogue-moment-import",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-27 • Studio",
+      "display_meta": "2026-04-29 • Studio",
       "search_terms": [
         "catalogue-moment-import",
         "catalogue",
@@ -3106,12 +3106,12 @@
         "import",
         "catalogue moment import",
         "studio",
-        "2026-04-27",
+        "2026-04-29",
         "2026",
         "04",
-        "27"
+        "29"
       ],
-      "search_text": "catalogue-moment-import catalogue moment import catalogue moment import studio 2026-04-27 2026 04 27"
+      "search_text": "catalogue-moment-import catalogue moment import catalogue moment import studio 2026-04-29 2026 04 29"
     },
     {
       "id": "tag-aliases",

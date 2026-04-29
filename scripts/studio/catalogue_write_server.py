@@ -747,6 +747,7 @@ def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, Dict[st
     for key in ["title", "status", "published_date", "date", "date_display", "source_image_file", "image_file", "image_alt"]:
         if key in body and key not in metadata:
             metadata[key] = body.get(key)
+    metadata["status"] = "draft"
     force = bool(body.get("force"))
     return moment_file, metadata, force
 
@@ -5593,7 +5594,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_moment_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        apply_build = extract_apply_build(body)
+        requested_apply_build = extract_apply_build(body)
         requested_moment_id = body.get("moment_id")
         moment_update = extract_moment_update(body)
         if requested_moment_id is None:
@@ -5629,6 +5630,7 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("moment source validation failed: " + "; ".join(validation_errors[:20]))
 
         changed = bool(fields_changed)
+        apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
         backup_paths: list[Path] = []
         if changed:
             updated_moments = dict(moments)
@@ -5694,6 +5696,11 @@ class Handler(BaseHTTPRequestHandler):
                 }
             )
         response_payload["build_requested"] = bool(apply_build and changed)
+        if requested_apply_build and changed and not apply_build:
+            response_payload["build_skipped"] = {
+                "reason": "moment_not_published",
+                "message": "Public moment update skipped because the saved moment is not published.",
+            }
         if apply_build and changed:
             _build_success, build_payload = self._run_build_operation(
                 work_id="",
@@ -5789,28 +5796,21 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_moment_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        moment_file, metadata, force = extract_moment_import_request(body)
+        moment_file, metadata, _force = extract_moment_import_request(body)
         preview = preview_moment_source(self.server.repo_root, moment_file, metadata=metadata, staged=True)
         payload: Dict[str, Any] = {
             "ok": True,
             "moment_file": preview.get("moment_file") or moment_file,
-            "force": bool(force),
             "preview": preview,
+            "build": {},
+            "steps": [],
+            "published": False,
         }
-        if preview.get("valid"):
-            scope = build_scope_for_moment(self.server.repo_root, moment_file, metadata=metadata, force=force)
-            scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
-            payload["build"] = scope
-            payload["effective_force"] = bool(force)
-            payload["refresh_published"] = True
-        else:
-            payload["effective_force"] = bool(force)
-            payload["refresh_published"] = True
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _handle_moment_import_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        moment_file, metadata, force = extract_moment_import_request(body)
+        moment_file, metadata, _force = extract_moment_import_request(body)
         preview = preview_moment_source(self.server.repo_root, moment_file, metadata=metadata, staged=True)
         if not preview.get("valid"):
             errors = preview.get("errors") or []
@@ -5845,28 +5845,17 @@ class Handler(BaseHTTPRequestHandler):
             atomic_write_text_no_backup(target_path, text)
             backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
 
-        result = run_moment_scoped_build(
-            self.server.repo_root,
-            moment_file=moment_file,
-            metadata=merged_metadata,
-            write=not self.server.dry_run,
-            force=force,
-            log_activity=not self.server.dry_run,
-        )
-        scope = result.get("scope") or {}
-        moment_ids = list(scope.get("moment_ids", []))
-        moment_id = str(moment_ids[0] if moment_ids else preview.get("moment_id") or "").strip().lower()
+        moment_id = str(preview.get("moment_id") or moment_id_for_write).strip().lower()
         payload: Dict[str, Any] = {
-            "ok": result.get("status") == "completed",
+            "ok": True,
             "moment_file": preview.get("moment_file") or moment_file,
             "moment_id": moment_id,
-            "force": bool(force),
-            "effective_force": bool(force),
-            "refresh_published": bool(result.get("refresh_published")),
+            "status": "draft",
+            "published": False,
             "preview": preview,
-            "build": scope,
-            "steps": result.get("steps", []),
-            "public_url": str(preview.get("public_url") or ""),
+            "build": {},
+            "steps": [],
+            "public_url": "",
             "metadata_path": str(preview.get("metadata_path") or ""),
             "target_path": str(preview.get("target_path") or ""),
         }
@@ -5874,30 +5863,6 @@ class Handler(BaseHTTPRequestHandler):
             payload["dry_run"] = True
         if backup_paths:
             payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
-        if result.get("status") != "completed":
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "moment.import_failed"),
-                        "time_utc": now_utc,
-                        "kind": "moment",
-                        "operation": "moment.import",
-                        "status": "failed",
-                        "summary": f"Moment import failed for {moment_id or preview.get('moment_file')}.",
-                        "affected": {
-                            "works": [],
-                            "series": [],
-                            "work_details": [],
-                            "moments": [moment_id] if moment_id else [],
-                        },
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
-            payload["error"] = str(result.get("error") or "Scoped moment build failed.")
-            payload["failed_step"] = result.get("failed_step")
-            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
-            return
         if not self.server.dry_run:
             payload["completed_at_utc"] = utc_now()
             self.server.append_activity(

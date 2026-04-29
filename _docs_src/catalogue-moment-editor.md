@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: "Catalogue Moment Editor"
 added_date: 2026-04-27
-last_updated: 2026-04-27
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 182
 ---
@@ -19,8 +19,9 @@ This page edits one existing canonical moment metadata record from `assets/studi
 
 - opening an existing moment by `moment_id` or title
 - editing moment metadata fields
-- saving source JSON only
-- optionally running a scoped moment rebuild immediately
+- saving source JSON without changing publication status
+- publishing draft moments through a dedicated `Publish` command
+- unpublishing public moments through a dedicated `Unpublish` command
 - deleting one moment and its generated site artifacts after preview/confirmation
 - checking permanent prose, staged prose, and source-image readiness
 - refreshing local moment image derivatives from the displayed source image path without changing source metadata
@@ -31,22 +32,30 @@ Use [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import) f
 ## Editable Fields
 
 - `title`
-- `status`
 - `date`
 - `date_display`
 - `published_date`
 - `source_image_file`
 - `image_alt`
 
+`status` is visible with the Readonly Display treatment. Change publication state with `Publish` or `Unpublish`; do not edit status directly.
+
 The editor does not edit prose inline. Moment prose remains body-only Markdown under `_docs_src_catalogue/moments/<moment_id>.md`.
 
-## Save And Rebuild
+## Save And Publication
 
 `Save` calls `POST /catalogue/moment/save` with the current record hash for stale-write protection.
 
-When `Update site now` is checked, save also runs the scoped moment build. Otherwise the page marks the public moment as pending until `Update site now` is run.
+`Save` does not change publication status. Draft moment saves remain source-only. Published moment saves request the internal public update path so saved changes appear in generated public moment artifacts without exposing a separate update command.
 
-The scoped update rebuilds:
+`Publish` and `Unpublish` call the shared publication preview/apply endpoints:
+
+- `POST /catalogue/publication-preview`
+- `POST /catalogue/publication-apply`
+
+`Publish` requires valid moment metadata and readiness for the public moment surface, then changes source status to `published` and runs the scoped public update. `Unpublish` changes source status back to `draft`, ignores unsaved form edits after confirmation, removes generated moment page/json/search output, and updates `assets/data/moments_index.json`.
+
+The internal scoped public update rebuilds:
 
 - `_moments/<moment_id>.md`
 - `assets/moments/index/<moment_id>.json`
@@ -81,7 +90,7 @@ It does not delete canonical prose under `_docs_src_catalogue/moments/`, canonic
 
 The staged file must be body-only Markdown with no front matter. Existing permanent prose requires overwrite confirmation when the staged content differs.
 
-Importing prose does not change `moments.json`; run `Update site now` afterward to publish the prose into generated runtime payloads.
+Importing prose does not change `moments.json`. Publish the moment or save an already published moment to update generated runtime payloads.
 
 ## Related References
 
