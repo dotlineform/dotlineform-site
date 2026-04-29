@@ -39,7 +39,6 @@ Those still belong in the owning reference docs and change logs.
 - [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
 - [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 - [Catalogue Moment Editor Request](/docs/?scope=studio&doc=site-request-catalogue-moment-editor)
-- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
 - [Catalogue Delete Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup)
 - [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
 - [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
@@ -47,3 +46,7 @@ Those still belong in the owning reference docs and change logs.
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 - [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
 - [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
+
+## Completed Requests
+
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)

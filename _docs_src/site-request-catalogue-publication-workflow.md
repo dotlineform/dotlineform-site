@@ -10,15 +10,17 @@ sort_order: 135
 
 Status:
 
-- specified
+- implemented
 
 ## Summary
 
 This change request covers replacing save-time publication checkboxes in Studio catalogue editors with a simpler user-facing publication model.
 
+Implementation is complete for series, works, work details, and moments. The active Studio workflow now uses read-only status display, source-only draft saves, internal public updates for published-record saves, and explicit `Publish` / `Unpublish` commands for publication state changes.
+
 The UI should not expose the difference between canonical source data, generated public data, indexes, search, or rebuild mechanics. Those are implementation details. The user-facing model is:
 
-- a work or series has been defined but is not on the public site: `draft`
+- a catalogue record has been defined but is not on the public site: `draft`
 - a draft has been published to the public site: `published`
 - a published record can be removed from the public site by changing it back to `draft`
 
@@ -95,9 +97,9 @@ This keeps the user's mental model simple: if a published work or series is edit
 
 Unpublish must remove the generated Markdown collection file for the record, such as `_series/<series_id>.md` or `_works/<work_id>.md`, so the public URL route to the draft record is no longer available. It must also remove or update public JSON, indexes, recent entries, and search records as needed for the record family.
 
-## Current Problem
+## Original Problem
 
-Current catalogue editors use variations of save-time `apply_build` behavior:
+The earlier catalogue editors used variations of save-time `apply_build` behavior:
 
 - a checkbox can make `Save` also run a public update
 - the checkbox can remain checked while status fields are edited
@@ -146,7 +148,7 @@ Series:
 
 Moments:
 
-- moment publication should use the same `draft` and `published` model if moments gain first-class edit publication controls
+- moment publication uses the same `draft` and `published` model as the other catalogue editors
 - `Publish` requires valid moment metadata and any required media/prose readiness for the public moment surface
 - `Save` on a published moment updates the public moment artifacts
 - `Unpublish` removes the moment page/json/search entry and updates `assets/data/moments_index.json`
@@ -161,9 +163,9 @@ Moments:
 - A successful `Publish` or `Unpublish` should leave the form showing the new status immediately.
 - A successful `Save` on a published record should make saved changes appear on the public site without asking for another visible rebuild action.
 - `published_date` handling should be explicit:
-  - first publish may set it when blank
-  - unpublish should not silently destroy historical date data without a documented decision
-  - republish should either preserve or intentionally refresh it according to the record-family rule
+  - publish and unpublish do not silently clear existing date data
+  - blank dates remain subject to record-family validation rules
+  - user-edited date changes happen through normal metadata save behavior
 
 ## Implementation Tasks
 
@@ -260,7 +262,7 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented
 
 Align moment editing and file-driven moment import flows with the same publication vocabulary and preview/apply model where moments expose publication controls.
 
@@ -274,18 +276,19 @@ Acceptance checks:
 Moment implementation:
 
 - `/studio/catalogue-moment/` no longer exposes save-time public update controls
-- the moment status field is read-only in existing-record edit mode
+- the moment status field is a non-input read-only display in existing-record edit mode and import mode
 - published moment saves request the internal public update path automatically
 - saved draft moments expose `Publish`; published moments expose `Unpublish`
 - moment `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
-- `/studio/catalogue-moment/` now includes the staged-file import panel, so import, review, save, publish, and unpublish live on one Moment editor page
+- `/studio/catalogue-moment/` now includes `New` beside `Open`; `New` reuses the shared metadata fields for staged-file import
+- import creates draft source metadata and draft prose only, then opens the imported draft in the same editor
 - `/studio/catalogue-moment-import/` is retained only as a compatibility bridge to the Moment editor and no longer owns a separate workflow
 
 ### Task 6. Update Docs And E2E Checklist
 
 Status:
 
-- proposed
+- implemented
 
 Update editor docs, script docs, and the Studio E2E checklist after the command model is implemented.
 
@@ -294,6 +297,29 @@ Acceptance checks:
 - each catalogue editor doc names `Save`, `Publish`, and `Unpublish` behavior where applicable
 - script docs describe the internal build/cleanup paths used by save, publish, and unpublish
 - manual E2E checks cover save-on-published, publish, and unpublish for each record family
+
+## Final Outcome
+
+- Series, work, work-detail, and moment editors use the same publication vocabulary and command model.
+- Status is visible as read-only display text rather than a mutable publication field.
+- `Save` preserves publication status.
+- Draft saves write source data only.
+- Published saves run the internal public update needed for the public site to reflect the saved metadata.
+- `Publish` and `Unpublish` use the shared publication preview/apply endpoints.
+- `Unpublish` changes status to `draft`, ignores unsaved form edits after confirmation, reloads from the apply response, and cleans public output for the target record family.
+- Catalogue Drafts is the recovery queue for draft series, works, work details, and moments.
+- Moment import is merged into `/studio/catalogue-moment/` as `New`; `/studio/catalogue-moment-import/` remains a compatibility redirect.
+
+## Resolved Decisions
+
+- Publication state changes happen only through the publication command, not by editing the status field.
+- The status display uses the shared read-only display primitive, so it is visible but not text-selectable as a form input.
+- Save-time public update checkboxes are removed from the active catalogue editor workflow.
+- Draft imports create draft source/prose records only; publishing is a separate editor command.
+- `published_date` is not silently cleared by unpublish. Publish and unpublish update publication status, while existing date values are preserved unless the user edits metadata through the normal save path or a record-family validation rule requires a date.
+- Republishing is handled as a status change through `Publish`; recent/index behavior follows the internal scoped public update for the affected record family.
+- The "metadata saved, public update failed" outcome is represented by the shared publication/apply response status and editor result copy, without exposing rebuild as a user command.
+- Work-detail publication remains independently controllable for this implementation while still updating the parent work runtime payload as needed.
 
 ## Benefits
 
@@ -306,16 +332,7 @@ Acceptance checks:
 
 ## Risks
 
-- published-record saves become higher impact because they trigger internal public updates
-- unpublish cleanup must be carefully scoped so it does not delete unrelated media or source prose
-- ignoring dirty metadata during unpublish can surprise users unless the UI clearly separates metadata save from publication status changes
-- `published_date` semantics need a clear decision before broad rollout
-- work/detail dependencies can create more complex previews than series
-
-## Open Questions
-
-- Should unpublish preserve `published_date`, clear it, or move it to a separate historical field?
-- Should republishing after unpublish create a new recent-index entry?
-- How should the UI show "metadata saved, public update failed" without exposing rebuild as a user command?
-- Should unpublish reset the form to the saved source response immediately, or keep dirty values visible with an explicit unsaved-warning state?
-- Should work-detail publication remain independent, or become part of the parent work publication model?
+- published-record saves have higher impact because they trigger internal public updates
+- unpublish cleanup remains intentionally id-scoped and should stay covered by preview/apply smoke checks before broad data changes
+- dependency-heavy records, especially works with published details, can still produce more complex preview outcomes than standalone series or moments
+- compatibility redirects and legacy query mappings should remain in place until old dashboard, docs, and activity links have aged out
