@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-b5dae47c676e639660c1d1a5547dbad6",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-59b2183ff2115b28bd6be121a243d4b4",
+    "generated_at_utc": "2026-04-29T08:49:11Z",
     "series_id": "050",
     "count": 2
   },
   "series": {
     "series_id": "050",
     "status": "published",
-    "published_date": "2026-03-19",
+    "published_date": "2026-04-01",
     "title": "field",
     "sort_fields": "work_id",
     "series_type": "primary",

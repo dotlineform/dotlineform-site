@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-52c80efef1f2e101a0d6ca46a94ab10f",
-    "generated_at_utc": "2026-04-26T21:17:43Z",
+    "version": "blake2b-17b441ac637a20616f1ea23a5ccbfdaa",
+    "generated_at_utc": "2026-04-29T08:49:11Z",
     "count": 139
   },
   "series": {
@@ -615,7 +615,7 @@
       "series_id": "026",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-04-01",
+      "published_date": "2026-04-26",
       "title": "collected 1989-1998",
       "sort_fields": "title,work_id",
       "series_type": "holding",
@@ -3084,7 +3084,7 @@
       "series_id": "105",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-04-01",
+      "published_date": "2026-04-26",
       "title": "nerve",
       "sort_fields": "work_id",
       "series_type": "primary",

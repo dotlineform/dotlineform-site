@@ -1040,12 +1040,14 @@ async function saveCurrentDetail(state) {
       status: normalizeText(record.status)
     });
     const outcome = applySingleSaveBuildOutcome(state, response);
-    const lookup = await loadDetailLookupRecord(state, state.currentDetailUid);
-    const lookupRecord = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : record;
-    setLoadedRecord(state, state.currentDetailUid, lookupRecord, {
-      recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
+    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
+    setLoadedRecord(state, state.currentDetailUid, record, {
+      recordHash,
       keepResult: true,
-      lookup
+      lookup: {
+        work_detail: record,
+        record_hash: recordHash
+      }
     });
     await refreshBuildPreview(state);
     if (outcome.kind === "saved_and_updated") {

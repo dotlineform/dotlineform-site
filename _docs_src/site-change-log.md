@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Kept work-detail form state fresh after save-and-update
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work details
+
+**Summary:**
+Changed the work-detail editor save flow so the current form baseline is reset from the write response record instead of immediately reloading generated lookup JSON.
+
+**Reason:**
+After saving with `Update site`, generated lookup data can still be stale in the browser for a moment. Rehydrating from that lookup made edited fields such as `title` appear to revert even though the source save succeeded.
+
+**Effect:**
+Saving a detail title now keeps the edited title visible after `Save` or `Save + Update site`; generated lookup JSON is still used when opening records.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Migrated work-detail create navigation to the unified route
 
 **Status:** implemented

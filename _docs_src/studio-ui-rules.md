@@ -23,6 +23,21 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-050
+
+- status: adopted
+- route: `/studio/catalogue-work-detail/`
+- issue: saving a changed detail title with `Update site` succeeded, but the editor immediately showed the pre-save title until a page refresh.
+- triage: save-state hydration bug
+- reasoning: source-write responses are the freshest available state after a save. Generated lookup JSON can still be stale in the browser immediately after an update, so a save flow should not rehydrate the active form baseline from generated lookup data before showing the saved result.
+- permanent rule: after a Studio source save succeeds, reset the current editor baseline from the write response record and response hash; use generated lookup JSON for opening records and previews, not for replacing a freshly saved form state.
+- outcome: single work-detail saves now keep the just-saved title and other fields visible after `Save` or `Save + Update site`.
+- files changed:
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - edit a detail title, save with `Update site`, and confirm the form title remains the edited value without refreshing
+
 ## UI Rule Log 2026-04-29 / UI-048
 
 - status: adopted
