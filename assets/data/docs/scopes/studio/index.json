@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T19:26:05Z",
+  "generated_at": "2026-04-29T19:43:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -853,7 +853,7 @@
       "doc_id": "catalogue-new-work-editor",
       "title": "New Catalogue Work",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 40,
       "published": true,

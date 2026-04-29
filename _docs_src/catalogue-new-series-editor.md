@@ -22,7 +22,7 @@ The compatibility route:
 
 - keeps old links from becoming dead ends
 - redirects immediately to `/studio/catalogue-series/?mode=new`
-- no longer loads the standalone new-series controller
+- has no standalone create controller; the old `assets/studio/js/catalogue-new-series-editor.js` implementation has been removed
 - no longer owns active route or UI text entries in `studio_config.json`
 
 Use `/studio/catalogue-series/` as the active route for both creating and editing series records.

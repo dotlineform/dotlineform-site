@@ -25,6 +25,8 @@ The active create implementation now lives in [Catalogue Work Detail Editor](/do
 
 The old standalone page exists only as a compatibility redirect for bookmarked links and stale dashboard/work-page links.
 
+The old `assets/studio/js/catalogue-new-work-detail-editor.js` controller has been removed, and the compatibility route is not represented by an active route key or UI text block in `studio_config.json`.
+
 ## Media Boundary
 
 The compatibility redirect does not upload or copy media.

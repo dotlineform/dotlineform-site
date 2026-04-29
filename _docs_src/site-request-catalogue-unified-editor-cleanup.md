@@ -10,7 +10,7 @@ sort_order: 140
 
 Status:
 
-- proposed
+- in progress
 
 ## Summary
 
@@ -114,7 +114,7 @@ That product workflow is tracked separately in [Catalogue Publication Workflow R
 
 Status:
 
-- proposed
+- implemented
 
 Search the repo for:
 
@@ -135,21 +135,47 @@ Classify each reference as:
 - stale implementation code
 - stale config or UI copy
 
+Inventory outcome:
+
+- active compatibility behavior:
+  - `studio/catalogue-new-work/index.md`
+  - `studio/catalogue-new-work-detail/index.md`
+  - `studio/catalogue-new-series/index.md`
+- compatibility docs:
+  - `_docs_src/catalogue-new-work-editor.md`
+  - `_docs_src/catalogue-new-work-detail-editor.md`
+  - `_docs_src/catalogue-new-series-editor.md`
+- stale implementation code:
+  - `assets/studio/js/catalogue-new-work-editor.js`
+  - `assets/studio/js/catalogue-new-work-detail-editor.js`
+  - `assets/studio/js/catalogue-new-series-editor.js`
+- docs/history only:
+  - prior unified-editor request docs, Studio UI rule entries, and Site Change Log entries that describe the migration history
+- stale config or UI copy:
+  - no active `catalogue_new_work_editor`, `catalogue_new_work_detail_editor`, or `catalogue_new_series_editor` route/UI text blocks remain in `studio_config.json`
+
 ### Task 2. Decide Old URL Compatibility
 
 Status:
 
-- proposed
+- implemented
 
 Choose one policy for the old create URLs.
 
 Option A keeps tiny redirect pages so old bookmarks continue to land on the unified editors. Option B removes the old pages once all internal references are gone. Either option is acceptable, but the repo should not keep full legacy controllers.
 
+Decision:
+
+- use Option A
+- keep tiny compatibility redirect pages for old `/studio/catalogue-new-*` URLs
+- do not keep standalone legacy create controllers or active config/UI text for those routes
+- keep compatibility docs for the old routes so the page-level Docs links are still useful when a redirect page is reached before navigation completes
+
 ### Task 3. Remove Retired Implementations
 
 Status:
 
-- proposed
+- implemented
 
 Delete or retire the old implementation code after Task 2.
 
@@ -160,17 +186,40 @@ Expected checks:
 - compatibility docs either explain redirects or are removed from the active docs tree
 - no active controller imports a retired create-editor module
 
+Implementation:
+
+- removed `assets/studio/js/catalogue-new-work-editor.js`
+- removed `assets/studio/js/catalogue-new-work-detail-editor.js`
+- removed `assets/studio/js/catalogue-new-series-editor.js`
+- kept redirect pages for `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/`
+- updated compatibility docs to state that the standalone controllers have been removed
+
 ### Task 4. Normalize Generated Series Payload Contract
 
 Status:
 
-- proposed
+- in progress
 
 Decide whether per-series JSON keeps or drops `series.works`.
 
 If kept, fix the generator status source so the array contains only published member works.
 
 If dropped, remove the field deliberately from generation, write-server update helpers, audit expectations, and docs. Confirm the public series page still renders grids from `series_index.json` and `works_index.json`.
+
+Initial finding:
+
+- the public series page renders its work grid from `assets/data/series_index.json` and `assets/data/works_index.json`
+- the per-series `assets/series/index/<series_id>.json` payload is still fetched for page-local metadata and `content_html`
+- current generator logic keeps `series.works` in per-series JSON and filters it to published member works
+- current aggregate `assets/data/series_index.json` generation also filters membership to published works
+- generated data currently has one stale per-series payload: `assets/series/index/002.json` lists draft work `00640`
+- source series `002` is already `draft`, so `scripts/catalogue_json_build.py --series-id 002` correctly refuses to run a public runtime build for it
+
+Working decision:
+
+- keep `series.works` for now as a compatibility/page-local field in per-series JSON
+- treat `assets/data/series_index.json` as the canonical public grid membership source
+- handle stale draft-series public artifacts through the publication/delete cleanup path or an explicit generated-artifact cleanup run, not by keeping a second series contract in active runtime code
 
 ### Task 5. Verify Catalogue Build And Runtime Paths
 

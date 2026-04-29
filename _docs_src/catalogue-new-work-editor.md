@@ -2,7 +2,7 @@
 doc_id: catalogue-new-work-editor
 title: "New Catalogue Work"
 added_date: 2026-04-18
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 40
 ---
@@ -21,7 +21,7 @@ The standalone new-work editor surface is retired. New work creation now happens
 The route:
 
 - redirects immediately to `/studio/catalogue-work/?mode=new`
-- does not load the old `assets/studio/js/catalogue-new-work-editor.js` controller
+- has no standalone create controller; the old `assets/studio/js/catalogue-new-work-editor.js` implementation has been removed
 - is no longer represented by a `catalogue_new_work_editor` route key or UI text block in `studio_config.json`
 
 ## Replacement Workflow

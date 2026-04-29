@@ -2481,16 +2481,16 @@ async function deleteCurrentWork(state) {
     const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
     if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
       const message = blockers[0] || validationErrors[0] || t(state, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(state.statusNode, message, "error");
       state.isDeleting = false;
       updateEditorState(state);
+      setTextWithState(state.statusNode, message, "error");
       return;
     }
     const summary = normalizeText(preview && preview.summary) || t(state, "delete_confirm_default", "Delete this source record?");
     if (!window.confirm(summary)) {
-      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."));
       state.isDeleting = false;
       updateEditorState(state);
+      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."));
       return;
     }
     setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
@@ -2505,9 +2505,9 @@ async function deleteCurrentWork(state) {
     const message = Number(error && error.status) === 409
       ? t(state, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
       : `${t(state, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
     state.isDeleting = false;
     updateEditorState(state);
+    setTextWithState(state.statusNode, message, "error");
   }
 }
 

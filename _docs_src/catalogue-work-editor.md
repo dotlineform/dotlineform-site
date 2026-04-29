@@ -181,9 +181,11 @@ Delete flow:
 
 1. single-record mode requests `POST /catalogue/delete-preview`
 2. the server returns blockers, validation errors, and dependent source-record impact
-3. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
-4. the server deletes the work plus dependent detail/file/link source records in one atomic write bundle
-5. the server removes generated work/detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries
+3. blockers and validation errors remain visible in the page status area
+4. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
+5. the server deletes the work plus dependent detail/file/link source records in one atomic write bundle
+6. if a draft series uses the deleted work as `primary_work_id`, the server clears that draft-only pointer; published series still block deletion until reassigned or unpublished
+7. the server removes generated work/detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries
 
 The current public update scope is intentionally narrow:
 

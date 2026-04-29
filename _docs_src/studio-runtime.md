@@ -138,8 +138,9 @@ Current page controllers:
 
 Retired compatibility controllers:
 
-- `assets/studio/js/catalogue-new-work-editor.js` is no longer loaded by `/studio/catalogue-new-work/`; the route redirects to `/studio/catalogue-work/?mode=new`.
-- `assets/studio/js/catalogue-new-series-editor.js` is no longer loaded by `/studio/catalogue-new-series/`; the route redirects to `/studio/catalogue-series/?mode=new`.
+- `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` are redirect-only compatibility routes.
+- The old standalone controllers `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` have been removed.
+- Active create behavior now lives in `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-detail-editor.js`, and `assets/studio/js/catalogue-series-editor.js`.
 
 Controller splits that are already live:
 

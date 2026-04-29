@@ -23,6 +23,80 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-069
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: a newly created draft series can reasonably start without `primary_work_id`, but the first member work normally becomes the eventual primary work for publish readiness.
+- triage: draft workflow ergonomics
+- reasoning: `primary_work_id` remains a publication requirement rather than a draft-save requirement, but the editor should remove mechanical data entry when the intent is unambiguous. The first accepted member work is the only member available and is therefore the best primary candidate.
+- permanent rule: when adding the first member work to a series with blank `primary_work_id`, the Series editor should auto-fill `primary_work_id` with that work id. Later member additions must not overwrite an existing primary value.
+- outcome: the member-add command now populates blank `primary_work_id` when the accepted work changes the member count from zero to one, then revalidates the editor in the normal save flow.
+- files changed:
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_docs_src/catalogue-series-editor.md`
+- verification:
+  - open a saved draft series with no member works and blank `primary_work_id`, add a valid work id, and confirm the primary field fills with that work id without saving immediately
+
+## UI Rule Log 2026-04-29 / UI-068
+
+- status: adopted
+- route: `/studio/catalogue-series/`, `/studio/catalogue-work/`
+- issue: draft series were treated as hard primary-work dependents during work delete, even though `primary_work_id` is only required when publishing a series.
+- triage: draft/publish workflow boundary
+- reasoning: draft records are allowed to be incomplete. Published series need a valid primary work because the public thumbnail and published series surface depend on it, but draft series should not prevent deletion of a draft work solely because they currently point at it as `primary_work_id`.
+- permanent rule: `primary_work_id` is a publication requirement for series, not a draft create/save requirement. Work delete should block published-series primary dependencies, while draft-series primary references to the deleted work can be cleared as source cleanup.
+- outcome: work delete preview now ignores draft-series primary references as blockers, delete validation clears draft-series `primary_work_id` references before validating the remaining source set, and delete apply writes that series cleanup with the work deletion.
+- files changed:
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/catalogue-series-editor.md`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+- verification:
+  - preview work delete for `00640` and confirm there are no blockers or validation errors while series `002` is draft
+  - preview publish for series `002` and confirm publication is still blocked until it has a valid published primary/member work
+
+## UI Rule Log 2026-04-29 / UI-067
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: clicking `Delete` on work `00640` appeared to do nothing even though the delete preview returned a blocker.
+- triage: command feedback state ordering
+- reasoning: mutation commands that re-render editor state after a server response must set failure or blocked feedback after the state refresh, or preserve that feedback through the refresh. Otherwise the page can overwrite the useful message with a generic loaded-state message.
+- permanent rule: delete blockers, validation errors, cancellation notices, and delete failures must remain visible in the command status area after editor state refreshes.
+- outcome: reordered work-delete feedback so preview blockers and failures are written after `updateEditorState()`. The page now shows that `00640` cannot be deleted while it is `primary_work_id` for series `002`.
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `_docs_src/catalogue-work-editor.md`
+- verification:
+  - open `/studio/catalogue-work/?work=00640`, click `Delete`, and confirm the status shows `Work is primary_work_id for series: 002. Reassign those series before deleting the work.`
+
+## UI Rule Log 2026-04-29 / UI-066
+
+- status: adopted
+- route: `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue-new-series/`
+- issue: the old create URLs had already become compatibility redirects, but their standalone create controllers still existed in the repo.
+- triage: route compatibility cleanup
+- reasoning: compatibility routes are useful for bookmarks and stale links, but they should not preserve a second implementation path. The active create/edit behavior belongs in the unified catalogue editors.
+- permanent rule: retired Studio create routes may remain as tiny redirects, but they must not keep standalone controllers, active config route keys, or active UI text blocks after the unified editor route owns the workflow.
+- outcome: kept the old `/studio/catalogue-new-*` pages as redirect-only compatibility routes, removed the retired work/detail/series create controllers, and updated the compatibility docs to state that create behavior lives in the unified editors.
+- files changed:
+  - `studio/catalogue-new-work/index.md`
+  - `studio/catalogue-new-work-detail/index.md`
+  - `studio/catalogue-new-series/index.md`
+  - `assets/studio/js/catalogue-new-work-editor.js`
+  - `assets/studio/js/catalogue-new-work-detail-editor.js`
+  - `assets/studio/js/catalogue-new-series-editor.js`
+  - `_docs_src/catalogue-new-work-editor.md`
+  - `_docs_src/catalogue-new-work-detail-editor.md`
+  - `_docs_src/catalogue-new-series-editor.md`
+  - `_docs_src/studio-runtime.md`
+- verification:
+  - confirm `/studio/catalogue-new-work/` redirects to `/studio/catalogue-work/?mode=new`
+  - confirm `/studio/catalogue-new-work-detail/?work=<work_id>` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
+  - confirm `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`
+  - confirm no active page imports the removed standalone controllers
+
 ## UI Rule Log 2026-04-29 / UI-065
 
 - status: adopted

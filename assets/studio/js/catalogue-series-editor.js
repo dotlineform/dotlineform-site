@@ -902,10 +902,16 @@ function addWorkToSeries(state) {
   }
   const current = state.memberSeriesIdsByWorkId.get(workId) || getStoredWorkSeriesIds(state, workId);
   if (current.includes(state.currentSeriesId)) {
-    setTextWithState(state.membersStatusNode, t(state, "members_add_exists", "Work {work_id} is already in this series.", { work_id }), "error");
+    setTextWithState(state.membersStatusNode, t(state, "members_add_exists", "Work {work_id} is already in this series.", { work_id: workId }), "error");
     return;
   }
+  const currentMemberCount = getCurrentMemberEntries(state).length;
   state.memberSeriesIdsByWorkId.set(workId, [...current, state.currentSeriesId]);
+  if (!currentMemberCount && !normalizeWorkId(state.draft.primary_work_id)) {
+    state.draft.primary_work_id = workId;
+    const primaryNode = state.fieldNodes.get("primary_work_id");
+    if (primaryNode) setFieldNodeValue(primaryNode, workId);
+  }
   state.memberAddNode.value = "";
   setTextWithState(state.membersStatusNode, "");
   updateEditorState(state);

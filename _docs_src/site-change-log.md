@@ -8,6 +8,98 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Auto-filled primary work for first series member
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series editor
+
+**Summary:**
+Changed the Series editor so adding the first member work to a series with blank `primary_work_id` fills the primary field automatically.
+
+**Reason:**
+Draft series may start incomplete, but once the first work is added there is an unambiguous primary candidate. Auto-filling the field keeps the draft workflow lightweight while preserving the publish-time requirement.
+
+**Effect:**
+The first accepted member work fills blank `primary_work_id` immediately in the editor. Later member additions do not overwrite an existing primary value, and publish validation still requires a valid published primary work.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-series-editor.js`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+## [2026-04-29] Relaxed series primary work for draft workflow
+
+**Status:** implemented
+
+**Area:** Studio / catalogue draft publication workflow
+
+**Summary:**
+Changed work delete validation so draft series no longer block deletion merely because they point at the deleted work as `primary_work_id`.
+
+**Reason:**
+`primary_work_id` is required for publishing a series, because the public series thumbnail comes from a published primary work. It should not be a required field for draft series creation or draft source maintenance.
+
+**Effect:**
+Published series still block deleting their primary work. Draft series that point at a deleted work have `primary_work_id` cleared during the work delete transaction. Publishing still requires a valid published primary/member work.
+
+**Affected files/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+## [2026-04-29] Kept work delete blockers visible
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Fixed the Work editor delete flow so server-side delete blockers remain visible after the editor state refreshes.
+
+**Reason:**
+Deleting work `00640` looked like a no-op. The delete preview correctly returned a blocker because the work is `primary_work_id` for series `002`, but the page immediately overwrote that blocker with the generic loaded-work status.
+
+**Effect:**
+Clicking `Delete` now leaves the blocker visible in the status area. For `00640`, the page reports that series `002` must be reassigned before the work can be deleted.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+## [2026-04-29] Removed retired catalogue create controllers
+
+**Status:** implemented
+
+**Area:** Studio / catalogue editor cleanup
+
+**Summary:**
+Removed the standalone work, work-detail, and series create controllers after their routes had become compatibility redirects to the unified editors.
+
+**Reason:**
+The old `/studio/catalogue-new-*` URLs are still useful as bookmark-safe redirects, but keeping their controllers in the repo preserved a second implementation path after create/edit behavior moved into the unified editor pages.
+
+**Effect:**
+`/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` remain as tiny redirect pages. The old `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` controllers are removed. Compatibility docs now identify the old routes as redirect-only and point users to the unified editors.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-new-work-editor.js`
+- `assets/studio/js/catalogue-new-work-detail-editor.js`
+- `assets/studio/js/catalogue-new-series-editor.js`
+- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
+- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
+- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Renamed Catalogue Status to Catalogue Drafts
 
 **Status:** implemented

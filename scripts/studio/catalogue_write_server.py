@@ -1312,6 +1312,7 @@ def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | Non
         series_id
         for series_id, series_record in source_records.series.items()
         if str(series_record.get("primary_work_id") or "") == work_id
+        and normalize_status(series_record.get("status")) == "published"
     )
     blockers: list[str] = []
     if primary_series_ids:
@@ -1339,6 +1340,24 @@ def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | Non
         "cleanup": cleanup,
         "summary": f"Delete work {work_id}, {len(dependent_detail_ids)} detail record(s), {len(dependent_file_ids)} file record(s), {len(dependent_link_ids)} link record(s), and remove {cleanup_count} generated/media file(s).",
     }
+
+
+def series_records_with_draft_primary_cleared(
+    series_records: Mapping[str, Dict[str, Any]],
+    work_id: str,
+) -> tuple[Dict[str, Dict[str, Any]], list[str]]:
+    updated_series: Dict[str, Dict[str, Any]] = {}
+    changed_series_ids: list[str] = []
+    for series_id, series_record in series_records.items():
+        next_record = dict(series_record)
+        if (
+            str(next_record.get("primary_work_id") or "") == work_id
+            and normalize_status(next_record.get("status")) != "published"
+        ):
+            next_record["primary_work_id"] = None
+            changed_series_ids.append(series_id)
+        updated_series[series_id] = next_record
+    return updated_series, sorted(changed_series_ids)
 
 
 def preview_work_detail_delete(source_dir: Path, detail_uid: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
@@ -1435,6 +1454,7 @@ def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
     source_records = records_from_json_source(source_dir)
     updated_works = dict(source_records.works)
     updated_works.pop(work_id, None)
+    updated_series, _changed_series_ids = series_records_with_draft_primary_cleared(source_records.series, work_id)
     updated_work_details = {
         detail_uid: detail_record
         for detail_uid, detail_record in source_records.work_details.items()
@@ -1453,7 +1473,7 @@ def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(updated_works),
         work_details=sort_record_map(updated_work_details),
-        series=sort_record_map(source_records.series),
+        series=sort_record_map(updated_series),
         work_files=sort_record_map(updated_work_files),
         work_links=sort_record_map(updated_work_links),
     )
@@ -3837,6 +3857,7 @@ class Handler(BaseHTTPRequestHandler):
         if kind == "work":
             works_payload = load_works_payload(self.server.works_path)
             details_payload = load_work_details_payload(self.server.work_details_path)
+            series_payload = load_series_payload(self.server.series_path)
             current_record = works_payload["works"].get(record_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"work_id not found: {record_id}")
@@ -3855,6 +3876,7 @@ class Handler(BaseHTTPRequestHandler):
                 for detail_uid, detail_record in details_payload["work_details"].items()
                 if str(detail_record.get("work_id") or "") != record_id
             }
+            updated_series, changed_series_ids = series_records_with_draft_primary_cleared(series_payload["series"], record_id)
             cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
             generated_payloads = build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
             payloads = {
@@ -3862,6 +3884,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
                 **generated_payloads,
             }
+            if changed_series_ids:
+                payloads[self.server.series_path.resolve()] = payload_for_map("series", updated_series)
             cleanup_result = self._apply_catalogue_delete_transaction(
                 backup_label="catalogue-delete-work",
                 payloads=payloads,
@@ -3886,7 +3910,10 @@ class Handler(BaseHTTPRequestHandler):
                         "operation": "work.delete",
                         "status": "completed",
                         "summary": f"Deleted work {record_id}, dependent source records, generated artifacts, local media, and catalogue search record.",
-                        "affected": preview["affected"],
+                        "affected": {
+                            **preview["affected"],
+                            "series": sorted(set([*preview["affected"].get("series", []), *changed_series_ids])),
+                        },
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }
                 )

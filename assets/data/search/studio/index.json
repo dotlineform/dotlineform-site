@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3602287b98270308c03cbe629972530f",
-    "generated_at_utc": "2026-04-29T19:26:07Z",
+    "version": "blake2b-6aef0e4d67e71513e9d437308c4cf629",
+    "generated_at_utc": "2026-04-29T19:43:39Z",
     "count": 146
   },
   "entries": [
@@ -1403,10 +1403,10 @@
       "kind": "doc",
       "title": "New Catalogue Work",
       "href": "/docs/?scope=studio&doc=catalogue-new-work-editor",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-28 • User Guide",
+      "display_meta": "2026-04-29 • User Guide",
       "search_terms": [
         "catalogue-new-work-editor",
         "catalogue",
@@ -1417,12 +1417,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-28",
+        "2026-04-29",
         "2026",
         "04",
-        "28"
+        "29"
       ],
-      "search_text": "catalogue-new-work-editor catalogue new work editor new catalogue work user guide user guide 2026-04-28 2026 04 28"
+      "search_text": "catalogue-new-work-editor catalogue new work editor new catalogue work user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "search-ranking-model",

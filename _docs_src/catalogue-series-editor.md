@@ -32,6 +32,7 @@ The first implementation covers:
 - cap visible member rows at 10 by default
 - search current members by `work_id` when the list is truncated
 - add a work to the current series
+- automatically fill blank `primary_work_id` when the first member work is added
 - remove a work from the current series
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
 - preview the scoped public update impact for the current series
@@ -48,8 +49,10 @@ Draft/publish rule:
 
 - new series are created as draft source records only
 - draft series may be saved without `primary_work_id`
+- draft series may temporarily lose or omit `primary_work_id` when member works are removed or deleted
 - edit-mode saves require `year` and `year_display`
 - published series must have a valid `primary_work_id` that belongs to the series
+- published series must have at least one published member work because the public thumbnail comes from the primary work
 - scoped rebuild is blocked until the series status is `published` and its primary work is also published
 
 ## New Mode
@@ -76,6 +79,8 @@ Locked constraints for this phase:
 
 - each work's `series_ids` order is preserved exactly as edited
 - membership save does not sort a work's series list
+- adding the first member work to a series with blank `primary_work_id` automatically sets that work as `primary_work_id`
+- adding later member works never overwrites an existing `primary_work_id`
 - the member list uses the same capped list pattern as the work-detail navigation surface
 - long member lists stay navigable through member search rather than rendering every row by default
 - the member search box sits below the section heading and is only shown when the member list is truncated

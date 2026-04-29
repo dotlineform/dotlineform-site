@@ -136,7 +136,8 @@ Request behavior:
 
 - returns a delete summary, affected records, blockers, and validation errors
 - work delete preview includes dependent detail/file/link source records
-- work delete blocks when the work is still used as `primary_work_id` by a series
+- work delete blocks when the work is still used as `primary_work_id` by a published series
+- work delete clears `primary_work_id` when a draft series points at the deleted work
 - series delete preview includes affected member works
 - work, work-detail, and series delete previews include generated artifact, repo-local media, public JSON update, Studio JSON update, and catalogue search impact where relevant
 - moment delete preview covers the canonical source metadata record plus generated moment artifacts, repo/local media cleanup, moments index update, and catalogue search rebuild
@@ -145,7 +146,7 @@ Request behavior:
 
 - re-runs delete preview and blocks when preview is not clean
 - writes the canonical source JSON files needed for that delete
-- for work deletes, removes generated work artifacts, generated dependent detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries
+- for work deletes, removes generated work artifacts, generated dependent detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries, and clears draft-series `primary_work_id` references to the deleted work
 - for work-detail deletes, removes generated detail artifacts, published thumbnails, repo-local staged media, and the deleted detail from the parent work runtime JSON
 - for series deletes, removes generated series artifacts, removes the series from affected work runtime/index records, removes the series tag-assignment row, updates recent/public indexes, and rebuilds catalogue search
 - for moment deletes, removes generated moment page/json artifacts, published thumbnails, and repo-local staged media
@@ -538,6 +539,7 @@ Request behavior:
 - each changed work keeps the submitted `series_ids` order; the server does not sort it
 - draft source saves may omit `primary_work_id`
 - `primary_work_id`, when present, must still be a member of the series after the proposed membership writes
+- `primary_work_id` is required for publication, not for draft create/save
 - the server validates the full source set before writing `series.json` and `works.json`
 - if `apply_build: true` is submitted for a draft series, the source save still succeeds but the public build request is skipped
 
