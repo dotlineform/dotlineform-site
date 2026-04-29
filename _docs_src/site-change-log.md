@@ -8,6 +8,33 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Converted work-detail editor to explicit Publish and Unpublish commands
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work details / publication workflow
+
+**Summary:**
+Updated the Work Detail editor so detail publication is controlled by `Publish` / `Unpublish` instead of save-time public update controls.
+
+**Reason:**
+Work details still exposed `Update site now` as a save-time checkbox and follow-up command after the Work and Series editors moved to separate `Save`, `Publish`, and `Unpublish` intentions. Details need the same publication model, with published saves updating the parent work output internally.
+
+**Effect:**
+The detail status field is now a non-input Readonly Display surface in single, bulk, and new modes. Single-detail `Save` never changes publication status, draft saves stay source-only, and published saves request the internal parent-work public update without showing an update command. Saved draft details expose `Publish`; published details expose `Unpublish`, which ignores unsaved form edits after confirmation and uses the shared publication preview/apply endpoints to clean public output. Bulk detail saves update public output only for changed published detail records.
+
+**Affected files/docs:**
+
+- `studio/catalogue-work-detail/index.md`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-work-detail-fields.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Rendered Work and Series status as Readonly Display
 
 **Status:** implemented

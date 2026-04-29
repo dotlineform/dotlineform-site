@@ -23,6 +23,29 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-062
+
+- status: adopted
+- route: `/studio/catalogue-work-detail/`
+- issue: the Work Detail editor still exposed publication as a save-time `Update site now` checkbox plus a follow-up update button after Work and Series had moved to explicit publication commands.
+- triage: command model / publication workflow
+- reasoning: detail metadata saves, bulk detail edits, and public visibility changes are separate user intentions. A published-detail save should update the parent work output internally, while `Publish` and `Unpublish` should be the only visible controls that change source status.
+- permanent rule: work-detail publication state changes happen through the single publication command. `Save` does not change status; saved published details run the internal parent-work public update; saved draft details remain source-only; bulk saves update public output only for changed records that are already published; `Publish` moves a clean draft detail to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated public output.
+- outcome: removed the visible work-detail save-time public update checkbox and follow-up update button, added a config-backed `Publish` / `Unpublish` command for single-detail mode, made status read-only in single, bulk, and new modes, and wired detail publication state changes through the shared catalogue publication preview/apply endpoints.
+- files changed:
+  - `studio/catalogue-work-detail/index.md`
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `assets/studio/js/catalogue-work-detail-fields.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-work-detail-editor.md`
+  - `_docs_src/site-request-catalogue-publication-workflow.md`
+- verification:
+  - open `/studio/catalogue-work-detail/?detail=<draft_detail_uid>` and confirm a saved draft shows `Publish`, no `Update site now` checkbox, and a non-input Readonly Display status field
+  - open `/studio/catalogue-work-detail/?detail=<published_detail_uid>` and confirm `Unpublish` remains available even with dirty form edits
+  - publish preview/apply for a valid draft detail whose parent work is published and confirm the form reloads as `published`
+  - unpublish dry-run or test record and confirm source status returns to `draft` and public cleanup impact is reported by the server
+
 ## UI Rule Log 2026-04-29 / UI-061
 
 - status: adopted

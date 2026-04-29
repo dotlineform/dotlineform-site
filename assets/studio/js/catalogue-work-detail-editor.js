@@ -259,6 +259,20 @@ function buildBulkDraftFromRecords(records) {
   return { draft, mixedFields };
 }
 
+function setFieldNodeValue(node, value) {
+  const text = normalizeText(value);
+  if ("value" in node) {
+    node.value = text;
+  } else {
+    node.textContent = displayValue(text);
+  }
+}
+
+function getFieldNodeValue(node) {
+  if ("value" in node) return node.value;
+  return normalizeText(node.textContent);
+}
+
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -271,9 +285,9 @@ function setPopupVisibility(state, visible) {
 }
 
 function renderField(field, fieldsNode, state) {
-  const wrapper = document.createElement("label");
+  const wrapper = document.createElement(field.readonly ? "div" : "label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  wrapper.htmlFor = `catalogueWorkDetailField-${field.key}`;
+  if (!field.readonly) wrapper.htmlFor = `catalogueWorkDetailField-${field.key}`;
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
@@ -281,7 +295,10 @@ function renderField(field, fieldsNode, state) {
   wrapper.appendChild(label);
 
   let input;
-  if (field.type === "select") {
+  if (field.readonly) {
+    input = document.createElement("span");
+    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  } else if (field.type === "select") {
     input = document.createElement("select");
     input.className = "tagStudio__input";
     field.options.forEach((optionValue) => {
@@ -305,8 +322,10 @@ function renderField(field, fieldsNode, state) {
   message.dataset.fieldStatus = field.key;
   wrapper.appendChild(message);
 
-  input.addEventListener("input", () => onFieldInput(state, field.key));
-  input.addEventListener("change", () => onFieldInput(state, field.key));
+  if (!field.readonly) {
+    input.addEventListener("input", () => onFieldInput(state, field.key));
+    input.addEventListener("change", () => onFieldInput(state, field.key));
+  }
   fieldsNode.appendChild(wrapper);
   state.fieldWrappers.set(field.key, wrapper);
   state.fieldNodes.set(field.key, input);
@@ -400,7 +419,7 @@ function applyDraftToInputs(state) {
   FORM_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
-    node.value = normalizeText(state.draft[field.key]);
+    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
   });
 }
 
@@ -419,9 +438,9 @@ function setModeFieldAvailability(state) {
     const newModeOnly = field.key === "work_id" || field.key === "detail_id";
     if (wrapper) wrapper.hidden = newModeOnly && state.mode !== "new";
     if (!node) return;
-    node.disabled = state.isSaving || state.isBuilding || state.isDeleting;
+    if ("disabled" in node) node.disabled = state.isSaving || state.isBuilding || state.isDeleting;
     if (state.mode === "new" && (field.key === "work_id" || field.key === "status")) {
-      node.disabled = true;
+      if ("disabled" in node) node.disabled = true;
     }
   });
 }
@@ -443,31 +462,67 @@ function buildPayload(state) {
       kind: "work_details",
       ids: state.bulkDetailUids.slice(),
       expected_record_hashes: expectedRecordHashes,
-      apply_build: applyBuildRequested(state),
+      apply_build: bulkSelectionHasPublishedRecords(state),
       set_fields: setFields
     };
   }
 
   const draft = state.draft;
-  return buildSaveWorkDetailPayload({ ...state, draft });
+  return buildSaveWorkDetailPayload({ ...state, draft, applyBuild: currentDetailIsPublished(state) });
 }
 
-function applyBuildRequested(state) {
-  return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+function currentDetailIsPublished(state) {
+  return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
+}
+
+function currentDetailIsDraft(state) {
+  return normalizeText(state.draft && state.draft.status).toLowerCase() === "draft";
+}
+
+function bulkSelectionHasPublishedRecords(state) {
+  if (state.mode !== "bulk") return false;
+  return state.bulkDetailUids.some((detailUid) => {
+    const record = state.bulkRecords.get(detailUid);
+    return normalizeText(record && record.status).toLowerCase() === "published";
+  });
+}
+
+function bulkPublishedBuildTargets(state) {
+  return state.bulkDetailUids
+    .filter((detailUid) => {
+      const record = state.bulkRecords.get(detailUid);
+      return normalizeText(record && record.status).toLowerCase() === "published";
+    })
+    .map((detailUid) => {
+      const record = state.bulkRecords.get(detailUid);
+      return { work_id: normalizeWorkId(record && record.work_id), extra_series_ids: [] };
+    })
+    .filter((target) => target.work_id);
 }
 
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const showUpdate = hasRecord && state.rebuildPending;
-  state.buildButton.hidden = !showUpdate;
-  state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
-  if (state.applyBuildNode) {
-    state.applyBuildNode.disabled = state.mode === "new" || !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  }
+  const canPublish = state.mode === "single" && hasRecord && currentDetailIsDraft(state);
+  const canUnpublish = state.mode === "single" && hasRecord && currentDetailIsPublished(state);
+  const label = canUnpublish
+    ? t(state, "unpublish_button", "Unpublish")
+    : t(state, "publish_button", "Publish");
+  state.publicationButton.textContent = label;
+  state.publicationButton.hidden = !(canPublish || canUnpublish);
+  state.publicationButton.disabled = !(canPublish || canUnpublish)
+    || (canPublish && dirty)
+    || (canPublish && errors.size > 0)
+    || state.isSaving
+    || state.isBuilding
+    || state.isDeleting
+    || !state.serverAvailable;
 }
 
 function applySingleSaveBuildOutcome(state, response) {
   const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!currentDetailIsPublished(state)) {
+    state.rebuildPending = false;
+    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
   if (!response || !response.build_requested || !build) {
     state.rebuildPending = Boolean(response && response.changed);
     return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
@@ -486,6 +541,11 @@ function applySingleSaveBuildOutcome(state, response) {
 
 function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
   const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!bulkSelectionHasPublishedRecords(state)) {
+    state.rebuildPending = false;
+    state.bulkBuildTargets = [];
+    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
   if (!response || !response.build_requested || !build) {
     state.rebuildPending = Boolean(response && response.changed);
     state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : fallbackBuildTargets;
@@ -654,7 +714,7 @@ function updateSummary(state) {
       </div>
     `;
     state.runtimeStateNode.textContent = state.rebuildPending
-      ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+      ? t(state, "summary_rebuild_needed", "public update failed in this session")
       : t(state, "summary_rebuild_current", "source and parent work output are aligned in this session");
     renderCurrentPreview(state);
     renderReadiness(state);
@@ -686,7 +746,7 @@ function updateSummary(state) {
   `;
 
   state.runtimeStateNode.textContent = state.rebuildPending
-    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
+    ? t(state, "summary_rebuild_needed", "public update failed in this session")
     : t(state, "summary_rebuild_current", "source and parent work output are aligned in this session");
   renderCurrentPreview(state);
   renderReadiness(state);
@@ -707,7 +767,6 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   state.bulkBuildTargets = [];
   state.baselineDraft = buildWorkDetailDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
-  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   applyDraftToInputs(state);
   applyReadonly(state);
   syncUrl(detailUid);
@@ -742,7 +801,6 @@ function setNewDetailMode(state, workId, options = {}) {
   state.draft.status = "draft";
   state.rebuildPending = false;
   state.buildPreview = null;
-  if (state.applyBuildNode) state.applyBuildNode.checked = false;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -781,7 +839,6 @@ function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, opti
   state.draft = { ...bulkDraft.draft };
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
-  if (state.applyBuildNode) state.applyBuildNode.checked = false;
   applyDraftToInputs(state);
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
@@ -862,11 +919,11 @@ function onFieldInput(state, fieldKey) {
   if (!node) return;
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
-    node.value = "draft";
+    setFieldNodeValue(node, "draft");
     updateEditorState(state);
     return;
   }
-  state.draft[fieldKey] = node.value;
+  state.draft[fieldKey] = getFieldNodeValue(node);
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
   }
@@ -881,10 +938,7 @@ async function refreshBuildPreview(state) {
   if (state.mode === "bulk") {
     const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
       ? state.bulkBuildTargets
-      : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
-        const record = state.bulkRecords.get(detailUid);
-        return normalizeWorkId(record && record.work_id);
-      }).filter(Boolean)));
+      : bulkPublishedBuildTargets(state);
     state.buildPreview = null;
     setTextWithState(
       state.buildImpactNode,
@@ -900,6 +954,13 @@ async function refreshBuildPreview(state) {
   if (!state.currentWorkId || !state.serverAvailable) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, "");
+    renderCurrentPreview(state);
+    renderReadiness(state);
+    return;
+  }
+  if (!currentDetailIsPublished(state)) {
+    state.buildPreview = null;
+    setTextWithState(state.buildImpactNode, t(state, "build_preview_unpublished", "Public update unavailable while the detail is not published."));
     renderCurrentPreview(state);
     renderReadiness(state);
     return;
@@ -944,10 +1005,6 @@ async function saveCurrentDetail(state) {
   }
 
   if (!draftHasChanges(state)) {
-    if (applyBuildRequested(state) && state.rebuildPending) {
-      await buildCurrentDetail(state);
-      return;
-    }
     setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
     setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
     updateEditorState(state);
@@ -956,11 +1013,10 @@ async function saveCurrentDetail(state) {
 
   state.isSaving = true;
   state.saveButton.disabled = true;
-  state.buildButton.disabled = true;
   setTextWithState(
     state.statusNode,
-    applyBuildRequested(state)
-      ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
+    (state.mode === "bulk" ? bulkSelectionHasPublishedRecords(state) : currentDetailIsPublished(state))
+      ? t(state, "save_status_saving_and_updating", "Saving source record and updating parent work output…")
       : t(state, "save_status_saving", "Saving source record…")
   );
   setTextWithState(state.resultNode, "");
@@ -1002,13 +1058,29 @@ async function saveCurrentDetail(state) {
       } else if (outcome.kind === "saved_update_failed") {
         setTextWithState(
           state.resultNode,
-          t(state, "bulk_save_result_success_partial", "Saved {count} detail records at {saved_at}, but the site update failed. Retry Update site now.", {
+          t(state, "bulk_save_result_success_partial", "Saved {count} detail records at {saved_at}, but the public update failed.", {
             count: String(response.changed_count || 0),
             saved_at: outcome.stamp
           }),
           "warn"
         );
         setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+      } else if (outcome.kind === "saved_unpublished") {
+        setTextWithState(
+          state.resultNode,
+          response.changed
+            ? t(state, "bulk_save_result_success_unpublished", "Saved {count} draft detail records at {saved_at}.", {
+              count: String(response.changed_count || 0),
+              saved_at: outcome.stamp
+            })
+            : t(state, "save_result_unchanged", "Source already matches the current form values."),
+          response.changed ? "success" : ""
+        );
+        setTextWithState(
+          state.statusNode,
+          t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
+          response.changed ? "success" : ""
+        );
       } else {
         setTextWithState(
           state.resultNode,
@@ -1060,10 +1132,17 @@ async function saveCurrentDetail(state) {
     } else if (outcome.kind === "saved_update_failed") {
       setTextWithState(
         state.resultNode,
-        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the site update failed. Retry Update site now.", { saved_at: outcome.stamp }),
+        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
         "warn"
       );
       setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+    } else if (outcome.kind === "saved_unpublished") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_unpublished", "Source saved at {saved_at}.", { saved_at: outcome.stamp }),
+        response.changed ? "success" : ""
+      );
+      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
     } else {
       setTextWithState(
         state.resultNode,
@@ -1194,6 +1273,119 @@ async function buildCurrentDetail(state) {
       `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
+async function applyPublicationChange(state) {
+  if (state.mode !== "single" || !state.currentRecord || !state.currentDetailUid || !state.serverAvailable) return;
+  const action = currentDetailIsPublished(state) ? "unpublish" : currentDetailIsDraft(state) ? "publish" : "";
+  if (!action) {
+    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published details."), "error");
+    return;
+  }
+  if (action === "publish" && draftHasChanges(state)) {
+    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
+    return;
+  }
+
+  if (action === "publish") {
+    const errors = validateDraft(state);
+    updateFieldMessages(state, errors);
+    if (errors.size > 0) {
+      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
+      updateEditorState(state);
+      return;
+    }
+  }
+
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(
+    state.statusNode,
+    action === "publish"
+      ? t(state, "publication_preview_publish_running", "Preparing publish preview…")
+      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview…")
+  );
+  setTextWithState(state.resultNode, "");
+
+  try {
+    const request = {
+      kind: "work_detail",
+      action,
+      detail_uid: state.currentDetailUid,
+      expected_record_hash: state.currentRecordHash
+    };
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
+    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
+    if ((preview && preview.blocked) || blockers.length) {
+      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
+      setTextWithState(state.statusNode, message, "error");
+      return;
+    }
+
+    if (action === "unpublish") {
+      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this detail?");
+      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
+      if (!window.confirm(`${summary}${dirtyNote}`)) {
+        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
+        return;
+      }
+    }
+
+    setTextWithState(
+      state.statusNode,
+      action === "publish"
+        ? t(state, "publication_publish_running", "Publishing detail…")
+        : t(state, "publication_unpublish_running", "Unpublishing detail…")
+    );
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    if (!record) throw new Error("publication response missing record");
+
+    const detailUid = state.currentDetailUid;
+    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
+    state.detailSearchByUid.set(detailUid, {
+      detail_uid: detailUid,
+      work_id: normalizeText(record.work_id),
+      detail_id: normalizeText(record.detail_id),
+      title: normalizeText(record.title),
+      status: normalizeText(record.status)
+    });
+    state.rebuildPending = response.status === "public_update_failed";
+    const lookup = await loadDetailLookupRecord(state, detailUid).catch(() => null);
+    setLoadedRecord(state, detailUid, record, {
+      recordHash,
+      keepResult: true,
+      lookup: lookup || {
+        work_detail: record,
+        record_hash: recordHash
+      }
+    });
+    await refreshBuildPreview(state);
+
+    if (response.status === "public_update_failed") {
+      const error = normalizeText(response.public_update && response.public_update.error);
+      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
+      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
+      return;
+    }
+
+    if (action === "publish") {
+      setTextWithState(state.statusNode, t(state, "publication_status_published", "Detail published."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_published", "Detail is published and parent work output has been updated."), "success");
+    } else {
+      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Detail unpublished."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Detail is draft again and public output has been cleaned up."), "success");
+    }
+  } catch (error) {
+    const message = Number(error && error.status) === 409
+      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
+      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
   } finally {
     state.isBuilding = false;
     updateEditorState(state);
@@ -1376,17 +1568,14 @@ async function init() {
   const popupListNode = document.getElementById("catalogueWorkDetailPopupList");
   const openButton = document.getElementById("catalogueWorkDetailOpen");
   const saveButton = document.getElementById("catalogueWorkDetailSave");
-  const buildButton = document.getElementById("catalogueWorkDetailBuild");
+  const publicationButton = document.getElementById("catalogueWorkDetailPublication");
   const deleteButton = document.getElementById("catalogueWorkDetailDelete");
-  const runtimeActionsNode = buildButton ? buildButton.closest(".catalogueWorkPage__runtimeActions") : null;
-  const applyBuildNode = document.getElementById("catalogueWorkDetailApplyBuild");
-  const applyBuildLabelNode = document.getElementById("catalogueWorkDetailApplyBuildLabel");
   const saveModeNode = document.getElementById("catalogueWorkDetailSaveMode");
   const contextNode = document.getElementById("catalogueWorkDetailContext");
   const statusNode = document.getElementById("catalogueWorkDetailStatus");
   const warningNode = document.getElementById("catalogueWorkDetailWarning");
   const resultNode = document.getElementById("catalogueWorkDetailResult");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !publicationButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode) {
     return;
   }
 
@@ -1425,11 +1614,8 @@ async function init() {
     popupListNode,
     openButton,
     saveButton,
-    buildButton,
+    publicationButton,
     deleteButton,
-    applyBuildNode,
-    applyBuildLabelNode,
-    runtimeActionsNode,
     saveModeNode,
     contextNode,
     statusNode,
@@ -1451,8 +1637,7 @@ async function init() {
     searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
-    buildButton.textContent = t(state, "build_button", "Update site now");
-    applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
+    publicationButton.textContent = t(state, "publish_button", "Publish");
     deleteButton.textContent = t(state, "delete_button", "Delete");
 
     const [detailsPayload, worksPayload, serverAvailable] = await Promise.all([
@@ -1530,8 +1715,8 @@ async function init() {
     saveButton.addEventListener("click", () => saveCurrentDetail(state).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected save failure", error);
     }));
-    buildButton.addEventListener("click", () => buildCurrentDetail(state).catch((error) => {
-      console.warn("catalogue_work_detail_editor: unexpected save/build failure", error);
+    publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => {
+      console.warn("catalogue_work_detail_editor: unexpected publication failure", error);
     }));
     deleteButton.addEventListener("click", () => deleteCurrentDetail(state).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected delete failure", error);

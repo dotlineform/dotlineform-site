@@ -5,7 +5,7 @@ const WORK_DETAIL_FIELD_DEFINITIONS = Object.freeze({
   project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
   title: Object.freeze({ key: "title", label: "title", type: "text" }),
-  status: Object.freeze({ key: "status", label: "status", type: "select", options: ["", "draft", "published"] }),
+  status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
   published_date: Object.freeze({ key: "published_date", label: "published date" }),
   width_px: Object.freeze({ key: "width_px", label: "width px" }),
   height_px: Object.freeze({ key: "height_px", label: "height px" })
@@ -112,7 +112,7 @@ function buildSaveWorkDetailPayload(state) {
   return {
     detail_uid: state.currentDetailUid,
     expected_record_hash: state.currentRecordHash,
-    apply_build: Boolean(state.applyBuildNode && state.applyBuildNode.checked),
+    apply_build: Boolean(Object.prototype.hasOwnProperty.call(state, "applyBuild") ? state.applyBuild : state.applyBuildNode && state.applyBuildNode.checked),
     record: buildWorkDetailRecordFromDraft(draft, {
       detailUid: state.currentDetailUid,
       workId: state.currentWorkId,

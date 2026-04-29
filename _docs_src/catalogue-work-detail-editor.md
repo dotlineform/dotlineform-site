@@ -28,18 +28,19 @@ The first implementation covers:
 - edit `project_subfolder`
 - edit `project_filename`
 - edit `title`
-- edit `status`
+- show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
 - bulk-edit those same fields across the selected detail records
 - show read-only fields for ids, published date, and dimensions
 - show detail media readiness, including the resolved expected source path and missing-state guidance
 - refresh local detail image derivatives from the displayed source image path without changing source metadata
 - show a compact current-record image preview at the top of the summary rail
-- preview the scoped rebuild impact for the parent work
-- save with an optional `Update site now` path through the local catalogue service
-- when `Update site now` runs, stage the resolved detail source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/work_details/img/`
+- preview the public update impact for the parent work when the detail is published
+- save source metadata, with published-detail saves updating the parent work output internally
+- publish draft details through a dedicated `Publish` command
+- unpublish public details through a dedicated `Unpublish` command
 - delete one work-detail source record in single-record mode
 
-The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
+The public update remains work-scoped. Saving a published detail updates the parent work outputs rather than introducing a separate detail-only planner.
 
 Implementation note: the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
 
@@ -56,7 +57,7 @@ In new mode:
 - the suggested next `detail_id` is prefilled when available
 - `status` is visible and fixed to `draft` for create
 - `project_subfolder`, `project_filename`, and `title` are editable
-- build, media refresh, and delete actions are disabled until the detail exists
+- publish, media refresh, and delete actions are disabled until the detail exists
 - `Create` writes source JSON only through `POST /catalogue/work-detail/create`
 - no public site update runs during create
 - after create, the page opens the new detail in normal edit mode with `?detail=<detail_uid>`
@@ -74,7 +75,7 @@ Current bulk-edit behavior:
 
 - untouched fields preserve per-record values
 - an empty touched field clears that field across the selected details
-- `Save` can optionally run one scoped parent-work rebuild per affected parent work
+- `Save` internally updates affected parent-work public output for selected details that are already published
 - delete is disabled in bulk mode
 
 ## Save Boundary
@@ -82,24 +83,26 @@ Current bulk-edit behavior:
 Current action labels:
 
 - `Save`
-  writes detail source JSON and can optionally also update the parent work output immediately
-- `Update site now`
-  appears only when source has been saved but the parent work output is still pending
+  writes detail source JSON; if the detail is already published, it also updates the parent work output internally
+- `Publish`
+  appears for saved draft details, requires the parent work to be published, and changes source status to `published` through the shared publication endpoint
+- `Unpublish`
+  appears for published details, ignores unsaved form edits after confirmation, changes source status back to `draft`, and cleans public detail output
 - `Delete`
   removes the current detail source record in single-record mode after preview/confirmation
 
-Current save/rebuild flow:
+Current save/publication flow:
 
 1. page loads the derived detail-search lookup, not the full canonical detail map
 2. opening a detail fetches one focused lookup record from `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
 3. browser uses the lookup-provided record hash for stale-write protection
 4. user edits the current detail form
-5. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, the normalized detail patch, and optional `apply_build: true`
-6. the local write server validates the full source set, writes `work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when requested
+5. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, the normalized detail patch, and `apply_build: true` only when the detail is already published
+6. the local write server validates the full source set, writes `work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
 7. the page reloads its focused detail lookup payload
-8. `POST /catalogue/build-preview` reports the parent-work rebuild impact and the current detail media readiness
+8. `POST /catalogue/build-preview` reports the parent-work public update impact and the current detail media readiness for published details
 9. the current-record rail resolves a compact detail preview from the generated detail thumb assets when they are available
-10. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/work_details/img/`, and leaves primary derivatives staged for remote publishing
+10. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
 
 The detail media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true`, `force: true`, and the current `detail_uid`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 
@@ -107,9 +110,9 @@ Bulk save flow:
 
 1. page expands the requested detail selection in the browser
 2. page loads focused lookup records for the selected details and tracks each record hash
-3. `POST /catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, touched field updates, and optional `apply_build: true`
+3. `POST /catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, touched field updates, and `apply_build: true` only when the selection includes published details
 4. the local write server validates the combined source write, writes `work_details.json` once, refreshes lookup payloads, and returns changed counts plus parent-work rebuild targets
-5. when `apply_build` is true, the same save response also reports the nested site-update result; otherwise the page leaves `Update site now` available as a follow-up action
+5. when `apply_build` is true, the same save response also reports the nested public-update result; draft-only bulk saves remain source-only
 
 Delete flow:
 
@@ -123,7 +126,8 @@ Delete flow:
 - `project_subfolder`
 - `project_filename`
 - `title`
-- `status`
+
+`status` is displayed in the form, but it is read-only. Use `Publish` and `Unpublish` to change publication state.
 
 ## Related References
 

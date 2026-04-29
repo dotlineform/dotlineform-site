@@ -226,7 +226,7 @@ Acceptance checks:
 
 Status:
 
-- partially implemented for works; work-detail conversion remains
+- implemented
 
 Apply the same command model to work and work-detail editors, including parent-runtime follow-through for details.
 
@@ -238,6 +238,15 @@ Work-editor implementation:
 - bulk saves internally update public output only for changed published work records
 - saved draft works expose `Publish`; published works expose `Unpublish`
 - work `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
+
+Work-detail implementation:
+
+- `/studio/catalogue-work-detail/` no longer exposes save-time public update controls
+- the detail status field is read-only in single, bulk, and new modes
+- published detail saves request the internal parent-work public update path automatically
+- bulk saves internally update public output only for changed published detail records
+- saved draft details expose `Publish`; published details expose `Unpublish`
+- work-detail `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
 
 Acceptance checks:
 
