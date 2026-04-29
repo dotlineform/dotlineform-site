@@ -10,7 +10,8 @@ sort_order: 120
 
 Status:
 
-- proposed
+- implemented
+- wider cleanup will be done after series implementation
 
 ## Summary
 
@@ -229,7 +230,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Update docs and verification around the unified detail route.
 
