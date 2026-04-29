@@ -8,6 +8,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Migrated work-detail create navigation to the unified route
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work details
+
+**Summary:**
+Moved active work-detail create navigation to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, converted `/studio/catalogue-new-work-detail/` into a compatibility redirect, and removed the standalone detail-create route from active Studio config.
+
+**Reason:**
+After parent-scoped new mode landed on the main work-detail editor, keeping active links and dashboard copy pointed at the legacy create page would split testing and keep presenting details as standalone records.
+
+**Effect:**
+The work page now opens detail creation directly on the unified editor route. Old links with `?work=<work_id>` redirect to the same unified route, while missing-parent legacy links redirect to the work editor. The Catalogue dashboard no longer promotes `Create New Detail` as a primary workflow.
+
+**Affected files/docs:**
+
+- `studio/catalogue-work/index.md`
+- `studio/catalogue-new-work-detail/index.md`
+- `studio/catalogue/index.md`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=studio-e2e-checklist)
+- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
+
 ## [2026-04-29] Added parent-scoped new mode to the work-detail editor
 
 **Status:** implemented

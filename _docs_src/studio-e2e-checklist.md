@@ -141,7 +141,6 @@ Checks:
 - confirm the dashboard signposts create, edit, review, maintenance, and guidance flows
 - open each linked Catalogue route at least once:
   - `/studio/catalogue-new-series/`
-  - `/studio/catalogue-new-work-detail/`
   - `/studio/catalogue-moment-import/`
   - `/studio/catalogue-work/`
   - `/studio/catalogue-series/`
@@ -214,7 +213,7 @@ Expected results:
 
 Route:
 
-- `/studio/catalogue-new-work-detail/`
+- `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
 - `/studio/catalogue-work-detail/`
 
 Owner:
@@ -224,6 +223,7 @@ Owner:
 Checks:
 
 - create one draft detail under a known work
+- confirm `/studio/catalogue-new-work-detail/?work=<work_id>` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
 - confirm the new detail can be opened in the detail editor
 - edit and save one detail in focused mode
 - run `Save + Rebuild`

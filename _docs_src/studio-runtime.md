@@ -66,7 +66,7 @@ Current route inventory:
 - `studio/catalogue-moment-import/index.md`
 - `studio/catalogue-moment/index.md`
 - `studio/catalogue-work/index.md`
-- `studio/catalogue-new-work-detail/index.md`
+- `studio/catalogue-new-work-detail/index.md` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` when a parent work is supplied
 - `studio/catalogue-work-detail/index.md`
 - `studio/catalogue-series/index.md`
 - `studio/catalogue-new-series/index.md`
@@ -89,7 +89,7 @@ Current page-level doc links:
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor` compatibility redirect note
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
-- New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor`
+- New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor` compatibility redirect note
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
 - New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
@@ -128,7 +128,6 @@ Current page controllers:
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-activity.js`
 - `assets/studio/js/catalogue-work-editor.js`
-- `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/js/catalogue-new-series-editor.js`

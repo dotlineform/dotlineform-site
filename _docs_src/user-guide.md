@@ -27,7 +27,6 @@ Current guides:
 - [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)

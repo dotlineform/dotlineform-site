@@ -17,7 +17,6 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_moment_editor: "/studio/catalogue-moment/",
       catalogue_work_editor: "/studio/catalogue-work/",
       catalogue_work_detail_editor: "/studio/catalogue-work-detail/",
-      catalogue_new_work_detail_editor: "/studio/catalogue-new-work-detail/",
       catalogue_series_editor: "/studio/catalogue-series/",
       catalogue_new_series_editor: "/studio/catalogue-new-series/",
       tag_registry: "/studio/tag-registry/",
@@ -552,9 +551,6 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_section_label: "detail section",
       summary_rebuild_needed: "source saved; site update pending",
       summary_rebuild_current: "source and parent work output are aligned in this session"
-    },
-    catalogue_new_work_detail_editor: {
-      create_button: "Create"
     },
     catalogue_series_editor: {
       load_failed_error: "Failed to load catalogue source data for the series editor.",

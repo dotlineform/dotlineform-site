@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 30
 ---
@@ -39,7 +39,7 @@ The first implementation covers:
 - cap visible detail rows at 10 per section
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
-- provide a direct `new work detail →` entry link for the current work
+- provide a direct `new work detail →` entry link to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` for the current work
 - list the current work's work-owned `downloads` metadata
 - list the current work's work-owned `links` metadata
 - add, edit, and delete work-owned downloads through modal forms

@@ -31,11 +31,10 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
       <section class="studioLinkGroup">
         <div class="studioLinkGroup__header">
           <h4>Create</h4>
-          <p>Create draft records and import new source content.</p>
+          <p>Create parent records and import new source content. Create work details from the parent work editor.</p>
         </div>
         <ul class="studioLinkList">
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-series/' | relative_url }}"><span class="studioLinkList__title">Create New Series</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}"><span class="studioLinkList__title">Create New Detail</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span></a></li>
         </ul>
       </section>
@@ -88,7 +87,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
     <div class="studioInfoGrid">
       <article class="studioInfoCard">
         <h4>Work records</h4>
-        <p>Create and edit work records from the Work Editor, then use Catalogue Status to review and reopen draft records.</p>
+        <p>Create and edit work records from the Work Editor. Work details are created from the current parent work.</p>
       </article>
       <article class="studioInfoCard">
         <h4>Series records</h4>

@@ -1213,7 +1213,7 @@ function updateSummary(state) {
       : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
     if (state.newDetailLinkNode) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");
-      state.newDetailLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
+      state.newDetailLinkNode.href = getStudioRoute(state.config, "catalogue_work_detail_editor");
     }
     if (state.newFileLinkNode) {
       state.newFileLinkNode.disabled = true;
@@ -1254,9 +1254,9 @@ function updateSummary(state) {
     ? t(state, "summary_rebuild_needed", "source saved; site update pending")
     : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
   if (state.newDetailLinkNode) {
-    const base = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
+    const base = getStudioRoute(state.config, "catalogue_work_detail_editor");
     state.newDetailLinkNode.removeAttribute("aria-disabled");
-    state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
+    state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}&mode=new` : base;
   }
   if (state.newFileLinkNode) {
     state.newFileLinkNode.disabled = !record || state.isSaving || state.isBuilding || state.isDeleting;

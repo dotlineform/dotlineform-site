@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T08:17:58Z",
+  "generated_at": "2026-04-29T08:35:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -559,7 +559,7 @@
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 30,
       "published": true,

@@ -200,7 +200,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Move active navigation to the unified detail route.
 
@@ -217,6 +217,13 @@ Acceptance checks:
 - old route behavior is documented
 - no active dashboard path points users into the retired implementation
 - work-page create/edit navigation works without returning to the dashboard
+
+Implementation notes:
+
+- the work editor `new work detail` link now points at `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
+- `/studio/catalogue-new-work-detail/` is a compatibility redirect to the unified detail route when `work` is supplied, or to the work editor when missing
+- active Studio config no longer includes the legacy `catalogue_new_work_detail_editor` route or UI text block
+- the Catalogue dashboard no longer presents detail creation as a standalone create workflow
 
 ### Task 5. Update Documentation And Verification
 

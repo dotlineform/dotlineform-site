@@ -40,8 +40,30 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - open `/studio/catalogue-work-detail/?work=<work_id>&mode=new` and confirm the parent work is locked, the suggested detail id is prefilled, and create-only controls render
-  - open `/studio/catalogue-work-detail/?mode=new` and confirm missing parent work is blocked
-  - create a draft detail and confirm the route switches to `?detail=<detail_uid>`
+- open `/studio/catalogue-work-detail/?mode=new` and confirm missing parent work is blocked
+- create a draft detail and confirm the route switches to `?detail=<detail_uid>`
+
+## UI Rule Log 2026-04-29 / UI-049
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue/`
+- issue: after the work-detail editor gained parent-scoped new mode, active links still pointed at the standalone create route and the Catalogue dashboard still presented detail creation as a top-level create workflow.
+- triage: route migration for parent-owned child records
+- reasoning: the UI should reinforce the parent-first model. Compatibility redirects can preserve old links, but active navigation should use the unified editor route and dashboard copy should not present child-detail creation as a standalone primary action.
+- permanent rule: after a parent-owned child editor gains unified create mode, update parent-page entry links immediately, make the retired create route redirect, remove active config keys for the retired route, and remove dashboard create links that bypass parent context.
+- outcome: the work editor now links to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, `/studio/catalogue-new-work-detail/` redirects to the unified route when `work` is supplied or to the work editor when missing, and the Catalogue dashboard no longer includes `Create New Detail`.
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `studio/catalogue-new-work-detail/index.md`
+  - `studio/catalogue/index.md`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - click `new work detail` from a loaded work and confirm the URL contains `?work=<work_id>&mode=new`
+  - open `/studio/catalogue-new-work-detail/?work=<work_id>` and confirm it redirects to the unified detail route
+  - open `/studio/catalogue-new-work-detail/` without `work` and confirm it redirects to the work editor
 
 ## UI Rule Log 2026-04-28 / UI-045
 

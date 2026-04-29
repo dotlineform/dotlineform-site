@@ -114,7 +114,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkDetailsHeading">work details</h2>
-      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewDetailLink" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}">new work detail →</a>
+      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewDetailLink" href="{{ '/studio/catalogue-work-detail/' | relative_url }}">new work detail →</a>
     </div>
     <div class="catalogueWorkDetails__searchRow" id="catalogueWorkDetailsSearchRow" hidden>
       <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">

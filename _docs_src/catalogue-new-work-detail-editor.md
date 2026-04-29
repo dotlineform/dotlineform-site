@@ -13,25 +13,21 @@ Route:
 - `/studio/catalogue-new-work-detail/`
 - focused create flow accepts `?work=<work_id>`
 
-This legacy page creates a new canonical work-detail source record in `assets/studio/data/catalogue/work_details.json`.
+This legacy page redirects to the unified work-detail editor route.
 
-The main work-detail editor also supports parent-scoped create mode at `/studio/catalogue-work-detail/?work=<work_id>&mode=new`. This page remains available until route migration retires the standalone create implementation.
+When `?work=<work_id>` is supplied, the page redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`.
 
-Implementation note: this legacy create route now consumes the same work-detail field definitions, id normalization, draft validation, next-id suggestion, and create payload helper as the main work-detail editor.
+When no parent work is supplied, the page redirects to `/studio/catalogue-work/` so the user can choose the parent work first.
 
 ## Current Scope
 
-The first implementation is draft-first:
+The active create implementation now lives in [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor).
 
-- create a new detail under an existing work
-- derive or suggest the next `detail_id` for that work
-- enter core draft detail metadata
-- save the new detail with `status = draft`
-- redirect into the main work-detail editor after create
+The old standalone page exists only as a compatibility redirect for bookmarked links and stale dashboard/work-page links.
 
 ## Media Boundary
 
-This page does not upload or copy media.
+The compatibility redirect does not upload or copy media.
 
 It only captures the source metadata fields that point at the existing detail media conventions such as:
 
