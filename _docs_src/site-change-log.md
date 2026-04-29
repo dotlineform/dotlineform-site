@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Refined catalogue publication workflow request
+
+**Status:** specified
+
+**Area:** Studio / catalogue workflow
+
+**Summary:**
+Updated the catalogue publication workflow request around a simpler user-facing model: records are `draft` or `published`, `Save` saves metadata, and one publication button switches between `Publish` and `Unpublish`.
+
+**Reason:**
+The user does not need to reason about canonical source data, generated public data, or rebuild mechanics. Published-record saves should update the public site internally, while publication state changes should happen only through explicit Publish/Unpublish commands.
+
+**Effect:**
+The request now removes `Rebuild` and `Update site now` from the editor UI model, makes status read-only, defines save-on-published behavior, specifies Publish and Unpublish enablement, and requires unpublish to remove generated route files so draft records are no longer publicly routable.
+
+**Affected files/docs:**
+
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Opened Catalogue Status editor links in new tabs
 
 **Status:** implemented
