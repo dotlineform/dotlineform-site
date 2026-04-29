@@ -219,7 +219,7 @@ Decision:
 
 Status:
 
-- proposed
+- implemented
 
 Run targeted verification after cleanup:
 
@@ -233,6 +233,19 @@ Run targeted verification after cleanup:
 - browser smoke for unified work, detail, and series routes
 - old URL behavior according to the selected compatibility policy
 - sanitization scan for changed scripts/docs
+
+Verification outcome:
+
+- `node --check` passed for the active work, work-detail, series, and moment editor controllers
+- Python syntax checks passed for the scoped catalogue build helper, generator, write server, workbook import, and deprecated catalogue entrypoints
+- `scripts/catalogue_json_build.py` previews passed for representative work `00001`, work-detail media scope `00001-001`, series `001`, and moment `the-moment-collector.md`
+- deprecated `build_catalogue.py`, `copy_draft_media_files.py`, and `export_catalogue_source.py` exited cleanly with guidance
+- Studio docs, Studio search, and catalogue search rebuilds completed
+- Jekyll built successfully to `/tmp/dlf-jekyll-build`
+- browser smoke returned 200 for `/studio/catalogue-work/?mode=new`, `/studio/catalogue-work-detail/?work=00001&mode=new`, `/studio/catalogue-series/?mode=new`, `/series/001/`, `/works/00001/`, and `/work_details/00001-001/`
+- removed old create URLs returned 404 for `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/`
+- generated docs/search no longer contain the deleted `catalogue-new-*` doc IDs
+- docs broken-link audit still reports existing unrelated issues, but no remaining issues for the removed `catalogue-new-*` docs
 
 ## Benefits
 

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-066125abc1e7ccec91b50d4f6158b38e",
-    "generated_at_utc": "2026-04-29T20:59:05Z",
-    "count": 2133
+    "version": "blake2b-6e9cc0ef828b45baa2066bf5139ae44e",
+    "generated_at_utc": "2026-04-29T21:37:52Z",
+    "count": 2135
   },
   "entries": [
     {
@@ -4649,6 +4649,57 @@
         "011"
       ],
       "search_text": "00375 00375 - colours colours 2024 011"
+    },
+    {
+      "kind": "work",
+      "id": "00376",
+      "title": "00376 - residues",
+      "href": "/works/00376/",
+      "year": 2024,
+      "display_meta": "2024?",
+      "series_ids": [
+        "102"
+      ],
+      "series_titles": [
+        "102"
+      ],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "00376",
+        "00376 - residues",
+        "residues",
+        "2024?",
+        "2024",
+        "102"
+      ],
+      "search_text": "00376 00376 - residues residues 2024? 2024 102"
+    },
+    {
+      "kind": "work",
+      "id": "00377",
+      "title": "00377 - residue - monoprint",
+      "href": "/works/00377/",
+      "year": 2024,
+      "display_meta": "2024?",
+      "series_ids": [
+        "102"
+      ],
+      "series_titles": [
+        "102"
+      ],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "00377",
+        "00377 - residue - monoprint",
+        "residue",
+        "monoprint",
+        "2024?",
+        "2024",
+        "102"
+      ],
+      "search_text": "00377 00377 - residue - monoprint residue monoprint 2024? 2024 102"
     },
     {
       "kind": "work",
