@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added catalogue publication workflow request
+
+**Status:** specified
+
+**Area:** Studio / catalogue workflow
+
+**Summary:**
+Added a catalogue-wide change request for replacing save-time publication checkboxes with explicit `Publish`, `Unpublish`, and `Rebuild` commands.
+
+**Reason:**
+The series draft/publication issue showed that a checkbox is the wrong interaction model for changing public visibility. The same distinction between source save, public visibility, and runtime rebuild needs to be consistent across works, work details, series, and moments.
+
+**Effect:**
+The new request defines the shared command vocabulary, record-family rules, implementation tasks, benefits, risks, and open questions for a future catalogue-wide publication workflow pass.
+
+**Affected files/docs:**
+
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+
 ## [2026-04-29] Blocked draft series from public updates
 
 **Status:** implemented

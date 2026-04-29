@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c4beb9c7f815c8fa4342443053369f95",
-    "generated_at_utc": "2026-04-29T10:55:32Z",
-    "count": 144
+    "version": "blake2b-129a97f1c6e89c762c1f1e2e1d34b58f",
+    "generated_at_utc": "2026-04-29T13:10:34Z",
+    "count": 145
   },
   "entries": [
     {
@@ -2720,6 +2720,33 @@
         "31"
       ],
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "site-request-catalogue-publication-workflow",
+      "kind": "doc",
+      "title": "Catalogue Publication Workflow Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
+      "last_updated": "2026-04-29",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-04-29 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-publication-workflow",
+        "site",
+        "request",
+        "catalogue",
+        "publication",
+        "workflow",
+        "catalogue publication workflow request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-04-29",
+        "2026",
+        "04",
+        "29"
+      ],
+      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow request change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
