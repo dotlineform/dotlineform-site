@@ -10,22 +10,11 @@
     "published_date": null,
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "00640",
+    "primary_work_id": null,
     "series_prose_file": null,
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "7ef8a7afdd69304bee3b119663123486514b479b27e7a0058f0acd4eb95c308d",
-  "member_works": [
-    {
-      "work_id": "00640",
-      "title": "100 grasping hands",
-      "year_display": "2023",
-      "status": "draft",
-      "series_ids": [
-        "002"
-      ],
-      "record_hash": "e6b4d5d5a12942573f7c84e4e5eea667b6a465f5a46b85c01ae27c99c2d3b4f0"
-    }
-  ]
+  "record_hash": "a9f9015696e2821db1c498eb0cefbfe22822c06933f1c8cae4a957044aa25491",
+  "member_works": []
 }

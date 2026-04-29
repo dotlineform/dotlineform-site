@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "studio_catalogue_lookup_work_search_v1",
-    "count": 1941
+    "count": 1940
   },
   "items": [
     {
@@ -6395,16 +6395,6 @@
         "003"
       ],
       "record_hash": "89093192b3b4ad8d86728d29bea4ebe95b9f1927b0ee49e5932c944beed97760"
-    },
-    {
-      "work_id": "00640",
-      "title": "100 grasping hands",
-      "year_display": "2023",
-      "status": "draft",
-      "series_ids": [
-        "002"
-      ],
-      "record_hash": "e6b4d5d5a12942573f7c84e4e5eea667b6a465f5a46b85c01ae27c99c2d3b4f0"
     },
     {
       "work_id": "00641",
