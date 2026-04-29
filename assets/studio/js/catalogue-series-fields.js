@@ -174,6 +174,11 @@ function validateCreateSeriesDraft(draft, options = {}) {
     errors.set("series_type", t("field_invalid_series_type", "Choose a listed series type."));
   }
 
+  validateRequiredSeriesMetadata(draft, errors, t);
+  return errors;
+}
+
+function validateRequiredSeriesMetadata(draft, errors, t) {
   const year = normalizeText(draft && draft.year);
   if (!year) {
     errors.set("year", t("field_required_year", "Enter a year."));
@@ -184,7 +189,6 @@ function validateCreateSeriesDraft(draft, options = {}) {
   if (!normalizeText(draft && draft.year_display)) {
     errors.set("year_display", t("field_required_year_display", "Enter a year display."));
   }
-  return errors;
 }
 
 function validateSeriesDraft(draft, options = {}) {
@@ -199,10 +203,7 @@ function validateSeriesDraft(draft, options = {}) {
   if (publishedDate && !SERIES_DATE_RE.test(publishedDate)) {
     errors.set("published_date", t("field_invalid_published_date", "Use YYYY-MM-DD or leave blank."));
   }
-  const year = normalizeText(draft && draft.year);
-  if (year && !/^-?\d+$/.test(year)) {
-    errors.set("year", t("field_invalid_year", "Use a whole year or leave blank."));
-  }
+  validateRequiredSeriesMetadata(draft, errors, t);
   const primaryWorkId = normalizeWorkId(draft && draft.primary_work_id);
   if (status === "published" && !primaryWorkId) {
     errors.set("primary_work_id", t("field_required_primary_work_publish", "Published series must have a primary work that belongs to this series."));

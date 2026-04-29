@@ -368,6 +368,7 @@ Implementation notes:
 - Create validation requires `series_id`, `title`, `series_type`, `year`, and `year_display`.
 - `status` is visible and fixed to `draft`; `published_date`, `primary_work_id`, member editing, staged prose import, build, and delete remain disabled until the series exists.
 - `Create` writes through `POST /catalogue/series/create` and then opens the created series in normal edit mode.
+- Follow-up validation tightened edit-mode saves so existing series records also require `year` and `year_display` before `Save` is enabled.
 - Follow-up fix: new-mode initialization now binds the member add button into editor state before refreshing the disabled member controls, so `/studio/catalogue-series/?mode=new` renders instead of falling through to the load-failed fallback.
 
 ### Task 4. Migrate Links, Routes, And Config
@@ -499,7 +500,7 @@ Expected benefits:
 
 ## Open Questions
 
-- Should `title`, `series_type`, `year`, and `year_display` also become required for edit-mode saves, or only for create in this phase?
+- Should `title`, `series_type`, `year`, and `year_display` also become required for edit-mode saves, or only for create in this phase? Follow-up decision: `year` and `year_display` are now required for edit-mode saves; `title` and `series_type` remain unchanged in edit mode for this phase.
 - If `series_type` becomes operationally important later, should the config-backed client options be promoted into a formal server-side data-model enum?
 - Should `sort_fields` become required for create, or remain optional draft metadata?
 - Should draft-series recovery get a dedicated `?view=draft-series` view immediately, or rely on the existing series status filter until usage proves it is needed?

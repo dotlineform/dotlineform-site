@@ -470,6 +470,8 @@ Request behavior:
   "expected_record_hash": "optional-current-record-sha256",
   "record": {
     "title": "Updated series title",
+    "year": 2026,
+    "year_display": "2026",
     "primary_work_id": "00001",
     "sort_fields": "work_id"
   },
@@ -487,6 +489,7 @@ Request behavior:
 
 - `series_id` must resolve to an existing canonical series record
 - optional `apply_build: true` requests a same-scope site update as part of the save response when the saved series status is `published`
+- `year` and `year_display` are required for the saved series record
 - `work_updates` is limited to changed membership rows for affected works
 - each changed work keeps the submitted `series_ids` order; the server does not sort it
 - draft source saves may omit `primary_work_id`
@@ -503,6 +506,8 @@ Request behavior:
     "title": "New draft series",
     "series_type": "primary",
     "status": "draft",
+    "year": 2026,
+    "year_display": "2026",
     "sort_fields": "work_id"
   }
 }
@@ -512,6 +517,7 @@ Request behavior:
 
 - `series_id` must not already exist
 - blank or missing `status` is normalized to `draft`
+- `year` and `year_display` are required
 - draft creates may omit `primary_work_id`
 - the server writes the new source record, refreshes derived lookup payloads, and returns the normalized saved record
 

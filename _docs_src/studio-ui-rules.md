@@ -23,6 +23,27 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-056
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: edit-mode series saves allowed `year` and `year_display` to be cleared even though new-mode series creation already required both fields.
+- triage: route-local validation parity
+- reasoning: the unified create/edit route should not let a record become less complete immediately after it has been created. Required metadata that is part of the current source contract needs browser feedback and a write-server guard for direct endpoint calls.
+- permanent rule: when a unified Studio editor requires metadata during create and the same metadata is required for a valid saved source record, edit-mode `Save` must enforce the same field-level errors and the write endpoint must reject direct invalid saves.
+- outcome: the series editor now blocks edit saves with blank `year` or `year_display`, updates field-level validation copy, and `POST /catalogue/series/save` rejects direct saves missing either field.
+- files changed:
+  - `assets/studio/js/catalogue-series-fields.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `scripts/studio/catalogue_write_server.py`
+  - `_docs_src/catalogue-series-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - clear `year` or `year_display` on an existing series and confirm `Save` is unavailable with a field-level error
+  - submit a direct series save payload with either field blank and confirm the write server rejects it
+
 ## UI Rule Log 2026-04-29 / UI-055
 
 - status: adopted

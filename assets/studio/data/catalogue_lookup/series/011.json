@@ -6,7 +6,7 @@
     "series_id": "011",
     "title": "all the colours",
     "series_type": "primary",
-    "status": null,
+    "status": "draft",
     "published_date": null,
     "year": null,
     "year_display": null,
@@ -15,7 +15,7 @@
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "52a1fb393e78c6803465d472507d7589b4da7f5a891d0a673b07e01ce4b0abdd",
+  "record_hash": "ee944e2781edbfe2a44ba20f53be7fae643938118cbea112d3834509c136a6e7",
   "member_works": [
     {
       "work_id": "00375",

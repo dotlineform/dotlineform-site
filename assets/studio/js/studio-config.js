@@ -616,7 +616,7 @@ const DEFAULT_STUDIO_CONFIG = {
       field_required_series_type: "Choose a series type.",
       field_invalid_series_type: "Choose a listed series type.",
       field_required_year: "Enter a year.",
-      field_invalid_year: "Use a whole year or leave blank.",
+      field_invalid_year: "Use a whole year.",
       field_required_year_display: "Enter a year display.",
       field_invalid_primary_work: "Primary work must be a current member of this series.",
       members_heading: "member works",

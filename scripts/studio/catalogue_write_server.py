@@ -1131,6 +1131,20 @@ def normalize_series_update(
     return normalize_source_record(merged, SERIES_FIELDS, text_fields=SERIES_TEXT_FIELDS)
 
 
+def validate_series_save_record(record: Mapping[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if not normalize_text(record.get("year")):
+        errors.append("series year is required")
+    else:
+        try:
+            int(normalize_text(record.get("year")))
+        except ValueError:
+            errors.append("series year must be a whole number")
+    if not normalize_text(record.get("year_display")):
+        errors.append("series year_display is required")
+    return errors
+
+
 def normalize_work_file_update(
     file_uid: str,
     current_record: Mapping[str, Any],
@@ -4362,6 +4376,9 @@ class Handler(BaseHTTPRequestHandler):
         works_payload = load_works_payload(self.server.works_path)
         works_map = works_payload["works"]
         updated_series_record = normalize_series_update(series_id, current_series_record, series_update)
+        save_validation_errors = validate_series_save_record(updated_series_record)
+        if save_validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(save_validation_errors))
         apply_build = requested_apply_build and normalize_status(updated_series_record.get("status")) == "published"
         pending_work_updates: Dict[str, Dict[str, Any]] = {}
         changed_work_ids: list[str] = []
@@ -4543,6 +4560,9 @@ class Handler(BaseHTTPRequestHandler):
         created_series_record = normalize_series_update(series_id, blank_series_record, series_update)
         if not str(created_series_record.get("title") or "").strip():
             raise ValueError("series title is required")
+        save_validation_errors = validate_series_save_record(created_series_record)
+        if save_validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(save_validation_errors))
 
         pending_work_updates: Dict[str, Dict[str, Any]] = {}
         changed_work_ids: list[str] = []

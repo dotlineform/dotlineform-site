@@ -45,6 +45,7 @@ Draft/publish rule:
 
 - new series are created as draft source records only
 - draft series may be saved without `primary_work_id`
+- edit-mode saves require `year` and `year_display`
 - published series must have a valid `primary_work_id` that belongs to the series
 - scoped rebuild is blocked until the series status is `published` and its primary work is also published
 
@@ -93,7 +94,7 @@ Current save/rebuild flow:
 1. page loads derived series-search and work-search lookup payloads, not full canonical source maps
 2. opening a series fetches one focused lookup record from `assets/studio/data/catalogue_lookup/series/<series_id>.json`
 3. membership edits operate on affected work `series_ids` arrays in the browser, using lookup-provided work hashes for stale-write checks
-4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, only the changed work membership rows, and optional `apply_build: true`
+4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, only the changed work membership rows, and optional `apply_build: true`; the editor and write server reject saves where `year` or `year_display` is blank
 5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested build status when a published series requested an update
 6. the page reloads its focused series lookup payload
 7. `POST /catalogue/build-preview` reports the scoped rebuild impact for published series plus affected published works and now also carries staged series prose readiness

@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Required year metadata for series saves
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series
+
+**Summary:**
+Edit-mode series saves now require `year` and `year_display`, matching the required metadata already enforced by new-mode series creation.
+
+**Reason:**
+The unified series editor could create a valid draft with year metadata, then later allow those same fields to be cleared on `Save`. The save path needed the same user-facing field errors plus a write-server guard for direct endpoint calls.
+
+**Effect:**
+`/studio/catalogue-series/` now blocks `Save` when `year` or `year_display` is blank, and `POST /catalogue/series/save` rejects direct payloads missing either field. Historical records that already lack those fields must be filled before they can be saved through the editor.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-series-fields.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Added draft-series recovery view
 
 **Status:** implemented
