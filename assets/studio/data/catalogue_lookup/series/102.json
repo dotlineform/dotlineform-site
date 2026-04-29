@@ -6,36 +6,36 @@
     "series_id": "102",
     "title": "monoprints and residues",
     "series_type": "primary",
-    "status": null,
+    "status": "draft",
     "published_date": null,
-    "year": null,
-    "year_display": null,
+    "year": 2024,
+    "year_display": "c. 2024-26",
     "primary_work_id": "00373",
     "series_prose_file": null,
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "83d054f94508d6ae100681a4c0adfe032a39481bd8e48e40a417a434dfeeea40",
+  "record_hash": "035398c4132d928963dfc785634904285b1f30e0ab3deca97a3acb3adecbc670",
   "member_works": [
     {
       "work_id": "00373",
       "title": "00373 - monoprint",
-      "year_display": "",
-      "status": "",
+      "year_display": "2024?",
+      "status": "published",
       "series_ids": [
         "102"
       ],
-      "record_hash": "ce8d6ae38e6a1286e158dc8830924c2a9d987d277a7fb718ae1610367112c495"
+      "record_hash": "65e7a98360902a524a62b8d37f0ded392b40e412c72e418d6f741bb00f38face"
     },
     {
       "work_id": "00374",
       "title": "00374 - monoprint",
-      "year_display": "",
-      "status": "",
+      "year_display": "2024?",
+      "status": "draft",
       "series_ids": [
         "102"
       ],
-      "record_hash": "553459ad1921b6b620cb94edb64b79d283a213c18aef4e5af60a146633735e4e"
+      "record_hash": "62395e15db9f59ea6a4274587d3dfe787328e711b9fa6ae8b85822a7873671c4"
     },
     {
       "work_id": "00376",

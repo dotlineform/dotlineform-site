@@ -1135,6 +1135,8 @@ def build_scope_for_work(
     work_record = records.works.get(normalized_work_id)
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {normalized_work_id}")
+    if normalize_status(work_record.get("status")) != "published":
+        raise ValueError(f"work {normalized_work_id}: status must be published for runtime build")
 
     current_series_ids: list[str] = []
     for series_id in normalize_series_ids(work_record.get("series_ids", [])):

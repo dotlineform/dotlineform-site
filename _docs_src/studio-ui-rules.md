@@ -23,6 +23,29 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-057
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: changing work `00375` from blank status to `draft` could still run the checked save-time public update, and the build path rewrote the work as `published`.
+- triage: publication-boundary mismatch
+- reasoning: work save-time public update controls had not yet adopted the same published-only boundary as series. A draft source save must not be able to publish the record just because `Update site now` remained checked.
+- permanent rule: Studio save-time public update controls are available for works only when the current form status is `published`; draft work saves remain source-only, and runtime work builds require a published work.
+- outcome: `Update site now` is disabled and unchecked for draft works, save-time `apply_build` is skipped server-side when the saved work is draft, and JSON-source work builds reject non-published works.
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `scripts/studio/catalogue_write_server.py`
+  - `scripts/catalogue_json_build.py`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+  - `_docs_src/scripts-build-catalogue-json.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - set a work to `draft`, save, and confirm public update controls are unavailable
+  - request a runtime build for a draft work and confirm it is rejected
+
 ## UI Rule Log 2026-04-29 / UI-056
 
 - status: adopted

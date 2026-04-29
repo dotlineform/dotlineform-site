@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "work_storage_index_v1",
-    "version": "blake2b-a805e4c304b6a39909a1d10abf254456",
-    "generated_at_utc": "2026-04-26T21:17:43Z",
-    "count": 481
+    "version": "blake2b-1b6f0b0fb116f9f7976a11607aaa21c7",
+    "generated_at_utc": "2026-04-29T14:07:31Z",
+    "count": 484
   },
   "works": {
     "00001": {
@@ -1118,6 +1118,15 @@
     },
     "00372": {
       "storage": "2"
+    },
+    "00373": {
+      "storage": "6"
+    },
+    "00374": {
+      "storage": "6"
+    },
+    "00375": {
+      "storage": "13"
     },
     "00378": {
       "storage": "6"

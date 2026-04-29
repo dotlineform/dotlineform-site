@@ -8,6 +8,74 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Fixed per-series JSON member filtering
+
+**Status:** implemented
+
+**Area:** catalogue generation / generated series data
+
+**Summary:**
+Fixed the generator path that populates published member works in `assets/series/index/<series_id>.json`.
+
+**Reason:**
+The generator filtered per-series membership through `work_meta_by_id.status`, but that metadata map intentionally does not include work publication status. As a result, regenerated per-series payloads could emit `series.works: []` for published series even when the aggregate `assets/data/series_index.json` still had the correct visible grid membership.
+
+**Effect:**
+Per-series JSON generation now uses an internal `work_status_by_id` lookup sourced directly from canonical work status data. The public payload contract is unchanged: published series payloads can include published member works, while the public series grid continues to render from the aggregate series and works indexes.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+## [2026-04-29] Added catalogue unified editor cleanup request
+
+**Status:** proposed
+
+**Area:** Studio / catalogue editors / generated catalogue data
+
+**Summary:**
+Added an umbrella change request for cleanup work that should follow the work, work-detail, and series editor unification work.
+
+**Reason:**
+The unified editor changes intentionally kept some legacy route artifacts and compatibility concerns separate from behavior fixes. The current series JSON investigation also surfaced a generated per-series membership field that is part of the payload contract but not consumed by the public series grid.
+
+**Effect:**
+The cleanup backlog now has one request covering retired `catalogue-new-*` routes/controllers/docs, final shared-helper review, old URL compatibility policy, and the future decision to keep or remove `series.works` from per-series runtime JSON.
+
+**Affected files/docs:**
+
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
+
+## [2026-04-29] Blocked draft works from public updates
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work / public build pipeline
+
+**Summary:**
+Aligned work saves and scoped work builds around a published-only public update boundary.
+
+**Reason:**
+Changing work `00375` from blank status to `draft` still allowed the checked `Update site now` path to run. The runtime build path treated that draft work as buildable and rewrote it to `published`, removing it from the draft status report until it was manually changed back.
+
+**Effect:**
+Draft work saves are source-only. The work editor disables and unchecks save-time public update controls while the form status is `draft`, the write server skips save-time build requests for draft works, and JSON-source work builds reject non-published works.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_json_build.py`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Required year metadata for series saves
 
 **Status:** implemented

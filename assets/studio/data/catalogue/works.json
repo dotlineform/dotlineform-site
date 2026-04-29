@@ -10076,8 +10076,8 @@
     },
     "00373": {
       "work_id": "00373",
-      "status": null,
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-04-29",
       "series_ids": [
         "102"
       ],
@@ -10087,8 +10087,8 @@
       "title": "00373 - monoprint",
       "width_cm": 25,
       "height_cm": 25,
-      "year": null,
-      "year_display": null,
+      "year": 2024,
+      "year_display": "2024?",
       "medium_type": null,
       "medium_caption": null,
       "storage_location": "6",
@@ -10096,15 +10096,15 @@
       "notes": null,
       "duration": null,
       "depth_cm": null,
-      "width_px": null,
-      "height_px": null,
+      "width_px": 2953,
+      "height_px": 2953,
       "provenance": null,
       "artist": null
     },
     "00374": {
       "work_id": "00374",
-      "status": null,
-      "published_date": null,
+      "status": "draft",
+      "published_date": "2026-04-29",
       "series_ids": [
         "102"
       ],
@@ -10114,8 +10114,8 @@
       "title": "00374 - monoprint",
       "width_cm": 25,
       "height_cm": 25,
-      "year": null,
-      "year_display": null,
+      "year": 2024,
+      "year_display": "2024?",
       "medium_type": null,
       "medium_caption": null,
       "storage_location": "6",
@@ -10123,15 +10123,15 @@
       "notes": null,
       "duration": null,
       "depth_cm": null,
-      "width_px": null,
-      "height_px": null,
+      "width_px": 2953,
+      "height_px": 2953,
       "provenance": null,
       "artist": null
     },
     "00375": {
       "work_id": "00375",
-      "status": null,
-      "published_date": null,
+      "status": "draft",
+      "published_date": "2026-04-29",
       "series_ids": [
         "011"
       ],
@@ -10141,8 +10141,8 @@
       "title": "00375 - colours",
       "width_cm": 40.5,
       "height_cm": 30.5,
-      "year": null,
-      "year_display": null,
+      "year": 2024,
+      "year_display": "2024",
       "medium_type": null,
       "medium_caption": null,
       "storage_location": "13",
@@ -10150,8 +10150,8 @@
       "notes": null,
       "duration": null,
       "depth_cm": null,
-      "width_px": null,
-      "height_px": null,
+      "width_px": 4783,
+      "height_px": 3602,
       "provenance": null,
       "artist": null
     },

@@ -4,7 +4,7 @@
   },
   "work": {
     "work_id": "00373",
-    "status": null,
+    "status": "draft",
     "published_date": null,
     "series_ids": [
       "102"
@@ -15,8 +15,8 @@
     "title": "00373 - monoprint",
     "width_cm": 25,
     "height_cm": 25,
-    "year": null,
-    "year_display": null,
+    "year": 2024,
+    "year_display": "2024?",
     "medium_type": null,
     "medium_caption": null,
     "storage_location": "6",
@@ -29,7 +29,7 @@
     "provenance": null,
     "artist": null
   },
-  "record_hash": "ce8d6ae38e6a1286e158dc8830924c2a9d987d277a7fb718ae1610367112c495",
+  "record_hash": "6c7006b4c3d42dc2fb277ca513fcaa0b1d1ba62ed0d82ad504856be3a9a784eb",
   "detail_sections": [],
   "downloads": [],
   "links": [],

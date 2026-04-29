@@ -51,7 +51,7 @@ The first implementation covers:
 - refresh local work image derivatives from the displayed source image path without changing source metadata
 - run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
 - save with an optional `Update site now` path through the local catalogue service
-- when `Update site now` runs, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
+- when `Update site now` runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
 - delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
 
@@ -138,9 +138,9 @@ Current bulk-edit behavior:
 Current action labels:
 
 - `Save`
-  writes source JSON and can optionally also update the public catalogue immediately
+  writes source JSON and can optionally also update the public catalogue immediately when the saved work is published
 - `Update site now`
-  appears only when source has been saved but runtime publication is still pending
+  appears only when a published source record has been saved but runtime publication is still pending
 - `Delete`
   removes the current source record in single-record mode after preview/confirmation
 
@@ -150,14 +150,14 @@ Current save/rebuild flow:
 2. opening a work fetches one focused work lookup record from `assets/studio/data/catalogue_lookup/works/<work_id>.json` for generated runtime context, but the editable form baseline comes from the canonical source record
 3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
-5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and optional `apply_build: true`
-6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when the user chose `Update site now`
+5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and optional `apply_build: true`; the editor and write server ignore `apply_build` unless the saved work status is `published`
+6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested build status when the user chose `Update site now` for a published work
 7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
 9. the same preview now also carries work media readiness and staged work prose readiness
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
-12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
+12. `POST /catalogue/build-apply` remains available for explicit follow-up update actions on published works; it stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
 13. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
 
 The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`

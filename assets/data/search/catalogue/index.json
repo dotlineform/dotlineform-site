@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-e77cc5c928927cbe5c4f9aed882a4534",
-    "generated_at_utc": "2026-04-29T11:00:44Z",
-    "count": 2130
+    "version": "blake2b-511cb750db5ad2aca500a1465113bbdf",
+    "generated_at_utc": "2026-04-29T14:07:32Z",
+    "count": 2134
   },
   "entries": [
     {
@@ -4578,6 +4578,80 @@
     },
     {
       "kind": "work",
+      "id": "00373",
+      "title": "00373 - monoprint",
+      "href": "/works/00373/",
+      "year": 2024,
+      "display_meta": "2024?",
+      "series_ids": [
+        "102"
+      ],
+      "series_titles": [
+        "102"
+      ],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "00373",
+        "00373 - monoprint",
+        "monoprint",
+        "2024?",
+        "2024",
+        "102"
+      ],
+      "search_text": "00373 00373 - monoprint monoprint 2024? 2024 102"
+    },
+    {
+      "kind": "work",
+      "id": "00374",
+      "title": "00374 - monoprint",
+      "href": "/works/00374/",
+      "year": 2024,
+      "display_meta": "2024?",
+      "series_ids": [
+        "102"
+      ],
+      "series_titles": [
+        "102"
+      ],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "00374",
+        "00374 - monoprint",
+        "monoprint",
+        "2024?",
+        "2024",
+        "102"
+      ],
+      "search_text": "00374 00374 - monoprint monoprint 2024? 2024 102"
+    },
+    {
+      "kind": "work",
+      "id": "00375",
+      "title": "00375 - colours",
+      "href": "/works/00375/",
+      "year": 2024,
+      "display_meta": "2024",
+      "series_ids": [
+        "011"
+      ],
+      "series_titles": [
+        "011"
+      ],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "00375",
+        "00375 - colours",
+        "colours",
+        "2024",
+        "011"
+      ],
+      "search_text": "00375 00375 - colours colours 2024 011"
+    },
+    {
+      "kind": "work",
       "id": "01198",
       "title": "4 form paths",
       "href": "/works/01198/",
@@ -5026,6 +5100,32 @@
         "paper"
       ],
       "search_text": "00361 83 particles 83 particles 2024 036 curve poems curve poems drawing pencil and ink on paper pencil and ink on paper"
+    },
+    {
+      "kind": "work",
+      "id": "00640",
+      "title": "100 grasping hands",
+      "href": "/works/00640/",
+      "year": 2023,
+      "display_meta": "2023",
+      "series_ids": [
+        "002"
+      ],
+      "series_titles": [
+        "002"
+      ],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "00640",
+        "100 grasping hands",
+        "100",
+        "grasping",
+        "hands",
+        "2023",
+        "002"
+      ],
+      "search_text": "00640 100 grasping hands 100 grasping hands 2023 002"
     },
     {
       "kind": "work",

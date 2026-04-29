@@ -8,24 +8,24 @@
     "series_type": "primary",
     "status": "draft",
     "published_date": null,
-    "year": null,
-    "year_display": null,
+    "year": 2025,
+    "year_display": "2024-25",
     "primary_work_id": "00375",
     "series_prose_file": null,
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "ee944e2781edbfe2a44ba20f53be7fae643938118cbea112d3834509c136a6e7",
+  "record_hash": "9dd15e930ba6b824038bf6abda4faaead9cacfe2b6555f5bbcbd66e921598e7a",
   "member_works": [
     {
       "work_id": "00375",
       "title": "00375 - colours",
-      "year_display": "",
-      "status": "",
+      "year_display": "2024",
+      "status": "draft",
       "series_ids": [
         "011"
       ],
-      "record_hash": "0b7a525f639e7272e2c7e18fba159815db9975f9764035446722aa2e3605b4b3"
+      "record_hash": "37c32bdde07a8e24f112612b33c9f789ba9fc7e5b1517c517fb2f3e47f34029b"
     }
   ]
 }

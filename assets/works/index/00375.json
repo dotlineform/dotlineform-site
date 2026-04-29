@@ -1,0 +1,24 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-b9de08f30d19506f37417bca621f6a9f",
+    "generated_at_utc": "2026-04-29T14:07:31Z",
+    "work_id": "00375",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00375",
+    "title": "00375 - colours",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "011"
+    ],
+    "storage": "13",
+    "height_cm": 30.5,
+    "width_cm": 40.5,
+    "width_px": 4783,
+    "height_px": 3602
+  },
+  "sections": []
+}

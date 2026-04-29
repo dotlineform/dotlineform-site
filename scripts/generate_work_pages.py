@@ -1351,6 +1351,7 @@ def main() -> None:
     works_sortable_fields.update({"work_id", "series_title", "title_sort"})
     numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
     work_meta_by_id: Dict[str, Dict[str, Any]] = {}
+    work_status_by_id: Dict[str, str] = {}
     work_ids_by_series_all: Dict[str, List[str]] = {}
     for wr in works_rows[1:]:
         wid_raw = cell(wr, works_hi, "work_id")
@@ -1358,6 +1359,7 @@ def main() -> None:
             continue
         wid = slug_id(wid_raw)
         meta = build_works_front_matter(wr, works_hi)
+        work_status_by_id[wid] = normalize_status(cell(wr, works_hi, "status"))
         series_ids = parse_work_series_ids(wr)
         sid = series_ids[0] if series_ids else ""
         meta["work_id"] = wid
@@ -2008,7 +2010,7 @@ def main() -> None:
 
                 series_work_ids_sorted = sorted(
                     work_id for work_id in work_ids_by_series_all.get(series_id, [])
-                    if normalize_status(work_meta_by_id.get(work_id, {}).get("status")) == "published"
+                    if work_status_by_id.get(work_id) == "published"
                 )
                 primary_work_id = require_series_primary_work_id(
                     series_id,

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-129a97f1c6e89c762c1f1e2e1d34b58f",
-    "generated_at_utc": "2026-04-29T13:10:34Z",
-    "count": 145
+    "version": "blake2b-4f4c018821394c590ed694ceecc3b539",
+    "generated_at_utc": "2026-04-29T14:59:05Z",
+    "count": 146
   },
   "entries": [
     {
@@ -2747,6 +2747,34 @@
         "29"
       ],
       "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow request change requests change requests 2026-04-29 2026 04 29"
+    },
+    {
+      "id": "site-request-catalogue-unified-editor-cleanup",
+      "kind": "doc",
+      "title": "Catalogue Unified Editor Cleanup Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup",
+      "last_updated": "2026-04-29",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-04-29 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-unified-editor-cleanup",
+        "site",
+        "request",
+        "catalogue",
+        "unified",
+        "editor",
+        "cleanup",
+        "catalogue unified editor cleanup request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-04-29",
+        "2026",
+        "04",
+        "29"
+      ],
+      "search_text": "site-request-catalogue-unified-editor-cleanup site request catalogue unified editor cleanup catalogue unified editor cleanup request change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",

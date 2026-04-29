@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v4",
-    "version": "blake2b-8cb24ad3b26b7bfaacecf935ebf354d5",
-    "generated_at_utc": "2026-04-26T21:17:43Z",
-    "count": 1935
+    "version": "blake2b-c05dee2c82f783dc8c43e777fc75eea6",
+    "generated_at_utc": "2026-04-29T14:07:31Z",
+    "count": 1939
   },
   "works": {
     "00001": {
@@ -3356,6 +3356,33 @@
         "036"
       ]
     },
+    "00373": {
+      "work_id": "00373",
+      "title": "00373 - monoprint",
+      "year": 2024,
+      "year_display": "2024?",
+      "series_ids": [
+        "102"
+      ]
+    },
+    "00374": {
+      "work_id": "00374",
+      "title": "00374 - monoprint",
+      "year": 2024,
+      "year_display": "2024?",
+      "series_ids": [
+        "102"
+      ]
+    },
+    "00375": {
+      "work_id": "00375",
+      "title": "00375 - colours",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "011"
+      ]
+    },
     "00378": {
       "work_id": "00378",
       "title": "mm quantum",
@@ -5712,6 +5739,15 @@
       "year_display": "2023",
       "series_ids": [
         "003"
+      ]
+    },
+    "00640": {
+      "work_id": "00640",
+      "title": "100 grasping hands",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "002"
       ]
     },
     "00641": {

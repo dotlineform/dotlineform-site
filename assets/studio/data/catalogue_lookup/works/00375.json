@@ -4,8 +4,8 @@
   },
   "work": {
     "work_id": "00375",
-    "status": null,
-    "published_date": null,
+    "status": "draft",
+    "published_date": "2026-04-29",
     "series_ids": [
       "011"
     ],
@@ -15,8 +15,8 @@
     "title": "00375 - colours",
     "width_cm": 40.5,
     "height_cm": 30.5,
-    "year": null,
-    "year_display": null,
+    "year": 2024,
+    "year_display": "2024",
     "medium_type": null,
     "medium_caption": null,
     "storage_location": "13",
@@ -24,12 +24,12 @@
     "notes": null,
     "duration": null,
     "depth_cm": null,
-    "width_px": null,
-    "height_px": null,
+    "width_px": 4783,
+    "height_px": 3602,
     "provenance": null,
     "artist": null
   },
-  "record_hash": "0b7a525f639e7272e2c7e18fba159815db9975f9764035446722aa2e3605b4b3",
+  "record_hash": "37c32bdde07a8e24f112612b33c9f789ba9fc7e5b1517c517fb2f3e47f34029b",
   "detail_sections": [],
   "downloads": [],
   "links": [],

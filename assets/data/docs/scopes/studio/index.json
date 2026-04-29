@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T13:10:32Z",
+  "generated_at": "2026-04-29T14:58:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1631,6 +1631,20 @@
       "source_path": "site-request-catalogue-publication-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-publication-workflow.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-unified-editor-cleanup",
+      "title": "Catalogue Unified Editor Cleanup Request",
+      "added_date": "2026-04-29",
+      "last_updated": "2026-04-29",
+      "parent_id": "change-requests",
+      "sort_order": 140,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-unified-editor-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-unified-editor-cleanup.json"
     },
     {
       "scope": "studio",

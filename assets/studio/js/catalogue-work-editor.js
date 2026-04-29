@@ -1571,22 +1571,38 @@ function buildPayload(state) {
   };
 }
 
+function currentWorkIsPublished(state) {
+  return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
+}
+
 function applyBuildRequested(state) {
-  return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+  if (state.mode === "bulk") {
+    return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+  }
+  return Boolean(state.applyBuildNode && state.applyBuildNode.checked && currentWorkIsPublished(state));
 }
 
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const showUpdate = state.mode !== "new" && hasRecord && state.rebuildPending;
+  const canUpdateSite = state.mode === "bulk"
+    ? state.mode !== "new" && hasRecord
+    : state.mode !== "new" && hasRecord && currentWorkIsPublished(state);
+  const showUpdate = canUpdateSite && state.rebuildPending;
   state.buildButton.hidden = !showUpdate;
   state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
   if (state.applyBuildNode) {
-    state.applyBuildNode.disabled = state.mode === "new" || !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+    if (!canUpdateSite) state.applyBuildNode.checked = false;
+    state.applyBuildNode.disabled = !canUpdateSite || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 }
 
 function applySingleSaveBuildOutcome(state, response) {
   const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!currentWorkIsPublished(state)) {
+    state.rebuildPending = false;
+    state.pendingBuildExtraSeriesIds = [];
+    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
   if (!response || !response.build_requested || !build) {
     state.rebuildPending = Boolean(response && response.changed);
     return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
@@ -1981,7 +1997,7 @@ async function saveCurrentWork(state) {
       record_hash: normalizeText(response.record_hash)
     });
     const outcome = applySingleSaveBuildOutcome(state, response);
-    if (response.changed && outcome.kind !== "saved_and_updated") {
+    if (response.changed && outcome.kind !== "saved_and_updated" && outcome.kind !== "saved_unpublished") {
       state.pendingBuildExtraSeriesIds = dedupeSeriesIds([
         ...state.pendingBuildExtraSeriesIds,
         ...previousSeriesIds,
@@ -2009,6 +2025,13 @@ async function saveCurrentWork(state) {
         "warn"
       );
       setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+    } else if (outcome.kind === "saved_unpublished") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_unpublished", "Source saved at {saved_at}. Public update is unavailable while the work is not published.", { saved_at: outcome.stamp }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId }), "success");
     } else {
       setTextWithState(
         state.resultNode,
@@ -2105,6 +2128,13 @@ async function refreshBuildPreview(state) {
     renderReadiness(state);
     return;
   }
+  if (!currentWorkIsPublished(state)) {
+    setTextWithState(state.buildImpactNode, t(state, "build_preview_unpublished", "Site update unavailable while the work is not published."));
+    state.buildPreview = null;
+    renderCurrentPreview(state);
+    renderReadiness(state);
+    return;
+  }
   try {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, {
       work_id: state.currentWorkId,
@@ -2195,7 +2225,7 @@ async function importWorkProse(state) {
 async function buildCurrentWork(state) {
   if (state.mode === "bulk") {
     if (!state.bulkWorkIds.length || !state.serverAvailable) return;
-  } else if (!state.currentRecord || !state.serverAvailable) {
+  } else if (!state.currentRecord || !state.serverAvailable || !currentWorkIsPublished(state)) {
     return;
   }
   state.isBuilding = true;

@@ -169,7 +169,8 @@ After successful canonical writes, the server also refreshes the derived Studio 
 Request behavior:
 
 - `work_id` is normalized to a five-digit work id
-- optional `apply_build: true` requests a same-scope site update as part of the save response
+- optional `apply_build: true` requests a same-scope site update as part of the save response when the saved work status is `published`
+- if `apply_build: true` is submitted for a draft work, the source save still succeeds but the public build request is skipped
 - `record` may be a partial update, but all keys must be known work source fields
 - `record.work_id`, when present, must match `work_id`
 - `series_ids` may be an array or comma-separated value and is normalized through the shared series-id rules

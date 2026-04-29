@@ -79,7 +79,7 @@
       "title": "all the colours",
       "status": "draft",
       "primary_work_id": "00375",
-      "record_hash": "ee944e2781edbfe2a44ba20f53be7fae643938118cbea112d3834509c136a6e7"
+      "record_hash": "9dd15e930ba6b824038bf6abda4faaead9cacfe2b6555f5bbcbd66e921598e7a"
     },
     {
       "series_id": "012",
@@ -378,9 +378,9 @@
     {
       "series_id": "054",
       "title": "fluid forms (2020)",
-      "status": "",
+      "status": "draft",
       "primary_work_id": "",
-      "record_hash": "af3e5f35425127852d8e251424600c02f43f09a5bdfd979ec81591950ae06eeb"
+      "record_hash": "0ba2f3f78c64b5766d06207f23d856423787d7a6cf12299a2bdeadaae414464d"
     },
     {
       "series_id": "055",
@@ -714,9 +714,9 @@
     {
       "series_id": "102",
       "title": "monoprints and residues",
-      "status": "",
+      "status": "draft",
       "primary_work_id": "00373",
-      "record_hash": "83d054f94508d6ae100681a4c0adfe032a39481bd8e48e40a417a434dfeeea40"
+      "record_hash": "035398c4132d928963dfc785634904285b1f30e0ab3deca97a3acb3adecbc670"
     },
     {
       "series_id": "103",

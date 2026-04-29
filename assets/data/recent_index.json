@@ -1,11 +1,44 @@
 {
   "header": {
     "schema": "recent_index_v1",
-    "version": "blake2b-c3680f1d9f3a7a0b200c0e7d58579def",
-    "generated_at_utc": "2026-04-29T10:59:58Z",
-    "count": 12
+    "version": "blake2b-e4a7fca5e68f709fb64b1749b4a96681",
+    "generated_at_utc": "2026-04-29T14:07:31Z",
+    "count": 15
   },
   "entries": [
+    {
+      "id": "work:00375",
+      "kind": "work",
+      "target_id": "00375",
+      "title": "00375 - colours",
+      "caption": "all the colours",
+      "published_date": "2026-04-29",
+      "thumb_id": "00375",
+      "recorded_at_utc": "2026-04-29T14:07:31Z",
+      "session_order": 1
+    },
+    {
+      "id": "work:00374",
+      "kind": "work",
+      "target_id": "00374",
+      "title": "00374 - monoprint",
+      "caption": "monoprints and residues",
+      "published_date": "2026-04-29",
+      "thumb_id": "00374",
+      "recorded_at_utc": "2026-04-29T14:03:36Z",
+      "session_order": 1
+    },
+    {
+      "id": "work:00373",
+      "kind": "work",
+      "target_id": "00373",
+      "title": "00373 - monoprint",
+      "caption": "monoprints and residues",
+      "published_date": "2026-04-29",
+      "thumb_id": "00373",
+      "recorded_at_utc": "2026-04-29T14:00:50Z",
+      "session_order": 1
+    },
     {
       "id": "series:143",
       "kind": "series",

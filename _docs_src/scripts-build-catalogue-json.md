@@ -150,6 +150,8 @@ The staged primary derivatives are the local handoff point for the remote media 
 
 This is the command-path companion to the Studio `Save + Rebuild` action on `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-moment/`, and the file-driven moments import flow on `/studio/catalogue-moment-import/`.
 
+Work and series scopes require published source records before runtime build/apply. Draft source saves remain source-only and are recovered through Catalogue Status rather than public rebuild paths.
+
 It keeps Phase 5 narrow:
 
 - source save remains separate from rebuild

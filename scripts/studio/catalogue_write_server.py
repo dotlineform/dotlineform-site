@@ -2749,7 +2749,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_work_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        apply_build = extract_apply_build(body)
+        requested_apply_build = extract_apply_build(body)
         requested_work_id = body.get("work_id")
         work_update = extract_work_update(body)
         if requested_work_id is None:
@@ -2779,6 +2779,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         updated_record = normalize_work_update(work_id, current_record, work_update)
+        apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
         fields_changed = changed_fields(current_record, updated_record)
         validation_errors = validate_updated_records(self.server.source_dir, work_id, updated_record)
         if validation_errors:
@@ -2868,6 +2869,11 @@ class Handler(BaseHTTPRequestHandler):
                     }
                 )
         response_payload["build_requested"] = bool(apply_build and changed)
+        if requested_apply_build and changed and not apply_build:
+            response_payload["build_skipped"] = {
+                "reason": "work_not_published",
+                "summary": "Work must be published before a public update can run.",
+            }
         if apply_build and changed:
             _build_success, build_payload = self._run_build_operation(
                 work_id=work_id,
