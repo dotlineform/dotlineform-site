@@ -8,20 +8,20 @@ sort_order: 270
 ---
 # Site Change Log
 
-## [2026-04-29] Rendered Work and Series status as read-only text
+## [2026-04-29] Rendered Work and Series status as Readonly Display
 
 **Status:** implemented
 
 **Area:** Studio / catalogue publication workflow
 
 **Summary:**
-Changed the Work and Series editor `status` controls from disabled dropdowns to read-only text inputs.
+Changed the Work and Series editor `status` controls from disabled dropdowns to non-input Readonly Display surfaces.
 
 **Reason:**
 Once publication state changes moved to explicit `Publish` / `Unpublish` commands, a disabled dropdown made the status field look like an unavailable edit control rather than current state.
 
 **Effect:**
-Work and Series status now reads as display state while preserving the existing draft/save validation flow. `Publish` and `Unpublish` remain the only visible commands that change publication status.
+Work and Series status now reads as display state through span-based `tagStudio__input--readonlyDisplay` surfaces while preserving the existing draft/save validation flow. The input primitive demo also shows Readonly Display with normal text color. `Publish` and `Unpublish` remain the only visible commands that change publication status.
 
 **Affected files/docs:**
 
@@ -29,6 +29,8 @@ Work and Series status now reads as display state while preserving the existing 
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-series-fields.js`
 - `assets/studio/js/catalogue-series-editor.js`
+- `_includes/studio_ui_catalogue_input_demo.html`
+- `studio/ui-catalogue/input/index.md`
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)

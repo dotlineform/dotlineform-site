@@ -456,10 +456,10 @@ function renderField(field, fieldsNode, state) {
     return;
   }
 
-  const wrapper = document.createElement("label");
+  const wrapper = document.createElement(field.readonly ? "div" : "label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
   if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
-  wrapper.htmlFor = `catalogueWorkField-${field.key}`;
+  if (!field.readonly) wrapper.htmlFor = `catalogueWorkField-${field.key}`;
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
@@ -467,7 +467,10 @@ function renderField(field, fieldsNode, state) {
   wrapper.appendChild(label);
 
   let input;
-  if (field.type === "textarea") {
+  if (field.readonly) {
+    input = document.createElement("span");
+    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  } else if (field.type === "textarea") {
     input = document.createElement("textarea");
     input.className = "tagStudio__input tagStudioForm__descriptionInput";
     input.rows = 4;
@@ -491,10 +494,6 @@ function renderField(field, fieldsNode, state) {
 
   input.id = `catalogueWorkField-${field.key}`;
   input.dataset.field = field.key;
-  if (field.readonly) {
-    input.readOnly = true;
-    input.setAttribute("aria-readonly", "true");
-  }
   if (field.description) {
     input.setAttribute("aria-describedby", `catalogueWorkFieldHelp-${field.key}`);
   }
@@ -513,11 +512,27 @@ function renderField(field, fieldsNode, state) {
   message.dataset.fieldStatus = field.key;
   wrapper.appendChild(message);
 
-  input.addEventListener("input", () => onFieldInput(state, field.key));
-  input.addEventListener("change", () => onFieldInput(state, field.key));
+  if (!field.readonly) {
+    input.addEventListener("input", () => onFieldInput(state, field.key));
+    input.addEventListener("change", () => onFieldInput(state, field.key));
+  }
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
+}
+
+function setFieldNodeValue(node, value) {
+  const text = normalizeText(value);
+  if ("value" in node) {
+    node.value = text;
+  } else {
+    node.textContent = displayValue(text);
+  }
+}
+
+function getFieldNodeValue(node) {
+  if ("value" in node) return node.value;
+  return normalizeText(node.textContent);
 }
 
 function renderSeriesField(field, fieldsNode, state) {
@@ -636,8 +651,8 @@ function renderReadonlyField(field, readonlyNode, state) {
 function setModeFieldAvailability(state) {
   const statusNode = state.fieldNodes.get("status");
   if (statusNode) {
-    statusNode.disabled = false;
-    statusNode.readOnly = true;
+    if ("disabled" in statusNode) statusNode.disabled = false;
+    if ("readOnly" in statusNode) statusNode.readOnly = true;
   }
   const publishedDateNode = state.fieldNodes.get("published_date");
   if (publishedDateNode) {
@@ -747,7 +762,7 @@ function applyDraftToInputs(state) {
       renderSeriesPicker(state);
       return;
     }
-    node.value = normalizeText(state.draft[field.key]);
+    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
   });
 }
 
@@ -1870,17 +1885,17 @@ function onFieldInput(state, fieldKey) {
   if (!node) return;
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
-    node.value = "draft";
+    setFieldNodeValue(node, "draft");
     updateEditorState(state);
     return;
   }
   if (state.mode === "new" && fieldKey === "published_date") {
     state.draft.published_date = "";
-    node.value = "";
+    setFieldNodeValue(node, "");
     updateEditorState(state);
     return;
   }
-  state.draft[fieldKey] = node.value;
+  state.draft[fieldKey] = getFieldNodeValue(node);
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
   }

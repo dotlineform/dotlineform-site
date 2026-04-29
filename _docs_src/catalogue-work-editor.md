@@ -29,7 +29,7 @@ The first implementation covers:
 - open multiple work records by comma-delimited `work_id` values and `start-end` ranges
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit core scalar metadata fields
-- show `status` as read-only text controlled by `Publish` / `Unpublish`
+- show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
 - edit ordered work series through a title-search series picker
 - bulk-edit core scalar metadata across the selected works
 - bulk-change `series_ids` by exact replacement or `+series_id` / `-series_id` diff entries

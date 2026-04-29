@@ -30,8 +30,8 @@ Use this as the single capture surface for Studio UI work:
 - issue: after publication state moved to `Publish` / `Unpublish`, the Work and Series editors still rendered `status` with disabled dropdown controls.
 - triage: field-control semantics / publication workflow
 - reasoning: a disabled dropdown implies a choice exists but is temporarily unavailable. Once status changes are owned by explicit publication commands, the field should read as state display rather than as a dormant editor control.
-- permanent rule: publication `status` fields in catalogue editors that use the explicit publication command model render as read-only text inputs, not disabled selects. Status changes stay owned by `Publish` and `Unpublish`.
-- outcome: changed Work and Series status field definitions from select controls to read-only text controls and taught both route-local renderers to preserve readonly semantics.
+- permanent rule: publication `status` fields in catalogue editors that use the explicit publication command model render with the shared non-input Readonly Display treatment, not disabled selects or focusable readonly inputs. Status changes stay owned by `Publish` and `Unpublish`.
+- outcome: changed Work and Series status field definitions from select controls to readonly text fields, and taught both route-local renderers to render readonly fields as span-based `tagStudio__input--readonlyDisplay` surfaces.
 - files changed:
   - `assets/studio/js/catalogue-work-fields.js`
   - `assets/studio/js/catalogue-work-editor.js`
@@ -40,9 +40,29 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/catalogue-work-editor.md`
   - `_docs_src/catalogue-series-editor.md`
 - verification:
-  - open `/studio/catalogue-work/?work=<work_id>` and confirm `status` is a read-only text input, not a dropdown
-  - open `/studio/catalogue-series/?series=<series_id>` and confirm `status` is a read-only text input, not a dropdown
+  - open `/studio/catalogue-work/?work=<work_id>` and confirm `status` uses a span-based `tagStudio__input--readonlyDisplay`, not a dropdown or focusable input
+  - open `/studio/catalogue-series/?series=<series_id>` and confirm `status` uses a span-based `tagStudio__input--readonlyDisplay`, not a dropdown or focusable input
   - confirm `Publish` / `Unpublish` remain the only visible commands that change publication state
+
+## UI Rule Log 2026-04-29 / UI-061A
+
+- status: adopted
+- route: `/studio/ui-catalogue/input/`, `/studio/catalogue-work/`, `/studio/catalogue-series/`
+- issue: the input primitive demo accidentally combined the Readonly Display class with the muted default-value class, while catalogue editor `status` fields used native readonly inputs rather than the primitive's non-input display shape.
+- triage: shared input primitive conformance
+- reasoning: Readonly Display is for values that are display-only by design. It should keep normal text color and avoid input focus/selection behavior unless a route explicitly needs native input affordances.
+- permanent rule: the default Readonly Display primitive uses a non-input element with `tagStudio__input tagStudio__input--readonlyDisplay` and normal text color. Do not add `tagStudio__input--defaultValue` unless the specific value is intentionally a muted default.
+- outcome: removed the default-value class from the input catalogue Readonly Display example and changed Work/Series readonly field rendering to use the same span-based display surface.
+- files changed:
+  - `_includes/studio_ui_catalogue_input_demo.html`
+  - `studio/ui-catalogue/input/index.md`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_includes/ui_catalogue_notes/input.md`
+  - `_docs_src/studio-ui-framework.md`
+- verification:
+  - inspect `/studio/ui-catalogue/input/` and confirm the Readonly Display sample uses normal text color
+  - inspect Work and Series `status` fields and confirm they use the same non-input display surface
 
 ## UI Rule Log 2026-04-29 / UI-060
 

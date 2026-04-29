@@ -111,13 +111,14 @@ Use these as the default contract for:
 Input rule:
 
 - `tagStudio__input` is the shared field shell for text entry, native select controls, and readonly field display
-- use placeholder text for muted default text on text-like fields, and `tagStudio__input--defaultValue` when a control such as a select or readonly display needs the same muted default-value treatment
+- use `tagStudio__input--readonlyDisplay` on a non-input element for values that are display-only by design; use readonly native inputs only when the value still needs input-like text selection or focus behavior
+- use placeholder text for muted default text on text-like fields, and `tagStudio__input--defaultValue` when a control such as a select needs the same muted default-value treatment
 - default text should use a lighter tone than normal muted labels/meta text so placeholders and default values are clearly distinguishable from entered content
 - `tagStudioField` owns width, label placement, and add-on button composition rather than pushing that layout into the base input class
 - the default field width is `18rem`; use a local `--field-width` override for deliberate exceptions and `tagStudioField--fill` when the field should take the remaining row width
 - text inputs, selects, and stepped numeric controls should keep the same control height as the small Studio button
 - numeric data should still default to plain input boxes; do not infer step buttons or native number-widget UI from storage type alone
-- disabled means temporarily unavailable because another page state is incomplete; disabled text should use the same lighter default-text tone, and values that are always display-only should use `tagStudio__input--readonlyDisplay` instead of the disabled state
+- disabled means temporarily unavailable because another page state is incomplete; disabled text should use the same lighter default-text tone, and values that are always display-only should use the non-input Readonly Display treatment instead of the disabled state
 - stepped value controls should use full-height small buttons rather than half-height split-arrow cells
 - in two-column Studio form rows, labels should be vertically centered with single-line controls and top-aligned only for multiline controls; prefer explicit alignment classes such as `tagStudioForm__field--topAligned` over padding offsets
 - info-only current-record panels in the catalogue editor family should use the Readonly Display treatment rather than the older muted `tagStudioForm__readonly` surface

@@ -161,10 +161,10 @@ function refreshSeriesTypeOptions(state) {
 }
 
 function renderField(field, fieldsNode, state) {
-  const wrapper = document.createElement("label");
+  const wrapper = document.createElement(field.readonly ? "div" : "label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
   if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
-  wrapper.htmlFor = `catalogueSeriesField-${field.key}`;
+  if (!field.readonly) wrapper.htmlFor = `catalogueSeriesField-${field.key}`;
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
@@ -172,7 +172,10 @@ function renderField(field, fieldsNode, state) {
   wrapper.appendChild(label);
 
   let input;
-  if (field.type === "textarea") {
+  if (field.readonly) {
+    input = document.createElement("span");
+    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  } else if (field.type === "textarea") {
     input = document.createElement("textarea");
     input.className = "tagStudio__input tagStudioForm__descriptionInput";
     input.rows = 4;
@@ -197,10 +200,6 @@ function renderField(field, fieldsNode, state) {
 
   input.id = `catalogueSeriesField-${field.key}`;
   input.dataset.field = field.key;
-  if (field.readonly) {
-    input.readOnly = true;
-    input.setAttribute("aria-readonly", "true");
-  }
   wrapper.appendChild(input);
 
   const message = document.createElement("span");
@@ -208,11 +207,27 @@ function renderField(field, fieldsNode, state) {
   message.dataset.fieldStatus = field.key;
   wrapper.appendChild(message);
 
-  input.addEventListener("input", () => onFieldInput(state, field.key));
-  input.addEventListener("change", () => onFieldInput(state, field.key));
+  if (!field.readonly) {
+    input.addEventListener("input", () => onFieldInput(state, field.key));
+    input.addEventListener("change", () => onFieldInput(state, field.key));
+  }
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
+}
+
+function setFieldNodeValue(node, value) {
+  const text = normalizeText(value);
+  if ("value" in node) {
+    node.value = text;
+  } else {
+    node.textContent = displayValue(text);
+  }
+}
+
+function getFieldNodeValue(node) {
+  if ("value" in node) return node.value;
+  return normalizeText(node.textContent);
 }
 
 function renderReadonlyField(field, readonlyNode, state) {
@@ -286,7 +301,7 @@ function applyDraftToInputs(state) {
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
-    node.value = normalizeText(state.draft[field.key]);
+    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
   });
 }
 
@@ -381,10 +396,10 @@ function setModeFieldAvailability(state) {
     if (state.mode === "new" && (field.key === "status" || field.key === "published_date" || field.key === "primary_work_id")) {
       disabled = true;
     }
-    node.disabled = disabled;
+    if ("disabled" in node) node.disabled = disabled;
     if (field.readonly) {
-      node.disabled = false;
-      node.readOnly = true;
+      if ("disabled" in node) node.disabled = false;
+      if ("readOnly" in node) node.readOnly = true;
     }
   });
 }
@@ -645,17 +660,17 @@ function onFieldInput(state, fieldKey) {
   if (!node) return;
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
-    node.value = "draft";
+    setFieldNodeValue(node, "draft");
     updateEditorState(state);
     return;
   }
   if (state.mode === "new" && (fieldKey === "published_date" || fieldKey === "primary_work_id")) {
     state.draft[fieldKey] = "";
-    node.value = "";
+    setFieldNodeValue(node, "");
     updateEditorState(state);
     return;
   }
-  state.draft[fieldKey] = node.value;
+  state.draft[fieldKey] = getFieldNodeValue(node);
   updateEditorState(state);
 }
 

@@ -72,7 +72,7 @@ ui_catalogue_primitive: input
 {% capture readonly_markup %}<div class="tagStudioField tagStudioField--split">
   <span class="tagStudioField__label">source alpha</span>
   <div class="tagStudioField__control">
-    <span class="tagStudio__input tagStudio__input--readonlyDisplay tagStudio__input--defaultValue" id="exampleInputReadonly">80%</span>
+    <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="exampleInputReadonly">80%</span>
   </div>
 </div>
 {% endcapture %}
