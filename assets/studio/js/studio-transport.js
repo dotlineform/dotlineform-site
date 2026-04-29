@@ -19,6 +19,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   bulkSave: "http://127.0.0.1:8788/catalogue/bulk-save",
   deletePreview: "http://127.0.0.1:8788/catalogue/delete-preview",
   deleteApply: "http://127.0.0.1:8788/catalogue/delete-apply",
+  publicationPreview: "http://127.0.0.1:8788/catalogue/publication-preview",
+  publicationApply: "http://127.0.0.1:8788/catalogue/publication-apply",
   createWork: "http://127.0.0.1:8788/catalogue/work/create",
   saveWork: "http://127.0.0.1:8788/catalogue/work/save",
   createWorkDetail: "http://127.0.0.1:8788/catalogue/work-detail/create",

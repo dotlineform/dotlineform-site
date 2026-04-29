@@ -33,10 +33,12 @@ The first implementation covers:
 - add a work to the current series
 - remove a work from the current series
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
-- preview the scoped rebuild impact for the current series
+- preview the scoped public update impact for the current series
 - show staged series prose readiness for `var/docs/catalogue/import-staging/series/<series_id>.md`
 - run a narrow `Import staged prose` action when the staged series prose Markdown file is ready
-- save with an optional `Update site now` path through the local catalogue service
+- save metadata, with published-series saves updating the public catalogue internally
+- publish draft series through a dedicated `Publish` command
+- unpublish public series through a dedicated `Unpublish` command
 - delete one series source record and remove its membership from affected works
 
 Series prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_src_catalogue/series/<series_id>.md`; the generator reads that ID-derived source file for public prose.
@@ -61,11 +63,11 @@ In new mode:
 - `series_type` defaults to `primary`
 - `title`, `series_type`, `year`, and `year_display` are required
 - `status` is visible and fixed to `draft`
-- `published_date`, `primary_work_id`, member editing, staged prose import, build, and delete actions remain disabled until the source record exists
+- `published_date`, `primary_work_id`, member editing, staged prose import, publication, and delete actions remain disabled until the source record exists
 - `Create` writes through `POST /catalogue/series/create`
 - successful create opens `/studio/catalogue-series/?series=<series_id>` in normal edit mode
 
-Create mode does not update the public site. Add member works, set a valid `primary_work_id`, and publish through the normal save/update flow after the draft exists.
+Create mode does not update the public site. Add member works, set a valid `primary_work_id`, save the draft, and then use `Publish` when ready.
 
 ## Membership Constraints
 
@@ -83,23 +85,26 @@ Locked constraints for this phase:
 Current action labels:
 
 - `Save`
-  writes series source JSON and any changed work membership rows, and can optionally also update the public catalogue immediately when the series is published
-- `Update site now`
-  appears only when a published source record has been saved but publication is still pending
+  writes series source JSON and any changed work membership rows. If the series is already `published`, the save also runs the internal public catalogue update.
+- `Publish`
+  appears for saved draft series when the form is clean and required publication fields are valid
+- `Unpublish`
+  appears for published series, ignores unsaved form edits after confirmation, changes source status back to `draft`, and cleans public catalogue output
 - `Delete`
   removes the current series source record and its membership from affected work records after preview/confirmation
 
-Current save/rebuild flow:
+Current save/publication flow:
 
 1. page loads derived series-search and work-search lookup payloads, not full canonical source maps
 2. opening a series fetches one focused lookup record from `assets/studio/data/catalogue_lookup/series/<series_id>.json`
 3. membership edits operate on affected work `series_ids` arrays in the browser, using lookup-provided work hashes for stale-write checks
-4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, only the changed work membership rows, and optional `apply_build: true`; the editor and write server reject saves where `year` or `year_display` is blank
-5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested build status when a published series requested an update
-6. the page reloads its focused series lookup payload
-7. `POST /catalogue/build-preview` reports the scoped rebuild impact for published series plus affected published works and now also carries staged series prose readiness
-8. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_src_catalogue/series/<series_id>.md` after overwrite confirmation when needed
-9. `POST /catalogue/build-apply` remains available for explicit follow-up update actions; generator lookup now reads `_docs_src_catalogue/series/<series_id>.md` for public series prose
+4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and write server reject saves where `year` or `year_display` is blank
+5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command
+6. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
+7. the page reloads its focused series lookup payload
+8. `POST /catalogue/build-preview` reports scoped public-update impact for published series plus affected published works and carries staged series prose readiness
+9. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
+10. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_src_catalogue/series/<series_id>.md` after overwrite confirmation when needed
 
 Delete flow:
 

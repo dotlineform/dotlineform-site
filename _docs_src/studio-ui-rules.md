@@ -23,6 +23,28 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-059
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: the series editor still exposed publication as a save-time `Update site now` checkbox plus a follow-up update button, even though the target workflow separates metadata save, publish, and unpublish.
+- triage: command model / publication workflow
+- reasoning: a published-series save should update public output internally, while changing public visibility should be an explicit command. The editor should not ask the user to understand rebuild timing or use a checkbox to change publication semantics.
+- permanent rule: series publication state changes happen through the single publication command. `Save` does not change status; saved published series run the internal public update; `Publish` moves a clean draft to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated public output.
+- outcome: removed the visible series save-time public update checkbox and follow-up update button, added a config-backed `Publish` / `Unpublish` command, made status read-only, and wired publication state changes through the shared catalogue publication preview/apply endpoints.
+- files changed:
+  - `studio/catalogue-series/index.md`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/js/studio-transport.js`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/catalogue-series-editor.md`
+  - `_docs_src/site-request-catalogue-publication-workflow.md`
+- verification:
+  - open `/studio/catalogue-series/?series=002` and confirm a saved draft shows `Publish`, no `Update site now` checkbox, and disabled status editing
+  - publish preview/apply for a valid draft series and confirm the form reloads as `published`
+  - open a published series and confirm `Unpublish` remains available even with dirty form edits, then confirm cancel writes nothing
+  - unpublish dry-run or test record and confirm source status returns to `draft` and public cleanup impact is reported by the server
+
 ## UI Rule Log 2026-04-29 / UI-058
 
 - status: adopted
@@ -105,13 +127,14 @@ Use this as the single capture surface for Studio UI work:
 
 ## UI Rule Log 2026-04-29 / UI-054
 
-- status: adopted
+- status: superseded by UI-059 for the visible Series editor command model
 - route: `/studio/catalogue-series/`
 - issue: changing a series to `draft` could still run the checked save-time public update and leave draft-generated series artifacts visible.
 - triage: publication-boundary mismatch
 - reasoning: source status and public update controls must represent the same state. If a record is draft, the editor should not imply that it can be published, and the write/build pipeline should not treat it as an actionable public series.
 - permanent rule: Studio save-time public update controls are available for series only when the current form status is `published`; draft series saves remain source-only, and runtime series builds require a published series with a published primary work.
 - outcome: `Update site now` is disabled and unchecked for draft series, save-time `apply_build` is skipped server-side when the saved series is draft, and JSON-source series builds reject non-published series or non-published primary works.
+- superseded note: the published-only backend guardrail still applies, but `/studio/catalogue-series/` no longer exposes save-time public update controls after UI-059.
 - files changed:
   - `assets/studio/js/catalogue-series-editor.js`
   - `assets/studio/data/studio_config.json`

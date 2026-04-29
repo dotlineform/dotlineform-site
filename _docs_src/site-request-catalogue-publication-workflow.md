@@ -208,7 +208,7 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented
 
 Use the series editor as the first implementation because it exposed the checkbox problem and already has a narrow public-build guardrail.
 

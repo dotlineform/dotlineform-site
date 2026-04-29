@@ -374,6 +374,9 @@ function setModeFieldAvailability(state) {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     let disabled = state.isSaving || state.isBuilding || state.isDeleting;
+    if (field.key === "status") {
+      disabled = true;
+    }
     if (state.mode === "new" && (field.key === "status" || field.key === "published_date" || field.key === "primary_work_id")) {
       disabled = true;
     }
@@ -384,7 +387,7 @@ function setModeFieldAvailability(state) {
 function buildPayload(state, workUpdates) {
   return {
     ...buildSaveSeriesPayload(state, workUpdates),
-    apply_build: applyBuildRequested(state)
+    apply_build: currentSeriesIsPublished(state)
   };
 }
 
@@ -392,20 +395,25 @@ function currentSeriesIsPublished(state) {
   return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
 }
 
-function applyBuildRequested(state) {
-  return Boolean(state.applyBuildNode && state.applyBuildNode.checked && currentSeriesIsPublished(state));
+function currentSeriesIsDraft(state) {
+  return normalizeText(state.draft && state.draft.status).toLowerCase() === "draft";
 }
 
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const canUpdateSite = hasRecord && state.mode !== "new" && currentSeriesIsPublished(state);
-  const showUpdate = canUpdateSite && state.rebuildPending;
-  state.buildButton.hidden = !showUpdate;
-  state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
-  if (state.applyBuildNode) {
-    if (!canUpdateSite) state.applyBuildNode.checked = false;
-    state.applyBuildNode.disabled = !canUpdateSite || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  }
+  const canPublish = hasRecord && state.mode !== "new" && currentSeriesIsDraft(state);
+  const canUnpublish = hasRecord && state.mode !== "new" && currentSeriesIsPublished(state);
+  const label = canUnpublish
+    ? t(state, "unpublish_button", "Unpublish")
+    : t(state, "publish_button", "Publish");
+  state.publicationButton.textContent = label;
+  state.publicationButton.hidden = !(canPublish || canUnpublish);
+  state.publicationButton.disabled = !(canPublish || canUnpublish)
+    || (canPublish && dirty)
+    || (canPublish && errors.size > 0)
+    || state.isSaving
+    || state.isBuilding
+    || state.isDeleting
+    || !state.serverAvailable;
 }
 
 function applySaveBuildOutcome(state, response) {
@@ -689,7 +697,6 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
   state.pendingBuildExtraWorkIds = Array.isArray(options.pendingBuildExtraWorkIds) ? options.pendingBuildExtraWorkIds.slice() : [];
-  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   setTextWithState(state.membersStatusNode, "");
   setOpenInputMode(state);
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
@@ -720,7 +727,6 @@ function setNewSeriesMode(state, options = {}) {
   state.pendingBuildExtraWorkIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
-  if (state.applyBuildNode) state.applyBuildNode.checked = false;
   state.searchNode.value = state.draft.series_id;
   setNewInputMode(state);
   applyDraftToInputs(state);
@@ -756,7 +762,6 @@ function setEmptySearchMode(state, options = {}) {
   state.pendingBuildExtraWorkIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
-  if (state.applyBuildNode) state.applyBuildNode.checked = true;
   setOpenInputMode(state);
   if (!options.keepSearchValue) state.searchNode.value = "";
   applyDraftToInputs(state);
@@ -921,10 +926,6 @@ async function saveCurrentSeries(state) {
     return;
   }
   if (!draftHasChanges(state)) {
-    if (applyBuildRequested(state) && state.rebuildPending) {
-      await buildCurrentSeries(state);
-      return;
-    }
     setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
     setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
     updateEditorState(state);
@@ -935,7 +936,7 @@ async function saveCurrentSeries(state) {
   updateEditorState(state);
   setTextWithState(
     state.statusNode,
-    applyBuildRequested(state)
+    currentSeriesIsPublished(state)
       ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
       : t(state, "save_status_saving", "Saving source record…")
   );
@@ -992,7 +993,7 @@ async function saveCurrentSeries(state) {
     } else if (outcome.kind === "saved_update_failed") {
       setTextWithState(
         state.resultNode,
-        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the site update failed. Retry Update site now.", { saved_at: outcome.stamp }),
+        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
         "warn"
       );
       setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
@@ -1103,6 +1104,115 @@ async function buildCurrentSeries(state) {
   }
 }
 
+async function applyPublicationChange(state) {
+  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
+  const action = currentSeriesIsPublished(state) ? "unpublish" : currentSeriesIsDraft(state) ? "publish" : "";
+  if (!action) {
+    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published series."), "error");
+    return;
+  }
+  if (action === "publish" && draftHasChanges(state)) {
+    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
+    return;
+  }
+
+  if (action === "publish") {
+    const errors = validateDraft(state);
+    updateFieldMessages(state, errors);
+    if (errors.size > 0) {
+      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
+      updateEditorState(state);
+      return;
+    }
+  }
+
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(
+    state.statusNode,
+    action === "publish"
+      ? t(state, "publication_preview_publish_running", "Preparing publish preview…")
+      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview…")
+  );
+  setTextWithState(state.resultNode, "");
+
+  try {
+    const request = {
+      kind: "series",
+      action,
+      series_id: state.currentSeriesId,
+      expected_record_hash: state.currentRecordHash
+    };
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
+    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
+    if ((preview && preview.blocked) || blockers.length) {
+      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
+      setTextWithState(state.statusNode, message, "error");
+      return;
+    }
+
+    if (action === "unpublish") {
+      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this series?");
+      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
+      if (!window.confirm(`${summary}${dirtyNote}`)) {
+        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
+        return;
+      }
+    }
+
+    setTextWithState(
+      state.statusNode,
+      action === "publish"
+        ? t(state, "publication_publish_running", "Publishing series…")
+        : t(state, "publication_unpublish_running", "Unpublishing series…")
+    );
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    if (!record) throw new Error("publication response missing record");
+
+    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
+    state.seriesById.set(state.currentSeriesId, {
+      series_id: state.currentSeriesId,
+      title: normalizeText(record.title),
+      status: normalizeText(record.status),
+      primary_work_id: normalizeText(record.primary_work_id),
+      record_hash: recordHash
+    });
+    state.rebuildPending = response.status === "public_update_failed";
+    state.pendingBuildExtraWorkIds = [];
+    setLoadedSeries(state, state.currentSeriesId, record, {
+      recordHash,
+      keepResult: true,
+      lookup: buildSavedSeriesLookup(state, record, recordHash)
+    });
+    await refreshBuildPreview(state);
+
+    if (response.status === "public_update_failed") {
+      const error = normalizeText(response.public_update && response.public_update.error);
+      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
+      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
+      return;
+    }
+
+    if (action === "publish") {
+      setTextWithState(state.statusNode, t(state, "publication_status_published", "Series published."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_published", "Series is published and public catalogue output has been updated."), "success");
+    } else {
+      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Series unpublished."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Series is draft again and public catalogue output has been cleaned up."), "success");
+    }
+  } catch (error) {
+    const message = Number(error && error.status) === 409
+      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
+      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
 async function deleteCurrentSeries(state) {
   if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
   state.isDeleting = true;
@@ -1194,11 +1304,8 @@ async function init() {
   const openButton = document.getElementById("catalogueSeriesOpen");
   const newButton = document.getElementById("catalogueSeriesNew");
   const saveButton = document.getElementById("catalogueSeriesSave");
-  const buildButton = document.getElementById("catalogueSeriesBuild");
+  const publicationButton = document.getElementById("catalogueSeriesPublication");
   const deleteButton = document.getElementById("catalogueSeriesDelete");
-  const runtimeActionsNode = buildButton ? buildButton.closest(".catalogueWorkPage__runtimeActions") : null;
-  const applyBuildNode = document.getElementById("catalogueSeriesApplyBuild");
-  const applyBuildLabelNode = document.getElementById("catalogueSeriesApplyBuildLabel");
   const saveModeNode = document.getElementById("catalogueSeriesSaveMode");
   const contextNode = document.getElementById("catalogueSeriesContext");
   const statusNode = document.getElementById("catalogueSeriesStatus");
@@ -1214,7 +1321,7 @@ async function init() {
   const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
   const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
   const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !publicationButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
     return;
   }
 
@@ -1249,11 +1356,8 @@ async function init() {
     popupListNode,
     newButton,
     saveButton,
-    buildButton,
+    publicationButton,
     deleteButton,
-    applyBuildNode,
-    applyBuildLabelNode,
-    runtimeActionsNode,
     saveModeNode,
     contextNode,
     statusNode,
@@ -1286,8 +1390,7 @@ async function init() {
     openButton.textContent = t(state, "open_button", "Open");
     newButton.textContent = t(state, "new_button", "New");
     saveButton.textContent = t(state, "save_button", "Save");
-    buildButton.textContent = t(state, "build_button", "Update site now");
-    applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
+    publicationButton.textContent = t(state, "publish_button", "Publish");
     deleteButton.textContent = t(state, "delete_button", "Delete");
     membersHeadingNode.textContent = t(state, "members_heading", "member works");
     memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
@@ -1376,7 +1479,7 @@ async function init() {
     });
     newButton.addEventListener("click", () => setNewSeriesMode(state));
     saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
-    buildButton.addEventListener("click", () => buildCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save/build failure", error)));
+    publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => console.warn("catalogue_series_editor: unexpected publication failure", error)));
     deleteButton.addEventListener("click", () => deleteCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
     memberSearchNode.addEventListener("input", () => updateMemberList(state));
     memberAddButton.addEventListener("click", () => addWorkToSeries(state));

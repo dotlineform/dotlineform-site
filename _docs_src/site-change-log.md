@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Converted series editor to explicit Publish and Unpublish commands
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series / publication workflow
+
+**Summary:**
+Updated the Series editor so publication is controlled by a single `Publish` / `Unpublish` command instead of save-time public update controls.
+
+**Reason:**
+The publication workflow request defines `Save`, `Publish`, and `Unpublish` as separate user intentions. The Series editor was the first target because it exposed the confusing `Update site now` checkbox problem.
+
+**Effect:**
+The series status field is now read-only, `Save` never changes publication status, draft saves stay source-only, and published saves request the internal public catalogue update without showing a rebuild/update command. Draft series expose `Publish` when the saved form is clean and valid; published series expose `Unpublish`, which ignores unsaved form edits after confirmation and uses the shared publication preview/apply endpoints to clean public output.
+
+**Affected files/docs:**
+
+- `studio/catalogue-series/index.md`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Added shared catalogue publication preview/apply server shape
 
 **Status:** implemented
