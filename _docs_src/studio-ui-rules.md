@@ -23,6 +23,26 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-070
+
+- status: adopted
+- route: `/studio/catalogue-series/`, `/studio/catalogue-work/`
+- issue: the draft bootstrap workflow needed a way to publish a new draft series and its draft member works without first requiring an impossible standalone work publish.
+- triage: publication workflow bootstrap
+- reasoning: standalone work publish should require an already published series, because a work without a visible series has no normal public catalogue route into it. A new draft series with draft works is the exception that creates that visible parent and children together.
+- permanent rule: series publish is the bootstrap boundary for new catalogue groups. Publishing a draft series must atomically publish all attached draft works; standalone work publish remains blocked unless the work already belongs to a published series.
+- outcome: series publication preview now reports attached draft works that will be promoted, series publication apply writes `series.json` and `works.json` together, and work publication blockers enforce the published-series prerequisite outside the series bootstrap flow.
+- files changed:
+  - `scripts/studio/catalogue_write_server.py`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/catalogue-series-editor.md`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/scripts-catalogue-write-server.md`
+- verification:
+  - preview publish for draft series `002` and confirm draft work `00640` is reported as a bootstrap-published work with no primary-work publication blocker
+  - preview standalone publish for draft work `00640` while series `002` is draft and confirm it is blocked until the work belongs to a published series
+
 ## UI Rule Log 2026-04-29 / UI-069
 
 - status: adopted

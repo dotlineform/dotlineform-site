@@ -1147,7 +1147,7 @@
       "publication_status_public_failed": "Publication state changed, but the public update failed.",
       "publication_result_public_failed": "Source status changed, but public artifacts did not finish updating.",
       "publication_status_published": "Series published.",
-      "publication_result_published": "Series is published and public catalogue output has been updated.",
+      "publication_result_published": "Series and attached draft works are published, and public catalogue output has been updated.",
       "publication_status_unpublished": "Series unpublished.",
       "publication_result_unpublished": "Series is draft again and public catalogue output has been cleaned up.",
       "publication_status_conflict": "Source record changed since this page loaded. Reload before changing publication state.",

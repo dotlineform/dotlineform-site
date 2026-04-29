@@ -179,6 +179,7 @@ Preview behavior:
 - reports source-write impact separately from internal public impact
 - reports scoped public-update impact for `publish` and `save_published`
 - reports generated artifact cleanup and public index/search impact for `unpublish`
+- for series `publish`, reports attached draft work ids that will be promoted to `published`
 - for `save_published`, the request must include the same partial `record` shape as the matching source save endpoint and must not change publication status
 
 `POST /catalogue/publication-apply` accepts the same request shape and then:
@@ -186,12 +187,15 @@ Preview behavior:
 - re-runs publication preview before writing
 - honors `expected_record_hash` for stale-write protection
 - writes the id-scoped source status or metadata update
+- when publishing a series, writes the series status and all attached draft-work status promotions atomically across `series.json` and `works.json`
 - refreshes Studio lookup payloads after non-dry-run source writes
 - runs the scoped public update for `publish` and `save_published`
 - runs deterministic generated-artifact cleanup for `unpublish`
 - returns `status: "public_update_failed"` when a source write succeeds but the internal public update fails
 - records Catalogue Activity with `publication` operation names such as `series.publish`, `series.unpublish`, and `series.save_published`
 - moment `unpublish` also removes generated moment page/json artifacts, published thumbnails, repo-local staged media, the `assets/data/moments_index.json` entry, and the catalogue search record
+
+Standalone work publish remains stricter than series bootstrap publish: `work.publish` is blocked unless the work already belongs to at least one published series. Publishing a series is the bootstrap path for a new draft series with draft member works.
 
 `POST /catalogue/work/save` expects:
 

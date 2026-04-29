@@ -1223,7 +1223,7 @@ async function applyPublicationChange(state) {
 
     if (action === "publish") {
       setTextWithState(state.statusNode, t(state, "publication_status_published", "Series published."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_published", "Series is published and public catalogue output has been updated."), "success");
+      setTextWithState(state.resultNode, t(state, "publication_result_published", "Series and attached draft works are published, and public catalogue output has been updated."), "success");
     } else {
       setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Series unpublished."), "success");
       setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Series is draft again and public catalogue output has been cleaned up."), "success");

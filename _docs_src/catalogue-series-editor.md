@@ -53,7 +53,8 @@ Draft/publish rule:
 - edit-mode saves require `year` and `year_display`
 - published series must have a valid `primary_work_id` that belongs to the series
 - published series must have at least one published member work because the public thumbnail comes from the primary work
-- scoped rebuild is blocked until the series status is `published` and its primary work is also published
+- publishing a draft series also publishes all draft works currently attached to that series
+- scoped rebuild is blocked until the series status is `published` and at least one attached work is published
 
 ## New Mode
 
@@ -93,7 +94,7 @@ Current action labels:
 - `Save`
   writes series source JSON and any changed work membership rows. If the series is already `published`, the save also runs the internal public catalogue update.
 - `Publish`
-  appears for saved draft series when the form is clean and required publication fields are valid
+  appears for saved draft series when the form is clean and required publication fields are valid. Publishing a series also promotes all attached draft works to `published` in the same source transaction.
 - `Unpublish`
   appears for published series, ignores unsaved form edits after confirmation, changes source status back to `draft`, and cleans public catalogue output
 - `Delete`
@@ -109,7 +110,7 @@ Current save/publication flow:
 6. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
 7. the page reloads its focused series lookup payload
 8. `POST /catalogue/build-preview` reports scoped public-update impact for published series plus affected published works and carries staged series prose readiness
-9. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
+9. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`; series publish writes `series.json` and any attached draft-work status changes in one atomic transaction
 10. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_src_catalogue/series/<series_id>.md` after overwrite confirmation when needed
 
 Delete flow:

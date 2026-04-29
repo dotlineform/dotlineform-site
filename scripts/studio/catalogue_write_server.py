@@ -1605,6 +1605,32 @@ def publication_affected_for_record(source_dir: Path, kind: str, record_id: str)
     return affected
 
 
+def series_publish_bootstrap_work_records(source_dir: Path, series_id: str) -> Dict[str, Dict[str, Any]]:
+    records = records_from_json_source(source_dir)
+    promoted: Dict[str, Dict[str, Any]] = {}
+    for work_id, work_record in records.works.items():
+        if series_id not in normalize_series_ids_value(work_record.get("series_ids")):
+            continue
+        if normalize_status(work_record.get("status")) != "draft":
+            continue
+        promoted[work_id] = normalize_work_update(work_id, work_record, {"status": "published"})
+    return promoted
+
+
+def publication_bootstrap_work_records(
+    source_dir: Path,
+    kind: str,
+    action: str,
+    record_id: str,
+    target_record: Mapping[str, Any],
+) -> Dict[str, Dict[str, Any]]:
+    if kind != "series" or action != "publish":
+        return {}
+    if normalize_status(target_record.get("status")) != "published":
+        return {}
+    return series_publish_bootstrap_work_records(source_dir, record_id)
+
+
 def current_publication_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
     if kind == "work":
         record = records_from_json_source(source_dir).works.get(record_id)
@@ -1660,6 +1686,8 @@ def validate_publication_target(
     kind: str,
     record_id: str,
     target_record: Dict[str, Any],
+    *,
+    work_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
 ) -> list[str]:
     if kind == "work":
         return validate_updated_records(source_dir, record_id, target_record)
@@ -1667,7 +1695,7 @@ def validate_publication_target(
         return validate_updated_detail_records(source_dir, record_id, target_record)
     if kind == "series":
         errors = validate_series_save_record(target_record)
-        errors.extend(validate_updated_series_records(source_dir, record_id, target_record, {}))
+        errors.extend(validate_updated_series_records(source_dir, record_id, target_record, work_updates or {}))
         return errors
     return validate_updated_moment_record(record_id, target_record)
 
@@ -1678,14 +1706,30 @@ def publication_specific_blockers(
     kind: str,
     record_id: str,
     target_record: Mapping[str, Any],
+    *,
+    work_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
 ) -> list[str]:
     if normalize_status(target_record.get("status")) != "published":
         return []
 
     records = records_from_json_source(source_dir)
+    effective_works = dict(records.works)
+    if work_updates:
+        effective_works.update({work_id: dict(record) for work_id, record in work_updates.items()})
+    if kind == "work":
+        published_series_ids = [
+            series_id
+            for series_id in normalize_series_ids_value(target_record.get("series_ids"))
+            if isinstance(records.series.get(series_id), dict)
+            and normalize_status(records.series[series_id].get("status")) == "published"
+        ]
+        if not published_series_ids:
+            return [f"work {record_id} must belong to a published series before publishing"]
+        return []
+
     if kind == "work_detail":
         work_id = slug_id(target_record.get("work_id"))
-        parent = records.works.get(work_id)
+        parent = effective_works.get(work_id)
         if not isinstance(parent, dict):
             return [f"parent work_id not found: {work_id}"]
         if normalize_status(parent.get("status")) != "published":
@@ -1697,7 +1741,7 @@ def publication_specific_blockers(
         blockers: list[str] = []
         if not primary_work_id:
             blockers.append("series primary_work_id is required before publishing")
-        primary = records.works.get(primary_work_id)
+        primary = effective_works.get(primary_work_id)
         if primary_work_id and not isinstance(primary, dict):
             blockers.append(f"primary work_id not found: {primary_work_id}")
         elif isinstance(primary, dict):
@@ -1707,7 +1751,7 @@ def publication_specific_blockers(
                 blockers.append(f"primary work {primary_work_id} must belong to series {record_id}")
         member_work_ids = [
             work_id
-            for work_id, work_record in records.works.items()
+            for work_id, work_record in effective_works.items()
             if record_id in normalize_series_ids_value(work_record.get("series_ids"))
             and normalize_status(work_record.get("status")) == "published"
         ]
@@ -1794,18 +1838,30 @@ def build_publication_preview(source_dir: Path, repo_root: Path, request: Mappin
     target_status = normalize_status(target_record.get("status")) or "draft"
     changed = current_record != target_record
     changed_field_names = changed_fields(current_record, target_record)
-    validation_errors = validate_publication_target(source_dir, kind, record_id, target_record)
+    bootstrap_work_records = publication_bootstrap_work_records(source_dir, kind, action, record_id, target_record)
+    bootstrap_work_ids = sorted(bootstrap_work_records)
+    source_changed = changed or bool(bootstrap_work_records)
+    validation_errors = validate_publication_target(source_dir, kind, record_id, target_record, work_updates=bootstrap_work_records)
     blockers.extend(validation_errors)
-    blockers.extend(publication_specific_blockers(source_dir, repo_root, kind, record_id, target_record))
+    blockers.extend(publication_specific_blockers(source_dir, repo_root, kind, record_id, target_record, work_updates=bootstrap_work_records))
     affected = publication_affected_for_record(source_dir, kind, record_id)
     impact: Dict[str, Any] = {
         "source": {
             "path": publication_source_path_key(kind),
-            "will_write": changed,
+            "will_write": source_changed,
             "changed_fields": changed_field_names,
+            "bootstrap_publish_work_ids": bootstrap_work_ids,
         },
         "public": {},
     }
+    if bootstrap_work_records:
+        impact["source"]["additional_paths"] = [
+            {
+                "path": str(DEFAULT_SOURCE_DIR / SOURCE_FILES["works"]),
+                "will_write": True,
+                "changed_record_ids": bootstrap_work_ids,
+            }
+        ]
 
     if action == "unpublish":
         if kind == "moment":
@@ -1849,7 +1905,9 @@ def build_publication_preview(source_dir: Path, repo_root: Path, request: Mappin
         "record": current_record,
         "target_record": target_record,
         "changed": changed,
+        "source_changed": source_changed,
         "changed_fields": changed_field_names,
+        "bootstrap_publish_work_ids": bootstrap_work_ids,
         "affected": affected,
         "impact": impact,
         "summary": f"{action.replace('_', ' ')} {kind} {record_id}: {current_status} -> {target_status}.",
@@ -3548,6 +3606,21 @@ class Handler(BaseHTTPRequestHandler):
         records[record_id] = dict(target_record)
         return self.server.moments_path.resolve(), moment_metadata_payload(records)
 
+    def _publication_source_payloads(self, kind: str, record_id: str, target_record: Mapping[str, Any], preview: Mapping[str, Any]) -> Dict[Path, Dict[str, Any]]:
+        source_path, source_payload = self._publication_source_payload(kind, record_id, target_record)
+        payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
+        bootstrap_work_ids = [str(work_id) for work_id in preview.get("bootstrap_publish_work_ids") or []]
+        if kind == "series" and bootstrap_work_ids:
+            promoted = series_publish_bootstrap_work_records(self.server.source_dir, record_id)
+            works_payload = load_works_payload(self.server.works_path)
+            work_records = dict(works_payload["works"])
+            for work_id in bootstrap_work_ids:
+                if work_id not in promoted:
+                    raise ValueError(f"bootstrap work {work_id} is no longer draft")
+                work_records[work_id] = promoted[work_id]
+            payloads[self.server.works_path.resolve()] = payload_for_map("works", work_records)
+        return payloads
+
     def _run_publication_build(
         self,
         *,
@@ -3684,6 +3757,7 @@ class Handler(BaseHTTPRequestHandler):
         record_id = str(request["id"])
         target_record = dict(preview["target_record"])
         changed = bool(preview.get("changed"))
+        source_changed = bool(preview.get("source_changed", changed))
         source_backups: list[Path] = []
         public_update: Dict[str, Any] = {"ok": True, "skipped": True}
         public_update_ok = True
@@ -3691,12 +3765,13 @@ class Handler(BaseHTTPRequestHandler):
         if action == "unpublish":
             public_update = self._apply_publication_unpublish_cleanup(kind=kind, record_id=record_id, target_record=target_record, preview=preview)
         else:
-            if changed:
-                source_path, source_payload = self._publication_source_payload(kind, record_id, target_record)
-                if source_path not in self.server.allowed_write_paths:
+            if source_changed:
+                source_payloads = self._publication_source_payloads(kind, record_id, target_record, preview)
+                blocked_paths = [path for path in source_payloads if path not in self.server.allowed_write_paths]
+                if blocked_paths:
                     raise ValueError("write target not allowlisted")
                 if not self.server.dry_run:
-                    source_backups = atomic_write_many({source_path: source_payload}, self.server.backups_dir)
+                    source_backups = atomic_write_many(source_payloads, self.server.backups_dir)
                     self._refresh_lookup_payloads()
             public_update_ok, public_update = self._run_publication_build(
                 kind=kind,
@@ -3714,16 +3789,18 @@ class Handler(BaseHTTPRequestHandler):
             "id": record_id,
             "action": action,
             "changed": changed,
+            "source_changed": source_changed,
             "changed_fields": preview.get("changed_fields", []),
+            "bootstrap_publish_work_ids": preview.get("bootstrap_publish_work_ids", []),
             "record": target_record,
             "record_hash": record_hash(target_record),
             "preview": preview,
-            "source_saved": bool(changed and not self.server.dry_run) or bool(action == "unpublish" and not self.server.dry_run),
+            "source_saved": bool(source_changed and not self.server.dry_run) or bool(action == "unpublish" and not self.server.dry_run),
             "public_update": public_update,
         }
         if self.server.dry_run:
             response_payload["dry_run"] = True
-            response_payload["would_write"] = changed or action == "unpublish"
+            response_payload["would_write"] = source_changed or action == "unpublish"
         elif source_backups:
             response_payload["backups"] = [self.server.rel_path(path) for path in source_backups]
         if not self.server.dry_run:

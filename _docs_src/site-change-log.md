@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added series publish bootstrap for draft works
+
+**Status:** implemented
+
+**Area:** Studio / catalogue publication workflow
+
+**Summary:**
+Changed series publication so publishing a draft series also publishes all draft works attached to that series in the same source transaction.
+
+**Reason:**
+Standalone work publication needs an already published series, but a newly created draft series normally contains draft works. The series publish command is the correct bootstrap point because it creates the visible parent series and its first visible works together.
+
+**Effect:**
+Series publish preview reports attached draft works that will be promoted. Series publish apply writes `series.json` and `works.json` atomically, refreshes lookup payloads, and runs the scoped public update. Standalone work publish is blocked unless the work already belongs to at least one published series.
+
+**Affected files/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/data/studio_config.json`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Auto-filled primary work for first series member
 
 **Status:** implemented

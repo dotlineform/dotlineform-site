@@ -143,7 +143,7 @@ Current action labels:
 - `Save`
   writes work source JSON. If the work is already `published`, the save also runs the internal public catalogue update.
 - `Publish`
-  appears for saved draft works when the form is clean and required publication fields are valid
+  appears for saved draft works when the form is clean, required publication fields are valid, and the work already belongs to at least one published series
 - `Unpublish`
   appears for published works, ignores unsaved form edits after confirmation, changes source status back to `draft`, and cleans public catalogue output
 - `Delete`
