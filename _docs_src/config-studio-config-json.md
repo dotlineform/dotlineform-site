@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: "Studio Config JSON"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-04-29
 parent_id: config
 sort_order: 30
 ---
@@ -24,6 +24,7 @@ Current responsibilities include:
 - shared Docs Viewer settings used by `/docs/` and `/library/`
 - the route and feed path for the current Studio build-activity page
 - route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
+- catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
 - Studio-owned UI text, including search-shell text that is shared through the same loader
 
@@ -64,6 +65,7 @@ What stays here:
 
 - route and data-path lookup used by browser-side modules
 - shared Docs Viewer UI settings such as `docs_viewer.recently_added_limit`
+- catalogue UI option lists such as `catalogue.series_type_options`, currently used by the series editor as a client-side dropdown while the write server remains permissive
 - shared Studio UI text
 - shared Studio analysis policy used by current tag metrics/RAG helpers
 - the lookup path for dedicated search policy and scope-owned search indexes

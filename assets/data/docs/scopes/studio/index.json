@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T09:08:42Z",
+  "generated_at": "2026-04-29T09:52:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -643,7 +643,7 @@
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-29",
       "parent_id": "config",
       "sort_order": 30,
       "published": true,
@@ -1259,7 +1259,7 @@
       "doc_id": "catalogue-series-editor",
       "title": "Catalogue Series Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 70,
       "published": true,

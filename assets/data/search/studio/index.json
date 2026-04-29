@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-68532cff7de42688dd65d3a6524db1bc",
-    "generated_at_utc": "2026-04-29T09:08:44Z",
+    "version": "blake2b-d3e49ea4cb31ed389973e4dc29178c95",
+    "generated_at_utc": "2026-04-29T09:52:01Z",
     "count": 144
   },
   "entries": [
@@ -1057,22 +1057,22 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-04-29",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-04-24 • Config",
+      "display_meta": "2026-04-29 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-04-24",
+        "2026-04-29",
         "2026",
         "04",
-        "24"
+        "29"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-04-24 2026 04 24"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-04-29 2026 04 29"
     },
     {
       "id": "data-models-studio",
@@ -2111,10 +2111,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-29 • User Guide",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -2124,12 +2124,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-29",
         "2026",
         "04",
-        "26"
+        "29"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "scripts-build-catalogue-json",

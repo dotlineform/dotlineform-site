@@ -1,7 +1,7 @@
 const SERIES_FIELD_DEFINITIONS = Object.freeze({
   series_id: Object.freeze({ key: "series_id", label: "series id", type: "text" }),
   title: Object.freeze({ key: "title", label: "title", type: "text" }),
-  series_type: Object.freeze({ key: "series_type", label: "series type", type: "text" }),
+  series_type: Object.freeze({ key: "series_type", label: "series type", type: "select", options: ["primary", "holding"] }),
   status: Object.freeze({ key: "status", label: "status", type: "select", options: ["", "draft", "published"] }),
   published_date: Object.freeze({ key: "published_date", label: "published date", type: "date" }),
   year: Object.freeze({ key: "year", label: "year", type: "number", step: "1" }),
@@ -39,6 +39,7 @@ const SERIES_READONLY_FIELDS = Object.freeze([
 
 const SERIES_STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const SERIES_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const SERIES_TYPE_OPTIONS = Object.freeze(["primary", "holding"]);
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -54,6 +55,30 @@ function normalizeWorkId(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   if (!digits) return "";
   return digits.padStart(5, "0");
+}
+
+function normalizeOptionValue(value) {
+  return normalizeText(value).toLowerCase();
+}
+
+function dedupeOptions(items) {
+  const seen = new Set();
+  const out = [];
+  items.forEach((item) => {
+    const value = normalizeOptionValue(item);
+    if (!value || seen.has(value)) return;
+    seen.add(value);
+    out.push(value);
+  });
+  return out;
+}
+
+function getSeriesTypeOptions(config) {
+  const configured = config && config.catalogue && Array.isArray(config.catalogue.series_type_options)
+    ? config.catalogue.series_type_options
+    : null;
+  const options = dedupeOptions(configured || SERIES_TYPE_OPTIONS);
+  return options.length ? options : SERIES_TYPE_OPTIONS.slice();
 }
 
 function formatNumberText(value) {
@@ -130,6 +155,7 @@ function validateCreateSeriesDraft(draft, options = {}) {
   const errors = new Map();
   const t = typeof options.t === "function" ? options.t : (_key, fallback) => fallback;
   const seriesById = options.seriesById instanceof Map ? options.seriesById : new Map();
+  const seriesTypeOptions = new Set(dedupeOptions(options.seriesTypeOptions || SERIES_TYPE_OPTIONS));
   const seriesId = normalizeSeriesId(draft && draft.series_id);
   if (!seriesId) {
     errors.set("series_id", t("field_required_series_id", "Enter a series id."));
@@ -141,9 +167,22 @@ function validateCreateSeriesDraft(draft, options = {}) {
     errors.set("title", t("field_required_title", "Enter a title."));
   }
 
+  const seriesType = normalizeOptionValue(draft && draft.series_type);
+  if (!seriesType) {
+    errors.set("series_type", t("field_required_series_type", "Choose a series type."));
+  } else if (!seriesTypeOptions.has(seriesType)) {
+    errors.set("series_type", t("field_invalid_series_type", "Choose a listed series type."));
+  }
+
   const year = normalizeText(draft && draft.year);
-  if (year && !/^-?\d+$/.test(year)) {
-    errors.set("year", t("field_invalid_year", "Use a whole year or leave blank."));
+  if (!year) {
+    errors.set("year", t("field_required_year", "Enter a year."));
+  } else if (!/^-?\d+$/.test(year)) {
+    errors.set("year", t("field_invalid_year", "Use a whole year."));
+  }
+
+  if (!normalizeText(draft && draft.year_display)) {
+    errors.set("year_display", t("field_required_year_display", "Enter a year display."));
   }
   return errors;
 }
@@ -180,11 +219,13 @@ export {
   SERIES_FIELD_DEFINITIONS,
   SERIES_READONLY_FIELDS,
   SERIES_STATUS_OPTIONS,
+  SERIES_TYPE_OPTIONS,
   buildCreateSeriesPayload,
   buildSaveSeriesPayload,
   buildSeriesDraftFromRecord,
   buildSeriesRecordFromDraft,
   formatNumberText,
+  getSeriesTypeOptions,
   normalizeSeriesId,
   normalizeText,
   normalizeWorkId,

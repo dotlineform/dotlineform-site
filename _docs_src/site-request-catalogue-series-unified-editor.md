@@ -329,7 +329,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Add `?mode=new` to `/studio/catalogue-series/`.
 
@@ -355,6 +355,17 @@ Acceptance checks:
 - successful create writes a draft series source record
 - create does not update the public site
 - post-create edit mode allows member work assignment and normal publication preparation
+
+Implementation notes:
+
+- `/studio/catalogue-series/?mode=new` now opens draft-create mode in the main series editor.
+- The editor has a `New` command beside `Open`.
+- New mode uses the top input as the `series_id` input and pre-fills the suggested next id.
+- `series_type` now renders as a config-backed select using `catalogue.series_type_options`, initially `primary` and `holding`.
+- Create validation requires `series_id`, `title`, `series_type`, `year`, and `year_display`.
+- `status` is visible and fixed to `draft`; `published_date`, `primary_work_id`, member editing, staged prose import, build, and delete remain disabled until the series exists.
+- `Create` writes through `POST /catalogue/series/create` and then opens the created series in normal edit mode.
+- Follow-up fix: new-mode initialization now binds the member add button into editor state before refreshing the disabled member controls, so `/studio/catalogue-series/?mode=new` renders instead of falling through to the load-failed fallback.
 
 ### Task 4. Migrate Links, Routes, And Config
 

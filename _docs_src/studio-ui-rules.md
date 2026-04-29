@@ -23,6 +23,27 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-051
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: series creation still lived on a separate route even though series is a top-level catalogue record like works and should follow the same explicit `new` mode pattern.
+- triage: parent-record unified create/edit workflow
+- reasoning: top-level catalogue records can share an editor route for create and edit when the draft create step is source-only and edit-mode workflows still own publication readiness. Series needs this pattern, but without inheriting work-detail's parent-scoped create model.
+- permanent rule: parent catalogue records that adopt unified create/edit should expose `New` beside `Open`, use `?mode=new` for draft creation, default create-only values from config where useful, keep publish/build/delete-only actions disabled until the source record exists, and return to normal edit mode after create.
+- outcome: `/studio/catalogue-series/?mode=new` creates draft series records from the main series editor, uses a config-backed `series_type` select, and keeps member/prose/build/delete actions disabled until create succeeds.
+- follow-up: fixed the new-mode initialization path so disabled member controls are bound in editor state before the member list refresh runs.
+- files changed:
+  - `studio/catalogue-series/index.md`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/js/catalogue-series-fields.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-series/?mode=new` and confirm create mode renders with suggested id, draft status, config-backed `series_type`, and disabled edit-only actions
+  - create a draft series and confirm the route switches to `?series=<series_id>`
+
 ## UI Rule Log 2026-04-29 / UI-050
 
 - status: adopted

@@ -16,11 +16,15 @@ import {
 import {
   SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
   SERIES_READONLY_FIELDS as READONLY_FIELDS,
+  buildCreateSeriesPayload,
   buildSaveSeriesPayload,
   buildSeriesDraftFromRecord,
+  getSeriesTypeOptions,
   normalizeSeriesId,
   normalizeText,
   normalizeWorkId,
+  suggestNextSeriesId,
+  validateCreateSeriesDraft,
   validateSeriesDraft
 } from "./catalogue-series-fields.js";
 
@@ -130,6 +134,32 @@ function setPopupVisibility(state, visible) {
   state.popupNode.hidden = !visible;
 }
 
+function setOpenInputMode(state) {
+  state.searchNode.placeholder = t(state, "search_placeholder", "find series by title");
+  state.searchNode.setAttribute("aria-label", t(state, "search_label", "Find series by title"));
+}
+
+function setNewInputMode(state) {
+  state.searchNode.placeholder = t(state, "new_series_id_placeholder", "new series id");
+  state.searchNode.setAttribute("aria-label", t(state, "new_series_id_label", "New series id"));
+}
+
+function refreshSeriesTypeOptions(state) {
+  const node = state.fieldNodes.get("series_type");
+  if (!node || node.tagName !== "SELECT") return;
+  const current = normalizeText(node.value || state.draft.series_type).toLowerCase();
+  node.innerHTML = "";
+  const options = state.seriesTypeOptions.slice();
+  if (current && !options.includes(current)) options.push(current);
+  options.forEach((optionValue) => {
+    const option = document.createElement("option");
+    option.value = optionValue;
+    option.textContent = optionValue || "(blank)";
+    node.appendChild(option);
+  });
+  if (current) node.value = current;
+}
+
 function renderField(field, fieldsNode, state) {
   const wrapper = document.createElement("label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
@@ -149,7 +179,8 @@ function renderField(field, fieldsNode, state) {
   } else if (field.type === "select") {
     input = document.createElement("select");
     input.className = "tagStudio__input";
-    field.options.forEach((optionValue) => {
+    const options = field.key === "series_type" ? state.seriesTypeOptions : field.options;
+    options.forEach((optionValue) => {
       const option = document.createElement("option");
       option.value = optionValue;
       option.textContent = optionValue || "(blank)";
@@ -247,6 +278,7 @@ async function loadSeriesLookupRecord(state, seriesId) {
 }
 
 function applyDraftToInputs(state) {
+  refreshSeriesTypeOptions(state);
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
@@ -303,11 +335,24 @@ function membershipHasChanges(state) {
 }
 
 function draftHasChanges(state) {
+  if (state.mode === "new") {
+    return true;
+  }
   if (!state.baselineDraft) return false;
   return EDITABLE_FIELDS.some((field) => normalizeText(state.draft[field.key]) !== normalizeText(state.baselineDraft[field.key])) || membershipHasChanges(state);
 }
 
 function validateDraft(state) {
+  if (state.mode === "new") {
+    return validateCreateSeriesDraft(
+      { ...state.draft, series_id: state.searchNode.value },
+      {
+        seriesById: state.seriesById,
+        seriesTypeOptions: state.seriesTypeOptions,
+        t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+      }
+    );
+  }
   return validateSeriesDraft(state.draft, {
     currentMemberWorkIds: new Set(getCurrentMemberEntries(state).map((entry) => entry.workId)),
     t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
@@ -321,6 +366,18 @@ function updateFieldMessages(state, errors) {
     const message = errors.get(field.key) || "";
     node.textContent = message;
     node.hidden = !message;
+  });
+}
+
+function setModeFieldAvailability(state) {
+  EDITABLE_FIELDS.forEach((field) => {
+    const node = state.fieldNodes.get(field.key);
+    if (!node) return;
+    let disabled = state.isSaving || state.isBuilding || state.isDeleting;
+    if (state.mode === "new" && (field.key === "status" || field.key === "published_date" || field.key === "primary_work_id")) {
+      disabled = true;
+    }
+    node.disabled = disabled;
   });
 }
 
@@ -338,7 +395,7 @@ function updatePublishControls(state, { hasRecord, dirty, errors }) {
   state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
   if (state.applyBuildNode) {
-    state.applyBuildNode.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+    state.applyBuildNode.disabled = state.mode === "new" || !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 }
 
@@ -404,14 +461,38 @@ function formatBuildPreview(state, build) {
   return mediaParts.length ? `${baseText} ${mediaParts.join("; ")}.` : baseText;
 }
 
-function syncUrl(seriesId) {
+function syncUrl(seriesId, mode = "") {
   const url = new URL(window.location.href);
   if (seriesId) url.searchParams.set("series", seriesId);
   else url.searchParams.delete("series");
+  if (mode) url.searchParams.set("mode", mode);
+  else url.searchParams.delete("mode");
   window.history.replaceState({}, "", url.toString());
 }
 
 function updateSummary(state) {
+  if (state.mode === "new") {
+    state.metaNode.textContent = t(state, "new_meta", "draft source record");
+    state.summaryNode.innerHTML = `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_series_id_label", "series id"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(state.draft.series_id))}</div>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_status_label", "status"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_status", "draft source record; not published"))}</div>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_next_label", "next step"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_next", "Create the draft, then add member works, set primary_work_id, and update the site when ready."))}</div>
+      </div>
+    `;
+    state.runtimeStateNode.textContent = t(state, "new_runtime_state", "Public site update is unavailable until the draft series exists.");
+    setTextWithState(state.buildImpactNode, "");
+    renderReadiness(state);
+    return;
+  }
+
   const record = state.currentRecord;
   state.metaNode.textContent = record ? `${record.series_id} · ${buildRecordSummary(record)}` : "";
   const publicHref = record ? `${getStudioRoute(state.config, "series_page_base")}${encodeURIComponent(record.series_id)}/` : "";
@@ -460,6 +541,10 @@ function renderMemberRows(state, entries) {
 }
 
 function updateMemberList(state) {
+  const memberEditingEnabled = Boolean(state.currentRecord) && !state.isSaving && !state.isBuilding && !state.isDeleting;
+  state.memberSearchNode.disabled = !memberEditingEnabled;
+  state.memberAddNode.disabled = !memberEditingEnabled;
+  state.memberAddButton.disabled = !memberEditingEnabled;
   const members = getCurrentMemberEntries(state);
   const truncated = members.length > MEMBER_LIST_LIMIT;
   const query = normalizeWorkId(state.memberSearchNode.value) || normalizeText(state.memberSearchNode.value).toLowerCase();
@@ -498,22 +583,33 @@ function updateMemberList(state) {
 }
 
 function updateEditorState(state) {
-  const hasRecord = Boolean(state.currentRecord);
+  const hasRecord = state.mode === "new" ? true : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
   updateFieldMessages(state, errors);
+  setModeFieldAvailability(state);
   updateSummary(state);
   updateMemberList(state);
   if (!hasRecord) setTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
-  if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
+  setTextWithState(state.warningNode, dirty && state.mode !== "new" ? t(state, "dirty_warning", "Unsaved source changes.") : "");
+  if (state.mode === "new" && !state.resultNode.textContent) {
+    const firstError = errors.size ? Array.from(errors.values()).find(Boolean) : "";
+    setTextWithState(
+      state.statusNode,
+      firstError || (state.serverAvailable ? "" : t(state, "create_mode_unavailable_hint", "Local catalogue server unavailable. Create is disabled.")),
+      firstError ? "error" : state.serverAvailable ? "" : "warn"
+    );
+  } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
     setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }));
   }
 
+  state.saveButton.textContent = state.mode === "new"
+    ? t(state, "create_button", "Create")
+    : t(state, "save_button", "Save");
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
-  state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  state.deleteButton.disabled = !Boolean(state.currentRecord) || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
 }
@@ -521,6 +617,18 @@ function updateEditorState(state) {
 function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
+  if (state.mode === "new" && fieldKey === "status") {
+    state.draft.status = "draft";
+    node.value = "draft";
+    updateEditorState(state);
+    return;
+  }
+  if (state.mode === "new" && (fieldKey === "published_date" || fieldKey === "primary_work_id")) {
+    state.draft[fieldKey] = "";
+    node.value = "";
+    updateEditorState(state);
+    return;
+  }
   state.draft[fieldKey] = node.value;
   updateEditorState(state);
 }
@@ -542,6 +650,7 @@ function initializeMembershipState(state, seriesId) {
 }
 
 function setLoadedSeries(state, seriesId, record, options = {}) {
+  state.mode = "single";
   state.currentSeriesId = seriesId;
   state.currentRecord = record;
   state.currentLookup = options.lookup || state.currentLookup;
@@ -557,8 +666,85 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.pendingBuildExtraWorkIds = [];
   if (state.applyBuildNode) state.applyBuildNode.checked = true;
   setTextWithState(state.membersStatusNode, "");
+  setOpenInputMode(state);
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
   setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: seriesId }));
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  updateEditorState(state);
+}
+
+function setNewSeriesMode(state, options = {}) {
+  state.mode = "new";
+  state.currentSeriesId = "";
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.baselineDraft = {};
+  state.draft = {};
+  EDITABLE_FIELDS.forEach((field) => {
+    state.draft[field.key] = "";
+  });
+  state.draft.series_id = normalizeSeriesId(options.seriesId) || state.nextSuggestedSeriesId || suggestNextSeriesId(Array.from(state.seriesById.values()));
+  state.draft.series_type = state.seriesTypeOptions[0] || "primary";
+  state.draft.status = "draft";
+  state.draft.published_date = "";
+  state.draft.primary_work_id = "";
+  state.memberSeriesIdsByWorkId = new Map();
+  state.baselineMemberSeriesIdsByWorkId = new Map();
+  state.pendingBuildExtraWorkIds = [];
+  state.rebuildPending = false;
+  state.buildPreview = null;
+  if (state.applyBuildNode) state.applyBuildNode.checked = false;
+  state.searchNode.value = state.draft.series_id;
+  setNewInputMode(state);
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+  setPopupVisibility(state, false);
+  syncUrl("", "new");
+  state.memberSearchNode.value = "";
+  state.memberAddNode.value = "";
+  setTextWithState(state.membersStatusNode, "");
+  setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft series source record."));
+  setTextWithState(state.statusNode, "");
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  updateEditorState(state);
+}
+
+function setEmptySearchMode(state, options = {}) {
+  state.mode = "single";
+  state.currentSeriesId = "";
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.baselineDraft = null;
+  state.draft = {};
+  EDITABLE_FIELDS.forEach((field) => {
+    state.draft[field.key] = "";
+  });
+  state.memberSeriesIdsByWorkId = new Map();
+  state.baselineMemberSeriesIdsByWorkId = new Map();
+  state.pendingBuildExtraWorkIds = [];
+  state.rebuildPending = false;
+  state.buildPreview = null;
+  if (state.applyBuildNode) state.applyBuildNode.checked = true;
+  setOpenInputMode(state);
+  if (!options.keepSearchValue) state.searchNode.value = "";
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+  setPopupVisibility(state, false);
+  syncUrl("");
+  state.memberSearchNode.value = "";
+  state.memberAddNode.value = "";
+  setTextWithState(state.membersStatusNode, "");
+  setTextWithState(state.contextNode, t(state, "missing_series_param", "Search for a series by title."));
   setTextWithState(state.warningNode, "");
   if (!options.keepResult) setTextWithState(state.resultNode, "");
   updateEditorState(state);
@@ -697,6 +883,10 @@ function removeMember(state, workId) {
 }
 
 async function saveCurrentSeries(state) {
+  if (state.mode === "new") {
+    await createCurrentSeries(state);
+    return;
+  }
   if (!state.currentRecord) return;
   const errors = validateDraft(state);
   updateFieldMessages(state, errors);
@@ -797,6 +987,54 @@ async function saveCurrentSeries(state) {
       : `${t(state, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim();
     setTextWithState(state.statusNode, message, "error");
   } finally {
+    state.isSaving = false;
+    updateEditorState(state);
+  }
+}
+
+async function createCurrentSeries(state) {
+  if (state.mode !== "new") return;
+  state.draft.series_id = normalizeSeriesId(state.searchNode.value);
+  const errors = validateDraft(state);
+  updateFieldMessages(state, errors);
+  if (errors.size > 0) {
+    const seriesIdError = errors.get("series_id") || "";
+    setTextWithState(
+      state.statusNode,
+      seriesIdError || t(state, "create_status_validation_error", "Fix validation errors before creating the draft series."),
+      "error"
+    );
+    updateEditorState(state);
+    return;
+  }
+
+  state.isSaving = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "create_status_saving", "Creating draft series..."));
+  setTextWithState(state.resultNode, "");
+
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createSeries, buildCreateSeriesPayload(state.draft));
+    const seriesId = normalizeSeriesId(response && response.series_id);
+    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    if (!seriesId) {
+      throw new Error("create response missing series id");
+    }
+    if (record) {
+      state.seriesById.set(seriesId, {
+        series_id: seriesId,
+        title: normalizeText(record.title),
+        status: normalizeText(record.status),
+        primary_work_id: normalizeText(record.primary_work_id),
+        record_hash: normalizeText(response.record_hash)
+      });
+    }
+    state.isSaving = false;
+    await openSeriesById(state, seriesId);
+    setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft series {series_id}. Opening edit mode...", { series_id: seriesId }), "success");
+    setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft series {series_id}.", { series_id: seriesId }), "success");
+  } catch (error) {
+    setTextWithState(state.statusNode, `${t(state, "create_status_failed", "Draft series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
     state.isSaving = false;
     updateEditorState(state);
   }
@@ -916,6 +1154,7 @@ async function init() {
   const popupNode = document.getElementById("catalogueSeriesPopup");
   const popupListNode = document.getElementById("catalogueSeriesPopupList");
   const openButton = document.getElementById("catalogueSeriesOpen");
+  const newButton = document.getElementById("catalogueSeriesNew");
   const saveButton = document.getElementById("catalogueSeriesSave");
   const buildButton = document.getElementById("catalogueSeriesBuild");
   const deleteButton = document.getElementById("catalogueSeriesDelete");
@@ -937,14 +1176,17 @@ async function init() {
   const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
   const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
   const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !buildButton || !deleteButton || !runtimeActionsNode || !applyBuildNode || !applyBuildLabelNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
     return;
   }
 
   const state = {
     config: null,
+    mode: "single",
     seriesById: new Map(),
     workSearchById: new Map(),
+    seriesTypeOptions: getSeriesTypeOptions(null),
+    nextSuggestedSeriesId: "",
     currentLookup: null,
     currentSeriesId: "",
     currentRecord: null,
@@ -967,6 +1209,7 @@ async function init() {
     searchNode,
     popupNode,
     popupListNode,
+    newButton,
     saveButton,
     buildButton,
     deleteButton,
@@ -987,6 +1230,7 @@ async function init() {
     memberSearchNode,
     memberSearchMetaNode,
     memberAddNode,
+    memberAddButton,
     membersMetaNode,
     membersStatusNode,
     membersResultsNode
@@ -998,8 +1242,11 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
+    state.seriesTypeOptions = getSeriesTypeOptions(config);
+    refreshSeriesTypeOptions(state);
     searchNode.placeholder = t(state, "search_placeholder", "find series by title");
     openButton.textContent = t(state, "open_button", "Open");
+    newButton.textContent = t(state, "new_button", "New");
     saveButton.textContent = t(state, "save_button", "Save");
     buildButton.textContent = t(state, "build_button", "Update site now");
     applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
@@ -1022,6 +1269,7 @@ async function init() {
       if (!seriesId) return;
       state.seriesById.set(seriesId, record);
     });
+    state.nextSuggestedSeriesId = suggestNextSeriesId(seriesItems);
     const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
     workItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
@@ -1036,6 +1284,12 @@ async function init() {
     }
 
     searchNode.addEventListener("input", () => {
+      if (state.mode === "new") {
+        state.draft.series_id = normalizeSeriesId(searchNode.value);
+        setPopupVisibility(state, false);
+        updateEditorState(state);
+        return;
+      }
       const query = searchNode.value;
       if (!normalizeText(query)) {
         renderSearchMatches(state, [], "");
@@ -1052,6 +1306,10 @@ async function init() {
     searchNode.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
+      if (state.mode === "new") {
+        saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected create failure", error));
+        return;
+      }
       const matches = getSearchMatches(state, searchNode.value);
       if (matches[0]) {
         openSeriesById(state, matches[0].seriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
@@ -1065,6 +1323,9 @@ async function init() {
     });
 
     openButton.addEventListener("click", () => {
+      if (state.mode === "new") {
+        setEmptySearchMode(state, { keepSearchValue: true });
+      }
       const matches = getSearchMatches(state, searchNode.value);
       if (matches[0]) {
         openSeriesById(state, matches[0].seriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
@@ -1075,6 +1336,7 @@ async function init() {
       if (!button) return;
       importSeriesProse(state).catch((error) => console.warn("catalogue_series_editor: unexpected prose import failure", error));
     });
+    newButton.addEventListener("click", () => setNewSeriesMode(state));
     saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
     buildButton.addEventListener("click", () => buildCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save/build failure", error)));
     deleteButton.addEventListener("click", () => deleteCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
@@ -1102,13 +1364,15 @@ async function init() {
       setPopupVisibility(state, false);
     });
 
-    const requestedSeriesId = normalizeSeriesId(new URLSearchParams(window.location.search).get("series"));
+    const params = new URLSearchParams(window.location.search);
+    const requestedSeriesId = normalizeSeriesId(params.get("series"));
+    const requestedMode = normalizeText(params.get("mode")).toLowerCase();
     if (requestedSeriesId && state.seriesById.has(requestedSeriesId)) {
       openSeriesById(state, requestedSeriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
+    } else if (requestedMode === "new") {
+      setNewSeriesMode(state, { seriesId: requestedSeriesId });
     } else {
-      setTextWithState(contextNode, t(state, "missing_series_param", "Search for a series by title."));
-      updateSummary(state);
-      updateEditorState(state);
+      setEmptySearchMode(state);
     }
 
     root.hidden = false;

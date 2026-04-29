@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: "Catalogue Series Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-26
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 70
 ---
@@ -12,6 +12,7 @@ Route:
 
 - `/studio/catalogue-series/`
 - focused record selection uses `?series=<series_id>`
+- new draft mode uses `?mode=new`
 
 This page edits one canonical series source record from `assets/studio/data/catalogue/series.json` and can also write affected work membership records in `assets/studio/data/catalogue/works.json`.
 
@@ -22,6 +23,7 @@ The first implementation covers:
 - search by series title with `series_id` shown in results
 - open one series record
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
+- create a draft series from the same route with `New` or `/studio/catalogue-series/?mode=new`
 - edit core scalar metadata fields
 - edit `sort_fields`
 - edit `primary_work_id`
@@ -41,9 +43,28 @@ Series prose is no longer edited through a source filename field. Use `Import st
 
 Draft/publish rule:
 
+- new series are created as draft source records only
 - draft series may be saved without `primary_work_id`
 - published series must have a valid `primary_work_id` that belongs to the series
 - scoped rebuild is blocked until the series is publishable
+
+## New Mode
+
+`New` switches the editor into draft-create mode on `/studio/catalogue-series/?mode=new`.
+
+In new mode:
+
+- the top input is the new `series_id` input
+- the suggested next id is prefilled
+- `series_type` renders as a config-backed select using `catalogue.series_type_options`
+- `series_type` defaults to `primary`
+- `title`, `series_type`, `year`, and `year_display` are required
+- `status` is visible and fixed to `draft`
+- `published_date`, `primary_work_id`, member editing, staged prose import, build, and delete actions remain disabled until the source record exists
+- `Create` writes through `POST /catalogue/series/create`
+- successful create opens `/studio/catalogue-series/?series=<series_id>` in normal edit mode
+
+Create mode does not update the public site. Add member works, set a valid `primary_work_id`, and publish through the normal save/update flow after the draft exists.
 
 ## Membership Constraints
 

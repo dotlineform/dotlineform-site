@@ -13,6 +13,7 @@ import { buildSaveModeText } from "./tag-studio-save.js";
 import {
   NEW_SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
   buildCreateSeriesPayload,
+  getSeriesTypeOptions,
   normalizeSeriesId,
   normalizeText,
   suggestNextSeriesId,
@@ -46,6 +47,16 @@ function renderField(field, fieldsNode, state) {
     input = document.createElement("textarea");
     input.className = "tagStudio__input tagStudioForm__descriptionInput";
     input.rows = 4;
+  } else if (field.type === "select") {
+    input = document.createElement("select");
+    input.className = "tagStudio__input";
+    const options = field.key === "series_type" ? state.seriesTypeOptions : field.options;
+    options.forEach((optionValue) => {
+      const option = document.createElement("option");
+      option.value = optionValue;
+      option.textContent = optionValue || "(blank)";
+      input.appendChild(option);
+    });
   } else {
     input = document.createElement("input");
     input.className = "tagStudio__input";
@@ -81,6 +92,7 @@ function renderField(field, fieldsNode, state) {
 function validateDraft(state) {
   return validateCreateSeriesDraft(state.draft, {
     seriesById: state.seriesById,
+    seriesTypeOptions: state.seriesTypeOptions,
     t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
   });
 }
@@ -172,6 +184,7 @@ async function init() {
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     seriesById: new Map(),
+    seriesTypeOptions: getSeriesTypeOptions(null),
     nextSuggestedSeriesId: "",
     serverAvailable: false,
     isSaving: false,
@@ -192,6 +205,17 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
+    state.seriesTypeOptions = getSeriesTypeOptions(config);
+    const seriesTypeNode = state.fieldNodes.get("series_type");
+    if (seriesTypeNode) {
+      seriesTypeNode.innerHTML = "";
+      state.seriesTypeOptions.forEach((optionValue) => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = optionValue;
+        seriesTypeNode.appendChild(option);
+      });
+    }
     createButton.textContent = t(state, "create_button", "Create");
 
     const [seriesPayload, serverAvailable] = await Promise.all([
@@ -210,6 +234,10 @@ async function init() {
       state.draft.series_id = state.nextSuggestedSeriesId;
       const seriesIdNode = state.fieldNodes.get("series_id");
       if (seriesIdNode) seriesIdNode.value = state.nextSuggestedSeriesId;
+    }
+    if (!normalizeText(state.draft.series_type)) {
+      state.draft.series_type = state.seriesTypeOptions[0] || "primary";
+      if (seriesTypeNode) seriesTypeNode.value = state.draft.series_type;
     }
 
     state.serverAvailable = Boolean(serverAvailable);

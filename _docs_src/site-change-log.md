@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added new mode to the catalogue series editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series
+
+**Summary:**
+Added `?mode=new` support to `/studio/catalogue-series/`, including a `New` command, draft-only create behavior, required create fields, and a config-backed `series_type` select.
+
+**Reason:**
+The series unified editor request needs create and edit behavior on one route before the legacy new-series route can be retired.
+
+**Effect:**
+The series editor can now create draft series source records through `POST /catalogue/series/create`. Create mode defaults `series_type` to `primary`, requires `title`, `series_type`, `year`, and `year_display`, disables member/prose/build/delete actions until the source record exists, and opens the created series in normal edit mode.
+
+**Affected files/docs:**
+
+- `studio/catalogue-series/index.md`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-series-fields.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
 ## [2026-04-29] Factored shared catalogue series editor helpers
 
 **Status:** implemented
