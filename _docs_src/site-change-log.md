@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Removed redundant per-series runtime fields
+
+**Status:** implemented
+
+**Area:** catalogue generation / generated series data
+
+**Summary:**
+Removed `series.works` and `series.primary_work_id` from generated per-series payloads at `assets/series/index/<series_id>.json`.
+
+**Reason:**
+Those fields duplicated aggregate runtime data and made stale draft cleanup look ambiguous. Public series grids already read membership from `assets/data/series_index.json` and `assets/data/works_index.json`.
+
+**Effect:**
+Per-series JSON now carries page-local series metadata and optional prose HTML only. Aggregate series data remains the canonical source for membership, primary-work thumbnail context, and public series-page grids. Delete cleanup also strips the obsolete fields from older per-series payloads when it touches them.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Catalogue Unified Editor Cleanup](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Limited work detail creation to published works
 
 **Status:** implemented
@@ -444,7 +468,7 @@ Fixed the generator path that populates published member works in `assets/series
 The generator filtered per-series membership through `work_meta_by_id.status`, but that metadata map intentionally does not include work publication status. As a result, regenerated per-series payloads could emit `series.works: []` for published series even when the aggregate `assets/data/series_index.json` still had the correct visible grid membership.
 
 **Effect:**
-Per-series JSON generation now uses an internal `work_status_by_id` lookup sourced directly from canonical work status data. The public payload contract is unchanged: published series payloads can include published member works, while the public series grid continues to render from the aggregate series and works indexes.
+Per-series JSON generation used an internal `work_status_by_id` lookup sourced directly from canonical work status data. That compatibility field was later removed from per-series runtime JSON; the public series grid continues to render from the aggregate series and works indexes.
 
 **Affected files/docs:**
 
@@ -465,7 +489,7 @@ Added an umbrella change request for cleanup work that should follow the work, w
 The unified editor changes intentionally kept some legacy route artifacts and compatibility concerns separate from behavior fixes. The current series JSON investigation also surfaced a generated per-series membership field that is part of the payload contract but not consumed by the public series grid.
 
 **Effect:**
-The cleanup backlog now has one request covering retired `catalogue-new-*` routes/controllers/docs, final shared-helper review, old URL compatibility policy, and the future decision to keep or remove `series.works` from per-series runtime JSON.
+The cleanup backlog now has one request covering retired `catalogue-new-*` routes/controllers/docs, final shared-helper review, old URL compatibility policy, and the generated series runtime contract.
 
 **Affected files/docs:**
 
@@ -584,7 +608,7 @@ Aligned the series editor, write server, scoped JSON build helper, and generator
 A draft save with `Update site now` still checked could run the public update path, creating public series artifacts for a draft series. The same path also exposed an older data issue where series `002` pointed at work `00640`, whose status is blank.
 
 **Effect:**
-Draft series saves are source-only. The editor disables and unchecks save-time public update controls while the form status is `draft`, the write server skips save-time build requests for draft series, scoped series builds require a published series with a published primary work, and generated public series payloads only include published member works. Series `002` is restored to `draft` with no `published_date` in canonical source.
+Draft series saves are source-only. The editor disables and unchecks save-time public update controls while the form status is `draft`, the write server skips save-time build requests for draft series, scoped series builds require a published series with a published primary work, and aggregate series index membership only includes published member works. Series `002` is restored to `draft` with no `published_date` in canonical source.
 
 The stale public aggregate artifacts were also regenerated so series `002` is removed from the public series index, recent index, and catalogue search. Its existing collection stub is marked `published: false` so Jekyll stops emitting the direct `/series/002/` page while the source record is draft. The validation pass aligned the retired `copy_draft_media_files.py` entrypoint with the deprecated-script contract so a bare run exits cleanly with guidance.
 

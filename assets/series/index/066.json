@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-57c5d05ba3db0d36e5365d1fa9e62115",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-4519f32671c764f7246ef57b884d9022",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "066",
     "count": 2
   },
   "series": {
     "series_id": "066",
     "status": "published",
-    "published_date": "2026-03-23",
+    "published_date": "2026-04-01",
     "title": "forms painting",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,11 +17,6 @@
     "year_display": "c. 1990-92?",
     "project_folders": [
       "forms painting"
-    ],
-    "works": [
-      "01200",
-      "01201"
-    ],
-    "primary_work_id": "01200"
+    ]
   }
 }

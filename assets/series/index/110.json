@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-8cfa2ebd9823e28b521a35d4209e553b",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-4f843ee2e7173e22f78a14c3bfa9444b",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "110",
     "count": 5
   },
   "series": {
     "series_id": "110",
     "status": "published",
-    "published_date": "2026-03-13",
+    "published_date": "2026-04-01",
     "title": "particle theory",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,14 +17,6 @@
     "year_display": "2008",
     "project_folders": [
       "particle theory"
-    ],
-    "works": [
-      "00549",
-      "00550",
-      "00551",
-      "00552",
-      "00553"
-    ],
-    "primary_work_id": "00553"
+    ]
   }
 }

@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-11ab0a9008231e7ae76bba65b9107d91",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-99302667382d92506e5518cab15a3115",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "120",
     "count": 10
   },
   "series": {
     "series_id": "120",
     "status": "published",
-    "published_date": "2026-03-25",
+    "published_date": "2026-04-01",
     "title": "reduce and return",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,19 +17,6 @@
     "year_display": "2005-07",
     "project_folders": [
       "reduce and return"
-    ],
-    "works": [
-      "01596",
-      "01597",
-      "01598",
-      "01599",
-      "01600",
-      "01601",
-      "01602",
-      "01603",
-      "01604",
-      "01605"
-    ],
-    "primary_work_id": "01596"
+    ]
   }
 }

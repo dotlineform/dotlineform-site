@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-0fd9fbe3065a4647330b21af2f2f9b4c",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-1ac8cb5a35413b1f4ec190e9eabd0b65",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "107",
     "count": 31
   },
   "series": {
     "series_id": "107",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "nothing is missing",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,40 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "nothing is missing"
-    ],
-    "works": [
-      "01448",
-      "01449",
-      "01450",
-      "01451",
-      "01452",
-      "01453",
-      "01454",
-      "01455",
-      "01456",
-      "01457",
-      "01458",
-      "01459",
-      "01460",
-      "01461",
-      "01462",
-      "01463",
-      "01464",
-      "01465",
-      "01466",
-      "01467",
-      "01468",
-      "01469",
-      "01470",
-      "01471",
-      "01472",
-      "01473",
-      "01474",
-      "01475",
-      "01476",
-      "01477",
-      "01478"
-    ],
-    "primary_work_id": "01448"
+    ]
   }
 }

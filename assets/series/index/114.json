@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-b716a80b1c66e4f0939d06c31052ba1d",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-2bad1d522a8307dd3c8760f845eaf313",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "114",
     "count": 7
   },
   "series": {
     "series_id": "114",
     "status": "published",
-    "published_date": "2026-03-25",
+    "published_date": "2026-04-01",
     "title": "plant forms",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,16 +17,6 @@
     "year_display": "2022",
     "project_folders": [
       "plant forms"
-    ],
-    "works": [
-      "01527",
-      "01528",
-      "01529",
-      "01530",
-      "01531",
-      "01532",
-      "01533"
-    ],
-    "primary_work_id": "01530"
+    ]
   }
 }

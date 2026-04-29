@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-b700e73d427d6f07bf5044801227a13a",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-13e6f6424a49071045488f7ff18a183a",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "035",
     "count": 5
   },
   "series": {
     "series_id": "035",
     "status": "published",
-    "published_date": "2026-03-16",
+    "published_date": "2026-04-01",
     "title": "curve machine",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,14 +17,6 @@
     "year_display": "2020",
     "project_folders": [
       "curve machine"
-    ],
-    "works": [
-      "00867",
-      "00868",
-      "00869",
-      "00870",
-      "00871"
-    ],
-    "primary_work_id": "00867"
+    ]
   }
 }

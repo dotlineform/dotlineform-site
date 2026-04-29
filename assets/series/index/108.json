@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-8f1e3e7ccc2e451105767584dddb42ac",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-8623fcebae0de5ce53e5e02aea77207e",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "108",
     "count": 1
   },
   "series": {
     "series_id": "108",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "olive tree",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2012",
     "project_folders": [
       "olive tree"
-    ],
-    "works": [
-      "01479"
-    ],
-    "primary_work_id": "01479"
+    ]
   }
 }

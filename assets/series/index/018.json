@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-09126860d5ff62ceb47ddfb0c2a40f24",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-b55bb492059a01eeca697f23782aa8de",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "018",
     "count": 1
   },
   "series": {
     "series_id": "018",
     "status": "published",
-    "published_date": "2026-03-25",
+    "published_date": "2026-04-01",
     "title": "body form",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2008",
     "project_folders": [
       "body form"
-    ],
-    "works": [
-      "01633"
-    ],
-    "primary_work_id": "01633"
+    ]
   }
 }

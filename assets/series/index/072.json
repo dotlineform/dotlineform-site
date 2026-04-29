@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-3bf43901577cbb0449a4b87d3d39a9ab",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-17bc25d7b702e818bf679d0f9f94eb4f",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "072",
     "count": 2
   },
   "series": {
     "series_id": "072",
     "status": "published",
-    "published_date": "2026-03-23",
+    "published_date": "2026-04-01",
     "title": "grid cells",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,11 +17,6 @@
     "year_display": "2013",
     "project_folders": [
       "grid cells"
-    ],
-    "works": [
-      "01363",
-      "01364"
-    ],
-    "primary_work_id": "01363"
+    ]
   }
 }

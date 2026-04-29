@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-6cfe2873c64a4d9cf47125df11dd107a",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-ce28d4836d74c28b328ee831bb561c2e",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "076",
     "count": 3
   },
   "series": {
     "series_id": "076",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "heaven and earth",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,12 +17,6 @@
     "year_display": "2011",
     "project_folders": [
       "heaven and earth"
-    ],
-    "works": [
-      "00469",
-      "01365",
-      "01366"
-    ],
-    "primary_work_id": "00469"
+    ]
   }
 }

@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-2ed59fdd7bf3467beee4038b0dd7c700",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-a9a9f74f7dd5ac6111a3fcf38bde2006",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "051",
     "count": 3
   },
   "series": {
     "series_id": "051",
     "status": "published",
-    "published_date": "2026-03-19",
+    "published_date": "2026-04-01",
     "title": "fireworks form",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,12 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "fireworks form"
-    ],
-    "works": [
-      "01049",
-      "01050",
-      "01051"
-    ],
-    "primary_work_id": "01050"
+    ]
   }
 }

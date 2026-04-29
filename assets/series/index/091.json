@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-29075931df99f48bd96d6173b579897c",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-f8d930cb1a215f3e362d1396720c8707",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "091",
     "count": 1
   },
   "series": {
     "series_id": "091",
     "status": "published",
-    "published_date": "2026-03-13",
+    "published_date": "2026-04-01",
     "title": "lipseyes",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2003",
     "project_folders": [
       "lipseyes"
-    ],
-    "works": [
-      "00388"
-    ],
-    "primary_work_id": "00388"
+    ]
   }
 }

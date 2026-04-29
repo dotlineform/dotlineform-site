@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-0d4e6ff38a7263c94629c0dd3393d452",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-1c39a4d058950a5eea907223882249b0",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "086",
     "count": 1
   },
   "series": {
     "series_id": "086",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "landscape for symbols",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2021",
     "project_folders": [
       "landscape for symbols"
-    ],
-    "works": [
-      "01400"
-    ],
-    "primary_work_id": "01400"
+    ]
   }
 }

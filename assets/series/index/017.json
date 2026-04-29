@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-f75d39f98b870d1b2f6ebb37ddf47fee",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-8aad5170de03a568b598e4e70ed85893",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "017",
     "count": 1
   },
   "series": {
     "series_id": "017",
     "status": "published",
-    "published_date": "2026-03-15",
+    "published_date": "2026-04-01",
     "title": "birth of healing forms",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "birth of healing forms"
-    ],
-    "works": [
-      "00782"
-    ],
-    "primary_work_id": "00782"
+    ]
   }
 }

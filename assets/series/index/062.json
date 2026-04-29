@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-9883ab057e97da035477513b13dbdaa7",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-4444925a3e21fe0a2a4960f0d3ad2e57",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "062",
     "count": 4
   },
   "series": {
     "series_id": "062",
     "status": "published",
-    "published_date": "2026-03-19",
+    "published_date": "2026-04-01",
     "title": "forests (2023)",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,13 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "forests (2023)"
-    ],
-    "works": [
-      "00465",
-      "00466",
-      "00467",
-      "00468"
-    ],
-    "primary_work_id": "00468"
+    ]
   }
 }

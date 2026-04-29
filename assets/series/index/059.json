@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-fee6cc594fc5b44ea51aa9a58b59489f",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-6b05bf2d7018c5513a444ae7adb52558",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "059",
     "count": 5
   },
   "series": {
     "series_id": "059",
     "status": "published",
-    "published_date": "2026-03-13",
+    "published_date": "2026-04-01",
     "title": "forest",
     "sort_fields": "title,work_id",
     "series_type": "primary",
@@ -17,14 +17,6 @@
     "year_display": "2003",
     "project_folders": [
       "forest"
-    ],
-    "works": [
-      "00390",
-      "00392",
-      "00393",
-      "00618",
-      "00619"
-    ],
-    "primary_work_id": "00392"
+    ]
   }
 }

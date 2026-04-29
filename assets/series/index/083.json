@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-7ac00af5d99882d0c59247c626deb53d",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-1d0ed654a9a213d054504be00506c3ed",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "083",
     "count": 3
   },
   "series": {
     "series_id": "083",
     "status": "published",
-    "published_date": "2026-03-25",
+    "published_date": "2026-04-01",
     "title": "k particles",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,12 +17,6 @@
     "year_display": "2008",
     "project_folders": [
       "k particles"
-    ],
-    "works": [
-      "01498",
-      "01499",
-      "01500"
-    ],
-    "primary_work_id": "01498"
+    ]
   }
 }

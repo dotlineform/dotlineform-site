@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-5d0ead47addad34ce055d680420e6a43",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-195a65cfb16dcd04d2dd0b663add39e6",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "041",
     "count": 12
   },
   "series": {
     "series_id": "041",
     "status": "published",
-    "published_date": "2026-03-17",
+    "published_date": "2026-04-01",
     "title": "dot theory",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,21 +17,6 @@
     "year_display": "2009",
     "project_folders": [
       "dot theory"
-    ],
-    "works": [
-      "00937",
-      "00938",
-      "00939",
-      "00940",
-      "00941",
-      "00942",
-      "00943",
-      "00944",
-      "00945",
-      "00946",
-      "00947",
-      "00948"
-    ],
-    "primary_work_id": "00937"
+    ]
   }
 }

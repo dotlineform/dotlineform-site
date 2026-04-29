@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-8390756cda3485efd291d3809e5899fd",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-25ce22eae9e358eb04899cb95ef4840f",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "133",
     "count": 18
   },
   "series": {
     "series_id": "133",
     "status": "published",
-    "published_date": "2026-03-26",
+    "published_date": "2026-04-01",
     "title": "thorns",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,27 +17,6 @@
     "year_display": "2006",
     "project_folders": [
       "thorns"
-    ],
-    "works": [
-      "01745",
-      "01746",
-      "01747",
-      "01748",
-      "01749",
-      "01750",
-      "01751",
-      "01752",
-      "01753",
-      "01754",
-      "01755",
-      "01756",
-      "01757",
-      "01758",
-      "01759",
-      "01760",
-      "01761",
-      "01762"
-    ],
-    "primary_work_id": "01762"
+    ]
   }
 }

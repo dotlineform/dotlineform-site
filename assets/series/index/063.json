@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-03c9c1b92ada318752b20a8924d4780b",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-b3aae9238ec92b0b421d3ca6f6a7edfb",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "063",
     "count": 19
   },
   "series": {
     "series_id": "063",
     "status": "published",
-    "published_date": "2026-03-13",
+    "published_date": "2026-04-01",
     "title": "form mobile",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,28 +17,6 @@
     "year_display": "2021",
     "project_folders": [
       "form mobile"
-    ],
-    "works": [
-      "00535",
-      "00582",
-      "00583",
-      "00584",
-      "00585",
-      "00586",
-      "00587",
-      "00588",
-      "00589",
-      "00590",
-      "00591",
-      "00592",
-      "00593",
-      "00594",
-      "00595",
-      "00596",
-      "00597",
-      "00598",
-      "00599"
-    ],
-    "primary_work_id": "00535"
+    ]
   }
 }

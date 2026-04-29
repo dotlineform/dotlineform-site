@@ -1,10 +1,10 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-0c6a9ad9ac86dbbe51010003f74e718b",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-3bcc89fbbdfc3a6618e2500268da1fd8",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "143",
-    "count": 1
+    "count": 2
   },
   "series": {
     "series_id": "143",
@@ -17,10 +17,6 @@
     "year_display": "2026",
     "project_folders": [
       "simultaneous equations"
-    ],
-    "works": [
-      "01941"
-    ],
-    "primary_work_id": "01941"
+    ]
   }
 }

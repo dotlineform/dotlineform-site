@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-55c8d85f280be00c8570d49cb189010a",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-4a95926ec383644db813822d3530188e",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "097",
     "count": 4
   },
   "series": {
     "series_id": "097",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "memory loss vessels",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,13 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "memory loss vessels"
-    ],
-    "works": [
-      "01443",
-      "01444",
-      "01445",
-      "01446"
-    ],
-    "primary_work_id": "01443"
+    ]
   }
 }

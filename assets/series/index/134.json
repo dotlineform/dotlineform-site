@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-ec1de83a5f31b5b1e27749619520f5c5",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-b1cdcd6fb6224ee65fcfaba218b0fc25",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "134",
     "count": 7
   },
   "series": {
     "series_id": "134",
     "status": "published",
-    "published_date": "2026-03-26",
+    "published_date": "2026-04-01",
     "title": "through a glass clearly",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,16 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "through a glass clearly"
-    ],
-    "works": [
-      "01763",
-      "01764",
-      "01765",
-      "01766",
-      "01767",
-      "01768",
-      "01769"
-    ],
-    "primary_work_id": "01768"
+    ]
   }
 }

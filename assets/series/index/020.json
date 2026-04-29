@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-aff9bf5dc7c652818b7072ab7ddc8c13",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-0bdb3d80fbfc81b1731aa1d3cafcb1b1",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "020",
     "count": 9
   },
   "series": {
     "series_id": "020",
     "status": "published",
-    "published_date": "2026-03-15",
+    "published_date": "2026-04-01",
     "title": "body space (reclining state)",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,18 +17,6 @@
     "year_display": "2019",
     "project_folders": [
       "body space (reclining state)"
-    ],
-    "works": [
-      "00792",
-      "00793",
-      "00794",
-      "00795",
-      "00796",
-      "00797",
-      "00798",
-      "00799",
-      "00800"
-    ],
-    "primary_work_id": "00792"
+    ]
   }
 }

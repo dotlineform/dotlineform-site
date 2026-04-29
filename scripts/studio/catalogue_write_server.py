@@ -2238,18 +2238,23 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
     series_record = payload.get("series")
     if not isinstance(series_record, dict):
         raise ValueError("series record payload must include a series object")
+    header = payload.get("header") if isinstance(payload.get("header"), dict) else {}
     works = series_record.get("works")
+    count = len(works) if isinstance(works, list) else header.get("count")
+    if not isinstance(count, int):
+        count = 0
     payload["header"] = {
-        "schema": str((payload.get("header") or {}).get("schema") or "series_record_v1"),
+        "schema": str(header.get("schema") or "series_record_v1"),
         "version": compute_payload_version(
             {
                 "series": series_record,
                 "content_html": payload.get("content_html"),
+                "work_count": count,
             }
         ),
         "generated_at_utc": utc_now(),
         "series_id": series_id,
-        "count": len(works) if isinstance(works, list) else 0,
+        "count": count,
     }
     return payload
 
@@ -2578,14 +2583,18 @@ def remove_work_from_series_record_payload(payload: Dict[str, Any], series_id: s
     series_record = payload.get("series")
     if not isinstance(series_record, dict):
         return False
+    changed = False
     works = series_record.get("works")
-    if not isinstance(works, list):
-        return False
-    next_works = [str(value) for value in works if str(value) != work_id]
-    if next_works == works:
-        return False
-    series_record["works"] = next_works
-    return True
+    if isinstance(works, list):
+        next_works = [str(value) for value in works if str(value) != work_id]
+        if isinstance(payload.get("header"), dict):
+            payload["header"]["count"] = len(next_works)
+        series_record.pop("works", None)
+        changed = True
+    if "primary_work_id" in series_record:
+        series_record.pop("primary_work_id", None)
+        changed = True
+    return changed
 
 
 def remove_series_from_work_record_payload(payload: Dict[str, Any], work_id: str, series_id: str) -> bool:

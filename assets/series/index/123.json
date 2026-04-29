@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-968b9320ddc0e1f0eade6dcb143cbbcd",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-6f4346dffa370a2fedad14b7158792a3",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "123",
     "count": 20
   },
   "series": {
     "series_id": "123",
     "status": "published",
-    "published_date": "2026-03-26",
+    "published_date": "2026-04-01",
     "title": "snow",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,29 +17,6 @@
     "year_display": "2018",
     "project_folders": [
       "snow"
-    ],
-    "works": [
-      "01655",
-      "01656",
-      "01657",
-      "01658",
-      "01659",
-      "01660",
-      "01661",
-      "01662",
-      "01663",
-      "01664",
-      "01665",
-      "01666",
-      "01667",
-      "01668",
-      "01669",
-      "01670",
-      "01671",
-      "01672",
-      "01673",
-      "01674"
-    ],
-    "primary_work_id": "01655"
+    ]
   }
 }

@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-159238aac89fe25229eee8a9e7a92213",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-e2d296b646ebb92b7af60a2abb64b899",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "126",
     "count": 1
   },
   "series": {
     "series_id": "126",
     "status": "published",
-    "published_date": "2026-03-26",
+    "published_date": "2026-04-01",
     "title": "spine symbols",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2008",
     "project_folders": [
       "spine symbols"
-    ],
-    "works": [
-      "01720"
-    ],
-    "primary_work_id": "01720"
+    ]
   }
 }

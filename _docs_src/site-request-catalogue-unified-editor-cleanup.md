@@ -83,14 +83,13 @@ Current facts:
 - the public series page needs this file for page-local series metadata and `content_html`
 - the visible series work grid currently uses `assets/data/series_index.json` and `assets/data/works_index.json`
 - the `series.works` array inside the per-series payload is not currently consumed by the public frontend
-- the generator currently still treats published member works as part of the per-series record contract
+- the per-series `primary_work_id` value is also redundant there because public thumbnail and membership context come from the aggregate index
 
-Cleanup options:
+Cleanup decision:
 
-- keep `series.works` and make the generator continue emitting correct published membership
-- formally deprecate and remove `series.works` from per-series JSON, leaving membership canonical in `assets/data/series_index.json`
+- formally deprecate and remove `series.works` and `series.primary_work_id` from per-series JSON, leaving membership canonical in `assets/data/series_index.json`
 
-If removal is chosen, update the full contract:
+Update the full contract:
 
 - `scripts/generate_work_pages.py`
 - `scripts/catalogue_json_build.py`
@@ -99,8 +98,6 @@ If removal is chosen, update the full contract:
 - delete/update helpers that touch affected per-series payloads
 - data-model docs for generated catalogue artifacts
 - search/docs references that describe membership ownership
-
-Until that decision is implemented, generated per-series payloads should not emit knowingly wrong membership data.
 
 ### Publication Workflow Boundary
 
@@ -198,28 +195,26 @@ Implementation:
 
 Status:
 
-- in progress
+- implemented
 
-Decide whether per-series JSON keeps or drops `series.works`.
+Remove redundant per-series runtime membership fields.
 
-If kept, fix the generator status source so the array contains only published member works.
-
-If dropped, remove the field deliberately from generation, write-server update helpers, audit expectations, and docs. Confirm the public series page still renders grids from `series_index.json` and `works_index.json`.
+Remove `series.works` and `series.primary_work_id` deliberately from generation, write-server update helpers, audit expectations, and docs. Confirm the public series page still renders grids from `series_index.json` and `works_index.json`.
 
 Initial finding:
 
 - the public series page renders its work grid from `assets/data/series_index.json` and `assets/data/works_index.json`
 - the per-series `assets/series/index/<series_id>.json` payload is still fetched for page-local metadata and `content_html`
-- current generator logic keeps `series.works` in per-series JSON and filters it to published member works
+- previous generator logic kept `series.works` and `primary_work_id` in per-series JSON even though those fields were not consumed there
 - current aggregate `assets/data/series_index.json` generation also filters membership to published works
 - generated data currently has one stale per-series payload: `assets/series/index/002.json` lists draft work `00640`
 - source series `002` is already `draft`, so `scripts/catalogue_json_build.py --series-id 002` correctly refuses to run a public runtime build for it
 
-Working decision:
+Decision:
 
-- keep `series.works` for now as a compatibility/page-local field in per-series JSON
+- remove `series.works` and `series.primary_work_id` from per-series JSON generation
 - treat `assets/data/series_index.json` as the canonical public grid membership source
-- handle stale draft-series public artifacts through the publication/delete cleanup path or an explicit generated-artifact cleanup run, not by keeping a second series contract in active runtime code
+- make write-server delete cleanup strip those obsolete fields from any older per-series payload it touches
 
 ### Task 5. Verify Catalogue Build And Runtime Paths
 

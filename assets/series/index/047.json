@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-88a1aaa423446e2154476bd26fe163fc",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-62c5cea5bdf0dd0b95d22213b41d3a95",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "047",
     "count": 6
   },
   "series": {
     "series_id": "047",
     "status": "published",
-    "published_date": "2026-03-19",
+    "published_date": "2026-04-01",
     "title": "egg prints",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,15 +17,6 @@
     "year_display": "2012",
     "project_folders": [
       "egg prints"
-    ],
-    "works": [
-      "01038",
-      "01039",
-      "01040",
-      "01041",
-      "01042",
-      "01043"
-    ],
-    "primary_work_id": "01038"
+    ]
   }
 }

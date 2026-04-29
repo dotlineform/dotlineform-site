@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-375623e125eedd86b71ba53a64f6ed72",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-6e4af3c2f647a9b309fa741273bbd45a",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "049",
     "count": 1
   },
   "series": {
     "series_id": "049",
     "status": "published",
-    "published_date": "2026-03-19",
+    "published_date": "2026-04-01",
     "title": "espresso",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2012",
     "project_folders": [
       "espresso"
-    ],
-    "works": [
-      "01046"
-    ],
-    "primary_work_id": "01046"
+    ]
   }
 }

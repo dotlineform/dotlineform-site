@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-2a560bc8fce5e0429f5435465ee766a5",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-f23d6036f7aec5bebef1d9ed9dba8da8",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "078",
     "count": 3
   },
   "series": {
     "series_id": "078",
     "status": "published",
-    "published_date": "2026-03-23",
+    "published_date": "2026-04-01",
     "title": "home land loss",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,12 +17,6 @@
     "year_display": "2021",
     "project_folders": [
       "home land loss"
-    ],
-    "works": [
-      "01372",
-      "01373",
-      "01374"
-    ],
-    "primary_work_id": "01372"
+    ]
   }
 }

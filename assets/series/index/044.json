@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-ee5adda6f4b1c729dd964785bb701dc7",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-7342f6f8d9b10d225c05de5665b7a9bd",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "044",
     "count": 7
   },
   "series": {
     "series_id": "044",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "dots",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,16 +17,6 @@
     "year_display": "2010",
     "project_folders": [
       "dots"
-    ],
-    "works": [
-      "00456",
-      "01001",
-      "01002",
-      "01003",
-      "01004",
-      "01005",
-      "01006"
-    ],
-    "primary_work_id": "00456"
+    ]
   }
 }

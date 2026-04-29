@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-e01aaffab084979a0303cc4e32c7254d",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-32e2f76b03106a504d14e0e601a48b93",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "023",
     "count": 1
   },
   "series": {
     "series_id": "023",
     "status": "published",
-    "published_date": "2026-03-13",
+    "published_date": "2026-04-01",
     "title": "certainty",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2001-26",
     "project_folders": [
       "certainty"
-    ],
-    "works": [
-      "00389"
-    ],
-    "primary_work_id": "00389"
+    ]
   }
 }

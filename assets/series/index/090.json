@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-912f5d7ecc4fd44865604776f9752c4c",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-adbaba3af4b176704597db31e01ea99b",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "090",
     "count": 16
   },
   "series": {
     "series_id": "090",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "lights",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,25 +17,6 @@
     "year_display": "2012-13",
     "project_folders": [
       "lights"
-    ],
-    "works": [
-      "01401",
-      "01402",
-      "01403",
-      "01404",
-      "01405",
-      "01406",
-      "01407",
-      "01408",
-      "01409",
-      "01410",
-      "01411",
-      "01412",
-      "01413",
-      "01414",
-      "01415",
-      "01416"
-    ],
-    "primary_work_id": "01401"
+    ]
   }
 }

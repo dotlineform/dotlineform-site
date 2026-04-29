@@ -275,8 +275,11 @@ Purpose:
 
 Current content families:
 
-- canonical series metadata
+- page-local series metadata
 - rendered prose as `content_html`
+
+Membership and thumbnail selection do not live in this payload. Public list and
+grid contexts should read `assets/data/series_index.json` instead.
 
 Current site mapping:
 
@@ -284,7 +287,8 @@ Current site mapping:
 
 Why it exists:
 
-- the page needs prose and a second copy of the series record, but the shared index should stay lightweight
+- the page needs prose and enough series metadata to update the local header
+- shared membership and card context belong in the aggregate index so consumers do not fetch every per-series record
 
 ### `assets/works/index/<work_id>.json`
 

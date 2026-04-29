@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-e3ee3e7d3eff871589fca3ee62951b01",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-237f935685b8af5d5cc4aecc39403c8b",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "128",
     "count": 13
   },
   "series": {
     "series_id": "128",
     "status": "published",
-    "published_date": "2026-03-26",
+    "published_date": "2026-04-01",
     "title": "still life",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,22 +17,6 @@
     "year_display": "2014",
     "project_folders": [
       "still life"
-    ],
-    "works": [
-      "01722",
-      "01723",
-      "01724",
-      "01725",
-      "01726",
-      "01727",
-      "01728",
-      "01729",
-      "01730",
-      "01731",
-      "01732",
-      "01733",
-      "01734"
-    ],
-    "primary_work_id": "01732"
+    ]
   }
 }

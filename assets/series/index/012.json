@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-071f5ed30e4d6681bff245053ac9a424",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-5b92cda42bb9795902478d0e1e481394",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "012",
     "count": 2
   },
   "series": {
     "series_id": "012",
     "status": "published",
-    "published_date": "2026-03-15",
+    "published_date": "2026-04-01",
     "title": "all the little cracks",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,11 +17,6 @@
     "year_display": "2010, 2016",
     "project_folders": [
       "all the little cracks"
-    ],
-    "works": [
-      "00751",
-      "00752"
-    ],
-    "primary_work_id": "00751"
+    ]
   }
 }

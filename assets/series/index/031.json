@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-bd6cf44168dad93f09a2941a1e1e77bf",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-4730b3357439b4204009148cb159ba68",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "031",
     "count": 14
   },
   "series": {
     "series_id": "031",
     "status": "published",
-    "published_date": "2026-03-15",
+    "published_date": "2026-04-01",
     "title": "concrete",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,23 +17,6 @@
     "year_display": "2012",
     "project_folders": [
       "concrete"
-    ],
-    "works": [
-      "00818",
-      "00819",
-      "00820",
-      "00821",
-      "00822",
-      "00823",
-      "00824",
-      "00825",
-      "00826",
-      "00827",
-      "00828",
-      "00829",
-      "00830",
-      "00831"
-    ],
-    "primary_work_id": "00830"
+    ]
   }
 }

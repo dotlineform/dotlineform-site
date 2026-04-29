@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-8189fffd14ec92c9f0c4d4b4aded91d7",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-a9580d47bbccaed045d24d64aea45163",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "008",
     "count": 12
   },
   "series": {
     "series_id": "008",
     "status": "published",
-    "published_date": "2026-03-15",
+    "published_date": "2026-04-01",
     "title": "a humid home full of light",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,21 +17,6 @@
     "year_display": "2013",
     "project_folders": [
       "a humid home full of light"
-    ],
-    "works": [
-      "00722",
-      "00723",
-      "00724",
-      "00725",
-      "00726",
-      "00727",
-      "00728",
-      "00729",
-      "00730",
-      "00731",
-      "00732",
-      "00733"
-    ],
-    "primary_work_id": "00729"
+    ]
   }
 }

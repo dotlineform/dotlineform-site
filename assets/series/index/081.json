@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-fa1dd5a8e664fd014628a2da48def041",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-9078129d8bf4367e01e3ad26516df391",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "081",
     "count": 1
   },
   "series": {
     "series_id": "081",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "intuition (2020)",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -18,10 +18,6 @@
     "notes": "put track listing in work_prose",
     "project_folders": [
       "intuition (2020)"
-    ],
-    "works": [
-      "00457"
-    ],
-    "primary_work_id": "00457"
+    ]
   }
 }

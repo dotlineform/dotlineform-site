@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-770fe352e15fd10bd043a981933b6ac9",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-637f8bc7ddaa75d63c9f0c359d1ad6fe",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "058",
     "count": 1
   },
   "series": {
     "series_id": "058",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "for David Lynch (2025)",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "2025",
     "project_folders": [
       "for David Lynch"
-    ],
-    "works": [
-      "00346"
-    ],
-    "primary_work_id": "00346"
+    ]
   }
 }

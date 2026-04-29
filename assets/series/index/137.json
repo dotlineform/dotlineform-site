@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-e5fd695955f37302e66f36ab44bd3bcb",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-46c786b9f227e66eae76f2e6c6554532",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "137",
     "count": 5
   },
   "series": {
     "series_id": "137",
     "status": "published",
-    "published_date": "2026-03-27",
+    "published_date": "2026-04-01",
     "title": "tulips",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,14 +17,6 @@
     "year_display": "2023",
     "project_folders": [
       "tulips"
-    ],
-    "works": [
-      "01869",
-      "01870",
-      "01871",
-      "01872",
-      "01873"
-    ],
-    "primary_work_id": "01869"
+    ]
   }
 }

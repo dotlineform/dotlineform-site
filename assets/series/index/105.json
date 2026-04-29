@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-c780123fb78b5db7ecc41fb2b852dcd2",
-    "generated_at_utc": "2026-04-26T21:17:43Z",
+    "version": "blake2b-8fea4b50fc7ab5d29860188807172d04",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "105",
     "count": 3
   },
   "series": {
     "series_id": "105",
     "status": "published",
-    "published_date": "2026-04-01",
+    "published_date": "2026-04-26",
     "title": "nerve",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -20,12 +20,6 @@
       "nerve",
       "nerve (abattoir)",
       "nerve (formaldehyde form)"
-    ],
-    "works": [
-      "00008",
-      "00163",
-      "00166"
-    ],
-    "primary_work_id": "00008"
+    ]
   }
 }

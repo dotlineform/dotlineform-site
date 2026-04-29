@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-3eeaa115d6d1748444dc6c288d2913bc",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-6f8d82bd8cf81dc0a0514da7b88fe931",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "024",
     "count": 21
   },
   "series": {
     "series_id": "024",
     "status": "published",
-    "published_date": "2026-03-26",
+    "published_date": "2026-04-01",
     "title": "changed photos",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,30 +17,6 @@
     "year_display": "2022-23",
     "project_folders": [
       "changed photos"
-    ],
-    "works": [
-      "01634",
-      "01635",
-      "01636",
-      "01637",
-      "01638",
-      "01639",
-      "01640",
-      "01641",
-      "01642",
-      "01643",
-      "01644",
-      "01645",
-      "01646",
-      "01647",
-      "01648",
-      "01649",
-      "01650",
-      "01651",
-      "01652",
-      "01653",
-      "01654"
-    ],
-    "primary_work_id": "01634"
+    ]
   }
 }

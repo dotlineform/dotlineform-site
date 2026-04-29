@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-201e88458879814aeaa0e611c6bc5269",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-539fe0183f29448aa168623cbadc7840",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "103",
     "count": 2
   },
   "series": {
     "series_id": "103",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "mother and child",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -18,11 +18,6 @@
     "project_folders": [
       "collected 1989-1998",
       "mother and child"
-    ],
-    "works": [
-      "00214",
-      "01447"
-    ],
-    "primary_work_id": "01447"
+    ]
   }
 }

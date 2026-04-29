@@ -131,7 +131,7 @@ Artifact behavior:
 - `work-pages`
   writes `_works/<work_id>.md` as lightweight stubs with `work_id`, `title`, `layout`, and `checksum`
 - `series-pages`
-  writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json` for published series only, and only includes published member works in the series payload
+  writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json` for published series only; per-series JSON carries page-local metadata and prose, while membership stays canonical in `assets/data/series_index.json`
 - `work-details-pages`
   writes `_work_details/<detail_uid>.md` lightweight stubs
 - `moments`

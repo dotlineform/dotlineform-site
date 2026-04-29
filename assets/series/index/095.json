@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-039137f3ed6a2313fbb0c6626d9541a0",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-81f31469956268e0e609a18190be33b2",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "095",
     "count": 18
   },
   "series": {
     "series_id": "095",
     "status": "published",
-    "published_date": "2026-03-24",
+    "published_date": "2026-04-01",
     "title": "melancholy hope cell",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,27 +17,6 @@
     "year_display": "2016-17",
     "project_folders": [
       "melancholy hope cell"
-    ],
-    "works": [
-      "01423",
-      "01424",
-      "01425",
-      "01426",
-      "01427",
-      "01428",
-      "01429",
-      "01430",
-      "01431",
-      "01432",
-      "01433",
-      "01434",
-      "01435",
-      "01436",
-      "01437",
-      "01438",
-      "01439",
-      "01440"
-    ],
-    "primary_work_id": "01423"
+    ]
   }
 }

@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-9b340974e7cfd3954bc7caaac7c47bcc",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-ac64658713ec23248ebc401f1df03a83",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "085",
     "count": 6
   },
   "series": {
     "series_id": "085",
     "status": "published",
-    "published_date": "2026-03-23",
+    "published_date": "2026-04-01",
     "title": "kylie wax model",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,15 +17,6 @@
     "year_display": "2024",
     "project_folders": [
       "kylie wax model"
-    ],
-    "works": [
-      "01394",
-      "01395",
-      "01396",
-      "01397",
-      "01398",
-      "01399"
-    ],
-    "primary_work_id": "01394"
+    ]
   }
 }

@@ -1573,6 +1573,8 @@ def main() -> None:
         public_record = dict(series_record)
         public_record.pop("layout", None)
         public_record.pop("checksum", None)
+        public_record.pop("works", None)
+        public_record.pop("primary_work_id", None)
         return compact_json_object(public_record)
 
     def build_moment_json_record(moment_record: Dict[str, Any]) -> Dict[str, Any]:
@@ -2030,8 +2032,6 @@ def main() -> None:
                     "year_display": year_display,
                     "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                     "project_folders": series_project_folders_by_id.get(series_id, []),
-                    "works": series_work_ids_sorted,
-                    "primary_work_id": primary_work_id,
                 })
 
                 public_series_record = build_series_json_record(series_record)
@@ -2041,7 +2041,11 @@ def main() -> None:
                     content_html = render_markdown_with_jekyll(source_prose_path)
 
                 payload_version = compute_payload_version(
-                    compact_json_object({"series": public_series_record, "content_html": content_html})
+                    compact_json_object({
+                        "series": public_series_record,
+                        "content_html": content_html,
+                        "work_count": len(series_work_ids_sorted),
+                    })
                 )
                 sfm: Dict[str, Any] = {
                     "series_id": series_id,

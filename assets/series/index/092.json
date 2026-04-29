@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-4b9ee68d8763c8427b255bccc940b28c",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-f80905e92c30815ecca573ba2b3e04c8",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "092",
     "count": 1
   },
   "series": {
     "series_id": "092",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "living surface hand form",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -17,10 +17,6 @@
     "year_display": "1989, 2004",
     "project_folders": [
       "living surface hand form"
-    ],
-    "works": [
-      "00463"
-    ],
-    "primary_work_id": "00463"
+    ]
   }
 }

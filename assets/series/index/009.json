@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-db3a929a518db9c93d940f5279af650d",
-    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "version": "blake2b-29e88003045804deaac79accd18ca75c",
+    "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "009",
     "count": 4
   },
   "series": {
     "series_id": "009",
     "status": "published",
-    "published_date": "2026-03-05",
+    "published_date": "2026-04-01",
     "title": "a poem divided into 4 parts",
     "sort_fields": "work_id",
     "series_type": "primary",
@@ -18,13 +18,6 @@
     "notes": "details attached to 00001",
     "project_folders": [
       "a poem divided into 4 parts"
-    ],
-    "works": [
-      "00001",
-      "00002",
-      "00003",
-      "00004"
-    ],
-    "primary_work_id": "00001"
+    ]
   }
 }
