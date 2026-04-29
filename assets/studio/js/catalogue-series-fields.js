@@ -2,7 +2,7 @@ const SERIES_FIELD_DEFINITIONS = Object.freeze({
   series_id: Object.freeze({ key: "series_id", label: "series id", type: "text" }),
   title: Object.freeze({ key: "title", label: "title", type: "text" }),
   series_type: Object.freeze({ key: "series_type", label: "series type", type: "select", options: ["primary", "holding"] }),
-  status: Object.freeze({ key: "status", label: "status", type: "select", options: ["", "draft", "published"] }),
+  status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
   published_date: Object.freeze({ key: "published_date", label: "published date", type: "date" }),
   year: Object.freeze({ key: "year", label: "year", type: "number", step: "1" }),
   year_display: Object.freeze({ key: "year_display", label: "year display", type: "text" }),

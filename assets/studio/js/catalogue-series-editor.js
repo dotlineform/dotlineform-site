@@ -197,6 +197,10 @@ function renderField(field, fieldsNode, state) {
 
   input.id = `catalogueSeriesField-${field.key}`;
   input.dataset.field = field.key;
+  if (field.readonly) {
+    input.readOnly = true;
+    input.setAttribute("aria-readonly", "true");
+  }
   wrapper.appendChild(input);
 
   const message = document.createElement("span");
@@ -374,13 +378,14 @@ function setModeFieldAvailability(state) {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     let disabled = state.isSaving || state.isBuilding || state.isDeleting;
-    if (field.key === "status") {
-      disabled = true;
-    }
     if (state.mode === "new" && (field.key === "status" || field.key === "published_date" || field.key === "primary_work_id")) {
       disabled = true;
     }
     node.disabled = disabled;
+    if (field.readonly) {
+      node.disabled = false;
+      node.readOnly = true;
+    }
   });
 }
 

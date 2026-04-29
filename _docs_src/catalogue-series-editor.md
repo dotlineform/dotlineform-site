@@ -25,6 +25,7 @@ The first implementation covers:
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - create a draft series from the same route with `New` or `/studio/catalogue-series/?mode=new`
 - edit core scalar metadata fields
+- show `status` as read-only text controlled by `Publish` / `Unpublish`
 - edit `sort_fields`
 - edit `primary_work_id`
 - list current member works

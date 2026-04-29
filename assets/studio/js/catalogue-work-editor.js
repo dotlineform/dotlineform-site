@@ -491,6 +491,10 @@ function renderField(field, fieldsNode, state) {
 
   input.id = `catalogueWorkField-${field.key}`;
   input.dataset.field = field.key;
+  if (field.readonly) {
+    input.readOnly = true;
+    input.setAttribute("aria-readonly", "true");
+  }
   if (field.description) {
     input.setAttribute("aria-describedby", `catalogueWorkFieldHelp-${field.key}`);
   }
@@ -632,7 +636,8 @@ function renderReadonlyField(field, readonlyNode, state) {
 function setModeFieldAvailability(state) {
   const statusNode = state.fieldNodes.get("status");
   if (statusNode) {
-    statusNode.disabled = true;
+    statusNode.disabled = false;
+    statusNode.readOnly = true;
   }
   const publishedDateNode = state.fieldNodes.get("published_date");
   if (publishedDateNode) {

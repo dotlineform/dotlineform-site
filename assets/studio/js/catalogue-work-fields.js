@@ -1,6 +1,6 @@
 const WORK_FIELD_DEFINITIONS = Object.freeze({
   work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
-  status: Object.freeze({ key: "status", label: "status", type: "select", options: ["", "draft", "published"] }),
+  status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
   published_date: Object.freeze({ key: "published_date", label: "published date", type: "date" }),
   series_ids: Object.freeze({ key: "series_ids", label: "series", type: "text", description: "search by series title" }),
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),

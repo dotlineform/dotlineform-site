@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Rendered Work and Series status as read-only text
+
+**Status:** implemented
+
+**Area:** Studio / catalogue publication workflow
+
+**Summary:**
+Changed the Work and Series editor `status` controls from disabled dropdowns to read-only text inputs.
+
+**Reason:**
+Once publication state changes moved to explicit `Publish` / `Unpublish` commands, a disabled dropdown made the status field look like an unavailable edit control rather than current state.
+
+**Effect:**
+Work and Series status now reads as display state while preserving the existing draft/save validation flow. `Publish` and `Unpublish` remain the only visible commands that change publication status.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-fields.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-series-fields.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Converted work editor to explicit Publish and Unpublish commands
 
 **Status:** implemented for works

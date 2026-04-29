@@ -23,6 +23,27 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-061
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-series/`
+- issue: after publication state moved to `Publish` / `Unpublish`, the Work and Series editors still rendered `status` with disabled dropdown controls.
+- triage: field-control semantics / publication workflow
+- reasoning: a disabled dropdown implies a choice exists but is temporarily unavailable. Once status changes are owned by explicit publication commands, the field should read as state display rather than as a dormant editor control.
+- permanent rule: publication `status` fields in catalogue editors that use the explicit publication command model render as read-only text inputs, not disabled selects. Status changes stay owned by `Publish` and `Unpublish`.
+- outcome: changed Work and Series status field definitions from select controls to read-only text controls and taught both route-local renderers to preserve readonly semantics.
+- files changed:
+  - `assets/studio/js/catalogue-work-fields.js`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-series-fields.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/catalogue-series-editor.md`
+- verification:
+  - open `/studio/catalogue-work/?work=<work_id>` and confirm `status` is a read-only text input, not a dropdown
+  - open `/studio/catalogue-series/?series=<series_id>` and confirm `status` is a read-only text input, not a dropdown
+  - confirm `Publish` / `Unpublish` remain the only visible commands that change publication state
+
 ## UI Rule Log 2026-04-29 / UI-060
 
 - status: adopted
