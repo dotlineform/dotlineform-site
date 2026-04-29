@@ -28,6 +28,8 @@ Exposed endpoints:
 - `POST /catalogue/bulk-save`
 - `POST /catalogue/delete-preview`
 - `POST /catalogue/delete-apply`
+- `POST /catalogue/publication-preview`
+- `POST /catalogue/publication-apply`
 - `POST /catalogue/work/create`
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/create`
@@ -151,6 +153,42 @@ Request behavior:
 - records one aggregated Catalogue Activity entry for the delete operation
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
+
+`POST /catalogue/publication-preview` expects:
+
+```json
+{
+  "kind": "series",
+  "action": "unpublish",
+  "series_id": "001",
+  "expected_record_hash": "optional-current-record-sha256"
+}
+```
+
+Supported `kind` values are `work`, `work_detail`, `series`, and `moment`. Supported `action` values are:
+
+- `publish`: change source status from `draft` to `published` and run the scoped public update
+- `unpublish`: change source status from `published` to `draft` and clean generated public artifacts
+- `save_published`: save metadata for a currently published record and then run the scoped public update
+
+Preview behavior:
+
+- returns current and target status, current and target record hashes, changed fields, affected ids, blockers, and validation errors
+- reports source-write impact separately from internal public impact
+- reports scoped public-update impact for `publish` and `save_published`
+- reports generated artifact cleanup and public index/search impact for `unpublish`
+- for `save_published`, the request must include the same partial `record` shape as the matching source save endpoint and must not change publication status
+
+`POST /catalogue/publication-apply` accepts the same request shape and then:
+
+- re-runs publication preview before writing
+- honors `expected_record_hash` for stale-write protection
+- writes the id-scoped source status or metadata update
+- refreshes Studio lookup payloads after non-dry-run source writes
+- runs the scoped public update for `publish` and `save_published`
+- runs deterministic generated-artifact cleanup for `unpublish`
+- returns `status: "public_update_failed"` when a source write succeeds but the internal public update fails
+- records Catalogue Activity with `publication` operation names such as `series.publish`, `series.unpublish`, and `series.save_published`
 
 `POST /catalogue/work/save` expects:
 

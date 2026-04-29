@@ -8,6 +8,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added shared catalogue publication preview/apply server shape
+
+**Status:** implemented
+
+**Area:** Studio / catalogue workflow
+
+**Summary:**
+Added shared `POST /catalogue/publication-preview` and `POST /catalogue/publication-apply` endpoints for catalogue record publication flows.
+
+**Reason:**
+The series editor conversion needs a server contract that separates metadata saves, publish, and unpublish before the UI removes save-time public update controls.
+
+**Effect:**
+The catalogue write server can now preview and apply `publish`, `unpublish`, and `save_published` actions for works, work details, series, and moments. Preview reports blockers, changed source fields, affected ids, and public update or cleanup impact. Apply re-runs preview, honors stale-write hashes, writes id-scoped source changes, records backups for existing generated/public-update files, refreshes Studio lookup data, and can return `public_update_failed` when a source save succeeds but the internal public update fails.
+
+**Affected files/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Refined catalogue publication workflow request
 
 **Status:** specified

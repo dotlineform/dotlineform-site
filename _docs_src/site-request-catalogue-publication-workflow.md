@@ -186,9 +186,16 @@ Acceptance checks:
 
 Status:
 
-- proposed
+- implemented
 
 Add or formalize publication preview/apply behavior that can be used by works, work details, series, and moments.
+
+Implemented server shape:
+
+- `POST /catalogue/publication-preview`
+- `POST /catalogue/publication-apply`
+
+The shared request shape uses `kind`, `action`, the target id, optional stale-write hash, and optional save payload for published-record saves. Supported actions are `publish`, `unpublish`, and `save_published`.
 
 Acceptance checks:
 

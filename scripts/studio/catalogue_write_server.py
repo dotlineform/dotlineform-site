@@ -13,6 +13,8 @@ Endpoints:
   POST /catalogue/bulk-save
   POST /catalogue/delete-preview
   POST /catalogue/delete-apply
+  POST /catalogue/publication-preview
+  POST /catalogue/publication-apply
   POST /catalogue/work/create
   POST /catalogue/work/save
   POST /catalogue/work-detail/create
@@ -170,6 +172,8 @@ MOMENT_SAVE_PATH = "/catalogue/moment/save"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
+PUBLICATION_PREVIEW_PATH = "/catalogue/publication-preview"
+PUBLICATION_APPLY_PATH = "/catalogue/publication-apply"
 PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
 
 BULK_WORK_EDITABLE_FIELDS = {
@@ -961,6 +965,47 @@ def extract_delete_request(body: Mapping[str, Any]) -> Dict[str, str]:
     }
 
 
+def extract_publication_request(body: Mapping[str, Any]) -> Dict[str, Any]:
+    kind = str(body.get("kind") or "").strip().lower()
+    if kind not in {"work", "work_detail", "series", "moment"}:
+        raise ValueError("publication kind must be work, work_detail, series, or moment")
+
+    action = str(body.get("action") or "").strip().lower().replace("-", "_")
+    if action not in {"publish", "unpublish", "save_published"}:
+        raise ValueError("publication action must be publish, unpublish, or save_published")
+
+    if kind == "work":
+        record_id = slug_id(body.get("work_id") or body.get("id"))
+    elif kind == "work_detail":
+        record_id = normalize_detail_uid_value(body.get("detail_uid") or body.get("id"))
+    elif kind == "series":
+        record_id = normalize_series_id(body.get("series_id") or body.get("id"))
+    else:
+        record_id = normalize_moment_id_value(body.get("moment_id") or body.get("id"))
+
+    record_update: Dict[str, Any] = {}
+    if action == "save_published":
+        if kind == "work":
+            record_update = extract_work_update(body)
+        elif kind == "work_detail":
+            record_update = extract_work_detail_update(body)
+        elif kind == "series":
+            record_update = extract_series_update(body)
+        else:
+            record_update = extract_moment_update(body)
+
+    return {
+        "kind": kind,
+        "action": action,
+        "id": record_id,
+        "record_update": record_update,
+        "expected_record_hash": str(body.get("expected_record_hash") or "").strip(),
+        "extra_series_ids": normalize_series_ids_value(body.get("extra_series_ids")),
+        "extra_work_ids": [slug_id(raw) for raw in body.get("extra_work_ids") or []],
+        "force": bool(body.get("force")),
+    }
+
+
 def extract_work_update(body: Mapping[str, Any]) -> Dict[str, Any]:
     raw_record = body.get("record", body.get("work"))
     if raw_record is None:
@@ -1481,6 +1526,313 @@ def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_ro
     preview["blockers"] = blockers
     preview["blocked"] = bool(blockers or validation_errors)
     return preview
+
+
+def publication_source_path_key(kind: str) -> str:
+    if kind == "work":
+        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["works"])
+    if kind == "work_detail":
+        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["work_details"])
+    if kind == "series":
+        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["series"])
+    return str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME)
+
+
+def publication_affected_for_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, list[str]]:
+    source_records = records_from_json_source(source_dir)
+    affected: Dict[str, list[str]] = {
+        "works": [],
+        "series": [],
+        "work_details": [],
+        "work_files": [],
+        "work_links": [],
+        "moments": [],
+    }
+    if kind == "work":
+        work_record = source_records.works.get(record_id)
+        if not isinstance(work_record, dict):
+            raise ValueError(f"work_id not found: {record_id}")
+        affected["works"] = [record_id]
+        affected["series"] = normalize_series_ids_value(work_record.get("series_ids"))
+        affected["work_details"] = sorted(
+            detail_uid
+            for detail_uid, detail_record in source_records.work_details.items()
+            if str(detail_record.get("work_id") or "") == record_id
+        )
+    elif kind == "work_detail":
+        detail_record = source_records.work_details.get(record_id)
+        if not isinstance(detail_record, dict):
+            raise ValueError(f"detail_uid not found: {record_id}")
+        work_id = str(detail_record.get("work_id") or "")
+        affected["works"] = [work_id] if work_id else []
+        affected["work_details"] = [record_id]
+    elif kind == "series":
+        series_record = source_records.series.get(record_id)
+        if not isinstance(series_record, dict):
+            raise ValueError(f"series_id not found: {record_id}")
+        affected["series"] = [record_id]
+        affected["works"] = sorted(
+            work_id
+            for work_id, work_record in source_records.works.items()
+            if record_id in normalize_series_ids_value(work_record.get("series_ids"))
+        )
+    else:
+        moment_records = load_moment_metadata_records(source_dir)
+        if record_id not in moment_records:
+            raise ValueError(f"moment_id not found: {record_id}")
+        affected["moments"] = [record_id]
+    return affected
+
+
+def current_publication_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
+    if kind == "work":
+        record = records_from_json_source(source_dir).works.get(record_id)
+        if not isinstance(record, dict):
+            raise ValueError(f"work_id not found: {record_id}")
+        return dict(record)
+    if kind == "work_detail":
+        record = records_from_json_source(source_dir).work_details.get(record_id)
+        if not isinstance(record, dict):
+            raise ValueError(f"detail_uid not found: {record_id}")
+        return dict(record)
+    if kind == "series":
+        record = records_from_json_source(source_dir).series.get(record_id)
+        if not isinstance(record, dict):
+            raise ValueError(f"series_id not found: {record_id}")
+        return dict(record)
+    record = load_moment_metadata_records(source_dir).get(record_id)
+    if not isinstance(record, dict):
+        raise ValueError(f"moment_id not found: {record_id}")
+    return normalize_moment_metadata_record(record_id, record)
+
+
+def normalize_publication_record(
+    source_dir: Path,
+    kind: str,
+    record_id: str,
+    current_record: Mapping[str, Any],
+    action: str,
+    record_update: Mapping[str, Any],
+) -> Dict[str, Any]:
+    if action == "publish":
+        update = {"status": "published"}
+    elif action == "unpublish":
+        update = {"status": "draft"}
+    else:
+        update = dict(record_update)
+        requested_status = normalize_status(update.get("status")) if "status" in update else normalize_status(current_record.get("status"))
+        current_status = normalize_status(current_record.get("status"))
+        if requested_status != current_status:
+            raise ValueError("save_published must not change publication status")
+
+    if kind == "work":
+        return normalize_work_update(record_id, current_record, update)
+    if kind == "work_detail":
+        return normalize_work_detail_update(record_id, current_record, update)
+    if kind == "series":
+        return normalize_series_update(record_id, current_record, update)
+    return normalize_moment_update(record_id, current_record, update)
+
+
+def validate_publication_target(
+    source_dir: Path,
+    kind: str,
+    record_id: str,
+    target_record: Dict[str, Any],
+) -> list[str]:
+    if kind == "work":
+        return validate_updated_records(source_dir, record_id, target_record)
+    if kind == "work_detail":
+        return validate_updated_detail_records(source_dir, record_id, target_record)
+    if kind == "series":
+        errors = validate_series_save_record(target_record)
+        errors.extend(validate_updated_series_records(source_dir, record_id, target_record, {}))
+        return errors
+    return validate_updated_moment_record(record_id, target_record)
+
+
+def publication_specific_blockers(
+    source_dir: Path,
+    repo_root: Path,
+    kind: str,
+    record_id: str,
+    target_record: Mapping[str, Any],
+) -> list[str]:
+    if normalize_status(target_record.get("status")) != "published":
+        return []
+
+    records = records_from_json_source(source_dir)
+    if kind == "work_detail":
+        work_id = slug_id(target_record.get("work_id"))
+        parent = records.works.get(work_id)
+        if not isinstance(parent, dict):
+            return [f"parent work_id not found: {work_id}"]
+        if normalize_status(parent.get("status")) != "published":
+            return [f"parent work {work_id} must be published before publishing detail {record_id}"]
+        return []
+
+    if kind == "series":
+        primary_work_id = str(target_record.get("primary_work_id") or "").strip()
+        blockers: list[str] = []
+        if not primary_work_id:
+            blockers.append("series primary_work_id is required before publishing")
+        primary = records.works.get(primary_work_id)
+        if primary_work_id and not isinstance(primary, dict):
+            blockers.append(f"primary work_id not found: {primary_work_id}")
+        elif isinstance(primary, dict):
+            if normalize_status(primary.get("status")) != "published":
+                blockers.append(f"primary work {primary_work_id} must be published before publishing series {record_id}")
+            if record_id not in normalize_series_ids_value(primary.get("series_ids")):
+                blockers.append(f"primary work {primary_work_id} must belong to series {record_id}")
+        member_work_ids = [
+            work_id
+            for work_id, work_record in records.works.items()
+            if record_id in normalize_series_ids_value(work_record.get("series_ids"))
+            and normalize_status(work_record.get("status")) == "published"
+        ]
+        if not member_work_ids:
+            blockers.append("series must have at least one published member work before publishing")
+        return blockers
+
+    if kind == "moment":
+        preview = preview_moment_source(repo_root, f"{record_id}.md", metadata=dict(target_record))
+        if not preview.get("valid"):
+            return [str(error) for error in preview.get("errors") or []] or ["moment source preview failed"]
+    return []
+
+
+def build_publication_build_impact(
+    source_dir: Path,
+    repo_root: Path,
+    kind: str,
+    record_id: str,
+    target_record: Mapping[str, Any],
+    *,
+    action: str,
+    extra_series_ids: list[str],
+    extra_work_ids: list[str],
+    force: bool,
+) -> Dict[str, Any]:
+    try:
+        if kind == "work":
+            build = build_scope_for_work(source_dir, record_id, extra_series_ids=extra_series_ids)
+            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
+        elif kind == "work_detail":
+            work_id = slug_id(target_record.get("work_id"))
+            build = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids, detail_uid=record_id)
+            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
+        elif kind == "series":
+            build = build_scope_for_series(source_dir, record_id, extra_work_ids=extra_work_ids)
+            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
+        else:
+            build = build_scope_for_moment(repo_root, f"{record_id}.md", metadata=dict(target_record), force=force)
+            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
+        return {
+            "type": "scoped_public_update",
+            "available": True,
+            "build": build,
+        }
+    except Exception as exc:  # noqa: BLE001
+        payload = {
+            "type": "scoped_public_update",
+            "available": action == "publish",
+            "build": {
+                "work_ids": [record_id] if kind == "work" else [slug_id(target_record.get("work_id"))] if kind == "work_detail" else [],
+                "series_ids": [record_id] if kind == "series" else [],
+                "moment_ids": [record_id] if kind == "moment" else [],
+                "rebuild_search": True,
+                "search_scope": "catalogue",
+                "refresh_published": True,
+            },
+        }
+        if action == "publish":
+            payload["pending_source_write"] = True
+            payload["summary"] = "Scoped public update will be resolved after the source status is written."
+        else:
+            payload["error"] = str(exc)
+        return payload
+
+
+def build_publication_preview(source_dir: Path, repo_root: Path, request: Mapping[str, Any]) -> Dict[str, Any]:
+    kind = str(request.get("kind") or "")
+    action = str(request.get("action") or "")
+    record_id = str(request.get("id") or "")
+    current_record = current_publication_record(source_dir, kind, record_id)
+    current_status = normalize_status(current_record.get("status")) or "draft"
+    record_update = request.get("record_update") if isinstance(request.get("record_update"), Mapping) else {}
+    blockers: list[str] = []
+
+    if action == "publish" and current_status == "published":
+        blockers.append("record is already published")
+    elif action == "unpublish" and current_status != "published":
+        blockers.append("record is not published")
+    elif action == "save_published" and current_status != "published":
+        blockers.append("save_published requires a published record")
+
+    target_record = normalize_publication_record(source_dir, kind, record_id, current_record, action, record_update)
+    target_status = normalize_status(target_record.get("status")) or "draft"
+    changed = current_record != target_record
+    changed_field_names = changed_fields(current_record, target_record)
+    validation_errors = validate_publication_target(source_dir, kind, record_id, target_record)
+    blockers.extend(validation_errors)
+    blockers.extend(publication_specific_blockers(source_dir, repo_root, kind, record_id, target_record))
+    affected = publication_affected_for_record(source_dir, kind, record_id)
+    impact: Dict[str, Any] = {
+        "source": {
+            "path": publication_source_path_key(kind),
+            "will_write": changed,
+            "changed_fields": changed_field_names,
+        },
+        "public": {},
+    }
+
+    if action == "unpublish":
+        if kind == "moment":
+            cleanup = moment_delete_preview_cleanup(repo_root, record_id)
+        else:
+            cleanup = catalogue_delete_preview_cleanup(repo_root, kind, record_id, affected)
+        impact["public"] = {
+            "type": "public_cleanup",
+            "cleanup": cleanup,
+        }
+    else:
+        impact["public"] = build_publication_build_impact(
+            source_dir,
+            repo_root,
+            kind,
+            record_id,
+            target_record,
+            action=action,
+            extra_series_ids=list(request.get("extra_series_ids") or []),
+            extra_work_ids=list(request.get("extra_work_ids") or []),
+            force=bool(request.get("force")),
+        )
+
+    if action in {"publish", "save_published"} and not impact["public"].get("available", True):
+        blockers.append(str(impact["public"].get("error") or "public update preview failed"))
+
+    blocked = bool(blockers)
+    return {
+        "ok": True,
+        "kind": kind,
+        "id": record_id,
+        "action": action,
+        "allowed": not blocked,
+        "blocked": blocked,
+        "blockers": blockers,
+        "validation_errors": validation_errors,
+        "current_status": current_status,
+        "target_status": target_status,
+        "current_record_hash": record_hash(current_record),
+        "target_record_hash": record_hash(target_record),
+        "record": current_record,
+        "target_record": target_record,
+        "changed": changed,
+        "changed_fields": changed_field_names,
+        "affected": affected,
+        "impact": impact,
+        "summary": f"{action.replace('_', ' ')} {kind} {record_id}: {current_status} -> {target_status}.",
+    }
 
 
 def validate_updated_records(source_dir: Path, work_id: str, work_record: Dict[str, Any]) -> list[str]:
@@ -2576,6 +2928,8 @@ class Handler(BaseHTTPRequestHandler):
             BULK_SAVE_PATH,
             DELETE_PREVIEW_PATH,
             DELETE_APPLY_PATH,
+            PUBLICATION_PREVIEW_PATH,
+            PUBLICATION_APPLY_PATH,
             WORK_CREATE_PATH,
             WORK_SAVE_PATH,
             DETAIL_CREATE_PATH,
@@ -2658,6 +3012,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == DELETE_APPLY_PATH:
                 self._handle_delete_apply(allowed)
+                return
+            if self.path == PUBLICATION_PREVIEW_PATH:
+                self._handle_publication_preview(allowed)
+                return
+            if self.path == PUBLICATION_APPLY_PATH:
+                self._handle_publication_apply(allowed)
                 return
             if self.path == WORK_SAVE_PATH:
                 self._handle_work_save(allowed)
@@ -3144,6 +3504,222 @@ class Handler(BaseHTTPRequestHandler):
         if apply_build and changed:
             response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
         self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _publication_source_payload(self, kind: str, record_id: str, target_record: Mapping[str, Any]) -> tuple[Path, Dict[str, Any]]:
+        if kind == "work":
+            payload = load_works_payload(self.server.works_path)
+            records = dict(payload["works"])
+            records[record_id] = dict(target_record)
+            return self.server.works_path.resolve(), payload_for_map("works", records)
+        if kind == "work_detail":
+            payload = load_work_details_payload(self.server.work_details_path)
+            records = dict(payload["work_details"])
+            records[record_id] = dict(target_record)
+            return self.server.work_details_path.resolve(), payload_for_map("work_details", records)
+        if kind == "series":
+            payload = load_series_payload(self.server.series_path)
+            records = dict(payload["series"])
+            records[record_id] = dict(target_record)
+            return self.server.series_path.resolve(), payload_for_map("series", records)
+        payload = load_moments_payload(self.server.moments_path)
+        records = dict(payload["moments"])
+        records[record_id] = dict(target_record)
+        return self.server.moments_path.resolve(), moment_metadata_payload(records)
+
+    def _run_publication_build(
+        self,
+        *,
+        kind: str,
+        record_id: str,
+        target_record: Mapping[str, Any],
+        extra_series_ids: list[str],
+        extra_work_ids: list[str],
+        force: bool,
+    ) -> tuple[bool, Dict[str, Any]]:
+        if self.server.dry_run:
+            return True, {
+                "ok": True,
+                "dry_run": True,
+                "would_run": True,
+                "kind": kind,
+                "id": record_id,
+                "summary": "Dry-run publication apply would run the scoped public update after the source write.",
+            }
+        generated_backup_root = self.server.backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{backup_stamp_now()}"
+        affected = publication_affected_for_record(self.server.source_dir, kind, record_id)
+        if kind == "moment":
+            cleanup = collect_moment_delete_cleanup(self.server.repo_root, record_id)
+            backup_candidates = [
+                *cleanup["delete_paths"],
+                self.server.repo_root / "assets" / "data" / "moments_index.json",
+                self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
+            ]
+        else:
+            cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, affected)
+            backup_candidates = [
+                *cleanup["delete_paths"],
+                *cleanup["public_json_updates"],
+                *cleanup["studio_json_updates"],
+                self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
+            ]
+        generated_backups = backup_transaction_paths(backup_candidates, generated_backup_root, self.server.repo_root)
+        if kind == "work":
+            success, payload = self._run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
+        elif kind == "work_detail":
+            success, payload = self._run_build_operation(work_id=slug_id(target_record.get("work_id")), series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid=record_id, force=force)
+        elif kind == "series":
+            success, payload = self._run_build_operation(work_id="", series_id=record_id, moment_id="", extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
+        else:
+            success, payload = self._run_build_operation(work_id="", series_id="", moment_id=record_id, extra_series_ids=[], extra_work_ids=[], detail_uid="", force=force)
+        payload["generated_backup_root"] = self.server.rel_path(generated_backup_root) if generated_backups else ""
+        payload["generated_backups"] = [self.server.rel_path(path) for path in generated_backups.values()]
+        return success, payload
+
+    def _apply_publication_unpublish_cleanup(
+        self,
+        *,
+        kind: str,
+        record_id: str,
+        target_record: Mapping[str, Any],
+        preview: Mapping[str, Any],
+    ) -> Dict[str, Any]:
+        source_path, source_payload = self._publication_source_payload(kind, record_id, target_record)
+        if source_path not in self.server.allowed_write_paths:
+            raise ValueError("write target not allowlisted")
+
+        if kind != "moment":
+            affected = preview["affected"]
+            cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, affected)
+            generated_payloads = build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, affected)
+            cleanup_result = self._apply_catalogue_delete_transaction(
+                backup_label=f"catalogue-unpublish-{kind.replace('_', '-')}",
+                payloads={source_path: source_payload, **generated_payloads},
+                cleanup=cleanup,
+            )
+            cleanup_result.pop("backup_paths", None)
+            return cleanup_result
+
+        cleanup = collect_moment_delete_cleanup(self.server.repo_root, record_id)
+        ensure_moment_delete_cleanup_scope(self.server.repo_root, cleanup)
+        moments_index_path = (self.server.repo_root / "assets" / "data" / "moments_index.json").resolve()
+        search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+        deleted_file_count = 0
+        search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
+        transaction_backup_root: Path | None = None
+        if not self.server.dry_run:
+            transaction_backup_root = self.server.backups_dir / f"catalogue-unpublish-moment-{backup_stamp_now()}"
+            touched_paths = unique_paths([source_path, moments_index_path, search_index_path, *cleanup["delete_paths"]])
+            transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+            try:
+                payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
+                if moments_index_path.exists():
+                    moments_index_payload = load_json_file(moments_index_path)
+                    moments_map = moments_index_payload.get("moments")
+                    if not isinstance(moments_map, dict):
+                        raise ValueError("moments_index.json must include a moments object")
+                    moments_map.pop(record_id, None)
+                    payloads[moments_index_path] = finalize_moments_index_payload(moments_index_payload)
+                atomic_write_many(payloads, self.server.backups_dir)
+                deleted_file_count = delete_existing_files(cleanup["delete_paths"])
+                search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
+            except Exception:
+                restore_transaction_paths(touched_paths, transaction_backups)
+                raise
+
+        return {
+            "deleted_files": deleted_file_count,
+            "would_delete_files": len(cleanup["delete_paths"]),
+            "moments_index_updated": bool(not self.server.dry_run and moments_index_path.exists()),
+            "would_update_moments_index": moments_index_path.exists(),
+            "catalogue_search_rebuilt": bool(not self.server.dry_run and search_rebuild.get("ok")),
+            "would_rebuild_catalogue_search": True,
+            "search_exit_code": search_rebuild.get("exit_code"),
+            "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
+        }
+
+    def _handle_publication_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        request = extract_publication_request(body)
+        preview = build_publication_preview(self.server.source_dir, self.server.repo_root, request)
+        self._send_json(HTTPStatus.OK, {"ok": True, "preview": preview}, allowed)
+
+    def _handle_publication_apply(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        request = extract_publication_request(body)
+        preview = build_publication_preview(self.server.source_dir, self.server.repo_root, request)
+        if preview.get("blocked"):
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "publication preview contains blockers", "preview": preview}, allowed)
+            return
+
+        expected_hash = str(request.get("expected_record_hash") or "").strip()
+        current_hash = str(preview.get("current_record_hash") or "")
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "kind": request["kind"], "id": request["id"], "current_record_hash": current_hash}, allowed)
+            return
+
+        kind = str(request["kind"])
+        action = str(request["action"])
+        record_id = str(request["id"])
+        target_record = dict(preview["target_record"])
+        changed = bool(preview.get("changed"))
+        source_backups: list[Path] = []
+        public_update: Dict[str, Any] = {"ok": True, "skipped": True}
+        public_update_ok = True
+
+        if action == "unpublish":
+            public_update = self._apply_publication_unpublish_cleanup(kind=kind, record_id=record_id, target_record=target_record, preview=preview)
+        else:
+            if changed:
+                source_path, source_payload = self._publication_source_payload(kind, record_id, target_record)
+                if source_path not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+                if not self.server.dry_run:
+                    source_backups = atomic_write_many({source_path: source_payload}, self.server.backups_dir)
+                    self._refresh_lookup_payloads()
+            public_update_ok, public_update = self._run_publication_build(
+                kind=kind,
+                record_id=record_id,
+                target_record=target_record,
+                extra_series_ids=list(request.get("extra_series_ids") or []),
+                extra_work_ids=list(request.get("extra_work_ids") or []),
+                force=bool(request.get("force")),
+            )
+
+        response_payload: Dict[str, Any] = {
+            "ok": public_update_ok,
+            "status": "completed" if public_update_ok else "public_update_failed",
+            "kind": kind,
+            "id": record_id,
+            "action": action,
+            "changed": changed,
+            "changed_fields": preview.get("changed_fields", []),
+            "record": target_record,
+            "record_hash": record_hash(target_record),
+            "preview": preview,
+            "source_saved": bool(changed and not self.server.dry_run) or bool(action == "unpublish" and not self.server.dry_run),
+            "public_update": public_update,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed or action == "unpublish"
+        elif source_backups:
+            response_payload["backups"] = [self.server.rel_path(path) for path in source_backups]
+        if not self.server.dry_run:
+            now_utc = utc_now()
+            operation = f"{kind}.{action}"
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, operation),
+                    "time_utc": now_utc,
+                    "kind": "publication",
+                    "operation": operation,
+                    "status": "completed" if public_update_ok else "failed",
+                    "summary": f"{action.replace('_', ' ').title()} {kind} {record_id}.",
+                    "affected": preview.get("affected", {}),
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK if public_update_ok else HTTPStatus.INTERNAL_SERVER_ERROR, response_payload, allowed)
 
     def _handle_delete_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
