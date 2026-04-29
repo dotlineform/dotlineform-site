@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: "Studio Runtime"
 added_date: 2026-04-24
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: studio
 sort_order: 10
 ---
@@ -69,7 +69,7 @@ Current route inventory:
 - `studio/catalogue-new-work-detail/index.md` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` when a parent work is supplied
 - `studio/catalogue-work-detail/index.md`
 - `studio/catalogue-series/index.md`
-- `studio/catalogue-new-series/index.md`
+- `studio/catalogue-new-series/index.md` redirects to `/studio/catalogue-series/?mode=new`
 - `studio/tag-groups/index.md`
 - `studio/tag-registry/index.md`
 - `studio/tag-aliases/index.md`
@@ -91,7 +91,7 @@ Current page-level doc links:
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor` compatibility redirect note
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
-- New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor`
+- New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor` compatibility redirect note
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
 - Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
 - Series Tags -> `/docs/?scope=studio&doc=series-tags`
@@ -130,7 +130,6 @@ Current page controllers:
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
-- `assets/studio/js/catalogue-new-series-editor.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/tag-registry.js`
 - `assets/studio/js/tag-aliases.js`
@@ -141,6 +140,7 @@ Current page controllers:
 Retired compatibility controllers:
 
 - `assets/studio/js/catalogue-new-work-editor.js` is no longer loaded by `/studio/catalogue-new-work/`; the route redirects to `/studio/catalogue-work/?mode=new`.
+- `assets/studio/js/catalogue-new-series-editor.js` is no longer loaded by `/studio/catalogue-new-series/`; the route redirects to `/studio/catalogue-series/?mode=new`.
 
 Controller splits that are already live:
 

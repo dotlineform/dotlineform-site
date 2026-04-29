@@ -44,8 +44,11 @@ Current direct consumers of that loader include:
 - `assets/studio/js/build-activity.js`
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
 - `assets/js/search/search-page.js`
 - `assets/js/docs-viewer.js`
 
@@ -69,6 +72,8 @@ What stays here:
 - shared Studio UI text
 - shared Studio analysis policy used by current tag metrics/RAG helpers
 - the lookup path for dedicated search policy and scope-owned search indexes
+
+Retired compatibility routes should not keep active route keys or UI text once they only redirect to a unified editor route. For example, `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`, so active series-create copy now belongs under `ui_text.catalogue_series_editor`.
 
 What does not stay here:
 

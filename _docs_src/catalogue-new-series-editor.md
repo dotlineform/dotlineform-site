@@ -2,7 +2,7 @@
 doc_id: catalogue-new-series-editor
 title: "New Catalogue Series"
 added_date: 2026-04-17
-last_updated: 2026-04-26
+last_updated: 2026-04-29
 parent_id: user-guide
 sort_order: 80
 ---
@@ -12,25 +12,24 @@ Route:
 
 - `/studio/catalogue-new-series/`
 
-This page creates a new canonical series source record in `assets/studio/data/catalogue/series.json`.
+This route is now a compatibility redirect to `/studio/catalogue-series/?mode=new`.
 
-## Current Scope
+## Current Status
 
-The first implementation is intentionally narrow:
+Series creation now lives in the main [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor).
 
-- create a new `series_id`
-- enter draft series metadata
-- save the new series with `status = draft`
-- omit `primary_work_id` at create time
-- redirect into the main series editor after create
+The compatibility route:
 
-Member works and `primary_work_id` are completed in the standard series editor after the draft series exists.
+- keeps old links from becoming dead ends
+- redirects immediately to `/studio/catalogue-series/?mode=new`
+- no longer loads the standalone new-series controller
+- no longer owns active route or UI text entries in `studio_config.json`
 
-Series prose is imported separately through the staged Markdown flow and stored under `_docs_src_catalogue/series/<series_id>.md`.
+Use `/studio/catalogue-series/` as the active route for both creating and editing series records.
 
 ## Draft And Publish Boundary
 
-Current rule:
+The current rule is unchanged:
 
 - source save may create a draft series without `primary_work_id`
 - scoped build remains blocked until the series has a valid `primary_work_id`
@@ -41,4 +40,4 @@ Current rule:
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
-- [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)

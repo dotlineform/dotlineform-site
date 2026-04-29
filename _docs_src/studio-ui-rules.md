@@ -23,6 +23,31 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-052
+
+- status: adopted
+- route: `/studio/catalogue/`, `/studio/catalogue-new-series/`, `/studio/catalogue-series/`
+- issue: after the series editor gained `?mode=new`, active navigation still presented series creation as a separate route.
+- triage: route migration for parent-record unified create/edit
+- reasoning: keeping the old create page active would split testing and make the dashboard imply two series workflows. The unified editor should be the only active entry point, while the old route remains a redirect for compatibility.
+- permanent rule: after a parent-record editor gains unified create mode, collapse dashboard links to one editor entry, redirect the retired create route to `?mode=new`, and remove retired create-route keys and UI text from active Studio config.
+- outcome: `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`, the Catalogue dashboard now has one `Series Editor` entry, and `catalogue_new_series_editor` is retired from active config.
+- files changed:
+  - `studio/catalogue/index.md`
+  - `studio/catalogue-new-series/index.md`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-new-series-editor.md`
+  - `_docs_src/studio-runtime.md`
+  - `_docs_src/user-guide.md`
+  - `_docs_src/studio-e2e-checklist.md`
+  - `_docs_src/site-request-catalogue-series-unified-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue/` and confirm the dashboard exposes one series editor entry
+  - open `/studio/catalogue-new-series/` and confirm it redirects to `/studio/catalogue-series/?mode=new`
+  - open `/studio/catalogue-series/` and `/studio/catalogue-series/?mode=new` and confirm both render
+
 ## UI Rule Log 2026-04-29 / UI-051
 
 - status: adopted

@@ -6,40 +6,14 @@ section: catalogue-new-series
 studio_page_doc: /docs/?scope=studio&doc=catalogue-new-series-editor
 ---
 
+{% assign catalogue_series_new_url = '/studio/catalogue-series/' | relative_url | append: '?mode=new' %}
+
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
+<meta http-equiv="refresh" content="0; url={{ catalogue_series_new_url }}">
+<script>
+  window.location.replace("{{ catalogue_series_new_url }}");
+</script>
 
-<div class="tagStudioPage catalogueWorkPage" id="catalogueNewSeriesRoot" hidden>
-  <section class="tagStudio__panel tagStudio__panel--editor">
-    <div class="tagStudio__headingRow">
-      <h2 class="tagStudio__heading">new series</h2>
-      <span class="tagStudio__saveMode" id="catalogueNewSeriesSaveMode"></span>
-    </div>
-
-    <p class="tagStudio__contextHint" id="catalogueNewSeriesContext"></p>
-    <p class="tagStudio__status" id="catalogueNewSeriesStatus"></p>
-    <p class="tagStudio__saveWarning" id="catalogueNewSeriesWarning"></p>
-    <p class="tagStudio__saveResult" id="catalogueNewSeriesResult"></p>
-  </section>
-
-  <div class="tagStudio__grid catalogueWorkPage__grid">
-    <section class="tagStudio__panel tagStudio__panel--editor">
-      <div class="tagStudio__headingRow">
-        <h2 class="tagStudio__heading">draft metadata</h2>
-        <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueNewSeriesCreate">Create</button>
-        </div>
-      </div>
-      <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueNewSeriesFields"></div>
-    </section>
-
-    <aside class="tagStudio__panel catalogueWorkSummary">
-      <h2 class="tagStudio__heading">next step</h2>
-      <p class="tagStudioForm__impact" id="catalogueNewSeriesSummary"></p>
-    </aside>
-  </div>
-</div>
-
-<p class="tagStudio__status" id="catalogueNewSeriesLoading">loading new series editor…</p>
-<p class="tagStudio__empty" id="catalogueNewSeriesEmpty" hidden></p>
-
-<script type="module" src="{{ '/assets/studio/js/catalogue-new-series-editor.js' | relative_url }}"></script>
+<p class="tagStudio__status">
+  New series creation has moved to the <a href="{{ catalogue_series_new_url }}">Catalogue Series Editor</a>.
+</p>

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d3e49ea4cb31ed389973e4dc29178c95",
-    "generated_at_utc": "2026-04-29T09:52:01Z",
+    "version": "blake2b-5c28c41d2942f1ebecd8e428019134c5",
+    "generated_at_utc": "2026-04-29T10:20:21Z",
     "count": 144
   },
   "entries": [
@@ -265,21 +265,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-28 • Studio",
+      "display_meta": "2026-04-29 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-04-28",
+        "2026-04-29",
         "2026",
         "04",
-        "28"
+        "29"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-04-28 2026 04 28"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-04-29 2026 04 29"
     },
     {
       "id": "ui-audit-catalogue-moment-import-20260421",
@@ -1151,19 +1151,19 @@
       "kind": "doc",
       "title": "User Guide",
       "href": "/docs/?scope=studio&doc=user-guide",
-      "last_updated": "2026-04-28",
-      "display_meta": "2026-04-28",
+      "last_updated": "2026-04-29",
+      "display_meta": "2026-04-29",
       "search_terms": [
         "user-guide",
         "user",
         "guide",
         "user guide",
-        "2026-04-28",
+        "2026-04-29",
         "2026",
         "04",
-        "28"
+        "29"
       ],
-      "search_text": "user-guide user guide user guide 2026-04-28 2026 04 28"
+      "search_text": "user-guide user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -1957,10 +1957,10 @@
       "kind": "doc",
       "title": "Studio E2E Checklist",
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-29",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-19 • New Cat Pipeline",
+      "display_meta": "2026-04-29 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-studio-e2e-checklist",
         "new",
@@ -1971,12 +1971,12 @@
         "studio e2e checklist",
         "new cat pipeline",
         "cat",
-        "2026-04-19",
+        "2026-04-29",
         "2026",
         "04",
-        "19"
+        "29"
       ],
-      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist new cat pipeline cat 2026-04-19 2026 04 19"
+      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist new cat pipeline cat 2026-04-29 2026 04 29"
     },
     {
       "id": "new-pipeline-refine-analytics",
@@ -2273,10 +2273,10 @@
       "kind": "doc",
       "title": "New Catalogue Series",
       "href": "/docs/?scope=studio&doc=catalogue-new-series-editor",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-04-29 • User Guide",
       "search_terms": [
         "catalogue-new-series-editor",
         "catalogue",
@@ -2287,12 +2287,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-26",
+        "2026-04-29",
         "2026",
         "04",
-        "26"
+        "29"
       ],
-      "search_text": "catalogue-new-series-editor catalogue new series editor new catalogue series user guide user guide 2026-04-26 2026 04 26"
+      "search_text": "catalogue-new-series-editor catalogue new series editor new catalogue series user guide user guide 2026-04-29 2026 04 29"
     },
     {
       "id": "search-validation-checklist",

@@ -2,7 +2,7 @@
 doc_id: user-guide
 title: "User Guide"
 added_date: 2026-04-23
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: ""
 sort_order: 30
 ---
@@ -28,7 +28,6 @@ Current guides:
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
-- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 
 When a practical workflow starts to feel buried inside a technical doc, prefer moving the how-to guidance here and leaving a short cross-reference behind in the technical reference.

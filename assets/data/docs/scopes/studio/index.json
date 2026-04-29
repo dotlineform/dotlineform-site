@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T09:52:00Z",
+  "generated_at": "2026-04-29T10:18:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -167,7 +167,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "studio",
       "sort_order": 10,
       "published": true,
@@ -699,7 +699,7 @@
       "doc_id": "user-guide",
       "title": "User Guide",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-04-29",
       "parent_id": "",
       "sort_order": 30,
       "published": true,
@@ -1175,7 +1175,7 @@
       "doc_id": "new-pipeline-studio-e2e-checklist",
       "title": "Studio E2E Checklist",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-29",
       "parent_id": "new-pipeline",
       "sort_order": 60,
       "published": true,
@@ -1357,7 +1357,7 @@
       "doc_id": "catalogue-new-series-editor",
       "title": "New Catalogue Series",
       "added_date": "2026-04-17",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-04-29",
       "parent_id": "user-guide",
       "sort_order": 80,
       "published": true,

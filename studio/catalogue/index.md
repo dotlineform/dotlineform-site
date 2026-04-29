@@ -31,10 +31,9 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
       <section class="studioLinkGroup">
         <div class="studioLinkGroup__header">
           <h4>Create</h4>
-          <p>Create parent records and import new source content. Create work details from the parent work editor.</p>
+          <p>Import new source content. Create work, series, and detail records from their editor routes.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-series/' | relative_url }}"><span class="studioLinkList__title">Create New Series</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span></a></li>
         </ul>
       </section>
@@ -45,7 +44,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         </div>
         <ul class="studioLinkList">
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work/' | relative_url }}"><span class="studioLinkList__title">Work Editor</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Edit Series</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Series Editor</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment/' | relative_url }}"><span class="studioLinkList__title">Edit Moment</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-detail/' | relative_url }}"><span class="studioLinkList__title">Edit Work Detail</span></a></li>
         </ul>
@@ -91,7 +90,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
       </article>
       <article class="studioInfoCard">
         <h4>Series records</h4>
-        <p>Create new series from the series flow, then use catalogue pages to connect works, metadata, and build actions.</p>
+        <p>Create and edit series from the Series Editor, then connect works, metadata, and build actions after the draft exists.</p>
       </article>
       <article class="studioInfoCard">
         <h4>Operational checks</h4>

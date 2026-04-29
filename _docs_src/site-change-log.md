@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Migrated series creation to the unified route
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series
+
+**Summary:**
+Moved active series creation navigation to `/studio/catalogue-series/?mode=new` through the main series editor, converted `/studio/catalogue-new-series/` into a compatibility redirect, and removed the legacy new-series route and UI text from active Studio config.
+
+**Reason:**
+After new mode landed on the main series editor, keeping the standalone create page active would split testing and keep the Catalogue dashboard presenting series creation and editing as separate workflows.
+
+**Effect:**
+The Catalogue dashboard now exposes one `Series Editor` entry. Old `/studio/catalogue-new-series/` links redirect to the unified new-mode route, while docs and E2E guidance now point active create/edit work at `/studio/catalogue-series/`.
+
+**Affected files/docs:**
+
+- `studio/catalogue/index.md`
+- `studio/catalogue-new-series/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [User Guide](/docs/?scope=studio&doc=user-guide)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
 ## [2026-04-29] Added new mode to the catalogue series editor
 
 **Status:** implemented

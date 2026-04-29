@@ -2,7 +2,7 @@
 doc_id: new-pipeline-studio-e2e-checklist
 title: "Studio E2E Checklist"
 added_date: 2026-04-19
-last_updated: 2026-04-19
+last_updated: 2026-04-29
 parent_id: new-pipeline
 sort_order: 60
 ---
@@ -140,7 +140,6 @@ Checks:
 
 - confirm the dashboard signposts create, edit, review, maintenance, and guidance flows
 - open each linked Catalogue route at least once:
-  - `/studio/catalogue-new-series/`
   - `/studio/catalogue-moment-import/`
   - `/studio/catalogue-work/`
   - `/studio/catalogue-series/`
@@ -265,7 +264,7 @@ Expected results:
 
 Route:
 
-- `/studio/catalogue-new-series/`
+- `/studio/catalogue-series/?mode=new`
 - `/studio/catalogue-series/`
 
 Owner:
@@ -275,6 +274,7 @@ Owner:
 Checks:
 
 - create one draft series
+- confirm `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`
 - open and edit the series in the series editor
 - confirm `primary_work_id` and membership expectations behave correctly
 - run `Save + Rebuild`

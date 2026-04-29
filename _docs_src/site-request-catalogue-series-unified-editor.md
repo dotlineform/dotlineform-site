@@ -13,6 +13,8 @@ Status:
 - specified
 - task 1 locked
 - task 2 implemented
+- task 3 implemented
+- task 4 implemented
 
 ## Summary
 
@@ -371,7 +373,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Move active navigation to the unified series route.
 
@@ -389,6 +391,14 @@ Acceptance checks:
 - old create route behavior is documented
 - no active dashboard link points to a functional legacy create implementation
 - direct edit links still open existing series records
+
+Implementation notes:
+
+- The Catalogue dashboard now uses one `Series Editor` entry at `/studio/catalogue-series/` instead of separate `Create New Series` and `Edit Series` entries.
+- `/studio/catalogue-new-series/` is a compatibility redirect to `/studio/catalogue-series/?mode=new`.
+- `catalogue_new_series_editor` was removed from the active Studio config route and UI text blocks.
+- The New Catalogue Series doc now describes the redirect compatibility route rather than a standalone create implementation.
+- Studio Runtime, User Guide, and the E2E checklist now point users and tests at the unified route.
 
 ### Task 5. Add Draft Series Visibility
 
