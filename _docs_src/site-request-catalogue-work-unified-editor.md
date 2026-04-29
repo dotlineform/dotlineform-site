@@ -626,7 +626,6 @@ Expected benefits:
 ## Related References
 
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)

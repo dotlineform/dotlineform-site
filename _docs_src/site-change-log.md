@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Removed retired catalogue create redirects
+
+**Status:** implemented
+
+**Area:** Studio / catalogue editor cleanup
+
+**Summary:**
+Removed the old `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` redirect pages and their page-level compatibility docs.
+
+**Reason:**
+The unified editors are now the only active create/edit surfaces. Keeping old redirects and docs added another route policy to explain without supporting a current workflow.
+
+**Effect:**
+Active navigation and manual checks now use `/studio/catalogue-work/?mode=new`, `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, and `/studio/catalogue-series/?mode=new` directly. The old `catalogue-new-*` pages and docs are no longer published.
+
+**Affected files/docs:**
+
+- `studio/catalogue-new-work/index.md`
+- `studio/catalogue-new-work-detail/index.md`
+- `studio/catalogue-new-series/index.md`
+- `_docs_src/catalogue-new-work-editor.md`
+- `_docs_src/catalogue-new-work-detail-editor.md`
+- `_docs_src/catalogue-new-series-editor.md`
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-29] Removed redundant per-series runtime fields
 
 **Status:** implemented
@@ -161,19 +190,16 @@ Clicking `Delete` now leaves the blocker visible in the status area. For `00640`
 Removed the standalone work, work-detail, and series create controllers after their routes had become compatibility redirects to the unified editors.
 
 **Reason:**
-The old `/studio/catalogue-new-*` URLs are still useful as bookmark-safe redirects, but keeping their controllers in the repo preserved a second implementation path after create/edit behavior moved into the unified editor pages.
+The old `/studio/catalogue-new-*` URLs had briefly been kept as bookmark-safe redirects, but keeping their controllers in the repo preserved a second implementation path after create/edit behavior moved into the unified editor pages.
 
 **Effect:**
-`/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` remain as tiny redirect pages. The old `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` controllers are removed. Compatibility docs now identify the old routes as redirect-only and point users to the unified editors.
+The old `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` controllers were removed. The temporary redirect pages and compatibility docs were removed in a later cleanup entry.
 
 **Affected files/docs:**
 
 - `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-new-series-editor.js`
-- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
-- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
-- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -674,7 +700,7 @@ The Catalogue dashboard now exposes one `Series Editor` entry. Old `/studio/cata
 - `studio/catalogue-new-series/index.md`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
@@ -794,9 +820,9 @@ The work page now opens detail creation directly on the unified editor route. Ol
 - `assets/studio/js/studio-config.js`
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Studio E2E Checklist](/docs/?scope=studio&doc=studio-e2e-checklist)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 
 ## [2026-04-29] Added parent-scoped new mode to the work-detail editor
@@ -843,7 +869,7 @@ The current `/studio/catalogue-work-detail/` and `/studio/catalogue-new-work-det
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 
 ## [2026-04-28] Added Change Requests docs root
@@ -936,7 +962,7 @@ Work creation and editing now share one active route. Draft works created withou
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
 - [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
 
@@ -1425,9 +1451,9 @@ New work, work editor, new series, and series editor forms no longer render or s
 - `assets/studio/js/catalogue-new-series-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
-- [New Catalogue Work](/docs/?scope=studio&doc=catalogue-new-work-editor)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 
 ## [2026-04-26] Switched work and series prose generation to repo-local sources

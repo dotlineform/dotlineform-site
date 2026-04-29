@@ -121,11 +121,11 @@ Use this as the single capture surface for Studio UI work:
 
 - status: adopted
 - route: `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue-new-series/`
-- issue: the old create URLs had already become compatibility redirects, but their standalone create controllers still existed in the repo.
+- issue: the old create URLs and their compatibility docs no longer serve a current workflow after create/edit moved into the unified editors.
 - triage: route compatibility cleanup
-- reasoning: compatibility routes are useful for bookmarks and stale links, but they should not preserve a second implementation path. The active create/edit behavior belongs in the unified catalogue editors.
-- permanent rule: retired Studio create routes may remain as tiny redirects, but they must not keep standalone controllers, active config route keys, or active UI text blocks after the unified editor route owns the workflow.
-- outcome: kept the old `/studio/catalogue-new-*` pages as redirect-only compatibility routes, removed the retired work/detail/series create controllers, and updated the compatibility docs to state that create behavior lives in the unified editors.
+- reasoning: stale route redirects add a second thing to explain without adding a useful action. The active create/edit behavior belongs in the unified catalogue editors, and internal navigation should point there directly.
+- permanent rule: retired Studio create routes should be removed once active navigation points at the unified editor route. They must not keep standalone controllers, active config route keys, active UI text blocks, or page-level compatibility docs.
+- outcome: removed the old `/studio/catalogue-new-*` pages, removed the retired work/detail/series create controllers, and removed compatibility docs for the old route pages.
 - files changed:
   - `studio/catalogue-new-work/index.md`
   - `studio/catalogue-new-work-detail/index.md`
@@ -138,9 +138,7 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/catalogue-new-series-editor.md`
   - `_docs_src/studio-runtime.md`
 - verification:
-  - confirm `/studio/catalogue-new-work/` redirects to `/studio/catalogue-work/?mode=new`
-  - confirm `/studio/catalogue-new-work-detail/?work=<work_id>` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
-  - confirm `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`
+  - confirm active Catalogue navigation points to the unified editor routes
   - confirm no active page imports the removed standalone controllers
 
 ## UI Rule Log 2026-04-29 / UI-065
@@ -442,9 +440,9 @@ Use this as the single capture surface for Studio UI work:
 - route: `/studio/catalogue/`, `/studio/catalogue-new-series/`, `/studio/catalogue-series/`
 - issue: after the series editor gained `?mode=new`, active navigation still presented series creation as a separate route.
 - triage: route migration for parent-record unified create/edit
-- reasoning: keeping the old create page active would split testing and make the dashboard imply two series workflows. The unified editor should be the only active entry point, while the old route remains a redirect for compatibility.
-- permanent rule: after a parent-record editor gains unified create mode, collapse dashboard links to one editor entry, redirect the retired create route to `?mode=new`, and remove retired create-route keys and UI text from active Studio config.
-- outcome: `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`, the Catalogue dashboard now has one `Series Editor` entry, and `catalogue_new_series_editor` is retired from active config.
+- reasoning: keeping the old create page active would split testing and make the dashboard imply two series workflows. The unified editor should be the only active entry point.
+- permanent rule: after a parent-record editor gains unified create mode, collapse dashboard links to one editor entry, remove the retired create route, and remove retired create-route keys and UI text from active Studio config.
+- outcome: `/studio/catalogue-series/?mode=new` is the series create entry point, the Catalogue dashboard now has one `Series Editor` entry, and `catalogue_new_series_editor` is retired from active config.
 - files changed:
   - `studio/catalogue/index.md`
   - `studio/catalogue-new-series/index.md`
@@ -458,7 +456,6 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - open `/studio/catalogue/` and confirm the dashboard exposes one series editor entry
-  - open `/studio/catalogue-new-series/` and confirm it redirects to `/studio/catalogue-series/?mode=new`
   - open `/studio/catalogue-series/` and `/studio/catalogue-series/?mode=new` and confirm both render
 
 ## UI Rule Log 2026-04-29 / UI-051
@@ -523,9 +520,9 @@ Use this as the single capture surface for Studio UI work:
 - route: `/studio/catalogue-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue/`
 - issue: after the work-detail editor gained parent-scoped new mode, active links still pointed at the standalone create route and the Catalogue dashboard still presented detail creation as a top-level create workflow.
 - triage: route migration for parent-owned child records
-- reasoning: the UI should reinforce the parent-first model. Compatibility redirects can preserve old links, but active navigation should use the unified editor route and dashboard copy should not present child-detail creation as a standalone primary action.
-- permanent rule: after a parent-owned child editor gains unified create mode, update parent-page entry links immediately, make the retired create route redirect, remove active config keys for the retired route, and remove dashboard create links that bypass parent context.
-- outcome: the work editor now links to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, `/studio/catalogue-new-work-detail/` redirects to the unified route when `work` is supplied or to the work editor when missing, and the Catalogue dashboard no longer includes `Create New Detail`.
+- reasoning: the UI should reinforce the parent-first model. Active navigation should use the unified editor route and dashboard copy should not present child-detail creation as a standalone primary action.
+- permanent rule: after a parent-owned child editor gains unified create mode, update parent-page entry links immediately, remove the retired create route, remove active config keys for the retired route, and remove dashboard create links that bypass parent context.
+- outcome: the work editor now links to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, the retired detail-create route has been removed, and the Catalogue dashboard no longer includes `Create New Detail`.
 - files changed:
   - `studio/catalogue-work/index.md`
   - `studio/catalogue-new-work-detail/index.md`
@@ -536,8 +533,6 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - click `new work detail` from a loaded work and confirm the URL contains `?work=<work_id>&mode=new`
-  - open `/studio/catalogue-new-work-detail/?work=<work_id>` and confirm it redirects to the unified detail route
-  - open `/studio/catalogue-new-work-detail/` without `work` and confirm it redirects to the work editor
 
 ## UI Rule Log 2026-04-28 / UI-045
 
@@ -546,8 +541,8 @@ Use this as the single capture surface for Studio UI work:
 - issue: work creation and work editing used separate Studio surfaces, which made field consistency and follow-up draft discovery harder to reason about.
 - triage: systemic catalogue editor workflow cleanup
 - reasoning: create/edit should be explicit modes of the same record editor when they share the same source schema. The mode switch can be a command button, but the route, field renderer, validation helpers, and page docs should converge so future series and moments work can reuse the pattern.
-- permanent rule: when a Studio record family adopts unified create/edit, use one editor route with an explicit `new` mode, redirect the old create route immediately, retire the old create route key from active config, and provide an obvious draft/status recovery view from Catalogue navigation.
-- outcome: `/studio/catalogue-work/` owns work create/edit through `?mode=new` and `?work=<work_id>`, `/studio/catalogue-new-work/` redirects to the unified route, and Catalogue Status now has `?view=draft-works`.
+- permanent rule: when a Studio record family adopts unified create/edit, use one editor route with an explicit `new` mode, remove the old create route, retire the old create route key from active config, and provide an obvious draft/status recovery view from Catalogue navigation.
+- outcome: `/studio/catalogue-work/` owns work create/edit through `?mode=new` and `?work=<work_id>`, the retired work-create route has been removed, and Catalogue Status now has `?view=draft-works`.
 - files changed:
   - `studio/catalogue-work/index.md`
   - `studio/catalogue-new-work/index.md`
@@ -562,7 +557,6 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - open `/studio/catalogue-work/?mode=new` and confirm the editor is in create mode
-  - open `/studio/catalogue-new-work/` and confirm it redirects to the unified new mode
   - open `/studio/catalogue-status/?view=draft-works` and confirm only draft works are listed
 
 ## UI Rule Log 2026-04-28 / UI-046

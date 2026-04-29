@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T19:43:37Z",
+  "generated_at": "2026-04-29T21:27:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -850,20 +850,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-new-work-editor",
-      "title": "New Catalogue Work",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-29",
-      "parent_id": "user-guide",
-      "sort_order": 40,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-editor.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-ranking-model",
       "title": "Search Ranking Model",
       "added_date": "2026-04-01",
@@ -1144,20 +1130,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-new-work-detail-editor",
-      "title": "New Catalogue Work Detail",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-04-29",
-      "parent_id": "user-guide",
-      "sort_order": 60,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-work-detail-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-detail-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-detail-editor.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
       "added_date": "2026-03-31",
@@ -1351,20 +1323,6 @@
       "source_path": "scripts-delete-moment.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-delete-moment",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-delete-moment.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "catalogue-new-series-editor",
-      "title": "New Catalogue Series",
-      "added_date": "2026-04-17",
-      "last_updated": "2026-04-29",
-      "parent_id": "user-guide",
-      "sort_order": 80,
-      "published": true,
-      "viewable": true,
-      "source_path": "catalogue-new-series-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-series-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-series-editor.json"
     },
     {
       "scope": "studio",

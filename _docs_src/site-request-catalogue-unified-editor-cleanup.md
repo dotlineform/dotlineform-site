@@ -159,14 +159,13 @@ Status:
 
 Choose one policy for the old create URLs.
 
-Option A keeps tiny redirect pages so old bookmarks continue to land on the unified editors. Option B removes the old pages once all internal references are gone. Either option is acceptable, but the repo should not keep full legacy controllers.
+Option A keeps tiny redirect pages so old bookmarks continue to land on the unified editors. Option B removes the old pages once all internal references are gone. The repo should not keep full legacy controllers either way.
 
 Decision:
 
-- use Option A
-- keep tiny compatibility redirect pages for old `/studio/catalogue-new-*` URLs
-- do not keep standalone legacy create controllers or active config/UI text for those routes
-- keep compatibility docs for the old routes so the page-level Docs links are still useful when a redirect page is reached before navigation completes
+- use Option B
+- remove the old `/studio/catalogue-new-*` route pages once active navigation points at the unified editors
+- do not keep standalone legacy create controllers, active config/UI text, or page-level compatibility docs for those routes
 
 ### Task 3. Remove Retired Implementations
 
@@ -188,8 +187,8 @@ Implementation:
 - removed `assets/studio/js/catalogue-new-work-editor.js`
 - removed `assets/studio/js/catalogue-new-work-detail-editor.js`
 - removed `assets/studio/js/catalogue-new-series-editor.js`
-- kept redirect pages for `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/`
-- updated compatibility docs to state that the standalone controllers have been removed
+- removed redirect pages for `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/`
+- removed compatibility docs for the old route pages
 
 ### Task 4. Normalize Generated Series Payload Contract
 

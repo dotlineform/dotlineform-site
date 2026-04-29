@@ -16,8 +16,6 @@ Route:
 
 This page edits canonical work source records from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
 
-The retired `/studio/catalogue-new-work/` route redirects immediately to `/studio/catalogue-work/?mode=new`.
-
 ## Current Scope
 
 The first implementation covers:

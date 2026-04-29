@@ -171,7 +171,6 @@ Owner:
 Checks:
 
 - create one draft work record
-- confirm `/studio/catalogue-new-work/` redirects to `/studio/catalogue-work/?mode=new`
 - open the new or selected work in `/studio/catalogue-work/`
 - edit several scalar metadata fields and save source only
 - confirm rebuild-needed state appears after save
@@ -224,7 +223,6 @@ Owner:
 Checks:
 
 - create one draft detail under a known work
-- confirm `/studio/catalogue-new-work-detail/?work=<work_id>` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
 - confirm the new detail can be opened in the detail editor
 - edit and save one detail in focused mode
 - run `Save + Rebuild`
@@ -276,7 +274,6 @@ Owner:
 Checks:
 
 - create one draft series
-- confirm `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`
 - open and edit the series in the series editor
 - confirm `primary_work_id` and membership expectations behave correctly
 - run `Save + Rebuild`

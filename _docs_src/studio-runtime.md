@@ -61,15 +61,12 @@ Current route inventory:
 - `studio/build-activity/index.md`
 - `studio/docs-broken-links/index.md`
 - `studio/docs-import/index.md`
-- `studio/catalogue-new-work/index.md` redirects to `/studio/catalogue-work/?mode=new`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment/index.md`
 - `studio/catalogue-moment-import/index.md` compatibility bridge to `/studio/catalogue-moment/`
 - `studio/catalogue-work/index.md`
-- `studio/catalogue-new-work-detail/index.md` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` when a parent work is supplied
 - `studio/catalogue-work-detail/index.md`
 - `studio/catalogue-series/index.md`
-- `studio/catalogue-new-series/index.md` redirects to `/studio/catalogue-series/?mode=new`
 - `studio/tag-groups/index.md`
 - `studio/tag-registry/index.md`
 - `studio/tag-aliases/index.md`
@@ -87,11 +84,8 @@ Current page-level doc links:
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
 - Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import` compatibility route note
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
-- New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor` compatibility redirect note
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
-- New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor` compatibility redirect note
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
-- New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor` compatibility redirect note
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
 - Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
 - Series Tags -> `/docs/?scope=studio&doc=series-tags`
@@ -136,9 +130,9 @@ Current page controllers:
 - `assets/studio/js/tag-studio.js`
 - `assets/studio/js/studio-works.js`
 
-Retired compatibility controllers:
+Retired catalogue create routes:
 
-- `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` are redirect-only compatibility routes.
+- `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` are no longer published Studio pages.
 - The old standalone controllers `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` have been removed.
 - Active create behavior now lives in `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-detail-editor.js`, and `assets/studio/js/catalogue-series-editor.js`.
 

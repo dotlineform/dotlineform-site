@@ -37,7 +37,7 @@ Current create route:
 - focused create flow accepts `?work=<work_id>`
 - source page: `studio/catalogue-new-work-detail/index.md`
 - controller: `assets/studio/js/catalogue-new-work-detail-editor.js`
-- docs: [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
+- docs: [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
 
 The work page already provides the right user entry points:
 
@@ -237,7 +237,6 @@ Update docs and verification around the unified detail route.
 Expected docs:
 
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor) as compatibility note or redirect documentation
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - Studio E2E checklist
@@ -274,6 +273,5 @@ Out of scope:
 - [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [New Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-new-work-detail-editor)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)

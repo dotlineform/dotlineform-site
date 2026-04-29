@@ -66,7 +66,7 @@ Current create route:
 - source page: `studio/catalogue-new-series/index.md`
 - controller: `assets/studio/js/catalogue-new-series-editor.js`
 - config route key: `catalogue_new_series_editor`
-- docs: [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
+- docs: [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
 
 The two scripts duplicate or partially duplicate:
 
@@ -445,10 +445,9 @@ Update docs and verification around the unified series route.
 Expected docs:
 
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
-- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor) as compatibility note or redirect documentation
 - [Catalogue Status](/docs/?scope=studio&doc=catalogue-status), if draft-series visibility changes
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Studio E2E Checklist](/docs/?scope=studio&doc=studio-e2e-checklist)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules), if a reusable route-migration or create-mode rule changes
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -513,7 +512,6 @@ Expected benefits:
 ## Related References
 
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
-- [New Catalogue Series](/docs/?scope=studio&doc=catalogue-new-series-editor)
 - [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)

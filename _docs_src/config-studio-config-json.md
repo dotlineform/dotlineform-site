@@ -73,7 +73,7 @@ What stays here:
 - shared Studio analysis policy used by current tag metrics/RAG helpers
 - the lookup path for dedicated search policy and scope-owned search indexes
 
-Retired compatibility routes should not keep active route keys or UI text once they only redirect to a unified editor route. For example, `/studio/catalogue-new-series/` redirects to `/studio/catalogue-series/?mode=new`, so active series-create copy now belongs under `ui_text.catalogue_series_editor`.
+Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs under `ui_text.catalogue_series_editor` because create mode now lives at `/studio/catalogue-series/?mode=new`.
 
 What does not stay here:
 
