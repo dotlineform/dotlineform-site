@@ -25,6 +25,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
         </div>
       </div>
       <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentNew">New</button>
       <span class="tagStudio__saveMode" id="catalogueMomentSaveMode"></span>
     </div>
 
@@ -42,14 +43,25 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentSave">Save</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentPublication">Publish</button>
           <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentDelete">Delete</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentImportPreview">Preview</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueMomentImportApply">Import</button>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueMomentMeta"></p>
+      <div class="tagStudioForm__fields" id="catalogueMomentImportSource" hidden>
+        <label class="tagStudioForm__field" for="catalogueMomentImportFile">
+          <span class="tagStudioForm__label" id="catalogueMomentImportFileLabel">moment file</span>
+          <input class="tagStudio__input" id="catalogueMomentImportFile" type="text" placeholder="keys.md" spellcheck="false" autocomplete="off">
+          <p class="tagStudioForm__meta" id="catalogueMomentImportFileDescription"></p>
+        </label>
+      </div>
       <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueMomentFields"></div>
+      <p class="tagStudioForm__meta" id="catalogueMomentImportSourceSummary"></p>
+      <p class="tagStudioForm__meta" id="catalogueMomentImportImageGuidance"></p>
     </section>
 
     <aside class="tagStudio__panel catalogueWorkSummary">
-      <h2 class="tagStudio__heading">current record</h2>
+      <h2 class="tagStudio__heading" id="catalogueMomentSideHeading">current record</h2>
       <div class="tagStudioForm__fields" id="catalogueMomentReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueMomentRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueMomentBuildImpact"></p>
@@ -57,38 +69,6 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
       <div class="tagStudioForm__fields" id="catalogueMomentReadiness"></div>
     </aside>
   </div>
-
-  <section class="tagStudio__panel tagStudio__panel--editor">
-    <div class="tagStudio__headingRow">
-      <h2 class="tagStudio__heading">import new moment</h2>
-      <div class="catalogueWorkPage__actions">
-        <button type="button" class="tagStudio__button" id="catalogueMomentImportPreview">Preview Source File</button>
-        <button type="button" class="tagStudio__button" id="catalogueMomentImportApply">Import</button>
-      </div>
-    </div>
-    <p class="tagStudio__contextHint" id="catalogueMomentImportContext"></p>
-    <p class="tagStudio__status" id="catalogueMomentImportStatus"></p>
-    <p class="tagStudio__saveWarning" id="catalogueMomentImportWarning"></p>
-    <p class="tagStudio__saveResult" id="catalogueMomentImportResult"></p>
-    <div class="tagStudioForm__fields">
-      <label class="tagStudioForm__field" for="catalogueMomentImportFile">
-        <span class="tagStudioForm__label" id="catalogueMomentImportFileLabel">moment file</span>
-        <input class="tagStudio__input" id="catalogueMomentImportFile" type="text" placeholder="keys.md" spellcheck="false" autocomplete="off">
-        <p class="tagStudioForm__meta" id="catalogueMomentImportFileDescription"></p>
-      </label>
-    </div>
-    <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueMomentImportMetadataFields"></div>
-    <p class="tagStudioForm__meta" id="catalogueMomentImportSourceSummary"></p>
-    <p class="tagStudioForm__meta" id="catalogueMomentImportImageGuidance"></p>
-  </section>
-
-  <section class="tagStudio__panel catalogueWorkDetails">
-    <div class="tagStudio__headingRow">
-      <h2 class="tagStudio__heading">import preview</h2>
-    </div>
-    <div class="tagStudioForm__fields" id="catalogueMomentImportSummary"></div>
-    <div class="catalogueWorkDetails__results" id="catalogueMomentImportDetails"></div>
-  </section>
 </div>
 
 <p class="tagStudio__status" id="catalogueMomentLoading">loading catalogue moment editor...</p>

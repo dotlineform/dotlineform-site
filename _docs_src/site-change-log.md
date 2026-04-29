@@ -21,7 +21,7 @@ Moved staged-file moment import onto `/studio/catalogue-moment/` so import, revi
 After moment import became draft-only, keeping a separate import page created an unnecessary handoff before review and publish. The target workflow is one Moment editor page with import as the creation path for new draft moments.
 
 **Effect:**
-The Moment editor now includes an import panel for staged body-only Markdown files. A successful import writes draft prose and metadata, then opens the imported draft in the editor. The legacy `/studio/catalogue-moment-import/` route redirects to the editor and preserves `?file=<filename>` for staged-file links. Dashboard and activity links now target the Moment editor for moment scopes.
+The Moment editor now has a `New` command beside `Open`. `New` switches the shared metadata form into draft import mode, shows the staged source-file input, and replaces record actions with `Preview` and `Import`. A successful import writes draft prose and metadata, then opens the imported draft in the editor. The legacy `/studio/catalogue-moment-import/` route redirects to the editor and preserves `?file=<filename>` for staged-file links. Dashboard and activity links now target the Moment editor for moment scopes.
 
 **Affected files/docs:**
 

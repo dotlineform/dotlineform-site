@@ -23,7 +23,7 @@ This document records the import contract that is now implemented on the single 
 It is intentionally file-driven:
 
 - the user specifies one staged moment Markdown filename such as `keys.md`
-- Studio collects the moment metadata in the editor import panel
+- Studio collects the moment metadata in the shared Moment editor metadata fields
 - Studio previews the staged body-only prose source
 - apply imports prose and writes canonical draft moment metadata
 
@@ -51,12 +51,13 @@ Shared runtime dependencies:
 Current page flow:
 
 1. probe the local catalogue write service
-2. accept a filename-only input
-3. accept moment metadata fields
-4. call `POST /catalogue/moment/import-preview`
-5. show resolved source metadata, staged prose state, local media state, and validation errors
-6. call `POST /catalogue/moment/import-apply`
-7. show the imported draft source result and open the draft moment in the editor
+2. enter new/import mode with `New` or `?file=<filename>`
+3. accept a filename-only input above the shared metadata fields
+4. accept moment metadata in the same fields used for existing moments
+5. call `POST /catalogue/moment/import-preview`
+6. show resolved source metadata, staged prose state, local media state, and validation errors
+7. call `POST /catalogue/moment/import-apply`
+8. show the imported draft source result and open the draft moment in the editor
 
 ## Source Model
 
