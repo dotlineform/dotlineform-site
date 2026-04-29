@@ -8,6 +8,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Merged moment import into the Moment editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue moments / editor workflow
+
+**Summary:**
+Moved staged-file moment import onto `/studio/catalogue-moment/` so import, review, save, publish, and unpublish happen on one page.
+
+**Reason:**
+After moment import became draft-only, keeping a separate import page created an unnecessary handoff before review and publish. The target workflow is one Moment editor page with import as the creation path for new draft moments.
+
+**Effect:**
+The Moment editor now includes an import panel for staged body-only Markdown files. A successful import writes draft prose and metadata, then opens the imported draft in the editor. The legacy `/studio/catalogue-moment-import/` route redirects to the editor and preserves `?file=<filename>` for staged-file links. Dashboard and activity links now target the Moment editor for moment scopes.
+
+**Affected files/docs:**
+
+- `studio/catalogue-moment/index.md`
+- `studio/catalogue-moment-import/index.md`
+- `studio/catalogue/index.md`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/build-activity.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Converted moment publication to explicit Publish and Unpublish commands
 
 **Status:** implemented

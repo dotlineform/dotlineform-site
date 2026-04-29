@@ -57,6 +57,38 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
       <div class="tagStudioForm__fields" id="catalogueMomentReadiness"></div>
     </aside>
   </div>
+
+  <section class="tagStudio__panel tagStudio__panel--editor">
+    <div class="tagStudio__headingRow">
+      <h2 class="tagStudio__heading">import new moment</h2>
+      <div class="catalogueWorkPage__actions">
+        <button type="button" class="tagStudio__button" id="catalogueMomentImportPreview">Preview Source File</button>
+        <button type="button" class="tagStudio__button" id="catalogueMomentImportApply">Import</button>
+      </div>
+    </div>
+    <p class="tagStudio__contextHint" id="catalogueMomentImportContext"></p>
+    <p class="tagStudio__status" id="catalogueMomentImportStatus"></p>
+    <p class="tagStudio__saveWarning" id="catalogueMomentImportWarning"></p>
+    <p class="tagStudio__saveResult" id="catalogueMomentImportResult"></p>
+    <div class="tagStudioForm__fields">
+      <label class="tagStudioForm__field" for="catalogueMomentImportFile">
+        <span class="tagStudioForm__label" id="catalogueMomentImportFileLabel">moment file</span>
+        <input class="tagStudio__input" id="catalogueMomentImportFile" type="text" placeholder="keys.md" spellcheck="false" autocomplete="off">
+        <p class="tagStudioForm__meta" id="catalogueMomentImportFileDescription"></p>
+      </label>
+    </div>
+    <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueMomentImportMetadataFields"></div>
+    <p class="tagStudioForm__meta" id="catalogueMomentImportSourceSummary"></p>
+    <p class="tagStudioForm__meta" id="catalogueMomentImportImageGuidance"></p>
+  </section>
+
+  <section class="tagStudio__panel catalogueWorkDetails">
+    <div class="tagStudio__headingRow">
+      <h2 class="tagStudio__heading">import preview</h2>
+    </div>
+    <div class="tagStudioForm__fields" id="catalogueMomentImportSummary"></div>
+    <div class="catalogueWorkDetails__results" id="catalogueMomentImportDetails"></div>
+  </section>
 </div>
 
 <p class="tagStudio__status" id="catalogueMomentLoading">loading catalogue moment editor...</p>

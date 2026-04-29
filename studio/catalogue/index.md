@@ -34,7 +34,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Import new source content. Create work, series, and detail records from their editor routes.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment/' | relative_url }}"><span class="studioLinkList__title">Moment Editor</span></a></li>
         </ul>
       </section>
       <section class="studioLinkGroup">
@@ -99,7 +99,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
       </article>
       <article class="studioInfoCard">
         <h4>Moments</h4>
-        <p>Import existing source markdown files one at a time. Missing images are acceptable in this first phase.</p>
+        <p>Open the Moment editor to import staged Markdown, review draft metadata, and publish when ready.</p>
       </article>
     </div>
   </section>

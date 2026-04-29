@@ -8,33 +8,39 @@ sort_order: 190
 ---
 # Catalogue Moment Import
 
-This page adds the first Studio-backed moments workflow.
+Moment import now lives inside [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor).
 
 Route:
 
 - `/studio/catalogue-moment-import/`
 
+The route is retained only as a compatibility bridge. It redirects to `/studio/catalogue-moment/` and preserves `?file=<filename>` when a staged-file link already has one.
+
 ## Purpose
 
-This is the Phase 2 narrow moments entry flow.
+This document records the import contract that is now implemented on the single Moment editor page.
 
 It is intentionally file-driven:
 
 - the user specifies one staged moment Markdown filename such as `keys.md`
-- Studio collects the moment metadata on the page
+- Studio collects the moment metadata in the editor import panel
 - Studio previews the staged body-only prose source
 - apply imports prose and writes canonical draft moment metadata
 
 This page does not scan external moment folders for changes.
 
-For routine metadata maintenance on an existing moment, use [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor).
+After apply, the editor opens the imported draft record for review, save, publish, unpublish, or delete.
 
 ## Current Behavior
 
-The page is implemented by:
+The current single-page flow is implemented by:
+
+- `studio/catalogue-moment/index.md`
+- `assets/studio/js/catalogue-moment-editor.js`
+
+The legacy bridge route is:
 
 - `studio/catalogue-moment-import/index.md`
-- `assets/studio/js/catalogue-moment-import.js`
 
 Shared runtime dependencies:
 
@@ -50,7 +56,7 @@ Current page flow:
 4. call `POST /catalogue/moment/import-preview`
 5. show resolved source metadata, staged prose state, local media state, and validation errors
 6. call `POST /catalogue/moment/import-apply`
-7. show the imported draft source result
+7. show the imported draft source result and open the draft moment in the editor
 
 ## Source Model
 
@@ -85,7 +91,7 @@ Apply writes:
 - body-only prose to `_docs_src_catalogue/moments/<moment_id>.md`
 - draft moment metadata to `assets/studio/data/catalogue/moments.json`
 
-Apply does not publish the moment and does not run the scoped public update. Open [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor) afterward to review the draft and use `Publish` when it is ready.
+Apply does not publish the moment and does not run the scoped public update. The editor opens the imported draft automatically; use `Publish` there when it is ready.
 
 Publishing later delegates to the existing generator path:
 

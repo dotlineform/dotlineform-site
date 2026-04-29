@@ -30,8 +30,8 @@ Use this as the single capture surface for Studio UI work:
 - issue: the Moment editor still exposed publication through a save-time `Update site now` checkbox plus a follow-up update button, while the Moment import flow implied public publication by running the scoped public update during import.
 - triage: command model / publication workflow
 - reasoning: moment source import, metadata saves, and public visibility changes are separate user intentions. Existing moments should use the same `Save`, `Publish`, and `Unpublish` model as other first-class catalogue records, while file-driven imports should create draft source data until the user explicitly publishes from the editor.
-- permanent rule: moment publication state changes happen through the single publication command. `Save` does not change status; saved published moments run the internal public update; saved draft moments remain source-only; `Publish` moves a clean draft moment to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated moment output, moments index entries, and catalogue search records. Moment import remains source-only until it is folded into the single editor page.
-- outcome: removed visible moment save-time public update controls, added a config-backed `Publish` / `Unpublish` command for existing moment records, made status a non-input Readonly Display field, routed moment publication through the shared preview/apply endpoints, and changed file-driven moment import to write draft source/prose without running the scoped public update.
+- permanent rule: moment publication state changes happen through the single publication command on the Moment editor. `Save` does not change status; saved published moments run the internal public update; saved draft moments remain source-only; `Publish` moves a clean draft moment to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated moment output, moments index entries, and catalogue search records. Moment staged-file import is source-only and belongs on the same editor page so imported drafts can be reviewed and published in place.
+- outcome: removed visible moment save-time public update controls, added a config-backed `Publish` / `Unpublish` command for existing moment records, made status a non-input Readonly Display field, routed moment publication through the shared preview/apply endpoints, and folded file-driven moment import into the Moment editor as draft source/prose import without running the scoped public update. The old import route now bridges to the editor.
 - files changed:
   - `studio/catalogue-moment/index.md`
   - `studio/catalogue-moment-import/index.md`
@@ -48,7 +48,7 @@ Use this as the single capture surface for Studio UI work:
   - open `/studio/catalogue-moment/?moment=<published_moment_id>` and confirm `Unpublish` remains available even with dirty form edits
   - run moment publication preview/apply for a valid draft moment and confirm the form reloads as `published`
   - run moment unpublish against a dry-run or test record and confirm source status returns to `draft` and public cleanup impact includes moment output, moments index, and catalogue search
-  - preview/apply `/studio/catalogue-moment-import/` and confirm import writes draft source only, with publication still handled from the Moment editor
+  - preview/apply the import panel on `/studio/catalogue-moment/` and confirm import writes draft source only, opens the imported draft, and leaves publication to the editor `Publish` command
 
 ## UI Rule Log 2026-04-29 / UI-062
 

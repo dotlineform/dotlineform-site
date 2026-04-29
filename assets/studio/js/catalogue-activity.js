@@ -76,7 +76,8 @@ function scopeLink(config, entry) {
     if (workId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(workId)}`;
   }
   if (scopeKind === "bulk_works" || scopeKind === "bulk_work_details") href = getStudioRoute(config, "bulk_add_work");
-  if (scopeKind === "moment") href = getStudioRoute(config, "catalogue_moment_import");
+  if (scopeKind === "moment" && scopeId) href = `${getStudioRoute(config, "catalogue_moment_editor")}?moment=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "moment" && !scopeId) href = getStudioRoute(config, "catalogue_moment_editor");
   return { href, label: scopeLabel };
 }
 
@@ -97,7 +98,8 @@ function nextLink(config, entry) {
     return { href: getStudioRoute(config, "catalogue_status"), label: "Review status" };
   }
   if (operation === "moment.import") {
-    return { href: getStudioRoute(config, "build_activity"), label: "Review build" };
+    if (scope.href) return { href: scope.href, label: "Open moment" };
+    return { href: getStudioRoute(config, "catalogue_moment_editor"), label: "Open moment editor" };
   }
   if (operation.startsWith("catalogue/import-")) {
     return { href: getStudioRoute(config, "build_activity"), label: "Review build" };

@@ -140,7 +140,7 @@ Checks:
 
 - confirm the dashboard signposts create, edit, review, maintenance, and guidance flows
 - open each linked Catalogue route at least once:
-  - `/studio/catalogue-moment-import/`
+  - `/studio/catalogue-moment/`
   - `/studio/catalogue-work/`
   - `/studio/catalogue-series/`
   - `/studio/catalogue-work-detail/`
@@ -338,11 +338,11 @@ Expected results:
 - duplicate rows are skipped rather than overwritten
 - apply is blocked when workbook rows are invalid
 
-## 11. Moments Import
+## 11. Moments Editor And Import
 
 Route:
 
-- `/studio/catalogue-moment-import/`
+- `/studio/catalogue-moment/`
 
 Owner:
 
@@ -445,7 +445,7 @@ Routes:
 - `/studio/catalogue-work-detail/`
 - `/studio/catalogue-series/`
 - `/studio/bulk-add-work/`
-- `/studio/catalogue-moment-import/`
+- `/studio/catalogue-moment/`
 - `/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan`
 
 Owner:

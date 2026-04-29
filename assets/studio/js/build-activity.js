@@ -74,7 +74,8 @@ function scopeLink(config, entry) {
   let href = "";
   if (scopeKind === "work" && scopeId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(scopeId)}`;
   if (scopeKind === "series" && scopeId) href = `${getStudioRoute(config, "catalogue_series_editor")}?series=${encodeURIComponent(scopeId)}`;
-  if (scopeKind === "moment") href = getStudioRoute(config, "catalogue_moment_import");
+  if (scopeKind === "moment" && scopeId) href = `${getStudioRoute(config, "catalogue_moment_editor")}?moment=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "moment" && !scopeId) href = getStudioRoute(config, "catalogue_moment_editor");
   if (scopeKind === "catalogue") href = getStudioRoute(config, "catalogue_status");
   return { href, label: scopeLabel };
 }

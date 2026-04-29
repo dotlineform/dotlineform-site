@@ -14,10 +14,12 @@ Route:
 - focused record selection uses `?moment=<moment_id>`
 
 This page edits one existing canonical moment metadata record from `assets/studio/data/catalogue/moments.json`.
+It also imports new draft moments from staged body-only Markdown, so moment creation, review, save, publish, and unpublish now live on one Studio page.
 
 ## Use This Page For
 
 - opening an existing moment by `moment_id` or title
+- importing a new draft moment from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 - editing moment metadata fields
 - saving source JSON without changing publication status
 - publishing draft moments through a dedicated `Publish` command
@@ -26,8 +28,6 @@ This page edits one existing canonical moment metadata record from `assets/studi
 - checking permanent prose, staged prose, and source-image readiness
 - refreshing local moment image derivatives from the displayed source image path without changing source metadata
 - importing staged moment prose from `var/docs/catalogue/import-staging/moments/<moment_id>.md`
-
-Use [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import) for introducing a moment from a staged prose file.
 
 ## Editable Fields
 
@@ -64,6 +64,28 @@ The internal scoped public update rebuilds:
 - local moment media derivatives when the configured source image is available
 
 The moment media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the scoped build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
+
+## Import New Moment
+
+The lower import panel introduces a new moment from a staged body-only Markdown file without leaving the editor.
+
+The import flow:
+
+1. accepts a filename-only staged moment file, such as `keys.md`
+2. collects initial metadata on the same editor page
+3. forces imported status to `draft`
+4. previews the staged prose and resolved metadata with `POST /catalogue/moment/import-preview`
+5. applies the import with `POST /catalogue/moment/import-apply`
+6. opens the imported draft in the editor immediately after a successful apply
+
+Apply writes:
+
+- body-only prose to `_docs_src_catalogue/moments/<moment_id>.md`
+- draft moment metadata to `assets/studio/data/catalogue/moments.json`
+
+Import does not publish the moment and does not run the scoped public update. Use `Publish` on the opened draft record when the moment is ready.
+
+The legacy `/studio/catalogue-moment-import/` route redirects to this editor and preserves `?file=<filename>` for staged-file links.
 
 ## Delete
 

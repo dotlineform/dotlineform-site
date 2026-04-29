@@ -278,7 +278,8 @@ Moment implementation:
 - published moment saves request the internal public update path automatically
 - saved draft moments expose `Publish`; published moments expose `Unpublish`
 - moment `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
-- `/studio/catalogue-moment-import/` remains separate for now, but imports draft source/prose only and no longer runs the scoped public update
+- `/studio/catalogue-moment/` now includes the staged-file import panel, so import, review, save, publish, and unpublish live on one Moment editor page
+- `/studio/catalogue-moment-import/` is retained only as a compatibility bridge to the Moment editor and no longer owns a separate workflow
 
 ### Task 6. Update Docs And E2E Checklist
 

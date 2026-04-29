@@ -63,8 +63,8 @@ Current route inventory:
 - `studio/docs-import/index.md`
 - `studio/catalogue-new-work/index.md` redirects to `/studio/catalogue-work/?mode=new`
 - `studio/bulk-add-work/index.md`
-- `studio/catalogue-moment-import/index.md`
 - `studio/catalogue-moment/index.md`
+- `studio/catalogue-moment-import/index.md` compatibility bridge to `/studio/catalogue-moment/`
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-new-work-detail/index.md` redirects to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` when a parent work is supplied
 - `studio/catalogue-work-detail/index.md`
@@ -84,8 +84,8 @@ Current page-level doc links:
 - Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
 - Docs HTML Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
-- Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
+- Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import` compatibility route note
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor` compatibility redirect note
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
@@ -123,7 +123,6 @@ Current page controllers:
 - `assets/studio/js/docs-broken-links.js`
 - `assets/studio/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
-- `assets/studio/js/catalogue-moment-import.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-activity.js`

@@ -148,7 +148,7 @@ The staged primary derivatives are the local handoff point for the remote media 
 
 ## Purpose
 
-This is the command-path companion to the Studio `Save + Rebuild` action on `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-moment/`, and the file-driven moments import flow on `/studio/catalogue-moment-import/`.
+This is the command-path companion to Studio public-update actions on `/studio/catalogue-work/`, `/studio/catalogue-series/`, and `/studio/catalogue-moment/`. The Moment editor also contains the file-driven draft import panel, but that import path stays source-only until the draft is published.
 
 Work and series scopes require published source records before runtime build/apply. Draft source saves remain source-only and are recovered through Catalogue Status rather than public rebuild paths.
 
