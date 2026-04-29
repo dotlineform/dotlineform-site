@@ -10,26 +10,14 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
-
-const EDITABLE_FIELDS = [
-  { key: "series_id", label: "series id", type: "text" },
-  { key: "title", label: "title", type: "text" },
-  { key: "series_type", label: "series type", type: "text" },
-  { key: "year", label: "year", type: "number", step: "1" },
-  { key: "year_display", label: "year display", type: "text" },
-  { key: "sort_fields", label: "sort fields", type: "text" },
-  { key: "notes", label: "notes", type: "textarea" }
-];
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
-
-function normalizeSeriesId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (digits) return digits.padStart(3, "0");
-  return normalizeText(value).toLowerCase();
-}
+import {
+  NEW_SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  buildCreateSeriesPayload,
+  normalizeSeriesId,
+  normalizeText,
+  suggestNextSeriesId,
+  validateCreateSeriesDraft
+} from "./catalogue-series-fields.js";
 
 function setTextWithState(node, text, state = "") {
   if (!node) return;
@@ -91,23 +79,10 @@ function renderField(field, fieldsNode, state) {
 }
 
 function validateDraft(state) {
-  const errors = new Map();
-  const seriesId = normalizeSeriesId(state.draft.series_id);
-  if (!seriesId) {
-    errors.set("series_id", t(state, "field_required_series_id", "Enter a series id."));
-  } else if (state.seriesById.has(seriesId)) {
-    errors.set("series_id", t(state, "field_duplicate_series_id", "Series id already exists."));
-  }
-
-  if (!normalizeText(state.draft.title)) {
-    errors.set("title", t(state, "field_required_title", "Enter a title."));
-  }
-
-  const year = normalizeText(state.draft.year);
-  if (year && !/^-?\d+$/.test(year)) {
-    errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
-  }
-  return errors;
+  return validateCreateSeriesDraft(state.draft, {
+    seriesById: state.seriesById,
+    t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+  });
 }
 
 function updateFieldMessages(state, errors) {
@@ -139,31 +114,7 @@ function updateEditorState(state) {
 }
 
 function buildPayload(state) {
-  return {
-    series_id: normalizeSeriesId(state.draft.series_id),
-    record: {
-      title: normalizeText(state.draft.title) || null,
-      series_type: normalizeText(state.draft.series_type) || null,
-      status: "draft",
-      published_date: null,
-      year: normalizeText(state.draft.year) ? Number(state.draft.year) : null,
-      year_display: normalizeText(state.draft.year_display) || null,
-      primary_work_id: null,
-      sort_fields: normalizeText(state.draft.sort_fields) || null,
-      notes: normalizeText(state.draft.notes) || null
-    }
-  };
-}
-
-function suggestNextSeriesId(seriesItems) {
-  let maxNumericId = 0;
-  seriesItems.forEach((record) => {
-    const seriesId = normalizeSeriesId(record && record.series_id);
-    if (!/^\d+$/.test(seriesId)) return;
-    maxNumericId = Math.max(maxNumericId, Number(seriesId));
-  });
-  if (maxNumericId <= 0) return "001";
-  return String(maxNumericId + 1).padStart(3, "0");
+  return buildCreateSeriesPayload(state.draft);
 }
 
 async function createSeries(state) {

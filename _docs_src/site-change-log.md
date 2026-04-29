@@ -8,6 +8,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Factored shared catalogue series editor helpers
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series
+
+**Summary:**
+Added a shared series source helper module and moved the current new-series and edit-series controllers onto shared field definitions, id normalization, draft shaping, validation helpers, next-id suggestion, and create/save payload helpers.
+
+**Reason:**
+The series unified editor work needs one source-field contract before adding `?mode=new` to the main series editor route.
+
+**Effect:**
+The current `/studio/catalogue-series/` and `/studio/catalogue-new-series/` route behavior remains unchanged, but both paths now depend on the same series helper surface.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-series-fields.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-new-series-editor.js`
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
+
 ## [2026-04-29] Added series unified editor request spec
 
 **Status:** specified

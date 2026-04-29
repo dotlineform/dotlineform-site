@@ -12,6 +12,7 @@ Status:
 
 - specified
 - task 1 locked
+- task 2 implemented
 
 ## Summary
 
@@ -300,7 +301,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Extract shared series field metadata, normalization, validation, draft shaping, and payload helpers.
 
@@ -316,6 +317,13 @@ Acceptance checks:
 - create and edit paths consume the same field definitions where applicable
 - helper extraction does not change routes or user-visible behavior
 - JS syntax checks pass
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-series-fields.js` now owns shared series field definitions, readonly field metadata, status/date constants, `series_id` and `work_id` normalization, draft shaping, create/save payload shaping, next-series-id suggestion, and create/edit validation helpers.
+- `assets/studio/js/catalogue-new-series-editor.js` now consumes the shared new-series field list, create payload builder, id normalization, next-id suggestion, and create validation helper.
+- `assets/studio/js/catalogue-series-editor.js` now consumes the shared edit field list, readonly field list, draft shaping, save payload builder, id normalization, and edit validation helper.
+- This task intentionally preserves current route behavior and current create validation. The stricter required create fields and config-backed `series_type` select are specified for the unified new-mode implementation rather than this extraction pass.
 
 ### Task 3. Add New Mode To Series Editor
 

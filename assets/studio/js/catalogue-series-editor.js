@@ -13,31 +13,19 @@ import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
+import {
+  SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  SERIES_READONLY_FIELDS as READONLY_FIELDS,
+  buildSaveSeriesPayload,
+  buildSeriesDraftFromRecord,
+  normalizeSeriesId,
+  normalizeText,
+  normalizeWorkId,
+  validateSeriesDraft
+} from "./catalogue-series-fields.js";
 
-const EDITABLE_FIELDS = [
-  { key: "title", label: "title", type: "text" },
-  { key: "series_type", label: "series type", type: "text" },
-  { key: "status", label: "status", type: "select", options: ["", "draft", "published"] },
-  { key: "published_date", label: "published date", type: "date" },
-  { key: "year", label: "year", type: "number", step: "1" },
-  { key: "year_display", label: "year display", type: "text" },
-  { key: "primary_work_id", label: "primary work id", type: "text" },
-  { key: "sort_fields", label: "sort fields", type: "text" },
-  { key: "notes", label: "notes", type: "textarea" }
-];
-
-const READONLY_FIELDS = [
-  { key: "series_id", label: "series id" }
-];
-
-const STATUS_OPTIONS = new Set(["", "draft", "published"]);
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SEARCH_LIMIT = 20;
 const MEMBER_LIST_LIMIT = 10;
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -52,18 +40,6 @@ function toneForReadinessStatus(status) {
   if (status === "ready") return "ready";
   if (status === "unavailable") return "error";
   return "warning";
-}
-
-function normalizeSeriesId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (digits) return digits.padStart(3, "0");
-  return normalizeText(value).toLowerCase();
-}
-
-function normalizeWorkId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(5, "0");
 }
 
 function stableStringify(value) {
@@ -270,14 +246,6 @@ async function loadSeriesLookupRecord(state, seriesId) {
   return loadStudioLookupRecordJson(state.config, "catalogue_lookup_series_base", seriesId, { cache: "no-store" });
 }
 
-function buildDraftFromRecord(record) {
-  const draft = {};
-  EDITABLE_FIELDS.forEach((field) => {
-    draft[field.key] = normalizeText(record[field.key]);
-  });
-  return draft;
-}
-
 function applyDraftToInputs(state) {
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
@@ -340,27 +308,10 @@ function draftHasChanges(state) {
 }
 
 function validateDraft(state) {
-  const errors = new Map();
-  const status = normalizeText(state.draft.status).toLowerCase();
-  if (!STATUS_OPTIONS.has(status)) {
-    errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
-  }
-  const publishedDate = normalizeText(state.draft.published_date);
-  if (publishedDate && !DATE_RE.test(publishedDate)) {
-    errors.set("published_date", "Use YYYY-MM-DD or leave blank.");
-  }
-  const year = normalizeText(state.draft.year);
-  if (year && !/^-?\d+$/.test(year)) {
-    errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
-  }
-  const primaryWorkId = normalizeWorkId(state.draft.primary_work_id);
-  const currentMembers = new Set(getCurrentMemberEntries(state).map((entry) => entry.workId));
-  if (status === "published" && !primaryWorkId) {
-    errors.set("primary_work_id", t(state, "field_required_primary_work_publish", "Published series must have a primary work that belongs to this series."));
-  } else if (primaryWorkId && !currentMembers.has(primaryWorkId)) {
-    errors.set("primary_work_id", t(state, "field_invalid_primary_work", "Primary work must be a current member of this series."));
-  }
-  return errors;
+  return validateSeriesDraft(state.draft, {
+    currentMemberWorkIds: new Set(getCurrentMemberEntries(state).map((entry) => entry.workId)),
+    t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+  });
 }
 
 function updateFieldMessages(state, errors) {
@@ -374,24 +325,7 @@ function updateFieldMessages(state, errors) {
 }
 
 function buildPayload(state, workUpdates) {
-  return {
-    series_id: state.currentSeriesId,
-    expected_record_hash: state.currentRecordHash,
-    apply_build: applyBuildRequested(state),
-    extra_work_ids: state.pendingBuildExtraWorkIds.slice(),
-    record: {
-      title: normalizeText(state.draft.title) || null,
-      series_type: normalizeText(state.draft.series_type) || null,
-      status: normalizeText(state.draft.status).toLowerCase() || null,
-      published_date: normalizeText(state.draft.published_date) || null,
-      year: normalizeText(state.draft.year) ? Number(state.draft.year) : null,
-      year_display: normalizeText(state.draft.year_display) || null,
-      primary_work_id: normalizeWorkId(state.draft.primary_work_id) || null,
-      sort_fields: normalizeText(state.draft.sort_fields) || null,
-      notes: normalizeText(state.draft.notes) || null
-    },
-    work_updates: workUpdates
-  };
+  return buildSaveSeriesPayload(state, workUpdates);
 }
 
 function applyBuildRequested(state) {
@@ -612,7 +546,7 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.currentRecord = record;
   state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
-  state.baselineDraft = buildDraftFromRecord(record);
+  state.baselineDraft = buildSeriesDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   initializeMembershipState(state, seriesId);
   applyDraftToInputs(state);
