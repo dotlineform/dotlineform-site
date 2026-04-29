@@ -170,7 +170,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Add parent-scoped new mode to `/studio/catalogue-work-detail/`.
 
@@ -189,6 +189,12 @@ Acceptance checks:
 - duplicate detail ids are blocked
 - successful create opens normal edit mode
 - create does not update the public site
+
+Implementation notes:
+
+- `/studio/catalogue-work-detail/?work=<work_id>&mode=new` now opens parent-scoped create mode on the main detail editor route.
+- New mode shows the locked parent work, prefilled suggested `detail_id`, visible draft `status`, and editable detail source fields.
+- `Create` writes through `POST /catalogue/work-detail/create` and then loads `/studio/catalogue-work-detail/?detail=<detail_uid>` in normal edit mode.
 
 ### Task 4. Migrate Links, Routes, And Config
 

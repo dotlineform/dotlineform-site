@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added parent-scoped new mode to the work-detail editor
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work details
+
+**Summary:**
+Added `?work=<work_id>&mode=new` support to `/studio/catalogue-work-detail/` so the main detail editor can create a draft detail under a locked parent work.
+
+**Reason:**
+The unified work-detail editor needs create and edit behavior on one route while preserving the product rule that work details are normally created from their parent work.
+
+**Effect:**
+New mode shows the parent work as read-only context, pre-fills the suggested next `detail_id`, keeps `status` visible and draft-only, disables build/delete/update actions until create succeeds, writes only through `POST /catalogue/work-detail/create`, and then opens the created detail in normal edit mode.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/data/studio_config.json`
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Factored shared work-detail editor helpers
 
 **Status:** implemented

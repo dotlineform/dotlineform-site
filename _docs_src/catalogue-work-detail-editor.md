@@ -12,8 +12,9 @@ Route:
 
 - `/studio/catalogue-work-detail/`
 - focused record selection uses `?detail=<detail_uid>`
+- parent-scoped draft create mode uses `?work=<work_id>&mode=new`
 
-This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` and writes changes through the local catalogue write service. It now supports both focused single-record edit and bulk edit mode on the same route.
+This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` and writes changes through the local catalogue write service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
 
 ## Current Scope
 
@@ -23,6 +24,7 @@ The first implementation covers:
 - open one work detail record
 - open multiple work detail records by comma-delimited detail ids and same-work detail ranges
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
+- create a draft detail source record from the detail editor route when a parent work is supplied
 - edit `project_subfolder`
 - edit `project_filename`
 - edit `title`
@@ -40,6 +42,24 @@ The first implementation covers:
 The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
 
 Implementation note: the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
+
+## New Mode
+
+New mode is entered with:
+
+- `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
+
+In new mode:
+
+- the parent work id is required in the URL
+- the parent work is shown as locked read-only context
+- the suggested next `detail_id` is prefilled when available
+- `status` is visible and fixed to `draft` for create
+- `project_subfolder`, `project_filename`, and `title` are editable
+- build, media refresh, and delete actions are disabled until the detail exists
+- `Create` writes source JSON only through `POST /catalogue/work-detail/create`
+- no public site update runs during create
+- after create, the page opens the new detail in normal edit mode with `?detail=<detail_uid>`
 
 ## Bulk Mode
 

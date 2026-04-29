@@ -20,17 +20,26 @@ import {
 } from "./catalogue-media-preview.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  WORK_DETAIL_FIELD_DEFINITIONS,
   WORK_DETAIL_READONLY_FIELDS as READONLY_FIELDS,
   WORK_DETAIL_STATUS_OPTIONS as STATUS_OPTIONS,
+  buildCreateWorkDetailPayload,
   buildSaveWorkDetailPayload,
   buildWorkDetailDraftFromRecord,
   canonicalizeWorkDetailScalar as canonicalizeScalar,
   normalizeDetailId,
   normalizeDetailUid,
   normalizeText,
-  normalizeWorkId
+  normalizeWorkId,
+  suggestNextDetailId,
+  validateCreateWorkDetailDraft
 } from "./catalogue-work-detail-fields.js";
 
+const FORM_FIELDS = Object.freeze([
+  WORK_DETAIL_FIELD_DEFINITIONS.work_id,
+  WORK_DETAIL_FIELD_DEFINITIONS.detail_id,
+  ...EDITABLE_FIELDS
+]);
 const SEARCH_LIMIT = 20;
 const BULK_PREVIEW_LIMIT = 12;
 
@@ -299,6 +308,7 @@ function renderField(field, fieldsNode, state) {
   input.addEventListener("input", () => onFieldInput(state, field.key));
   input.addEventListener("change", () => onFieldInput(state, field.key));
   fieldsNode.appendChild(wrapper);
+  state.fieldWrappers.set(field.key, wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
 }
@@ -327,6 +337,14 @@ function buildRecordSummary(record) {
   const section = normalizeText(record && record.project_subfolder);
   if (title && section) return `${title} · ${section}`;
   return title || section || "—";
+}
+
+function buildParentWorkSummary(record) {
+  const workId = normalizeWorkId(record && record.work_id);
+  const title = normalizeText(record && record.title);
+  const yearDisplay = normalizeText(record && record.year_display);
+  const label = [title, yearDisplay].filter(Boolean).join(" · ");
+  return label ? `${workId} · ${label}` : workId || "—";
 }
 
 function getSearchMatches(state, rawQuery) {
@@ -379,7 +397,7 @@ async function loadDetailLookupRecord(state, detailUid) {
 }
 
 function applyDraftToInputs(state) {
-  EDITABLE_FIELDS.forEach((field) => {
+  FORM_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     node.value = normalizeText(state.draft[field.key]);
@@ -391,6 +409,20 @@ function applyReadonly(state) {
     const node = state.readonlyNodes.get(field.key);
     if (!node) return;
     node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
+  });
+}
+
+function setModeFieldAvailability(state) {
+  FORM_FIELDS.forEach((field) => {
+    const wrapper = state.fieldWrappers.get(field.key);
+    const node = state.fieldNodes.get(field.key);
+    const newModeOnly = field.key === "work_id" || field.key === "detail_id";
+    if (wrapper) wrapper.hidden = newModeOnly && state.mode !== "new";
+    if (!node) return;
+    node.disabled = state.isSaving || state.isBuilding || state.isDeleting;
+    if (state.mode === "new" && (field.key === "work_id" || field.key === "status")) {
+      node.disabled = true;
+    }
   });
 }
 
@@ -430,7 +462,7 @@ function updatePublishControls(state, { hasRecord, dirty, errors }) {
   state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
   if (state.applyBuildNode) {
-    state.applyBuildNode.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+    state.applyBuildNode.disabled = state.mode === "new" || !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 }
 
@@ -505,14 +537,30 @@ function formatBuildPreview(state, build) {
   return mediaParts.length ? `${baseText} ${mediaParts.join("; ")}.` : baseText;
 }
 
-function syncUrl(detailValue) {
+function syncUrl(detailValue, options = {}) {
   const url = new URL(window.location.href);
-  if (detailValue) url.searchParams.set("detail", detailValue);
-  else url.searchParams.delete("detail");
+  if (normalizeText(options.mode).toLowerCase() === "new") {
+    url.searchParams.delete("detail");
+    url.searchParams.set("mode", "new");
+    const workId = normalizeWorkId(options.workId);
+    if (workId) url.searchParams.set("work", workId);
+    else url.searchParams.delete("work");
+  } else if (detailValue) {
+    url.searchParams.delete("mode");
+    url.searchParams.delete("work");
+    url.searchParams.set("detail", detailValue);
+  } else {
+    url.searchParams.delete("mode");
+    url.searchParams.delete("work");
+    url.searchParams.delete("detail");
+  }
   window.history.replaceState({}, "", url.toString());
 }
 
 function draftHasChanges(state) {
+  if (state.mode === "new") {
+    return true;
+  }
   if (state.mode === "bulk") {
     return state.bulkTouchedFields.size > 0;
   }
@@ -521,6 +569,13 @@ function draftHasChanges(state) {
 }
 
 function validateDraft(state) {
+  if (state.mode === "new") {
+    return validateCreateWorkDetailDraft(state.draft, {
+      workById: state.workSearchById,
+      detailByUid: state.detailSearchByUid,
+      t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+    });
+  }
   const errors = new Map();
   if (state.mode === "bulk" && !state.bulkTouchedFields.has("status")) {
     return errors;
@@ -533,7 +588,7 @@ function validateDraft(state) {
 }
 
 function updateFieldMessages(state, errors) {
-  EDITABLE_FIELDS.forEach((field) => {
+  FORM_FIELDS.forEach((field) => {
     const messageNode = state.fieldStatusNodes.get(field.key);
     if (!messageNode) return;
     let message = errors.get(field.key) || "";
@@ -546,6 +601,38 @@ function updateFieldMessages(state, errors) {
 }
 
 function updateSummary(state) {
+  if (state.mode === "new") {
+    const workId = normalizeWorkId(state.draft.work_id);
+    const parentRecord = state.workSearchById.get(workId);
+    const workEditorBase = getStudioRoute(state.config, "catalogue_work_editor");
+    const parentHref = workId ? `${workEditorBase}?work=${encodeURIComponent(workId)}` : workEditorBase;
+    state.summaryNode.innerHTML = `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_parent_label", "parent work"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">
+          ${workId ? `<a href="${escapeHtml(parentHref)}">${escapeHtml(buildParentWorkSummary(parentRecord || { work_id: workId }))}</a>` : "—"}
+        </div>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_detail_id_label", "detail id"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(state.draft.detail_id))}</div>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_status_label", "status"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_status", "draft source record; not published"))}</div>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_next_label", "next step"))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_next", "Create the draft, then continue editing and update the parent work when ready."))}</div>
+      </div>
+    `;
+    state.runtimeStateNode.textContent = t(state, "new_runtime_state", "public site update is unavailable until the draft detail exists");
+    setTextWithState(state.buildImpactNode, "");
+    renderCurrentPreview(state);
+    renderReadiness(state);
+    return;
+  }
+
   if (state.mode === "bulk") {
     const selectedCount = state.bulkDetailUids.length;
     const parentWorkIds = Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
@@ -631,6 +718,52 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   updateEditorState(state);
 }
 
+function setNewDetailMode(state, workId, options = {}) {
+  const normalizedWorkId = normalizeWorkId(workId);
+  state.mode = "new";
+  state.currentDetailUid = "";
+  state.currentWorkId = normalizedWorkId;
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.bulkDetailUids = [];
+  state.bulkRecords = new Map();
+  state.bulkRecordHashes = new Map();
+  state.bulkMixedFields = new Set();
+  state.bulkTouchedFields = new Set();
+  state.bulkBuildTargets = [];
+  state.baselineDraft = {};
+  state.draft = {};
+  FORM_FIELDS.forEach((field) => {
+    state.draft[field.key] = "";
+  });
+  state.draft.work_id = normalizedWorkId;
+  state.draft.detail_id = suggestNextDetailId(state.detailSearchByUid, normalizedWorkId);
+  state.draft.status = "draft";
+  state.rebuildPending = false;
+  state.buildPreview = null;
+  if (state.applyBuildNode) state.applyBuildNode.checked = false;
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = field.key === "work_id" ? displayValue(normalizedWorkId) : "—";
+  });
+  state.searchNode.value = "";
+  setPopupVisibility(state, false);
+  syncUrl("", { mode: "new", workId: normalizedWorkId });
+  if (!normalizedWorkId) {
+    setTextWithState(state.contextNode, t(state, "new_context_parent_missing", "Open new detail mode from a parent work editor or provide a work id."));
+  } else if (!state.workSearchById.has(normalizedWorkId)) {
+    setTextWithState(state.contextNode, t(state, "new_context_parent_unknown", "Cannot create a detail because parent work {work_id} was not found.", { work_id: normalizedWorkId }), "error");
+  } else {
+    setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft detail under work {work_id}.", { work_id: normalizedWorkId }));
+  }
+  setTextWithState(state.statusNode, "");
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  updateEditorState(state);
+}
+
 function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, options = {}) {
   state.mode = "bulk";
   state.currentDetailUid = "";
@@ -672,10 +805,11 @@ function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, opti
 }
 
 function updateEditorState(state) {
-  const hasRecord = state.mode === "bulk" ? state.bulkDetailUids.length > 0 : Boolean(state.currentRecord);
+  const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkDetailUids.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
   updateFieldMessages(state, errors);
+  setModeFieldAvailability(state);
   updateSummary(state);
   if (!hasRecord) {
     setTextWithState(state.buildImpactNode, "");
@@ -695,8 +829,15 @@ function updateEditorState(state) {
   }
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
-  if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
+  setTextWithState(state.warningNode, dirty && state.mode !== "new" ? t(state, "dirty_warning", "Unsaved source changes.") : "");
+  if (state.mode === "new" && !state.resultNode.textContent) {
+    const firstError = errors.size ? Array.from(errors.values()).find(Boolean) : "";
+    setTextWithState(
+      state.statusNode,
+      firstError || (state.serverAvailable ? "" : t(state, "create_mode_unavailable_hint", "Local catalogue server unavailable. Create is disabled.")),
+      firstError ? "error" : state.serverAvailable ? "" : "warn"
+    );
+  } else if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
     setTextWithState(
       state.statusNode,
       state.mode === "bulk"
@@ -705,6 +846,11 @@ function updateEditorState(state) {
     );
   }
 
+  state.searchNode.disabled = state.mode === "new";
+  state.openButton.disabled = state.mode === "new";
+  state.saveButton.textContent = state.mode === "new"
+    ? t(state, "create_button", "Create")
+    : t(state, "save_button", "Save");
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   updatePublishControls(state, { hasRecord, dirty, errors });
@@ -714,6 +860,12 @@ function updateEditorState(state) {
 function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
+  if (state.mode === "new" && fieldKey === "status") {
+    state.draft.status = "draft";
+    node.value = "draft";
+    updateEditorState(state);
+    return;
+  }
   state.draft[fieldKey] = node.value;
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
@@ -774,6 +926,10 @@ async function refreshBuildPreview(state) {
 }
 
 async function saveCurrentDetail(state) {
+  if (state.mode === "new") {
+    await createCurrentDetail(state);
+    return;
+  }
   if (state.mode === "bulk") {
     if (!state.bulkDetailUids.length) return;
   } else if (!state.currentRecord) {
@@ -923,6 +1079,55 @@ async function saveCurrentDetail(state) {
       : `${t(state, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim();
     setTextWithState(state.statusNode, message, "error");
   } finally {
+    state.isSaving = false;
+    updateEditorState(state);
+  }
+}
+
+async function createCurrentDetail(state) {
+  if (state.mode !== "new") return;
+  const errors = validateDraft(state);
+  updateFieldMessages(state, errors);
+  if (errors.size > 0) {
+    const workIdError = errors.get("work_id") || "";
+    setTextWithState(
+      state.statusNode,
+      workIdError || t(state, "create_status_validation_error", "Fix validation errors before creating the draft detail."),
+      "error"
+    );
+    updateEditorState(state);
+    return;
+  }
+
+  state.isSaving = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "create_status_saving", "Creating draft detail..."));
+  setTextWithState(state.resultNode, "");
+
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkDetail, buildCreateWorkDetailPayload(state.draft));
+    const detailUid = normalizeDetailUid(response && response.detail_uid);
+    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    if (!detailUid) {
+      throw new Error("create response missing detail id");
+    }
+    if (record) {
+      state.detailSearchByUid.set(detailUid, {
+        detail_uid: detailUid,
+        work_id: normalizeText(record.work_id),
+        detail_id: normalizeText(record.detail_id),
+        title: normalizeText(record.title),
+        status: normalizeText(record.status)
+      });
+    }
+    state.isSaving = false;
+    await openDetailByUid(state, detailUid);
+    setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft detail {detail_uid}. Opening edit mode...", { detail_uid: detailUid }), "success");
+    setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft detail {detail_uid}.", { detail_uid: detailUid }), "success");
+  } catch (error) {
+    const message = `${t(state, "create_status_failed", "Draft detail create failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
+    setTextWithState(state.resultNode, message, "error");
     state.isSaving = false;
     updateEditorState(state);
   }
@@ -1187,6 +1392,7 @@ async function init() {
     config: null,
     mode: "single",
     detailSearchByUid: new Map(),
+    workSearchById: new Map(),
     currentLookup: null,
     currentDetailUid: "",
     currentWorkId: "",
@@ -1208,12 +1414,14 @@ async function init() {
     isBuilding: false,
     isDeleting: false,
     serverAvailable: false,
+    fieldWrappers: new Map(),
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),
     searchNode,
     popupNode,
     popupListNode,
+    openButton,
     saveButton,
     buildButton,
     deleteButton,
@@ -1232,7 +1440,7 @@ async function init() {
     buildImpactNode
   };
 
-  EDITABLE_FIELDS.forEach((field) => renderField(field, fieldsNode, state));
+  FORM_FIELDS.forEach((field) => renderField(field, fieldsNode, state));
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
 
   try {
@@ -1245,8 +1453,9 @@ async function init() {
     applyBuildLabelNode.textContent = t(state, "build_button", "Update site now");
     deleteButton.textContent = t(state, "delete_button", "Delete");
 
-    const [detailsPayload, serverAvailable] = await Promise.all([
+    const [detailsPayload, worksPayload, serverAvailable] = await Promise.all([
       loadStudioLookupJson(config, "catalogue_lookup_work_detail_search", { cache: "no-store" }),
+      loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),
       probeCatalogueHealth()
     ]);
 
@@ -1256,6 +1465,13 @@ async function init() {
       const detailUid = normalizeText(record.detail_uid);
       if (!detailUid) return;
       state.detailSearchByUid.set(detailUid, record);
+    });
+    const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
+    workItems.forEach((record) => {
+      if (!record || typeof record !== "object") return;
+      const workId = normalizeWorkId(record.work_id);
+      if (!workId) return;
+      state.workSearchById.set(workId, record);
     });
     state.serverAvailable = Boolean(serverAvailable);
     saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_detail_editor.${key}`, fallback, tokens));
@@ -1269,7 +1485,7 @@ async function init() {
         renderSearchMatches(state, [], "");
         return;
       }
-       if (isDetailBulkQuery(query)) {
+      if (isDetailBulkQuery(query)) {
         renderSearchMatches(state, [], "");
         return;
       }
@@ -1324,8 +1540,13 @@ async function init() {
       setPopupVisibility(state, false);
     });
 
-    const requestedDetailValue = normalizeText(new URLSearchParams(window.location.search).get("detail"));
-    if (requestedDetailValue) {
+    const params = new URLSearchParams(window.location.search);
+    const requestedMode = normalizeText(params.get("mode")).toLowerCase();
+    const requestedWorkValue = normalizeText(params.get("work"));
+    const requestedDetailValue = normalizeText(params.get("detail"));
+    if (requestedMode === "new") {
+      setNewDetailMode(state, requestedWorkValue);
+    } else if (requestedDetailValue) {
       openDetailSelection(state, requestedDetailValue).catch((error) => {
         console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
       });

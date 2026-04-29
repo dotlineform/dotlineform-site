@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,26 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-29 / UI-048
+
+- status: adopted
+- route: `/studio/catalogue-work-detail/`
+- issue: work-detail create/edit needed a unified implementation route without making details feel like standalone dashboard records.
+- triage: systemic child-record editor workflow rule
+- reasoning: child records that only make sense through a parent should still share create/edit helpers and routes when they use one source schema, but new mode must keep the parent record visible and locked rather than asking the user to search globally for a parent.
+- permanent rule: for parent-owned child records, unified Studio create mode should be entered with a parent id in the URL, show the parent as read-only context, disable build/delete/update actions until the child source record exists, and return to normal edit mode after create.
+- outcome: `/studio/catalogue-work-detail/?work=<work_id>&mode=new` creates draft details under a locked parent work and opens `/studio/catalogue-work-detail/?detail=<detail_uid>` after create.
+- files changed:
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/catalogue-work-detail-editor.md`
+  - `_docs_src/site-request-catalogue-work-detail-unified-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-work-detail/?work=<work_id>&mode=new` and confirm the parent work is locked, the suggested detail id is prefilled, and create-only controls render
+  - open `/studio/catalogue-work-detail/?mode=new` and confirm missing parent work is blocked
+  - create a draft detail and confirm the route switches to `?detail=<detail_uid>`
 
 ## UI Rule Log 2026-04-28 / UI-045
 

@@ -13,7 +13,9 @@ Route:
 - `/studio/catalogue-new-work-detail/`
 - focused create flow accepts `?work=<work_id>`
 
-This page creates a new canonical work-detail source record in `assets/studio/data/catalogue/work_details.json`.
+This legacy page creates a new canonical work-detail source record in `assets/studio/data/catalogue/work_details.json`.
+
+The main work-detail editor also supports parent-scoped create mode at `/studio/catalogue-work-detail/?work=<work_id>&mode=new`. This page remains available until route migration retires the standalone create implementation.
 
 Implementation note: this legacy create route now consumes the same work-detail field definitions, id normalization, draft validation, next-id suggestion, and create payload helper as the main work-detail editor.
 
