@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-e77cc5c928927cbe5c4f9aed882a4534",
-    "generated_at_utc": "2026-04-26T21:17:45Z",
-    "count": 2130
+    "version": "blake2b-1f6f9a09254dad91bc056a984a57b7aa",
+    "generated_at_utc": "2026-04-29T10:28:04Z",
+    "count": 2131
   },
   "entries": [
     {
@@ -1386,6 +1386,29 @@
         "primary"
       ],
       "search_text": "003 16 forms 16 forms 2023 primary"
+    },
+    {
+      "kind": "series",
+      "id": "002",
+      "title": "100 grasping hands",
+      "href": "/series/002/",
+      "year": 2023,
+      "display_meta": "2023",
+      "series_ids": [],
+      "series_titles": [],
+      "series_type": "primary",
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "002",
+        "100 grasping hands",
+        "100",
+        "grasping",
+        "hands",
+        "2023",
+        "primary"
+      ],
+      "search_text": "002 100 grasping hands 100 grasping hands 2023 primary"
     },
     {
       "kind": "series",

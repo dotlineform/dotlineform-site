@@ -649,6 +649,18 @@ function initializeMembershipState(state, seriesId) {
   }
 }
 
+function buildSavedSeriesLookup(state, record, recordHash) {
+  return {
+    ...(state.currentLookup || {}),
+    series: record,
+    record_hash: recordHash,
+    member_works: getCurrentMemberEntries(state).map((entry) => ({
+      work_id: entry.workId,
+      series_ids: entry.seriesIds.slice()
+    }))
+  };
+}
+
 function setLoadedSeries(state, seriesId, record, options = {}) {
   state.mode = "single";
   state.currentSeriesId = seriesId;
@@ -663,7 +675,7 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   syncUrl(seriesId);
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
-  state.pendingBuildExtraWorkIds = [];
+  state.pendingBuildExtraWorkIds = Array.isArray(options.pendingBuildExtraWorkIds) ? options.pendingBuildExtraWorkIds.slice() : [];
   if (state.applyBuildNode) state.applyBuildNode.checked = true;
   setTextWithState(state.membersStatusNode, "");
   setOpenInputMode(state);
@@ -945,15 +957,16 @@ async function saveCurrentSeries(state) {
       });
     });
     const outcome = applySaveBuildOutcome(state, response);
+    let pendingBuildExtraWorkIds = [];
     if (response.changed && outcome.kind !== "saved_and_updated") {
-      state.pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
+      pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
     }
-    const lookup = await loadSeriesLookupRecord(state, state.currentSeriesId);
-    const lookupRecord = lookup && lookup.series && typeof lookup.series === "object" ? lookup.series : record;
-    setLoadedSeries(state, state.currentSeriesId, lookupRecord, {
-      recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
+    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
+    setLoadedSeries(state, state.currentSeriesId, record, {
+      recordHash,
       keepResult: true,
-      lookup
+      lookup: buildSavedSeriesLookup(state, record, recordHash),
+      pendingBuildExtraWorkIds
     });
     await refreshBuildPreview(state);
     if (outcome.kind === "saved_and_updated") {

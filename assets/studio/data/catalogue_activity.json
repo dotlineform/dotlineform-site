@@ -5,6 +5,55 @@
   },
   "entries": [
     {
+      "id": "2026-04-29T10:27:55Z-series-save",
+      "time_utc": "2026-04-29T10:27:55Z",
+      "kind": "source_save",
+      "operation": "series.save",
+      "status": "completed",
+      "summary": "Saved series 002 and 0 member work records.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "series",
+      "scope_label": "series 002",
+      "scope_id": "002",
+      "affected": {
+        "works": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "series": {
+          "count": 1,
+          "sample_ids": [
+            "002"
+          ],
+          "truncated": 0
+        },
+        "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_files": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_links": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
       "id": "2026-04-29T08:51:58Z-work-detail-save",
       "time_utc": "2026-04-29T08:51:58Z",
       "kind": "source_save",
@@ -2375,55 +2424,6 @@
     {
       "id": "2026-04-22T19:36:16Z-work-save",
       "time_utc": "2026-04-22T19:36:16Z",
-      "kind": "source_save",
-      "operation": "work.save",
-      "status": "completed",
-      "summary": "Saved 1 work source record.",
-      "event_label": "Saved",
-      "attention_label": "rebuild pending",
-      "needs_attention": true,
-      "scope_kind": "work",
-      "scope_label": "work 00001",
-      "scope_id": "00001",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00001"
-          ],
-          "truncated": 0
-        },
-        "series": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "moments": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-22T19:35:30Z-work-save",
-      "time_utc": "2026-04-22T19:35:30Z",
       "kind": "source_save",
       "operation": "work.save",
       "status": "completed",

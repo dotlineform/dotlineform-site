@@ -1,11 +1,22 @@
 {
   "header": {
     "schema": "recent_index_v1",
-    "version": "blake2b-c3680f1d9f3a7a0b200c0e7d58579def",
-    "generated_at_utc": "2026-04-26T21:17:43Z",
-    "count": 12
+    "version": "blake2b-97543efa20c99672e0e690635c6186cc",
+    "generated_at_utc": "2026-04-29T10:28:03Z",
+    "count": 13
   },
   "entries": [
+    {
+      "id": "series:002",
+      "kind": "series",
+      "target_id": "002",
+      "title": "100 grasping hands",
+      "caption": "1 work",
+      "published_date": "2026-04-29",
+      "thumb_id": "00640",
+      "recorded_at_utc": "2026-04-29T10:28:03Z",
+      "session_order": 1
+    },
     {
       "id": "series:143",
       "kind": "series",

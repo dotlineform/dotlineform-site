@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-04-01T07:42:28Z",
+  "updated_at_utc": "2026-04-29T10:28:03Z",
   "series": {
     "001": {
       "tags": [],
@@ -755,6 +755,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-04-01T07:42:28Z"
+    },
+    "002": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-04-29T10:28:03Z"
     }
   }
 }

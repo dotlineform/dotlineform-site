@@ -23,6 +23,21 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-053
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: saving a series status change could leave the old status visible until a browser refresh.
+- triage: save-state hydration bug
+- reasoning: series saves were still resetting the active form from generated lookup JSON immediately after the source write response. That lookup can be stale for a moment, so the form should trust the write response record just as the work-detail editor now does.
+- permanent rule: series editor saves follow the shared source-save baseline rule: reset the active editor record, draft baseline, and hash from the write response; use generated lookup JSON for opening records and previews, not for replacing freshly saved form state.
+- outcome: series scalar saves now keep the saved values visible immediately after save, including status changes such as `published` to `draft`.
+- files changed:
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - change series `002` status to `draft`, save, and confirm the field remains `draft` without a browser refresh
+
 ## UI Rule Log 2026-04-29 / UI-052
 
 - status: adopted

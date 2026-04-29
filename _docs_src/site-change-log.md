@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Kept series form state fresh after save
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series
+
+**Summary:**
+Changed the series editor save flow so the current form baseline is reset from the write response record instead of immediately reloading generated lookup JSON.
+
+**Reason:**
+After saving a series status change, generated lookup data could still be stale in the browser briefly. Rehydrating from that lookup made the status field appear unchanged until a browser refresh even though the source save succeeded.
+
+**Effect:**
+Saving a series status change, including changing series `002` to `draft`, keeps the saved status visible immediately after save. Generated lookup JSON is still used when opening series records and for preview context.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-series-editor.js`
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Migrated series creation to the unified route
 
 **Status:** implemented
