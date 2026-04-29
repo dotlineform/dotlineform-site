@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T10:18:29Z",
+  "generated_at": "2026-04-29T10:55:19Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -573,7 +573,7 @@
       "doc_id": "scripts-copy-draft-media",
       "title": "Copy Draft Media",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-29",
       "parent_id": "_archive",
       "sort_order": 30,
       "published": true,
@@ -965,7 +965,7 @@
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "_archive",
       "sort_order": 50,
       "published": true,
@@ -1273,7 +1273,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "scripts",
       "sort_order": 70,
       "published": true,
@@ -1455,7 +1455,7 @@
       "doc_id": "scripts-catalogue-write-server",
       "title": "Catalogue Write Server",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "scripts",
       "sort_order": 100,
       "published": true,

@@ -2,7 +2,7 @@
 doc_id: scripts-copy-draft-media
 title: "Copy Draft Media"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-29
 parent_id: _archive
 sort_order: 30
 ---
@@ -15,6 +15,7 @@ Status:
 - retained for historical context only
 
 This document describes the retired `copy_draft_media_files.py` entrypoint from the workbook-led pipeline.
+Running it without flags exits cleanly with deprecation guidance.
 
 Script:
 

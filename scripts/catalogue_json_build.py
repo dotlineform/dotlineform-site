@@ -1100,15 +1100,20 @@ def validate_buildable_series_scope(records, series_ids: Sequence[str]) -> None:
             errors.append(f"series {series_id}: not found in source records")
             continue
         status = normalize_status(series_record.get("status"))
-        if status not in {"draft", "published"}:
+        if status != "published":
+            errors.append(f"series {series_id}: status must be published for runtime build")
             continue
         raw_primary_work_id = str(series_record.get("primary_work_id") or "").strip()
         if not raw_primary_work_id:
             errors.append(f"series {series_id}: missing primary_work_id for runtime build")
             continue
         primary_work_id = slug_id(raw_primary_work_id)
-        if primary_work_id not in records.works:
+        primary_work_record = records.works.get(primary_work_id)
+        if not isinstance(primary_work_record, dict):
             errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} not found in works")
+            continue
+        if normalize_status(primary_work_record.get("status")) != "published":
+            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} is not a published work")
             continue
         if series_id not in work_series_ids_by_work_id.get(primary_work_id, []):
             errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} is not in that work's series_ids")
@@ -1131,7 +1136,11 @@ def build_scope_for_work(
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {normalized_work_id}")
 
-    current_series_ids = normalize_series_ids(work_record.get("series_ids", []))
+    current_series_ids: list[str] = []
+    for series_id in normalize_series_ids(work_record.get("series_ids", [])):
+        series_record = records.series.get(series_id)
+        if isinstance(series_record, dict) and normalize_status(series_record.get("status")) == "published":
+            current_series_ids.append(series_id)
     requested_extra_series_ids = normalize_series_ids(extra_series_ids or [])
     series_ids = normalize_series_ids([*current_series_ids, *requested_extra_series_ids])
     validate_buildable_series_scope(records, series_ids)
@@ -1169,9 +1178,13 @@ def build_scope_for_series(
     series_record = records.series.get(normalized_series_id)
     if not isinstance(series_record, dict):
         raise ValueError(f"series_id not found: {normalized_series_id}")
+    if normalize_status(series_record.get("status")) != "published":
+        raise ValueError(f"series {normalized_series_id}: status must be published for runtime build")
 
     current_work_ids: list[str] = []
     for work_id, work_record in records.works.items():
+        if normalize_status(work_record.get("status")) != "published":
+            continue
         series_ids = work_record.get("series_ids", [])
         if isinstance(series_ids, list) and normalized_series_id in normalize_series_ids(series_ids):
             current_work_ids.append(work_id)

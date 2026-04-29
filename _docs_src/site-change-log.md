@@ -8,6 +8,44 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Blocked draft series from public updates
+
+**Status:** implemented
+
+**Area:** Studio / catalogue series / public build pipeline
+
+**Summary:**
+Aligned the series editor, write server, scoped JSON build helper, and generator around a published-only public update boundary for series.
+
+**Reason:**
+A draft save with `Update site now` still checked could run the public update path, creating public series artifacts for a draft series. The same path also exposed an older data issue where series `002` pointed at work `00640`, whose status is blank.
+
+**Effect:**
+Draft series saves are source-only. The editor disables and unchecks save-time public update controls while the form status is `draft`, the write server skips save-time build requests for draft series, scoped series builds require a published series with a published primary work, and generated public series payloads only include published member works. Series `002` is restored to `draft` with no `published_date` in canonical source.
+
+The stale public aggregate artifacts were also regenerated so series `002` is removed from the public series index, recent index, and catalogue search. Its existing collection stub is marked `published: false` so Jekyll stops emitting the direct `/series/002/` page while the source record is draft. The validation pass aligned the retired `copy_draft_media_files.py` entrypoint with the deprecated-script contract so a bare run exits cleanly with guidance.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/catalogue/series.json`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/generate_work_pages.py`
+- `scripts/copy_draft_media_files.py`
+- `assets/data/series_index.json`
+- `assets/data/recent_index.json`
+- `assets/data/search/catalogue/index.json`
+- `_series/002.md`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Kept series form state fresh after save
 
 **Status:** implemented

@@ -382,7 +382,6 @@ def main() -> int:
     parser.add_argument(
         "--mode",
         choices=["work", "work_details", "moment"],
-        required=True,
         help="Copy mode: work|work_details|moment",
     )
     parser.add_argument("--write", action="store_true", help="Actually copy files (default: dry-run)")

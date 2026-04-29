@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: "Scoped JSON Catalogue Build"
 added_date: 2026-04-18
-last_updated: 2026-04-27
+last_updated: 2026-04-29
 parent_id: scripts
 sort_order: 70
 ---
@@ -87,8 +87,10 @@ Refresh only local image derivatives for one moment:
 The helper:
 
 - reads canonical JSON source from `assets/studio/data/catalogue/`
-- resolves the current work record and its current series ids
+- resolves the current work record and its current published series ids
 - unions any `--extra-series-ids`
+- requires every series in the build scope to have `status: published`
+- requires a series primary work to exist, belong to the series, and have `status: published`
 - lets the generator render optional work and series prose from `_docs_src_catalogue/works/<work_id>.md` and `_docs_src_catalogue/series/<series_id>.md`
 - stages in-scope work and work-detail source images under `var/catalogue/media/`
 - generates local primary and thumbnail srcset derivatives under `var/catalogue/media/`

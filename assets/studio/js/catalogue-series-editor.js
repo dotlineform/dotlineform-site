@@ -382,25 +382,38 @@ function setModeFieldAvailability(state) {
 }
 
 function buildPayload(state, workUpdates) {
-  return buildSaveSeriesPayload(state, workUpdates);
+  return {
+    ...buildSaveSeriesPayload(state, workUpdates),
+    apply_build: applyBuildRequested(state)
+  };
+}
+
+function currentSeriesIsPublished(state) {
+  return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
 }
 
 function applyBuildRequested(state) {
-  return Boolean(state.applyBuildNode && state.applyBuildNode.checked);
+  return Boolean(state.applyBuildNode && state.applyBuildNode.checked && currentSeriesIsPublished(state));
 }
 
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const showUpdate = hasRecord && state.rebuildPending;
+  const canUpdateSite = hasRecord && state.mode !== "new" && currentSeriesIsPublished(state);
+  const showUpdate = canUpdateSite && state.rebuildPending;
   state.buildButton.hidden = !showUpdate;
   state.buildButton.disabled = !showUpdate || dirty || errors.size > 0 || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   if (state.runtimeActionsNode) state.runtimeActionsNode.hidden = !showUpdate;
   if (state.applyBuildNode) {
-    state.applyBuildNode.disabled = state.mode === "new" || !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+    if (!canUpdateSite) state.applyBuildNode.checked = false;
+    state.applyBuildNode.disabled = !canUpdateSite || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 }
 
 function applySaveBuildOutcome(state, response) {
   const build = response && response.build && typeof response.build === "object" ? response.build : null;
+  if (!currentSeriesIsPublished(state)) {
+    state.rebuildPending = false;
+    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
+  }
   if (!response || !response.build_requested || !build) {
     state.rebuildPending = Boolean(response && response.changed);
     return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
@@ -763,7 +776,7 @@ function setEmptySearchMode(state, options = {}) {
 }
 
 async function refreshBuildPreview(state) {
-  if (!state.currentSeriesId || !state.serverAvailable) {
+  if (!state.currentSeriesId || !state.serverAvailable || !currentSeriesIsPublished(state)) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, "");
     renderReadiness(state);
@@ -958,7 +971,7 @@ async function saveCurrentSeries(state) {
     });
     const outcome = applySaveBuildOutcome(state, response);
     let pendingBuildExtraWorkIds = [];
-    if (response.changed && outcome.kind !== "saved_and_updated") {
+    if (response.changed && currentSeriesIsPublished(state) && outcome.kind !== "saved_and_updated") {
       pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
     }
     const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
@@ -983,6 +996,13 @@ async function saveCurrentSeries(state) {
         "warn"
       );
       setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
+    } else if (outcome.kind === "saved_unpublished") {
+      setTextWithState(
+        state.resultNode,
+        t(state, "save_result_success_unpublished", "Source saved at {saved_at}. Public update is unavailable while the series is not published.", { saved_at: outcome.stamp }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
     } else {
       setTextWithState(
         state.resultNode,
@@ -1055,6 +1075,11 @@ async function createCurrentSeries(state) {
 
 async function buildCurrentSeries(state) {
   if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
+  if (!currentSeriesIsPublished(state)) {
+    state.rebuildPending = false;
+    updateEditorState(state);
+    return;
+  }
   state.isBuilding = true;
   updateEditorState(state);
   setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));

@@ -399,6 +399,7 @@ Implementation notes:
 - `catalogue_new_series_editor` was removed from the active Studio config route and UI text blocks.
 - The New Catalogue Series doc now describes the redirect compatibility route rather than a standalone create implementation.
 - Studio Runtime, User Guide, and the E2E checklist now point users and tests at the unified route.
+- Follow-up fix: the save-time public update path is now disabled for draft series, and runtime series builds require the series and primary work to be published before public artifacts can be generated.
 
 ### Task 5. Add Draft Series Visibility
 

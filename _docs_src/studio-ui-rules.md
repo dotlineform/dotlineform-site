@@ -23,6 +23,28 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-054
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: changing a series to `draft` could still run the checked save-time public update and leave draft-generated series artifacts visible.
+- triage: publication-boundary mismatch
+- reasoning: source status and public update controls must represent the same state. If a record is draft, the editor should not imply that it can be published, and the write/build pipeline should not treat it as an actionable public series.
+- permanent rule: Studio save-time public update controls are available for series only when the current form status is `published`; draft series saves remain source-only, and runtime series builds require a published series with a published primary work.
+- outcome: `Update site now` is disabled and unchecked for draft series, save-time `apply_build` is skipped server-side when the saved series is draft, and JSON-source series builds reject non-published series or non-published primary works.
+- files changed:
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `scripts/studio/catalogue_write_server.py`
+  - `scripts/catalogue_json_build.py`
+  - `scripts/generate_work_pages.py`
+  - `assets/studio/data/catalogue/series.json`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - set series `002` to `draft`, save, and confirm public update controls are unavailable
+  - preview a runtime build for series `002` and confirm it is rejected while draft
+
 ## UI Rule Log 2026-04-29 / UI-053
 
 - status: adopted

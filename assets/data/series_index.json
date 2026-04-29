@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-5a4be8720a044bd1d000e1d566cab206",
-    "generated_at_utc": "2026-04-29T10:28:03Z",
-    "count": 140
+    "version": "blake2b-17b441ac637a20616f1ea23a5ccbfdaa",
+    "generated_at_utc": "2026-04-29T10:59:58Z",
+    "count": 139
   },
   "series": {
     "001": {
@@ -25,21 +25,6 @@
         "00636",
         "00637"
       ]
-    },
-    "002": {
-      "series_id": "002",
-      "layout": "series",
-      "status": "draft",
-      "title": "100 grasping hands",
-      "sort_fields": "work_id",
-      "series_type": "primary",
-      "year": 2023,
-      "year_display": "2023",
-      "primary_work_id": "00640",
-      "project_folders": [
-        "100 grasping hands"
-      ],
-      "works": []
     },
     "003": {
       "series_id": "003",

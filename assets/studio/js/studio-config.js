@@ -339,6 +339,7 @@ const DEFAULT_STUDIO_CONFIG = {
       save_status_conflict: "Source record changed since this page loaded. Reload the work before saving again.",
       save_status_failed: "Source save failed.",
       save_result_success: "Source saved at {saved_at}. Public catalogue update still pending.",
+      save_result_success_unpublished: "Source saved at {saved_at}. Public update is unavailable while the series is not published.",
       save_result_success_applied: "Saved source changes and updated the public catalogue at {saved_at}.",
       save_result_success_partial: "Source changes were saved at {saved_at}, but the public catalogue update failed. Retry Update site now.",
       save_result_unchanged: "Source already matches the current form values.",

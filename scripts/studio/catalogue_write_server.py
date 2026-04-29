@@ -4329,7 +4329,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_series_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        apply_build = extract_apply_build(body)
+        requested_apply_build = extract_apply_build(body)
         requested_series_id = body.get("series_id")
         series_update = extract_series_update(body)
         if requested_series_id is None:
@@ -4362,6 +4362,7 @@ class Handler(BaseHTTPRequestHandler):
         works_payload = load_works_payload(self.server.works_path)
         works_map = works_payload["works"]
         updated_series_record = normalize_series_update(series_id, current_series_record, series_update)
+        apply_build = requested_apply_build and normalize_status(updated_series_record.get("status")) == "published"
         pending_work_updates: Dict[str, Dict[str, Any]] = {}
         changed_work_ids: list[str] = []
 
@@ -4500,6 +4501,11 @@ class Handler(BaseHTTPRequestHandler):
                 }
             )
         response_payload["build_requested"] = bool(apply_build and changed)
+        if requested_apply_build and changed and not apply_build:
+            response_payload["build_skipped"] = {
+                "reason": "series_not_published",
+                "summary": "Series must be published before a public update can run.",
+            }
         if apply_build and changed:
             _build_success, build_payload = self._run_build_operation(
                 work_id="",

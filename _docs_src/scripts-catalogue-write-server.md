@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: "Catalogue Write Server"
 added_date: 2026-04-22
-last_updated: 2026-04-27
+last_updated: 2026-04-29
 parent_id: scripts
 sort_order: 100
 ---
@@ -486,12 +486,13 @@ Request behavior:
 Request behavior:
 
 - `series_id` must resolve to an existing canonical series record
-- optional `apply_build: true` requests a same-scope site update as part of the save response
+- optional `apply_build: true` requests a same-scope site update as part of the save response when the saved series status is `published`
 - `work_updates` is limited to changed membership rows for affected works
 - each changed work keeps the submitted `series_ids` order; the server does not sort it
 - draft source saves may omit `primary_work_id`
 - `primary_work_id`, when present, must still be a member of the series after the proposed membership writes
 - the server validates the full source set before writing `series.json` and `works.json`
+- if `apply_build: true` is submitted for a draft series, the source save still succeeds but the public build request is skipped
 
 `POST /catalogue/series/create` expects:
 
@@ -544,8 +545,10 @@ It returns the planned scoped build:
 
 Scoped build preconditions:
 
+- any series included in the requested build scope must have `status: published`
 - any series included in the requested build scope must have a valid `primary_work_id`
-- draft series without `primary_work_id` can be saved in source JSON, but build preview/apply returns a validation error until they are publishable
+- that primary work must be a published work and must include the series in its `series_ids`
+- draft series can be saved in source JSON, but build preview/apply and save-time `apply_build` do not publish them
 
 `POST /catalogue/build-apply` accepts the same shapes and then runs:
 

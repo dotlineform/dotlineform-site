@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-04-27
+last_updated: 2026-04-29
 parent_id: _archive
 sort_order: 50
 ---
@@ -131,7 +131,7 @@ Artifact behavior:
 - `work-pages`
   writes `_works/<work_id>.md` as lightweight stubs with `work_id`, `title`, `layout`, and `checksum`
 - `series-pages`
-  writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json`
+  writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json` for published series only, and only includes published member works in the series payload
 - `work-details-pages`
   writes `_work_details/<detail_uid>.md` lightweight stubs
 - `moments`
@@ -154,6 +154,7 @@ There is no separate `works-prose` artifact; use `work-json` for prose-only refr
 Scoped refresh behavior:
 
 - selected published records are processed when `--refresh-published` or `--force` is present
+- draft series are not actionable generator records and are excluded from public series pages and series index payloads
 - unchanged generated artifacts still skip under `--refresh-published` when their content version matches
 - `published_date` updates are reserved for first-time `draft -> published` transitions
 - `--force` remains the explicit stronger mode for full rewrites and timestamp refreshes in generated payload headers

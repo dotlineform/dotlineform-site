@@ -1940,8 +1940,6 @@ def main() -> None:
         print("No series pages to generate (Series sheet empty).")
     else:
         def is_actionable_series_status(status_value: str) -> bool:
-            if status_value == "draft":
-                return True
             if status_value == "published" and refresh_published:
                 return True
             return False
@@ -2008,7 +2006,10 @@ def main() -> None:
                     # Fall back to numeric year rendered as text
                     year_display = str(year) if year is not None else None
 
-                series_work_ids_sorted = sorted(work_ids_by_series_all.get(series_id, []))
+                series_work_ids_sorted = sorted(
+                    work_id for work_id in work_ids_by_series_all.get(series_id, [])
+                    if normalize_status(work_meta_by_id.get(work_id, {}).get("status")) == "published"
+                )
                 primary_work_id = require_series_primary_work_id(
                     series_id,
                     sr,
@@ -2065,27 +2066,6 @@ def main() -> None:
                         series_path.write_text(series_content, encoding="utf-8")
                         print(f"{prefix_s}WRITE: {display_path(series_path)}")
                         series_written += 1
-                        status_idx = series_hi.get("status")
-                        if status_idx is not None:
-                            status_was = normalize_status(sr_cells[status_idx].value)
-                            if status_was != "published":
-                                sr_cells[status_idx].value = "published"
-                                series_status_updated += 1
-                            if status_was != "published":
-                                if series_published_date_idx is not None:
-                                    sr_cells[series_published_date_idx].value = today
-                                    series_published_date_updated += 1
-                                elif not series_published_date_missing_warned:
-                                    print("Warning: Series sheet missing published_date column; skipping date updates.")
-                                    series_published_date_missing_warned = True
-                            if status_was != "published":
-                                series_publish_transitions.append({
-                                    "series_id": series_id,
-                                    "title": series_title,
-                                    "published_date": today.isoformat(),
-                                    "primary_work_id": primary_work_id,
-                                    "work_count": len(series_work_ids_sorted),
-                                })
                     else:
                         print(f"{prefix_s}DRY-RUN: would write {display_path(series_path)} (overwrite={series_path.exists()})")
                         series_written += 1
@@ -2228,7 +2208,7 @@ def main() -> None:
         if is_empty(wid_raw):
             continue
         status = normalize_status(cell(wr, works_hi, "status"))
-        if status not in {"draft", "published"}:
+        if status != "published":
             continue
         wid = slug_id(wid_raw)
         for sid in parse_work_series_ids(wr):
@@ -2247,7 +2227,7 @@ def main() -> None:
             continue
         sid = normalize_series_id(sid_raw)
         status = normalize_status(cell(sr, series_hi, "status"))
-        if status not in {"draft", "published"}:
+        if status != "published":
             continue
 
         title_raw = cell(sr, series_hi, "title")

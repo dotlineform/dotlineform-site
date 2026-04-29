@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5c28c41d2942f1ebecd8e428019134c5",
-    "generated_at_utc": "2026-04-29T10:20:21Z",
+    "version": "blake2b-c4beb9c7f815c8fa4342443053369f95",
+    "generated_at_utc": "2026-04-29T10:55:32Z",
     "count": 144
   },
   "entries": [
@@ -944,10 +944,10 @@
       "kind": "doc",
       "title": "Copy Draft Media",
       "href": "/docs/?scope=studio&doc=scripts-copy-draft-media",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-29",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-18 • Archive",
+      "display_meta": "2026-04-29 • Archive",
       "search_terms": [
         "scripts-copy-draft-media",
         "scripts",
@@ -956,12 +956,12 @@
         "media",
         "copy draft media",
         "archive",
-        "2026-04-18",
+        "2026-04-29",
         "2026",
         "04",
-        "18"
+        "29"
       ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-04-18 2026 04 18"
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-04-29 2026 04 29"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -1599,10 +1599,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-27 • Archive",
+      "display_meta": "2026-04-29 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -1611,12 +1611,12 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-04-27",
+        "2026-04-29",
         "2026",
         "04",
-        "27"
+        "29"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-27 2026 04 27"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-29 2026 04 29"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -2136,10 +2136,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-27 • Scripts",
+      "display_meta": "2026-04-29 • Scripts",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -2148,12 +2148,12 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-04-27",
+        "2026-04-29",
         "2026",
         "04",
-        "27"
+        "29"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-27 2026 04 27"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-29 2026 04 29"
     },
     {
       "id": "search-build-pipeline",
@@ -2441,10 +2441,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-29",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-27 • Scripts",
+      "display_meta": "2026-04-29 • Scripts",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -2452,12 +2452,12 @@
         "write",
         "server",
         "catalogue write server",
-        "2026-04-27",
+        "2026-04-29",
         "2026",
         "04",
-        "27"
+        "29"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-27 2026 04 27"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-29 2026 04 29"
     },
     {
       "id": "site-request-field-aware-build-scoping",
