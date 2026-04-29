@@ -57,6 +57,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         <ul class="studioLinkList">
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}"><span class="studioLinkList__title">Review Catalogue Status</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}?view=draft-works"><span class="studioLinkList__title">Review Draft Works</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}?view=draft-series"><span class="studioLinkList__title">Review Draft Series</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-activity/' | relative_url }}"><span class="studioLinkList__title">Review Source Activity</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/project-state/' | relative_url }}"><span class="studioLinkList__title">Review Project State</span></a></li>
           <li><a class="studioLinkList__item" href="{{ '/studio/build-activity/' | relative_url }}"><span class="studioLinkList__title">Review Build Activity</span></a></li>

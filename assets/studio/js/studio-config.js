@@ -230,9 +230,15 @@ const DEFAULT_STUDIO_CONFIG = {
       empty_state: "No non-published catalogue source records.",
       meta_summary: "{count} non-published source records",
       meta_summary_one: "1 non-published source record",
+      all_filter_label: "all",
+      draft_works_filter_label: "draft works",
       draft_works_empty_state: "No draft work records.",
       draft_works_summary: "{count} draft work records",
-      draft_works_summary_one: "1 draft work record"
+      draft_works_summary_one: "1 draft work record",
+      draft_series_filter_label: "draft series",
+      draft_series_empty_state: "No draft series records.",
+      draft_series_summary: "{count} draft series records",
+      draft_series_summary_one: "1 draft series record"
     },
     catalogue_activity: {
       load_failed_error: "Failed to load catalogue activity.",

@@ -146,6 +146,7 @@ Checks:
   - `/studio/catalogue-work-detail/`
   - `/studio/catalogue-status/`
   - `/studio/catalogue-status/?view=draft-works`
+  - `/studio/catalogue-status/?view=draft-series`
   - `/studio/catalogue-activity/`
   - `/studio/build-activity/`
   - `/studio/bulk-add-work/`

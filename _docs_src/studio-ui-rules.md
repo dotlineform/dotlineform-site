@@ -23,6 +23,26 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-04-29 / UI-055
+
+- status: adopted
+- route: `/studio/catalogue-status/`, `/studio/catalogue/`, `/studio/catalogue-series/`
+- issue: after the series editor gained unified draft creation, draft series needed the same recovery visibility pattern as draft works.
+- triage: catalogue recovery-view parity
+- reasoning: source-only create workflows need a discoverable way back to draft records after the create session ends. Catalogue Status is already the non-published source-record surface, so adding a URL-backed draft-series view keeps recovery centralized instead of creating another list.
+- permanent rule: when a parent catalogue record family supports unified draft creation, Catalogue Status should expose a focused `?view=draft-<family>` recovery view, link rows to the owning editor route, and surface the view from Catalogue dashboard review navigation when the family is a primary workflow.
+- outcome: `/studio/catalogue-status/?view=draft-series` filters to draft series, rows link to `/studio/catalogue-series/?series=<series_id>`, and the Catalogue dashboard now links to `Review Draft Series`.
+- files changed:
+  - `studio/catalogue/index.md`
+  - `assets/studio/js/catalogue-status.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/catalogue-status.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/catalogue-status/?view=draft-series` and confirm only draft series are listed
+  - confirm a draft-series row opens the focused series editor
+
 ## UI Rule Log 2026-04-29 / UI-054
 
 - status: adopted

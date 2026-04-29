@@ -15,6 +15,7 @@ Status:
 - task 2 implemented
 - task 3 implemented
 - task 4 implemented
+- task 5 implemented
 
 ## Summary
 
@@ -405,7 +406,7 @@ Implementation notes:
 
 Status:
 
-- proposed
+- implemented
 
 Extend draft recovery to series if implementation review confirms the current status view is not enough.
 
@@ -421,6 +422,13 @@ Acceptance checks:
 - newly created draft series can be found after source data refresh
 - published series do not appear in the draft-series view
 - non-series draft records remain available from the all-status view
+
+Implementation notes:
+
+- Catalogue Status now supports `/studio/catalogue-status/?view=draft-series`.
+- The status filter bar includes a `draft series` pill beside `draft works`.
+- Draft-series rows link directly to `/studio/catalogue-series/?series=<series_id>`.
+- The Catalogue dashboard includes a `Review Draft Series` link in the Review group.
 
 ### Task 6. Update Documentation And Verification
 

@@ -14,6 +14,10 @@ Draft-work view:
 
 - `/studio/catalogue-status/?view=draft-works`
 
+Draft-series view:
+
+- `/studio/catalogue-status/?view=draft-series`
+
 ## Purpose
 
 The page lists canonical catalogue source records whose `status` is not `published`.
@@ -37,6 +41,7 @@ The page:
 - loads the source record families that still own publication status
 - filters to rows where normalized status is not `published`
 - offers a draft-work view for work source records whose normalized status is `draft`
+- offers a draft-series view for series source records whose normalized status is `draft`
 - groups counts by record family
 - supports a simple search across id, status, title, and parent/reference fields
 - shows id, type, status, title, and reference columns
@@ -52,6 +57,12 @@ Work-owned `downloads` and `links` are not listed here because they no longer ha
 The `?view=draft-works` view narrows the table to draft work source records only. It shows each draft work's id, title, status, and assigned series ids in the reference column, and links the id to `/studio/catalogue-work/?work=<work_id>`.
 
 This view is the recovery surface for draft works created in the unified work editor but not published in the same session.
+
+## Draft Series View
+
+The `?view=draft-series` view narrows the table to draft series source records only. It shows each draft series id, title, status, and `primary_work_id` when present in the reference column, and links the id to `/studio/catalogue-series/?series=<series_id>`.
+
+This view is the recovery surface for draft series created in the unified series editor but not published in the same session.
 
 ## Boundaries
 

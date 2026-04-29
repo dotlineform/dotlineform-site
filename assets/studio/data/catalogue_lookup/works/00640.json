@@ -4,7 +4,7 @@
   },
   "work": {
     "work_id": "00640",
-    "status": null,
+    "status": "draft",
     "published_date": null,
     "series_ids": [
       "002"
@@ -29,7 +29,7 @@
     "provenance": null,
     "artist": null
   },
-  "record_hash": "97adf8bdd8a798804f099ea8771240bed0eefd4344432ff52459ddc397a74f60",
+  "record_hash": "e6b4d5d5a12942573f7c84e4e5eea667b6a465f5a46b85c01ae27c99c2d3b4f0",
   "detail_sections": [],
   "downloads": [],
   "links": [],

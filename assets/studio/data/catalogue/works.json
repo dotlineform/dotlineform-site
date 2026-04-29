@@ -17291,7 +17291,7 @@
     },
     "00640": {
       "work_id": "00640",
-      "status": null,
+      "status": "draft",
       "published_date": null,
       "series_ids": [
         "002"

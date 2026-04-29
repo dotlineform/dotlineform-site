@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added draft-series recovery view
+
+**Status:** implemented
+
+**Area:** Studio / catalogue status / series editor
+
+**Summary:**
+Extended Catalogue Status with a focused draft-series view and added a Catalogue dashboard link for reopening draft series records.
+
+**Reason:**
+After the series editor gained unified draft creation, draft series needed the same recovery path that draft works already have. The all-status page listed non-published series, but a focused `?view=draft-series` route makes newly created source-only series easier to find after the create session ends.
+
+**Effect:**
+`/studio/catalogue-status/?view=draft-series` now filters to draft series, shows the primary work reference when present, and links each row to `/studio/catalogue-series/?series=<series_id>`. The Catalogue dashboard now includes `Review Draft Series` beside `Review Draft Works`.
+
+**Affected files/docs:**
+
+- `studio/catalogue/index.md`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-29] Added catalogue publication workflow request
 
 **Status:** specified
