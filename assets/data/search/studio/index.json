@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f37a12a700abfb67d18813542150c5c7",
-    "generated_at_utc": "2026-04-29T15:32:30Z",
+    "version": "blake2b-bf95999d480996fc512d89bca967eb94",
+    "generated_at_utc": "2026-04-29T15:38:12Z",
     "count": 146
   },
   "entries": [
@@ -2629,7 +2629,7 @@
     {
       "id": "site-request-catalogue-series-unified-editor",
       "kind": "doc",
-      "title": "Catalogue Series Unified Editor Request",
+      "title": "Catalogue Series Unified Editor Request ✅",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor",
       "last_updated": "2026-04-29",
       "parent_id": "change-requests",
@@ -2643,7 +2643,7 @@
         "series",
         "unified",
         "editor",
-        "catalogue series unified editor request",
+        "catalogue series unified editor request ✅",
         "change requests",
         "change",
         "requests",
@@ -2652,7 +2652,7 @@
         "04",
         "29"
       ],
-      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor request change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor request ✅ change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
