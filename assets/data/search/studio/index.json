@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6f7f6c653456d610bba7bf37fb4705e9",
-    "generated_at_utc": "2026-04-29T08:35:22Z",
-    "count": 143
+    "version": "blake2b-68532cff7de42688dd65d3a6524db1bc",
+    "generated_at_utc": "2026-04-29T09:08:44Z",
+    "count": 144
   },
   "entries": [
     {
@@ -2625,6 +2625,34 @@
         "31"
       ],
       "search_text": "scripts-css-token-audit scripts css token audit css token audit 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "site-request-catalogue-series-unified-editor",
+      "kind": "doc",
+      "title": "Catalogue Series Unified Editor Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor",
+      "last_updated": "2026-04-29",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-04-29 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-series-unified-editor",
+        "site",
+        "request",
+        "catalogue",
+        "series",
+        "unified",
+        "editor",
+        "catalogue series unified editor request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-04-29",
+        "2026",
+        "04",
+        "29"
+      ],
+      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor request change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",

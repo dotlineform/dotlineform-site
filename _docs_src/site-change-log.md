@@ -8,6 +8,25 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-29] Added series unified editor request spec
+
+**Status:** specified
+
+**Area:** Studio / catalogue series
+
+**Summary:**
+Added a change-request spec and task list for unifying new-series and edit-series workflows around `/studio/catalogue-series/?mode=new` and `/studio/catalogue-series/?series=<series_id>`.
+
+**Reason:**
+Work and work-detail route unification established the shared create/edit direction. Series is the next parent-record editor to align before a later catalogue-wide cleanup pass.
+
+**Effect:**
+The series implementation now has a documented route contract, new-mode behavior, draft-series visibility plan, risks, non-goals, and six implementation tasks.
+
+**Affected files/docs:**
+
+- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
+
 ## [2026-04-29] Kept work-detail form state fresh after save-and-update
 
 **Status:** implemented
