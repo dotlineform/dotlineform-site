@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: ""
 sort_order: 220
 ---
@@ -42,6 +42,7 @@ Those still belong in the owning reference docs and change logs.
 - [Catalogue Delete Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup)
 - [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
 - [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Catalogue Media And Detail Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)
 - [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
 - [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)

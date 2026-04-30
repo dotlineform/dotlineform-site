@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T19:41:47Z",
+  "generated_at": "2026-04-30T20:45:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1480,6 +1480,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-catalogue-media-section-schema",
+      "title": "Catalogue Media And Detail Section Schema Request",
+      "added_date": "2026-04-30",
+      "last_updated": "2026-04-30",
+      "parent_id": "change-requests",
+      "sort_order": 105,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-media-section-schema.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-media-section-schema.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-catalogue-lookup",
       "title": "Catalogue Lookup Export",
       "added_date": "2026-04-17",
@@ -1917,7 +1931,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-04-30",
       "parent_id": "",
       "sort_order": 220,
       "published": true,

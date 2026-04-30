@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ce7a737f3d11113d7640108f12c99729",
-    "generated_at_utc": "2026-04-30T19:41:54Z",
-    "count": 146
+    "version": "blake2b-7916fe0cb598dd7b9d3dfba40ed2f154",
+    "generated_at_utc": "2026-04-30T20:46:00Z",
+    "count": 147
   },
   "entries": [
     {
@@ -2503,6 +2503,36 @@
       "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue change requests change requests 2026-04-30 2026 04 30"
     },
     {
+      "id": "site-request-catalogue-media-section-schema",
+      "kind": "doc",
+      "title": "Catalogue Media And Detail Section Schema Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
+      "last_updated": "2026-04-30",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-04-30 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-media-section-schema",
+        "site",
+        "request",
+        "catalogue",
+        "media",
+        "section",
+        "schema",
+        "catalogue media and detail section schema request",
+        "and",
+        "detail",
+        "change requests",
+        "change",
+        "requests",
+        "2026-04-30",
+        "2026",
+        "04",
+        "30"
+      ],
+      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-04-30 2026 04 30"
+    },
+    {
       "id": "scripts-catalogue-lookup",
       "kind": "doc",
       "title": "Catalogue Lookup Export",
@@ -3195,19 +3225,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-04-29",
-      "display_meta": "2026-04-29",
+      "last_updated": "2026-04-30",
+      "display_meta": "2026-04-30",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-04-29",
+        "2026-04-30",
         "2026",
         "04",
-        "29"
+        "30"
       ],
-      "search_text": "change-requests change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "change-requests change requests change requests 2026-04-30 2026 04 30"
     },
     {
       "id": "tag-editor",
