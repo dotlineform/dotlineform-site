@@ -150,6 +150,18 @@ Expected artifacts:
 
 Do this in small steps.
 
+### Stage 0. Pre-Analysis Cleanup
+
+Before the full dependency inventory becomes executable, take obvious broad work out of the path when the dependency is already clear.
+
+Good candidates:
+
+- media behavior: local media generation only depends on source media identity/path fields and explicit force/media refresh requests
+- page-shell checksums: minimal Jekyll route pages should not be rewritten just because unrelated runtime JSON metadata changed
+- generated hash/version inputs: checksums should describe the artifact's actual serialized payload, not a broader source record
+
+This stage should stay narrow. It can hard-code small, well-understood exclusions, but it should not become a partial hidden dependency registry.
+
 ### Stage 1. Define The Dependency Registry
 
 Create a single source of truth for field-to-artifact dependencies.
@@ -191,6 +203,30 @@ Add targeted verification around representative changes:
 - unknown or mixed changes keep the safe fallback
 
 ## Task List
+
+### Task 0. Pre-Analysis Cleanup
+
+Status:
+
+- planned
+
+Apply immediate low-risk cleanup before the full dependency registry work:
+
+- identify media-affecting fields for works, work details, and moments
+- let metadata-only saves skip local media planning/generation when no media-affecting field changed and no explicit media refresh was requested
+- review page-shell checksum inputs for `_works/`, `_series/`, and `_moments/`
+- narrow page-shell checksums to the fields actually serialized into each page shell, or document why broader checksums must remain
+- review generated payload version inputs for cases where broad source hashes cause no-op rewrites or misleading rebuild plans
+
+Acceptance checks:
+
+- changing a work title does not trigger local media generation
+- changing a work `project_filename` still selects local media generation
+- changing a detail title does not trigger detail media generation
+- changing a detail `project_subfolder` or `project_filename` still selects detail media generation
+- changing a moment title or `image_alt` does not trigger moment media generation
+- changing a moment `source_image_file` still selects moment media generation
+- page-shell files do not rewrite when only fields outside their serialized front matter changed
 
 ### Task 1. Inventory Artifact Dependencies
 
