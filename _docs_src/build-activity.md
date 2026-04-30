@@ -2,7 +2,7 @@
 doc_id: build-activity
 title: "Build Activity"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-30
 parent_id: studio
 sort_order: 90
 ---
@@ -24,7 +24,11 @@ It is not the canonical engineering log for scripts and it is not yet a public-f
 
 ## Current Inputs
 
-The page reads:
+The page reads the feed through the local Catalogue Write Server:
+
+- `GET /catalogue/read?key=build_activity`
+
+That service-backed read returns:
 
 - `assets/studio/data/build_activity.json`
 
@@ -36,6 +40,8 @@ That feed is generated from:
 The published feed is a capped summary view. The fuller local journal lives outside the published assets under:
 
 - `var/build_activity/build_catalogue.jsonl`
+
+The generated feed file is excluded from Jekyll input so routine build-activity writes do not trigger a separate Jekyll regeneration pass. The page therefore expects the local Studio runtime, normally `bin/dev-studio`, rather than a static fallback.
 
 ## Current Entry Shape
 

@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-30] Moved Studio activity feeds behind the local read service
+
+**Status:** implemented
+
+**Area:** Studio / local catalogue runtime
+
+**Summary:**
+Build Activity and Catalogue Activity now read their generated feed JSON through `GET /catalogue/read` instead of fetching the files directly from Jekyll-served assets.
+
+**Reason:**
+Routine source saves and scoped builds update `assets/studio/data/catalogue_activity.json`, `assets/studio/data/build_activity.json`, and local generator logs. Those writes are useful Studio runtime state, but they should not wake Jekyll for an extra regeneration pass.
+
+**Effect:**
+The Catalogue Write Server now serves allowlisted `build_activity` and `catalogue_activity` read keys. Jekyll excludes the two activity feed files and `logs/`, so save/build activity updates remain visible in Studio while avoiding watcher churn. The tradeoff matches other mutable Studio reads: these activity pages expect the local Studio runtime rather than a stale static fallback.
+
+**Affected files/docs:**
+
+- `_config.yml`
+- `assets/studio/js/build-activity.js`
+- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/studio-data.js`
+- `scripts/studio/catalogue_write_server.py`
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Data Models](/docs/?scope=studio&doc=data-models-studio)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-30] Converted public catalogue stubs to route anchors
 
 **Status:** implemented

@@ -190,16 +190,16 @@ What it does not start:
 - catalogue/search regeneration scripts
 - any separate Studio-only frontend server
 
-Current local generated Studio feed surfaced through this runtime:
+Current local generated Studio feeds surfaced through this runtime:
 
-- `assets/studio/data/build_activity.json`
-- `assets/studio/data/catalogue_activity.json`
+- build activity via `GET /catalogue/read?key=build_activity`
+- catalogue activity via `GET /catalogue/read?key=catalogue_activity`
 
 Current mutable catalogue data surfaced through this runtime:
 
 - catalogue source records and catalogue lookup/search records are read from `scripts/studio/catalogue_write_server.py`
-- Jekyll excludes `assets/studio/data/catalogue/` and `assets/studio/data/catalogue_lookup/` from the served site so local source/lookup writes do not trigger an extra Jekyll regeneration pass
-- catalogue editors and Catalogue Drafts show the existing local-server-unavailable state instead of falling back to stale static source JSON
+- Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, the two activity feed JSON files, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
+- catalogue editors, Catalogue Drafts, and the activity pages show their existing unavailable/load-failed states instead of falling back to stale static source JSON
 
 Current localhost docs-maintenance integration surfaced through this runtime:
 

@@ -2,7 +2,7 @@
 doc_id: data-models-studio
 title: "Studio Scope"
 added_date: 2026-04-19
-last_updated: 2026-04-25
+last_updated: 2026-04-30
 parent_id: data-models
 sort_order: 30
 ---
@@ -90,7 +90,7 @@ Why it is separate:
 
 Current consumers:
 
-- `/studio/build-activity/`
+- `/studio/build-activity/`, through `GET /catalogue/read?key=build_activity`
 
 ### `catalogue_activity.json`
 
@@ -118,7 +118,7 @@ Why it is separate:
 
 Current consumers:
 
-- `/studio/catalogue-activity/`
+- `/studio/catalogue-activity/`, through `GET /catalogue/read?key=catalogue_activity`
 
 ### `tag_registry.json`
 

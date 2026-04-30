@@ -2,7 +2,7 @@
 doc_id: catalogue-activity
 title: "Catalogue Activity"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-04-30
 parent_id: studio
 sort_order: 60
 ---
@@ -18,7 +18,11 @@ It gives quick access to recent source saves, creates, deletes, imports, and val
 
 ## Current Inputs
 
-The page reads:
+The page reads the feed through the local Catalogue Write Server:
+
+- `GET /catalogue/read?key=catalogue_activity`
+
+That service-backed read returns:
 
 - `assets/studio/data/catalogue_activity.json`
 
@@ -31,6 +35,8 @@ The fuller local journal lives outside published route data under:
 The write-server operational log remains:
 
 - `var/studio/catalogue/logs/catalogue_write_server.log`
+
+The generated feed file is excluded from Jekyll input so routine source-save activity writes do not trigger a separate Jekyll regeneration pass. The page therefore expects the local Studio runtime, normally `bin/dev-studio`, rather than a static fallback.
 
 ## Current Entry Shape
 

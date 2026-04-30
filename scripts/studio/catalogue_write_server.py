@@ -145,6 +145,8 @@ BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
+BUILD_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/build_activity.json")
+CATALOGUE_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/catalogue_activity.json")
 MAX_BODY_BYTES = 1024 * 1024
 MAX_PROSE_MARKDOWN_BYTES = 1024 * 1024
 WORK_SAVE_PATH = "/catalogue/work/save"
@@ -531,6 +533,19 @@ MOMENT_FIELDS = [
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def load_activity_feed(repo_root: Path, rel_path: Path, schema: str) -> Dict[str, Any]:
+    path = repo_root / rel_path
+    if not path.exists():
+        return {"header": {"schema": schema, "count": 0}, "entries": []}
+    payload = load_json_file(path)
+    if not isinstance(payload, dict):
+        raise ValueError(f"activity feed must be a JSON object: {rel_path}")
+    if not isinstance(payload.get("entries"), list):
+        payload = dict(payload)
+        payload["entries"] = []
+    return payload
 
 
 def backup_stamp_now() -> str:
@@ -3203,6 +3218,11 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _catalogue_read_payload(self, key: str, record_id: str = "") -> Dict[str, Any]:
+        if key == "build_activity":
+            return load_activity_feed(self.server.repo_root, BUILD_ACTIVITY_FEED_REL_PATH, "studio_build_activity_v2")
+        if key == "catalogue_activity":
+            return load_activity_feed(self.server.repo_root, CATALOGUE_ACTIVITY_FEED_REL_PATH, "catalogue_activity_v2")
+
         if key == "catalogue_works":
             return load_works_payload(self.server.works_path)
         if key == "catalogue_work_details":

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T19:04:42Z",
+  "generated_at": "2026-04-30T19:41:47Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -699,7 +699,7 @@
       "doc_id": "data-models-studio",
       "title": "Studio Scope",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-04-30",
       "parent_id": "data-models",
       "sort_order": 30,
       "published": true,
@@ -1119,7 +1119,7 @@
       "doc_id": "catalogue-activity",
       "title": "Catalogue Activity",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-30",
       "parent_id": "studio",
       "sort_order": 60,
       "published": true,
@@ -1385,7 +1385,7 @@
       "doc_id": "build-activity",
       "title": "Build Activity",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-30",
       "parent_id": "studio",
       "sort_order": 90,
       "published": true,

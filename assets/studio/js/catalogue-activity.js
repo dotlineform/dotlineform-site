@@ -1,9 +1,9 @@
 import {
-  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import { loadStudioServerReadJson } from "./studio-data.js";
 
 const SORT_KEYS = ["time", "event", "status", "scope", "attention"];
 
@@ -188,13 +188,8 @@ function renderList(config, listNode, state, entries) {
   `;
 }
 
-async function loadFeed(config) {
-  const url = getStudioDataPath(config, "catalogue_activity");
-  if (!url) return { entries: [] };
-  const response = await fetch(url, { cache: "default" });
-  if (response.status === 404) return { entries: [] };
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
+async function loadFeed() {
+  return loadStudioServerReadJson("catalogue_activity", { cache: "no-store" });
 }
 
 function applySort(state) {
@@ -212,7 +207,7 @@ async function init() {
 
   try {
     const config = await loadStudioConfig();
-    const payload = await loadFeed(config);
+    const payload = await loadFeed();
     const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
     metaNode.textContent = entries.length === 1
       ? getStudioText(config, "catalogue_activity.meta_summary_one", "1 recent catalogue entry")

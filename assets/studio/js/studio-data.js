@@ -3,6 +3,8 @@ import { CATALOGUE_WRITE_ENDPOINTS } from "./studio-transport.js";
 let studioConfigModulePromise = null;
 
 const CATALOGUE_SERVER_READ_KEYS = new Set([
+  "build_activity",
+  "catalogue_activity",
   "catalogue_works",
   "catalogue_work_details",
   "catalogue_series",
@@ -65,6 +67,13 @@ export async function loadStudioLookupJson(config, key, options) {
   }
   const { getStudioDataPath } = await loadStudioConfigModule();
   return fetchJson(getStudioDataPath(config, key), options);
+}
+
+export async function loadStudioServerReadJson(key, options) {
+  if (!CATALOGUE_SERVER_READ_KEYS.has(key)) {
+    throw new Error(`Unsupported catalogue server read key: ${key}`);
+  }
+  return fetchJson(buildCatalogueReadUrl(key), options);
 }
 
 export async function loadStudioLookupRecordJson(config, baseKey, recordId, options) {
