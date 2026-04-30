@@ -21,6 +21,8 @@ The current detail model uses `project_subfolder` for two unrelated concepts:
 - resolving the source image path for a work detail
 - naming and grouping public detail sections in the generated work JSON and on the site
 
+The second role already behaves like section metadata. Work and work-detail JSON effectively carry the public section label today as `project_subfolder`, commonly with values such as `details`.
+
 That coupling was a reasonable early simplification, but it now constrains both source-folder organization and public section naming. A detail section cannot be renamed without moving files on disk, and work source images cannot be organized freely into subfolders because subfolders already imply detail sections.
 
 This request is intentionally not an implementation task for the current field-aware build-scoping work. It records the schema problem and a preferred migration direction for later.
@@ -43,6 +45,8 @@ Work details currently use:
 For a work, `project_folder` is effectively the root source folder for that work. `project_filename` points to the primary work image inside that root.
 
 For a work detail, `project_subfolder` and `project_filename` together resolve the source image under the parent work folder. The same `project_subfolder` value also becomes the generated detail section grouping in `assets/works/index/<work_id>.json`.
+
+This means the existing JSON already contains the future section-title concept, but under a misleading filesystem-oriented field name.
 
 ## Problem
 
@@ -94,6 +98,14 @@ Work details should replace the path/grouping overload with separate fields:
 
 `section_title` should be the display label for the public section. It may initially equal `section_id`, but it should not be derived from the filesystem after migration.
 
+For existing records, the section migration is mostly a semantic rename and propagation:
+
+- existing generated `project_subfolder` section values become `section_title`
+- records can keep the same visible section labels after migration
+- Studio can then treat the value as editable section metadata
+
+The separate source path field becomes essential when source image organization diverges from the old rule that detail images live under a folder named by the public section.
+
 ## Automatic Migration
 
 The legacy fields should map onto the new schema in a one-time source migration, not remain as permanent fallback behavior.
@@ -116,6 +128,8 @@ Work detail migration:
 The migration should write normalized source JSON so existing records immediately use the new schema without hand edits.
 
 Compatibility logic should live at the migration or source-normalization boundary only. Generator, lookup, editor, validation, and media code should move toward consuming the new fields directly.
+
+If the initial migration keeps all existing source files in their current locations, `source_image_path` should preserve the current relative path exactly. Later edits can then move source images into arbitrary nested paths without changing the public section title.
 
 ## Build-Scoping Implications
 
