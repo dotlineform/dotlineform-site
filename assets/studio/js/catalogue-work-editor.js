@@ -839,7 +839,10 @@ function buildDetailEditorHref(state, detailUid) {
 }
 
 async function loadWorkLookupRecord(state, workId) {
-  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_base", workId, { cache: "no-store" });
+  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_base", workId, {
+    cache: "no-store",
+    catalogueServerAvailable: state.serverAvailable
+  });
 }
 
 function getSourceWorkRecord(state, workId, fallbackRecord = null) {
@@ -2737,11 +2740,22 @@ async function init() {
     publicationButton.textContent = t(state, "publish_button", "Publish");
     deleteButton.textContent = t(state, "delete_button", "Delete");
 
-    const [worksPayload, worksSourcePayload, seriesPayload, serverAvailable] = await Promise.all([
-      loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),
-      loadStudioLookupJson(config, "catalogue_works", { cache: "no-store" }),
-      loadStudioLookupJson(config, "catalogue_lookup_series_search", { cache: "no-store" }),
-      probeCatalogueHealth()
+    const serverAvailable = await probeCatalogueHealth();
+    state.serverAvailable = Boolean(serverAvailable);
+    saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_editor.${key}`, fallback, tokens));
+    if (!state.serverAvailable) {
+      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
+      updateEditorState(state);
+      root.hidden = false;
+      loadingNode.hidden = true;
+      return;
+    }
+
+    const serverReadOptions = { cache: "no-store", catalogueServerAvailable: state.serverAvailable };
+    const [worksPayload, worksSourcePayload, seriesPayload] = await Promise.all([
+      loadStudioLookupJson(config, "catalogue_lookup_work_search", serverReadOptions),
+      loadStudioLookupJson(config, "catalogue_works", serverReadOptions),
+      loadStudioLookupJson(config, "catalogue_lookup_series_search", serverReadOptions)
     ]);
 
     const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
@@ -2760,12 +2774,6 @@ async function init() {
       if (!seriesId) return;
       state.seriesById.set(seriesId, record);
     });
-    state.serverAvailable = Boolean(serverAvailable);
-    saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_editor.${key}`, fallback, tokens));
-    if (!state.serverAvailable) {
-      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
-    }
-
     searchNode.addEventListener("input", () => {
       const query = searchNode.value;
       if (state.mode === "new") {

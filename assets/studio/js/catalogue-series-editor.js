@@ -293,7 +293,10 @@ function renderSearchMatches(state, matches, message = "") {
 }
 
 async function loadSeriesLookupRecord(state, seriesId) {
-  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_series_base", seriesId, { cache: "no-store" });
+  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_series_base", seriesId, {
+    cache: "no-store",
+    catalogueServerAvailable: state.serverAvailable
+  });
 }
 
 function applyDraftToInputs(state) {
@@ -1423,10 +1426,21 @@ async function init() {
     memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
     memberAddButton.textContent = t(state, "members_add_button", "Add");
 
-    const [seriesPayload, worksPayload, serverAvailable] = await Promise.all([
-      loadStudioLookupJson(config, "catalogue_lookup_series_search", { cache: "no-store" }),
-      loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),
-      probeCatalogueHealth()
+    const serverAvailable = await probeCatalogueHealth();
+    state.serverAvailable = Boolean(serverAvailable);
+    saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_series_editor.${key}`, fallback, tokens));
+    if (!state.serverAvailable) {
+      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
+      updateEditorState(state);
+      root.hidden = false;
+      loadingNode.hidden = true;
+      return;
+    }
+
+    const serverReadOptions = { cache: "no-store", catalogueServerAvailable: state.serverAvailable };
+    const [seriesPayload, worksPayload] = await Promise.all([
+      loadStudioLookupJson(config, "catalogue_lookup_series_search", serverReadOptions),
+      loadStudioLookupJson(config, "catalogue_lookup_work_search", serverReadOptions)
     ]);
 
     const seriesItems = Array.isArray(seriesPayload && seriesPayload.items) ? seriesPayload.items : [];
@@ -1444,12 +1458,6 @@ async function init() {
       if (!workId) return;
       state.workSearchById.set(workId, record);
     });
-    state.serverAvailable = Boolean(serverAvailable);
-    saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_series_editor.${key}`, fallback, tokens));
-    if (!state.serverAvailable) {
-      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
-    }
-
     searchNode.addEventListener("input", () => {
       if (state.mode === "new") {
         state.draft.series_id = normalizeSeriesId(searchNode.value);

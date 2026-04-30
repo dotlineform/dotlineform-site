@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: "Catalogue Series Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: user-guide
 sort_order: 70
 ---
@@ -14,7 +14,7 @@ Route:
 - focused record selection uses `?series=<series_id>`
 - new draft mode uses `?mode=new`
 
-This page edits one canonical series source record from `assets/studio/data/catalogue/series.json` and can also write affected work membership records in `assets/studio/data/catalogue/works.json`.
+This page edits one canonical series source record from `assets/studio/data/catalogue/series.json` through the local catalogue service and can also write affected work membership records in `assets/studio/data/catalogue/works.json`.
 
 ## Current Scope
 
@@ -102,8 +102,8 @@ Current action labels:
 
 Current save/publication flow:
 
-1. page loads derived series-search and work-search lookup payloads, not full canonical source maps
-2. opening a series fetches one focused lookup record from `assets/studio/data/catalogue_lookup/series/<series_id>.json`
+1. page loads derived series-search and work-search lookup payloads through `GET /catalogue/read`, not full canonical source maps
+2. opening a series fetches one focused lookup record through `GET /catalogue/read?key=catalogue_lookup_series_base&record_id=<series_id>`
 3. membership edits operate on affected work `series_ids` arrays in the browser, using lookup-provided work hashes for stale-write checks
 4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and write server reject saves where `year` or `year_display` is blank
 5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command

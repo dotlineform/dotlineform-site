@@ -227,6 +227,7 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     catalogue_status: {
       load_failed_error: "Failed to load catalogue drafts.",
+      server_unavailable_hint: "Local catalogue server unavailable. Catalogue drafts are disabled.",
       empty_state: "No draft {family} records.",
       meta_summary: "{count} draft {family} records",
       meta_summary_one: "1 draft {family} record"

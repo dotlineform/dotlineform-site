@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,32 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-04-30 / UI-072
+
+- status: adopted
+- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, `/studio/catalogue-series/`, `/studio/catalogue-moment/`, `/studio/catalogue-status/`
+- issue: catalogue editors were already local-service-backed for writes, but source and lookup reads still used Jekyll-served mutable JSON under `assets/studio/data/catalogue*`, which made local metadata saves trigger an avoidable Jekyll regeneration pass.
+- triage: local Studio runtime contract / editor responsiveness
+- reasoning: Studio is a local service-backed workspace. Live `.com` Studio routes only need to render visibly; local editing and mutable source review require `bin/dev-studio`. Reading mutable catalogue source through the local catalogue server keeps the contract explicit and prevents Jekyll from watching editor-only source/lookup writes.
+- permanent rule: catalogue editor source and lookup reads should use the local catalogue server when editing is available. If the server is unavailable, the page should show the unavailable state and disable affected controls rather than falling back to stale static catalogue source data.
+- outcome: added allowlisted catalogue read endpoints to the Catalogue Write Server, routed catalogue editor/status reads through those endpoints, and excluded `assets/studio/data/catalogue/` plus `assets/studio/data/catalogue_lookup/` from Jekyll.
+- files changed:
+  - `_config.yml`
+  - `assets/studio/js/studio-data.js`
+  - `assets/studio/js/studio-transport.js`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/js/catalogue-moment-editor.js`
+  - `assets/studio/js/catalogue-status.js`
+  - `assets/studio/js/studio-dashboard.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/studio/catalogue_write_server.py`
+- verification:
+  - with `bin/dev-studio` running, open each catalogue editor and confirm records load through the local catalogue server
+  - with the catalogue server unavailable, confirm the pages render their unavailable state without stale static source data
+  - save a work title locally and confirm the first Jekyll regeneration wave from `assets/studio/data/catalogue*` no longer occurs
 
 ## UI Rule Log 2026-04-29 / UI-071
 

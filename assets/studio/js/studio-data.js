@@ -1,4 +1,19 @@
+import { CATALOGUE_WRITE_ENDPOINTS } from "./studio-transport.js";
+
 let studioConfigModulePromise = null;
+
+const CATALOGUE_SERVER_READ_KEYS = new Set([
+  "catalogue_works",
+  "catalogue_work_details",
+  "catalogue_series",
+  "catalogue_moments",
+  "catalogue_lookup_work_search",
+  "catalogue_lookup_series_search",
+  "catalogue_lookup_work_detail_search",
+  "catalogue_lookup_work_base",
+  "catalogue_lookup_work_detail_base",
+  "catalogue_lookup_series_base"
+]);
 
 export async function fetchJson(url, options = {}) {
   const cache = String(options.cache || "default");
@@ -45,14 +60,33 @@ export async function loadSearchIndexJson(config, scope, options) {
 }
 
 export async function loadStudioLookupJson(config, key, options) {
+  if (shouldUseCatalogueServerRead(key, options)) {
+    return fetchJson(buildCatalogueReadUrl(key), options);
+  }
   const { getStudioDataPath } = await loadStudioConfigModule();
   return fetchJson(getStudioDataPath(config, key), options);
 }
 
 export async function loadStudioLookupRecordJson(config, baseKey, recordId, options) {
+  if (shouldUseCatalogueServerRead(baseKey, options)) {
+    return fetchJson(buildCatalogueReadUrl(baseKey, recordId), options);
+  }
   const { getStudioDataPath } = await loadStudioConfigModule();
   const basePath = getStudioDataPath(config, baseKey);
   return fetchJson(buildLookupRecordPath(basePath, recordId), options);
+}
+
+function shouldUseCatalogueServerRead(key, options = {}) {
+  return Boolean(options && options.catalogueServerAvailable && CATALOGUE_SERVER_READ_KEYS.has(key));
+}
+
+function buildCatalogueReadUrl(key, recordId = "") {
+  const url = new URL(CATALOGUE_WRITE_ENDPOINTS.read);
+  url.searchParams.set("key", key);
+  if (recordId) {
+    url.searchParams.set("record_id", String(recordId));
+  }
+  return url.toString();
 }
 
 export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {

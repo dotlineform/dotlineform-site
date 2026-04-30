@@ -2,7 +2,7 @@
 doc_id: catalogue-status
 title: "Catalogue Drafts"
 added_date: 2026-04-18
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: studio
 sort_order: 50
 ---
@@ -25,14 +25,14 @@ It is the recovery surface for draft catalogue records created without publishin
 
 ## Current Inputs
 
-The page reads canonical source JSON directly:
+The page reads canonical source JSON through the local Catalogue Write Server:
 
-- `assets/studio/data/catalogue/works.json`
-- `assets/studio/data/catalogue/work_details.json`
-- `assets/studio/data/catalogue/series.json`
-- `assets/studio/data/catalogue/moments.json`
+- `GET /catalogue/read?key=catalogue_works`
+- `GET /catalogue/read?key=catalogue_work_details`
+- `GET /catalogue/read?key=catalogue_series`
+- `GET /catalogue/read?key=catalogue_moments`
 
-The browser paths are configured through `assets/studio/data/studio_config.json`.
+The logical keys are configured through `assets/studio/data/studio_config.json`. The canonical source files still live under `assets/studio/data/catalogue/`, but Jekyll excludes that directory from the served site so local source writes do not trigger an extra regeneration pass.
 
 ## Current Behavior
 

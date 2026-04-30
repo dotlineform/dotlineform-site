@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: "Studio Runtime"
 added_date: 2026-04-24
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: studio
 sort_order: 10
 ---
@@ -194,6 +194,12 @@ Current local generated Studio feed surfaced through this runtime:
 
 - `assets/studio/data/build_activity.json`
 - `assets/studio/data/catalogue_activity.json`
+
+Current mutable catalogue data surfaced through this runtime:
+
+- catalogue source records and catalogue lookup/search records are read from `scripts/studio/catalogue_write_server.py`
+- Jekyll excludes `assets/studio/data/catalogue/` and `assets/studio/data/catalogue_lookup/` from the served site so local source/lookup writes do not trigger an extra Jekyll regeneration pass
+- catalogue editors and Catalogue Drafts show the existing local-server-unavailable state instead of falling back to stale static source JSON
 
 Current localhost docs-maintenance integration surfaced through this runtime:
 

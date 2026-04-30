@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: user-guide
 sort_order: 30
 ---
@@ -14,7 +14,7 @@ Route:
 - focused record selection uses `?work=<work_id>`
 - new draft mode uses `?mode=new`
 
-This page edits canonical work source records from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
+This page edits canonical work source records from `assets/studio/data/catalogue/works.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
 
 ## Current Scope
 
@@ -85,7 +85,7 @@ Work details are added only after the parent work is published. The `new work de
 
 ## Series Picker
 
-For single-work edit and new mode, the `series` field is a title-search picker backed by `assets/studio/data/catalogue_lookup/series_search.json`.
+For single-work edit and new mode, the `series` field is a title-search picker backed by the local catalogue service's series-search lookup.
 
 The picker:
 
@@ -151,8 +151,8 @@ Current action labels:
 
 Current save/publication flow:
 
-1. page loads derived lookup payloads for work search and series lookup, plus the canonical `assets/studio/data/catalogue/works.json` source map for editable work fields
-2. opening a work fetches one focused work lookup record from `assets/studio/data/catalogue_lookup/works/<work_id>.json` for generated runtime context, but the editable form baseline comes from the canonical source record
+1. page loads work search, series search, and the editable work source map through `GET /catalogue/read`
+2. opening a work fetches one focused work lookup record through `GET /catalogue/read?key=catalogue_lookup_work_base&record_id=<work_id>` for generated runtime context, but the editable form baseline comes from the canonical source record
 3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
 5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`

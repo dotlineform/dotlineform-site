@@ -2,11 +2,45 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-30] Made catalogue editor reads service-backed
+
+**Status:** implemented
+
+**Area:** Studio / local catalogue runtime
+
+**Summary:**
+Changed mutable catalogue source and lookup reads for Studio catalogue editors from Jekyll-served static JSON to allowlisted reads through the local Catalogue Write Server.
+
+**Reason:**
+Studio is a local service-backed workspace. Catalogue writes already require `bin/dev-studio`, but local source/lookup writes under `assets/studio/data/catalogue*` were still in Jekyll's watched source path, causing an avoidable regeneration wave after metadata edits.
+
+**Effect:**
+`GET /catalogue/read` now serves allowlisted source and lookup payloads for the catalogue editors and Catalogue Drafts. Jekyll excludes `assets/studio/data/catalogue/` and `assets/studio/data/catalogue_lookup/`, so local source/lookup writes no longer trigger that first regeneration pass. When the local catalogue server is unavailable, affected Studio pages show the unavailable state instead of falling back to stale static source JSON.
+
+**Affected files/docs:**
+
+- `_config.yml`
+- `assets/studio/js/studio-data.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/js/studio-dashboard.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/studio/catalogue_write_server.py`
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## [2026-04-29] Removed retired catalogue create redirects
 

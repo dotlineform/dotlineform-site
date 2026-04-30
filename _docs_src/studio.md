@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: 2026-04-26
+last_updated: 2026-04-30
 parent_id: ""
 sort_order: 20
 ---
@@ -11,6 +11,8 @@ sort_order: 20
 This section documents the Studio routes used to review and edit site data, catalogue records, and related operational workflows.
 
 Studio is a site-owned admin toolset, not a separate app. Each page is rendered by Jekyll under `/studio/`, uses the shared Studio layout, and links its implementation notes into the scoped Docs Viewer.
+
+Studio is a local service-backed workspace. The live `.com` routes may render the page shells, but catalogue editing and mutable catalogue review data require `bin/dev-studio` and the localhost services it starts. When a required local service is unavailable, Studio pages should make that state visible and disable affected controls rather than reading stale static editor data.
 
 The current Studio shell is organized around domain dashboards:
 
@@ -98,6 +100,7 @@ Current runner behavior:
 - starts `scripts/studio/catalogue_write_server.py`
 - keeps all three processes attached to the current terminal
 - stops all three processes on `Ctrl+C`
+- serves mutable catalogue source and lookup reads through the local catalogue server rather than through Jekyll-served static JSON
 
 Current limits:
 

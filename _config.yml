@@ -88,3 +88,5 @@ exclude:
   - node_modules
   - .bundle
   - var
+  - assets/studio/data/catalogue
+  - assets/studio/data/catalogue_lookup

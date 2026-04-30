@@ -28,6 +28,7 @@ Endpoints:
   POST /catalogue/build-preview
   POST /catalogue/build-apply
   POST /catalogue/project-state-report
+  GET /catalogue/read?key=<studio_config_data_key>[&record_id=<id>]
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -52,7 +53,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Optional
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_DIR) not in sys.path:
@@ -157,6 +158,7 @@ WORK_FILE_DELETE_PATH = "/catalogue/work-file/delete"
 WORK_LINK_SAVE_PATH = "/catalogue/work-link/save"
 WORK_LINK_CREATE_PATH = "/catalogue/work-link/create"
 WORK_LINK_DELETE_PATH = "/catalogue/work-link/delete"
+CATALOGUE_READ_PATH = "/catalogue/read"
 IMPORT_PREVIEW_PATH = "/catalogue/import-preview"
 IMPORT_APPLY_PATH = "/catalogue/import-apply"
 SERIES_SAVE_PATH = "/catalogue/series/save"
@@ -3011,8 +3013,12 @@ class CatalogueWriteServer(ThreadingHTTPServer):
 class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
 
+    def _request_path(self) -> str:
+        return urlparse(self.path).path
+
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {
+        request_path = self._request_path()
+        if request_path not in {
             BULK_SAVE_PATH,
             DELETE_PREVIEW_PATH,
             DELETE_APPLY_PATH,
@@ -3028,6 +3034,7 @@ class Handler(BaseHTTPRequestHandler):
             WORK_LINK_CREATE_PATH,
             WORK_LINK_SAVE_PATH,
             WORK_LINK_DELETE_PATH,
+            CATALOGUE_READ_PATH,
             IMPORT_PREVIEW_PATH,
             IMPORT_APPLY_PATH,
             SERIES_SAVE_PATH,
@@ -3062,7 +3069,19 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "origin not allowed"})
             return
 
-        if self.path != "/health":
+        request_path = self._request_path()
+        if request_path == CATALOGUE_READ_PATH:
+            try:
+                self._handle_catalogue_read(allowed)
+            except ValueError as exc:
+                self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "validation"})
+                self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
+            except Exception as exc:  # noqa: BLE001
+                self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "internal"})
+                self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"internal error: {exc}"}, allowed)
+            return
+
+        if request_path != "/health":
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
             return
 
@@ -3088,94 +3107,95 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "origin not allowed"})
             return
 
+        request_path = self._request_path()
         try:
-            if self.path == WORK_CREATE_PATH:
+            if request_path == WORK_CREATE_PATH:
                 self._handle_work_create(allowed)
                 return
-            if self.path == BULK_SAVE_PATH:
+            if request_path == BULK_SAVE_PATH:
                 self._handle_bulk_save(allowed)
                 return
-            if self.path == DELETE_PREVIEW_PATH:
+            if request_path == DELETE_PREVIEW_PATH:
                 self._handle_delete_preview(allowed)
                 return
-            if self.path == DELETE_APPLY_PATH:
+            if request_path == DELETE_APPLY_PATH:
                 self._handle_delete_apply(allowed)
                 return
-            if self.path == PUBLICATION_PREVIEW_PATH:
+            if request_path == PUBLICATION_PREVIEW_PATH:
                 self._handle_publication_preview(allowed)
                 return
-            if self.path == PUBLICATION_APPLY_PATH:
+            if request_path == PUBLICATION_APPLY_PATH:
                 self._handle_publication_apply(allowed)
                 return
-            if self.path == WORK_SAVE_PATH:
+            if request_path == WORK_SAVE_PATH:
                 self._handle_work_save(allowed)
                 return
-            if self.path == DETAIL_CREATE_PATH:
+            if request_path == DETAIL_CREATE_PATH:
                 self._handle_work_detail_create(allowed)
                 return
-            if self.path == DETAIL_SAVE_PATH:
+            if request_path == DETAIL_SAVE_PATH:
                 self._handle_work_detail_save(allowed)
                 return
-            if self.path == WORK_FILE_CREATE_PATH:
+            if request_path == WORK_FILE_CREATE_PATH:
                 self._handle_work_file_create(allowed)
                 return
-            if self.path == WORK_FILE_SAVE_PATH:
+            if request_path == WORK_FILE_SAVE_PATH:
                 self._handle_work_file_save(allowed)
                 return
-            if self.path == WORK_FILE_DELETE_PATH:
+            if request_path == WORK_FILE_DELETE_PATH:
                 self._handle_work_file_delete(allowed)
                 return
-            if self.path == WORK_LINK_CREATE_PATH:
+            if request_path == WORK_LINK_CREATE_PATH:
                 self._handle_work_link_create(allowed)
                 return
-            if self.path == WORK_LINK_SAVE_PATH:
+            if request_path == WORK_LINK_SAVE_PATH:
                 self._handle_work_link_save(allowed)
                 return
-            if self.path == WORK_LINK_DELETE_PATH:
+            if request_path == WORK_LINK_DELETE_PATH:
                 self._handle_work_link_delete(allowed)
                 return
-            if self.path == IMPORT_PREVIEW_PATH:
+            if request_path == IMPORT_PREVIEW_PATH:
                 self._handle_import_preview(allowed)
                 return
-            if self.path == IMPORT_APPLY_PATH:
+            if request_path == IMPORT_APPLY_PATH:
                 self._handle_import_apply(allowed)
                 return
-            if self.path == SERIES_SAVE_PATH:
+            if request_path == SERIES_SAVE_PATH:
                 self._handle_series_save(allowed)
                 return
-            if self.path == SERIES_CREATE_PATH:
+            if request_path == SERIES_CREATE_PATH:
                 self._handle_series_create(allowed)
                 return
-            if self.path == BUILD_PREVIEW_PATH:
+            if request_path == BUILD_PREVIEW_PATH:
                 self._handle_build_preview(allowed)
                 return
-            if self.path == BUILD_APPLY_PATH:
+            if request_path == BUILD_APPLY_PATH:
                 self._handle_build_apply(allowed)
                 return
-            if self.path == PROSE_IMPORT_PREVIEW_PATH:
+            if request_path == PROSE_IMPORT_PREVIEW_PATH:
                 self._handle_prose_import_preview(allowed)
                 return
-            if self.path == PROSE_IMPORT_APPLY_PATH:
+            if request_path == PROSE_IMPORT_APPLY_PATH:
                 self._handle_prose_import_apply(allowed)
                 return
-            if self.path == MOMENT_IMPORT_PREVIEW_PATH:
+            if request_path == MOMENT_IMPORT_PREVIEW_PATH:
                 self._handle_moment_import_preview(allowed)
                 return
-            if self.path == MOMENT_IMPORT_APPLY_PATH:
+            if request_path == MOMENT_IMPORT_APPLY_PATH:
                 self._handle_moment_import_apply(allowed)
                 return
-            if self.path == MOMENT_PREVIEW_PATH:
+            if request_path == MOMENT_PREVIEW_PATH:
                 self._handle_moment_preview(allowed)
                 return
-            if self.path == MOMENT_SAVE_PATH:
+            if request_path == MOMENT_SAVE_PATH:
                 self._handle_moment_save(allowed)
                 return
-            if self.path == PROJECT_STATE_REPORT_PATH:
+            if request_path == PROJECT_STATE_REPORT_PATH:
                 self._handle_project_state_report(allowed)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
-            self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "validation"})
+            self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "validation"})
             if not self.server.dry_run:
                 now_utc = utc_now()
                 self.server.append_activity(
@@ -3183,7 +3203,7 @@ class Handler(BaseHTTPRequestHandler):
                         "id": activity_id(now_utc, "request.validation_failed"),
                         "time_utc": now_utc,
                         "kind": "validation",
-                        "operation": self.path.strip("/") or "request",
+                        "operation": request_path.strip("/") or "request",
                         "status": "failed",
                         "summary": "Catalogue request failed validation.",
                         "affected": {"works": [], "series": [], "work_details": [], "work_files": [], "work_links": [], "moments": []},
@@ -3192,8 +3212,58 @@ class Handler(BaseHTTPRequestHandler):
                 )
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
         except Exception as exc:  # noqa: BLE001
-            self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "internal"})
+            self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "internal"})
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"internal error: {exc}"}, allowed)
+
+    def _handle_catalogue_read(self, allowed: Optional[str]) -> None:
+        query = parse_qs(urlparse(self.path).query)
+        key = str((query.get("key") or [""])[0] or "").strip()
+        record_id = str((query.get("record_id") or [""])[0] or "").strip()
+        payload = self._catalogue_read_payload(key, record_id)
+        self._send_json(HTTPStatus.OK, payload, allowed)
+
+    def _catalogue_read_payload(self, key: str, record_id: str = "") -> Dict[str, Any]:
+        if key == "catalogue_works":
+            return load_works_payload(self.server.works_path)
+        if key == "catalogue_work_details":
+            return load_work_details_payload(self.server.work_details_path)
+        if key == "catalogue_series":
+            return load_series_payload(self.server.series_path)
+        if key == "catalogue_moments":
+            return load_moments_payload(self.server.moments_path)
+
+        if key in {
+            "catalogue_lookup_work_search",
+            "catalogue_lookup_series_search",
+            "catalogue_lookup_work_detail_search",
+            "catalogue_lookup_work_base",
+            "catalogue_lookup_work_detail_base",
+            "catalogue_lookup_series_base",
+        }:
+            source_records = records_from_json_source(self.server.source_dir)
+            if key == "catalogue_lookup_work_search":
+                return build_work_search_payload(source_records)
+            if key == "catalogue_lookup_series_search":
+                return build_series_search_payload(source_records)
+            if key == "catalogue_lookup_work_detail_search":
+                return build_work_detail_search_payload(source_records)
+            if key == "catalogue_lookup_work_base":
+                work_id = slug_id(record_id)
+                if not work_id:
+                    raise ValueError("record_id is required for work lookup reads")
+                return build_work_lookup_payload(source_records, work_id)
+            if key == "catalogue_lookup_work_detail_base":
+                detail_uid = normalize_detail_uid_value(record_id)
+                if not detail_uid:
+                    raise ValueError("record_id is required for work detail lookup reads")
+                return build_work_detail_lookup_payload(source_records, detail_uid)
+            if key == "catalogue_lookup_series_base":
+                series_id = normalize_series_id(record_id)
+                if not series_id:
+                    raise ValueError("record_id is required for series lookup reads")
+                return build_series_lookup_payload(source_records, series_id)
+
+        raise ValueError(f"unsupported catalogue read key: {key}")
 
     def _handle_work_save(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()

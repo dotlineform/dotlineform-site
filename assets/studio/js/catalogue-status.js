@@ -1,12 +1,12 @@
 import {
-  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 import {
-  fetchJson
+  loadStudioLookupJson
 } from "./studio-data.js";
+import { probeCatalogueHealth } from "./studio-transport.js";
 
 const FAMILIES = [
   { key: "series", label: "series", singular: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" },
@@ -78,10 +78,11 @@ function makeEntry(family, key, record) {
   };
 }
 
-async function loadFamily(config, family) {
-  const url = getStudioDataPath(config, family.pathKey);
-  if (!url) return [];
-  const payload = await fetchJson(url);
+async function loadFamily(config, family, serverAvailable) {
+  const payload = await loadStudioLookupJson(config, family.pathKey, {
+    cache: "no-store",
+    catalogueServerAvailable: serverAvailable
+  });
   const records = payload && payload[family.objectKey] && typeof payload[family.objectKey] === "object"
     ? payload[family.objectKey]
     : {};
@@ -210,7 +211,13 @@ async function init() {
 
   try {
     const config = await loadStudioConfig();
-    const groups = await Promise.all(FAMILIES.map((family) => loadFamily(config, family)));
+    const serverAvailable = await probeCatalogueHealth();
+    if (!serverAvailable) {
+      loadingNode.textContent = getStudioText(config, "catalogue_status.server_unavailable_hint", "Local catalogue server unavailable. Catalogue drafts are disabled.");
+      root.hidden = false;
+      return;
+    }
+    const groups = await Promise.all(FAMILIES.map((family) => loadFamily(config, family, serverAvailable)));
     const entries = groups.flat().sort((a, b) => {
       if (a.family !== b.family) return a.family.localeCompare(b.family);
       return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });

@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: "Catalogue Write Server"
 added_date: 2026-04-22
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: scripts
 sort_order: 100
 ---
@@ -25,6 +25,7 @@ Script:
 Exposed endpoints:
 
 - `GET /health`
+- `GET /catalogue/read?key=<studio_config_data_key>[&record_id=<id>]`
 - `POST /catalogue/bulk-save`
 - `POST /catalogue/delete-preview`
 - `POST /catalogue/delete-apply`
@@ -48,7 +49,22 @@ Exposed endpoints:
 - `POST /catalogue/moment/import-apply`
 - `POST /catalogue/project-state-report`
 
-The current implementation can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, can apply shared publication preview/apply actions for works, work details, series, and moments, and can write the local project-state report. It does not write back into Excel.
+The current implementation can serve allowlisted catalogue source and lookup payloads for Studio, can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, can apply shared publication preview/apply actions for works, work details, series, and moments, and can write the local project-state report. It does not write back into Excel.
+
+`GET /catalogue/read` is the server-backed read path for mutable catalogue editor data. It accepts the same logical keys used by `studio_config.json`, including:
+
+- `catalogue_works`
+- `catalogue_work_details`
+- `catalogue_series`
+- `catalogue_moments`
+- `catalogue_lookup_work_search`
+- `catalogue_lookup_series_search`
+- `catalogue_lookup_work_detail_search`
+- `catalogue_lookup_work_base` with `record_id=<work_id>`
+- `catalogue_lookup_work_detail_base` with `record_id=<detail_uid>`
+- `catalogue_lookup_series_base` with `record_id=<series_id>`
+
+Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, and lookup payloads are built from the current source records for the request. This lets Studio treat catalogue source/lookup data as local service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/` and `assets/studio/data/catalogue_lookup/` from its served source tree.
 
 `POST /catalogue/project-state-report` accepts:
 

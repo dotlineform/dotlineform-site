@@ -1,10 +1,9 @@
 import {
-  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
-import { fetchJson } from "./studio-data.js";
+import { loadStudioLookupJson } from "./studio-data.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
   postJson,
@@ -1314,18 +1313,25 @@ async function init() {
     bindEvents(state);
     state.importFileNode.value = readRequestedImportFile();
 
-    const momentsPath = getStudioDataPath(state.config, "catalogue_moments");
-    const payload = await fetchJson(momentsPath, { cache: "no-store" });
+    if (!state.serverAvailable) {
+      setTextWithState(state.statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warning");
+      setTextWithState(state.importStatusNode, t(state, "import_save_mode_unavailable_hint", "Local catalogue server unavailable. Moment import is disabled."), "warning");
+      updateDirtyState(state);
+      updateImportState(state);
+      loadingNode.hidden = true;
+      root.hidden = false;
+      return;
+    }
+
+    const payload = await loadStudioLookupJson(state.config, "catalogue_moments", {
+      cache: "no-store",
+      catalogueServerAvailable: state.serverAvailable
+    });
     state.momentRows = buildMomentRows(payload);
     state.moments = new Map(state.momentRows.map((row) => [row.moment_id, row]));
 
     loadingNode.hidden = true;
     root.hidden = false;
-    if (!state.serverAvailable) {
-      setTextWithState(state.statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warning");
-      setTextWithState(state.importStatusNode, t(state, "import_save_mode_unavailable_hint", "Local catalogue server unavailable. Moment import is disabled."), "warning");
-    }
-
     const initialMoment = normalizeMomentId(new URLSearchParams(window.location.search).get("moment"));
     const initialImportFile = currentImportMomentFile(state);
     if (initialMoment) {

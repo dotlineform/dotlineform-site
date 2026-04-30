@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: "Studio Config and Save Flow"
 added_date: 2026-04-22
-last_updated: 2026-04-27
+last_updated: 2026-04-30
 parent_id: studio
 sort_order: 20
 ---
@@ -133,6 +133,7 @@ Current write-service implementation notes:
 
 Catalogue editor local save behavior:
 
+- catalogue editor source and lookup reads go through `GET /catalogue/read` when the local catalogue server is available
 - the work editor sends `POST /catalogue/work/save` to the catalogue local write service
 - the request includes `work_id`, a browser-computed record hash, a normalized work record patch, and optional `apply_build: true`
 - the server validates the full catalogue source set before writing
@@ -232,8 +233,8 @@ Studio currently depends on four data families:
 Current ownership boundary:
 
 - Studio reads both Studio-owned JSON and shared site/search artifacts
-- editor routes now prefer derived lookup JSON under `assets/studio/data/catalogue_lookup/` instead of loading full canonical source maps into the browser
-- work, detail, file, link, and series editors now read focused derived lookup records rather than full canonical source maps
+- mutable catalogue editor reads are local-service-backed and should not fall back to stale static source JSON when the catalogue server is unavailable
+- work, detail, file, link, and series editors read focused derived lookup records through the local catalogue service rather than full canonical source maps
 - Studio writes only through the local save service
 - detailed payload shape belongs in [Data Models](/docs/?scope=studio&doc=data-models), not here
 

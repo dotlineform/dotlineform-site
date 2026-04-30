@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: "Catalogue Moment Editor"
 added_date: 2026-04-27
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: user-guide
 sort_order: 182
 ---
@@ -14,7 +14,7 @@ Route:
 - focused record selection uses `?moment=<moment_id>`
 - staged import mode uses `?file=<moment_id>.md`
 
-This page edits one existing canonical moment metadata record from `assets/studio/data/catalogue/moments.json`.
+This page edits one existing canonical moment metadata record from `assets/studio/data/catalogue/moments.json` through the local catalogue service.
 It also imports new draft moments from staged body-only Markdown, so moment creation, review, save, publish, and unpublish now live on one Studio page.
 
 ## Use This Page For
@@ -95,7 +95,7 @@ If the preview has no blockers or validation errors, the page asks for confirmat
 
 The Studio delete removes:
 
-- the canonical moment metadata record from `assets/studio/data/catalogue/moments.json`
+- the canonical moment metadata record through `GET /catalogue/read?key=catalogue_moments`
 - `_moments/<moment_id>.md`
 - `assets/moments/index/<moment_id>.json`
 - matching published moment thumbnails under `assets/moments/img/`

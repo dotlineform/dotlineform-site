@@ -1,3 +1,7 @@
+import { loadStudioConfig } from "./studio-config.js";
+import { loadStudioLookupJson } from "./studio-data.js";
+import { probeCatalogueHealth } from "./studio-transport.js";
+
 async function loadJson(url) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) {
@@ -20,6 +24,11 @@ function formatNumber(value) {
 async function initStudioDashboard() {
   const metricNodes = document.querySelectorAll("[data-studio-metric]");
   if (!metricNodes.length) return;
+  const [config, catalogueServerAvailable] = await Promise.all([
+    loadStudioConfig().catch(() => null),
+    probeCatalogueHealth()
+  ]);
+  const catalogueReadOptions = { cache: "no-store", catalogueServerAvailable };
 
   const tasks = [
     loadJson("/assets/data/works_index.json").then((payload) => {
@@ -28,13 +37,13 @@ async function initStudioDashboard() {
     loadJson("/assets/data/series_index.json").then((payload) => {
       setMetric("series-count", formatNumber(Number(payload?.header?.count || 0)));
     }),
-    loadJson("/assets/studio/data/catalogue/work_details.json").then((payload) => {
+    (catalogueServerAvailable && config ? loadStudioLookupJson(config, "catalogue_work_details", catalogueReadOptions) : Promise.resolve(null)).then((payload) => {
       const count = Number(payload?.header?.count || 0) || Object.keys(payload?.work_details || {}).length;
-      setMetric("work-details-count", formatNumber(count));
+      if (payload) setMetric("work-details-count", formatNumber(count));
     }),
-    loadJson("/assets/studio/data/catalogue/moments.json").then((payload) => {
+    (catalogueServerAvailable && config ? loadStudioLookupJson(config, "catalogue_moments", catalogueReadOptions) : Promise.resolve(null)).then((payload) => {
       const count = Number(payload?.header?.count || 0) || Object.keys(payload?.moments || {}).length;
-      setMetric("moments-count", formatNumber(count));
+      if (payload) setMetric("moments-count", formatNumber(count));
     }),
     loadJson("/assets/data/docs/scopes/library/index.json").then((payload) => {
       const count = Array.isArray(payload?.docs) ? payload.docs.length : 0;

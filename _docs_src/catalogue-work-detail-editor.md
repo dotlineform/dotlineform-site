@@ -2,7 +2,7 @@
 doc_id: catalogue-work-detail-editor
 title: "Catalogue Work Detail Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: user-guide
 sort_order: 50
 ---
@@ -14,7 +14,7 @@ Route:
 - focused record selection uses `?detail=<detail_uid>`
 - parent-scoped draft create mode uses `?work=<work_id>&mode=new`
 
-This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` and writes changes through the local catalogue write service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
+This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
 
 ## Current Scope
 
@@ -96,8 +96,8 @@ Current action labels:
 
 Current save/publication flow:
 
-1. page loads the derived detail-search lookup, not the full canonical detail map
-2. opening a detail fetches one focused lookup record from `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
+1. page loads the derived detail-search and work-search lookups through `GET /catalogue/read`, not the full canonical detail map
+2. opening a detail fetches one focused lookup record through `GET /catalogue/read?key=catalogue_lookup_work_detail_base&record_id=<detail_uid>`
 3. browser uses the lookup-provided record hash for stale-write protection
 4. user edits the current detail form
 5. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, the normalized detail patch, and `apply_build: true` only when the detail is already published
