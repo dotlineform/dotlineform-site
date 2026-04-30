@@ -163,6 +163,7 @@ Good candidates:
 Related pre-analysis spec:
 
 - [Route-Anchor Collection Stubs Spec](/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs)
+- [Studio Record Hash Simplification Analysis](/docs/?scope=studio&doc=site-request-studio-record-hash-simplification)
 
 This stage should stay narrow. It can hard-code small, well-understood exclusions, but it should not become a partial hidden dependency registry.
 
@@ -221,6 +222,7 @@ Apply immediate low-risk cleanup before the full dependency registry work:
 - review page-shell checksum inputs for `_works/`, `_series/`, and `_moments/`
 - narrow page-shell checksums to the fields actually serialized into each page shell, or document why broader checksums must remain
 - define whether generated collection Markdown files should become route anchors only, with runtime metadata moved entirely to JSON artifacts
+- decide whether Studio record hashes should be removed from broad lookup rows and normal local save enforcement
 - review generated payload version inputs for cases where broad source hashes cause no-op rewrites or misleading rebuild plans
 
 Acceptance checks:
@@ -233,6 +235,7 @@ Acceptance checks:
 - changing a moment `source_image_file` still selects moment media generation
 - page-shell files do not rewrite when only fields outside their serialized front matter changed
 - route-anchor collection stubs do not rewrite on metadata-only saves once the route-stub cleanup is implemented
+- broad Studio lookup rows do not rewrite solely because full-record hash baselines changed
 
 ### Task 1. Inventory Artifact Dependencies
 

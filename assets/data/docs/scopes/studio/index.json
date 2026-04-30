@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T17:12:35Z",
+  "generated_at": "2026-04-30T18:07:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -21,6 +21,20 @@
       "source_path": "site-request-route-anchor-collection-stubs.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-route-anchor-collection-stubs.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-record-hash-simplification",
+      "title": "Studio Record Hash Simplification Analysis",
+      "added_date": "2026-04-30",
+      "last_updated": "2026-04-30",
+      "parent_id": "site-request-field-aware-build-scoping",
+      "sort_order": 6,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-studio-record-hash-simplification.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-record-hash-simplification",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-record-hash-simplification.json"
     },
     {
       "scope": "studio",

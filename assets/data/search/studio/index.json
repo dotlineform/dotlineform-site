@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d922860a2ffd15316812aceacc279b66",
-    "generated_at_utc": "2026-04-30T17:12:37Z",
-    "count": 145
+    "version": "blake2b-f0940b03c38fb1f3b9f10af1d908e418",
+    "generated_at_utc": "2026-04-30T18:07:46Z",
+    "count": 146
   },
   "entries": [
     {
@@ -38,6 +38,38 @@
         "30"
       ],
       "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping request field aware catalogue build scoping 2026-04-30 2026 04 30"
+    },
+    {
+      "id": "site-request-studio-record-hash-simplification",
+      "kind": "doc",
+      "title": "Studio Record Hash Simplification Analysis",
+      "href": "/docs/?scope=studio&doc=site-request-studio-record-hash-simplification",
+      "last_updated": "2026-04-30",
+      "parent_id": "site-request-field-aware-build-scoping",
+      "parent_title": "Field-Aware Catalogue Build Scoping Request",
+      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request",
+      "search_terms": [
+        "site-request-studio-record-hash-simplification",
+        "site",
+        "request",
+        "studio",
+        "record",
+        "hash",
+        "simplification",
+        "studio record hash simplification analysis",
+        "analysis",
+        "field-aware catalogue build scoping request",
+        "field",
+        "aware",
+        "catalogue",
+        "build",
+        "scoping",
+        "2026-04-30",
+        "2026",
+        "04",
+        "30"
+      ],
+      "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping request field aware catalogue build scoping 2026-04-30 2026 04 30"
     },
     {
       "id": "new-pipeline-current-pipeline-map",
