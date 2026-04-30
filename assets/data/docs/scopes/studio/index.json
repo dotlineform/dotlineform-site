@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T11:47:52Z",
+  "generated_at": "2026-04-30T17:12:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -8,6 +8,20 @@
     "show_updated_date": true
   },
   "docs": [
+    {
+      "scope": "studio",
+      "doc_id": "site-request-route-anchor-collection-stubs",
+      "title": "Route-Anchor Collection Stubs Spec",
+      "added_date": "2026-04-30",
+      "last_updated": "2026-04-30",
+      "parent_id": "site-request-field-aware-build-scoping",
+      "sort_order": 5,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-route-anchor-collection-stubs.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-route-anchor-collection-stubs.json"
+    },
     {
       "scope": "studio",
       "doc_id": "new-pipeline-current-pipeline-map",

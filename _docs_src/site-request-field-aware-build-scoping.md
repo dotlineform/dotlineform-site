@@ -160,6 +160,10 @@ Good candidates:
 - page-shell checksums: minimal Jekyll route pages should not be rewritten just because unrelated runtime JSON metadata changed
 - generated hash/version inputs: checksums should describe the artifact's actual serialized payload, not a broader source record
 
+Related pre-analysis spec:
+
+- [Route-Anchor Collection Stubs Spec](/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs)
+
 This stage should stay narrow. It can hard-code small, well-understood exclusions, but it should not become a partial hidden dependency registry.
 
 ### Stage 1. Define The Dependency Registry
@@ -216,6 +220,7 @@ Apply immediate low-risk cleanup before the full dependency registry work:
 - let metadata-only saves skip local media planning/generation when no media-affecting field changed and no explicit media refresh was requested
 - review page-shell checksum inputs for `_works/`, `_series/`, and `_moments/`
 - narrow page-shell checksums to the fields actually serialized into each page shell, or document why broader checksums must remain
+- define whether generated collection Markdown files should become route anchors only, with runtime metadata moved entirely to JSON artifacts
 - review generated payload version inputs for cases where broad source hashes cause no-op rewrites or misleading rebuild plans
 
 Acceptance checks:
@@ -227,6 +232,7 @@ Acceptance checks:
 - changing a moment title or `image_alt` does not trigger moment media generation
 - changing a moment `source_image_file` still selects moment media generation
 - page-shell files do not rewrite when only fields outside their serialized front matter changed
+- route-anchor collection stubs do not rewrite on metadata-only saves once the route-stub cleanup is implemented
 
 ### Task 1. Inventory Artifact Dependencies
 
