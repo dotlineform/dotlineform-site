@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "works_index_v4",
-    "version": "blake2b-688726b0e85b7ba43265837ff028f934",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "version": "blake2b-b013242bd8b5683a6cf92a02ea46644e",
+    "generated_at_utc": "2026-04-30T08:50:39Z",
     "count": 1940
   },
   "works": {
@@ -4915,7 +4915,7 @@
     },
     "00546": {
       "work_id": "00546",
-      "title": "tree.jpg",
+      "title": "tree",
       "year": 2024,
       "year_display": "2024",
       "series_ids": [
@@ -4924,7 +4924,7 @@
     },
     "00547": {
       "work_id": "00547",
-      "title": "tree (tint).jpg",
+      "title": "tree (tint)",
       "year": 2024,
       "year_display": "2024",
       "series_ids": [
@@ -4933,7 +4933,7 @@
     },
     "00548": {
       "work_id": "00548",
-      "title": "tree source.jpg",
+      "title": "tree source",
       "year": 2024,
       "year_display": "2024",
       "series_ids": [
@@ -9460,7 +9460,7 @@
     },
     "01052": {
       "work_id": "01052",
-      "title": "flowers 1.jpg",
+      "title": "flowers 1",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [
@@ -9469,7 +9469,7 @@
     },
     "01053": {
       "work_id": "01053",
-      "title": "flowers 2.jpg",
+      "title": "flowers 2",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [
@@ -9478,7 +9478,7 @@
     },
     "01054": {
       "work_id": "01054",
-      "title": "flowers 3.jpg",
+      "title": "flowers 3",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [

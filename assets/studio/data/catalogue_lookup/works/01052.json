@@ -12,7 +12,7 @@
     "series_title": null,
     "project_folder": "flowers",
     "project_filename": "flowers 1.jpg",
-    "title": "flowers 1.jpg",
+    "title": "flowers 1",
     "width_cm": 120,
     "height_cm": 50,
     "year": 2023,
@@ -29,7 +29,7 @@
     "provenance": null,
     "artist": null
   },
-  "record_hash": "7d1eea386deeb3fe1831619c6e39cd434b64792793e7d529e4d947f97e80a44b",
+  "record_hash": "949baa8f13f71954ede81b864c4911ab18661a66f5cfdd74ff986a70362baaf4",
   "detail_sections": [
     {
       "project_subfolder": "details",

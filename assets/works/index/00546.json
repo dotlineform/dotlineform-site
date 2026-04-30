@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-9b1d74cc95b7530b400731a220e7b2d1",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-239c1be667b7dcee361a13efe566b396",
+    "generated_at_utc": "2026-04-30T08:50:39Z",
     "work_id": "00546",
     "count": 0
   },
   "work": {
     "work_id": "00546",
-    "title": "tree.jpg",
+    "title": "tree",
     "year": 2024,
     "year_display": "2024",
     "series_ids": [

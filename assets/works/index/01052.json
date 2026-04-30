@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4d92135a7d74bb2501f5643d40cd7aa9",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-e8745e3ea305cffa17a4280aaa8e1769",
+    "generated_at_utc": "2026-04-30T08:19:57Z",
     "work_id": "01052",
     "count": 3
   },
   "work": {
     "work_id": "01052",
-    "title": "flowers 1.jpg",
+    "title": "flowers 1",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [

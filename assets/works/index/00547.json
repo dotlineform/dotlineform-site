@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-d2e045d78e18c74ffd630e8ff71dd7be",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-e33dafe77c62ad49645c86d71f4c41da",
+    "generated_at_utc": "2026-04-30T08:48:32Z",
     "work_id": "00547",
     "count": 0
   },
   "work": {
     "work_id": "00547",
-    "title": "tree (tint).jpg",
+    "title": "tree (tint)",
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
