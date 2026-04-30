@@ -2,7 +2,7 @@
 doc_id: site-request-field-aware-build-scoping
 title: Field-Aware Catalogue Build Scoping Request
 added_date: 2026-04-27
-last_updated: 2026-04-27
+last_updated: 2026-04-30
 parent_id: change-requests
 sort_order: 100
 ---
@@ -65,6 +65,7 @@ The result is conceptually confusing. A change to a work download can appear to 
 - make planner output explain selected artifacts and dependency reasons
 - align write-server invalidation, build preview, and generated commands around the same rules
 - reduce no-op or near-no-op generated-output churn
+- skip local media generation for metadata-only saves that do not touch image/media source fields
 
 ## Non-Goals
 
@@ -208,6 +209,17 @@ Map which source fields appear in:
 - public series index
 - Studio lookup payloads
 - catalogue search payloads
+- local media generation and staged media outputs
+
+Inventory doc:
+
+- [Field-Aware Build Scoping Inventory](/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory)
+
+Open questions:
+
+- none blocking for Task 1
+- confirm during inventory exactly which work, work-detail, series, and moment fields are media-affecting fields
+- confirm whether any non-image metadata currently changes generated media manifests, copy lists, or media readiness output
 
 ### Task 2. Define Field-To-Artifact Rules
 
@@ -223,6 +235,8 @@ The registry should include:
 - work detail fields where they affect parent work outputs
 - series fields
 - moment fields if the same planner model is extended there
+- media-affecting fields that should trigger local media generation
+- metadata-only fields that should explicitly skip local media generation
 - fallback rules for unknown fields and structural operations
 
 ### Task 3. Wire Rules Into Write-Server Planning
@@ -267,6 +281,8 @@ Status:
 Add targeted checks for:
 
 - work-local files/links metadata
+- metadata-only saves skip local media generation
+- image/media source field changes still select local media generation
 - series membership changes
 - status/publish transitions
 - unknown-field fallback
@@ -277,6 +293,7 @@ Update the relevant script and Studio docs after implementation.
 
 - scoped dry-runs become easier to trust
 - small metadata edits create less generated-output noise
+- metadata-only saves avoid unnecessary local media checks and generation work
 - build planning rules become inspectable instead of implicit
 - future source-model changes can reuse the same dependency model
 

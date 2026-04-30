@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e787d846e3cd473ec6c5620e21e23514",
-    "generated_at_utc": "2026-04-30T11:11:37Z",
-    "count": 143
+    "version": "blake2b-347a542826ae0709e38fdbe103777b5d",
+    "generated_at_utc": "2026-04-30T11:47:53Z",
+    "count": 144
   },
   "entries": [
     {
@@ -102,6 +102,34 @@
         "26"
       ],
       "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "site-request-field-aware-build-scoping-inventory",
+      "kind": "doc",
+      "title": "Field-Aware Build Scoping Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
+      "last_updated": "2026-04-30",
+      "parent_id": "site-request-field-aware-build-scoping",
+      "parent_title": "Field-Aware Catalogue Build Scoping Request",
+      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request",
+      "search_terms": [
+        "site-request-field-aware-build-scoping-inventory",
+        "site",
+        "request",
+        "field",
+        "aware",
+        "build",
+        "scoping",
+        "inventory",
+        "field-aware build scoping inventory",
+        "field-aware catalogue build scoping request",
+        "catalogue",
+        "2026-04-30",
+        "2026",
+        "04",
+        "30"
+      ],
+      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request catalogue 2026-04-30 2026 04 30"
     },
     {
       "id": "config-jekyll-site-config",
@@ -2386,10 +2414,10 @@
       "kind": "doc",
       "title": "Field-Aware Catalogue Build Scoping Request",
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-04-30",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-27 • Change Requests",
+      "display_meta": "2026-04-30 • Change Requests",
       "search_terms": [
         "site-request-field-aware-build-scoping",
         "site",
@@ -2403,12 +2431,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-27",
+        "2026-04-30",
         "2026",
         "04",
-        "27"
+        "30"
       ],
-      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue change requests change requests 2026-04-27 2026 04 27"
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue change requests change requests 2026-04-30 2026 04 30"
     },
     {
       "id": "scripts-catalogue-lookup",
