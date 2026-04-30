@@ -16,13 +16,10 @@ layout: default
 {% unless img_base contains '://' %}
   {% assign img_base_out = img_base | relative_url %}
 {% endunless %}
-{% assign moment_id = page.moment_id | default: page.slug %}
-{%- capture fallback_moment_json -%}
-{
-  "moment_id": {{ moment_id | jsonify }},
-  "title": {{ page.title | jsonify }}
-}
-{%- endcapture -%}
+{% assign moment_id = page.slug %}
+{% assign public_text = site.public_runtime_text | default: nil %}
+{% assign loading_text = public_text.loading | default: "loading..." %}
+{% assign unavailable_text = public_text.unavailable | default: "info not available" %}
 
 <article
   class="page moment"
@@ -34,10 +31,11 @@ layout: default
   data-primary-display-width="{{ primary_display_width | escape }}"
   data-primary-suffix="{{ primary_suffix | escape }}"
   data-asset-format="{{ asset_format | escape }}"
-  data-fallback-json="{{ fallback_moment_json | strip_newlines | escape }}"
+  data-loading-text="{{ loading_text | escape }}"
+  data-unavailable-text="{{ unavailable_text | escape }}"
 >
   <header class="page__header moment-header">
-    <h1 class="page__title" id="momentTitleText">{{ page.title }}</h1>
+    <h1 class="page__title" id="momentTitleText">{{ loading_text }}</h1>
 
     <p class="page__meta muted small" id="momentDateText" hidden></p>
   </header>
@@ -46,7 +44,7 @@ layout: default
     <img class="page__mediaImg" id="momentHeroImg"
          width="1600"
          height="1200"
-         alt="{{ page.title | escape }}"
+         alt="{{ moment_id | escape }}"
          loading="eager" fetchpriority="high" decoding="async">
     <figcaption id="momentHeroCaption" hidden></figcaption>
   </figure>

@@ -4,7 +4,7 @@ Audit generated site consistency (read-only).
 
 Checks:
 - cross_refs: validate key cross-artifact references and duplicate IDs
-- schema: front matter required fields + format/consistency rules
+- schema: route-anchor ID format + generated JSON consistency rules
 - json_schema: generated JSON shape and count checks (series/work indexes + work detail JSON)
 - links: sitemap/link target existence + query-contract sanity
 - media: expected media/download file presence checks
@@ -149,15 +149,24 @@ def load_collection(path_glob: str, id_field: str) -> Tuple[Dict[str, Dict[str, 
     dups: List[str] = []
     for p in sorted(Path().glob(path_glob)):
         fm = parse_front_matter(p)
-        if not fm:
-            continue
         idv = normalize_text(fm.get(id_field))
+        if idv == "":
+            idv = normalize_text(p.stem)
         if idv == "":
             continue
         if idv in rows:
             dups.append(idv)
         rows[idv] = {"path": str(p), "fm": fm}
     return rows, dups
+
+
+def work_id_for_detail(detail_uid: str, row: Dict[str, Any]) -> str:
+    fm_work_id = normalize_text(row.get("fm", {}).get("work_id"))
+    if fm_work_id:
+        return fm_work_id
+    if "-" in detail_uid:
+        return detail_uid.split("-", 1)[0]
+    return ""
 
 
 def add_sample(samples: List[Dict[str, Any]], item: Dict[str, Any], max_samples: int) -> None:
@@ -284,7 +293,7 @@ def check_cross_refs(
         errors += 1
         add_sample(samples, {"check": "cross_refs", "id": dup, "message": "duplicate detail_uid in _work_details"}, max_samples)
 
-    # _works -> _series references
+    # Legacy _works front matter may still contain series_id; route-anchor stubs do not.
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -297,12 +306,12 @@ def check_cross_refs(
             errors += 1
             add_sample(samples, {"check": "cross_refs", "id": wid, "path": row["path"], "message": f"missing series page for series_id '{sid}'"}, max_samples)
 
-    # _work_details -> _works references
+    # _work_details route anchors derive the parent work id from the detail_uid prefix.
     for duid, row in work_details.items():
-        wid = normalize_text(row["fm"].get("work_id"))
+        wid = work_id_for_detail(duid, row)
         if wid == "":
             errors += 1
-            add_sample(samples, {"check": "cross_refs", "id": duid, "path": row["path"], "message": "missing work_id in work detail"}, max_samples)
+            add_sample(samples, {"check": "cross_refs", "id": duid, "path": row["path"], "message": "could not derive parent work_id for work detail"}, max_samples)
             continue
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -523,8 +532,7 @@ def check_schema(
             add_sample(samples, {"check": "schema", "id": sid, "path": source_path, "message": "sort_fields must include work_id exactly once"}, max_samples)
         sort_fields_by_series[sid] = parsed
 
-    # _works
-    works_required = ["work_id", "checksum"]
+    # _works route anchors
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -532,11 +540,11 @@ def check_schema(
         sid = normalize_series_ref(fm.get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
-        for field in works_required:
-            if is_empty(fm.get(field)):
-                errors += 1
-                add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": f"missing required works field '{field}'"}, max_samples)
-        if not re_work_id.fullmatch(normalize_text(fm.get("work_id"))):
+        fm_work_id = normalize_text(fm.get("work_id"))
+        if fm_work_id and fm_work_id != wid:
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "work_id front matter does not match route filename"}, max_samples)
+        if not re_work_id.fullmatch(wid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid work_id format (expected 5 digits)"}, max_samples)
         layout = normalize_text(fm.get("layout"))
@@ -547,28 +555,27 @@ def check_schema(
             errors += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_id format"}, max_samples)
 
-    # _series
-    series_required = ["series_id", "layout"]
+    # _series route anchors
     for sid, row in series.items():
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         fm = row["fm"]
-        for field in series_required:
-            if is_empty(fm.get(field)):
-                errors += 1
-                add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": f"missing required series field '{field}'"}, max_samples)
-        if not is_valid_series_ref(fm.get("series_id")):
+        fm_series_id = normalize_series_ref(fm.get("series_id"))
+        if fm_series_id and fm_series_id != sid:
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series_id front matter does not match route filename"}, max_samples)
+        if not is_valid_series_ref(sid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "invalid series_id format"}, max_samples)
-        if normalize_text(fm.get("layout")) != "series":
+        layout = normalize_text(fm.get("layout"))
+        if layout not in {"", "series"}:
             warnings += 1
             add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series layout should be 'series'"}, max_samples)
 
-    # _work_details
-    detail_required = ["work_id", "detail_id", "detail_uid", "title"]
+    # _work_details route anchors
     for duid, row in work_details.items():
         fm = row["fm"]
-        wid = normalize_text(fm.get("work_id"))
+        wid = work_id_for_detail(duid, row)
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
         sid = ""
@@ -576,32 +583,30 @@ def check_schema(
             sid = normalize_series_ref(works[wid]["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
-        for field in detail_required:
-            if is_empty(fm.get(field)):
-                errors += 1
-                add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": f"missing required work_detail field '{field}'"}, max_samples)
         if not re_work_id.fullmatch(wid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "invalid work_detail work_id format"}, max_samples)
-        if not re_detail_uid.fullmatch(normalize_text(fm.get("detail_uid"))):
+        fm_detail_uid = normalize_text(fm.get("detail_uid"))
+        if fm_detail_uid and fm_detail_uid != duid:
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid front matter does not match route filename"}, max_samples)
+        if not re_detail_uid.fullmatch(duid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "invalid detail_uid format (expected 00000-000)"}, max_samples)
-        detail_uid = normalize_text(fm.get("detail_uid"))
-        if re_detail_uid.fullmatch(detail_uid):
-            detail_work_id = detail_uid.split("-", 1)[0]
+        if re_detail_uid.fullmatch(duid):
+            detail_work_id = duid.split("-", 1)[0]
             if detail_work_id != wid:
                 errors += 1
                 add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid prefix must match work_id"}, max_samples)
 
-    # _moments (basic)
-    moment_required = ["moment_id", "title"]
+    # _moments route anchors
     for mid, row in moments.items():
         fm = row["fm"]
-        for field in moment_required:
-            if is_empty(fm.get(field)):
-                errors += 1
-                add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": f"missing required moment field '{field}'"}, max_samples)
-        if not is_slug_safe(normalize_text(fm.get("moment_id"))):
+        fm_moment_id = normalize_text(fm.get("moment_id"))
+        if fm_moment_id and fm_moment_id != mid:
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "moment_id front matter does not match route filename"}, max_samples)
+        if not is_slug_safe(mid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "invalid moment_id slug format"}, max_samples)
 
@@ -961,7 +966,7 @@ def check_links(
             add_sample(samples, {"check": "links", "id": wid, "path": row["path"], "message": f"work links to missing series target '/series/{sid}/'"}, max_samples)
 
     for duid, row in work_details.items():
-        wid = normalize_text(row["fm"].get("work_id"))
+        wid = work_id_for_detail(duid, row)
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
         if wid in works:
@@ -1025,7 +1030,7 @@ def check_media(
 
     for duid, row in work_details.items():
         fm = row["fm"]
-        wid = normalize_text(fm.get("work_id"))
+        wid = work_id_for_detail(duid, row)
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
         sid = ""
@@ -1083,7 +1088,7 @@ def check_orphans(
             add_sample(samples, {"check": "orphans", "id": sid, "path": row["path"], "message": "series page has no works"}, max_samples)
 
     for duid, row in work_details.items():
-        wid = normalize_text(row["fm"].get("work_id"))
+        wid = work_id_for_detail(duid, row)
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
         sid = ""

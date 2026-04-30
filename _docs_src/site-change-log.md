@@ -8,6 +8,41 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-30] Converted public catalogue stubs to route anchors
+
+**Status:** implemented
+
+**Area:** catalogue generation / public runtime / Studio write flow
+
+**Summary:**
+Generated collection Markdown files for works, work details, series, and moments now act as metadata-free route anchors. Public layouts derive route identity from `page.slug`, load runtime content from generated JSON, and use config-backed loading/unavailable text.
+
+**Reason:**
+Mutable front matter and route-stub checksums made metadata-only catalogue edits rewrite Jekyll collection pages. That created avoidable rebuild churn and made field-aware build scoping harder to reason about.
+
+**Effect:**
+`generate_work_pages.py` now emits empty-front-matter stubs for new public collection routes and skips existing stubs unless `--force` is used to normalize older generated files. Work-detail routes derive the parent work id from the `detail_uid` prefix. The site consistency audit now validates route-anchor filenames and generated JSON references instead of requiring metadata fields in stubs. Studio lookup payloads and write endpoints no longer use full-record `record_hash`/`expected_record_hash` concurrency tokens; local saves apply against the current source record with validation and backups as the safety layer.
+
+**Affected files/docs:**
+
+- `_config.yml`
+- `_layouts/work.html`
+- `_layouts/work_details.html`
+- `_layouts/series.html`
+- `_layouts/moment.html`
+- `assets/js/moment.js`
+- `scripts/generate_work_pages.py`
+- `scripts/audit_site_consistency.py`
+- `scripts/catalogue_lookup.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+- [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Route-Anchor Collection Stubs Spec](/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs)
+- [Studio Record Hash Simplification Analysis](/docs/?scope=studio&doc=site-request-studio-record-hash-simplification)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-30] Made catalogue editor reads service-backed
 
 **Status:** implemented

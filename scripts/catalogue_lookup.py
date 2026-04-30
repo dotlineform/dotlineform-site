@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -33,11 +32,6 @@ SCHEMAS = {
     "series_record": "studio_catalogue_lookup_series_record_v1",
     "meta": "studio_catalogue_lookup_meta_v1",
 }
-
-
-def record_hash(record: Mapping[str, Any]) -> str:
-    encoded = json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return hashlib.sha256(encoded).hexdigest()
 
 
 def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> Dict[str, Any]:
@@ -89,7 +83,6 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
             "schema": SCHEMAS["work_record"],
         },
         "work": dict(record),
-        "record_hash": record_hash(record),
         "detail_sections": detail_sections,
         "downloads": list(record.get("downloads", [])) if isinstance(record.get("downloads"), list) else [],
         "links": list(record.get("links", [])) if isinstance(record.get("links"), list) else [],
@@ -108,7 +101,6 @@ def build_work_detail_lookup_payload(records: CatalogueSourceRecords, detail_uid
             "schema": SCHEMAS["work_detail_record"],
         },
         "work_detail": dict(record),
-        "record_hash": record_hash(record),
         "work_summary": {
             "work_id": work_id,
             "title": normalize_text(work_record.get("title")),
@@ -133,7 +125,6 @@ def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str)
                 "year_display": normalize_text(work_record.get("year_display")),
                 "status": normalize_text(work_record.get("status")),
                 "series_ids": list(series_ids),
-                "record_hash": record_hash(work_record),
             }
         )
     members.sort(key=lambda item: item["work_id"])
@@ -143,7 +134,6 @@ def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str)
             "schema": SCHEMAS["series_record"],
         },
         "series": dict(record),
-        "record_hash": record_hash(record),
         "member_works": members,
     }
 
@@ -158,7 +148,6 @@ def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]
                 "year_display": normalize_text(record.get("year_display")),
                 "status": normalize_text(record.get("status")),
                 "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
-                "record_hash": record_hash(record),
             }
         )
     items.sort(key=lambda item: item["work_id"])
@@ -180,7 +169,6 @@ def build_series_search_payload(records: CatalogueSourceRecords) -> Dict[str, An
                 "title": normalize_text(record.get("title")),
                 "status": normalize_text(record.get("status")),
                 "primary_work_id": normalize_text(record.get("primary_work_id")),
-                "record_hash": record_hash(record),
             }
         )
     items.sort(key=lambda item: item["series_id"])
@@ -245,7 +233,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                 "schema": SCHEMAS["work_detail_record"],
             },
             "work_detail": record,
-            "record_hash": record_hash(record),
             "work_summary": {
                 "work_id": work_id,
                 "title": normalize_text(work_record.get("title")),
@@ -260,7 +247,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                 "year_display": normalize_text(record.get("year_display")),
                 "status": normalize_text(record.get("status")),
                 "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
-                "record_hash": record_hash(record),
             }
         )
         works_by_id[work_id] = build_work_lookup_payload(records, work_id)
@@ -272,7 +258,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                 "title": normalize_text(record.get("title")),
                 "status": normalize_text(record.get("status")),
                 "primary_work_id": normalize_text(record.get("primary_work_id")),
-                "record_hash": record_hash(record),
             }
         )
         members = []
@@ -287,7 +272,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                     "year_display": normalize_text(work_record.get("year_display")),
                     "status": normalize_text(work_record.get("status")),
                     "series_ids": list(series_ids),
-                    "record_hash": record_hash(work_record),
                 }
             )
         members.sort(key=lambda item: item["work_id"])
@@ -296,7 +280,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                 "schema": SCHEMAS["series_record"],
             },
             "series": record,
-            "record_hash": record_hash(record),
             "member_works": members,
         }
 

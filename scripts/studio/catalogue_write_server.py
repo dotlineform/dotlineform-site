@@ -42,7 +42,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import hashlib
 import json
 import os
 import shutil
@@ -588,11 +587,6 @@ def allowed_origin(origin: str) -> Optional[str]:
     return f"{parsed.scheme}://{parsed.hostname}:{parsed.port}"
 
 
-def record_hash(record: Mapping[str, Any]) -> str:
-    encoded = json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return hashlib.sha256(encoded).hexdigest()
-
-
 def normalize_series_ids_value(value: Any) -> list[str]:
     if value is None:
         return []
@@ -899,13 +893,6 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> Dict[str, Any]:
     if not ids:
         raise ValueError("bulk save ids must include at least one valid id")
 
-    raw_expected_hashes = body.get("expected_record_hashes") or {}
-    if not isinstance(raw_expected_hashes, dict):
-        raise ValueError("expected_record_hashes must be an object")
-    expected_hashes: Dict[str, str] = {}
-    for record_id in ids:
-        expected_hashes[record_id] = str(raw_expected_hashes.get(record_id) or "").strip()
-
     raw_set_fields = body.get("set_fields") or {}
     if not isinstance(raw_set_fields, dict):
         raise ValueError("set_fields must be an object")
@@ -937,7 +924,6 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> Dict[str, Any]:
     return {
         "kind": kind,
         "ids": ids,
-        "expected_record_hashes": expected_hashes,
         "set_fields": set_fields,
         "series_operation": series_operation,
     }
@@ -960,11 +946,9 @@ def extract_delete_request(body: Mapping[str, Any]) -> Dict[str, str]:
         record_id = normalize_series_id(body.get("series_id") or body.get("id"))
     else:
         record_id = normalize_moment_id_value(body.get("moment_id") or body.get("id"))
-    expected_record_hash = str(body.get("expected_record_hash") or "").strip()
     return {
         "kind": kind,
         "id": record_id,
-        "expected_record_hash": expected_record_hash,
     }
 
 
@@ -1002,7 +986,6 @@ def extract_publication_request(body: Mapping[str, Any]) -> Dict[str, Any]:
         "action": action,
         "id": record_id,
         "record_update": record_update,
-        "expected_record_hash": str(body.get("expected_record_hash") or "").strip(),
         "extra_series_ids": normalize_series_ids_value(body.get("extra_series_ids")),
         "extra_work_ids": [slug_id(raw) for raw in body.get("extra_work_ids") or []],
         "force": bool(body.get("force")),
@@ -1064,7 +1047,7 @@ def extract_series_work_updates(body: Mapping[str, Any]) -> list[Dict[str, Any]]
     for raw in raw_updates:
         if not isinstance(raw, dict):
             raise ValueError("work_updates entries must be objects")
-        unknown = sorted(str(key) for key in raw.keys() if str(key) not in {"work_id", "series_ids", "expected_record_hash"})
+        unknown = sorted(str(key) for key in raw.keys() if str(key) not in {"work_id", "series_ids"})
         if unknown:
             raise ValueError(f"work_updates entry contains unsupported fields: {', '.join(unknown)}")
         work_id = slug_id(raw.get("work_id"))
@@ -1073,7 +1056,6 @@ def extract_series_work_updates(body: Mapping[str, Any]) -> list[Dict[str, Any]]
             {
                 "work_id": work_id,
                 "series_ids": series_ids,
-                "expected_record_hash": str(raw.get("expected_record_hash") or "").strip(),
             }
         )
     return updates
@@ -1902,8 +1884,6 @@ def build_publication_preview(source_dir: Path, repo_root: Path, request: Mappin
         "validation_errors": validation_errors,
         "current_status": current_status,
         "target_status": target_status,
-        "current_record_hash": record_hash(current_record),
-        "target_record_hash": record_hash(target_record),
         "record": current_record,
         "target_record": target_record,
         "changed": changed,
@@ -3281,21 +3261,6 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(current_record, dict):
             raise ValueError(f"work_id not found: {work_id}")
 
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(
-                HTTPStatus.CONFLICT,
-                {
-                    "ok": False,
-                    "error": "record changed since loaded",
-                    "work_id": work_id,
-                    "current_record_hash": current_hash,
-                },
-                allowed,
-            )
-            return
-
         updated_record = normalize_work_update(work_id, current_record, work_update)
         apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
         fields_changed = changed_fields(current_record, updated_record)
@@ -3320,7 +3285,6 @@ class Handler(BaseHTTPRequestHandler):
             "work_id": work_id,
             "changed": changed,
             "changed_fields": fields_changed,
-            "record_hash": record_hash(updated_record),
             "record": updated_record,
         }
         lookup_refresh_payload: Dict[str, Any] = {}
@@ -3410,7 +3374,6 @@ class Handler(BaseHTTPRequestHandler):
         request = extract_bulk_save_request(body)
         kind = request["kind"]
         selected_ids: list[str] = request["ids"]
-        expected_hashes: Dict[str, str] = request["expected_record_hashes"]
         set_fields: Dict[str, Any] = request["set_fields"]
         series_operation = request["series_operation"]
 
@@ -3430,22 +3393,6 @@ class Handler(BaseHTTPRequestHandler):
                 current_record = works_map.get(work_id)
                 if not isinstance(current_record, dict):
                     raise ValueError(f"work_id not found: {work_id}")
-                expected_hash = expected_hashes.get(work_id) or ""
-                current_hash = record_hash(current_record)
-                if expected_hash and expected_hash != current_hash:
-                    self._send_json(
-                        HTTPStatus.CONFLICT,
-                        {
-                            "ok": False,
-                            "error": "record changed since loaded",
-                            "kind": kind,
-                            "work_id": work_id,
-                            "current_record_hash": current_hash,
-                        },
-                        allowed,
-                    )
-                    return
-
                 update = dict(set_fields)
                 if series_operation is not None:
                     update["series_ids"] = apply_work_bulk_series_operation(
@@ -3471,7 +3418,6 @@ class Handler(BaseHTTPRequestHandler):
                 changed_record_payloads.append(
                     {
                         "work_id": work_id,
-                        "record_hash": record_hash(updated_record),
                         "record": updated_record,
                     }
                 )
@@ -3554,21 +3500,6 @@ class Handler(BaseHTTPRequestHandler):
             current_record = detail_map.get(detail_uid)
             if not isinstance(current_record, dict):
                 raise ValueError(f"detail_uid not found: {detail_uid}")
-            expected_hash = expected_hashes.get(detail_uid) or ""
-            current_hash = record_hash(current_record)
-            if expected_hash and expected_hash != current_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {
-                        "ok": False,
-                        "error": "record changed since loaded",
-                        "kind": kind,
-                        "detail_uid": detail_uid,
-                        "current_record_hash": current_hash,
-                    },
-                    allowed,
-                )
-                return
             updated_record = normalize_work_detail_update(detail_uid, current_record, set_fields)
             work_id = str(updated_record.get("work_id") or "")
             if work_id not in source_records.works:
@@ -3591,7 +3522,6 @@ class Handler(BaseHTTPRequestHandler):
             changed_record_payloads.append(
                 {
                     "detail_uid": detail_uid,
-                    "record_hash": record_hash(updated_record),
                     "record": updated_record,
                 }
             )
@@ -3825,12 +3755,6 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "publication preview contains blockers", "preview": preview}, allowed)
             return
 
-        expected_hash = str(request.get("expected_record_hash") or "").strip()
-        current_hash = str(preview.get("current_record_hash") or "")
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "kind": request["kind"], "id": request["id"], "current_record_hash": current_hash}, allowed)
-            return
-
         kind = str(request["kind"])
         action = str(request["action"])
         record_id = str(request["id"])
@@ -3872,7 +3796,6 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": preview.get("changed_fields", []),
             "bootstrap_publish_work_ids": preview.get("bootstrap_publish_work_ids", []),
             "record": target_record,
-            "record_hash": record_hash(target_record),
             "preview": preview,
             "source_saved": bool(source_changed and not self.server.dry_run) or bool(action == "unpublish" and not self.server.dry_run),
             "public_update": public_update,
@@ -3991,7 +3914,6 @@ class Handler(BaseHTTPRequestHandler):
         request = extract_delete_request(body)
         kind = request["kind"]
         record_id = request["id"]
-        expected_hash = request["expected_record_hash"]
         preview = build_delete_preview(self.server.source_dir, kind, record_id, repo_root=self.server.repo_root)
         if preview.get("blocked"):
             self._send_json(
@@ -4017,14 +3939,6 @@ class Handler(BaseHTTPRequestHandler):
             current_record = works_payload["works"].get(record_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"work_id not found: {record_id}")
-            current_hash = record_hash(current_record)
-            if expected_hash and expected_hash != current_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {"ok": False, "error": "record changed since loaded", "work_id": record_id, "current_record_hash": current_hash},
-                    allowed,
-                )
-                return
             updated_works = dict(works_payload["works"])
             del updated_works[record_id]
             updated_details = {
@@ -4078,14 +3992,6 @@ class Handler(BaseHTTPRequestHandler):
             current_record = details_payload["work_details"].get(record_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"detail_uid not found: {record_id}")
-            current_hash = record_hash(current_record)
-            if expected_hash and expected_hash != current_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {"ok": False, "error": "record changed since loaded", "detail_uid": record_id, "current_record_hash": current_hash},
-                    allowed,
-                )
-                return
             updated_details = dict(details_payload["work_details"])
             del updated_details[record_id]
             cleanup = collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
@@ -4128,14 +4034,6 @@ class Handler(BaseHTTPRequestHandler):
             current_record = series_payload["series"].get(record_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"series_id not found: {record_id}")
-            current_hash = record_hash(current_record)
-            if expected_hash and expected_hash != current_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {"ok": False, "error": "record changed since loaded", "series_id": record_id, "current_record_hash": current_hash},
-                    allowed,
-                )
-                return
             updated_series = dict(series_payload["series"])
             del updated_series[record_id]
             updated_works = dict(works_payload["works"])
@@ -4186,14 +4084,6 @@ class Handler(BaseHTTPRequestHandler):
             if not isinstance(current_record, dict):
                 raise ValueError(f"moment_id not found: {record_id}")
             normalized_current = normalize_moment_metadata_record(record_id, current_record)
-            current_hash = record_hash(normalized_current)
-            if expected_hash and expected_hash != current_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {"ok": False, "error": "record changed since loaded", "moment_id": record_id, "current_record_hash": current_hash},
-                    allowed,
-                )
-                return
             updated_moments = dict(moments_payload["moments"])
             del updated_moments[record_id]
             cleanup = collect_moment_delete_cleanup(self.server.repo_root, record_id)
@@ -4325,7 +4215,6 @@ class Handler(BaseHTTPRequestHandler):
             "created": True,
             "changed": True,
             "changed_fields": changed_fields(blank_work_record, created_record),
-            "record_hash": record_hash(created_record),
             "record": created_record,
         }
         if self.server.dry_run:
@@ -4417,7 +4306,6 @@ class Handler(BaseHTTPRequestHandler):
             "created": True,
             "changed": True,
             "changed_fields": changed_fields(blank_detail_record, created_record),
-            "record_hash": record_hash(created_record),
             "record": created_record,
         }
         if self.server.dry_run:
@@ -4469,21 +4357,6 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(current_record, dict):
             raise ValueError(f"detail_uid not found: {detail_uid}")
 
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(
-                HTTPStatus.CONFLICT,
-                {
-                    "ok": False,
-                    "error": "record changed since loaded",
-                    "detail_uid": detail_uid,
-                    "current_record_hash": current_hash,
-                },
-                allowed,
-            )
-            return
-
         updated_record = normalize_work_detail_update(detail_uid, current_record, detail_update)
         work_id = str(updated_record.get("work_id") or "")
         if not work_id:
@@ -4516,7 +4389,6 @@ class Handler(BaseHTTPRequestHandler):
             "work_id": work_id,
             "changed": changed,
             "changed_fields": fields_changed,
-            "record_hash": record_hash(updated_record),
             "record": updated_record,
         }
         lookup_refresh_payload: Dict[str, Any] = {}
@@ -4648,7 +4520,6 @@ class Handler(BaseHTTPRequestHandler):
             "created": True,
             "changed": True,
             "changed_fields": changed_fields(blank_record, created_record),
-            "record_hash": record_hash(created_record),
             "record": created_record,
         }
         if self.server.dry_run:
@@ -4690,11 +4561,6 @@ class Handler(BaseHTTPRequestHandler):
         current_record = record_map.get(file_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"file_uid not found: {file_uid}")
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "file_uid": file_uid, "current_record_hash": current_hash}, allowed)
-            return
         updated_record = normalize_work_file_update(file_uid, current_record, file_update)
         if not str(updated_record.get("filename") or "").strip():
             raise ValueError("work file filename is required")
@@ -4720,7 +4586,6 @@ class Handler(BaseHTTPRequestHandler):
             "work_id": updated_record.get("work_id"),
             "changed": changed,
             "changed_fields": fields_changed,
-            "record_hash": record_hash(updated_record),
             "record": updated_record,
         }
         lookup_refresh_payload: Dict[str, Any] = {}
@@ -4813,11 +4678,6 @@ class Handler(BaseHTTPRequestHandler):
         current_record = record_map.get(file_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"file_uid not found: {file_uid}")
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "file_uid": file_uid, "current_record_hash": current_hash}, allowed)
-            return
         validation_errors = validate_deleted_file_records(self.server.source_dir, file_uid)
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
@@ -4903,7 +4763,6 @@ class Handler(BaseHTTPRequestHandler):
             "created": True,
             "changed": True,
             "changed_fields": changed_fields(blank_record, created_record),
-            "record_hash": record_hash(created_record),
             "record": created_record,
         }
         if self.server.dry_run:
@@ -4945,11 +4804,6 @@ class Handler(BaseHTTPRequestHandler):
         current_record = record_map.get(link_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"link_uid not found: {link_uid}")
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "link_uid": link_uid, "current_record_hash": current_hash}, allowed)
-            return
         updated_record = normalize_work_link_update(link_uid, current_record, link_update)
         if not str(updated_record.get("url") or "").strip():
             raise ValueError("work link url is required")
@@ -4975,7 +4829,6 @@ class Handler(BaseHTTPRequestHandler):
             "work_id": updated_record.get("work_id"),
             "changed": changed,
             "changed_fields": fields_changed,
-            "record_hash": record_hash(updated_record),
             "record": updated_record,
         }
         lookup_refresh_payload: Dict[str, Any] = {}
@@ -5068,11 +4921,6 @@ class Handler(BaseHTTPRequestHandler):
         current_record = record_map.get(link_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"link_uid not found: {link_uid}")
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "link_uid": link_uid, "current_record_hash": current_hash}, allowed)
-            return
         validation_errors = validate_deleted_link_records(self.server.source_dir, link_uid)
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
@@ -5128,21 +4976,6 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(current_series_record, dict):
             raise ValueError(f"series_id not found: {series_id}")
 
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
-        current_hash = record_hash(current_series_record)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(
-                HTTPStatus.CONFLICT,
-                {
-                    "ok": False,
-                    "error": "record changed since loaded",
-                    "series_id": series_id,
-                    "current_record_hash": current_hash,
-                },
-                allowed,
-            )
-            return
-
         works_payload = load_works_payload(self.server.works_path)
         works_map = works_payload["works"]
         updated_series_record = normalize_series_update(series_id, current_series_record, series_update)
@@ -5158,20 +4991,6 @@ class Handler(BaseHTTPRequestHandler):
             current_work_record = works_map.get(work_id)
             if not isinstance(current_work_record, dict):
                 raise ValueError(f"work_id not found: {work_id}")
-            expected_work_hash = update.get("expected_record_hash") or ""
-            current_work_hash = record_hash(current_work_record)
-            if expected_work_hash and expected_work_hash != current_work_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {
-                        "ok": False,
-                        "error": "work record changed since loaded",
-                        "work_id": work_id,
-                        "current_record_hash": current_work_hash,
-                    },
-                    allowed,
-                )
-                return
             updated_work_record = normalize_work_update(work_id, current_work_record, {"series_ids": update["series_ids"]})
             pending_work_updates[work_id] = updated_work_record
             if changed_fields(current_work_record, updated_work_record):
@@ -5217,7 +5036,6 @@ class Handler(BaseHTTPRequestHandler):
             "changed": changed,
             "changed_fields": series_changed_fields,
             "changed_work_ids": changed_work_ids,
-            "record_hash": record_hash(updated_series_record),
             "record": updated_series_record,
             "work_records": response_work_records,
         }
@@ -5342,20 +5160,6 @@ class Handler(BaseHTTPRequestHandler):
             current_work_record = works_map.get(work_id)
             if not isinstance(current_work_record, dict):
                 raise ValueError(f"work_id not found: {work_id}")
-            expected_work_hash = update.get("expected_record_hash") or ""
-            current_work_hash = record_hash(current_work_record)
-            if expected_work_hash and expected_work_hash != current_work_hash:
-                self._send_json(
-                    HTTPStatus.CONFLICT,
-                    {
-                        "ok": False,
-                        "error": "work record changed since loaded",
-                        "work_id": work_id,
-                        "current_record_hash": current_work_hash,
-                    },
-                    allowed,
-                )
-                return
             updated_work_record = normalize_work_update(work_id, current_work_record, {"series_ids": update["series_ids"]})
             pending_work_updates[work_id] = updated_work_record
             if changed_fields(current_work_record, updated_work_record):
@@ -5397,7 +5201,6 @@ class Handler(BaseHTTPRequestHandler):
             "changed": True,
             "changed_fields": changed_fields(blank_series_record, created_series_record),
             "changed_work_ids": changed_work_ids,
-            "record_hash": record_hash(created_series_record),
             "record": created_series_record,
             "work_records": response_work_records,
         }
@@ -5768,7 +5571,6 @@ class Handler(BaseHTTPRequestHandler):
             "ok": True,
             "moment_id": moment_id,
             "record": normalized_record,
-            "record_hash": record_hash(normalized_record),
             "preview": preview,
             "readiness": build_moment_readiness(self.server.repo_root, f"{moment_id}.md", metadata=normalized_record),
         }
@@ -5793,22 +5595,7 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(current_record, dict):
             raise ValueError(f"moment_id not found: {moment_id}")
 
-        expected_hash = str(body.get("expected_record_hash") or "").strip()
         normalized_current = normalize_moment_metadata_record(moment_id, current_record)
-        current_hash = record_hash(normalized_current)
-        if expected_hash and expected_hash != current_hash:
-            self._send_json(
-                HTTPStatus.CONFLICT,
-                {
-                    "ok": False,
-                    "error": "record changed since loaded",
-                    "moment_id": moment_id,
-                    "current_record_hash": current_hash,
-                },
-                allowed,
-            )
-            return
-
         updated_record = normalize_moment_update(moment_id, normalized_current, moment_update)
         fields_changed = changed_fields(normalized_current, updated_record)
         validation_errors = validate_updated_moment_record(moment_id, updated_record)
@@ -5832,7 +5619,6 @@ class Handler(BaseHTTPRequestHandler):
             "moment_id": moment_id,
             "changed": changed,
             "changed_fields": fields_changed,
-            "record_hash": record_hash(updated_record),
             "record": updated_record,
         }
         if changed:

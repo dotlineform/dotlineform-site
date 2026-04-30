@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-04-29
+last_updated: 2026-04-30
 parent_id: _archive
 sort_order: 50
 ---
@@ -68,7 +68,8 @@ Moment canonical source model:
 - `--write`: persist generated file changes plus canonical-source work/work-detail/series updates
 - `--source-dir` with default `assets/studio/data/catalogue`
   - canonical source JSON directory for the internal run
-- `--force`: force rewrites even when checksums or content versions match
+- `--force`: force rewrites even when generated content would otherwise match
+  - for route-anchor collection stubs, this is also the explicit way to normalize an existing older metadata-bearing stub to the current empty-front-matter shape
 - `--refresh-published`
   - internal narrow refresh mode used by `catalogue_json_build.py`
   - lets selected published records be processed for prose/runtime payload recomputation without forcing unchanged aggregate JSON or catalogue search rewrites
@@ -83,7 +84,7 @@ Moment canonical source model:
   - renders canonical moment prose from `_docs_src_catalogue/moments/<moment_id>.md` using the local Jekyll markdown stack
   - generated together with `_moments/<moment_id>.md` when `moments` is selected
   - JSON is now the canonical runtime source for moment date, image, and prose content
-  - generated `_moments/<moment_id>.md` files are minimal stubs with `moment_id`, `title`, `layout`, and `checksum`
+  - generated `_moments/<moment_id>.md` files are metadata-free route-anchor stubs
 - `--moments-index-json-path` with default `assets/data/moments_index.json`
   - writes a lightweight moments index object keyed by `moment_id`
   - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
@@ -129,13 +130,13 @@ Allowed values:
 Artifact behavior:
 
 - `work-pages`
-  writes `_works/<work_id>.md` as lightweight stubs with `work_id`, `title`, `layout`, and `checksum`
+  writes `_works/<work_id>.md` as metadata-free route-anchor stubs
 - `series-pages`
-  writes `_series/<series_id>.md` lightweight stubs plus `assets/series/index/<series_id>.json` for published series only; per-series JSON carries page-local metadata and prose, while membership stays canonical in `assets/data/series_index.json`
+  writes `_series/<series_id>.md` metadata-free route-anchor stubs plus `assets/series/index/<series_id>.json` for published series only; per-series JSON carries page-local metadata and prose, while membership stays canonical in `assets/data/series_index.json`
 - `work-details-pages`
-  writes `_work_details/<detail_uid>.md` lightweight stubs
+  writes `_work_details/<detail_uid>.md` metadata-free route-anchor stubs
 - `moments`
-  writes both `_moments/<moment_id>.md` stubs and `assets/moments/index/<moment_id>.json`
+  writes both `_moments/<moment_id>.md` route-anchor stubs and `assets/moments/index/<moment_id>.json`
 - `moments-index-json`
   writes `assets/data/moments_index.json` as a lightweight full index keyed by `moment_id`
 - `series-index-json`
@@ -154,6 +155,7 @@ There is no separate `works-prose` artifact; use `work-json` for prose-only refr
 Scoped refresh behavior:
 
 - selected published records are processed when `--refresh-published` or `--force` is present
+- existing route-anchor stubs are skipped unless `--force` is present; missing stubs are still created
 - draft series are not actionable generator records and are excluded from public series pages and series index payloads
 - unchanged generated artifacts still skip under `--refresh-published` when their content version matches
 - `published_date` updates are reserved for first-time `draft -> published` transitions
@@ -181,7 +183,7 @@ This validation runs before generated files or canonical source status/date upda
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata
 - `/series/<series_id>/` reads `assets/series/index/<series_id>.json` for series prose HTML
 - `/works/<work_id>/` reads `assets/works/index/<work_id>.json` for metadata, prose HTML, and detail sections; series nav state also reads `assets/data/series_index.json`
-- `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`
+- `/work_details/<detail_uid>/` derives `work_id` from the `detail_uid` route prefix and then fetches `assets/works/index/<work_id>.json`
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`
 - `/search/` reads `assets/data/search/catalogue/index.json`
 - `/studio/studio-works/` reads `assets/studio/data/work_storage_index.json` for curator-only storage values

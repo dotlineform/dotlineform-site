@@ -2,9 +2,9 @@
 """
 Generate Jekyll work/moment pages and JSON artifacts.
 
-This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
-file per work (e.g. `_works/00286.md`) with YAML front matter populated from canonical catalogue
-source records plus an in-memory sheet-like projection retained for internal compatibility.
+This repo stores works as a Jekyll collection in `_works/`. The generator writes metadata-free
+Markdown route anchors (e.g. `_works/00286.md`) while runtime catalogue metadata lives in
+generated JSON artifacts.
 
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
@@ -41,7 +41,7 @@ It is not a user-facing workbook command.
 
 Common flags:
 - --write: persist generated files + canonical source status/date updates
-- --force: regenerate even when checksum/hash matches existing output
+- --force: regenerate even when generated output would otherwise match existing files
 - --work-ids / --work-ids-file: limit work/work_details generation scope
 - --series-ids / --series-ids-file: limit series page/JSON scope
 - --moment-ids / --moment-ids-file: limit moments generation scope
@@ -466,13 +466,16 @@ def build_front_matter(fields: Dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def build_route_stub_content() -> str:
+    """Build a metadata-free Jekyll collection route anchor."""
+    return build_front_matter({})
+
+
 # ----------------------------
-# Canonical schema (Works sheet)
+# Canonical schema (Works source projection)
 # ----------------------------
-# Define the Works->front matter mapping once so adding a new field is a one-line change.
-# Each entry is: (front_matter_key, excel_column_name, coercer)
-# Coercers should return the Python type we want before YAML emission:
-# - strings (quoted), ints/floats (unquoted for configured numeric keys), or None (-> null)
+# Define the Works source-record projection once so adding a new field is a one-line change.
+# Each entry is: (record_key, source_column_name, coercer)
 WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("artist", "artist", coerce_string),
     ("title", "title", coerce_string),
@@ -488,12 +491,11 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("width_px", "width_px", coerce_int),
     ("height_px", "height_px", coerce_int),
     # tags handled separately (csv list)
-    # checksum is always computed, not sourced from Excel
 ]
 
 
-def build_works_front_matter(works_row: tuple, works_hi: Dict[str, int]) -> Dict[str, Any]:
-    """Build the scalar portion of Works front matter (excluding work_id, tags, images, attachments)."""
+def build_work_record_projection(works_row: tuple, works_hi: Dict[str, int]) -> Dict[str, Any]:
+    """Build the scalar portion of the public work record projection."""
     fm: Dict[str, Any] = {}
     for fm_key, col_name, coercer in WORKS_SCHEMA:
         raw = works_row[works_hi[col_name]] if col_name in works_hi else None
@@ -539,45 +541,15 @@ def build_link_entry(url: Any, label: Any) -> Dict[str, str]:
 # Checksum helpers
 # ----------------------------
 
-def compute_work_checksum(front_matter: Dict[str, Any]) -> str:
-    """Compute a deterministic checksum for a work from its front matter (excluding checksum itself)."""
-    payload = dict(front_matter)
+def compute_work_checksum(record: Dict[str, Any]) -> str:
+    """Compute a deterministic checksum for a generated JSON record."""
+    payload = dict(record)
     payload.pop("checksum", None)
 
     # Canonical JSON for hashing (sorted keys ensures deterministic output)
     canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     h = hashlib.blake2b(canonical, digest_size=16)
     return h.hexdigest()
-
-
-def extract_existing_checksum(path: Path) -> Optional[str]:
-    """Extract `checksum` from the YAML front matter of an existing work page."""
-    try:
-        text = path.read_text(encoding="utf-8")
-    except Exception:
-        return None
-
-    # Only inspect the first YAML front matter block
-    if not text.startswith("---"):
-        return None
-
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return None
-
-    fm_text = parts[1]
-    for line in fm_text.splitlines():
-        if not line.startswith("checksum:"):
-            continue
-        _, raw = line.split(":", 1)
-        raw = raw.strip()
-        if raw == "null" or raw == "":
-            return None
-        if raw.startswith('"') and raw.endswith('"') and len(raw) >= 2:
-            return raw[1:-1]
-        return raw
-
-    return None
 
 
 # ----------------------------
@@ -890,7 +862,7 @@ def load_tag_registry_payload(path: Path) -> Dict[str, Any]:
 # 1) Parse CLI args (scope + output options)
 # 2) Load canonical source JSON
 # 3) Build the internal sheet-like projection used by retained generator helpers
-# 4) Iterate the projected rows -> build front matter + body -> write generated artifacts
+# 4) Iterate the projected rows -> build generated artifacts
 def main() -> None:
     # CLI arguments define the internal JSON-source run and where output files go.
     ap = argparse.ArgumentParser()
@@ -1358,7 +1330,7 @@ def main() -> None:
         if is_empty(wid_raw):
             continue
         wid = slug_id(wid_raw)
-        meta = build_works_front_matter(wr, works_hi)
+        meta = build_work_record_projection(wr, works_hi)
         work_status_by_id[wid] = normalize_status(cell(wr, works_hi, "status"))
         series_ids = parse_work_series_ids(wr)
         sid = series_ids[0] if series_ids else ""
@@ -1839,30 +1811,14 @@ def main() -> None:
                 if canonical_work_fm is None:
                     skipped += 1
                     continue
-                checksum = str(canonical_work_fm.get("checksum"))
-                # Canonical work metadata lives in JSON artifacts; keep _works lightweight.
-                work_page_fm: Dict[str, Any] = {
-                    "work_id": wid,
-                    "title": coerce_string(canonical_work_fm.get("title")),
-                    "layout": "work",
-                    "checksum": checksum,
-                }
-
-                work_page_content = build_front_matter(work_page_fm) + "\n"
+                work_page_content = build_route_stub_content()
                 out_path = out_dir / f"{wid}.md"
 
                 def write_page(path: Path, label: str, page_content: str) -> bool:
                     exists = path.exists()
-                    existing_checksum = extract_existing_checksum(path) if exists else None
-                    if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
-                        existing_content: Optional[str] = None
-                        try:
-                            existing_content = path.read_text(encoding="utf-8")
-                        except Exception:
-                            existing_content = None
-                        if existing_content == page_content:
-                            print(f"{prefix}SKIP ({label}; checksum+content match): {display_path(path)}")
-                            return False
+                    if exists and not args.force:
+                        print(f"{prefix}SKIP ({label}; route exists): {display_path(path)}")
+                        return False
                     if args.write:
                         path.write_text(page_content, encoding="utf-8")
                         print(f"{prefix}WRITE ({label}): {display_path(path)}")
@@ -2047,25 +2003,12 @@ def main() -> None:
                         "work_count": len(series_work_ids_sorted),
                     })
                 )
-                sfm: Dict[str, Any] = {
-                    "series_id": series_id,
-                    "title": series_title,
-                    "layout": "series",
-                    "checksum": compute_work_checksum(series_record),
-                }
-                series_content = build_front_matter(sfm) + "\n"
+                series_content = build_route_stub_content()
 
                 series_path = series_out_dir / f"{series_id}.md"
-                existing_text = None
-                if series_path.exists():
-                    try:
-                        existing_text = series_path.read_text(encoding="utf-8")
-                    except Exception:
-                        existing_text = None
-
-                needs_write = (existing_text != series_content)
-                if (not needs_write) and (not args.force):
-                    print(f"{prefix_s}SKIP (no change): {display_path(series_path)}")
+                series_exists = series_path.exists()
+                if series_exists and not args.force:
+                    print(f"{prefix_s}SKIP (route exists): {display_path(series_path)}")
                     series_skipped += 1
                 else:
                     if args.write:
@@ -2073,7 +2016,7 @@ def main() -> None:
                         print(f"{prefix_s}WRITE: {display_path(series_path)}")
                         series_written += 1
                     else:
-                        print(f"{prefix_s}DRY-RUN: would write {display_path(series_path)} (overwrite={series_path.exists()})")
+                        print(f"{prefix_s}DRY-RUN: would write {display_path(series_path)} (overwrite={series_exists})")
                         series_written += 1
 
                 payload = compact_json_object({
@@ -2438,23 +2381,12 @@ def main() -> None:
                 elif project_filename:
                     print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
-                # Canonical detail metadata stays in per-work JSON/index artifacts.
-                # Keep _work_details pages minimal (routing identifiers + title only).
-                dfm: Dict[str, Any] = {
-                    "work_id": wid,
-                    "detail_id": did,
-                    "detail_uid": detail_uid,
-                    "title": title,
-                }
-
-                d_content = build_front_matter(dfm)
+                d_content = build_route_stub_content()
                 d_path = work_details_out_dir / f"{detail_uid}.md"
                 d_exists = d_path.exists()
                 if d_exists and not args.force:
-                    existing_content = d_path.read_text(encoding="utf-8")
-                    if existing_content == d_content:
-                        details_skipped += 1
-                        continue
+                    details_skipped += 1
+                    continue
 
                 if args.write:
                     d_path.write_text(d_content, encoding="utf-8")
@@ -3057,14 +2989,6 @@ def main() -> None:
                 "height_px": height_px,
                 "layout": "moment",
             }
-            moment_page_fm: Dict[str, Any] = {
-                "moment_id": moment_id,
-                "title": title or moment_id,
-                "layout": "moment",
-            }
-            m_checksum = compute_work_checksum(moment_record)
-            moment_page_fm["checksum"] = m_checksum
-
             source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
             source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_root / f"{moment_id}.md")
             if not source_prose_path.exists():
@@ -3075,29 +2999,12 @@ def main() -> None:
                 continue
 
             if moment_actionable:
-                # Canonical moment metadata lives in JSON artifacts; keep `_moments`
-                # pages minimal and reserve front matter for routing + title fallback.
-                m_content = build_front_matter(moment_page_fm) + "\n"
+                m_content = build_route_stub_content()
                 m_path = moments_out_dir / f"{moment_id}.md"
                 m_exists = m_path.exists()
-                existing_checksum = extract_existing_checksum(m_path) if m_exists else None
 
-                if (existing_checksum is not None) and (existing_checksum == m_checksum) and (not args.force):
-                    existing_content: Optional[str] = None
-                    try:
-                        existing_content = m_path.read_text(encoding="utf-8")
-                    except Exception:
-                        existing_content = None
-                    if existing_content == m_content:
-                        moments_pages_skipped += 1
-                    else:
-                        if args.write:
-                            m_path.write_text(m_content, encoding="utf-8")
-                            print(f"{prefix_m}WRITE: {display_path(m_path)}")
-                            moments_pages_written += 1
-                        else:
-                            print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
-                            moments_pages_written += 1
+                if m_exists and not args.force:
+                    moments_pages_skipped += 1
                 else:
                     if args.write:
                         m_path.write_text(m_content, encoding="utf-8")

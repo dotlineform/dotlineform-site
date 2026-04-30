@@ -10,17 +10,17 @@ sort_order: 6
 
 Status:
 
-- analysis
+- implemented
 
 ## Summary
 
-This analysis captures the record-hash discussion from the field-aware build scoping pre-analysis work.
+This note captures the record-hash decision from the field-aware build scoping pre-analysis work.
 
-Removing mutable metadata from Jekyll route stubs removes route-stub checksums from the public page path. The remaining broad hash surface is Studio `record_hash` data in lookup payloads and save requests.
+Removing mutable metadata from Jekyll route stubs removes route-stub checksums from the public page path. The companion cleanup removed Studio `record_hash` data from lookup payloads and expected-hash checks from save requests.
 
-The current hashes are mostly optimistic concurrency tokens. In a multi-user editing environment, that is useful: a save can cheaply reject stale writes without field-by-field conflict checks. In this local Studio workspace, the same protection is much less valuable because Studio is implicitly a local, one-user-at-a-time, service-backed editor.
+The removed hashes were mostly optimistic concurrency tokens. In a multi-user editing environment, that can be useful: a save can cheaply reject stale writes without field-by-field conflict checks. In this local Studio workspace, the same protection is much less valuable because Studio is implicitly a local, one-user-at-a-time, service-backed editor.
 
-The target direction is pragmatic:
+The implemented direction is pragmatic:
 
 - remove record hashes from broad list and lookup display payloads
 - remove expected-hash enforcement from normal local save paths
@@ -30,17 +30,17 @@ The target direction is pragmatic:
 
 This should not replace hashes with another elaborate conflict-resolution system. The working assumption is that stale-tab, multi-editor, and concurrent-write cases are unlikely in normal use, and Studio is intentionally not designed as a multi-user editing environment.
 
-## Current Purpose
+## Former Purpose
 
-`record_hash` is currently computed as a deterministic hash of a canonical source record. It is not a checksum of the lookup file and is not intended to describe public generated artifacts.
+`record_hash` was computed as a deterministic hash of a canonical source record. It was not a checksum of the lookup file and was not intended to describe public generated artifacts.
 
-Current uses:
+Former uses:
 
-- focused work, detail, series, and moment edit payloads expose a hash
-- broad lookup/search payloads expose hashes for convenience baselines
-- save, publish, unpublish, and delete requests can include `expected_record_hash`
-- the write server recomputes the current source record hash
-- if the expected hash differs, the server returns `409 Conflict`
+- focused work, detail, series, and moment edit payloads exposed a hash
+- broad lookup/search payloads exposed hashes for convenience baselines
+- save, publish, unpublish, and delete requests could include `expected_record_hash`
+- the write server recomputed the current source record hash
+- if the expected hash differed, the server returned `409 Conflict`
 
 The visible UI message is a stale-page warning such as:
 
@@ -75,20 +75,20 @@ Examples:
 
 This undermines field-aware build scoping because broad display payloads change for reasons unrelated to their displayed fields.
 
-## Target Contract
+## Implemented Contract
 
-Studio should use local last-write-wins semantics for normal source saves.
+Studio uses local last-write-wins semantics for normal source saves.
 
 The replacement for hashes should be pragmatic logic, not a new conflict framework. If the server receives a valid save request, it should apply that request to the current source state and return the resulting normalized record. Rare stale-page cases can be handled by the next save response, validation errors, backups, and Git review rather than by blocking the save before it happens.
 
-The server should:
+The server:
 
-- load the current source record at request time
-- apply the submitted patch or operation to that current record
-- validate the resulting source set
-- write backups before mutation
-- write the updated source atomically
-- return the updated normalized record
+- loads the current source record at request time
+- applies the submitted patch or operation to that current record
+- validates the resulting source set
+- writes backups before mutation
+- writes the updated source atomically
+- returns the updated normalized record
 
 The UI should:
 
@@ -101,14 +101,14 @@ For targeted operations, baseline checks should match the operation rather than 
 
 ## Proposed Removals
 
-Remove `record_hash` from broad display/read models:
+Removed `record_hash` from broad display/read models:
 
 - `work_search.items[]`
 - `series_search.items[]`
 - `series.<series_id>.member_works[]`
 - any other list rows where the hash exists only as a convenience save baseline
 
-Remove expected-hash enforcement from normal local write paths:
+Removed expected-hash enforcement from normal local write paths:
 
 - single work save
 - single work-detail save

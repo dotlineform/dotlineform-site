@@ -134,19 +134,16 @@ Important distinction:
 | `work_search.items[].year_display` | Work editor search/open display metadata. |
 | `work_search.items[].status` | Work editor search/open workflow state. |
 | `work_search.items[].series_ids` | Work editor search/open membership context. |
-| `work_search.items[].record_hash` | Work editor stale-write baseline. |
 | `series_search.items[].series_id` | Series editor search/open identity. |
 | `series_search.items[].title` | Series editor search/open display text. |
 | `series_search.items[].status` | Series editor search/open workflow state. |
 | `series_search.items[].primary_work_id` | Series editor search/open primary work context. |
-| `series_search.items[].record_hash` | Series editor stale-write baseline. |
 | `work_detail_search.items[].detail_uid` | Detail editor search/open identity. |
 | `work_detail_search.items[].work_id` | Detail editor search/open parent work identity. |
 | `work_detail_search.items[].detail_id` | Detail editor search/open local detail identity. |
 | `work_detail_search.items[].title` | Detail editor search/open display text. |
 | `work_detail_search.items[].status` | Detail editor search/open workflow state. |
 | `works.<work_id>.work` | Full canonical source work record for editing. |
-| `works.<work_id>.record_hash` | Stale-write protection for focused work edits. |
 | `works.<work_id>.detail_sections[].project_subfolder` | Work editor detail summary grouping. |
 | `works.<work_id>.detail_sections[].details[].detail_uid` | Work editor detail summary identity. |
 | `works.<work_id>.detail_sections[].details[].detail_id` | Work editor detail summary local detail identity. |
@@ -157,26 +154,20 @@ Important distinction:
 | `works.<work_id>.series_summary[].series_id` | Work editor series membership identity. |
 | `works.<work_id>.series_summary[].title` | Work editor series membership display text. |
 | `work_details.<detail_uid>.work_detail` | Full canonical source detail record for editing. |
-| `work_details.<detail_uid>.record_hash` | Stale-write protection for focused detail edits. |
 | `work_details.<detail_uid>.work_summary.work_id` | Detail editor parent work identity. |
 | `work_details.<detail_uid>.work_summary.title` | Detail editor parent work display text. |
 | `series.<series_id>.series` | Full canonical source series record for editing. |
-| `series.<series_id>.record_hash` | Stale-write protection for focused series edits. |
 | `series.<series_id>.member_works[].work_id` | Series editor member-work identity. |
 | `series.<series_id>.member_works[].title` | Series editor member-work display text. |
 | `series.<series_id>.member_works[].year_display` | Series editor member-work display metadata. |
 | `series.<series_id>.member_works[].status` | Series editor member-work workflow state. |
 | `series.<series_id>.member_works[].series_ids` | Series editor member-work membership context. |
-| `series.<series_id>.member_works[].record_hash` | Series editor member-work baseline. |
 
 ## `work-page` Fields
 
 | Artifact field | Purpose |
 |---|---|
-| `front_matter.work_id` | Route identity for `/works/<work_id>/`. |
-| `front_matter.title` | Jekyll/page fallback title. |
-| `front_matter.layout` | Selects the public work layout. |
-| `front_matter.checksum` | Change detector; currently derived from the broader canonical work record. |
+| `filename_stem` | Route identity for `/works/<work_id>/`; layout comes from `_config.yml` collection defaults. |
 
 ## `work-json` Fields
 
@@ -218,10 +209,7 @@ Important distinction:
 
 | Artifact field | Purpose |
 |---|---|
-| `front_matter.work_id` | Parent work identity. |
-| `front_matter.detail_id` | Detail-local identity. |
-| `front_matter.detail_uid` | Detail route identity for `/work_details/<detail_uid>/`. |
-| `front_matter.title` | Detail page fallback title. |
+| `filename_stem` | Detail route identity for `/work_details/<detail_uid>/`; parent work id is derived from the detail uid prefix and layout comes from `_config.yml` collection defaults. |
 
 ## `works-index-json` Fields
 
@@ -251,10 +239,7 @@ Important distinction:
 
 | Artifact field | Purpose |
 |---|---|
-| `front_matter.series_id` | Route identity for `/series/<series_id>/`. |
-| `front_matter.title` | Jekyll/page fallback title. |
-| `front_matter.layout` | Selects the public series layout. |
-| `front_matter.checksum` | Change detector for the series page shell. |
+| `filename_stem` | Route identity for `/series/<series_id>/`; layout comes from `_config.yml` collection defaults. |
 
 ## `series-json` Fields
 
@@ -319,10 +304,7 @@ Important distinction:
 
 | Artifact field | Purpose |
 |---|---|
-| `front_matter.moment_id` | Route identity for `/moments/<moment_id>/`. |
-| `front_matter.title` | Jekyll/page fallback title. |
-| `front_matter.layout` | Selects the public moment layout. |
-| `front_matter.checksum` | Change detector for the moment page shell. |
+| `filename_stem` | Route identity for `/moments/<moment_id>/`; layout comes from `_config.yml` collection defaults. |
 
 ## `moment-json` Fields
 
@@ -440,7 +422,7 @@ Examples:
 
 These items should be confirmed before Task 2 turns this into executable rules.
 
-- Decide whether `work-page`, `series-page`, and `moment-page` should continue selecting page artifacts when only checksum-only metadata changed.
+- Confirm whether route page artifacts should be selected only for create/delete/identity operations now that stubs are metadata-free.
 - Confirm whether `work_prose_file` and `series_prose_file` are obsolete retained fields or future path overrides.
 - Confirm whether any source field outside the media-affecting summary can change media manifests, copy lists, or media readiness output.
 - Confirm whether `notes` and `provenance` are intentionally source/editor-only for works.

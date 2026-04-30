@@ -2,7 +2,7 @@
 doc_id: scripts-audit-site-consistency
 title: "Site Consistency Audit"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-04-30
 parent_id: scripts
 sort_order: 130
 ---
@@ -50,8 +50,8 @@ Multiple repeated checks:
 
 ## Current Checks
 
-- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, `assets/data/series_index.json`, and `assets/works/index/*.json`, including duplicate IDs
-- `schema`: validates required front matter fields by collection and format and consistency checks
+- `cross_refs`: validates key references across route-anchor stubs, public indexes, `assets/works/index/*.json`, and Studio tag assignments, including duplicate route IDs
+- `schema`: validates route-anchor ID format, optional legacy front matter ID consistency, and generated JSON consistency checks
 - `json_schema`: validates generated JSON structure and count consistency for:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
@@ -99,6 +99,8 @@ Source artifacts checked by the current audit include:
 - `assets/works/index/*.json`
 - `assets/studio/data/tag_assignments.json`
 - generated URLs and media paths referenced by those artifacts
+
+Collection Markdown files are treated as route anchors. Their canonical IDs come from the filename stem when front matter omits `work_id`, `series_id`, `detail_uid`, or `moment_id`; work-detail parent `work_id` is derived from the `detail_uid` prefix.
 
 Target artifacts:
 

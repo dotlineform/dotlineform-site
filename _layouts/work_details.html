@@ -2,11 +2,10 @@
 layout: default
 ---
 
-{% assign detail_uid = page.detail_uid | default: page.slug %}
-{% assign title_txt = page.title | default: "" | strip %}
-{% assign fallback_work_id = page.work_id | default: "" %}
-{% assign fallback_section = page.project_subfolder | default: "details" | slugify %}
-{% assign fallback_work_title = page.work_title | default: fallback_work_id %}
+{% assign detail_uid = page.slug %}
+{% assign public_text = site.public_runtime_text | default: nil %}
+{% assign loading_text = public_text.loading | default: "loading..." %}
+{% assign unavailable_text = public_text.unavailable | default: "info not available" %}
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_image_work_details = site.media_image_work_details | default: "/work_details/img" %}
@@ -42,14 +41,10 @@ layout: default
   id="detailPageRoot"
   data-baseurl="{{ site.baseurl | default: '' }}"
   data-detail-uid="{{ detail_uid | escape }}"
-  data-fallback-work-id="{{ fallback_work_id | escape }}"
-  data-fallback-work-title="{{ fallback_work_title | escape }}"
-  data-fallback-section="{{ fallback_section | escape }}"
-  data-fallback-title="{{ title_txt | escape }}"
-  data-fallback-width-px="{{ page.width_px | default: 0 | escape }}"
-  data-fallback-height-px="{{ page.height_px | default: 0 | escape }}"
+  data-loading-text="{{ loading_text | escape }}"
+  data-unavailable-text="{{ unavailable_text | escape }}"
 >
-  <h1 class="visually-hidden" id="detailHiddenTitle">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+  <h1 class="visually-hidden" id="detailHiddenTitle">{{ loading_text }}</h1>
 
   <figure class="page__media">
     <a
@@ -59,7 +54,7 @@ layout: default
       href="{{ primary_full_src }}"
       target="_blank"
       rel="noopener"
-      style="--work-ar: {{ page.width_px | default: 4 }} / {{ page.height_px | default: 3 }};">
+      style="--work-ar: 4 / 3;">
       <img
         class="page__mediaImg"
         id="detailPrimaryImg"
@@ -69,7 +64,7 @@ layout: default
         data-primary-full-src="{{ primary_full_src | escape }}"
         data-primary-srcset="{{ primary_srcset | strip | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
-        alt="{{ title_txt | default: detail_uid | escape }}"
+        alt="{{ detail_uid | escape }}"
         loading="eager"
         fetchpriority="high"
         decoding="async"
@@ -82,15 +77,15 @@ layout: default
     <div class="page__caption page__metaList">
       <div class="page__row work__titleRow">
         <span class="work__titleMain">
-          <span id="detailTitleText">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
+          <span id="detailTitleText">{{ loading_text }}</span>
         </span>
         <nav class="seriesNav seriesNav--title" id="detailNav"
             aria-label="Detail navigation"
             data-detail-uid="{{ detail_uid | escape }}"
-            data-work-id="{{ fallback_work_id | escape }}"
-            data-work-title="{{ fallback_work_title | escape }}"
+            data-work-id=""
+            data-work-title=""
             data-baseurl="{{ site.baseurl | default: '' }}"
-            data-default-section="{{ fallback_section | escape }}"
+            data-default-section=""
             hidden>
           <span class="navCounter" id="detailTitleCounter" hidden></span>
           <a class="seriesNav__prev" id="detailNavPrev" href="#">←</a>
@@ -105,11 +100,8 @@ layout: default
     <a
       id="detailBackLink"
       class="page__back"
-      href="{{ '/works/' | append: fallback_work_id | append: '/' | relative_url }}#details-{{ fallback_section }}"
+      href="{{ '/series/' | relative_url }}"
       data-baseurl="{{ site.baseurl | default: '' }}"
-      data-fallback-work-id="{{ fallback_work_id | escape }}"
-      data-fallback-work-title="{{ fallback_work_title | escape }}"
-      data-fallback-section="{{ fallback_section | escape }}"
     >← work</a>
   </nav>
 </article>
@@ -129,12 +121,9 @@ layout: default
 
     var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
     var detailUid = String(root.getAttribute('data-detail-uid') || '').trim();
-    var fallbackWorkId = String(root.getAttribute('data-fallback-work-id') || '').trim();
-    var fallbackWorkTitle = String(root.getAttribute('data-fallback-work-title') || '').trim();
-    var fallbackSection = String(root.getAttribute('data-fallback-section') || '').trim();
-    var fallbackTitle = String(root.getAttribute('data-fallback-title') || '').trim();
-    var fallbackWidthPx = Number(root.getAttribute('data-fallback-width-px') || '0');
-    var fallbackHeightPx = Number(root.getAttribute('data-fallback-height-px') || '0');
+    var loadingText = String(root.getAttribute('data-loading-text') || 'loading...');
+    var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
+    var derivedWorkId = detailUid.indexOf('-') !== -1 ? detailUid.split('-', 1)[0] : '';
 
     var params = new URLSearchParams(window.location.search);
     var explicitFromWorkTitle = String(params.get('from_work_title') || '').trim() !== '';
@@ -143,16 +132,16 @@ layout: default
 
     var ctx = {
       detailUid: detailUid,
-      fromWork: (params.get('from_work') || fallbackWorkId || '').trim(),
-      fromWorkTitle: (params.get('from_work_title') || fallbackWorkTitle || '').trim(),
-      section: (params.get('section') || fallbackSection || '').trim().toLowerCase(),
+      fromWork: (params.get('from_work') || derivedWorkId || '').trim(),
+      fromWorkTitle: (params.get('from_work_title') || '').trim(),
+      section: (params.get('section') || '').trim().toLowerCase(),
       detailsSection: '',
       detailsPage: 1,
       series: (params.get('series') || '').trim(),
       seriesPage: 0,
-      title: String(fallbackTitle || detailUid || 'Untitled').trim(),
-      widthPx: Number(fallbackWidthPx),
-      heightPx: Number(fallbackHeightPx)
+      title: loadingText,
+      widthPx: 0,
+      heightPx: 0
     };
     if (!ctx.fromWorkTitle) ctx.fromWorkTitle = ctx.fromWork;
 
@@ -192,6 +181,7 @@ layout: default
       if (hiddenTitle) hiddenTitle.textContent = ctx.title || 'Untitled';
       if (titleText) titleText.textContent = ctx.title || 'Untitled';
       if (catText) catText.textContent = ctx.detailUid;
+      if (ctx.title) document.title = ctx.title + ' | dotlineform';
     }
 
     function updateMedia() {
@@ -313,6 +303,9 @@ layout: default
     updateBackLink();
 
     if (!ctx.fromWork) {
+      ctx.title = unavailableText;
+      updateTitleAndCat();
+      updateBackLink();
       nav.hidden = true;
       return;
     }
@@ -355,6 +348,8 @@ layout: default
         setNavFromWorkPayload(workPayload);
       })
       .catch(function () {
+        ctx.title = unavailableText;
+        updateTitleAndCat();
         updateBackLink();
         nav.hidden = true;
       });

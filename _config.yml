@@ -32,6 +32,10 @@ home_media_prefix: "/home/img"
 # Keep true unless you explicitly want to suppress jump-to-section on return from detail pages.
 enable_details_hash_scroll: true
 
+public_runtime_text:
+  loading: "loading..."
+  unavailable: "info not available"
+
 collections:
   works:
     output: true

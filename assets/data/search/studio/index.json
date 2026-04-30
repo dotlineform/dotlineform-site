@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f0940b03c38fb1f3b9f10af1d908e418",
-    "generated_at_utc": "2026-04-30T18:07:46Z",
+    "version": "blake2b-6b006d3bfe4fb49e47e778e2ed4e885b",
+    "generated_at_utc": "2026-04-30T19:04:51Z",
     "count": 146
   },
   "entries": [
@@ -101,22 +101,22 @@
       "kind": "doc",
       "title": "Data Flow",
       "href": "/docs/?scope=studio&doc=data-flow",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-30",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-03-31 • Architecture",
+      "display_meta": "2026-04-30 • Architecture",
       "search_terms": [
         "data-flow",
         "data",
         "flow",
         "data flow",
         "architecture",
-        "2026-03-31",
+        "2026-04-30",
         "2026",
-        "03",
-        "31"
+        "04",
+        "30"
       ],
-      "search_text": "data-flow data flow data flow architecture 2026-03-31 2026 03 31"
+      "search_text": "data-flow data flow data flow architecture 2026-04-30 2026 04 30"
     },
     {
       "id": "user-guide-docs-images",
@@ -1666,10 +1666,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-04-30",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-29 • Archive",
+      "display_meta": "2026-04-30 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -1678,12 +1678,12 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-04-29",
+        "2026-04-30",
         "2026",
         "04",
-        "29"
+        "30"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-29 2026 04 29"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-30 2026 04 30"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -2507,10 +2507,10 @@
       "kind": "doc",
       "title": "Catalogue Lookup Export",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-30",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-17 • Scripts",
+      "display_meta": "2026-04-30 • Scripts",
       "search_terms": [
         "scripts-catalogue-lookup",
         "scripts",
@@ -2518,12 +2518,12 @@
         "lookup",
         "catalogue lookup export",
         "export",
-        "2026-04-17",
+        "2026-04-30",
         "2026",
         "04",
-        "17"
+        "30"
       ],
-      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export 2026-04-17 2026 04 17"
+      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export 2026-04-30 2026 04 30"
     },
     {
       "id": "site-request-catalogue-work-unified-editor",
@@ -2717,10 +2717,10 @@
       "kind": "doc",
       "title": "Site Consistency Audit",
       "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-30",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
+      "display_meta": "2026-04-30 • Scripts",
       "search_terms": [
         "scripts-audit-site-consistency",
         "scripts",
@@ -2728,12 +2728,12 @@
         "site",
         "consistency",
         "site consistency audit",
-        "2026-03-31",
+        "2026-04-30",
         "2026",
-        "03",
-        "31"
+        "04",
+        "30"
       ],
-      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-03-31 2026 03 31"
+      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-04-30 2026 04 30"
     },
     {
       "id": "site-request-catalogue-publication-workflow",

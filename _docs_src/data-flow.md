@@ -2,7 +2,7 @@
 doc_id: data-flow
 title: "Data Flow"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-04-30
 parent_id: architecture
 sort_order: 10
 ---
@@ -129,7 +129,7 @@ Template:
 
 How the page works:
 
-- it reads `page.work_id` from the stub
+- it derives `work_id` from the `detail_uid` route prefix
 - it fetches `assets/works/index/<work_id>.json`
 - it finds the matching `detail_uid` in that work payload
 
@@ -185,7 +185,7 @@ The implemented data flow is now:
    - uses `assets/data/series_index.json` for series context
 
 4. `/work_details/<detail_uid>/`
-   - uses stub front matter for `work_id`
+   - derives `work_id` from the `detail_uid` route prefix
    - uses `assets/works/index/<work_id>.json`
 
 5. `/moments/<moment_id>/`

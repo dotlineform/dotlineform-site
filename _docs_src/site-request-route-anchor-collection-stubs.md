@@ -10,15 +10,15 @@ sort_order: 5
 
 Status:
 
-- planned
+- implemented
 
 ## Summary
 
 This spec defines the pre-analysis cleanup for generated Jekyll collection Markdown files.
 
-The current catalogue pages are JSON-first at runtime, but generated collection stubs still carry mutable metadata and checksums. That means a metadata-only edit can rewrite `_works/*.md`, `_work_details/*.md`, `_series/*.md`, or `_moments/*.md`, which wakes Jekyll as if a route page changed.
+The catalogue pages are JSON-first at runtime, and generated collection stubs now avoid mutable metadata and checksums. The previous model let a metadata-only edit rewrite `_works/*.md`, `_work_details/*.md`, `_series/*.md`, or `_moments/*.md`, which woke Jekyll as if a route page changed.
 
-The target model is simpler:
+The implemented model is simpler:
 
 - collection Markdown files are route anchors only
 - generated JSON artifacts own runtime page content
@@ -27,7 +27,7 @@ The target model is simpler:
 
 This is part of Task 0 in [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping).
 
-## Current Contract
+## Route Contract
 
 Jekyll collections currently provide clean static routes:
 
@@ -47,11 +47,11 @@ The public page layouts already load most meaningful page content from JSON:
 | series | `assets/data/series_index.json`, `assets/data/works_index.json`, and focused series JSON where needed |
 | moment | `assets/moments/index/<moment_id>.json` |
 
-The remaining front matter is mostly fallback content, route identity, or checksum state. In practice, the site is already JavaScript/data dependent, so that fallback content does not justify the Jekyll churn it creates.
+The collection files are now route anchors. Runtime content comes from generated JSON payloads.
 
 ## Target Contract
 
-Generated collection stubs should contain no mutable catalogue metadata:
+Generated collection stubs contain no mutable catalogue metadata:
 
 - no title
 - no year or date
@@ -62,9 +62,9 @@ Generated collection stubs should contain no mutable catalogue metadata:
 - no downloads or links
 - no metadata checksum
 
-The route identity should come from the filename and Jekyll's `page.slug`.
+The route identity comes from the filename and Jekyll's `page.slug`.
 
-The preferred final stub shape is:
+The generated stub shape is:
 
 ```md
 ---
@@ -100,13 +100,14 @@ Client scripts should update `document.title` after JSON loads so browser titles
 
 ## Generator Responsibilities
 
-The generator should:
+The generator:
 
-- create missing stubs for published routes
-- remove stale stubs when public routes are deleted or unpublished through cleanup flows
-- avoid rewriting existing stubs for metadata-only changes
-- avoid checksums based on source metadata for route-anchor stubs
-- keep route-stub writes deterministic
+- creates missing stubs for published routes
+- removes stale stubs when public routes are deleted or unpublished through cleanup flows
+- avoids rewriting existing stubs for metadata-only changes
+- normalizes older metadata-bearing stubs only when `--force` is used
+- avoids checksums based on source metadata for route-anchor stubs
+- keeps route-stub writes deterministic
 
 Metadata checksums and payload versions should move to the JSON artifacts that actually serialize the metadata.
 
@@ -141,15 +142,15 @@ Expected checks:
 
 ## Implementation Tasks
 
-1. Update work, series, detail, and moment layouts to derive route identity from `page.slug`.
-2. Remove front-matter-derived fallback JSON from layouts where it serializes mutable metadata.
-3. Update detail-page runtime logic so direct detail routes can recover enough context from JSON without front matter.
-4. Update `scripts/generate_work_pages.py` to emit metadata-free route stubs.
-5. Remove route-stub checksums or narrow them to stable route-shell content only.
-6. Update delete, unpublish, and cleanup flows so stale route stubs are still removed.
-7. Update `scripts/audit_site_consistency.py` expectations for route-anchor stubs.
-8. Update script/data-model docs after implementation.
-9. Verify metadata-only saves do not rewrite collection stubs.
+1. Done: work, series, detail, and moment layouts derive route identity from `page.slug`.
+2. Done: front-matter-derived fallback JSON was removed where it serialized mutable metadata.
+3. Done: direct detail routes derive parent work context from the `detail_uid` prefix and parent work JSON.
+4. Done: `scripts/generate_work_pages.py` emits metadata-free route stubs.
+5. Done: route-stub checksums were removed.
+6. Done: delete, unpublish, and cleanup flows continue to remove stale route stubs through generated-artifact cleanup.
+7. Done: `scripts/audit_site_consistency.py` validates route-anchor stubs by filename and generated JSON references.
+8. Done: script docs were updated with the route-anchor contract.
+9. Pending manual check: metadata-only saves should be smoke-tested in Studio after deployment.
 
 ## Decisions
 
@@ -185,8 +186,9 @@ Expected checks:
 
 - Public catalogue pages become explicitly JavaScript/data dependent.
 - JSON generation or fetch failures become more visible.
-- Work-detail direct routes need careful handling because they currently use the most front matter fallback.
-- Audit scripts and cleanup flows can drift if they keep treating stubs as metadata records.
+- Public page loading depends on the relevant JSON payload being present and fetchable.
+- Work-detail direct routes depend on the current `detail_uid` prefix convention.
+- Audit scripts and cleanup flows can drift if future code treats stubs as metadata records again.
 
 Mitigation:
 

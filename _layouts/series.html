@@ -2,7 +2,10 @@
 layout: default
 ---
 
-{% assign series_id_fallback = page.series_id | default: page.slug %}
+{% assign series_id_fallback = page.slug %}
+{% assign public_text = site.public_runtime_text | default: nil %}
+{% assign loading_text = public_text.loading | default: "loading..." %}
+{% assign unavailable_text = public_text.unavailable | default: "info not available" %}
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_works = site.thumb_works | default: "/assets/works/img" %}
 {% assign pipeline = site.data.pipeline %}
@@ -25,12 +28,12 @@ layout: default
   data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}"
   data-thumb-suffix="{{ thumb_suffix | escape }}"
   data-asset-format="{{ asset_format | escape }}"
+  data-loading-text="{{ loading_text | escape }}"
+  data-unavailable-text="{{ unavailable_text | escape }}"
 >
   <header class="page__header">
-    <h1 class="page__title" id="seriesPageTitle">{{ page.title | default: series_id_fallback }}</h1>
-    <p class="page__meta muted small" id="seriesPageMeta"{% if page.year_display == blank and page.year == blank %} hidden{% endif %}>
-      {{ page.year_display | default: page.year }}
-    </p>
+    <h1 class="page__title" id="seriesPageTitle">{{ loading_text }}</h1>
+    <p class="page__meta muted small" id="seriesPageMeta" hidden></p>
   </header>
 
 {%- if series_id_fallback -%}
@@ -67,6 +70,7 @@ layout: default
       var titleEl = document.getElementById('seriesPageTitle');
       var metaEl = document.getElementById('seriesPageMeta');
       var indexLink = document.getElementById('seriesGridIndexLink');
+      var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
 
       var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
       var seriesId = String(root.getAttribute('data-series-id') || '').trim().toLowerCase();
@@ -94,7 +98,7 @@ layout: default
       var worksIndexUrl = baseurl + '/assets/data/works_index.json';
       if (!seriesId) {
         pager.hidden = true;
-        grid.innerHTML = '';
+        grid.textContent = unavailableText;
         return;
       }
       if (indexLink) {
@@ -110,6 +114,7 @@ layout: default
         var title = text(row.title) || seriesId;
         var yearTxt = text(row.year_display) || text(row.year);
         if (titleEl) titleEl.textContent = title;
+        if (title) document.title = title + ' | dotlineform';
         if (metaEl) {
           if (yearTxt) {
             metaEl.textContent = yearTxt;
@@ -154,11 +159,11 @@ layout: default
           prose.innerHTML = contentHtml;
           return;
         }
-        if (showError) {
-          if (proseSection) proseSection.hidden = false;
-          prose.innerHTML = '<p>problem loading content</p>';
-          return;
-        }
+      if (showError) {
+        if (proseSection) proseSection.hidden = false;
+        prose.textContent = unavailableText;
+        return;
+      }
         if (proseSection) proseSection.hidden = true;
         prose.innerHTML = '';
       }

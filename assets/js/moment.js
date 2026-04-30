@@ -11,6 +11,8 @@
   var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
   var displayWidth = Number(root.getAttribute('data-primary-display-width') || '0');
   if (!Number.isFinite(displayWidth) || displayWidth <= 0) displayWidth = 1600;
+  var loadingText = String(root.getAttribute('data-loading-text') || 'loading...');
+  var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
 
   var renderWidths = [];
   try {
@@ -23,14 +25,6 @@
     return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
   }).filter(function (value) { return value > 0; }) : [];
   if (!renderWidths.length) renderWidths = [800, 1200, 1600];
-
-  var fallbackRaw = root.getAttribute('data-fallback-json') || '{}';
-  var fallback = {};
-  try {
-    fallback = JSON.parse(fallbackRaw);
-  } catch (e) {
-    fallback = {};
-  }
 
   function text(value) {
     return String(value == null ? '' : value).trim();
@@ -130,6 +124,7 @@
     var heroCaption = document.getElementById('momentHeroCaption');
 
     if (titleEl) titleEl.textContent = normalized.title;
+    if (normalized.title) document.title = normalized.title + ' | dotlineform';
 
     if (dateEl) {
       var formattedDate = formatDate(normalized);
@@ -192,7 +187,7 @@
   }
 
   function showLoadError() {
-    applyContentHtml('<p>problem loading content</p>');
+    applyContentHtml('<p>' + unavailableText + '</p>');
   }
 
   function fetchJson(url) {
@@ -203,7 +198,7 @@
       });
   }
 
-  applyMetadata(fallback);
+  applyMetadata({ moment_id: momentId, title: loadingText });
 
   var url = baseurl + '/assets/moments/index/' + encodeURIComponent(momentId) + '.json';
   fetchJson(url)
@@ -212,15 +207,11 @@
       var contentHtml = payload && typeof payload.content_html === 'string' ? payload.content_html : null;
       if (!moment || contentHtml == null) throw new Error('Invalid moment payload');
 
-      var merged = {};
-      var key;
-      for (key in fallback) merged[key] = fallback[key];
-      for (key in moment) merged[key] = moment[key];
-      applyMetadata(merged);
+      applyMetadata(moment);
       applyContentHtml(contentHtml);
     })
     .catch(function () {
-      applyMetadata(fallback);
+      applyMetadata({ moment_id: momentId, title: unavailableText });
       showLoadError();
     });
 })();

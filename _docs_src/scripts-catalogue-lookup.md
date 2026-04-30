@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-lookup
 title: "Catalogue Lookup Export"
 added_date: 2026-04-17
-last_updated: 2026-04-17
+last_updated: 2026-04-30
 parent_id: scripts
 sort_order: 110
 ---
@@ -24,6 +24,8 @@ The lookup payloads are explicitly non-canonical. They exist to support:
 - lightweight series search
 - lightweight detail search
 - focused per-record editor reads for work, detail, and series routes
+
+Lookup payloads do not include full-source `record_hash` values. Studio save endpoints apply submitted changes to the current source record and return the normalized saved record.
 
 Canonical write ownership remains with:
 

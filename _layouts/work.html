@@ -2,8 +2,10 @@
 layout: default
 ---
 
-{% assign wid = page.work_id | default: page.slug %}
-{%- assign title_txt = page.title | default: "" | strip -%}
+{% assign wid = page.slug %}
+{% assign public_text = site.public_runtime_text | default: nil %}
+{% assign loading_text = public_text.loading | default: "loading..." %}
+{% assign unavailable_text = public_text.unavailable | default: "info not available" %}
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_image_works = site.media_image_works | default: "/works/img" %}
@@ -50,27 +52,7 @@ layout: default
   {%- endfor -%}
 {%- endcapture -%}
 
-{%- capture fallback_work_json -%}
-{
-  "work_id": {{ wid | jsonify }},
-  "title": {{ title_txt | jsonify }},
-  "year": {{ page.year | jsonify }},
-  "year_display": {{ page.year_display | jsonify }},
-  "series_ids": {{ page.series_ids | jsonify }},
-  "medium_type": {{ page.medium_type | jsonify }},
-  "medium_caption": {{ page.medium_caption | jsonify }},
-  "duration": {{ page.duration | jsonify }},
-  "links": {{ page.links | jsonify }},
-  "width_px": {{ page.width_px | jsonify }},
-  "height_px": {{ page.height_px | jsonify }},
-  "height_cm": {{ page.height_cm | jsonify }},
-  "width_cm": {{ page.width_cm | jsonify }},
-  "depth_cm": {{ page.depth_cm | jsonify }},
-  "downloads": {{ page.downloads | jsonify }}
-}
-{%- endcapture -%}
-
-<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-media-files-works-base="{{ works_files_base_out | escape }}" data-fallback-json="{{ fallback_work_json | strip_newlines | escape }}" data-detail-thumb-sizes="{{ detail_thumb_sizes | jsonify | escape }}" data-detail-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}">
+<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-media-files-works-base="{{ works_files_base_out | escape }}" data-detail-thumb-sizes="{{ detail_thumb_sizes | jsonify | escape }}" data-detail-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}" data-loading-text="{{ loading_text | escape }}" data-unavailable-text="{{ unavailable_text | escape }}">
 
   <h1 class="visually-hidden" id="workTitleHidden">{{ wid }}</h1>
 
@@ -104,7 +86,7 @@ layout: default
     <div class="page__caption page__metaList">
       <div class="page__row work__titleRow">
         <span class="work__titleMain">
-          <span id="workTitleMainText">{{ wid }}</span>
+          <span id="workTitleMainText">{{ loading_text }}</span>
         </span>
         {% comment %}
         Series navigation:
@@ -220,13 +202,7 @@ layout: default
     var workId = String(root.getAttribute('data-work-id') || '').trim();
     if (!workId) return;
 
-    var fallbackRaw = root.getAttribute('data-fallback-json') || '{}';
-    var fallback = {};
-    try {
-      fallback = JSON.parse(fallbackRaw);
-    } catch (e) {
-      fallback = {};
-    }
+    var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
 
     function text(v) {
       return String(v == null ? '' : v).trim();
@@ -363,7 +339,7 @@ layout: default
       }
       if (showError) {
         if (proseSection) proseSection.hidden = false;
-        prose.innerHTML = '<p>problem loading content</p>';
+        prose.textContent = unavailableText;
         return;
       }
       if (proseSection) proseSection.hidden = true;
@@ -387,6 +363,7 @@ layout: default
       if (hiddenTitle) hiddenTitle.textContent = title;
       if (mainTitle) mainTitle.textContent = title;
       if (img) img.setAttribute('alt', title || 'Artwork');
+      if (title) document.title = title + ' | dotlineform';
 
       setRowText('workYearRow', 'workYearText', yearDisplay);
       setRowText('workMediumRow', 'workMediumText', mediumCaption);
@@ -449,19 +426,15 @@ layout: default
         var work = (payload && payload.work && typeof payload.work === 'object') ? payload.work : null;
         var contentHtml = (payload && typeof payload.content_html === 'string') ? payload.content_html : null;
         if (!work) {
-          applyMetadata(fallback);
+          applyMetadata({ work_id: workId, title: unavailableText });
           renderProse(null, true);
           return;
         }
-        var merged = {};
-        var key;
-        for (key in fallback) merged[key] = fallback[key];
-        for (key in work) merged[key] = work[key];
-        applyMetadata(merged);
+        applyMetadata(work);
         renderProse(contentHtml, false);
       })
       .catch(function () {
-        applyMetadata(fallback);
+        applyMetadata({ work_id: workId, title: unavailableText });
         renderProse(null, true);
       });
   })();

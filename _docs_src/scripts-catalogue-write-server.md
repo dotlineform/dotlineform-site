@@ -82,11 +82,6 @@ It runs `./scripts/project_state_report.py` through its shared Python entrypoint
 {
   "kind": "works",
   "ids": ["00001", "00002", "00003"],
-  "expected_record_hashes": {
-    "00001": "sha256-a",
-    "00002": "sha256-b",
-    "00003": "sha256-c"
-  },
   "set_fields": {
     "status": "draft",
     "storage_location": "rack-3"
@@ -103,7 +98,6 @@ Request behavior:
 
 - `kind` must be `works` or `work_details`
 - `ids` must be a non-empty array of normalized target ids
-- `expected_record_hashes` may include one hash per selected id for stale-write protection
 - `set_fields` may include only the bulk-editable fields for that record kind
 - work bulk save may also include `series_operation`
 - work bulk `series_operation.mode` may be `replace` or `add_remove`
@@ -158,7 +152,7 @@ Request behavior:
 - work, work-detail, and series delete previews include generated artifact, repo-local media, public JSON update, Studio JSON update, and catalogue search impact where relevant
 - moment delete preview covers the canonical source metadata record plus generated moment artifacts, repo/local media cleanup, moments index update, and catalogue search rebuild
 
-`POST /catalogue/delete-apply` accepts the same shape plus optional `expected_record_hash` and then:
+`POST /catalogue/delete-apply` accepts the same shape and then:
 
 - re-runs delete preview and blocks when preview is not clean
 - writes the canonical source JSON files needed for that delete
@@ -178,8 +172,7 @@ After successful canonical writes, the server also refreshes the derived Studio 
 {
   "kind": "series",
   "action": "unpublish",
-  "series_id": "001",
-  "expected_record_hash": "optional-current-record-sha256"
+  "series_id": "001"
 }
 ```
 
@@ -191,7 +184,7 @@ Supported `kind` values are `work`, `work_detail`, `series`, and `moment`. Suppo
 
 Preview behavior:
 
-- returns current and target status, current and target record hashes, changed fields, affected ids, blockers, and validation errors
+- returns current and target status, changed fields, affected ids, blockers, and validation errors
 - reports source-write impact separately from internal public impact
 - reports scoped public-update impact for `publish` and `save_published`
 - reports generated artifact cleanup and public index/search impact for `unpublish`
@@ -201,7 +194,6 @@ Preview behavior:
 `POST /catalogue/publication-apply` accepts the same request shape and then:
 
 - re-runs publication preview before writing
-- honors `expected_record_hash` for stale-write protection
 - writes the id-scoped source status or metadata update
 - when publishing a series, writes the series status and all attached draft-work status promotions atomically across `series.json` and `works.json`
 - refreshes Studio lookup payloads after non-dry-run source writes
@@ -218,7 +210,6 @@ Standalone work publish remains stricter than series bootstrap publish: `work.pu
 ```json
 {
   "work_id": "00001",
-  "expected_record_hash": "optional-current-record-sha256",
   "record": {
     "title": "Updated title",
     "status": "draft",
@@ -238,14 +229,12 @@ Request behavior:
 - `status` is lowercased and blank status is stored as `null`
 - unknown fields are rejected
 - missing work IDs are rejected
-- `expected_record_hash`, when provided, must match the current stored record hash or the server returns `409 Conflict`
 
 Successful responses include:
 
 - `work_id`
 - `changed`
 - `changed_fields`
-- `record_hash`
 - `record`
 - `lookup_refresh` when the request changed the record
 - `saved_at_utc` when a non-dry-run write changed the source file
@@ -440,7 +429,6 @@ Request behavior:
 ```json
 {
   "detail_uid": "00001-001",
-  "expected_record_hash": "optional-current-record-sha256",
   "record": {
     "detail_uid": "00001-001",
     "work_id": "00001",
@@ -460,7 +448,6 @@ Request behavior:
 - `record` may be partial, but all keys must be known work-detail source fields
 - `record.detail_uid`, `record.work_id`, and `record.detail_id` must remain consistent with the target record
 - the parent `work_id` must exist in canonical source JSON
-- `expected_record_hash`, when provided, must match the current stored detail hash or the server returns `409 Conflict`
 
 `POST /catalogue/work-detail/create` expects:
 
@@ -535,7 +522,6 @@ Request behavior:
 ```json
 {
   "series_id": "009",
-  "expected_record_hash": "optional-current-record-sha256",
   "record": {
     "title": "Updated series title",
     "year": 2026,
@@ -546,8 +532,7 @@ Request behavior:
   "work_updates": [
     {
       "work_id": "00001",
-      "series_ids": ["009", "031"],
-      "expected_record_hash": "optional-current-work-sha256"
+      "series_ids": ["009", "031"]
     }
   ]
 }
