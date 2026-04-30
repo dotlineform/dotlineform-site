@@ -71,15 +71,7 @@ The preferred final stub shape is:
 ---
 ```
 
-If explicit layout front matter is kept for readability, it must still be stable and metadata-free:
-
-```md
----
-layout: work
----
-```
-
-Because `_config.yml` already assigns collection layouts by collection type, layout-only front matter is optional rather than functionally required.
+Do not repeat `layout` in generated front matter. `_config.yml` already assigns stable collection layouts, and those layouts are not expected to vary per generated route.
 
 ## Runtime Responsibilities
 
@@ -88,13 +80,23 @@ Layouts and client scripts should treat the stub as a route shell only.
 | Page | Route identity source | Runtime data source |
 |---|---|---|
 | work | `page.slug` | focused work JSON |
-| work detail | `page.slug` as `detail_uid`; derive `work_id` from the `detail_uid` prefix unless a better detail lookup is added | parent work JSON |
+| work detail | `page.slug` as `detail_uid`; derive `work_id` from the `detail_uid` prefix | parent work JSON |
 | series | `page.slug` | series and works indexes, plus focused series JSON where needed |
 | moment | `page.slug` | focused moment JSON |
 
 Server-rendered fallback payloads should be removed where they serialize mutable front matter. The page shell may still render stable structural attributes such as base URLs, media base paths, pipeline-derived image variant settings, and route IDs.
 
-Client-side loading states should handle the short gap before JSON arrives. Complete JSON failure can use a small generic error state; the site does not need to preserve a non-JavaScript fallback catalogue experience.
+Client-side loading states should handle the short gap before JSON arrives. Loading text should come from config and use:
+
+- `loading...`
+
+Complete JSON failure should use config-backed text:
+
+- `info not available`
+
+The site does not need to preserve a non-JavaScript fallback catalogue experience.
+
+Client scripts should update `document.title` after JSON loads so browser titles follow runtime metadata rather than route IDs.
 
 ## Generator Responsibilities
 
@@ -149,14 +151,14 @@ Expected checks:
 8. Update script/data-model docs after implementation.
 9. Verify metadata-only saves do not rewrite collection stubs.
 
-## Open Questions
+## Decisions
 
-- Should the final stub be empty front matter or explicit layout-only front matter?
-- Is deriving `work_id` from the `detail_uid` prefix always valid for current and future detail IDs?
-- Should work-detail direct routes add a small generated detail lookup JSON, or is parent-work JSON via derived `work_id` enough?
-- What exact loading placeholder should each public page show before JSON arrives?
-- What should the generic JSON-failure state say on public pages?
-- Should client scripts update `document.title` after JSON loads so browser titles follow runtime metadata?
+- Final stub shape is empty front matter. Layouts stay in `_config.yml`.
+- Deriving `work_id` from the `detail_uid` prefix is valid for current and future detail IDs.
+- Work-detail direct routes should use parent work JSON via derived `work_id`; do not add a separate generated detail lookup JSON for this pass.
+- Loading placeholder text is `loading...` and should be stored in config.
+- Generic JSON-failure text is `info not available` and should be stored in config.
+- Client scripts should update `document.title` after JSON loads.
 
 ## Acceptance Checks
 
@@ -167,6 +169,9 @@ Expected checks:
 - Creating a public record creates the required route stub.
 - Deleting or unpublishing a public record removes the stale route stub where appropriate.
 - Direct visits to work, work-detail, series, and moment routes still load their JSON-backed content.
+- Direct work-detail visits derive the parent work id from `detail_uid` and read the parent work JSON.
+- Public page loading and JSON-failure text comes from config.
+- Browser titles update from runtime JSON metadata after load.
 - Jekyll still builds the collection routes successfully.
 
 ## Benefits
