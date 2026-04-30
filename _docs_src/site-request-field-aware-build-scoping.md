@@ -65,7 +65,6 @@ The result is conceptually confusing. A change to a work download can appear to 
 - make planner output explain selected artifacts and dependency reasons
 - align write-server invalidation, build preview, and generated commands around the same rules
 - reduce no-op or near-no-op generated-output churn
-- skip local media generation for metadata-only saves that do not touch image/media source fields
 
 ## Non-Goals
 
@@ -73,6 +72,7 @@ The result is conceptually confusing. A change to a work download can appear to 
 - do not redesign the generator in this request
 - do not change public runtime payload contracts
 - do not require perfect incremental generation for every artifact family in the first pass
+- do not analyze source image replacement, srcset generation, staged image media, or thumbnail copy as part of JSON artifact dependency scoping
 - do not optimize for large-scale performance ahead of correctness and clarity
 
 ## Dependency Model
@@ -217,8 +217,6 @@ Status:
 
 Apply immediate low-risk cleanup before the full dependency registry work:
 
-- identify media-affecting fields for works, work details, and moments
-- let metadata-only saves skip local media planning/generation when no media-affecting field changed and no explicit media refresh was requested
 - review page-shell checksum inputs for `_works/`, `_series/`, and `_moments/`
 - narrow page-shell checksums to the fields actually serialized into each page shell, or document why broader checksums must remain
 - define whether generated collection Markdown files should become route anchors only, with runtime metadata moved entirely to JSON artifacts
@@ -227,12 +225,6 @@ Apply immediate low-risk cleanup before the full dependency registry work:
 
 Acceptance checks:
 
-- changing a work title does not trigger local media generation
-- changing a work `project_filename` still selects local media generation
-- changing a detail title does not trigger detail media generation
-- changing a detail `project_subfolder` or `project_filename` still selects detail media generation
-- changing a moment title or `image_alt` does not trigger moment media generation
-- changing a moment `source_image_file` still selects moment media generation
 - page-shell files do not rewrite when only fields outside their serialized front matter changed
 - route-anchor collection stubs do not rewrite on metadata-only saves once the route-stub cleanup is implemented
 - broad Studio lookup rows do not rewrite solely because full-record hash baselines changed
@@ -254,7 +246,6 @@ Map which source fields appear in:
 - public series index
 - Studio lookup payloads
 - catalogue search payloads
-- local media generation and staged media outputs
 
 Inventory doc:
 
@@ -263,8 +254,7 @@ Inventory doc:
 Open questions:
 
 - none blocking for Task 1
-- confirm during inventory exactly which work, work-detail, series, and moment fields are media-affecting fields
-- confirm whether any non-image metadata currently changes generated media manifests, copy lists, or media readiness output
+- confirm whether any non-image metadata currently changes generated JSON artifacts through retained compatibility paths
 
 ### Task 2. Define Field-To-Artifact Rules
 
@@ -280,8 +270,6 @@ The registry should include:
 - work detail fields where they affect parent work outputs
 - series fields
 - moment fields if the same planner model is extended there
-- media-affecting fields that should trigger local media generation
-- metadata-only fields that should explicitly skip local media generation
 - fallback rules for unknown fields and structural operations
 
 ### Task 3. Wire Rules Into Write-Server Planning

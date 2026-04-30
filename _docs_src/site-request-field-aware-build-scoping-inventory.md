@@ -361,6 +361,14 @@ Important distinction:
 
 ## `local-media` Fields
 
+This section is a reference for the separate image-media workflow. It is not part of the field-aware JSON artifact dependency analysis.
+
+Current Studio behavior keeps explicit image refresh separate from JSON rebuild scoping: the media readiness action calls `POST /catalogue/build-apply` with `media_only: true`, so it stages source images, regenerates local derivatives, and copies thumbnails without regenerating page JSON or catalogue search.
+
+Replacing a source image with the same filename does not change catalogue source JSON. In the Studio save path, no source JSON change means no public JSON rebuild is requested. If a user changes metadata and an image is also pending, the normal scoped build may run media planning before JSON generation, but the JSON generation is caused by the source JSON change, not by the image replacement itself.
+
+For Task 2, treat image media as out of scope for JSON artifact dependency rules. Keep `downloads` and `links` in scope because they are work-owned source JSON metadata, not image media.
+
 | Artifact field | Purpose |
 |---|---|
 | `work.work_id` | Names staged source, primary derivatives, and thumbnail derivatives. |
@@ -396,7 +404,7 @@ These are the current media-affecting field sets.
 | moment | `moment_id` | Names moment media derivative outputs. |
 | moment | `source_image_file` | Resolves the moment source media path. |
 
-Metadata-only changes should be able to skip local media generation when none of the fields above changed and the user did not explicitly request a media refresh.
+Metadata-only source JSON changes should not be treated as image-media changes.
 
 Examples of metadata-only candidates:
 
