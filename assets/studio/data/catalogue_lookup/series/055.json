@@ -15,7 +15,6 @@
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "5d698b3531a2912bf51e37166962250e751bf5508c31fb0da9569ff9d3b2d24b",
   "member_works": [
     {
       "work_id": "01071",
@@ -24,8 +23,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "e5b7fda9366ff5e16e400b6f1e42626421099aa474551e89bf78d3ee71597f50"
+      ]
     },
     {
       "work_id": "01072",
@@ -34,8 +32,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "e1ebbdd3ac9ed8d43bb4294afbac8e530a9faf7e61bbd0e5c10e2c37380fd3db"
+      ]
     },
     {
       "work_id": "01073",
@@ -44,8 +41,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "b2ffb54bf9c5afab3ca855f0e38beb56e6972f27bfcabd56b994ece7bd002e9b"
+      ]
     },
     {
       "work_id": "01074",
@@ -54,8 +50,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "6515dab6945c19ff5f7ce73d26cb37933aa593647821b7349443778ae1fd035f"
+      ]
     },
     {
       "work_id": "01075",
@@ -64,8 +59,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "1603afa72c33c2f42338d1245cc74a366075d6394ea2df33ec84bd8736d42c74"
+      ]
     },
     {
       "work_id": "01076",
@@ -74,8 +68,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "5ce6c0f62412f9433b44009e132ce450cd80f2b764637d563c4f39c3e8a7a9fa"
+      ]
     },
     {
       "work_id": "01077",
@@ -84,8 +77,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "02dc0422d1fe80c0554ee0111013a3ebae6996278d79cfc19368b48c10f48dc4"
+      ]
     },
     {
       "work_id": "01078",
@@ -94,8 +86,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "fcddac59997d49bd49664a07943a2e3bcb508bc9e70e2a5221f72877ac5ca3af"
+      ]
     },
     {
       "work_id": "01079",
@@ -104,8 +95,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "e7f4e92c64a3d5ba0a188887af5601f8d74805f163a32872b1120e00c41f8fe6"
+      ]
     },
     {
       "work_id": "01080",
@@ -114,8 +104,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "dccbf94938a1e1dfd0091bf746ff9311e6ab23d38830609145669f606b61b490"
+      ]
     },
     {
       "work_id": "01081",
@@ -124,8 +113,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "01b6d9632bebf5a46ac1016669e9ae145060aa3ba2ebb9353304dcb1af3983c3"
+      ]
     },
     {
       "work_id": "01082",
@@ -134,8 +122,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "f887961b520403b93a2b928c6e5eacd5b1efdc790c2d34578f0673ab1349368c"
+      ]
     },
     {
       "work_id": "01083",
@@ -144,8 +131,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "eadbfcb28fca793e44c2919220ad0784f0e51b87d197b31c504d2c662b019ea9"
+      ]
     },
     {
       "work_id": "01084",
@@ -154,8 +140,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "4ea1e1c53b65bdb65cfe880690caa581edf16c4fe1f1592088147ec90fd7bf98"
+      ]
     },
     {
       "work_id": "01085",
@@ -164,8 +149,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "fc775caa127d90dbbf5ed1d0417a606472fe0193de5acea936df19a711d568e1"
+      ]
     },
     {
       "work_id": "01086",
@@ -174,8 +158,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "f7a58b86008f3d95ef44773fcd5cc77eb33dc2a08a937461d669069c099dd79a"
+      ]
     },
     {
       "work_id": "01087",
@@ -184,8 +167,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "00ede80fc67d38a7c56ac08a0ca4ea54112afd47c1f58a2c0fba3fe3d3b89dd9"
+      ]
     },
     {
       "work_id": "01088",
@@ -194,8 +176,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "8236dc8c87a70d6c499634448527633dbba9eb101420c90f534eeae7b76c89ae"
+      ]
     },
     {
       "work_id": "01089",
@@ -204,8 +185,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "7f8115b5f74f2800b9e7af65a864d9336f580a6618c32c6becb41f503c0904fe"
+      ]
     },
     {
       "work_id": "01090",
@@ -214,8 +194,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "727c6c1edeea7f6fc0aeff19e4437f8b86233873d962feafb143fdfab057afc4"
+      ]
     },
     {
       "work_id": "01091",
@@ -224,8 +203,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "3a85a23945b6be69bce8183ed6db7199ef1a17fbb21ba3b64208a2f60ff68598"
+      ]
     },
     {
       "work_id": "01092",
@@ -234,8 +212,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "83251914035f2f2f07560d80672c4c1952663458a4c17075bf3478a93ae70a8a"
+      ]
     },
     {
       "work_id": "01093",
@@ -244,8 +221,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "313918d25109939b22444c5bd71b3a319269c35bd333377831277bb19bf25c8b"
+      ]
     },
     {
       "work_id": "01094",
@@ -254,8 +230,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "718f08a01a1d2cad7f63d04178ca7e6736d834ddc1a352423e3b08f141f0b870"
+      ]
     },
     {
       "work_id": "01095",
@@ -264,8 +239,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "2bd6c20b7a0cb76f41818d30f668af4139dbe244cff712ef68e121ce17ba50b2"
+      ]
     },
     {
       "work_id": "01096",
@@ -274,8 +248,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "210447f4e5614c02396fe8731d63a5aa176f6e705860f705f303fc88f0f39075"
+      ]
     },
     {
       "work_id": "01097",
@@ -284,8 +257,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "dfa5fe9e58a065590bd336d5e6c79e31aa6c6ec2b638295d9b96d7e1f4d7065f"
+      ]
     },
     {
       "work_id": "01098",
@@ -294,8 +266,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "b24446cbac3f2c4a7e774a1fc9af89e4623ae5c28bfc262dad4592940ea43349"
+      ]
     },
     {
       "work_id": "01099",
@@ -304,8 +275,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "50ccf30af82fa57a4b7904dd58b6c25819c84318a4ad2c946caf5bddfa30d14e"
+      ]
     },
     {
       "work_id": "01100",
@@ -314,8 +284,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "57738750b0485176243aaf538afdbcad7b0e78fa138a3dc46068ad98655a7653"
+      ]
     },
     {
       "work_id": "01101",
@@ -324,8 +293,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "5fb5a98fc72d800799115758afc9c064b04def4694f505d63514e7890eef9f6a"
+      ]
     },
     {
       "work_id": "01102",
@@ -334,8 +302,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "aae7c95496196d2d70d354867938793711d89cda330c549b7755b6e09dbaefee"
+      ]
     },
     {
       "work_id": "01103",
@@ -344,8 +311,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "0dd5a037f5ec2f9e409b7b7ed726466b3cc6226beb79e745d147dde2dc7d9171"
+      ]
     },
     {
       "work_id": "01104",
@@ -354,8 +320,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "9708e3876b6b38cee5c5929c9e56cc34a55afb9a547e1ad67748c8a95da01277"
+      ]
     },
     {
       "work_id": "01105",
@@ -364,8 +329,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "954dbb9fc808b9195e0b99ce24f0db0f6c6c8c5b6e39f177fd511527d32c5d9c"
+      ]
     },
     {
       "work_id": "01106",
@@ -374,8 +338,7 @@
       "status": "published",
       "series_ids": [
         "055"
-      ],
-      "record_hash": "a8f8d65d2b584c31e961793c22faedf2564d84005d9d71156c40f9d07d1ecd81"
+      ]
     }
   ]
 }

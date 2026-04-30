@@ -15,7 +15,6 @@
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "a0870dc39500cacc559f797c633e1029fff674d00dfa3d16a8f7c83d74469374",
   "member_works": [
     {
       "work_id": "00460",
@@ -24,8 +23,7 @@
       "status": "published",
       "series_ids": [
         "101"
-      ],
-      "record_hash": "8f347ef7d7a9ba77f9b0b00cd28d3706f8873dd424255d866073625da59eb388"
+      ]
     },
     {
       "work_id": "00461",
@@ -34,8 +32,7 @@
       "status": "published",
       "series_ids": [
         "101"
-      ],
-      "record_hash": "450c62773c19b059b498dd3fc1f56e34951b85bc1dcec480cbfdfc7ac3f0d7f6"
+      ]
     },
     {
       "work_id": "00462",
@@ -44,8 +41,7 @@
       "status": "published",
       "series_ids": [
         "101"
-      ],
-      "record_hash": "738b00c870b7fe097ba5f960224d58607a4f66b0b12a09998a9e490813567dd6"
+      ]
     }
   ]
 }

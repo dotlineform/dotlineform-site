@@ -15,7 +15,6 @@
     "notes": "put track listing in work_prose",
     "sort_fields": "work_id"
   },
-  "record_hash": "ca37cc992a848ab307a49f6f3d6f0727f63ca01455eef4d47f687fa2fbac5718",
   "member_works": [
     {
       "work_id": "01250",
@@ -24,8 +23,7 @@
       "status": "published",
       "series_ids": [
         "069"
-      ],
-      "record_hash": "7c3a738b74901f53ab0bf821a4b5ca941eebc3f144b791cb2deae5e2657aa118"
+      ]
     }
   ]
 }

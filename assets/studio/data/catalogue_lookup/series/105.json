@@ -15,7 +15,6 @@
     "notes": "works and details to publish",
     "sort_fields": "work_id"
   },
-  "record_hash": "bf2709e692e3e37b6a33333d6ab15e186ccbd835186bb6e96421402f7b810c0d",
   "member_works": [
     {
       "work_id": "00008",
@@ -25,8 +24,7 @@
       "series_ids": [
         "105",
         "026"
-      ],
-      "record_hash": "194f6ca8d1fa19e40dc082d79862ec1cadc72ee132ccdba4c4cabc702db48c2d"
+      ]
     },
     {
       "work_id": "00163",
@@ -35,8 +33,7 @@
       "status": "published",
       "series_ids": [
         "105"
-      ],
-      "record_hash": "f1322fd7b3d191450a4f0a197841bbe27e436de9778cf3429eaa19e44f18e462"
+      ]
     },
     {
       "work_id": "00166",
@@ -45,8 +42,7 @@
       "status": "published",
       "series_ids": [
         "105"
-      ],
-      "record_hash": "b270cd44c4b39598d52fe51b69f3b40ce4ad9ae03424fa56efaee4b8dbc6a7f3"
+      ]
     }
   ]
 }

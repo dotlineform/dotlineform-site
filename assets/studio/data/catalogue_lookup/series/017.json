@@ -15,7 +15,6 @@
     "notes": null,
     "sort_fields": "work_id"
   },
-  "record_hash": "8f4d3ee84c0a860184816eb72c9596c38ae4cd47e9c4ec4a7403423a12c51adb",
   "member_works": [
     {
       "work_id": "00782",
@@ -24,8 +23,7 @@
       "status": "published",
       "series_ids": [
         "017"
-      ],
-      "record_hash": "1d5297d423dedab42d353e7a45c1ff557cf49161246e2dc5e818a180834b4bc7"
+      ]
     }
   ]
 }
