@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "works_index_v4",
-    "version": "blake2b-b013242bd8b5683a6cf92a02ea46644e",
-    "generated_at_utc": "2026-04-30T08:50:39Z",
+    "version": "blake2b-721c8acde5deb8129d0f12f11be96890",
+    "generated_at_utc": "2026-04-30T09:33:07Z",
     "count": 1940
   },
   "works": {
@@ -16849,7 +16849,7 @@
     },
     "01874": {
       "work_id": "01874",
-      "title": "untitled composites - source",
+      "title": "untitled composites source",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [

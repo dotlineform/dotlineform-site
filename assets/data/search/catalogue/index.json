@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-f94249fdac873ced97a76524253f8ea8",
-    "generated_at_utc": "2026-04-30T08:50:41Z",
+    "version": "blake2b-9e60cc07b9cbb19bd84aa0fda29b4f52",
+    "generated_at_utc": "2026-04-30T09:33:09Z",
     "count": 2135
   },
   "entries": [
@@ -71324,40 +71324,6 @@
     },
     {
       "kind": "work",
-      "id": "01874",
-      "title": "untitled composites - source",
-      "href": "/works/01874/",
-      "year": 2023,
-      "display_meta": "2023",
-      "series_ids": [
-        "138"
-      ],
-      "series_titles": [
-        "untitled composites"
-      ],
-      "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
-      "search_terms": [
-        "01874",
-        "untitled composites - source",
-        "untitled",
-        "composites",
-        "source",
-        "2023",
-        "138",
-        "untitled composites",
-        "digital print",
-        "digital",
-        "print",
-        "digital c-type print",
-        "c",
-        "type"
-      ],
-      "search_text": "01874 untitled composites - source untitled composites source 2023 138 untitled composites digital print digital print digital c-type print c type"
-    },
-    {
-      "kind": "work",
       "id": "01881",
       "title": "untitled composites 1-3",
       "href": "/works/01881/",
@@ -71425,6 +71391,40 @@
         "type"
       ],
       "search_text": "01882 untitled composites 4-6 untitled composites 4 6 2023 138 untitled composites digital print digital print digital c-type print c type"
+    },
+    {
+      "kind": "work",
+      "id": "01874",
+      "title": "untitled composites source",
+      "href": "/works/01874/",
+      "year": 2023,
+      "display_meta": "2023",
+      "series_ids": [
+        "138"
+      ],
+      "series_titles": [
+        "untitled composites"
+      ],
+      "medium_type": "digital print",
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "01874",
+        "untitled composites source",
+        "untitled",
+        "composites",
+        "source",
+        "2023",
+        "138",
+        "untitled composites",
+        "digital print",
+        "digital",
+        "print",
+        "digital c-type print",
+        "c",
+        "type"
+      ],
+      "search_text": "01874 untitled composites source untitled composites source 2023 138 untitled composites digital print digital print digital c-type print c type"
     },
     {
       "kind": "work",
