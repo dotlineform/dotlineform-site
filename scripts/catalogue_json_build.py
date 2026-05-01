@@ -1372,37 +1372,56 @@ def run_scoped_build_scope(
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     refresh_published = True
     effective_force = bool(force)
-    media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env, force=force)
-    if scope_kind == "moment":
-        commands = [
-            (
-                "Generate Moment Pages",
-                build_generate_moment_command(
-                    repo_root,
-                    repo_root / DEFAULT_SOURCE_DIR,
-                    scope,
-                    write=write,
-                    force=effective_force,
-                    refresh_published=refresh_published,
-                ),
-            ),
-            ("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=effective_force, env=env)),
-        ]
+    generate_local_media = bool(scope.get("generate_local_media", True))
+    rebuild_search = bool(scope.get("rebuild_search", True))
+    generate_only = list(scope.get("generate_only") or [])
+    run_generate = bool(generate_only)
+    if generate_local_media:
+        media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env, force=force)
     else:
-        commands = [
-            (
-                "Generate Work Pages",
-                build_generate_command(
-                    repo_root,
-                    Path(scope["source_dir"]),
-                    scope,
-                    write=write,
-                    force=effective_force,
-                    refresh_published=refresh_published,
-                ),
-            ),
-            ("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=effective_force, env=env)),
-        ]
+        media_step = {
+            "label": "Generate Local Media Derivatives",
+            "status": "skipped",
+            "summary": "Local media not selected by this field-aware scope.",
+            "generated": {"work": [], "work_details": [], "moment": []},
+            "planned": {"work": [], "work_details": [], "moment": []},
+            "current": {"work": [], "work_details": [], "moment": []},
+            "blocked": {"work": [], "work_details": [], "moment": []},
+            "exit_code": 0,
+        }
+    commands: list[tuple[str, list[str]]] = []
+    if scope_kind == "moment":
+        if run_generate:
+            commands.append(
+                (
+                    "Generate Moment Pages",
+                    build_generate_moment_command(
+                        repo_root,
+                        repo_root / DEFAULT_SOURCE_DIR,
+                        scope,
+                        write=write,
+                        force=effective_force,
+                        refresh_published=refresh_published,
+                    ),
+                )
+            )
+    else:
+        if run_generate:
+            commands.append(
+                (
+                    "Generate Work Pages",
+                    build_generate_command(
+                        repo_root,
+                        Path(scope["source_dir"]),
+                        scope,
+                        write=write,
+                        force=effective_force,
+                        refresh_published=refresh_published,
+                    ),
+                )
+            )
+    if rebuild_search:
+        commands.append(("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=effective_force, env=env)))
     steps: list[Dict[str, Any]] = []
     status = "completed"
     failed_step = ""
@@ -1479,6 +1498,7 @@ def run_scoped_build_scope(
                     failed_step=failed_step,
                     force=effective_force,
                     refresh_published=refresh_published,
+                    rebuild_search=rebuild_search,
                 ),
             )
         else:
@@ -1494,6 +1514,7 @@ def run_scoped_build_scope(
                     failed_step=failed_step,
                     force=effective_force,
                     refresh_published=refresh_published,
+                    rebuild_search=rebuild_search,
                 ),
             )
     return response
@@ -1556,14 +1577,16 @@ def build_activity_entry_for_scoped_json_build(
     failed_step: str = "",
     force: bool = False,
     refresh_published: bool = False,
+    rebuild_search: bool = True,
 ) -> Dict[str, Any]:
     work_ids_list = list(work_ids)
     series_ids_list = list(series_ids)
     generated_work_ids_list = sorted(str(value) for value in generated_work_ids if str(value).strip())
     generated_detail_uids_list = sorted(str(value) for value in generated_detail_uids if str(value).strip())
     media_generated_count = len(generated_work_ids_list) + len(generated_detail_uids_list)
+    search_text = "rebuilt catalogue search" if rebuild_search else "skipped catalogue search"
     summary = (
-        f"Scoped JSON build updated {len(work_ids_list)} work records, {len(series_ids_list)} series, rebuilt catalogue search, and generated local media for {media_generated_count} record(s)."
+        f"Scoped JSON build updated {len(work_ids_list)} work records, {len(series_ids_list)} series, {search_text}, and generated local media for {media_generated_count} record(s)."
         if status == "completed"
         else f"Scoped JSON build failed for {len(work_ids_list)} work records."
     )
@@ -1597,7 +1620,7 @@ def build_activity_entry_for_scoped_json_build(
             "generate_work_ids": len(work_ids_list),
             "generate_series_ids": len(series_ids_list),
             "generate_local_media": media_generated_count > 0,
-            "rebuild_search": True,
+            "rebuild_search": bool(rebuild_search),
             "force_generate": bool(force),
             "refresh_published": bool(refresh_published),
         },
@@ -1620,11 +1643,13 @@ def build_activity_entry_for_scoped_moment_build(
     failed_step: str = "",
     force: bool = False,
     refresh_published: bool = False,
+    rebuild_search: bool = True,
 ) -> Dict[str, Any]:
     moment_ids_list = sorted(str(moment_id) for moment_id in moment_ids if str(moment_id).strip())
     generated_moment_ids_list = sorted(str(moment_id) for moment_id in generated_moment_ids if str(moment_id).strip())
+    search_text = "rebuilt catalogue search" if rebuild_search else "skipped catalogue search"
     summary = (
-        f"Scoped moment build updated {len(moment_ids_list)} moment records, rebuilt catalogue search, and generated local media for {len(generated_moment_ids_list)} moment record(s)."
+        f"Scoped moment build updated {len(moment_ids_list)} moment records, {search_text}, and generated local media for {len(generated_moment_ids_list)} moment record(s)."
         if status == "completed"
         else f"Scoped moment build failed for {len(moment_ids_list)} moment records."
     )
@@ -1659,7 +1684,7 @@ def build_activity_entry_for_scoped_moment_build(
         "actions": {
             "generate_moment_ids": len(moment_ids_list),
             "generate_local_media": bool(generated_moment_ids_list),
-            "rebuild_search": True,
+            "rebuild_search": bool(rebuild_search),
             "force_generate": bool(force),
             "refresh_published": bool(refresh_published),
         },

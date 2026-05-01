@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Wired catalogue field registry into save-time build planning
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Single-record catalogue saves now resolve changed fields through `assets/studio/data/catalogue_field_registry.json` before running save-time public builds.
+
+**Reason:**
+Small metadata saves should not automatically select local media generation, catalogue search, or broad page/index refreshes when the registry says the changed fields affect only focused payloads or Studio-only source data.
+
+**Effect:**
+Work, work-detail, series, and moment save endpoints can pass narrowed `generate_only`, `rebuild_search`, and `generate_local_media` values into the scoped build runner. Unknown fields, mixed rule classes, bulk saves, create/delete flows, imports, publication actions, and cross-family series saves retain conservative fallback.
+
+**Affected files/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_json_build.py`
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Added catalogue field registry for build scoping
 
 **Status:** implemented

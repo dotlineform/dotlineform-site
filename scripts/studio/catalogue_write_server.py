@@ -108,9 +108,7 @@ from catalogue_json_build import (  # noqa: E402
     build_scope_for_series,
     build_scope_for_work,
     preview_moment_source,
-    run_moment_scoped_build,
-    run_scoped_build,
-    run_series_scoped_build,
+    run_scoped_build_scope,
 )
 from moment_sources import (  # noqa: E402
     CATALOGUE_MOMENT_PROSE_REL_DIR,
@@ -178,6 +176,45 @@ DELETE_APPLY_PATH = "/catalogue/delete-apply"
 PUBLICATION_PREVIEW_PATH = "/catalogue/publication-preview"
 PUBLICATION_APPLY_PATH = "/catalogue/publication-apply"
 PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
+CATALOGUE_FIELD_REGISTRY_REL_PATH = Path("assets/studio/data/catalogue_field_registry.json")
+
+REGISTRY_ARTIFACT_TO_GENERATE_ONLY = {
+    "work-page": "work-pages",
+    "work-details-page": "work-details-pages",
+    "series-page": "series-pages",
+    "work-json": "work-json",
+    "works-index-json": "works-index-json",
+    "work-storage-index-json": "work-json",
+    "series-json": "series-pages",
+    "series-index-json": "series-index-json",
+    "recent-index-json": "recent-index-json",
+    "moment-page": "moments",
+    "moment-json": "moments",
+    "moments-index-json": "moments-index-json",
+}
+
+BUILD_ARTIFACT_ORDER = [
+    "work-pages",
+    "work-json",
+    "work-details-pages",
+    "series-pages",
+    "series-index-json",
+    "works-index-json",
+    "recent-index-json",
+    "moments",
+    "moments-index-json",
+]
+
+DEFAULT_JSON_BUILD_GENERATE_ARTIFACTS = [
+    "work-pages",
+    "work-json",
+    "series-pages",
+    "series-index-json",
+    "works-index-json",
+    "recent-index-json",
+]
+
+DEFAULT_MOMENT_BUILD_GENERATE_ARTIFACTS = ["moments"]
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -1227,6 +1264,305 @@ def normalize_moment_update(
 
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
     return [field for field in sorted(set(before.keys()) | set(after.keys())) if before.get(field) != after.get(field)]
+
+
+def load_catalogue_field_registry(repo_root: Path) -> Dict[str, Any]:
+    path = repo_root / CATALOGUE_FIELD_REGISTRY_REL_PATH
+    payload = load_json_file(path)
+    if not isinstance(payload, dict):
+        raise ValueError(f"catalogue field registry must be a JSON object: {CATALOGUE_FIELD_REGISTRY_REL_PATH}")
+    if payload.get("schema") != "catalogue_field_registry_v1":
+        raise ValueError("unsupported catalogue field registry schema")
+    return payload
+
+
+def registry_rules_for(
+    registry: Mapping[str, Any],
+    *,
+    record_family: str,
+    operation: str,
+) -> list[Mapping[str, Any]]:
+    rules = registry.get("rules")
+    if not isinstance(rules, list):
+        raise ValueError("catalogue field registry missing rules[]")
+    return [
+        rule
+        for rule in rules
+        if isinstance(rule, Mapping)
+        and str(rule.get("record_family") or "") == record_family
+        and str(rule.get("operation") or "") == operation
+    ]
+
+
+def rule_fields(rule: Mapping[str, Any]) -> list[str]:
+    return [str(field).strip() for field in rule.get("fields") or [] if str(field).strip()]
+
+
+def build_rule_index(
+    registry: Mapping[str, Any],
+    *,
+    record_family: str,
+    operation: str,
+) -> dict[str, Mapping[str, Any]]:
+    index: dict[str, Mapping[str, Any]] = {}
+    for rule in registry_rules_for(registry, record_family=record_family, operation=operation):
+        rule_id = str(rule.get("id") or "").strip()
+        for field in rule_fields(rule):
+            if field in index:
+                raise ValueError(f"catalogue field registry has duplicate {record_family}.{operation} field: {field}")
+            if not rule_id:
+                raise ValueError(f"catalogue field registry rule for {field} is missing id")
+            index[field] = rule
+    return index
+
+
+def registry_default_reason(registry: Mapping[str, Any], key: str, fallback: str) -> str:
+    defaults = registry.get("defaults") if isinstance(registry.get("defaults"), Mapping) else {}
+    default_row = defaults.get(key) if isinstance(defaults, Mapping) else {}
+    target = default_row.get("target") if isinstance(default_row, Mapping) and isinstance(default_row.get("target"), Mapping) else {}
+    return str(target.get("reason") or fallback)
+
+
+def ordered_generate_artifacts(artifacts: Iterable[str]) -> list[str]:
+    selected = {str(artifact) for artifact in artifacts if str(artifact)}
+    return [artifact for artifact in BUILD_ARTIFACT_ORDER if artifact in selected]
+
+
+def fallback_generate_only_for_record_family(record_family: str) -> list[str]:
+    if record_family == "moment":
+        return list(DEFAULT_MOMENT_BUILD_GENERATE_ARTIFACTS)
+    return list(DEFAULT_JSON_BUILD_GENERATE_ARTIFACTS)
+
+
+def registry_artifacts_to_generate_only(artifacts: Iterable[str]) -> list[str]:
+    mapped: set[str] = set()
+    for artifact in artifacts:
+        generate_artifact = REGISTRY_ARTIFACT_TO_GENERATE_ONLY.get(str(artifact))
+        if generate_artifact:
+            mapped.add(generate_artifact)
+    return ordered_generate_artifacts(mapped)
+
+
+def series_sort_fields_for_work(records: CatalogueSourceRecords, work_record: Mapping[str, Any]) -> set[str]:
+    fields: set[str] = set()
+    for series_id in normalize_series_ids_value(work_record.get("series_ids")):
+        series_record = records.series.get(series_id)
+        if not isinstance(series_record, Mapping):
+            continue
+        raw_sort_fields = str(series_record.get("sort_fields") or "").strip()
+        for raw_field in raw_sort_fields.split(","):
+            field = raw_field.strip()
+            if field:
+                fields.add(field)
+    return fields
+
+
+def conditional_artifact_applies(
+    artifact: str,
+    *,
+    rule_id: str,
+    record_family: str,
+    changed_field_names: set[str],
+    context: Mapping[str, Any],
+) -> bool:
+    if artifact == "series-index-json" and record_family == "work" and rule_id == "work_display_core":
+        source_records = context.get("source_records")
+        current_record = context.get("current_record")
+        updated_record = context.get("updated_record")
+        if not isinstance(source_records, CatalogueSourceRecords):
+            return False
+        sort_fields: set[str] = set()
+        if isinstance(current_record, Mapping):
+            sort_fields.update(series_sort_fields_for_work(source_records, current_record))
+        if isinstance(updated_record, Mapping):
+            sort_fields.update(series_sort_fields_for_work(source_records, updated_record))
+        return bool(sort_fields.intersection(changed_field_names))
+    return False
+
+
+def field_aware_build_plan(
+    registry: Mapping[str, Any],
+    *,
+    record_family: str,
+    operation: str,
+    changed_field_names: list[str],
+    context: Mapping[str, Any] | None = None,
+) -> Dict[str, Any]:
+    context = context or {}
+    changed = sorted({str(field).strip() for field in changed_field_names if str(field).strip()})
+    if not changed:
+        return {
+            "mode": "none",
+            "fallback": False,
+            "fields": [],
+            "rule_ids": [],
+            "artifacts": [],
+            "generate_only": [],
+            "rebuild_search": False,
+            "generate_local_media": False,
+            "build_required": False,
+            "reason": "No source fields changed.",
+        }
+
+    rule_index = build_rule_index(registry, record_family=record_family, operation=operation)
+    unknown_fields = [field for field in changed if field not in rule_index]
+    if unknown_fields:
+        return {
+            "mode": "full-fallback",
+            "fallback": True,
+            "fallback_reason": "unknown_field",
+            "fields": changed,
+            "rule_ids": [],
+            "artifacts": [],
+            "generate_only": fallback_generate_only_for_record_family(record_family),
+            "rebuild_search": True,
+            "generate_local_media": True,
+            "build_required": True,
+            "unknown_fields": unknown_fields,
+            "reason": registry_default_reason(
+                registry,
+                "unknown_field",
+                "Unknown source fields use conservative fallback until explicitly classified.",
+            ),
+        }
+
+    matched_rules: dict[str, Mapping[str, Any]] = {}
+    for field in changed:
+        rule = rule_index[field]
+        matched_rules[str(rule.get("id") or "")] = rule
+
+    if len(matched_rules) != 1:
+        return {
+            "mode": "full-fallback",
+            "fallback": True,
+            "fallback_reason": "mixed_dependency_classes",
+            "fields": changed,
+            "rule_ids": sorted(matched_rules),
+            "artifacts": [],
+            "generate_only": fallback_generate_only_for_record_family(record_family),
+            "rebuild_search": True,
+            "generate_local_media": True,
+            "build_required": True,
+            "unknown_fields": [],
+            "reason": registry_default_reason(
+                registry,
+                "mixed_multi_family_save",
+                "Mixed edits spanning dependency classes use conservative fallback.",
+            ),
+        }
+
+    rule_id, rule = next(iter(matched_rules.items()))
+    target = rule.get("target") if isinstance(rule.get("target"), Mapping) else {}
+    if bool(target.get("fallback")):
+        return {
+            "mode": "full-fallback",
+            "fallback": True,
+            "fallback_reason": "rule_fallback",
+            "fields": changed,
+            "rule_ids": [rule_id],
+            "artifacts": [],
+            "generate_only": fallback_generate_only_for_record_family(record_family),
+            "rebuild_search": True,
+            "generate_local_media": True,
+            "build_required": True,
+            "unknown_fields": [],
+            "reason": str(target.get("reason") or "Registry rule requires conservative fallback."),
+        }
+
+    artifacts = {str(artifact) for artifact in target.get("artifacts") or [] if str(artifact)}
+    changed_set = set(changed)
+    applied_conditional_artifacts: list[str] = []
+    omitted_conditional_artifacts: list[str] = []
+    for conditional in target.get("conditional_artifacts") or []:
+        if not isinstance(conditional, Mapping):
+            continue
+        artifact = str(conditional.get("artifact") or "").strip()
+        if not artifact:
+            continue
+        if conditional_artifact_applies(
+            artifact,
+            rule_id=rule_id,
+            record_family=record_family,
+            changed_field_names=changed_set,
+            context=context,
+        ):
+            artifacts.add(artifact)
+            applied_conditional_artifacts.append(artifact)
+        else:
+            omitted_conditional_artifacts.append(artifact)
+
+    generate_only = registry_artifacts_to_generate_only(artifacts)
+    rebuild_search = "catalogue-search" in artifacts
+    generate_local_media = "local-media" in artifacts
+    build_required = bool(generate_only or rebuild_search or generate_local_media)
+    return {
+        "mode": "field-aware",
+        "fallback": False,
+        "fields": changed,
+        "rule_ids": [rule_id],
+        "artifacts": sorted(artifacts),
+        "generate_only": generate_only,
+        "rebuild_search": rebuild_search,
+        "generate_local_media": generate_local_media,
+        "build_required": build_required,
+        "unknown_fields": [],
+        "conditional_artifacts": {
+            "applied": sorted(set(applied_conditional_artifacts)),
+            "omitted": sorted(set(omitted_conditional_artifacts)),
+        },
+        "reason": str(target.get("reason") or ""),
+    }
+
+
+def full_fallback_build_plan(
+    *,
+    fields: Iterable[str],
+    reason: str,
+    fallback_reason: str,
+    record_family: str,
+) -> Dict[str, Any]:
+    return {
+        "mode": "full-fallback",
+        "fallback": True,
+        "fallback_reason": fallback_reason,
+        "fields": sorted({str(field).strip() for field in fields if str(field).strip()}),
+        "rule_ids": [],
+        "artifacts": [],
+        "generate_only": fallback_generate_only_for_record_family(record_family),
+        "rebuild_search": True,
+        "generate_local_media": True,
+        "build_required": True,
+        "unknown_fields": [],
+        "reason": reason,
+    }
+
+
+def apply_field_build_plan_to_scope(scope: Dict[str, Any], build_plan: Mapping[str, Any]) -> None:
+    scope["field_plan"] = {
+        "mode": build_plan.get("mode"),
+        "fallback": bool(build_plan.get("fallback")),
+        "fallback_reason": build_plan.get("fallback_reason"),
+        "fields": list(build_plan.get("fields") or []),
+        "rule_ids": list(build_plan.get("rule_ids") or []),
+        "artifacts": list(build_plan.get("artifacts") or []),
+        "unknown_fields": list(build_plan.get("unknown_fields") or []),
+        "reason": str(build_plan.get("reason") or ""),
+    }
+    scope["generate_only"] = list(build_plan.get("generate_only") or [])
+    scope["rebuild_search"] = bool(build_plan.get("rebuild_search"))
+    scope["generate_local_media"] = bool(build_plan.get("generate_local_media"))
+    if "summary" in scope:
+        mode = str(build_plan.get("mode") or "field-aware")
+        artifacts = ", ".join(scope["generate_only"]) if scope["generate_only"] else "none"
+        search = "yes" if scope["rebuild_search"] else "no"
+        media = "yes" if scope["generate_local_media"] else "no"
+        if str(scope.get("kind") or "work") == "moment":
+            ids = ", ".join(str(item) for item in scope.get("moment_ids", [])) or "none"
+            scope["summary"] = f"Field-aware build moments [{ids}]; mode {mode}; generate [{artifacts}], search {search}, local media {media}."
+        else:
+            work_ids = ", ".join(str(item) for item in scope.get("work_ids", [])) or "none"
+            series_ids = ", ".join(str(item) for item in scope.get("series_ids", [])) or "none"
+            scope["summary"] = f"Field-aware build works [{work_ids}], series [{series_ids}]; mode {mode}; generate [{artifacts}], search {search}, local media {media}."
 
 
 def validate_bulk_records(
@@ -2969,6 +3305,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.allowed_write_roots = {path.resolve() for path in allowed_write_roots}
         self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
+        self.field_registry = load_catalogue_field_registry(self.repo_root)
 
     def rel_path(self, path: Path) -> str:
         try:
@@ -3297,6 +3634,7 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": fields_changed,
             "record": updated_record,
         }
+        build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
             invalidation = work_lookup_invalidation_for_fields(fields_changed)
@@ -3314,6 +3652,18 @@ class Handler(BaseHTTPRequestHandler):
                 "unknown_fields": invalidation["unknown_fields"],
             }
             response_payload["lookup_refresh"] = lookup_refresh_payload
+            build_plan = field_aware_build_plan(
+                self.server.field_registry,
+                record_family="work",
+                operation="metadata_update",
+                changed_field_names=fields_changed,
+                context={
+                    "source_records": records_from_json_source(self.server.source_dir),
+                    "current_record": current_record,
+                    "updated_record": updated_record,
+                },
+            )
+            response_payload["build_plan"] = build_plan
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -3366,14 +3716,24 @@ class Handler(BaseHTTPRequestHandler):
                 "reason": "work_not_published",
                 "summary": "Work must be published before a public update can run.",
             }
-        if apply_build and changed:
+        if apply_build and changed and not build_plan.get("build_required", True):
+            response_payload["build_requested"] = False
+            response_payload["build_skipped"] = {
+                "reason": "no_public_build_artifacts",
+                "summary": "Changed fields do not require public build artifacts.",
+            }
+        if apply_build and changed and build_plan.get("build_required", True):
+            previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
+            next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
+            removed_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
             _build_success, build_payload = self._run_build_operation(
                 work_id=work_id,
                 series_id="",
-                extra_series_ids=extra_series_ids,
+                extra_series_ids=normalize_series_ids_value([*extra_series_ids, *removed_series_ids]),
                 extra_work_ids=[],
                 detail_uid="",
                 force=False,
+                build_plan=build_plan,
             )
             response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
@@ -4401,6 +4761,7 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": fields_changed,
             "record": updated_record,
         }
+        build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
             invalidation = detail_lookup_invalidation_for_fields(fields_changed)
@@ -4413,6 +4774,18 @@ class Handler(BaseHTTPRequestHandler):
                 "unknown_fields": invalidation["unknown_fields"],
             }
             response_payload["lookup_refresh"] = lookup_refresh_payload
+            build_plan = field_aware_build_plan(
+                self.server.field_registry,
+                record_family="work_detail",
+                operation="metadata_update",
+                changed_field_names=fields_changed,
+                context={
+                    "source_records": source_records,
+                    "current_record": current_record,
+                    "updated_record": updated_record,
+                },
+            )
+            response_payload["build_plan"] = build_plan
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -4461,7 +4834,13 @@ class Handler(BaseHTTPRequestHandler):
                 }
             )
         response_payload["build_requested"] = bool(apply_build and changed)
-        if apply_build and changed:
+        if apply_build and changed and not build_plan.get("build_required", True):
+            response_payload["build_requested"] = False
+            response_payload["build_skipped"] = {
+                "reason": "no_public_build_artifacts",
+                "summary": "Changed fields do not require public build artifacts.",
+            }
+        if apply_build and changed and build_plan.get("build_required", True):
             _build_success, build_payload = self._run_build_operation(
                 work_id=work_id,
                 series_id="",
@@ -4469,6 +4848,7 @@ class Handler(BaseHTTPRequestHandler):
                 extra_work_ids=[],
                 detail_uid=detail_uid,
                 force=False,
+                build_plan=build_plan,
             )
             response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
@@ -5049,6 +5429,7 @@ class Handler(BaseHTTPRequestHandler):
             "record": updated_series_record,
             "work_records": response_work_records,
         }
+        build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
             invalidation = series_lookup_invalidation_for_fields(series_changed_fields)
@@ -5067,6 +5448,26 @@ class Handler(BaseHTTPRequestHandler):
                 "unknown_fields": invalidation["unknown_fields"],
             }
             response_payload["lookup_refresh"] = lookup_refresh_payload
+            if changed_work_ids:
+                build_plan = full_fallback_build_plan(
+                    fields=[*series_changed_fields, "work.series_ids"],
+                    fallback_reason="series_save_changed_member_works",
+                    reason="Series save also changed member work records; use conservative fallback until cross-family saves are scoped explicitly.",
+                    record_family="series",
+                )
+            else:
+                build_plan = field_aware_build_plan(
+                    self.server.field_registry,
+                    record_family="series",
+                    operation="metadata_update",
+                    changed_field_names=series_changed_fields,
+                    context={
+                        "source_records": records_from_json_source(self.server.source_dir),
+                        "current_record": current_series_record,
+                        "updated_record": updated_series_record,
+                    },
+                )
+            response_payload["build_plan"] = build_plan
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -5121,7 +5522,13 @@ class Handler(BaseHTTPRequestHandler):
                 "reason": "series_not_published",
                 "summary": "Series must be published before a public update can run.",
             }
-        if apply_build and changed:
+        if apply_build and changed and not build_plan.get("build_required", True):
+            response_payload["build_requested"] = False
+            response_payload["build_skipped"] = {
+                "reason": "no_public_build_artifacts",
+                "summary": "Changed fields do not require public build artifacts.",
+            }
+        if apply_build and changed and build_plan.get("build_required", True):
             _build_success, build_payload = self._run_build_operation(
                 work_id="",
                 series_id=series_id,
@@ -5129,6 +5536,7 @@ class Handler(BaseHTTPRequestHandler):
                 extra_work_ids=extra_work_ids,
                 detail_uid="",
                 force=False,
+                build_plan=build_plan,
             )
             response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)
@@ -5372,34 +5780,44 @@ class Handler(BaseHTTPRequestHandler):
         detail_uid: str,
         force: bool,
         media_only: bool = False,
+        build_plan: Optional[Mapping[str, Any]] = None,
     ) -> tuple[bool, Dict[str, Any]]:
         if work_id:
-            result = run_scoped_build(
-                self.server.repo_root,
-                source_dir=self.server.source_dir,
-                work_id=work_id,
+            scope = build_scope_for_work(
+                self.server.source_dir,
+                work_id,
                 extra_series_ids=extra_series_ids,
                 detail_uid=detail_uid,
+            )
+            if build_plan:
+                apply_field_build_plan_to_scope(scope, build_plan)
+            result = run_scoped_build_scope(
+                self.server.repo_root,
+                scope=scope,
                 write=not self.server.dry_run,
                 force=force,
                 media_only=media_only,
                 log_activity=not self.server.dry_run,
             )
         elif series_id:
-            result = run_series_scoped_build(
+            scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
+            if build_plan:
+                apply_field_build_plan_to_scope(scope, build_plan)
+            result = run_scoped_build_scope(
                 self.server.repo_root,
-                source_dir=self.server.source_dir,
-                series_id=series_id,
-                extra_work_ids=extra_work_ids,
+                scope=scope,
                 write=not self.server.dry_run,
                 force=force,
                 media_only=media_only,
                 log_activity=not self.server.dry_run,
             )
         else:
-            result = run_moment_scoped_build(
+            scope = build_scope_for_moment(self.server.repo_root, f"{moment_id}.md", force=force)
+            if build_plan:
+                apply_field_build_plan_to_scope(scope, build_plan)
+            result = run_scoped_build_scope(
                 self.server.repo_root,
-                moment_file=f"{moment_id}.md",
+                scope=scope,
                 write=not self.server.dry_run,
                 force=force,
                 media_only=media_only,
@@ -5415,6 +5833,7 @@ class Handler(BaseHTTPRequestHandler):
             "force": force,
             "media_only": media_only,
             "build": result.get("scope"),
+            "field_plan": dict(build_plan) if build_plan else None,
             "media": result.get("media"),
             "steps": result.get("steps", []),
         }
@@ -5631,6 +6050,7 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": fields_changed,
             "record": updated_record,
         }
+        build_plan: Dict[str, Any] = {}
         if changed:
             invalidation = moment_lookup_invalidation_for_fields(fields_changed)
             response_payload["lookup_refresh"] = {
@@ -5639,6 +6059,17 @@ class Handler(BaseHTTPRequestHandler):
                 "artifacts": invalidation["artifacts"],
                 "unknown_fields": invalidation["unknown_fields"],
             }
+            build_plan = field_aware_build_plan(
+                self.server.field_registry,
+                record_family="moment",
+                operation="metadata_update",
+                changed_field_names=fields_changed,
+                context={
+                    "current_record": normalized_current,
+                    "updated_record": updated_record,
+                },
+            )
+            response_payload["build_plan"] = build_plan
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -5683,7 +6114,13 @@ class Handler(BaseHTTPRequestHandler):
                 "reason": "moment_not_published",
                 "message": "Public moment update skipped because the saved moment is not published.",
             }
-        if apply_build and changed:
+        if apply_build and changed and not build_plan.get("build_required", True):
+            response_payload["build_requested"] = False
+            response_payload["build_skipped"] = {
+                "reason": "no_public_build_artifacts",
+                "message": "Changed fields do not require public build artifacts.",
+            }
+        if apply_build and changed and build_plan.get("build_required", True):
             _build_success, build_payload = self._run_build_operation(
                 work_id="",
                 series_id="",
@@ -5692,6 +6129,7 @@ class Handler(BaseHTTPRequestHandler):
                 extra_work_ids=[],
                 detail_uid="",
                 force=False,
+                build_plan=build_plan,
             )
             response_payload["build"] = build_payload
         self._send_json(HTTPStatus.OK, response_payload, allowed)

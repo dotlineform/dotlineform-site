@@ -351,7 +351,7 @@ The registry is now the single source of truth for Task 3 implementation plannin
 
 Status:
 
-- planned
+- completed
 
 Update the local write server so saved changed-field sets can produce narrower build scopes.
 
@@ -361,6 +361,19 @@ The write server should keep full-scope fallback for:
 - create/delete operations until explicitly scoped
 - unknown field changes
 - mixed changes that span multiple dependency classes
+
+Implemented behavior:
+
+- single work, work-detail, series, and moment save endpoints now resolve changed fields through `assets/studio/data/catalogue_field_registry.json`
+- fields that share one registry rule use the rule's target artifacts for save-time `apply_build`
+- unknown fields, mixed rule classes, and series saves that also change member work records keep conservative fallback
+- editor-only work fields such as `notes` and `provenance` can skip public build work entirely
+- build scopes can now independently skip catalogue search and local media generation when the selected registry rule does not require them
+
+Current limits:
+
+- bulk save, create, delete, publication, import, and direct build-preview/apply paths keep the existing broad behavior
+- some generator artifact flags are still coarser than the registry vocabulary; later tasks should tighten preview output and generator granularity where needed
 
 ### Task 4. Wire Rules Into Build Preview
 
