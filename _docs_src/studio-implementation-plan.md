@@ -156,13 +156,13 @@ Risks:
 
 Status:
 
-- completed on 2026-04-18
+- completed on 2026-04-18; source model later superseded by canonical JSON metadata plus body-only prose
 
 Scope:
 
 - add the first functional Studio-backed moments workflow
-- support adding a new moment by specifying an explicit source markdown filename on the webpage rather than scanning the `moments/` directory
-- support the current metadata model where moment metadata is stored in the `.md` file front matter itself
+- support adding a new moment by specifying an explicit staged Markdown filename on the webpage rather than scanning a moments folder
+- support moment metadata entered in Studio and stored in canonical catalogue source JSON
 - support optional image filename handling as explicit metadata, while preserving the current public runtime behavior when an image is missing
 - support targeted import/rebuild for one moment or a small selected set
 
@@ -175,27 +175,27 @@ Out of scope:
 Deliverables:
 
 - a moments-focused Studio entry surface
-- file-driven import flow for one existing moment source markdown file
-- source preview covering the resolved front matter, source-image state, and current generated/runtime state
+- file-driven import flow for one staged body-only moment Markdown file
+- source preview covering resolved metadata, staged prose state, source-image state, and current generated/runtime state
 - targeted moment validation and rebuild hooks
 - moments status visibility sufficient for draft/published workflow handling without adding browser-side prose editing
 
 Delivered:
 
-1. Added `/studio/catalogue-moment-import/` as the first moments-focused Studio route.
-2. Implemented filename-only preview/apply flow against the canonical moments source folder.
+1. Added `/studio/catalogue-moment-import/` as the first moments-focused Studio route; this route now redirects into `/studio/catalogue-moment/`.
+2. Implemented filename-only preview/apply flow for staged body-only Markdown.
 3. Added local write-service endpoints for moment import preview and apply.
 4. Added targeted rebuild support in `catalogue_json_build.py` for `--moment-file`.
-5. Reused the existing generator behavior so moment publish state and `published_date` remain generator-owned.
+5. Later source-model cleanup moved moment metadata ownership to `assets/studio/data/catalogue/moments.json`; publish state and `published_date` are now canonical source metadata rather than prose front matter.
 6. Kept missing source images non-blocking and left srcset generation out of scope.
 7. Added first-pass build and catalogue activity reporting for moment imports.
-8. Updated Studio/docs references so the file-driven moments path is now the documented entry flow.
+8. Updated Studio/docs references so the single Moment editor is now the documented entry flow.
 
 Verification:
 
 - user can add a new moment without relying on the retired automated scanning flow
-- targeted moment import/rebuild succeeds for an explicit file-based markdown workflow
-- the saved metadata shape matches the current moment front matter model
+- targeted moment import/rebuild succeeds for an explicit staged Markdown workflow
+- the saved metadata shape matches the current canonical moment JSON model
 - missing images remain acceptable and the current public `/moments/.../` UI still handles them cleanly
 - current moment runtime contracts remain stable unless a change is documented explicitly
 
@@ -746,7 +746,7 @@ Task list:
 3. Record the exact split between `manual browser testing` and `Codex-runnable verification`, so each step is clearly owned and the checklist does not drift into ambiguous partial coverage.
 4. Map every major implemented Studio surface to at least one checklist scenario, including Studio shell/navigation, Catalogue dashboard routing, status/activity pages, build activity, work editor, detail editor, series editor, work-file/work-link editors, bulk import, and moments import.
 5. Add create/edit/save scenarios for works, details, series, work files, and work links, with explicit expected source-write outcomes and expected rebuild follow-up where applicable.
-6. Add a moments-specific scenario that covers explicit source-file preview, import/apply, missing-image tolerance, and the expected public/runtime follow-through for one moment.
+6. Add a moments-specific scenario that covers explicit staged prose preview, metadata entry, import/apply, missing-image tolerance, and the expected public/runtime follow-through for one moment.
 7. Add bulk-import scenarios for both `works` and `work_details` modes, including duplicate handling, blocked-row handling, and the expected one-way JSON import behavior.
 8. Add delete-flow scenarios for the implemented delete preview/apply surfaces, including validation blocking where source integrity would be broken and the expected rebuild scope after deletion.
 9. Add build/reporting scenarios that confirm scoped rebuild preview/apply behavior, Build Activity logging, Catalogue Activity logging, and the visibility of local media generation and readiness state.
@@ -761,7 +761,7 @@ Implemented:
 1. Added a separate execution document at **[Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)** so end-to-end testing now has its own working surface instead of living inside the implementation plan.
 2. Defined explicit prerequisites for local services, source paths, workbook availability, and representative source/runtime states before the first full pass begins.
 3. Defined the split between manual browser testing and Codex-runnable verification so each scenario has a clear execution owner.
-4. Mapped the checklist to the currently implemented Studio surfaces, including Studio shell/docs, Catalogue dashboard routing, work/detail/file/link/series flows, bulk import, moments import, activity/build reporting, readiness states, public runtime follow-through, and responsive checks.
+4. Mapped the checklist to the currently implemented Studio surfaces, including Studio shell/docs, Catalogue dashboard routing, work/detail/file/link/series flows, bulk import, Moment editor import, activity/build reporting, readiness states, public runtime follow-through, and responsive checks.
 5. Added an execution order, expected outcomes, suggested Codex command set, and a short failure-triage model so the first full pass can move directly into issue routing once results are recorded externally.
 
 ### Phase 12. Cloud-Native Media Target

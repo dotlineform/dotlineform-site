@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Rewrote stale moment workflow docs
+
+**Status:** implemented
+
+**Area:** documentation / moment source cleanup
+
+**Summary:**
+Updated current Studio planning and testing docs so they no longer describe moment front matter as the active metadata model.
+
+**Reason:**
+The current moment workflow uses canonical JSON metadata in `assets/studio/data/catalogue/moments.json` and body-only prose in `_docs_src_catalogue/moments/`. Some older current-workflow docs still described front-matter preview and front-matter-owned metadata from an earlier source model.
+
+**Effect:**
+The Studio implementation plan now frames the old Phase 2 source model as superseded by canonical JSON metadata plus body-only prose. The Studio E2E checklist now tests staged prose import, submitted metadata, canonical draft metadata writes, and publish/save follow-through. The Moment import docs now refer to resolved moment metadata rather than source metadata.
+
+**Affected files/docs:**
+
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed moment front-matter preflight checks
 
 **Status:** implemented

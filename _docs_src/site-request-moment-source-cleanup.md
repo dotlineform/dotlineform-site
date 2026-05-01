@@ -131,7 +131,7 @@ Slice status:
 - Done: remove external moment source scanning and moment source manifest support.
 - Done: remove standalone moment delete script and active script docs.
 - Done: remove workbook/front-matter moment checks from deprecated preflight paths.
-- Planned: rewrite stale current-workflow docs while preserving clearly marked historical context.
+- Done: rewrite stale current-workflow docs while preserving clearly marked historical context.
 
 ### Task 4. Verify Moment Output Stability
 

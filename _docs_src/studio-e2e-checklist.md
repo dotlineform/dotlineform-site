@@ -28,7 +28,7 @@ Complete these before running the checklist:
 - start the local Studio stack with `bin/dev-studio`
 - confirm the site is available at `http://127.0.0.1:4000/`
 - confirm the local catalogue write server is available on `http://127.0.0.1:8788/`
-- confirm `DOTLINEFORM_PROJECTS_BASE_DIR` points to the current source tree used for prose, work media, and moments
+- confirm `DOTLINEFORM_PROJECTS_BASE_DIR` points to the current source tree used for work media and moment source images
 - confirm `DOTLINEFORM_MEDIA_BASE_DIR` is set if media-generation behavior is being checked
 - confirm `assets/studio/data/catalogue/` is present and current
 - confirm `data/works_bulk_import.xlsx` is present if bulk import is in scope for the run
@@ -38,7 +38,8 @@ Complete these before running the checklist:
   - work with details
   - work with file and link records
   - series with `primary_work_id`
-  - moment source markdown file
+  - staged body-only moment prose file
+  - existing canonical moment metadata record
   - prose-ready work or series
   - missing-file or missing-metadata readiness case
 
@@ -348,16 +349,18 @@ Owner:
 
 Checks:
 
-- preview one known source markdown filename
-- confirm front matter, image state, and generated/runtime state are shown clearly
+- enter `New` moment import mode and preview one known staged Markdown filename
+- confirm submitted metadata, staged prose state, image state, and generated/runtime state are shown clearly
 - run import/apply for one valid moment
+- confirm the imported draft opens in the Moment editor
 - check the public moment page afterward
 - include one case where the source image is missing
 
 Expected results:
 
 - missing images do not block the import flow
-- moment import updates activity/build reporting and public runtime as expected
+- moment import writes body-only prose plus canonical draft metadata
+- publishing or saving an already published moment updates activity/build reporting and public runtime as expected
 
 ## 12. Catalogue Activity And Build Activity
 
@@ -467,7 +470,7 @@ Use these as companion checks during execution:
 
 ```bash
 python -m py_compile scripts/generate_work_pages.py scripts/catalogue_json_build.py scripts/studio/catalogue_write_server.py
-./scripts/build_docs.rb --write
+./scripts/build_docs.rb --scope studio --write
 bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 python scripts/catalogue_json_build.py --work-id <work_id>
 python scripts/catalogue_json_build.py --moment-file <moment_file>.md

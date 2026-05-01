@@ -55,7 +55,7 @@ Current page flow:
 3. accept a filename-only input above the shared metadata fields
 4. accept moment metadata in the same fields used for existing moments
 5. call `POST /catalogue/moment/import-preview`
-6. show resolved source metadata, staged prose state, local media state, and validation errors
+6. show resolved moment metadata, staged prose state, local media state, and validation errors
 7. call `POST /catalogue/moment/import-apply`
 8. show the imported draft source result and open the draft moment in the editor
 
