@@ -2,11 +2,34 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-01] Added catalogue field registry for build scoping
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Added `assets/studio/data/catalogue_field_registry.json` as the JSON source of truth for Task 2 field-to-artifact build scoping rules.
+
+**Reason:**
+The field-aware build planner needs a reviewable registry that separates current broad behavior from target narrowed behavior before the write server and build preview are changed.
+
+**Effect:**
+The registry groups catalogue fields by record family and operation, records current and target artifact families, keeps fallback rules explicit, and lists retired fields removed by Task 1A. `studio_config.json` now exposes the registry path for the future Studio review page.
+
+**Affected files/docs:**
+
+- `assets/studio/data/catalogue_field_registry.json`
+- `assets/studio/data/studio_config.json`
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## [2026-05-01] Limited recently added entries to currently published targets
 

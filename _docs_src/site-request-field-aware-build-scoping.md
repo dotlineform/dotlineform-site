@@ -314,11 +314,30 @@ Acceptance checks:
 
 Status:
 
-- planned
+- completed
 
 Create a dependency registry that maps changed fields to artifact families.
 
-The registry should include:
+Registry source:
+
+- `assets/studio/data/catalogue_field_registry.json`
+
+Registry design:
+
+- use JSON so the future Studio review page can fetch and display the same source of truth
+- group rules by record family, operation, and field set where fields share the same behavior
+- keep `current` behavior separate from `target` behavior so planned optimizations are not mistaken for live behavior
+- record `reason`, `fallback`, and `conditional_artifacts` where dependencies are not unconditional
+- list retired fields explicitly so review surfaces can show that they are intentionally absent from active rules
+
+Task 2 sequence:
+
+1. Confirm the registry shape, location, artifact family names, fallback model, and current/target separation.
+2. Populate the registry with current field-to-artifact rules as currently selected by the broad planner, lookup invalidation, and media workflow.
+3. Review current rules for optimization opportunities, redundant artifact selection, and dependencies that must stay conservative.
+4. Populate target rules that later tasks can wire into the write server, build preview, dry-run explanations, and tests.
+
+The registry includes:
 
 - work fields
 - work detail fields where they affect parent work outputs
@@ -326,7 +345,7 @@ The registry should include:
 - moment fields if the same planner model is extended there
 - fallback rules for unknown fields and structural operations
 
-The registry becomes the single source of truth for active field-to-artifact dependencies. The Task 1 inventory remains useful as the evidence basis for this task, but should stop being maintained as the live dependency table once the registry is built.
+The registry is now the single source of truth for Task 3 implementation planning. The Task 1 inventory remains useful as the evidence basis, but should stop being maintained as the live dependency table.
 
 ### Task 3. Wire Rules Into Write-Server Planning
 

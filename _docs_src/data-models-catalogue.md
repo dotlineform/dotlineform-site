@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue
 title: "Catalogue Scope"
 added_date: 2026-04-01
-last_updated: 2026-04-27
+last_updated: 2026-05-01
 parent_id: data-models
 sort_order: 20
 ---
@@ -40,6 +40,8 @@ Current checked-in catalogue model families:
   - `assets/moments/index/<moment_id>.json`
 - scope search:
   - `assets/data/search/catalogue/index.json`
+- Studio planning/support data:
+  - `assets/studio/data/catalogue_field_registry.json`
 
 Primary writers:
 
@@ -49,6 +51,31 @@ Primary writers:
 Primary validator:
 
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+
+## Catalogue Field Registry
+
+### `assets/studio/data/catalogue_field_registry.json`
+
+Purpose:
+
+- source of truth for field-aware catalogue build scoping rules
+- reviewable registry for the future Studio field-registry page
+- bridge between the Task 1 dependency inventory and later executable build-planning implementation
+
+Current content families:
+
+- `artifact_families` labels the artifact family vocabulary used by the planner
+- `rules[]` groups fields by record family, operation, current behavior, and target behavior
+- `rules[].current` describes broad behavior currently selected by the planner, lookup invalidation, or media workflow
+- `rules[].target` describes the narrower behavior later tasks should implement
+- `defaults` defines fallback behavior for unknown fields and mixed multi-family saves
+- `retired_fields[]` records fields intentionally removed from active source rules
+
+Notes:
+
+- the registry is JSON so Studio can display it directly
+- current and target rules stay separate until the target rules are wired into build planning
+- the registry should be updated before adding a new active catalogue source field
 
 ## Work-Owned Files And Links
 

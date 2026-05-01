@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-980959eed73304ee6662eca647d162c4",
-    "generated_at_utc": "2026-05-01T11:49:40Z",
+    "version": "blake2b-78d02abdaa51c14d7cff55686d6c6241",
+    "generated_at_utc": "2026-05-01T12:07:26Z",
     "count": 148
   },
   "entries": [
@@ -569,10 +569,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-01",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-27 • Data Models",
+      "display_meta": "2026-05-01 • Data Models",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -581,12 +581,12 @@
         "catalogue scope",
         "scope",
         "data models",
-        "2026-04-27",
+        "2026-05-01",
         "2026",
-        "04",
-        "27"
+        "05",
+        "01"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-27 2026 04 27"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -3406,20 +3406,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-30",
-      "display_meta": "2026-04-30",
+      "last_updated": "2026-05-01",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-30 2026 04 30"
+      "search_text": "site-change-log site change log site change log 2026-05-01 2026 05 01"
     },
     {
       "id": "tiered-dimension-policy",

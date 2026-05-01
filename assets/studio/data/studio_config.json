@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-04-24T00:00:00Z",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -48,7 +48,8 @@
         "catalogue_lookup_meta": "/assets/studio/data/catalogue_lookup/meta.json",
         "catalogue_lookup_work_base": "/assets/studio/data/catalogue_lookup/works/",
         "catalogue_lookup_work_detail_base": "/assets/studio/data/catalogue_lookup/work_details/",
-        "catalogue_lookup_series_base": "/assets/studio/data/catalogue_lookup/series/"
+        "catalogue_lookup_series_base": "/assets/studio/data/catalogue_lookup/series/",
+        "catalogue_field_registry": "/assets/studio/data/catalogue_field_registry.json"
       },
       "site": {
         "series_index": "/assets/data/series_index.json",
