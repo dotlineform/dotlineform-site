@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2dbb4fee6a9d4783f49791dedadc8856",
-    "generated_at_utc": "2026-05-01T20:43:47Z",
-    "count": 156
+    "version": "blake2b-8140dd752fcfa992f5b0d7f23c5e0a2b",
+    "generated_at_utc": "2026-05-01T20:57:05Z",
+    "count": 157
   },
   "entries": [
     {
@@ -219,6 +219,31 @@
         "01"
       ],
       "search_text": "site-request-catalogue-compatibility-cleanup-inventory site request catalogue compatibility cleanup inventory compatibility cleanup 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "site-request-moment-source-cleanup-inventory",
+      "kind": "doc",
+      "title": "Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory",
+      "last_updated": "2026-05-01",
+      "parent_id": "site-request-moment-source-cleanup",
+      "parent_title": "Moment Source Cleanup",
+      "display_meta": "2026-05-01 • Moment Source Cleanup",
+      "search_terms": [
+        "site-request-moment-source-cleanup-inventory",
+        "site",
+        "request",
+        "moment",
+        "source",
+        "cleanup",
+        "inventory",
+        "moment source cleanup",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "site-request-moment-source-cleanup-inventory site request moment source cleanup inventory moment source cleanup 2026-05-01 2026 05 01"
     },
     {
       "id": "config-jekyll-site-config",

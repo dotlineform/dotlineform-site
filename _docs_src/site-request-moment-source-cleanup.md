@@ -10,7 +10,7 @@ sort_order: 102
 
 Status:
 
-- proposed
+- in progress
 
 ## Summary
 
@@ -61,7 +61,11 @@ These surfaces make it harder to tell which moment source paths are live workflo
 
 Status:
 
-- planned
+- completed
+
+Result:
+
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
 
 Inventory likely areas:
 
@@ -82,6 +86,14 @@ Questions to answer:
 - Is generator fallback scanning of external moment source files still needed now that `moments.json` is canonical?
 - Should `delete_moment.py` delete canonical prose from `_docs_src_catalogue/moments/`, or remain source-metadata/runtime cleanup only by default?
 - Which docs describe historical migration context, and which are stale current workflow guidance?
+
+Resolved direction:
+
+- Moment prose import is body-only Markdown. Metadata is stored in catalogue source JSON, not prose front matter.
+- Front-matter parsing should remain only where it is needed to reject front matter in staged or canonical body-only prose. Helpers that extract metadata from moment prose are migration-only unless another active path proves otherwise.
+- Generator fallback scanning of external moment source files is not needed now that `moments.json` is canonical. Prose source files are copied manually into staging.
+- The Delete button on `/studio/catalogue-moment/` is the only current deletion entry point for moments. Standalone delete behavior should not preserve a separate active moment-deletion workflow.
+- Documentation needs classification before cleanup. Current workflow docs should describe `moments.json`, `_docs_src_catalogue/moments/`, and `var/docs/catalogue/import-staging/moments/`; migration/change-log docs may remain as historical context when clearly framed that way.
 
 ### Task 2. Decide Retention Policy
 
