@@ -120,6 +120,7 @@ Implemented slices:
 - rewrote stale current docs and archived workbook-led workflow pages so they point to the current JSON-source pipeline instead of live workbook/file-link workflows
 - replaced deprecated workbook-led script implementations with short clean-exit stubs, including the old source export and workbook/source comparison commands
 - narrowed generator write-back so mutable work and detail source fields are persisted directly on canonical source records instead of rebuilding source JSON from the sheet-like projection
+- removed the generator proxy worksheet/cell wrapper; remaining compatibility projection now uses mutable row lists only
 
 Apply approved removals in small slices.
 

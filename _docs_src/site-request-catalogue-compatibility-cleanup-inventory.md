@@ -109,7 +109,7 @@ Use this order for cleanup implementation:
 | 3. Remove file/link compatibility maps | CCI-006, CCI-010 | Complete. | Live source records no longer include file/link compatibility maps; activity affected groups no longer show obsolete file/link families. |
 | 4. Stale docs cleanup | CCI-003, CCI-009 | Complete for current docs. | Cleanup/change-log history still contains explicit retired-path terms by design; script implementation strings are deferred to slice 5. |
 | 5. Deprecated script cleanup | CCI-004, CCI-008 | Complete. | Retained entrypoints are guidance-only stubs; direct `generate_work_pages.py` clean-exit behavior remains separately owned by CCI-004. |
-| 6. Generator projection refactor | CCI-007 | In progress. | First sub-slice removed projection rebuild from source write-back; remaining read loops still use sheet-like rows and should be refactored in smaller follow-ups. |
+| 6. Generator projection refactor | CCI-007 | In progress. | Source write-back no longer rebuilds from projection, and proxy worksheet/cell wrappers were removed. Remaining read loops still use header-indexed row lists and should be refactored in smaller follow-ups. |
 
 ## Verification Matrix
 

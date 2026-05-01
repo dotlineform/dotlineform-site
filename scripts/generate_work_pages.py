@@ -200,51 +200,16 @@ def parse_list(raw: Any, sep: str = ",") -> List[str]:
     return [item.strip() for item in s.split(sep) if item.strip()]
 
 
-class ProxyCell:
-    def __init__(self, value: Any = None) -> None:
-        self.value = value
-
-
-class ProxyWorksheet:
-    def __init__(self, headers: List[str], rows: List[tuple[Any, ...]]) -> None:
-        self._headers = list(headers)
-        header_row = [ProxyCell(value) for value in self._headers]
-        data_rows = [[ProxyCell(value) for value in row] for row in rows]
-        self._rows: List[List[ProxyCell]] = [header_row, *data_rows]
-
-    @property
-    def max_column(self) -> int:
-        return len(self._headers)
-
-    def iter_rows(self, min_row: int = 1):
-        start = max(1, int(min_row)) - 1
-        for row in self._rows[start:]:
-            yield tuple(row)
-
-    def cell(self, row: int, column: int, value: Any = None) -> ProxyCell:
-        row_index = max(1, int(row)) - 1
-        column_index = max(1, int(column)) - 1
-        while len(self._rows) <= row_index:
-            self._rows.append([ProxyCell() for _ in range(len(self._headers))])
-        target_row = self._rows[row_index]
-        while len(target_row) <= column_index:
-            target_row.append(ProxyCell())
-        target = target_row[column_index]
-        if value is not None:
-            target.value = value
-        return target
-
-
 def workbook_cell_value(value: Any) -> Any:
     if isinstance(value, list):
         return ",".join(str(item) for item in value if item is not None)
     return value
 
 
-def rows_from_records(headers: List[str], records: List[Dict[str, Any]]) -> List[tuple[Any, ...]]:
-    header_row = tuple(headers)
+def rows_from_records(headers: List[str], records: List[Dict[str, Any]]) -> List[List[Any]]:
+    header_row = list(headers)
     data_rows = [
-        tuple(workbook_cell_value(record.get(header)) for header in headers)
+        [workbook_cell_value(record.get(header)) for header in headers]
         for record in records
     ]
     return [header_row, *data_rows]
@@ -1055,10 +1020,6 @@ def main() -> None:
     )
     work_details_rows = rows_from_records(WORKBOOK_HEADERS["WorkDetails"], list(source_records.work_details.values()))
 
-    works_ws = ProxyWorksheet(WORKBOOK_HEADERS["Works"], works_rows[1:])
-    series_ws = ProxyWorksheet(WORKBOOK_HEADERS["Series"], series_rows[1:])
-    work_details_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkDetails"], work_details_rows[1:])
-
     def read_sheet_rows(sheet_name: str) -> List[tuple]:
         mapping = {
             args.works_sheet: works_rows,
@@ -1104,15 +1065,27 @@ def main() -> None:
             raise ValueError(f"Series '{sid}' primary_work_id '{wid}' is not in its works list")
         return wid
 
-    def read_cell_value(row: tuple, row_cells: tuple | None, header_index: Dict[str, int], col_name: str) -> Any:
+    def read_cell_value(row: List[Any], header_index: Dict[str, int], col_name: str) -> Any:
         i = header_index.get(col_name)
         if i is None:
             return None
         if i < len(row):
             return row[i]
-        if row_cells is not None and i < len(row_cells):
-            return row_cells[i].value
         return None
+
+    def ensure_projection_column(rows: List[List[Any]], header_index: Dict[str, int], col_name: str) -> int:
+        existing_index = header_index.get(col_name)
+        if existing_index is not None:
+            return existing_index
+        if not rows:
+            rows.append([])
+        column_index = len(rows[0])
+        rows[0].append(col_name)
+        header_index[col_name] = column_index
+        header_index[col_name.lower()] = column_index
+        for row in rows[1:]:
+            row.append(None)
+        return column_index
 
     def first_present_col(header_index: Dict[str, int], names: List[str]) -> Optional[str]:
         for n in names:
@@ -1659,18 +1632,14 @@ def main() -> None:
     works_height_px_idx = works_hi.get("height_px")
     if args.write and run_work_dimension_refresh:
         if works_width_px_idx is None:
-            works_width_px_idx = works_ws.max_column
-            works_ws.cell(row=1, column=works_width_px_idx + 1, value="width_px")
-            works_hi["width_px"] = works_width_px_idx
+            works_width_px_idx = ensure_projection_column(works_rows, works_hi, "width_px")
         if works_height_px_idx is None:
-            works_height_px_idx = works_ws.max_column
-            works_ws.cell(row=1, column=works_height_px_idx + 1, value="height_px")
-            works_hi["height_px"] = works_height_px_idx
+            works_height_px_idx = ensure_projection_column(works_rows, works_hi, "height_px")
 
     work_dimensions_updated = 0
     work_project_folder_missing_warned = False
     if run_work_dimension_refresh:
-        for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+        for wr in works_rows[1:]:
             raw_work_id = cell(wr, works_hi, "work_id")
             if is_empty(raw_work_id):
                 continue
@@ -1681,9 +1650,9 @@ def main() -> None:
             if status not in {"draft", "published"}:
                 continue
 
-            width_px = coerce_int(read_cell_value(wr, wr_cells, works_hi, "width_px")) if "width_px" in works_hi else None
-            height_px = coerce_int(read_cell_value(wr, wr_cells, works_hi, "height_px")) if "height_px" in works_hi else None
-            project_filename = coerce_string(read_cell_value(wr, wr_cells, works_hi, "project_filename")) if "project_filename" in works_hi else None
+            width_px = coerce_int(read_cell_value(wr, works_hi, "width_px")) if "width_px" in works_hi else None
+            height_px = coerce_int(read_cell_value(wr, works_hi, "height_px")) if "height_px" in works_hi else None
+            project_filename = coerce_string(read_cell_value(wr, works_hi, "project_filename")) if "project_filename" in works_hi else None
 
             src_path: Optional[Path] = None
             if project_filename:
@@ -1706,11 +1675,11 @@ def main() -> None:
                     width_px = src_w
                     height_px = src_h
                     if args.write and works_width_px_idx is not None and works_height_px_idx is not None:
-                        prev_w = wr_cells[works_width_px_idx].value if works_width_px_idx < len(wr_cells) else None
-                        prev_h = wr_cells[works_height_px_idx].value if works_height_px_idx < len(wr_cells) else None
+                        prev_w = wr[works_width_px_idx] if works_width_px_idx < len(wr) else None
+                        prev_h = wr[works_height_px_idx] if works_height_px_idx < len(wr) else None
                         if prev_w != src_w or prev_h != src_h:
-                            wr_cells[works_width_px_idx].value = src_w
-                            wr_cells[works_height_px_idx].value = src_h
+                            wr[works_width_px_idx] = src_w
+                            wr[works_height_px_idx] = src_h
                             update_source_work_record(wid, width_px=src_w, height_px=src_h)
                             work_dimensions_updated += 1
                 else:
@@ -1752,7 +1721,7 @@ def main() -> None:
 
     # Iterate each Works row and emit one Markdown file per work.
     if run_work_processing:
-        for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+        for r in works_rows[1:]:
             status = normalize_status(cell(r, works_hi, "status"))
             raw_work_id = cell(r, works_hi, "work_id")
             if is_empty(raw_work_id):
@@ -1794,14 +1763,14 @@ def main() -> None:
                     written += 1
                     if args.write:
                         status_idx = works_hi["status"]
-                        status_was = normalize_status(row_cells[status_idx].value)
+                        status_was = normalize_status(r[status_idx] if status_idx < len(r) else None)
                         if status_was != "published":
-                            row_cells[status_idx].value = "published"
+                            r[status_idx] = "published"
                             update_source_work_record(wid, status="published")
                             status_updated += 1
                         if status_was != "published":
                             if published_date_idx is not None:
-                                row_cells[published_date_idx].value = today
+                                r[published_date_idx] = today
                                 update_source_work_record(wid, published_date=today.isoformat())
                                 published_date_updated += 1
                             elif not published_date_missing_warned:
@@ -1898,7 +1867,7 @@ def main() -> None:
         s_processed = 0
 
         if run_series_pages:
-            for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
+            for sr in series_rows[1:]:
                 sid_raw = cell(sr, series_hi, "series_id")
                 if is_empty(sid_raw):
                     series_skipped += 1
@@ -2217,7 +2186,7 @@ def main() -> None:
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)
     # ----------------------------
-    if not work_details_rows or len(work_details_rows) < 2 or work_details_ws is None:
+    if not work_details_rows or len(work_details_rows) < 2:
         if run_work_details_pages or run_work_json or run_works_index_json:
             print("No work detail pages/JSON/index rows found (WorkDetails sheet empty or missing).")
         else:
@@ -2236,13 +2205,9 @@ def main() -> None:
         height_px_idx = work_details_hi.get("height_px")
         if args.write and run_work_details_pages:
             if width_px_idx is None:
-                width_px_idx = work_details_ws.max_column
-                work_details_ws.cell(row=1, column=width_px_idx + 1, value="width_px")
-                work_details_hi["width_px"] = width_px_idx
+                width_px_idx = ensure_projection_column(work_details_rows, work_details_hi, "width_px")
             if height_px_idx is None:
-                height_px_idx = work_details_ws.max_column
-                work_details_ws.cell(row=1, column=height_px_idx + 1, value="height_px")
-                work_details_hi["height_px"] = height_px_idx
+                height_px_idx = ensure_projection_column(work_details_rows, work_details_hi, "height_px")
 
         # Build known works from the Works sheet to validate foreign-key references.
         known_work_ids: set[str] = set()
@@ -2282,7 +2247,7 @@ def main() -> None:
                     details_total += 1
 
             details_processed = 0
-            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
+            for dr in work_details_rows[1:]:
                 wid_raw = cell(dr, work_details_hi, "work_id")
                 did_raw = cell(dr, work_details_hi, "detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
@@ -2336,11 +2301,11 @@ def main() -> None:
                         width_px = src_w
                         height_px = src_h
                         if args.write and width_px_idx is not None and height_px_idx is not None:
-                            prev_w = dr_cells[width_px_idx].value if width_px_idx < len(dr_cells) else None
-                            prev_h = dr_cells[height_px_idx].value if height_px_idx < len(dr_cells) else None
+                            prev_w = dr[width_px_idx] if width_px_idx < len(dr) else None
+                            prev_h = dr[height_px_idx] if height_px_idx < len(dr) else None
                             if prev_w != src_w or prev_h != src_h:
-                                dr_cells[width_px_idx].value = src_w
-                                dr_cells[height_px_idx].value = src_h
+                                dr[width_px_idx] = src_w
+                                dr[height_px_idx] = src_h
                                 update_source_detail_record(detail_uid, width_px=src_w, height_px=src_h)
                                 details_dimensions_updated += 1
                     else:
@@ -2362,14 +2327,14 @@ def main() -> None:
 
                     status_idx = work_details_hi.get("status")
                     if status_idx is not None:
-                        status_was = normalize_status(dr_cells[status_idx].value)
+                        status_was = normalize_status(dr[status_idx] if status_idx < len(dr) else None)
                         if status_was != "published":
-                            dr_cells[status_idx].value = "published"
+                            dr[status_idx] = "published"
                             update_source_detail_record(detail_uid, status="published")
                             details_status_updated += 1
                         if status_was != "published":
                             if details_published_date_idx is not None:
-                                dr_cells[details_published_date_idx].value = today
+                                dr[details_published_date_idx] = today
                                 update_source_detail_record(detail_uid, published_date=today.isoformat())
                                 details_published_date_updated += 1
                             elif not details_published_date_missing_warned:
@@ -2417,7 +2382,7 @@ def main() -> None:
                     encountered_work_ids.append(wid)
                     encountered_work_id_set.add(wid)
 
-            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
+            for dr in work_details_rows[1:]:
                 wid_raw = cell(dr, work_details_hi, "work_id")
                 did_raw = cell(dr, work_details_hi, "detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
@@ -2427,7 +2392,7 @@ def main() -> None:
                 if wid not in encountered_work_id_set:
                     continue
 
-                status_val = dr_cells[detail_status_idx].value if detail_status_idx is not None else cell(dr, work_details_hi, "status")
+                status_val = dr[detail_status_idx] if detail_status_idx is not None and detail_status_idx < len(dr) else cell(dr, work_details_hi, "status")
                 if normalize_status(status_val) != "published":
                     continue
 
@@ -2435,10 +2400,10 @@ def main() -> None:
                 detail_record = build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "title")),
-                    project_subfolder=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(dr_cells[work_details_hi["width_px"]].value) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr_cells) else None,
-                    height_px=coerce_int(dr_cells[work_details_hi["height_px"]].value) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr_cells) else None,
+                    title=coerce_string(read_cell_value(dr, work_details_hi, "title")),
+                    project_subfolder=coerce_string(read_cell_value(dr, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(dr[work_details_hi["width_px"]]) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr) else None,
+                    height_px=coerce_int(dr[work_details_hi["height_px"]]) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr) else None,
                 )
                 detail_records_by_work.setdefault(wid, []).append(detail_record)
 
@@ -2519,7 +2484,7 @@ def main() -> None:
 
     detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
     if work_details_rows and len(work_details_rows) > 1:
-        for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
+        for dr in work_details_rows[1:]:
             wid_raw = cell(dr, work_details_hi, "work_id")
             did_raw = cell(dr, work_details_hi, "detail_id")
             if is_empty(wid_raw) or is_empty(did_raw):
@@ -2527,7 +2492,7 @@ def main() -> None:
             wid = slug_id(wid_raw)
             if wid not in works_payload:
                 continue
-            status = normalize_status(dr_cells[work_details_hi["status"]].value if work_details_hi["status"] < len(dr_cells) else cell(dr, work_details_hi, "status"))
+            status = normalize_status(dr[work_details_hi["status"]] if work_details_hi["status"] < len(dr) else cell(dr, work_details_hi, "status"))
             if status not in {"draft", "published"}:
                 continue
             did = slug_id(did_raw, width=3)
@@ -2535,10 +2500,10 @@ def main() -> None:
                 build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "title")),
-                    project_subfolder=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(dr_cells[work_details_hi["width_px"]].value) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr_cells) else None,
-                    height_px=coerce_int(dr_cells[work_details_hi["height_px"]].value) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr_cells) else None,
+                    title=coerce_string(read_cell_value(dr, work_details_hi, "title")),
+                    project_subfolder=coerce_string(read_cell_value(dr, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(dr[work_details_hi["width_px"]]) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr) else None,
+                    height_px=coerce_int(dr[work_details_hi["height_px"]]) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr) else None,
                 )
             )
 

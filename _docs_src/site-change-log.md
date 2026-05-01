@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed generator proxy worksheet wrapper
+
+**Status:** implemented
+
+**Area:** generator / compatibility cleanup
+
+**Summary:**
+Removed the internal proxy worksheet/cell wrapper from `generate_work_pages.py`.
+
+**Reason:**
+After source write-back moved onto canonical source records, the proxy worksheet objects no longer represented a real persistence boundary. They were only preserving a workbook-shaped abstraction around generator read loops.
+
+**Effect:**
+The generator now uses mutable row-list projections for the remaining header-indexed read loops. Series iteration no longer uses any proxy row wrapper, and work/detail same-run status and dimension updates mutate those row lists directly while also updating canonical source records.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Narrowed generator source write-back
 
 **Status:** implemented
