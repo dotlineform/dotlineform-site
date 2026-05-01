@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Verified compatibility cleanup output stability
+
+**Status:** implemented
+
+**Area:** generator / compatibility cleanup
+
+**Summary:**
+Completed the generated-output stability verification pass for the catalogue compatibility cleanup.
+
+**Reason:**
+The generator projection cleanup removed workbook-shaped internal access from `generate_work_pages.py`, so the generated artifacts needed a targeted stability check before moving on.
+
+**Effect:**
+Representative generated route stubs, per-record JSON, aggregate indexes, recent index output, Studio storage index output, deprecated command guidance, temp Studio lookup export shape, and field registry rules were verified. The recent index comparison explicitly seeded the temp output with the checked-in recent index because that artifact intentionally preserves existing recent-publication state.
+
+**Affected files/docs:**
+
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed generator row projection
 
 **Status:** implemented

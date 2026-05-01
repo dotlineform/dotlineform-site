@@ -136,7 +136,7 @@ Expected cleanup areas:
 
 Status:
 
-- planned
+- completed
 
 Run targeted previews and generated-output checks after each cleanup slice.
 
@@ -147,6 +147,14 @@ Acceptance checks:
 - generated public artifacts remain deterministic
 - Studio lookup payloads still provide fields required by current editors
 - field-aware registry rules do not include migration-only or retired compatibility fields
+
+Verification result:
+
+- representative work, work-detail, series, per-record JSON, aggregate JSON, recent index, and Studio storage artifacts were regenerated into an isolated temp output and compared against checked-in generated artifacts after normalizing volatile `generated_at_utc` values
+- `recent_index.json` comparison was seeded with the checked-in recent index because the generator intentionally retains state from the existing recent artifact
+- deprecated workbook-led commands still exit cleanly with guidance
+- temp Studio lookup export still provides current work/detail/series editor payload contracts and does not create retired `work_files` or `work_links` lookup folders
+- catalogue field registry verification passes, and retired fields remain documented outside active registry rules
 
 ## Benefits
 

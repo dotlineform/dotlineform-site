@@ -121,3 +121,23 @@ Use this order for cleanup implementation:
 | Stale docs cleanup | `./scripts/build_docs.rb --scope studio --write`; `./scripts/build_search.rb --scope studio --write`; docs search for `data/works.xlsx`, `WorkFiles`, `WorkLinks` | Review Docs Viewer search results for stale workbook workflow wording |
 | Deprecated script cleanup | run retained deprecated commands and confirm clean-exit guidance; `./scripts/run_checks.py --profile quick` | Confirm script docs route users to current JSON-source commands |
 | Generator projection refactor | `./scripts/run_checks.py --profile quick --profile catalogue`; representative dry-run previews for work/detail/series/moment scopes; Jekyll build if generated output changes | Spot-check public work/detail/series/moment pages touched by the representative scope |
+
+## Task 4 Verification Result
+
+Status:
+
+- completed
+
+Codex-run checks completed:
+
+- generated representative work, work-detail, series, per-record JSON, aggregate JSON, recent index, and Studio storage artifacts into an isolated temp output
+- compared generated temp artifacts against checked-in artifacts after normalizing volatile `generated_at_utc` values
+- seeded the temp recent index from the checked-in recent index before comparison because that artifact intentionally retains existing recent-publication state
+- confirmed deprecated workbook-led commands still exit cleanly with guidance
+- exported a temp Studio lookup payload set and confirmed current work/detail/series contracts plus absence of retired `work_files` and `work_links` lookup folders
+- confirmed catalogue field registry verification passes and retired fields are not active rule fields
+
+Manual follow-up remains light-touch:
+
+- open representative public work, detail, and series pages touched by work `00001` and series `009`
+- open the Work, Work Detail, and Series Studio editors for the same records if UI confidence is needed before a real write run
