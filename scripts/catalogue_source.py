@@ -23,8 +23,6 @@ SCHEMAS = {
     "works": "catalogue_source_works_v1",
     "work_details": "catalogue_source_work_details_v1",
     "series": "catalogue_source_series_v1",
-    "work_files": "catalogue_source_work_files_v1",
-    "work_links": "catalogue_source_work_links_v1",
     "meta": "catalogue_source_meta_v1",
 }
 
@@ -159,16 +157,12 @@ class CatalogueSourceRecords:
     works: Dict[str, Dict[str, Any]]
     work_details: Dict[str, Dict[str, Any]]
     series: Dict[str, Dict[str, Any]]
-    work_files: Dict[str, Dict[str, Any]]
-    work_links: Dict[str, Dict[str, Any]]
 
     def as_maps(self) -> Dict[str, Dict[str, Dict[str, Any]]]:
         return {
             "works": self.works,
             "work_details": self.work_details,
             "series": self.series,
-            "work_files": self.work_files,
-            "work_links": self.work_links,
         }
 
 
@@ -451,64 +445,6 @@ def build_link_record(
     return normalize_source_record(record, LINK_FIELDS, text_fields=LINK_TEXT_FIELDS)
 
 
-def build_work_file_records_from_downloads(
-    works: Mapping[str, Mapping[str, Any]],
-) -> Dict[str, Dict[str, Any]]:
-    used_uids: set[str] = set()
-    out: Dict[str, Dict[str, Any]] = {}
-    for work_id in sorted(works):
-        work_record = works[work_id]
-        for download in normalize_downloads(work_record.get("downloads")):
-            filename = normalize_scalar_text(download.get("filename"))
-            label = normalize_scalar_text(download.get("label"))
-            if not filename and not label:
-                continue
-            fragment = safe_uid_fragment(Path(filename or "").stem or label, "file")
-            file_uid = unique_uid(f"{work_id}:{fragment}", used_uids)
-            out[file_uid] = normalize_source_record(
-                {
-                    "file_uid": file_uid,
-                    "work_id": work_id,
-                    "filename": filename,
-                    "label": label,
-                    "status": "published",
-                    "published_date": None,
-                },
-                FILE_FIELDS,
-                text_fields=FILE_TEXT_FIELDS,
-            )
-    return sort_record_map(out)
-
-
-def build_work_link_records_from_links(
-    works: Mapping[str, Mapping[str, Any]],
-) -> Dict[str, Dict[str, Any]]:
-    used_uids: set[str] = set()
-    out: Dict[str, Dict[str, Any]] = {}
-    for work_id in sorted(works):
-        work_record = works[work_id]
-        for link in normalize_links(work_record.get("links")):
-            url = normalize_scalar_text(link.get("url"))
-            label = normalize_scalar_text(link.get("label"))
-            if not url and not label:
-                continue
-            fragment = safe_uid_fragment(label or url, "link")
-            link_uid = unique_uid(f"{work_id}:{fragment}", used_uids)
-            out[link_uid] = normalize_source_record(
-                {
-                    "link_uid": link_uid,
-                    "work_id": work_id,
-                    "url": url,
-                    "label": label,
-                    "status": "published",
-                    "published_date": None,
-                },
-                LINK_FIELDS,
-                text_fields=LINK_TEXT_FIELDS,
-            )
-    return sort_record_map(out)
-
-
 def attach_work_owned_files_and_links(
     works: Mapping[str, Dict[str, Any]],
     work_files: Mapping[str, Mapping[str, Any]],
@@ -604,15 +540,10 @@ def records_from_workbook(
         work_links[str(record["link_uid"])] = record
 
     works = attach_work_owned_files_and_links(works, work_files, work_links)
-    work_files = build_work_file_records_from_downloads(works)
-    work_links = build_work_link_records_from_links(works)
-
     return CatalogueSourceRecords(
         works=works,
         work_details=sort_record_map(work_details),
         series=sort_record_map(series),
-        work_files=work_files,
-        work_links=work_links,
     )
 
 
@@ -712,8 +643,6 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
         works=works,
         work_details=sort_record_map(maps["work_details"]),
         series=sort_record_map(maps["series"]),
-        work_files=build_work_file_records_from_downloads(works),
-        work_links=build_work_link_records_from_links(works),
     )
 
 
@@ -763,17 +692,6 @@ def write_records_to_workbook(records: CatalogueSourceRecords, workbook_path: Pa
         WORKBOOK_HEADERS["WorkDetails"],
         records.work_details.values(),
     )
-    append_sheet_rows(
-        wb.create_sheet("WorkFiles"),
-        WORKBOOK_HEADERS["WorkFiles"],
-        records.work_files.values(),
-    )
-    append_sheet_rows(
-        wb.create_sheet("WorkLinks"),
-        WORKBOOK_HEADERS["WorkLinks"],
-        records.work_links.values(),
-    )
-
     workbook_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(workbook_path)
 
@@ -799,20 +717,6 @@ def sync_mutable_fields_from_workbook(source_dir: Path, workbook_path: Path) -> 
 
     for series_id, workbook_record in workbook_records.series.items():
         source_record = source_records.series.get(series_id)
-        if source_record is None:
-            continue
-        for field in ["status", "published_date"]:
-            source_record[field] = workbook_record.get(field)
-
-    for file_uid, workbook_record in workbook_records.work_files.items():
-        source_record = source_records.work_files.get(file_uid)
-        if source_record is None:
-            continue
-        for field in ["status", "published_date"]:
-            source_record[field] = workbook_record.get(field)
-
-    for link_uid, workbook_record in workbook_records.work_links.items():
-        source_record = source_records.work_links.get(link_uid)
         if source_record is None:
             continue
         for field in ["status", "published_date"]:
@@ -930,32 +834,6 @@ def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
         if normalize_status(record.get("status")) in ACTIONABLE_STATUSES and work_id not in all_work_ids:
             errors.append(f"work_details {key}: work_id {work_id!r} not found in works")
 
-    for key, record in records.work_files.items():
-        work_id = record.get("work_id")
-        if is_empty(work_id):
-            errors.append(f"work_files {key}: missing work_id")
-            continue
-        try:
-            normalized_work_id = slug_id(work_id)
-        except ValueError as exc:
-            errors.append(f"work_files {key}: invalid work_id ({exc})")
-            continue
-        if normalize_status(record.get("status")) in ACTIONABLE_STATUSES and normalized_work_id not in all_work_ids:
-            errors.append(f"work_files {key}: work_id {normalized_work_id!r} not found in works")
-
-    for key, record in records.work_links.items():
-        work_id = record.get("work_id")
-        if is_empty(work_id):
-            errors.append(f"work_links {key}: missing work_id")
-            continue
-        try:
-            normalized_work_id = slug_id(work_id)
-        except ValueError as exc:
-            errors.append(f"work_links {key}: invalid work_id ({exc})")
-            continue
-        if normalize_status(record.get("status")) in ACTIONABLE_STATUSES and normalized_work_id not in all_work_ids:
-            errors.append(f"work_links {key}: work_id {normalized_work_id!r} not found in works")
-
     return sorted(dict.fromkeys(errors))
 
 
@@ -980,7 +858,7 @@ def compare_record_maps(
 
 def compare_sources(workbook_records: CatalogueSourceRecords, json_records: CatalogueSourceRecords) -> list[str]:
     diffs: list[str] = []
-    for kind in ["works", "work_details", "series", "work_files", "work_links"]:
+    for kind in ["works", "work_details", "series"]:
         diffs.extend(
             compare_record_maps(
                 workbook_records.as_maps()[kind],

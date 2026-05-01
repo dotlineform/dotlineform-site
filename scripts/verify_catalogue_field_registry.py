@@ -116,8 +116,6 @@ def work_sort_context() -> dict[str, Any]:
         works={"00001": {"work_id": "00001", "series_ids": ["009"]}},
         work_details={},
         series={"009": {"series_id": "009", "sort_fields": "title"}},
-        work_files={},
-        work_links={},
     )
     record = records.works["00001"]
     return {"source_records": records, "current_record": record, "updated_record": record}

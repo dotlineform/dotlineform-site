@@ -116,8 +116,6 @@ def apply_workbook_import_plan(source_dir: Path, plan: WorkbookImportPlan) -> Ca
             works=sort_record_map(merged),
             work_details=source_records.work_details,
             series=source_records.series,
-            work_files=source_records.work_files,
-            work_links=source_records.work_links,
         )
 
     merged = dict(source_records.work_details)
@@ -126,8 +124,6 @@ def apply_workbook_import_plan(source_dir: Path, plan: WorkbookImportPlan) -> Ca
         works=source_records.works,
         work_details=sort_record_map(merged),
         series=source_records.series,
-        work_files=source_records.work_files,
-        work_links=source_records.work_links,
     )
 
 
@@ -429,8 +425,6 @@ def _validate_imported_records(
             works=sort_record_map(merged),
             work_details=source_records.work_details,
             series=source_records.series,
-            work_files=source_records.work_files,
-            work_links=source_records.work_links,
         )
     else:
         merged = dict(source_records.work_details)
@@ -439,8 +433,6 @@ def _validate_imported_records(
             works=source_records.works,
             work_details=sort_record_map(merged),
             series=source_records.series,
-            work_files=source_records.work_files,
-            work_links=source_records.work_links,
         )
 
     return validate_source_records(candidate_records)

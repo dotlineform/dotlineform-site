@@ -105,7 +105,7 @@ The current source fields are:
 
 Empty arrays are omitted from source records.
 
-The retired `work_files.json` and `work_links.json` files are no longer canonical source. Existing pipeline helpers may still derive in-memory compatibility rows from `Works.downloads` and `Works.links` while older generator surfaces are simplified.
+The retired `work_files.json` and `work_links.json` files are no longer canonical source, and live source records no longer expose derived `work_files` / `work_links` compatibility maps. Workbook import helpers may still read legacy `WorkFiles` and `WorkLinks` sheets only to fold those rows into work-owned `downloads` and `links`.
 
 ## Why The Model Is Split This Way
 

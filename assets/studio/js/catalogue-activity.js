@@ -56,8 +56,6 @@ function summarizeAffected(affected) {
     countText("works", affected && affected.works),
     countText("series", affected && affected.series),
     countText("details", affected && affected.work_details),
-    countText("files", affected && affected.work_files),
-    countText("links", affected && affected.work_links),
     countText("moments", affected && affected.moments)
   ].filter(Boolean);
   return parts.join(" · ");
@@ -71,10 +69,6 @@ function scopeLink(config, entry) {
   if (scopeKind === "work" && scopeId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(scopeId)}`;
   if (scopeKind === "series" && scopeId) href = `${getStudioRoute(config, "catalogue_series_editor")}?series=${encodeURIComponent(scopeId)}`;
   if (scopeKind === "work_detail" && scopeId) href = `${getStudioRoute(config, "catalogue_work_detail_editor")}?detail=${encodeURIComponent(scopeId)}`;
-  if ((scopeKind === "work_file" || scopeKind === "work_link") && scopeId) {
-    const workId = scopeId.split(":")[0];
-    if (workId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(workId)}`;
-  }
   if (scopeKind === "bulk_works" || scopeKind === "bulk_work_details") href = getStudioRoute(config, "bulk_add_work");
   if (scopeKind === "moment" && scopeId) href = `${getStudioRoute(config, "catalogue_moment_editor")}?moment=${encodeURIComponent(scopeId)}`;
   if (scopeKind === "moment" && !scopeId) href = getStudioRoute(config, "catalogue_moment_editor");

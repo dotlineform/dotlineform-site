@@ -124,8 +124,6 @@ def _primary_scope(entry: Dict[str, Any], affected: Dict[str, Any]) -> Dict[str,
     operation = str(entry.get("operation") or "").strip()
     scope_order = [
         ("work_details", "work_detail", "work detail"),
-        ("work_files", "work_file", "work file"),
-        ("work_links", "work_link", "work link"),
         ("works", "work", "work"),
         ("series", "series", "series"),
         ("moments", "moment", "moment"),
@@ -152,8 +150,6 @@ def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
         "works": _compact_ids(affected.get("works")),
         "series": _compact_ids(affected.get("series")),
         "work_details": _compact_ids(affected.get("work_details")),
-        "work_files": _compact_ids(affected.get("work_files")),
-        "work_links": _compact_ids(affected.get("work_links")),
         "moments": _compact_ids(affected.get("moments")),
     }
     primary_scope = _primary_scope(entry, affected)

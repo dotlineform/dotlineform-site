@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed file and link compatibility maps
+
+**Status:** implemented
+
+**Area:** catalogue source model / compatibility cleanup
+
+**Summary:**
+Removed the retained `work_files` and `work_links` compatibility maps from live catalogue source records and dependent status surfaces.
+
+**Reason:**
+Files and links are now work-owned metadata in `works.json` as `downloads` and `links`. Keeping separate in-memory source families made validation, delete previews, lookup invalidation, and activity summaries look as though the old file/link source records still existed.
+
+**Effect:**
+`CatalogueSourceRecords` now contains works, work details, and series only. Source validation, delete previews, lookup refresh logic, Studio activity shaping, and Studio transport no longer expose `work_files` or `work_links` as current source families. Retired standalone work-file and work-link endpoints continue to return `410 Gone`; legacy workbook import helpers may still read `WorkFiles` and `WorkLinks` sheets only to fold rows into work-owned `downloads` and `links`.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_source.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_activity.py`
+- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/studio-transport.js`
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed workbook provenance from source metadata
 
 **Status:** implemented

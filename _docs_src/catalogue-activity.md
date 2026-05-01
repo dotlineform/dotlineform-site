@@ -48,7 +48,7 @@ Each feed entry now includes:
 - scope label
 - short summary
 - follow-up / attention label
-- affected work, series, work-detail, work-file, work-link, and moment groups
+- affected work, series, work-detail, and moment groups
 - log reference
 
 IDs are sampled in the published feed rather than dumped in full.

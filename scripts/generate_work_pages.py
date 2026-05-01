@@ -1239,8 +1239,6 @@ def main() -> None:
             works=works_records,
             work_details=sort_record_map(detail_records),
             series=sort_record_map(series_records),
-            work_files=source_records.work_files,
-            work_links=source_records.work_links,
         )
         validation_errors = validate_source_records(rebuilt_records)
         if validation_errors:
