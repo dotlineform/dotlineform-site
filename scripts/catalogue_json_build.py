@@ -20,7 +20,6 @@ from moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
     build_moment_metadata_entry,
-    has_front_matter_text,
     load_moment_metadata_records,
     moment_metadata_payload,
     normalize_moment_filename,
@@ -1021,12 +1020,6 @@ def preview_moment_source(
 
     if not source_path.exists():
         preview["errors"] = [f"Missing {'staged ' if staged else ''}moment prose file: {source_rel_path}"]
-        return preview
-
-    source_text = source_path.read_text(encoding="utf-8")
-    if has_front_matter_text(source_text):
-        prefix = "Staged moment prose" if staged else "Moment prose source"
-        preview["errors"] = [f"{prefix} must be body-only Markdown without front matter."]
         return preview
 
     projects_base_dir, _availability_error = detect_projects_base_dir_optional(env)

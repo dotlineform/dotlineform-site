@@ -99,7 +99,7 @@ Resolved direction:
 
 Status:
 
-- planned
+- completed
 
 For each retained path, decide whether to:
 
@@ -114,7 +114,7 @@ For each retained path, decide whether to:
 
 Status:
 
-- planned
+- in progress
 
 Apply approved changes in small slices.
 
@@ -124,6 +124,14 @@ Likely cleanup areas:
 - narrow or remove external moment source scanning if no live flow needs it
 - align delete script docs and behavior with `_docs_src_catalogue/moments/` as the canonical prose source
 - update current docs to distinguish staged import, canonical prose, and source image lookup
+
+Slice status:
+
+- Done: remove front-matter detection and rejection from active moment preview/import paths.
+- Planned: remove external moment source scanning and moment source manifest support.
+- Planned: remove or retire standalone moment delete script and active script docs.
+- Planned: remove workbook/front-matter moment checks from deprecated preflight paths.
+- Planned: rewrite stale current-workflow docs while preserving clearly marked historical context.
 
 ### Task 4. Verify Moment Output Stability
 

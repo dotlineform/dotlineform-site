@@ -114,7 +114,6 @@ from catalogue_field_registry import (  # noqa: E402
 from moment_sources import (  # noqa: E402
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
-    has_front_matter_text,
     load_moment_metadata_records,
     moment_metadata_payload,
     normalize_moment_filename,
@@ -730,8 +729,6 @@ def read_staged_prose_markdown(staging_path: Path) -> tuple[str, list[str], list
         return "", [f"Could not read staged Markdown file: {exc}"], warnings
     if "\x00" in text:
         errors.append("Staged Markdown file contains a null byte.")
-    if text.startswith("---\n") or text.startswith("---\r\n"):
-        errors.append("Staged prose source files must not include front matter.")
     if not text.strip():
         warnings.append("Staged Markdown file is blank; importing it will publish blank optional prose after the generator lookup is updated.")
     return text, errors, warnings
@@ -5213,8 +5210,6 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("moment prose source root is not allowlisted")
         ensure_direct_child(target_path, target_root)
         text = staging_path.read_text(encoding="utf-8")
-        if has_front_matter_text(text):
-            raise ValueError("staged moment prose must be body-only Markdown without front matter")
         if not text.endswith("\n"):
             text += "\n"
 

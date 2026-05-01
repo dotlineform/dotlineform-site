@@ -111,7 +111,7 @@ It does not delete canonical prose under `_docs_src_catalogue/moments/`, canonic
 
 - `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 
-The staged file must be body-only Markdown with no front matter. Existing permanent prose requires overwrite confirmation when the staged content differs.
+The staged file is imported as Markdown body source. Existing permanent prose requires overwrite confirmation when the staged content differs.
 
 Importing prose does not change `moments.json`. Publish the moment or save an already published moment to update generated runtime payloads.
 

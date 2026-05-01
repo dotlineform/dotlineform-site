@@ -76,7 +76,7 @@ Staged prose enters through:
 Current assumptions:
 
 - `moment_id` is the filename stem
-- staged and permanent prose files are body-only Markdown with no canonical metadata front matter
+- staged and permanent prose files are Markdown body source
 - required metadata is entered on the Studio page
 - imported moments are always written with `status: draft`
 - existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration

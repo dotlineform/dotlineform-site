@@ -267,7 +267,7 @@ Request behavior:
 - the target work or series must exist in the canonical catalogue source JSON
 - work prose is staged at `var/docs/catalogue/import-staging/works/<work_id>.md`
 - series prose is staged at `var/docs/catalogue/import-staging/series/<series_id>.md`
-- the preview validates UTF-8 Markdown and rejects prose files with front matter
+- the preview validates UTF-8 Markdown
 - the preview reports whether the permanent target already exists and whether overwrite confirmation is required
 
 `POST /catalogue/prose/import-apply` accepts the same request shape plus:
@@ -331,7 +331,7 @@ Request behavior:
 - permanent prose target is `_docs_src_catalogue/moments/<moment_id>.md`
 - metadata is validated from the submitted metadata plus any existing `assets/studio/data/catalogue/moments.json` record
 - submitted import status is normalized to `draft`; publishing happens through `POST /catalogue/publication-apply` after import
-- staged prose must be body-only Markdown and must not contain canonical metadata front matter
+- staged prose is imported as Markdown body source
 - existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
 
 `POST /catalogue/moment/import-apply` accepts the same request shape.

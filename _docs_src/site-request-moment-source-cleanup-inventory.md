@@ -70,7 +70,7 @@ Use these classifications consistently:
 
 Use this order for Task 3 after Task 2 confirms retention policy:
 
-1. Remove front-matter parsing, detection, and update helpers from active moment paths.
+1. Done: remove front-matter detection and rejection from active moment preview/import paths. Parsing and update helpers remain only where later cleanup slices still own retired scanner/delete/preflight paths.
 2. Remove generator fallback scanning of external moment source files and moment source manifest support.
 3. Remove or retire `scripts/delete_moment.py` and `_docs_src/scripts-delete-moment.md` so Studio delete remains the single moment deletion workflow.
 4. Remove workbook/front-matter moment checks from deprecated preflight paths or convert those paths to clean-exit guidance.

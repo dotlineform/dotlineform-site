@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed active moment front-matter rejection
+
+**Status:** implemented
+
+**Area:** Studio / moment source cleanup
+
+**Summary:**
+Removed front-matter detection and rejection from active moment preview/import paths.
+
+**Reason:**
+Moment prose front matter no longer exists. Moment metadata is canonical in `assets/studio/data/catalogue/moments.json`, and staged prose is imported as Markdown body source.
+
+**Effect:**
+Moment build previews and Studio staged prose imports no longer call the moment front-matter detection helper or reject Markdown that starts with a front-matter-shaped block. Staged prose still goes through the existing file, UTF-8, null-byte, blank-file, overwrite, metadata, and write-root checks. Retired front-matter parsing helpers remain only for later cleanup slices that still own external scanner, delete-script, and deprecated preflight paths.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_json_build.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Verified compatibility cleanup output stability
 
 **Status:** implemented
