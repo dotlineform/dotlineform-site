@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed moment front-matter preflight checks
+
+**Status:** implemented
+
+**Area:** deprecated preflight / moment source cleanup
+
+**Summary:**
+Removed the last front-matter parsing dependency from the deprecated workbook preflight path.
+
+**Reason:**
+Moment metadata is canonical in `assets/studio/data/catalogue/moments.json`, and moment prose is body-only Markdown. The workbook preflight was still scanning external moment Markdown files and parsing front matter for status validation, which preserved a retired source model.
+
+**Effect:**
+`scripts/catalogue_preflight.py` no longer imports moment source helpers, resolves an external moments root, or validates moment front matter. The unused `parse_front_matter` helper was removed from `scripts/moment_sources.py`.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_preflight.py`
+- `scripts/moment_sources.py`
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed standalone moment delete script
 
 **Status:** implemented
@@ -67,7 +90,7 @@ Removed front-matter detection and rejection from active moment preview/import p
 Moment prose front matter no longer exists. Moment metadata is canonical in `assets/studio/data/catalogue/moments.json`, and staged prose is imported as Markdown body source.
 
 **Effect:**
-Moment build previews and Studio staged prose imports no longer call the moment front-matter detection helper or reject Markdown that starts with a front-matter-shaped block. Staged prose still goes through the existing file, UTF-8, null-byte, blank-file, overwrite, metadata, and write-root checks. Retired front-matter parsing helpers remain only for later cleanup slices that still own external scanner, delete-script, and deprecated preflight paths.
+Moment build previews and Studio staged prose imports no longer call the moment front-matter detection helper or reject Markdown that starts with a front-matter-shaped block. Staged prose still goes through the existing file, UTF-8, null-byte, blank-file, overwrite, metadata, and write-root checks. Retired front-matter parsing helpers were removed in later cleanup slices.
 
 **Affected files/docs:**
 

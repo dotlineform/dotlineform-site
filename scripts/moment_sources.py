@@ -63,34 +63,6 @@ def normalize_moment_filename(value: Any) -> str:
     return f"{stem}.md"
 
 
-def parse_scalar_from_fm_line(raw: str) -> Optional[str]:
-    value = raw.strip()
-    if value == "" or value == "null":
-        return None
-    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
-        return value[1:-1]
-    return value
-
-
-def parse_front_matter(path: Path) -> Dict[str, Any]:
-    try:
-        text = path.read_text(encoding="utf-8")
-    except Exception:
-        return {}
-    if not text.startswith("---"):
-        return {}
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return {}
-    fm: Dict[str, Any] = {}
-    for line in parts[1].splitlines():
-        match = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", line)
-        if not match:
-            continue
-        fm[match.group(1)] = parse_scalar_from_fm_line(match.group(2))
-    return fm
-
-
 def validate_moment_source_entry(entry: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
     moment_id = normalize_text(entry.get("moment_id")).lower()

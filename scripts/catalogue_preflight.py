@@ -7,23 +7,12 @@ from typing import Any, Dict, List, Sequence
 import openpyxl
 
 try:
-    from moment_sources import parse_front_matter
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.moment_sources import parse_front_matter
-
-try:
-    from pipeline_config import env_var_value, load_pipeline_config, source_moments_root_subdir
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.pipeline_config import env_var_value, load_pipeline_config, source_moments_root_subdir
-
-try:
     from series_ids import normalize_series_id, parse_series_ids
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id, parse_series_ids
 
 
 ACTIONABLE_STATUSES = {"draft", "published"}
-PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 
 
 def normalize_text(value: Any) -> str:
@@ -56,10 +45,6 @@ def slug_id(raw: Any, width: int = 5) -> str:
     if not s:
         raise ValueError(f"Invalid id value: {raw!r}")
     return s.zfill(width)
-
-
-def is_slug_safe(value: str) -> bool:
-    return bool(re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", value))
 
 
 def header_map(ws) -> Dict[str, int]:
@@ -104,7 +89,6 @@ def validate_catalogue_workbook(
     works_sheet: str = "Works",
     series_sheet: str = "Series",
     work_details_sheet: str = "WorkDetails",
-    projects_base_dir: Path | None = None,
 ) -> List[str]:
     errors: List[str] = []
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
@@ -228,30 +212,6 @@ def validate_catalogue_workbook(
                 f"{work_details_sheet} row {row_number}: work_id {work_id!r} not found in {works_sheet}"
             )
 
-    configured_projects_base_dir = (
-        projects_base_dir
-        if projects_base_dir is not None
-        else Path(env_var_value(PIPELINE_CONFIG, "projects_base_dir")).expanduser()
-        if env_var_value(PIPELINE_CONFIG, "projects_base_dir")
-        else None
-    )
-    if configured_projects_base_dir is not None:
-        moments_root = configured_projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
-        if moments_root.exists():
-            for path in sorted(moments_root.glob("*.md")):
-                moment_id = path.stem.strip().lower()
-                if not moment_id:
-                    continue
-                if not is_slug_safe(moment_id):
-                    errors.append(f"Moment source file {path.name!r}: moment_id is not slug-safe")
-                    continue
-                front_matter = parse_front_matter(path)
-                status = normalize_status(front_matter.get("status"))
-                if status and status not in ACTIONABLE_STATUSES:
-                    errors.append(
-                        f"Moment source file {path.name!r}: invalid status {front_matter.get('status')!r}; expected draft or published"
-                    )
-
     return errors
 
 
@@ -261,14 +221,12 @@ def raise_if_invalid_catalogue_workbook(
     works_sheet: str = "Works",
     series_sheet: str = "Series",
     work_details_sheet: str = "WorkDetails",
-    projects_base_dir: Path | None = None,
 ) -> None:
     errors = validate_catalogue_workbook(
         xlsx_path,
         works_sheet=works_sheet,
         series_sheet=series_sheet,
         work_details_sheet=work_details_sheet,
-        projects_base_dir=projects_base_dir,
     )
     if not errors:
         return
