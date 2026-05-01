@@ -418,7 +418,7 @@ Implemented behavior:
 
 Status:
 
-- planned
+- completed
 
 Add targeted checks for:
 
@@ -430,6 +430,17 @@ Add targeted checks for:
 - unknown-field fallback
 
 Update the relevant script and Studio docs after implementation.
+
+Implemented behavior:
+
+- added `./scripts/verify_catalogue_field_registry.py` as a read-only planner verification helper
+- the helper loads the registry through `studio_config.json` and checks 16 representative cases
+- covered cases include work-local metadata, editor-only fields, media source fields, search/display fields, membership/publication fields, work-detail fields, series fields, moment fields, unknown-field fallback, mixed dependency-class fallback, and series saves that also change member work rows
+- script docs now describe when to run the helper and what it covers
+
+Current limits:
+
+- the helper verifies planner decisions only; it does not write generated files, run image generation, rebuild catalogue search, or replace end-to-end Studio/browser smoke checks
 
 ### Task 7. Add Studio Field Registry Review Page
 

@@ -82,6 +82,10 @@ Planner output:
 - each explanation row includes `artifact`, `fields`, `rule_ids`, `fallback`, `fallback_reason`, `reason`, and the artifact-family `description` when one is available
 - fallback plans derive broad artifact selection and explanation rows from registry defaults instead of Python-only fallback tables
 
+Verification:
+
+- `./scripts/verify_catalogue_field_registry.py` checks representative target rules and fallback defaults against the live registry
+
 Notes:
 
 - the registry is JSON so Studio can display it directly

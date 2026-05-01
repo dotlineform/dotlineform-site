@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Added field-aware catalogue registry verification
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Added `./scripts/verify_catalogue_field_registry.py` to check representative field-aware build planner cases against the live registry.
+
+**Reason:**
+After moving build scoping into a registry-backed planner, the important dependency classes needed a fast read-only verification path that does not require running generators or mutating source data.
+
+**Effect:**
+The helper verifies work-local metadata, editor-only metadata, media source fields, search/display fields, publication and membership fields, work-detail, series, and moment rules, plus unknown-field, mixed-dependency, and cross-family series-save fallback behavior.
+
+**Affected files/docs:**
+
+- `scripts/verify_catalogue_field_registry.py`
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Moved field-aware fallback artifact defaults into the registry
 
 **Status:** implemented

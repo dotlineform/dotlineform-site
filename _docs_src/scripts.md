@@ -81,6 +81,8 @@ Catalogue/runtime maintenance:
 
 - `python3 ./scripts/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
+- `python3 ./scripts/verify_catalogue_field_registry.py`
+  - verifies representative field-aware catalogue build plans without writing files
 - `python3 ./scripts/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`
 - `python3 ./scripts/compare_catalogue_sources.py`
@@ -106,6 +108,8 @@ Catalogue/runtime maintenance:
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
   Preview or run the Phase 5 scoped JSON-source rebuild flow for one work.
+- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+  Verify representative field-aware catalogue build plans and fallback behavior.
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
   Validate and compare canonical catalogue source JSON during the transition away from workbook-led tooling.
 - [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)

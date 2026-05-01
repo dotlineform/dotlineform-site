@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T12:07:24Z",
+  "generated_at": "2026-05-01T15:10:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1309,6 +1309,20 @@
       "source_path": "search-build-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-verify-catalogue-field-registry",
+      "title": "Catalogue Field Registry Verification",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "scripts",
+      "sort_order": 75,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-verify-catalogue-field-registry.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-verify-catalogue-field-registry.json"
     },
     {
       "scope": "studio",

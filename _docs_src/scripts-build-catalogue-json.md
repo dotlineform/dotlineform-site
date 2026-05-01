@@ -118,6 +118,8 @@ The helper:
 
 When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. The preview prints `Field-aware reasons` lines that group selected artifact families by the changed fields and registry reason. Unknown fields and mixed rule classes use conservative fallback and explain the fallback selection.
 
+Planner behavior is covered by `./scripts/verify_catalogue_field_registry.py`.
+
 For `--moment-file`, the helper:
 
 - resolves moment metadata from `assets/studio/data/catalogue/moments.json`

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-78d02abdaa51c14d7cff55686d6c6241",
-    "generated_at_utc": "2026-05-01T12:07:26Z",
-    "count": 148
+    "version": "blake2b-b3f77e3d16f216dfd334856be4307d25",
+    "generated_at_utc": "2026-05-01T15:10:37Z",
+    "count": 149
   },
   "entries": [
     {
@@ -2216,6 +2216,31 @@
         "26"
       ],
       "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "scripts-verify-catalogue-field-registry",
+      "kind": "doc",
+      "title": "Catalogue Field Registry Verification",
+      "href": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
+      "last_updated": "2026-05-01",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-01 • Scripts",
+      "search_terms": [
+        "scripts-verify-catalogue-field-registry",
+        "scripts",
+        "verify",
+        "catalogue",
+        "field",
+        "registry",
+        "catalogue field registry verification",
+        "verification",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-01 2026 05 01"
     },
     {
       "id": "search-studio-v1-index-shape",
