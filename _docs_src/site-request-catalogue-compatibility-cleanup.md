@@ -119,6 +119,7 @@ Implemented slices:
 - removed `work_files` and `work_links` compatibility maps from live source records, validation, delete previews, lookup invalidation, and activity summaries
 - rewrote stale current docs and archived workbook-led workflow pages so they point to the current JSON-source pipeline instead of live workbook/file-link workflows
 - replaced deprecated workbook-led script implementations with short clean-exit stubs, including the old source export and workbook/source comparison commands
+- narrowed generator write-back so mutable work and detail source fields are persisted directly on canonical source records instead of rebuilding source JSON from the sheet-like projection
 
 Apply approved removals in small slices.
 

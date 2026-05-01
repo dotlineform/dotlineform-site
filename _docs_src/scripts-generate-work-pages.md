@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: _archive
 sort_order: 50
 ---
@@ -193,27 +193,25 @@ Catalogue search note:
 - `generate_work_pages.py` no longer writes `assets/data/search/catalogue/index.json`
 - catalogue search is now rebuilt separately by [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) from the generated repo JSON artifacts above plus Studio tag metadata
 
-## JSON Source Mode
+## Internal JSON Source Mode
 
-`--source json` is the Phase 1 bridge from workbook-led generation to JSON-led generation.
+`--internal-json-source-run` is the internal generator mode used by `catalogue_json_build.py`.
 
 Current behavior:
 
 - reads canonical source JSON from `assets/studio/data/catalogue/`
-- materializes those records into a temporary workbook with the current worksheet names and columns
-- runs the existing generation logic against that temporary workbook
+- builds a retained sheet-like read projection for generator sections that have not yet been refactored to direct JSON-record access
 - writes the same runtime artifacts as workbook mode
-- when `--write` is used, syncs generator-updated mutable fields back into source JSON:
+- when `--write` is used, mutates generator-updated mutable fields directly on canonical source records before source JSON write-back:
   - work `status`, `published_date`, `width_px`, `height_px`
   - work-detail `status`, `published_date`, `width_px`, `height_px`
-  - series `status`, `published_date`
 
-Work-owned `downloads` and `links` are preserved from `works.json` during generator write-back; they are not processed as separate artifacts.
+Work-owned `downloads` and `links` remain on the canonical work record and are not processed as separate artifacts.
 
 Validation note:
 
-- JSON source mode still passes through the current workbook/source preflight after materialization
-- use [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source) for direct JSON source validation and workbook-vs-JSON comparison
+- JSON source records are validated before generation and again before source write-back
+- use [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source) for direct JSON source validation
 
 ## Works Download Files
 

@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Narrowed generator source write-back
+
+**Status:** implemented
+
+**Area:** generator / compatibility cleanup
+
+**Summary:**
+Changed `generate_work_pages.py` so mutable source updates are written directly to canonical source records instead of rebuilding source JSON from the internal sheet-like projection.
+
+**Reason:**
+The live JSON generator still has retained worksheet-shaped read loops. Source write-back was unnecessarily coupled to that projection, which kept workbook-era helper code in the persistence path.
+
+**Effect:**
+Work and work-detail status, published dates, and image dimensions are now applied to the loaded source records before `write_source_record_payloads(...)` runs. The sheet-like projection remains for read-side generation loops and is tracked as follow-up cleanup.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed workbook-led script implementations
 
 **Status:** implemented

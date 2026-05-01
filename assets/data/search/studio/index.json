@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7872c9b984693d2ee3d18d370d16aba4",
-    "generated_at_utc": "2026-05-01T19:51:04Z",
+    "version": "blake2b-53997e50d05378e02d3b3e1e8e1333c9",
+    "generated_at_utc": "2026-05-01T19:59:40Z",
     "count": 155
   },
   "entries": [
@@ -1763,10 +1763,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-04-30 • Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -1775,12 +1775,12 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-04-30 2026 04 30"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-moments-prose-source-model",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T19:51:02Z",
+  "generated_at": "2026-05-01T19:59:39Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1049,7 +1049,7 @@
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "_archive",
       "sort_order": 50,
       "published": true,

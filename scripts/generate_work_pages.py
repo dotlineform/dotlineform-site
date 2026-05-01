@@ -108,29 +108,17 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 try:
     from catalogue_source import (
-        CatalogueSourceRecords,
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
         WORKBOOK_HEADERS,
-        build_detail_record,
-        build_series_record,
-        build_series_sort_map,
-        build_work_record,
         records_from_json_source,
-        sort_record_map,
         validate_source_records,
         write_source_record_payloads,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_source import (
-        CatalogueSourceRecords,
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
         WORKBOOK_HEADERS,
-        build_detail_record,
-        build_series_record,
-        build_series_sort_map,
-        build_work_record,
         records_from_json_source,
-        sort_record_map,
         validate_source_records,
         write_source_record_payloads,
     )
@@ -861,8 +849,9 @@ def load_tag_registry_payload(path: Path) -> Dict[str, Any]:
 # High-level flow:
 # 1) Parse CLI args (scope + output options)
 # 2) Load canonical source JSON
-# 3) Build the internal sheet-like projection used by retained generator helpers
+# 3) Build the internal sheet-like read projection still used by retained generator helpers
 # 4) Iterate the projected rows -> build generated artifacts
+# 5) Persist mutable source fields directly against canonical source records
 def main() -> None:
     # CLI arguments define the internal JSON-source run and where output files go.
     ap = argparse.ArgumentParser()
@@ -1200,50 +1189,24 @@ def main() -> None:
     series_sort_hi = build_header_index(series_sort_rows) if series_sort_rows else {}
     work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
 
-    def row_from_cells(row_cells: tuple[Any, ...]) -> tuple[Any, ...]:
-        return tuple(getattr(cell, "value", cell) for cell in row_cells)
-
-    def rebuild_source_records_from_projection():
-        works_records: Dict[str, Dict[str, Any]] = {}
-        for row_cells in works_ws.iter_rows(min_row=2):
-            row = row_from_cells(row_cells)
-            if is_empty(cell(row, works_hi, "work_id")):
-                continue
-            record = build_work_record(row, works_hi)
-            existing_work_record = source_records.works.get(str(record["work_id"]), {})
-            for key in ["downloads", "links"]:
-                existing_items = existing_work_record.get(key)
-                if isinstance(existing_items, list) and existing_items:
-                    record[key] = list(existing_items)
-            works_records[str(record["work_id"])] = record
-
-        sort_fields_by_series_id = build_series_sort_map(series_sort_rows, series_sort_hi)
-        series_records: Dict[str, Dict[str, Any]] = {}
-        for row_cells in series_ws.iter_rows(min_row=2):
-            row = row_from_cells(row_cells)
-            if is_empty(cell(row, series_hi, "series_id")):
-                continue
-            record = build_series_record(row, series_hi, sort_fields_by_series_id)
-            series_records[str(record["series_id"])] = record
-
-        detail_records: Dict[str, Dict[str, Any]] = {}
-        if work_details_ws is not None:
-            for row_cells in work_details_ws.iter_rows(min_row=2):
-                row = row_from_cells(row_cells)
-                if is_empty(cell(row, work_details_hi, "work_id")) or is_empty(cell(row, work_details_hi, "detail_id")):
-                    continue
-                record = build_detail_record(row, work_details_hi)
-                detail_records[str(record["detail_uid"])] = record
-
-        rebuilt_records = CatalogueSourceRecords(
-            works=works_records,
-            work_details=sort_record_map(detail_records),
-            series=sort_record_map(series_records),
-        )
-        validation_errors = validate_source_records(rebuilt_records)
+    def validate_source_records_for_writeback() -> None:
+        validation_errors = validate_source_records(source_records)
         if validation_errors:
             raise SystemExit("JSON source write-back validation failed: " + "; ".join(validation_errors[:20]))
-        return rebuilt_records
+
+    def update_source_work_record(work_id: str, **updates: Any) -> None:
+        record = source_records.works.get(work_id)
+        if not isinstance(record, dict):
+            return
+        for key, value in updates.items():
+            record[key] = value
+
+    def update_source_detail_record(detail_uid: str, **updates: Any) -> None:
+        record = source_records.work_details.get(detail_uid)
+        if not isinstance(record, dict):
+            return
+        for key, value in updates.items():
+            record[key] = value
 
     if "status" not in works_hi:
         raise SystemExit("Works sheet missing required column: status")
@@ -1748,6 +1711,7 @@ def main() -> None:
                         if prev_w != src_w or prev_h != src_h:
                             wr_cells[works_width_px_idx].value = src_w
                             wr_cells[works_height_px_idx].value = src_h
+                            update_source_work_record(wid, width_px=src_w, height_px=src_h)
                             work_dimensions_updated += 1
                 else:
                     print(f"Warning: could not read dimensions for work primary source image: {display_projects_path(src_path)}")
@@ -1833,10 +1797,12 @@ def main() -> None:
                         status_was = normalize_status(row_cells[status_idx].value)
                         if status_was != "published":
                             row_cells[status_idx].value = "published"
+                            update_source_work_record(wid, status="published")
                             status_updated += 1
                         if status_was != "published":
                             if published_date_idx is not None:
                                 row_cells[published_date_idx].value = today
+                                update_source_work_record(wid, published_date=today.isoformat())
                                 published_date_updated += 1
                             elif not published_date_missing_warned:
                                 print("Warning: Works sheet missing published_date column; skipping date updates.")
@@ -2375,6 +2341,7 @@ def main() -> None:
                             if prev_w != src_w or prev_h != src_h:
                                 dr_cells[width_px_idx].value = src_w
                                 dr_cells[height_px_idx].value = src_h
+                                update_source_detail_record(detail_uid, width_px=src_w, height_px=src_h)
                                 details_dimensions_updated += 1
                     else:
                         print(f"Warning: could not read dimensions for detail source image: {display_projects_path(src_path)}")
@@ -2398,10 +2365,12 @@ def main() -> None:
                         status_was = normalize_status(dr_cells[status_idx].value)
                         if status_was != "published":
                             dr_cells[status_idx].value = "published"
+                            update_source_detail_record(detail_uid, status="published")
                             details_status_updated += 1
                         if status_was != "published":
                             if details_published_date_idx is not None:
                                 dr_cells[details_published_date_idx].value = today
+                                update_source_detail_record(detail_uid, published_date=today.isoformat())
                                 details_published_date_updated += 1
                             elif not details_published_date_missing_warned:
                                 print("Warning: WorkDetails sheet missing published_date column; skipping date updates.")
@@ -3161,8 +3130,8 @@ def main() -> None:
             )
 
     if args.write:
-        rebuilt_source_records = rebuild_source_records_from_projection()
-        synced_paths = write_source_record_payloads(json_source_dir, rebuilt_source_records)
+        validate_source_records_for_writeback()
+        synced_paths = write_source_record_payloads(json_source_dir, source_records)
         print("Catalogue source JSON write-back done.")
         for synced_path in synced_paths:
             print(f"  - {display_path(synced_path)}")
