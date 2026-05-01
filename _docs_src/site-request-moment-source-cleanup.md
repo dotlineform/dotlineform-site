@@ -10,7 +10,7 @@ sort_order: 102
 
 Status:
 
-- in progress
+- complete
 
 ## Summary
 
@@ -114,7 +114,7 @@ For each retained path, decide whether to:
 
 Status:
 
-- in progress
+- completed
 
 Apply approved changes in small slices.
 
@@ -137,7 +137,7 @@ Slice status:
 
 Status:
 
-- planned
+- completed
 
 Acceptance checks:
 
@@ -146,6 +146,22 @@ Acceptance checks:
 - Moment editor import preview/apply still works for staged body-only prose
 - publish, unpublish, delete preview, and media refresh behavior remain aligned with the current source model
 - docs no longer present retired front-matter/external-prose assumptions as current guidance
+
+Verification result:
+
+- representative moment build preview passed for `13-moments-in-october.md`
+- representative current-media moment build preview passed for `keys.md`
+- representative generator dry-run for `13-moments-in-october` reported no would-write changes for moment route stubs, per-moment JSON, or `assets/data/moments_index.json`
+- catalogue search dry-run reported no would-write changes for `assets/data/search/catalogue/index.json`
+- staged body-only import preview for `keys.md` returned valid with no errors, found the staged prose file, existing canonical target, generated JSON, and moments index entry
+- Studio moment delete preview for `keys` returned unblocked with no validation errors and scoped the affected source family to `moments`
+- Python syntax checks passed for moment source/build/write-server modules
+- docs were rebuilt after close-out
+
+Write/apply note:
+
+- destructive import-apply and delete-apply checks were not run during close-out
+- those remain manual Studio checks when an intentional test moment is prepared
 
 ## Benefits
 

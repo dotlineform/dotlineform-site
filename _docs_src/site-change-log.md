@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Closed moment source cleanup
+
+**Status:** implemented
+
+**Area:** moment source cleanup
+
+**Summary:**
+Closed the moment source cleanup request after verifying the current JSON metadata plus body-only prose workflow.
+
+**Reason:**
+The implementation slices had already removed front-matter detection, external moment source scanning, manifest support, standalone moment deletion, deprecated preflight coupling, and stale current-workflow docs. The request needed a final verification record before being marked complete.
+
+**Effect:**
+Representative moment build previews, generator dry-runs, catalogue search dry-run, staged body-only import preview, and moment delete preview now document the close-out state. Destructive import-apply and delete-apply checks were intentionally left as manual checks for a prepared test moment.
+
+**Affected files/docs:**
+
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed retired workbook scripts
 
 **Status:** implemented
