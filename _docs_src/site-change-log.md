@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Added dry-run explanations for field-aware catalogue builds
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Field-aware catalogue build plans now include concise explanation rows for the artifact families selected by the registry.
+
+**Reason:**
+After preview and save-time builds began using narrowed rules, dry-runs needed to show why a plan selected `work-json`, catalogue search, local media, fallback artifacts, or no public build work.
+
+**Effect:**
+CLI previews print grouped `Field-aware reasons` lines, and `POST /catalogue/build-preview` plus dry-run save-time `apply_build` responses expose `field_plan.explanations[]`. Unknown fields and mixed dependency classes now explain conservative fallback selection.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_field_registry.py`
+- `scripts/catalogue_json_build.py`
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Added field-aware catalogue build previews
 
 **Status:** implemented

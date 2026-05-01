@@ -638,6 +638,7 @@ Build preview and save-time `apply_build` for single work, work-detail, series, 
 - fields in one registry rule use that rule's target artifact families
 - editor-only work fields can skip public build work
 - local media generation and catalogue search are skipped unless the selected rule includes `local-media` or `catalogue-search`
+- `field_plan.explanations[]` names the selected artifact families, changed fields, matched rule ids, fallback state, and concise registry reason
 - unknown fields, mixed rule classes, bulk saves, create/delete operations, imports, publication actions, and series saves that also alter member work records keep conservative fallback
 
 The direct `POST /catalogue/build-apply` endpoint still uses the explicit broad request shape unless called through save-time `apply_build`.

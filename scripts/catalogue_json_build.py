@@ -1351,6 +1351,26 @@ def build_field_plan_for_scope(
     )
 
 
+def field_plan_explanation_lines(field_plan: Mapping[str, Any]) -> list[str]:
+    explanations = field_plan.get("explanations") if isinstance(field_plan.get("explanations"), list) else []
+    grouped: dict[tuple[str, str, str], list[str]] = {}
+    for row in explanations:
+        if not isinstance(row, Mapping):
+            continue
+        artifact = str(row.get("artifact") or "").strip()
+        if not artifact:
+            continue
+        fields = ", ".join(str(field) for field in row.get("fields") or [] if str(field).strip()) or "field-aware plan"
+        reason = str(row.get("reason") or "").strip() or "Selected by the field registry."
+        fallback = str(row.get("fallback_reason") or "").strip() if row.get("fallback") else ""
+        grouped.setdefault((fields, reason, fallback), []).append(artifact)
+    lines: list[str] = []
+    for (fields, reason, fallback), artifacts in grouped.items():
+        prefix = "fallback " if fallback else ""
+        lines.append(f"{', '.join(sorted(set(artifacts)))}: {prefix}{fields} -> {reason}")
+    return lines
+
+
 def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:
     env = env or os.environ
     home = Path(env.get("HOME", "")).expanduser()
@@ -1803,6 +1823,11 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
         print(f"Field-aware mode: {field_plan.get('mode') or 'unknown'}")
         print(f"Field-aware rules: {', '.join(field_plan.get('rule_ids') or []) or 'none'}")
         print(f"Field-aware artifacts: {', '.join(field_plan.get('artifacts') or []) or 'none'}")
+        explanation_lines = field_plan_explanation_lines(field_plan)
+        if explanation_lines:
+            print("Field-aware reasons:")
+            for line in explanation_lines:
+                print(f"  - {line}")
     media_plan = (
         build_local_media_plan(repo_root, scope=scope, force=force)
         if bool(scope.get("generate_local_media", True))

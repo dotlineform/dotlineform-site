@@ -75,6 +75,12 @@ Current content families:
 - `defaults` defines fallback behavior for unknown fields and mixed multi-family saves
 - `retired_fields[]` records fields intentionally removed from active source rules
 
+Planner output:
+
+- `field_plan.explanations[]` is derived from the registry rather than stored in the registry file
+- each explanation row includes `artifact`, `fields`, `rule_ids`, `fallback`, `fallback_reason`, `reason`, and the artifact-family `description` when one is available
+- fallback plans explain broad artifact selection through the fallback reason instead of pretending a narrow field rule matched
+
 Notes:
 
 - the registry is JSON so Studio can display it directly

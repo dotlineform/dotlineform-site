@@ -116,7 +116,7 @@ The helper:
   - `recent-index-json`
 - then runs `build_search.rb --scope catalogue`
 
-When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. Unknown fields and mixed rule classes use conservative fallback.
+When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. The preview prints `Field-aware reasons` lines that group selected artifact families by the changed fields and registry reason. Unknown fields and mixed rule classes use conservative fallback and explain the fallback selection.
 
 For `--moment-file`, the helper:
 

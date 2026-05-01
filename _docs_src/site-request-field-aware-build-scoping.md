@@ -394,17 +394,24 @@ Implemented behavior:
 Current limits:
 
 - direct `/catalogue/build-apply` remains explicit/broad unless called through save-time `apply_build`
-- detailed human-readable artifact reasons are still part of Task 5
 
 ### Task 5. Add Dry-Run Explanations
 
 Status:
 
-- planned
+- completed
 
 Show why each artifact family was selected.
 
 The explanation should be concise and operational, not a full dependency dump.
+
+Implemented behavior:
+
+- field-aware build plans now include `explanations[]`
+- each explanation row names the selected artifact family, changed fields, matched rule ids, fallback state, and registry reason
+- CLI dry-run preview groups explanation rows into concise `artifact: field -> reason` lines
+- `/catalogue/build-preview` and dry-run save-time `apply_build` responses expose the same explanation rows through `field_plan`
+- conservative fallback plans now explain that broad artifact families were selected by fallback rather than by a narrow rule
 
 ### Task 6. Verify And Document
 
