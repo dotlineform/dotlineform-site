@@ -90,9 +90,9 @@ Questions to answer:
 Resolved direction:
 
 - Moment prose import is body-only Markdown. Metadata is stored in catalogue source JSON, not prose front matter.
-- Front-matter parsing should remain only where it is needed to reject front matter in staged or canonical body-only prose. Helpers that extract metadata from moment prose are migration-only unless another active path proves otherwise.
+- Front-matter parsing and front-matter rejection are not active requirements. Moment prose front matter no longer exists, and staged prose is treated as body-only source.
 - Generator fallback scanning of external moment source files is not needed now that `moments.json` is canonical. Prose source files are copied manually into staging.
-- The Delete button on `/studio/catalogue-moment/` is the only current deletion entry point for moments. Standalone delete behavior should not preserve a separate active moment-deletion workflow.
+- The Delete button on `/studio/catalogue-moment/` is the only current deletion entry point for moments. Standalone delete behavior should not preserve a separate active or habit-compatible deletion workflow.
 - Documentation needs classification before cleanup. Current workflow docs should describe `moments.json`, `_docs_src_catalogue/moments/`, and `var/docs/catalogue/import-staging/moments/`; migration/change-log docs may remain as historical context when clearly framed that way.
 
 ### Task 2. Decide Retention Policy
