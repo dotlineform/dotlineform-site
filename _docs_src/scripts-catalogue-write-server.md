@@ -597,12 +597,25 @@ Series-scoped request:
 }
 ```
 
+Field-aware preview request:
+
+```json
+{
+  "work_id": "00001",
+  "changed_fields": ["duration"]
+}
+```
+
+`changed_fields` may be an array or comma-separated string. `record_family` is optional and can be used when the scope is ambiguous, for example a work-scoped detail preview.
+
 It returns the planned scoped build:
 
 - `work_ids`
 - `series_ids`
 - `generate_only`
 - `rebuild_search`
+- `generate_local_media`
+- `field_plan` when `changed_fields` was supplied
 - `summary`
 
 Scoped build preconditions:
@@ -620,14 +633,14 @@ Scoped build preconditions:
 
 The apply path uses refresh mode rather than broad force mode. That allows selected published records to be recomputed while unchanged generated payloads and catalogue search output still skip by content version. A request-level `force` value remains the explicit stronger rewrite path.
 
-Save-time `apply_build` for single work, work-detail, series, and moment saves now uses `assets/studio/data/catalogue_field_registry.json` to narrow build scopes from the changed field set:
+Build preview and save-time `apply_build` for single work, work-detail, series, and moment saves now use the catalogue field registry path from `studio_config.json` to narrow build scopes from the changed field set:
 
 - fields in one registry rule use that rule's target artifact families
 - editor-only work fields can skip public build work
 - local media generation and catalogue search are skipped unless the selected rule includes `local-media` or `catalogue-search`
 - unknown fields, mixed rule classes, bulk saves, create/delete operations, imports, publication actions, and series saves that also alter member work records keep conservative fallback
 
-The direct `POST /catalogue/build-preview` and `POST /catalogue/build-apply` endpoints still use the explicit broad request shape. Field-aware preview parity is tracked separately in the field-aware build-scoping request.
+The direct `POST /catalogue/build-apply` endpoint still uses the explicit broad request shape unless called through save-time `apply_build`.
 
 The apply endpoint updates:
 

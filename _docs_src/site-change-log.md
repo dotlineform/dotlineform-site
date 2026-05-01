@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Added field-aware catalogue build previews
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+`scripts/catalogue_json_build.py` and `POST /catalogue/build-preview` can now accept changed-field context and preview the same registry-backed narrowed scope used by save-time builds.
+
+**Reason:**
+Task 3 narrowed save-time builds, but previews still showed broad commands unless the save endpoint had already planned the build. The CLI and preview endpoint needed the same field-aware rule path for review and debugging.
+
+**Effect:**
+The preview path resolves the field registry through `studio_config.json`, applies matching target rules to `generate_only`, `rebuild_search`, and `generate_local_media`, and returns or prints the selected `field_plan`. Unknown fields and mixed rule classes continue to preview conservative fallback.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_field_registry.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Wired catalogue field registry into save-time build planning
 
 **Status:** implemented

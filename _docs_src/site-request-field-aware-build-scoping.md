@@ -379,9 +379,22 @@ Current limits:
 
 Status:
 
-- planned
+- completed
 
 Update `scripts/catalogue_json_build.py` preview generation so field-aware scopes can be previewed consistently outside the write server.
+
+Implemented behavior:
+
+- `scripts/catalogue_json_build.py` accepts `--changed-fields` and optional `--record-family`
+- field-aware CLI previews resolve the registry path from `studio_config.json`
+- preview output uses the same rule planner as save-time write-server builds
+- `/catalogue/build-preview` accepts optional `changed_fields` and `record_family` request fields
+- preview scopes include `field_plan`, narrowed `generate_only`, `rebuild_search`, `generate_local_media`, and local-media counts that reflect the selected rule
+
+Current limits:
+
+- direct `/catalogue/build-apply` remains explicit/broad unless called through save-time `apply_build`
+- detailed human-readable artifact reasons are still part of Task 5
 
 ### Task 5. Add Dry-Run Explanations
 

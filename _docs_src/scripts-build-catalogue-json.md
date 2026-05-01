@@ -28,6 +28,16 @@ Preview the scoped build:
 
 Preview output includes local media counts for the scoped work/detail media plan.
 
+Preview a field-aware work metadata scope:
+
+```bash
+./scripts/catalogue_json_build.py --work-id 00001 --changed-fields duration
+```
+
+The registry path is resolved from `assets/studio/data/studio_config.json` key `paths.data.studio.catalogue_field_registry`.
+
+Field-aware preview output shows the selected planner mode, rule ids, artifact families, generator `--only` values, catalogue-search selection, and local-media selection. For example, a focused work metadata field can preview `work-json` only, while editor-only fields can produce no public build commands.
+
 Run the scoped build:
 
 ```bash
@@ -87,6 +97,7 @@ Refresh only local image derivatives for one moment:
 The helper:
 
 - reads canonical JSON source from `assets/studio/data/catalogue/`
+- optionally reads field-aware planning rules from the registry path exposed by `studio_config.json`
 - resolves the current work record and its current published series ids
 - unions any `--extra-series-ids`
 - requires every series in the build scope to have `status: published`
@@ -104,6 +115,8 @@ The helper:
   - `works-index-json`
   - `recent-index-json`
 - then runs `build_search.rb --scope catalogue`
+
+When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. Unknown fields and mixed rule classes use conservative fallback.
 
 For `--moment-file`, the helper:
 

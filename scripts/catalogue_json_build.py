@@ -11,9 +11,10 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Iterable, Sequence
+from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from build_activity import append_build_activity
+from catalogue_field_registry import apply_field_build_plan_to_scope, field_aware_build_plan, load_catalogue_field_registry
 from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
 from moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
@@ -1272,6 +1273,84 @@ def summarize_moment_scope(moment_ids: Sequence[str]) -> str:
     return f"Build moments [{moment_text}], rebuild the moments index, and rebuild catalogue search."
 
 
+def parse_csv_tokens(value: Any) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    if value is None:
+        return out
+    raw_values = value if isinstance(value, list) else [value]
+    for raw in raw_values:
+        for part in str(raw or "").split(","):
+            item = part.strip()
+            if not item or item in seen:
+                continue
+            seen.add(item)
+            out.append(item)
+    return out
+
+
+def infer_record_family_for_scope(scope: Mapping[str, Any], explicit_family: str = "") -> str:
+    family = str(explicit_family or "").strip().lower().replace("-", "_")
+    if family:
+        if family not in {"work", "work_detail", "series", "moment"}:
+            raise ValueError("--record-family must be work, work_detail, series, or moment")
+        return family
+    if str(scope.get("kind") or "") == "moment":
+        return "moment"
+    if scope.get("detail_uid"):
+        return "work_detail"
+    if scope.get("series_ids") and not scope.get("work_ids"):
+        return "series"
+    return "work"
+
+
+def build_field_plan_for_scope(
+    repo_root: Path,
+    source_dir: Path,
+    scope: Mapping[str, Any],
+    *,
+    changed_fields: Sequence[str],
+    record_family: str = "",
+) -> Dict[str, Any]:
+    fields = [str(field).strip() for field in changed_fields if str(field).strip()]
+    if not fields:
+        return {}
+    family = infer_record_family_for_scope(scope, record_family)
+    registry = load_catalogue_field_registry(repo_root)
+    context: Dict[str, Any] = {}
+    if family in {"work", "work_detail", "series"}:
+        records = records_from_json_source(source_dir)
+        context["source_records"] = records
+        if family == "work":
+            work_ids = [str(item) for item in scope.get("work_ids", []) if str(item)]
+            if work_ids:
+                record = records.works.get(work_ids[0])
+                if isinstance(record, dict):
+                    context["current_record"] = record
+                    context["updated_record"] = record
+        elif family == "work_detail":
+            detail_uid = str(scope.get("detail_uid") or "").strip()
+            if detail_uid:
+                record = records.work_details.get(detail_uid)
+                if isinstance(record, dict):
+                    context["current_record"] = record
+                    context["updated_record"] = record
+        else:
+            series_ids = [str(item) for item in scope.get("series_ids", []) if str(item)]
+            if series_ids:
+                record = records.series.get(series_ids[0])
+                if isinstance(record, dict):
+                    context["current_record"] = record
+                    context["updated_record"] = record
+    return field_aware_build_plan(
+        registry,
+        record_family=family,
+        operation="metadata_update",
+        changed_field_names=fields,
+        context=context,
+    )
+
+
 def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:
     env = env or os.environ
     home = Path(env.get("HOME", "")).expanduser()
@@ -1719,7 +1798,16 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
     print(f"Published refresh: {'no' if media_only else 'yes'}")
     print(f"Search rebuild: {'no' if media_only else 'yes' if scope['rebuild_search'] else 'no'}")
     print(f"Media only: {'yes' if media_only else 'no'}")
-    media_plan = build_local_media_plan(repo_root, scope=scope, force=force)
+    field_plan = scope.get("field_plan") if isinstance(scope.get("field_plan"), dict) else {}
+    if field_plan:
+        print(f"Field-aware mode: {field_plan.get('mode') or 'unknown'}")
+        print(f"Field-aware rules: {', '.join(field_plan.get('rule_ids') or []) or 'none'}")
+        print(f"Field-aware artifacts: {', '.join(field_plan.get('artifacts') or []) or 'none'}")
+    media_plan = (
+        build_local_media_plan(repo_root, scope=scope, force=force)
+        if bool(scope.get("generate_local_media", True))
+        else {"counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
+    )
     media_counts = media_plan.get("counts", {})
     print(
         "Local media: "
@@ -1732,26 +1820,28 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
         print("Commands: media-only internal derivative refresh")
         return
     print("Commands:")
-    commands = (
-        [
-            build_generate_moment_command(
-                repo_root,
-                repo_root / DEFAULT_SOURCE_DIR,
-                scope,
-                write=False,
-                force=bool(force),
-                refresh_published=True,
-            ),
-            build_search_command(repo_root, write=False, force=bool(force)),
-        ]
-        if scope.get("kind") == "moment"
-        else [
-            build_generate_command(repo_root, source_dir, scope, write=False, force=force, refresh_published=True),
-            build_search_command(repo_root, write=False, force=force),
-        ]
-    )
-    for cmd in commands:
-        print("  + " + " ".join(cmd))
+    commands: list[list[str]] = []
+    if scope.get("generate_only"):
+        if scope.get("kind") == "moment":
+            commands.append(
+                build_generate_moment_command(
+                    repo_root,
+                    repo_root / DEFAULT_SOURCE_DIR,
+                    scope,
+                    write=False,
+                    force=bool(force),
+                    refresh_published=True,
+                )
+            )
+        else:
+            commands.append(build_generate_command(repo_root, source_dir, scope, write=False, force=force, refresh_published=True))
+    if bool(scope.get("rebuild_search")):
+        commands.append(build_search_command(repo_root, write=False, force=bool(force)))
+    if commands:
+        for cmd in commands:
+            print("  + " + " ".join(cmd))
+    else:
+        print("  (none)")
 
 
 def parse_args() -> argparse.Namespace:
@@ -1767,6 +1857,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--write", action="store_true", help="Run generation and search rebuild")
     parser.add_argument("--force", action="store_true", help="Force generation and search rewrites even when content versions match")
     parser.add_argument("--media-only", action="store_true", help="Only stage source media and regenerate local image derivatives")
+    parser.add_argument("--changed-fields", action="append", default=[], help="Optional comma-separated source fields for field-aware preview planning")
+    parser.add_argument("--record-family", default="", help="Record family for --changed-fields: work, work_detail, series, or moment")
     return parser.parse_args()
 
 
@@ -1785,42 +1877,27 @@ def main() -> None:
         scope = build_scope_for_series(source_dir, series_id, extra_work_ids=args.extra_work_ids.split(","))
     else:
         scope = build_scope_for_work(source_dir, work_id, extra_series_ids=args.extra_series_ids.split(","), detail_uid=args.detail_uid)
+    changed_fields = parse_csv_tokens(args.changed_fields)
+    if changed_fields:
+        build_plan = build_field_plan_for_scope(
+            repo_root,
+            source_dir,
+            scope,
+            changed_fields=changed_fields,
+            record_family=args.record_family,
+        )
+        apply_field_build_plan_to_scope(scope, build_plan)
     if not args.write:
         print_preview(scope, repo_root, source_dir, force=args.force, media_only=args.media_only)
         return
 
-    result = (
-        run_moment_scoped_build(
-            repo_root,
-            moment_file=moment_file,
-            write=True,
-            force=args.force,
-            media_only=args.media_only,
-            log_activity=True,
-        )
-        if moment_file
-        else run_series_scoped_build(
-            repo_root,
-            source_dir=source_dir,
-            series_id=series_id,
-            extra_work_ids=args.extra_work_ids.split(","),
-            write=True,
-            force=args.force,
-            media_only=args.media_only,
-            log_activity=True,
-        )
-        if series_id
-        else run_scoped_build(
-            repo_root,
-            source_dir=source_dir,
-            work_id=work_id,
-            extra_series_ids=args.extra_series_ids.split(","),
-            detail_uid=args.detail_uid,
-            write=True,
-            force=args.force,
-            media_only=args.media_only,
-            log_activity=True,
-        )
+    result = run_scoped_build_scope(
+        repo_root,
+        scope=scope,
+        write=True,
+        force=args.force,
+        media_only=args.media_only,
+        log_activity=True,
     )
     if result["status"] != "completed":
         raise SystemExit(str(result.get("error") or "Scoped JSON build failed."))

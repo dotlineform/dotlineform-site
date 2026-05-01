@@ -62,6 +62,10 @@ Purpose:
 - reviewable registry for the future Studio field-registry page
 - bridge between the Task 1 dependency inventory and later executable build-planning implementation
 
+Location:
+
+- exposed through `assets/studio/data/studio_config.json` at `paths.data.studio.catalogue_field_registry`
+
 Current content families:
 
 - `artifact_families` labels the artifact family vocabulary used by the planner
