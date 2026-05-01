@@ -165,8 +165,8 @@ Primary target artifacts:
   - work-detail source images
   - moment source images
 - It also fingerprints canonical prose sources for:
-  - work prose files resolved from `Works.project_folder` plus `Works.work_prose_file`
-  - series prose files resolved from `Series.primary_work_id` plus `Series.series_prose_file`
+  - work prose files resolved from `_docs_src_catalogue/works/<work_id>.md`
+  - series prose files resolved from `_docs_src_catalogue/series/<series_id>.md`
 - moment prose files resolved from `moments/<moment_id>.md`
 - Work, series, and moment prose changes trigger generation targeting only.
   They do not trigger copy/srcset and do not currently force a catalogue search rebuild on their own.

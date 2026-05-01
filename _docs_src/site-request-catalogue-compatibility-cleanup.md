@@ -31,6 +31,14 @@ Known examples to review:
 - deprecated workbook-led scripts and docs that should remain clearly separated from live workflow behavior
 - work file/link compatibility rows retained after `Works.downloads` and `Works.links` became canonical
 
+Task 1A in the field-aware build scoping request removed confirmed-retired source fields from canonical source, source schema helpers, write allowlists, and generated lookup payloads:
+
+- `works.<work_id>.work_prose_file`
+- `works.<work_id>.series_title`
+- `series.<series_id>.series_prose_file`
+
+Remaining compatibility cleanup should focus on the broader surfaces above, not on preserving those retired fields.
+
 These surfaces may be harmless individually, but together they make it harder to tell which fields are active source model, editor-only context, derived data, migration-only compatibility, or retired debt.
 
 ## Goals

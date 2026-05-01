@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f27fd603e6d7e6dba8b5fba0aa15a2ad",
-    "generated_at_utc": "2026-05-01T10:18:37Z",
+    "version": "blake2b-980959eed73304ee6662eca647d162c4",
+    "generated_at_utc": "2026-05-01T11:49:40Z",
     "count": 148
   },
   "entries": [
@@ -826,10 +826,10 @@
       "kind": "doc",
       "title": "Source Model",
       "href": "/docs/?scope=studio&doc=new-pipeline-source-model",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-01",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-27 • New Cat Pipeline",
+      "display_meta": "2026-05-01 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-source-model",
         "new",
@@ -839,12 +839,12 @@
         "source model",
         "new cat pipeline",
         "cat",
-        "2026-04-27",
+        "2026-05-01",
         "2026",
-        "04",
-        "27"
+        "05",
+        "01"
       ],
-      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-04-27 2026 04 27"
+      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-05-01 2026 05 01"
     },
     {
       "id": "docs-viewer-source-organisation",

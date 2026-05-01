@@ -102,7 +102,6 @@ Likely `single-record` candidates:
 - `width_cm`
 - `depth_cm`
 - `storage_location`
-- `work_prose_file`
 - `notes`
 - `provenance`
 - `artist`
@@ -278,7 +277,6 @@ Locked first-phase scope:
   - `width_cm`
   - `depth_cm`
   - `storage_location`
-  - `work_prose_file`
   - `notes`
   - `provenance`
   - `artist`

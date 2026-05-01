@@ -2,7 +2,7 @@
 doc_id: new-pipeline-source-model
 title: "Source Model"
 added_date: 2026-04-17
-last_updated: 2026-04-27
+last_updated: 2026-05-01
 parent_id: new-pipeline
 sort_order: 20
 ---
@@ -124,7 +124,6 @@ Primary map:
       "medium_caption": "ink on paper",
       "duration": null,
       "storage_location": "box 1",
-      "work_prose_file": "example.md",
       "notes": "",
       "provenance": "",
       "artist": "Michael Davies",
@@ -141,6 +140,8 @@ Field notes:
 - Keep `series_ids` as an ordered array.
 - The first `series_ids` item remains the primary series.
 - `width_px` and `height_px` remain source metadata once measured; they are no longer written back to the workbook.
+- Work prose uses the ID-derived source path `_docs_src_catalogue/works/<work_id>.md`; there is no source filename override field.
+- Series titles are derived from the related series records rather than stored redundantly on work records.
 - Internal fields such as `storage_location`, `notes`, and `provenance` can remain in source JSON, but only approved projections should reach runtime public JSON.
 
 ## `work_details.json`
@@ -196,7 +197,6 @@ Primary map:
       "year": 2026,
       "year_display": "2026",
       "primary_work_id": "00456",
-      "series_prose_file": "example-series.md",
       "notes": "",
       "sort_fields": "work_id"
     }
@@ -209,6 +209,7 @@ Field notes:
 - `sort_fields` replaces the separate `SeriesSort` table for the JSON-first model.
 - `primary_work_id` must reference a work whose `series_ids` includes this series when the series is publishable; draft source records may omit it temporarily.
 - `series_type` should remain explicit because Studio currently distinguishes primary series from other holdings/curated groups.
+- Series prose uses the ID-derived source path `_docs_src_catalogue/series/<series_id>.md`; there is no source filename override field.
 
 ## Work-Owned Files And Links
 

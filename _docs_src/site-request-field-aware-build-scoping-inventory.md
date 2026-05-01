@@ -93,8 +93,8 @@ Important distinction:
 | `works.<work_id>.links[]` | Work-owned link metadata. |
 | `works.<work_id>.notes` | Source/editor-only field for Studio pages; not published to the public site. |
 | `works.<work_id>.provenance` | Source/editor-only field for Studio pages; not published to the public site. |
-| `works.<work_id>.series_title` | Source/editor field; generated runtime derives current series title from series records. |
-| `works.<work_id>.work_prose_file` | Obsolete retained field; not a future path override. Remove from canonical source and do not create artifact rules for it. |
+| `works.<work_id>.series_title` | Removed retired denormalized source field. Generated runtime derives current series title from series records. |
+| `works.<work_id>.work_prose_file` | Removed obsolete retained field; not a future path override. Do not create artifact rules for it. |
 | `work_details.<detail_uid>.work_id` | Detail parent relation. |
 | `work_details.<detail_uid>.detail_id` | Detail-local identity. |
 | `work_details.<detail_uid>.detail_uid` | Detail identity and source map key consistency. |
@@ -115,7 +115,7 @@ Important distinction:
 | `series.<series_id>.published_date` | Series publish transition bookkeeping and `/recent/` ledger date; not displayed elsewhere outside Studio editor pages. |
 | `series.<series_id>.primary_work_id` | Source of public primary-work context in aggregate series data. |
 | `series.<series_id>.sort_fields` | Work ordering rules for generated series membership. |
-| `series.<series_id>.series_prose_file` | Obsolete retained field; not a future path override. Remove from canonical source and do not create artifact rules for it. |
+| `series.<series_id>.series_prose_file` | Removed obsolete retained field; not a future path override. Do not create artifact rules for it. |
 | `moments.<moment_id>.moment_id` | Moment identity and source map key consistency. |
 | `moments.<moment_id>.title` | Moment display and search metadata. |
 | `moments.<moment_id>.date` | Moment date and search metadata. |
@@ -435,6 +435,7 @@ Examples of metadata-only candidates:
 These fields are not future path overrides and should not become Task 2 artifact dependencies:
 
 - `works.<work_id>.work_prose_file`
+- `works.<work_id>.series_title`
 - `series.<series_id>.series_prose_file`
 
 Current prose resolution is ID-derived:
@@ -442,7 +443,7 @@ Current prose resolution is ID-derived:
 - work prose: `_docs_src_catalogue/works/<work_id>.md`
 - series prose: `_docs_src_catalogue/series/<series_id>.md`
 
-Follow-up implementation should remove the obsolete retained fields from canonical source records, source schemas, editor surfaces, and any compatibility payloads that still expose them.
+Task 1A removed these fields from canonical source records, source schemas, write allowlists, and generated Studio lookup payloads.
 
 Task 1A in the parent request should also record obvious adjacent retired-field candidates, but broader compatibility cleanup belongs in [Catalogue Compatibility Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup).
 
@@ -466,7 +467,8 @@ For metadata-free route shells, route page artifacts should be selected only by 
 These confirmations should guide Task 2 executable rules.
 
 - Route page artifacts are selected only for create/delete/identity operations.
-- `work_prose_file` and `series_prose_file` are obsolete retained fields and should be removed rather than supported as overrides.
+- `work_prose_file` and `series_prose_file` are obsolete retained fields and were removed rather than supported as overrides.
+- `series_title` was removed as a work source field; generated runtime derives current series titles from series records.
 - Retained compatibility paths should not become active Task 2 registry dependencies by default. Confirmed-retired fields are handled by Task 1A; broader compatibility-layer cleanup is tracked separately.
 - No source field outside the media-affecting summary changes media manifests, copy lists, or media readiness output.
 - Work `width_px` and `height_px` are derived from source images during the media/dimension workflow. They are not user-editable, but media replacement can require a canonical works JSON update when the image aspect ratio changes.

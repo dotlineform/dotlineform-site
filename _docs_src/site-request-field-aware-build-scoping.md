@@ -280,13 +280,14 @@ Resolved Task 1 note:
 
 Status:
 
-- planned
+- completed
 
 Check canonical source records, schemas, editor fields, lookup payloads, generated artifacts, and docs for retired catalogue fields.
 
-Initial known cleanup targets:
+Removed source fields:
 
 - `works.<work_id>.work_prose_file`
+- `works.<work_id>.series_title`
 - `series.<series_id>.series_prose_file`
 
 Also scan for obvious adjacent workbook-era or retained compatibility fields. If a field is clearly obsolete and its removal is narrow, remove it in this task. If the field still has unclear generator, lookup, import/export, or editor implications, document it as follow-up in [Catalogue Compatibility Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup) rather than turning Task 1A into a compatibility-layer refactor.
