@@ -88,8 +88,6 @@ Catalogue/runtime maintenance:
   - verifies representative field-aware catalogue build plans without writing files
 - `python3 ./scripts/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`
-- `python3 ./scripts/compare_catalogue_sources.py`
-  - compares workbook-normalized source records with JSON-normalized source records during transition checks
 - `python3 ./scripts/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
 - `bash scripts/make_srcset_images.sh`
@@ -116,7 +114,7 @@ Catalogue/runtime maintenance:
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
   Verify representative field-aware catalogue build plans and fallback behavior.
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
-  Validate and compare canonical catalogue source JSON during the transition away from workbook-led tooling.
+  Validate canonical catalogue source JSON and inspect source-adjacent project state.
 - [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
   Report source project folders and primary images that are not represented by `works.json`.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)

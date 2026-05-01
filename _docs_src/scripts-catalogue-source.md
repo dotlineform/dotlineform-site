@@ -8,7 +8,7 @@ sort_order: 60
 ---
 # Catalogue Source Utilities
 
-These utilities validate, compare, and inspect the canonical catalogue source JSON.
+These utilities validate and inspect the canonical catalogue source JSON.
 
 They do not write runtime-critical public catalogue artifacts. They work against canonical source JSON under:
 
@@ -33,16 +33,6 @@ Validation checks the source JSON for core relationship errors:
 - series `primary_work_id` values that are not members of that series
 - work details that reference unknown works when actionable
 
-## Compare
-
-```bash
-./scripts/compare_catalogue_sources.py
-```
-
-This comparison command is retained for transition diagnostics only. It is not part of the live catalogue maintenance workflow.
-
-Use source validation and scoped build previews for current JSON-source checks.
-
 ## Project State Report
 
 ```bash
@@ -55,13 +45,13 @@ Use this when you need to find source project folders or primary-image candidate
 
 ## Shared Module
 
-Shared source loading, normalization, validation, and comparison logic lives in:
+Shared source loading, normalization, and validation logic lives in:
 
 ```text
 scripts/catalogue_source.py
 ```
 
-This module is the shared source-data helper for current JSON source records plus retained import/diagnostic adapters.
+This module is the shared source-data helper for current JSON source records plus retained import adapters.
 
 ## Related References
 

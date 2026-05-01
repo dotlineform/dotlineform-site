@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed workbook-led script implementations
+
+**Status:** implemented
+
+**Area:** scripts / compatibility cleanup
+
+**Summary:**
+Replaced retained workbook-led catalogue entrypoints with short clean-exit stubs.
+
+**Reason:**
+The scripts already returned early in some cases, but still carried retired implementation code behind those returns. That left hidden compatibility artifacts in the repo and made it harder to tell which command paths were genuinely live.
+
+**Effect:**
+`build_catalogue.py`, `copy_draft_media_files.py`, `export_catalogue_source.py`, and `compare_catalogue_sources.py` now only print deprecation guidance and exit successfully. Active docs route current checks through source validation, Studio, and scoped JSON build previews.
+
+**Affected files/docs:**
+
+- `scripts/build_catalogue.py`
+- `scripts/copy_draft_media_files.py`
+- `scripts/export_catalogue_source.py`
+- `scripts/compare_catalogue_sources.py`
+- `AGENTS.md`
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Rewrote stale workbook workflow docs
 
 **Status:** implemented

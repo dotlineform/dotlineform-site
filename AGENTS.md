@@ -68,7 +68,7 @@
 
 - Treat `assets/studio/data/catalogue/*.json` as canonical source for catalogue metadata.
 - Treat the configured bulk-import workbook as an import source for new works and new work details only.
-- Do not treat workbook-led scripts as part of the live workflow. `build_catalogue.py`, `copy_draft_media_files.py`, and `export_catalogue_source.py` are retained as deprecated reference entrypoints and should exit cleanly.
+- Do not treat workbook-led scripts as part of the live workflow. `build_catalogue.py`, `copy_draft_media_files.py`, `export_catalogue_source.py`, and `compare_catalogue_sources.py` are retained as deprecated reference entrypoints and should exit cleanly.
 - Treat `scripts/catalogue_json_build.py` as the live CLI rebuild path for generated catalogue/runtime artifacts.
 - Treat `scripts/generate_work_pages.py` as an internal generator entrypoint, not a user-facing command.
 - Keep generated output deterministic (stable ordering, stable checksums, stable formatting).

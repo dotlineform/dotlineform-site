@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d543fb994bd4ecc2c0596a83e8a8d1a8",
-    "generated_at_utc": "2026-05-01T19:45:52Z",
+    "version": "blake2b-7872c9b984693d2ee3d18d370d16aba4",
+    "generated_at_utc": "2026-05-01T19:51:04Z",
     "count": 155
   },
   "entries": [
@@ -2457,22 +2457,22 @@
       "kind": "doc",
       "title": "Build Activity",
       "href": "/docs/?scope=studio&doc=build-activity",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-30 • Studio",
+      "display_meta": "2026-05-01 • Studio",
       "search_terms": [
         "build-activity",
         "build",
         "activity",
         "build activity",
         "studio",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "build-activity build activity build activity studio 2026-04-30 2026 04 30"
+      "search_text": "build-activity build activity build activity studio 2026-05-01 2026 05 01"
     },
     {
       "id": "search-incremental-orchestration-plan",

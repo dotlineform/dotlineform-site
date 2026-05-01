@@ -476,7 +476,7 @@ The live user-facing generator path is the scoped JSON build CLI:
 
 ## Build Flow
 
-The current `build_catalogue.py` couples source-change planning, media copy/srcset, generation, stale cleanup, search rebuild, and build activity.
+The retired `build_catalogue.py` coupled source-change planning, media copy/srcset, generation, stale cleanup, search rebuild, and build activity.
 
 New target flow:
 
@@ -487,7 +487,7 @@ New target flow:
 
 Media behavior:
 
-- `copy_draft_media_files.py` remains functionally the same.
+- media preparation should be handled by current media-specific workflows when needed.
 - `make_srcset_images.sh` remains functionally the same.
 - The new pipeline should not require `build_catalogue.py` to orchestrate media.
 - Studio can display commands or expose local build endpoints that call those scripts explicitly.

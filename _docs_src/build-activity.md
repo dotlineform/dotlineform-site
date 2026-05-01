@@ -2,7 +2,7 @@
 doc_id: build-activity
 title: "Build Activity"
 added_date: 2026-04-18
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: studio
 sort_order: 90
 ---
@@ -32,10 +32,7 @@ That service-backed read returns:
 
 - `assets/studio/data/build_activity.json`
 
-That feed is generated from:
-
-- successful non-dry-run `build_catalogue.py` runs
-- scoped JSON-source rebuilds triggered by the Studio catalogue workflow
+That feed is generated from scoped JSON-source rebuilds triggered by the Studio catalogue workflow.
 
 The published feed is a capped summary view. The fuller local journal lives outside the published assets under:
 
@@ -54,7 +51,6 @@ Each entry now includes:
 - result label
 - short summary text
 - source change groups when the run came from a JSON-source scoped rebuild
-- workbook change groups
 - media change groups
 - planned action counts
 - result flags such as planner state updates
@@ -67,7 +63,7 @@ Current planner mode labels:
 - `bootstrap`
 - `incremental`
 
-Historical planner labels came from the retired workbook-led pipeline. Current scoped JSON build entries use the JSON-led rebuild flow and share this same activity surface.
+Historical entries may still include retired workbook-led planner labels or workbook change groups. Current scoped JSON build entries use the JSON-led rebuild flow and share this same activity surface.
 
 ## Current Boundaries
 
