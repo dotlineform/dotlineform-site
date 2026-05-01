@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T15:10:35Z",
+  "generated_at": "2026-05-01T16:03:16Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -517,7 +517,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -570,6 +570,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio-smoke-testing",
+      "title": "Studio Smoke Testing",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "studio",
+      "sort_order": 25,
+      "published": true,
+      "viewable": true,
+      "source_path": "studio-smoke-testing.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
@@ -601,7 +615,7 @@
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "user-guide",
       "sort_order": 30,
       "published": true,
@@ -713,7 +727,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "design",
       "sort_order": 30,
       "published": true,
@@ -805,6 +819,20 @@
       "source_path": "docs-viewer-draft-publishing-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-draft-publishing-spec.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-ready-state-contract",
+      "title": "Studio Ready State Contract Request",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "change-requests",
+      "sort_order": 37,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-studio-ready-state-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json"
     },
     {
       "scope": "studio",
@@ -1959,7 +1987,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "",
       "sort_order": 220,
       "published": true,

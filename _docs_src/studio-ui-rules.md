@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,24 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-05-01 / UI-073
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: field-aware public-update preview existed in the CLI and write-server endpoint, but the Work editor had no visible way to inspect unsaved field changes before pressing `Save`.
+- triage: command placement / feedback density
+- reasoning: the current-record rail is already dense with generated metadata, runtime impact, summaries, and readiness. A preview command belongs next to the record preview media because it is a review action for the current work, but its detailed result should open in a modal so the rail does not become another report surface.
+- permanent rule: optional current-record review commands should sit immediately after the media preview and caption when they relate to the whole current record. Detailed, occasionally used impact output should use the shared modal shell instead of adding persistent text to an already dense summary rail.
+- outcome: added `Preview update` below the current-record image/caption. The command is enabled for unsaved single-work edits on published works, sends changed field names to the build-preview endpoint, and shows the field-aware summary, rules, artifacts, and wrapped reasons in a modal.
+- files changed:
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/catalogue-work-editor.md`
+- verification:
+  - edit a published work download without saving and confirm `Preview update` opens a modal showing `downloads` as the changed field
+  - confirm the button stays disabled when there are no unsaved changes, when the work is draft, or when validation errors block saving
 
 ## UI Rule Log 2026-04-30 / UI-072
 

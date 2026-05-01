@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b3f77e3d16f216dfd334856be4307d25",
-    "generated_at_utc": "2026-05-01T15:10:37Z",
-    "count": 149
+    "version": "blake2b-4cefc88a74059d52e3d10eba7d37f085",
+    "generated_at_utc": "2026-05-01T16:03:18Z",
+    "count": 151
   },
   "entries": [
     {
@@ -875,16 +875,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-04-30",
-      "display_meta": "2026-04-30",
+      "last_updated": "2026-05-01",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "studio",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "studio 2026-04-30 2026 04 30"
+      "search_text": "studio 2026-05-01 2026 05 01"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -958,6 +958,28 @@
       "search_text": "studio-ui-conformance studio ui conformance studio ui conformance spec spec design 2026-04-21 2026 04 21"
     },
     {
+      "id": "studio-smoke-testing",
+      "kind": "doc",
+      "title": "Studio Smoke Testing",
+      "href": "/docs/?scope=studio&doc=studio-smoke-testing",
+      "last_updated": "2026-05-01",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-01 • Studio",
+      "search_terms": [
+        "studio-smoke-testing",
+        "studio",
+        "smoke",
+        "testing",
+        "studio smoke testing",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-01 2026 05 01"
+    },
+    {
       "id": "ui-catalogue",
       "kind": "doc",
       "title": "UI Catalogue",
@@ -1011,10 +1033,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-30 • User Guide",
+      "display_meta": "2026-05-01 • User Guide",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -1024,12 +1046,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-04-30 2026 04 30"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-copy-draft-media",
@@ -1195,10 +1217,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-30 • Design",
+      "display_meta": "2026-05-01 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -1209,12 +1231,12 @@
         "decision",
         "log",
         "design",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-30 2026 04 30"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-05-01 2026 05 01"
     },
     {
       "id": "tag-groups",
@@ -1357,6 +1379,34 @@
         "25"
       ],
       "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-04-25 2026 04 25"
+    },
+    {
+      "id": "site-request-studio-ready-state-contract",
+      "kind": "doc",
+      "title": "Studio Ready State Contract Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
+      "last_updated": "2026-05-01",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-01 • Change Requests",
+      "search_terms": [
+        "site-request-studio-ready-state-contract",
+        "site",
+        "request",
+        "studio",
+        "ready",
+        "state",
+        "contract",
+        "studio ready state contract request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "bulk-add-work",
@@ -3277,19 +3327,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-04-30",
-      "display_meta": "2026-04-30",
+      "last_updated": "2026-05-01",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "change-requests change requests change requests 2026-04-30 2026 04 30"
+      "search_text": "change-requests change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "tag-editor",

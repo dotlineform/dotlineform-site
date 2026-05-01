@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: user-guide
 sort_order: 30
 ---
@@ -46,6 +46,7 @@ The first implementation covers:
 - validate basic field format before save
 - save metadata, with published-work saves updating the public catalogue internally
 - preview the scoped public update impact for the current work
+- preview the field-aware public update impact for unsaved single-work changes from the current-record rail
 - show work media readiness plus staged work prose readiness for `var/docs/catalogue/import-staging/works/<work_id>.md`
 - refresh local work image derivatives from the displayed source image path without changing source metadata
 - run a narrow `Import staged prose` action when the staged work prose Markdown file is ready
@@ -159,12 +160,13 @@ Current save/publication flow:
 6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
 7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
 8. `POST /catalogue/build-preview` reports the scoped public-update impact for the saved work record
-9. the same preview now also carries work media readiness and staged work prose readiness
-10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
-11. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
-12. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
-13. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
-14. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
+9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /catalogue/build-preview` and shows the field-aware result in a modal without saving
+10. the same preview now also carries work media readiness and staged work prose readiness
+11. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
+12. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_src_catalogue/works/<work_id>.md` after overwrite confirmation when needed
+13. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
+14. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
+15. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
 
 The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 

@@ -1,0 +1,115 @@
+---
+doc_id: studio-smoke-testing
+title: "Studio Smoke Testing"
+added_date: 2026-05-01
+last_updated: 2026-05-01
+parent_id: studio
+sort_order: 25
+---
+# Studio Smoke Testing
+
+This document records the practical harness rules for lightweight Codex-run Studio browser smoke tests.
+
+It complements the broader [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist). Use this page for test mechanics, not for scenario coverage.
+
+## Purpose
+
+Studio pages are local-service-backed, async-rendered admin surfaces. Smoke tests should verify real route behavior without creating false failures from racing page load, async list rendering, or browser scroll heuristics.
+
+Use these rules when a Codex-run check needs to open a Studio page, create temporary in-browser draft state, or click a Studio command.
+
+## Runtime Setup
+
+Prefer the normal local Studio stack when it is already running.
+
+For one-off static review, use:
+
+- a Jekyll build written to a temporary destination
+- a local static HTTP server serving that build
+- the catalogue write server when the page reads or writes catalogue source data
+
+Do not use a raw `file://` URL for Studio pages that depend on module imports, local services, or same-origin asset paths.
+
+## Page Readiness
+
+Do not interact with a Studio page immediately after `domcontentloaded`.
+
+Minimum readiness for page-level smoke tests:
+
+1. wait for the page root to be visible, such as `#catalogueWorkRoot:not([hidden])`
+2. wait for the page's loaded status text or another route-specific loaded marker
+3. allow a short settle window when the next action is below an async-rendered list or media preview
+
+Example:
+
+```python
+def wait_for_studio_loaded(page, root_selector, loaded_text):
+    page.wait_for_selector(f"{root_selector}:not([hidden])")
+    page.wait_for_function(
+        """([selector, text]) => document.querySelector(selector)?.textContent.includes(text)""",
+        ["#catalogueWorkStatus", loaded_text],
+    )
+    page.wait_for_timeout(300)
+```
+
+The status selector and loaded text should be route-specific. Do not assume every Studio page uses the same ids.
+
+## Pointer Clicks
+
+Use real pointer clicks for the control being tested.
+
+Before clicking controls below async-rendered lists, scroll the target into view and confirm hit testing resolves to the target or one of its children. This avoids false failures where Playwright's auto-scroll lands while a nearby row is still intercepting the click.
+
+Example:
+
+```python
+def click_when_hit_testable(page, selector):
+    target = page.locator(selector)
+    target.scroll_into_view_if_needed()
+    page.wait_for_timeout(100)
+    page.wait_for_function(
+        """selector => {
+            const el = document.querySelector(selector);
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            const hit = document.elementFromPoint(
+                rect.left + rect.width / 2,
+                rect.top + rect.height / 2
+            );
+            return hit === el || el.contains(hit);
+        }""",
+        selector,
+    )
+    target.click()
+```
+
+If hit testing does not resolve to the target, inspect the page geometry before treating the product as broken. A repeated failure may indicate a real overlap or stacking bug.
+
+## Setup Actions
+
+Use DOM activation only for setup-only actions that are not the behavior under test.
+
+Example:
+
+```python
+page.evaluate("document.querySelector('#catalogueWorkNewFileLink').click()")
+```
+
+This is acceptable when the test goal is a later control, such as a public-update preview modal, and the setup action only creates temporary in-browser draft state.
+
+Do not use DOM activation for the primary action being verified. If the action being verified cannot be clicked with a real pointer after readiness and hit-test checks, report that as a UI issue.
+
+## Current Known Gap
+
+Studio does not yet expose a shared route-ready contract. Smoke tests currently need route-specific root selectors and loaded status text.
+
+A proposed shared contract is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
+
+## Manual Check Pairing
+
+Every Codex-run smoke test should still name the manual follow-up when behavior depends on tactile interaction, visual layout, or mobile scrolling.
+
+For example:
+
+- Codex-run check: open the page, create draft state, click the target command, confirm modal text
+- manual check: repeat the same flow on desktop and mobile to confirm the control placement and pointer interaction feel natural

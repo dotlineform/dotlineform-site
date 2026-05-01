@@ -2341,6 +2341,17 @@ button.tagStudioList__cellLink {
   line-height: var(--line-snug);
 }
 
+.catalogueRecordPreview__actions {
+  display: flex;
+  align-items: center;
+}
+
+.catalogueWorkBuildPreview__reasons {
+  white-space: pre-wrap;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+
 .catalogueThumbPreview {
   position: relative;
   overflow: hidden;

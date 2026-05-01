@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: ""
 sort_order: 20
 ---
@@ -36,7 +36,8 @@ Read this section in this order:
 1. **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for Studio UI preflight before implementing or revising a Studio page
 2. **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
 3. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
-4. Technical route and workflow docs:
+4. **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
+5. Technical route and workflow docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**

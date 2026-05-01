@@ -111,6 +111,7 @@
   - installed browsers currently live under `~/Library/Caches/ms-playwright/`
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
+- For Studio Playwright smoke tests, follow `_docs_src/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
 - Always define targeted verification for both:
   - Codex-run checks
   - manual checks

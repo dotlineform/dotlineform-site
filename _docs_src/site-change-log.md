@@ -8,6 +8,54 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Documented Studio smoke-test harness guidance
+
+**Status:** implemented
+
+**Area:** Studio / testing
+
+**Summary:**
+Added a dedicated Studio smoke-testing reference, recorded future Studio ready-state work as a separate change request, and updated `AGENTS.md` so future Codex sessions use the same Playwright interaction rules.
+
+**Reason:**
+Recent Work editor smoke tests showed that async-rendered Studio pages can create false pointer-click failures when tests interact before the route has settled. The immediate need is a stable harness rule; the broader product improvement belongs in its own request.
+
+**Effect:**
+Codex-run Studio smoke tests now have documented guidance for route readiness waits, hit-testable pointer clicks, and setup-only DOM activation. The separate ready-state request tracks a future shared `data-studio-ready` / `data-studio-busy` contract.
+
+**Affected files/docs:**
+
+- `AGENTS.md`
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+## [2026-05-01] Added Work editor unsaved build preview modal
+
+**Status:** implemented
+
+**Area:** Studio / catalogue work editor
+
+**Summary:**
+Added a `Preview update` command to the Work editor current-record rail for unsaved single-work changes on published works.
+
+**Reason:**
+Field-aware build previews were available from the CLI and local write server, but the Work editor did not expose a visible preview before `Save`. The preview result is useful for occasional review, but too verbose to keep permanently in the already dense current-record rail.
+
+**Effect:**
+The command appears immediately after the current-record image and caption, sends the unsaved changed field names to `POST /catalogue/build-preview`, and shows the field-aware summary, rules, artifacts, and reasons in a modal. For a download-only edit, the modal reports the narrowed `work_local_public_metadata` scope instead of a broad series/search/media update.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Added field-aware catalogue registry verification
 
 **Status:** implemented
