@@ -50,6 +50,7 @@ These surfaces may be harmless individually, but together they make it harder to
 - keep any retained migration-only paths narrow, documented, and outside the field-to-artifact registry
 - preserve deterministic generated output while cleanup happens
 - make live JSON-source workflow boundaries easier to understand
+- apply cleanup as if the current scripts were being created without the old `data/works.xlsx` pipeline, so compatibility artifacts are removed rather than relocated under new names
 
 ## Non-Goals
 
@@ -89,17 +90,17 @@ Initial Task 1 finding:
 
 Status:
 
-- planned
+- in progress
 
 For each retained path, decide whether to remove it, narrow it, or keep it as documented migration/deprecated behavior.
 
 Particular decisions:
 
-- whether generator helpers still need workbook-shaped row/cell projection
-- whether `scripts/catalogue_source.py` should keep workbook-era headers for retired fields
-- whether Studio lookup focused-record payloads should continue exposing full source records
-- whether work file/link compatibility rows are still needed after work-owned `downloads` and `links`
-- how deprecated workbook-led script docs should describe retained clean-exit behavior
+- move workbook row helpers such as `header_map` and `cell` closer to the active bulk-import adapter
+- remove `data/works.xlsx` provenance from catalogue source metadata
+- remove stale `data/works.xlsx` references from current docs
+- remove `work_files` and `work_links` compatibility maps after confirming current flows no longer depend on them
+- keep deprecated clean-exit paths only where they still provide useful guidance during transition
 
 ### Task 3. Remove Or Narrow Compatibility Surfaces
 

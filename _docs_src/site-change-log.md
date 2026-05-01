@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Recorded compatibility cleanup retention direction
+
+**Status:** implemented
+
+**Area:** catalogue source model / documentation
+
+**Summary:**
+Resolved the first compatibility cleanup inventory questions and recorded the cleanup policy for upcoming implementation slices.
+
+**Reason:**
+The cleanup should not preserve compatibility artifacts under new names. Decisions needed to be made from the perspective of the current JSON-source pipeline rather than from the old `data/works.xlsx` workflow.
+
+**Effect:**
+The inventory now records that workbook row helpers should move beside the active bulk-import adapter, `data/works.xlsx` provenance and stale doc references should be removed, and `work_files` / `work_links` compatibility maps are not needed by current editor, lookup, delete, or validation paths. The parent request now marks retention-policy work as in progress.
+
+**Affected files/docs:**
+
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Started compatibility cleanup inventory
 
 **Status:** implemented
