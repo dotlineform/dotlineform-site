@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8f64ed43e7b95c26943580434f1d6c47",
-    "generated_at_utc": "2026-05-01T18:37:10Z",
-    "count": 154
+    "version": "blake2b-b6354ec30c7e67a9b73433140bbf09c5",
+    "generated_at_utc": "2026-05-01T18:46:47Z",
+    "count": 155
   },
   "entries": [
     {
@@ -194,6 +194,31 @@
         "01"
       ],
       "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request ✅ catalogue 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "site-request-catalogue-compatibility-cleanup-inventory",
+      "kind": "doc",
+      "title": "Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory",
+      "last_updated": "2026-05-01",
+      "parent_id": "site-request-catalogue-compatibility-cleanup",
+      "parent_title": "Compatibility Cleanup",
+      "display_meta": "2026-05-01 • Compatibility Cleanup",
+      "search_terms": [
+        "site-request-catalogue-compatibility-cleanup-inventory",
+        "site",
+        "request",
+        "catalogue",
+        "compatibility",
+        "cleanup",
+        "inventory",
+        "compatibility cleanup",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "site-request-catalogue-compatibility-cleanup-inventory site request catalogue compatibility cleanup inventory compatibility cleanup 2026-05-01 2026 05 01"
     },
     {
       "id": "config-jekyll-site-config",
@@ -2602,7 +2627,7 @@
     {
       "id": "site-request-catalogue-compatibility-cleanup",
       "kind": "doc",
-      "title": "Catalogue Compatibility Cleanup Request",
+      "title": "Compatibility Cleanup",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup",
       "last_updated": "2026-05-01",
       "parent_id": "change-requests",
@@ -2615,7 +2640,7 @@
         "catalogue",
         "compatibility",
         "cleanup",
-        "catalogue compatibility cleanup request",
+        "compatibility cleanup",
         "change requests",
         "change",
         "requests",
@@ -2624,7 +2649,7 @@
         "05",
         "01"
       ],
-      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup catalogue compatibility cleanup request change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-media-section-schema",

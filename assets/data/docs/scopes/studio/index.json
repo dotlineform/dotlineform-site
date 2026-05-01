@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T18:37:08Z",
+  "generated_at": "2026-05-01T18:46:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -105,6 +105,20 @@
       "source_path": "site-request-field-aware-build-scoping-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping-inventory.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-compatibility-cleanup-inventory",
+      "title": "Inventory",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "site-request-catalogue-compatibility-cleanup",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-compatibility-cleanup-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-compatibility-cleanup-inventory.json"
     },
     {
       "scope": "studio",
@@ -1537,7 +1551,7 @@
     {
       "scope": "studio",
       "doc_id": "site-request-catalogue-compatibility-cleanup",
-      "title": "Catalogue Compatibility Cleanup Request",
+      "title": "Compatibility Cleanup",
       "added_date": "2026-05-01",
       "last_updated": "2026-05-01",
       "parent_id": "change-requests",

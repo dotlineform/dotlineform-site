@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Started compatibility cleanup inventory
+
+**Status:** implemented
+
+**Area:** catalogue source model / documentation
+
+**Summary:**
+Added the first inventory document for the catalogue compatibility cleanup request.
+
+**Reason:**
+The compatibility cleanup needs a place to classify retained workbook-era and transitional paths before deciding what to keep, narrow, move, or remove. The active `data/works_bulk_import.xlsx` flow also needed to be distinguished from retired canonical editing through `data/works.xlsx`.
+
+**Effect:**
+The request now points Task 1 at a short child doc, [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory), with initial findings for the active bulk-import workbook adapter, workbook import helpers, deprecated workbook references, direct generator clean-exit behavior, source provenance metadata, and work file/link compatibility records.
+
+**Affected files/docs:**
+
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Added lightweight optional test framework
 
 **Status:** implemented

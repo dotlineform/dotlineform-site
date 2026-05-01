@@ -1,16 +1,16 @@
 ---
 doc_id: site-request-catalogue-compatibility-cleanup
-title: Catalogue Compatibility Cleanup Request
+title: Compatibility Cleanup
 added_date: 2026-05-01
 last_updated: 2026-05-01
 parent_id: change-requests
 sort_order: 101
 ---
-# Catalogue Compatibility Cleanup Request
+# Compatibility Cleanup
 
 Status:
 
-- planned
+- in progress
 
 ## Summary
 
@@ -30,6 +30,7 @@ Known examples to review:
 - Studio lookup payloads that expose full source records, including retired or compatibility-only fields
 - deprecated workbook-led scripts and docs that should remain clearly separated from live workflow behavior
 - work file/link compatibility rows retained after `Works.downloads` and `Works.links` became canonical
+- the active bulk-import workbook adapter for `data/works_bulk_import.xlsx`, which should remain one-way into canonical JSON even if its implementation still shares workbook-era helpers
 
 Task 1A in the field-aware build scoping request removed confirmed-retired source fields from canonical source, source schema helpers, write allowlists, and generated lookup payloads:
 
@@ -63,9 +64,13 @@ These surfaces may be harmless individually, but together they make it harder to
 
 Status:
 
-- planned
+- in progress
 
 List compatibility surfaces in code, canonical source JSON, generated Studio lookup payloads, generated public JSON, deprecated scripts, and docs.
+
+Inventory doc:
+
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
 
 The inventory should distinguish:
 
@@ -75,6 +80,10 @@ The inventory should distinguish:
 - migration-only compatibility fields
 - deprecated clean-exit commands
 - retired fields ready for removal
+
+Initial Task 1 finding:
+
+- `data/works_bulk_import.xlsx` is an active import adapter, not the retired canonical `data/works.xlsx` workflow. Any workbook-era implementation reused by bulk import should be narrowed into the new JSON-source pipeline boundary rather than removed as legacy by default.
 
 ### Task 2. Decide Retention Policy
 
