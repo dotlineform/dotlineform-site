@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T20:45:58Z",
+  "generated_at": "2026-05-01T10:02:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -97,7 +97,7 @@
       "doc_id": "site-request-field-aware-build-scoping-inventory",
       "title": "Field-Aware Build Scoping Inventory",
       "added_date": "2026-04-30",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "site-request-field-aware-build-scoping",
       "sort_order": 10,
       "published": true,
@@ -1469,7 +1469,7 @@
       "doc_id": "site-request-field-aware-build-scoping",
       "title": "Field-Aware Catalogue Build Scoping Request",
       "added_date": "2026-04-27",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "change-requests",
       "sort_order": 100,
       "published": true,

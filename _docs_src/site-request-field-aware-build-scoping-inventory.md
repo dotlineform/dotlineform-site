@@ -2,7 +2,7 @@
 doc_id: site-request-field-aware-build-scoping-inventory
 title: Field-Aware Build Scoping Inventory
 added_date: 2026-04-30
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: site-request-field-aware-build-scoping
 sort_order: 10
 ---
@@ -10,13 +10,16 @@ sort_order: 10
 
 Status:
 
-- initial inventory populated
+- Task 1 inventory reviewed
+- inventory gaps resolved for Task 2 rule drafting
 
 ## Purpose
 
 This document is the Task 1 evidence inventory for [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping).
 
 It maps catalogue source fields to the generated or Studio-facing artifact families that currently consume them. It is intentionally descriptive, not prescriptive: Task 2 should turn this inventory into field-to-artifact planning rules.
+
+After the executable registry and Studio registry review page exist, the tables in this document should be treated as a frozen evidence snapshot. The registry should become the single source of truth for active field-to-artifact dependencies.
 
 ## How To Read This Inventory
 
@@ -35,16 +38,16 @@ Important distinction:
 |---|---|---|
 | `source-json` | `assets/studio/data/catalogue/works.json`; `assets/studio/data/catalogue/work_details.json`; `assets/studio/data/catalogue/series.json`; `assets/studio/data/catalogue/moments.json`; `assets/studio/data/catalogue/meta.json` | Canonical local Studio metadata source. Excluded from Jekyll build/watch. |
 | `studio-lookup` | `assets/studio/data/catalogue_lookup/meta.json`; `assets/studio/data/catalogue_lookup/work_search.json`; `assets/studio/data/catalogue_lookup/series_search.json`; `assets/studio/data/catalogue_lookup/work_detail_search.json`; `assets/studio/data/catalogue_lookup/works/<work_id>.json`; `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`; `assets/studio/data/catalogue_lookup/series/<series_id>.json`; equivalent `/catalogue/read` payloads | Fast editor read model for search, focused records, summaries, hashes, details, downloads, and links. |
-| `work-page` | `_works/<work_id>.md` | Public Jekyll route shell for a work. Runtime data comes from focused JSON. |
+| `work-page` | `_works/<work_id>.md` | Public Jekyll route shell for a work. Runtime data comes from focused JSON; selection should be limited to create/delete/identity operations. |
 | `work-json` | `assets/works/index/<work_id>.json` | Main public metadata/prose/detail payload for one work. |
-| `work-details-page` | `_work_details/<detail_uid>.md` | Public Jekyll route shell for a work detail. Runtime context is loaded client-side. |
+| `work-details-page` | `_work_details/<detail_uid>.md` | Public Jekyll route shell for a work detail. Runtime context is loaded client-side; selection should be limited to create/delete/identity operations. |
 | `works-index-json` | `assets/data/works_index.json` | Lightweight public work index for index loading, series pages, and catalogue search. |
 | `work-storage-index-json` | `assets/studio/data/work_storage_index.json` | Studio-only storage lookup derived from work storage metadata. |
-| `series-page` | `_series/<series_id>.md` | Public Jekyll route shell for a series. Runtime data comes from aggregate indexes and focused JSON. |
+| `series-page` | `_series/<series_id>.md` | Public Jekyll route shell for a series. Runtime data comes from aggregate indexes and focused JSON; selection should be limited to create/delete/identity operations. |
 | `series-json` | `assets/series/index/<series_id>.json` | Focused public metadata/prose payload for one series. |
 | `series-index-json` | `assets/data/series_index.json` | Lightweight public series index for index loading, series membership, ordering, thumbnails, and catalogue search. |
 | `recent-index-json` | `assets/data/recent_index.json` | Public recent-publications index generated from publish transitions and current membership context. |
-| `moment-page` | `_moments/<moment_id>.md` | Public Jekyll route shell for a moment. Runtime data comes from focused JSON. |
+| `moment-page` | `_moments/<moment_id>.md` | Public Jekyll route shell for a moment. Runtime data comes from focused JSON; selection should be limited to create/delete/identity operations. |
 | `moment-json` | `assets/moments/index/<moment_id>.json` | Main public metadata/prose/image payload for one moment. |
 | `moments-index-json` | `assets/data/moments_index.json` | Lightweight public moment index for index loading and catalogue search. |
 | `catalogue-search` | `assets/data/search/catalogue/index.json` | Combined public search index for works, series, moments, and tags. |
@@ -69,7 +72,7 @@ Important distinction:
 |---|---|
 | `works.<work_id>.work_id` | Work identity and source map key consistency. |
 | `works.<work_id>.status` | Draft/published workflow state. |
-| `works.<work_id>.published_date` | Publish transition bookkeeping. |
+| `works.<work_id>.published_date` | Publish transition bookkeeping and `/recent/` ledger date; not displayed elsewhere outside Studio editor pages. |
 | `works.<work_id>.series_ids` | Work-to-series membership source. |
 | `works.<work_id>.project_folder` | Source media path input for primary work media and parent folder input for detail media. |
 | `works.<work_id>.project_filename` | Source media path input for primary work media. |
@@ -84,14 +87,14 @@ Important distinction:
 | `works.<work_id>.width_cm` | Physical dimension metadata. |
 | `works.<work_id>.height_cm` | Physical dimension metadata. |
 | `works.<work_id>.depth_cm` | Physical dimension metadata. |
-| `works.<work_id>.width_px` | Image dimension metadata. |
-| `works.<work_id>.height_px` | Image dimension metadata. |
+| `works.<work_id>.width_px` | Derived primary-image dimension metadata; not user editable. Updated from the source image during media/dimension refresh so public image aspect ratio stays correct. |
+| `works.<work_id>.height_px` | Derived primary-image dimension metadata; not user editable. Updated from the source image during media/dimension refresh so public image aspect ratio stays correct. |
 | `works.<work_id>.downloads[]` | Work-owned file metadata. |
 | `works.<work_id>.links[]` | Work-owned link metadata. |
-| `works.<work_id>.notes` | Source/editor field; current public consumers are limited or reserved. |
-| `works.<work_id>.provenance` | Source/editor field; current public consumers are limited or reserved. |
+| `works.<work_id>.notes` | Source/editor-only field for Studio pages; not published to the public site. |
+| `works.<work_id>.provenance` | Source/editor-only field for Studio pages; not published to the public site. |
 | `works.<work_id>.series_title` | Source/editor field; generated runtime derives current series title from series records. |
-| `works.<work_id>.work_prose_file` | Source/editor field; current generator resolves prose by `work_id`. |
+| `works.<work_id>.work_prose_file` | Obsolete retained field; not a future path override. Remove from canonical source and do not create artifact rules for it. |
 | `work_details.<detail_uid>.work_id` | Detail parent relation. |
 | `work_details.<detail_uid>.detail_id` | Detail-local identity. |
 | `work_details.<detail_uid>.detail_uid` | Detail identity and source map key consistency. |
@@ -109,16 +112,16 @@ Important distinction:
 | `series.<series_id>.year_display` | Core series display date metadata. |
 | `series.<series_id>.notes` | Core series metadata. |
 | `series.<series_id>.status` | Series workflow state. |
-| `series.<series_id>.published_date` | Series publish transition bookkeeping. |
+| `series.<series_id>.published_date` | Series publish transition bookkeeping and `/recent/` ledger date; not displayed elsewhere outside Studio editor pages. |
 | `series.<series_id>.primary_work_id` | Source of public primary-work context in aggregate series data. |
 | `series.<series_id>.sort_fields` | Work ordering rules for generated series membership. |
-| `series.<series_id>.series_prose_file` | Source/editor field; current generator resolves prose by `series_id`. |
+| `series.<series_id>.series_prose_file` | Obsolete retained field; not a future path override. Remove from canonical source and do not create artifact rules for it. |
 | `moments.<moment_id>.moment_id` | Moment identity and source map key consistency. |
 | `moments.<moment_id>.title` | Moment display and search metadata. |
 | `moments.<moment_id>.date` | Moment date and search metadata. |
 | `moments.<moment_id>.date_display` | Moment display date and search metadata. |
 | `moments.<moment_id>.status` | Moment workflow state. |
-| `moments.<moment_id>.published_date` | Moment publish bookkeeping. |
+| `moments.<moment_id>.published_date` | Moment publish bookkeeping; not displayed outside Studio editor pages. |
 | `moments.<moment_id>.source_image_file` | Moment image source metadata. |
 | `moments.<moment_id>.image_alt` | Moment public image alt metadata. |
 
@@ -165,6 +168,8 @@ Important distinction:
 
 ## `work-page` Fields
 
+Route page artifacts are metadata-free route anchors. Field-aware planning should select them only for create/delete/identity operations, not for metadata-only edits.
+
 | Artifact field | Purpose |
 |---|---|
 | `filename_stem` | Route identity for `/works/<work_id>/`; layout comes from `_config.yml` collection defaults. |
@@ -207,6 +212,8 @@ Important distinction:
 
 ## `work-details-page` Fields
 
+Route page artifacts are metadata-free route anchors. Field-aware planning should select them only for create/delete/identity operations, not for metadata-only edits.
+
 | Artifact field | Purpose |
 |---|---|
 | `filename_stem` | Detail route identity for `/work_details/<detail_uid>/`; parent work id is derived from the detail uid prefix and layout comes from `_config.yml` collection defaults. |
@@ -237,6 +244,8 @@ Important distinction:
 
 ## `series-page` Fields
 
+Route page artifacts are metadata-free route anchors. Field-aware planning should select them only for create/delete/identity operations, not for metadata-only edits.
+
 | Artifact field | Purpose |
 |---|---|
 | `filename_stem` | Route identity for `/series/<series_id>/`; layout comes from `_config.yml` collection defaults. |
@@ -252,7 +261,7 @@ Important distinction:
 | `header.count` | Published work count. |
 | `series.series_id` | Focused public series identity. |
 | `series.status` | Focused public series workflow state. |
-| `series.published_date` | Focused public series publication metadata. |
+| `series.published_date` | Series publish bookkeeping/runtime metadata; not displayed on public series pages. |
 | `series.title` | Focused public series display metadata. |
 | `series.series_type` | Focused public series metadata. |
 | `series.year` | Focused public series date metadata. |
@@ -272,7 +281,7 @@ Important distinction:
 | `header.count` | Series count. |
 | `series.<series_id>.series_id` | Series identity and map key consistency. |
 | `series.<series_id>.status` | Series publication state. |
-| `series.<series_id>.published_date` | Series publication metadata. |
+| `series.<series_id>.published_date` | Series publish bookkeeping/runtime metadata and `/recent/` pruning context; not displayed on public index pages. |
 | `series.<series_id>.title` | Public aggregate series display metadata and search source data. |
 | `series.<series_id>.series_type` | Public aggregate series metadata and search source data. |
 | `series.<series_id>.year` | Public aggregate series date metadata and search source data. |
@@ -301,6 +310,8 @@ Important distinction:
 | `entries[].thumb_id` | Thumbnail target, usually work id or series primary work id. |
 
 ## `moment-page` Fields
+
+Route page artifacts are metadata-free route anchors. Field-aware planning should select them only for create/delete/identity operations, not for metadata-only edits.
 
 | Artifact field | Purpose |
 |---|---|
@@ -340,6 +351,10 @@ Important distinction:
 
 ## `catalogue-search` Fields
 
+Targeted catalogue search means invoking `scripts/build_search.rb --scope catalogue --only-records kind:id,...` to merge selected `work`, `series`, or `moment` records into the existing public search artifact instead of rebuilding the full catalogue search index.
+
+Current targeted catalogue search is additive-only: it can insert missing new records, treat identical existing records as unchanged, and refuse changed existing records. It does not update or remove existing catalogue search records. This is the current policy because catalogue search entries are not isolated single-source records. A work search entry can depend on work index data, focused work JSON, series titles, series membership, and tags; series and moment records have their own cross-artifact dependencies. Until Task 2 defines executable field-to-record invalidation rules for those dependencies, metadata edits, relationship edits, tag changes, removals, and ambiguous states should continue to trigger a full catalogue search rebuild.
+
 | Artifact field | Purpose |
 |---|---|
 | `entries[].kind` | Search result type. |
@@ -366,6 +381,8 @@ This section is a reference for the separate image-media workflow. It is not par
 Current Studio behavior keeps explicit image refresh separate from JSON rebuild scoping: the media readiness action calls `POST /catalogue/build-apply` with `media_only: true`, so it stages source images, regenerates local derivatives, and copies thumbnails without regenerating page JSON or catalogue search.
 
 Replacing a source image with the same filename does not change catalogue source JSON. In the Studio save path, no source JSON change means no public JSON rebuild is requested. If a user changes metadata and an image is also pending, the normal scoped build may run media planning before JSON generation, but the JSON generation is caused by the source JSON change, not by the image replacement itself.
+
+No source field outside the media-affecting summary below changes media manifests, copy lists, or media readiness output. There is one important reverse dependency: `works.<work_id>.width_px` and `works.<work_id>.height_px` are derived, non-user-editable fields populated from the primary source image during the media/dimension workflow. If a work image is replaced and the pixel dimensions differ, canonical works JSON and focused public work JSON must be refreshed so the published image renders with the correct aspect ratio.
 
 For Task 2, treat image media as out of scope for JSON artifact dependency rules. Keep `downloads` and `links` in scope because they are work-owned source JSON metadata, not image media.
 
@@ -404,7 +421,7 @@ These are the current media-affecting field sets.
 | moment | `moment_id` | Names moment media derivative outputs. |
 | moment | `source_image_file` | Resolves the moment source media path. |
 
-Metadata-only source JSON changes should not be treated as image-media changes.
+Metadata-only source JSON changes should not be treated as image-media changes. Derived work image dimensions are the exception in the opposite direction: a media refresh can produce a source JSON dimension change, and that dimension change should then follow normal JSON artifact dependency rules.
 
 Examples of metadata-only candidates:
 
@@ -412,6 +429,20 @@ Examples of metadata-only candidates:
 - work detail `title`, `status`, `published_date`, `width_px`, `height_px`
 - series `title`, `year`, `year_display`, `series_type`, `notes`, `primary_work_id`, `sort_fields`
 - moment `title`, `date`, `date_display`, `image_alt`
+
+## Obsolete Retained Source Fields
+
+These fields are not future path overrides and should not become Task 2 artifact dependencies:
+
+- `works.<work_id>.work_prose_file`
+- `series.<series_id>.series_prose_file`
+
+Current prose resolution is ID-derived:
+
+- work prose: `_docs_src_catalogue/works/<work_id>.md`
+- series prose: `_docs_src_catalogue/series/<series_id>.md`
+
+Follow-up implementation should remove the obsolete retained fields from canonical source records, source schemas, editor surfaces, and any compatibility payloads that still expose them.
 
 ## Structural Operations
 
@@ -426,13 +457,16 @@ Examples:
 - bulk saves that mix multiple record families
 - unknown fields added to source records before the registry is updated
 
-## Inventory Gaps
+For metadata-free route shells, route page artifacts should be selected only by create/delete/identity operations once those explicit rules are in place.
 
-These items should be confirmed before Task 2 turns this into executable rules.
+## Resolved Task 1 Decisions
 
-- Confirm whether route page artifacts should be selected only for create/delete/identity operations now that stubs are metadata-free.
-- Confirm whether `work_prose_file` and `series_prose_file` are obsolete retained fields or future path overrides.
-- Confirm whether any source field outside the media-affecting summary can change media manifests, copy lists, or media readiness output.
-- Confirm whether `notes` and `provenance` are intentionally source/editor-only for works.
-- Confirm whether `published_date` should remain transition/bookkeeping-only for works and moments or become public metadata.
-- Confirm whether targeted catalogue search can safely update existing records in the future; current targeted catalogue policy is additive-only.
+These confirmations should guide Task 2 executable rules.
+
+- Route page artifacts are selected only for create/delete/identity operations.
+- `work_prose_file` and `series_prose_file` are obsolete retained fields and should be removed rather than supported as overrides.
+- No source field outside the media-affecting summary changes media manifests, copy lists, or media readiness output.
+- Work `width_px` and `height_px` are derived from source images during the media/dimension workflow. They are not user-editable, but media replacement can require a canonical works JSON update when the image aspect ratio changes.
+- Work `notes` and `provenance` are Studio/editor-only fields and are not published to the public site.
+- `published_date` is transition/bookkeeping metadata. Outside Studio editor pages, its public role is limited to the `/recent/` recently added ledger and related pruning/order context.
+- Current targeted catalogue search is additive-only by design. Existing-record catalogue search updates and removals should remain full-rebuild-only until Task 2 or a later search-specific task defines safe invalidation and merge rules for cross-artifact dependencies.

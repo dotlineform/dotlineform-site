@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7916fe0cb598dd7b9d3dfba40ed2f154",
-    "generated_at_utc": "2026-04-30T20:46:00Z",
+    "version": "blake2b-72288a9d4dcbde8850021e14715b105a",
+    "generated_at_utc": "2026-05-01T10:02:55Z",
     "count": 147
   },
   "entries": [
@@ -172,10 +172,10 @@
       "kind": "doc",
       "title": "Field-Aware Build Scoping Inventory",
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "site-request-field-aware-build-scoping",
       "parent_title": "Field-Aware Catalogue Build Scoping Request",
-      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request",
+      "display_meta": "2026-05-01 • Field-Aware Catalogue Build Scoping Request",
       "search_terms": [
         "site-request-field-aware-build-scoping-inventory",
         "site",
@@ -188,12 +188,12 @@
         "field-aware build scoping inventory",
         "field-aware catalogue build scoping request",
         "catalogue",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request catalogue 2026-04-30 2026 04 30"
+      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request catalogue 2026-05-01 2026 05 01"
     },
     {
       "id": "config-jekyll-site-config",
@@ -2478,10 +2478,10 @@
       "kind": "doc",
       "title": "Field-Aware Catalogue Build Scoping Request",
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-01",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-30 • Change Requests",
+      "display_meta": "2026-05-01 • Change Requests",
       "search_terms": [
         "site-request-field-aware-build-scoping",
         "site",
@@ -2495,12 +2495,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-30",
+        "2026-05-01",
         "2026",
-        "04",
-        "30"
+        "05",
+        "01"
       ],
-      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue change requests change requests 2026-04-30 2026 04 30"
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-media-section-schema",

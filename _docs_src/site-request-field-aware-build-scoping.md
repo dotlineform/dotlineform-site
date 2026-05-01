@@ -2,7 +2,7 @@
 doc_id: site-request-field-aware-build-scoping
 title: Field-Aware Catalogue Build Scoping Request
 added_date: 2026-04-27
-last_updated: 2026-04-30
+last_updated: 2026-05-01
 parent_id: change-requests
 sort_order: 100
 ---
@@ -178,6 +178,8 @@ This can live in code or config, but it should be explicit enough for:
 - dry-run explanations
 - tests or fixture checks
 
+Before building the executable registry, run a retired-field cleanup pass so obsolete source fields do not become permanent registry entries.
+
 ### Stage 2. Use The Registry In Build Planning
 
 Update work-scoped build planning so callers can pass changed-field context.
@@ -206,6 +208,12 @@ Add targeted verification around representative changes:
 - work title/year/status changes select the required search/index surfaces
 - `series_ids` change selects old and new series
 - unknown or mixed changes keep the safe fallback
+
+### Stage 5. Add A Registry Review Surface
+
+After the analysis is complete and the executable registry exists, add a Studio page that displays the field registry for future review.
+
+The page can render the registry as a tree list, grouped table, or generated Markdown-style document. The important requirement is that the registry becomes the single source of truth and the Studio page becomes the review surface. At that point, the current inventory document tables should be treated as a frozen evidence snapshot rather than living dependency tables.
 
 ## Task List
 
@@ -256,6 +264,29 @@ Open questions:
 - none blocking for Task 1
 - confirm whether any non-image metadata currently changes generated JSON artifacts through retained compatibility paths
 
+### Task 1A. Retired Field Cleanup
+
+Status:
+
+- planned
+
+Check canonical source records, schemas, editor fields, lookup payloads, generated artifacts, and docs for retired catalogue fields.
+
+Initial known cleanup targets:
+
+- `works.<work_id>.work_prose_file`
+- `series.<series_id>.series_prose_file`
+
+Remove confirmed-retired fields before creating executable field-to-artifact rules, so the new registry does not preserve obsolete compatibility surface.
+
+Acceptance checks:
+
+- retired fields are absent from canonical source records
+- retired fields are absent from Studio editor forms and lookup payloads
+- retired fields are absent from source schema/normalization helpers unless a migration-only compatibility path is explicitly documented
+- generated public artifacts do not expose retired fields
+- docs identify ID-derived prose paths as the supported model
+
 ### Task 2. Define Field-To-Artifact Rules
 
 Status:
@@ -271,6 +302,8 @@ The registry should include:
 - series fields
 - moment fields if the same planner model is extended there
 - fallback rules for unknown fields and structural operations
+
+The registry becomes the single source of truth for active field-to-artifact dependencies. The Task 1 inventory remains useful as the evidence basis for this task, but should stop being maintained as the live dependency table once the registry is built.
 
 ### Task 3. Wire Rules Into Write-Server Planning
 
@@ -322,12 +355,37 @@ Add targeted checks for:
 
 Update the relevant script and Studio docs after implementation.
 
+### Task 7. Add Studio Field Registry Review Page
+
+Status:
+
+- planned
+
+Create a Studio page that surfaces the active field-to-artifact registry for review.
+
+The page should:
+
+- load the registry source of truth, not scrape the frozen inventory document
+- group fields by record family and artifact family
+- show fallback rules for unknown, mixed, create/delete, and identity operations
+- make retired or unsupported fields visibly absent rather than silently listed
+- support quick scanning through a tree list, grouped table, or generated Markdown-style view
+- link back to the frozen inventory evidence doc and this change request for context
+
+Acceptance checks:
+
+- the Studio page reflects the executable registry exactly
+- current inventory tables are treated as frozen evidence, not an editable live dependency source
+- adding a new active source field requires updating the registry before the page can display a complete dependency model
+- manual review can confirm work, detail, series, moment, media, and catalogue-search dependency groups without reading implementation code
+
 ## Benefits
 
 - scoped dry-runs become easier to trust
 - small metadata edits create less generated-output noise
 - metadata-only saves avoid unnecessary local media checks and generation work
 - build planning rules become inspectable instead of implicit
+- the active registry can be reviewed from Studio without treating planning docs as source of truth
 - future source-model changes can reuse the same dependency model
 
 ## Risks
@@ -335,9 +393,11 @@ Update the relevant script and Studio docs after implementation.
 - under-scoping can leave stale generated artifacts
 - dependency rules can drift if new fields are added without registry updates
 - field-aware planning can become harder to reason about if fallback rules are not explicit
+- the Studio review page can drift if it duplicates registry logic instead of rendering the registry itself
 
 Mitigation:
 
 - keep conservative fallback as the default for unknown cases
 - make dependency reasons visible in dry-runs
+- make the Studio page read the registry source of truth directly
 - verify representative changes before replacing broad scopes
