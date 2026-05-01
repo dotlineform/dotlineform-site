@@ -5138,6 +5138,7 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["lookup_refresh"] = lookup_refresh_payload
             if changed_work_ids:
                 build_plan = full_fallback_build_plan(
+                    self.server.field_registry,
                     fields=[*series_changed_fields, "work.series_ids"],
                     fallback_reason="series_save_changed_member_works",
                     reason="Series save also changed member work records; use conservative fallback until cross-family saves are scoped explicitly.",

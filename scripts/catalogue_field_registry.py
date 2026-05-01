@@ -39,60 +39,6 @@ BUILD_ARTIFACT_ORDER = [
     "moments-index-json",
 ]
 
-DEFAULT_JSON_BUILD_GENERATE_ARTIFACTS = [
-    "work-pages",
-    "work-json",
-    "series-pages",
-    "series-index-json",
-    "works-index-json",
-    "recent-index-json",
-]
-
-DEFAULT_MOMENT_BUILD_GENERATE_ARTIFACTS = ["moments"]
-
-FALLBACK_REGISTRY_ARTIFACTS_BY_FAMILY = {
-    "work": [
-        "source-json",
-        "studio-lookup",
-        "work-page",
-        "work-json",
-        "works-index-json",
-        "series-page",
-        "series-json",
-        "series-index-json",
-        "recent-index-json",
-        "catalogue-search",
-        "local-media",
-    ],
-    "work_detail": [
-        "source-json",
-        "studio-lookup",
-        "work-details-page",
-        "work-json",
-        "catalogue-search",
-        "local-media",
-    ],
-    "series": [
-        "source-json",
-        "studio-lookup",
-        "series-page",
-        "series-json",
-        "series-index-json",
-        "works-index-json",
-        "recent-index-json",
-        "catalogue-search",
-    ],
-    "moment": [
-        "source-json",
-        "moment-page",
-        "moment-json",
-        "moments-index-json",
-        "catalogue-search",
-        "local-media",
-    ],
-}
-
-
 def normalize_series_ids_value(value: Any) -> list[str]:
     if value is None:
         return []
@@ -172,25 +118,19 @@ def build_rule_index(
 
 
 def registry_default_reason(registry: Mapping[str, Any], key: str, fallback: str) -> str:
+    target = registry_default_target(registry, key)
+    return str(target.get("reason") or fallback)
+
+
+def registry_default_target(registry: Mapping[str, Any], key: str) -> Mapping[str, Any]:
     defaults = registry.get("defaults") if isinstance(registry.get("defaults"), Mapping) else {}
     default_row = defaults.get(key) if isinstance(defaults, Mapping) else {}
-    target = default_row.get("target") if isinstance(default_row, Mapping) and isinstance(default_row.get("target"), Mapping) else {}
-    return str(target.get("reason") or fallback)
+    return default_row.get("target") if isinstance(default_row, Mapping) and isinstance(default_row.get("target"), Mapping) else {}
 
 
 def ordered_generate_artifacts(artifacts: Iterable[str]) -> list[str]:
     selected = {str(artifact) for artifact in artifacts if str(artifact)}
     return [artifact for artifact in BUILD_ARTIFACT_ORDER if artifact in selected]
-
-
-def fallback_generate_only_for_record_family(record_family: str) -> list[str]:
-    if record_family == "moment":
-        return list(DEFAULT_MOMENT_BUILD_GENERATE_ARTIFACTS)
-    return list(DEFAULT_JSON_BUILD_GENERATE_ARTIFACTS)
-
-
-def fallback_registry_artifacts_for_record_family(record_family: str) -> list[str]:
-    return list(FALLBACK_REGISTRY_ARTIFACTS_BY_FAMILY.get(record_family, FALLBACK_REGISTRY_ARTIFACTS_BY_FAMILY["work"]))
 
 
 def registry_artifacts_to_generate_only(artifacts: Iterable[str]) -> list[str]:
@@ -200,6 +140,26 @@ def registry_artifacts_to_generate_only(artifacts: Iterable[str]) -> list[str]:
         if generate_artifact:
             mapped.add(generate_artifact)
     return ordered_generate_artifacts(mapped)
+
+
+def fallback_registry_artifacts_for_record_family(
+    registry: Mapping[str, Any],
+    *,
+    default_key: str,
+    record_family: str,
+) -> list[str]:
+    target = registry_default_target(registry, default_key)
+    by_family = target.get("artifacts_by_record_family")
+    if isinstance(by_family, Mapping):
+        raw_artifacts = by_family.get(record_family)
+        if raw_artifacts is None:
+            raw_artifacts = by_family.get("work")
+        if isinstance(raw_artifacts, list):
+            return [str(artifact) for artifact in raw_artifacts if str(artifact).strip()]
+    raw_artifacts = target.get("artifacts")
+    if isinstance(raw_artifacts, list):
+        return [str(artifact) for artifact in raw_artifacts if str(artifact).strip()]
+    raise ValueError(f"catalogue field registry default {default_key} is missing fallback artifacts for {record_family}")
 
 
 def series_sort_fields_for_work(records: CatalogueSourceRecords, work_record: Mapping[str, Any]) -> set[str]:
@@ -301,12 +261,17 @@ def field_aware_build_plan(
     rule_index = build_rule_index(registry, record_family=record_family, operation=operation)
     unknown_fields = [field for field in changed if field not in rule_index]
     if unknown_fields:
-        artifacts = fallback_registry_artifacts_for_record_family(record_family)
+        artifacts = fallback_registry_artifacts_for_record_family(
+            registry,
+            default_key="unknown_field",
+            record_family=record_family,
+        )
         reason = registry_default_reason(
             registry,
             "unknown_field",
             "Unknown source fields use conservative fallback until explicitly classified.",
         )
+        generate_only = registry_artifacts_to_generate_only(artifacts)
         return {
             "mode": "full-fallback",
             "fallback": True,
@@ -314,10 +279,10 @@ def field_aware_build_plan(
             "fields": changed,
             "rule_ids": [],
             "artifacts": artifacts,
-            "generate_only": fallback_generate_only_for_record_family(record_family),
-            "rebuild_search": True,
-            "generate_local_media": True,
-            "build_required": True,
+            "generate_only": generate_only,
+            "rebuild_search": "catalogue-search" in artifacts,
+            "generate_local_media": "local-media" in artifacts,
+            "build_required": bool(generate_only or "catalogue-search" in artifacts or "local-media" in artifacts),
             "unknown_fields": unknown_fields,
             "reason": reason,
             "explanations": build_artifact_explanations(
@@ -337,8 +302,17 @@ def field_aware_build_plan(
         matched_rules[str(rule.get("id") or "")] = rule
 
     if len(matched_rules) != 1:
-        artifacts = fallback_registry_artifacts_for_record_family(record_family)
-        reason = "Mixed edits spanning dependency classes use conservative fallback."
+        artifacts = fallback_registry_artifacts_for_record_family(
+            registry,
+            default_key="mixed_dependency_classes",
+            record_family=record_family,
+        )
+        reason = registry_default_reason(
+            registry,
+            "mixed_dependency_classes",
+            "Mixed edits spanning dependency classes use conservative fallback.",
+        )
+        generate_only = registry_artifacts_to_generate_only(artifacts)
         return {
             "mode": "full-fallback",
             "fallback": True,
@@ -346,10 +320,10 @@ def field_aware_build_plan(
             "fields": changed,
             "rule_ids": sorted(matched_rules),
             "artifacts": artifacts,
-            "generate_only": fallback_generate_only_for_record_family(record_family),
-            "rebuild_search": True,
-            "generate_local_media": True,
-            "build_required": True,
+            "generate_only": generate_only,
+            "rebuild_search": "catalogue-search" in artifacts,
+            "generate_local_media": "local-media" in artifacts,
+            "build_required": bool(generate_only or "catalogue-search" in artifacts or "local-media" in artifacts),
             "unknown_fields": [],
             "reason": reason,
             "explanations": build_artifact_explanations(
@@ -366,8 +340,18 @@ def field_aware_build_plan(
     rule_id, rule = next(iter(matched_rules.items()))
     target = rule.get("target") if isinstance(rule.get("target"), Mapping) else {}
     if bool(target.get("fallback")):
-        artifacts = fallback_registry_artifacts_for_record_family(record_family)
+        raw_artifacts = target.get("artifacts")
+        artifacts = (
+            [str(artifact) for artifact in raw_artifacts if str(artifact).strip()]
+            if isinstance(raw_artifacts, list)
+            else fallback_registry_artifacts_for_record_family(
+                registry,
+                default_key="unknown_field",
+                record_family=record_family,
+            )
+        )
         reason = str(target.get("reason") or "Registry rule requires conservative fallback.")
+        generate_only = registry_artifacts_to_generate_only(artifacts)
         return {
             "mode": "full-fallback",
             "fallback": True,
@@ -375,10 +359,10 @@ def field_aware_build_plan(
             "fields": changed,
             "rule_ids": [rule_id],
             "artifacts": artifacts,
-            "generate_only": fallback_generate_only_for_record_family(record_family),
-            "rebuild_search": True,
-            "generate_local_media": True,
-            "build_required": True,
+            "generate_only": generate_only,
+            "rebuild_search": "catalogue-search" in artifacts,
+            "generate_local_media": "local-media" in artifacts,
+            "build_required": bool(generate_only or "catalogue-search" in artifacts or "local-media" in artifacts),
             "unknown_fields": [],
             "reason": reason,
             "explanations": build_artifact_explanations(
@@ -447,14 +431,21 @@ def field_aware_build_plan(
 
 
 def full_fallback_build_plan(
+    registry: Mapping[str, Any],
     *,
     fields: Iterable[str],
     reason: str,
     fallback_reason: str,
     record_family: str,
+    default_key: str = "mixed_dependency_classes",
 ) -> Dict[str, Any]:
     fallback_reason_text = str(reason or "Conservative fallback selected this artifact family.")
-    artifacts = fallback_registry_artifacts_for_record_family(record_family)
+    artifacts = fallback_registry_artifacts_for_record_family(
+        registry,
+        default_key=default_key,
+        record_family=record_family,
+    )
+    generate_only = registry_artifacts_to_generate_only(artifacts)
     return {
         "mode": "full-fallback",
         "fallback": True,
@@ -462,10 +453,10 @@ def full_fallback_build_plan(
         "fields": sorted({str(field).strip() for field in fields if str(field).strip()}),
         "rule_ids": [],
         "artifacts": artifacts,
-        "generate_only": fallback_generate_only_for_record_family(record_family),
-        "rebuild_search": True,
-        "generate_local_media": True,
-        "build_required": True,
+        "generate_only": generate_only,
+        "rebuild_search": "catalogue-search" in artifacts,
+        "generate_local_media": "local-media" in artifacts,
+        "build_required": bool(generate_only or "catalogue-search" in artifacts or "local-media" in artifacts),
         "unknown_fields": [],
         "reason": fallback_reason_text,
         "explanations": [

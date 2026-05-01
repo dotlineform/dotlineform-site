@@ -72,14 +72,15 @@ Current content families:
 - `rules[]` groups fields by record family, operation, current behavior, and target behavior
 - `rules[].current` describes broad behavior currently selected by the planner, lookup invalidation, or media workflow
 - `rules[].target` describes the narrower behavior used by save-time write-server planning and by later preview/dry-run tasks
-- `defaults` defines fallback behavior for unknown fields and mixed multi-family saves
+- `defaults` defines fallback behavior for unknown fields and mixed dependency classes
+- `defaults.*.target.artifacts_by_record_family` owns fallback artifact sets for `work`, `work_detail`, `series`, and `moment`
 - `retired_fields[]` records fields intentionally removed from active source rules
 
 Planner output:
 
 - `field_plan.explanations[]` is derived from the registry rather than stored in the registry file
 - each explanation row includes `artifact`, `fields`, `rule_ids`, `fallback`, `fallback_reason`, `reason`, and the artifact-family `description` when one is available
-- fallback plans explain broad artifact selection through the fallback reason instead of pretending a narrow field rule matched
+- fallback plans derive broad artifact selection and explanation rows from registry defaults instead of Python-only fallback tables
 
 Notes:
 

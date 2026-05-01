@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Moved field-aware fallback artifact defaults into the registry
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Field-aware fallback artifact sets now live in `assets/studio/data/catalogue_field_registry.json` instead of a hardcoded Python table.
+
+**Reason:**
+Fallback behavior is part of the dependency model. Keeping unknown-field and mixed-dependency artifact sets in the registry makes the registry the reviewable source of truth for both narrow rules and conservative behavior.
+
+**Effect:**
+The planner reads `defaults.*.target.artifacts_by_record_family` for fallback artifacts, derives fallback `generate_only`, catalogue-search, and local-media selections from those registry artifacts, and uses the renamed `mixed_dependency_classes` default for mixed rule classes.
+
+**Affected files/docs:**
+
+- `assets/studio/data/catalogue_field_registry.json`
+- `scripts/catalogue_field_registry.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Added dry-run explanations for field-aware catalogue builds
 
 **Status:** implemented

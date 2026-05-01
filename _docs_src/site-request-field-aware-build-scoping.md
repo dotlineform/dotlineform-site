@@ -412,6 +412,7 @@ Implemented behavior:
 - CLI dry-run preview groups explanation rows into concise `artifact: field -> reason` lines
 - `/catalogue/build-preview` and dry-run save-time `apply_build` responses expose the same explanation rows through `field_plan`
 - conservative fallback plans now explain that broad artifact families were selected by fallback rather than by a narrow rule
+- fallback artifact sets are defined in `assets/studio/data/catalogue_field_registry.json` under `defaults.*.target.artifacts_by_record_family`, not in Python
 
 ### Task 6. Verify And Document
 

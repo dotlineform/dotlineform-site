@@ -31,31 +31,25 @@
     "unknown_field": {
       "target": {
         "fallback": true,
-        "artifacts": [
-          "source-json",
-          "studio-lookup",
-          "work-page",
-          "work-json",
-          "work-details-page",
-          "works-index-json",
-          "work-storage-index-json",
-          "series-page",
-          "series-json",
-          "series-index-json",
-          "recent-index-json",
-          "moment-page",
-          "moment-json",
-          "moments-index-json",
-          "catalogue-search",
-          "local-media"
-        ],
+        "artifacts_by_record_family": {
+          "work": ["source-json", "studio-lookup", "work-page", "work-json", "works-index-json", "series-page", "series-json", "series-index-json", "recent-index-json", "catalogue-search", "local-media"],
+          "work_detail": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
+          "series": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+          "moment": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"]
+        },
         "reason": "Unknown source fields use conservative fallback until explicitly classified."
       }
     },
-    "mixed_multi_family_save": {
+    "mixed_dependency_classes": {
       "target": {
         "fallback": true,
-        "reason": "Mixed edits spanning record families use conservative fallback until the planner can combine field rules safely."
+        "artifacts_by_record_family": {
+          "work": ["source-json", "studio-lookup", "work-page", "work-json", "works-index-json", "series-page", "series-json", "series-index-json", "recent-index-json", "catalogue-search", "local-media"],
+          "work_detail": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
+          "series": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+          "moment": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"]
+        },
+        "reason": "Mixed edits spanning dependency classes use conservative fallback until the planner can combine field rules safely."
       }
     }
   },
