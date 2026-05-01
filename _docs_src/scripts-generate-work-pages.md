@@ -98,7 +98,7 @@ Moment canonical source model:
   - writes a capped recent-publications ledger for `/recent/`
   - snapshots only first-time `draft -> published` transitions for series and works
   - groups multiple newly published works in the same existing series into one work entry anchored to the first published work in that run
-  - prunes entries whose target series or work no longer exists in the current catalogue
+  - prunes entries whose target series or work no longer exists or is no longer published in the current catalogue
   - existing ledgers can be seeded once from workbook git history with `scripts/backfill_recent_index_from_git_history.py`
 - `--series-json-dir` with default `assets/series/index`
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
@@ -146,7 +146,7 @@ Artifact behavior:
   for shared card and lookup metadata
   and writes `assets/studio/data/work_storage_index.json` as a Studio-only companion lookup for curator storage values
 - `recent-index-json`
-  writes `assets/data/recent_index.json` as a capped recent-publications ledger for `/recent/`
+  writes `assets/data/recent_index.json` as a capped recent-publications ledger for `/recent/`; retained entries must still point at currently published series or works
 - `work-json`
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 

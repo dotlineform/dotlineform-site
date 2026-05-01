@@ -242,7 +242,7 @@ Why it is a separate derived artifact:
 
 - the page needs publish-event history, not just current catalogue state
 - snapshot titles and captions intentionally do not track later title edits or work-to-series moves
-- deleted targets can be pruned centrally by the generator when the catalogue rebuilds
+- deleted or unpublished targets can be pruned centrally by the generator when the catalogue rebuilds
 
 ### `assets/data/moments_index.json`
 

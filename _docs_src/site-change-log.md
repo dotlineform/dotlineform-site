@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Limited recently added entries to currently published targets
+
+**Status:** implemented
+
+**Area:** catalogue generation / public runtime
+
+**Summary:**
+`assets/data/recent_index.json` now retains only entries whose current target series or work is still `published`.
+
+**Reason:**
+The recent-publications ledger can outlive a target's current status. Draft records that still existed in the generated aggregate indexes could remain visible on `/recent/`.
+
+**Effect:**
+Regenerating the recent index prunes draft works and draft series from the public recently added list while keeping the existing historical ordering for published targets.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- `assets/data/recent_index.json`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-04-30] Moved Studio activity feeds behind the local read service
 
 **Status:** implemented

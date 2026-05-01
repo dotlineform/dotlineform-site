@@ -1283,8 +1283,9 @@ def main() -> None:
                 f"{duplicate_summary}"
             )
 
-    # Pre-index series titles by series_id
+    # Pre-index series titles/statuses by series_id
     series_title_by_id: Dict[str, str] = {}
+    series_status_by_id: Dict[str, str] = {}
     for r in series_rows[1:] if len(series_rows) > 1 else []:
         sid_raw = cell(r, series_hi, "series_id")
         if is_empty(sid_raw):
@@ -1293,6 +1294,7 @@ def main() -> None:
             sid = normalize_series_id(sid_raw)
         except ValueError:
             continue
+        series_status_by_id[sid] = normalize_status(cell(r, series_hi, "status"))
         title_raw = cell(r, series_hi, "title")
         title = coerce_string(title_raw)
         if title is None:
@@ -2608,12 +2610,19 @@ def main() -> None:
     recent_entries_existing = load_recent_entries(recent_index_json_path)
     current_work_ids = set(works_payload.keys())
     current_series_ids = set(series_payload.keys())
+
+    def is_current_published_recent_target(entry: Dict[str, Any]) -> bool:
+        kind = str(entry.get("kind") or "")
+        target_id = str(entry.get("target_id") or "")
+        if kind == "work":
+            return target_id in current_work_ids and work_status_by_id.get(target_id) == "published"
+        if kind == "series":
+            return target_id in current_series_ids and series_status_by_id.get(target_id) == "published"
+        return False
+
     retained_recent_entries = [
         entry for entry in recent_entries_existing
-        if (
-            (entry.get("kind") == "work" and str(entry.get("target_id") or "") in current_work_ids)
-            or (entry.get("kind") == "series" and str(entry.get("target_id") or "") in current_series_ids)
-        )
+        if is_current_published_recent_target(entry)
     ]
 
     recorded_at_utc = utc_timestamp_now()
@@ -2761,7 +2770,10 @@ def main() -> None:
         })
         if normalized is not None:
             existing_by_id[str(normalized.get("id") or "")] = normalized
-    recent_index_payload = build_recent_index_payload(list(existing_by_id.values()))
+    recent_index_payload = build_recent_index_payload([
+        entry for entry in existing_by_id.values()
+        if is_current_published_recent_target(entry)
+    ])
     recent_exists = recent_index_json_path.exists()
     recent_existing_version = extract_existing_header_scalar(recent_index_json_path, "version") if recent_exists else None
     recent_payload_version = recent_index_payload["header"]["version"]
