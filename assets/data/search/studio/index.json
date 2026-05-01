@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8140dd752fcfa992f5b0d7f23c5e0a2b",
-    "generated_at_utc": "2026-05-01T20:57:05Z",
-    "count": 157
+    "version": "blake2b-5bdb4bcef7bc7e8d259ee9b568e6f724",
+    "generated_at_utc": "2026-05-01T21:35:24Z",
+    "count": 156
   },
   "entries": [
     {
@@ -2432,28 +2432,6 @@
         "27"
       ],
       "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request change requests change requests 2026-04-27 2026 04 27"
-    },
-    {
-      "id": "scripts-delete-moment",
-      "kind": "doc",
-      "title": "Delete Moment",
-      "href": "/docs/?scope=studio&doc=scripts-delete-moment",
-      "last_updated": "2026-04-01",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-04-01 • Scripts",
-      "search_terms": [
-        "scripts-delete-moment",
-        "scripts",
-        "delete",
-        "moment",
-        "delete moment",
-        "2026-04-01",
-        "2026",
-        "04",
-        "01"
-      ],
-      "search_text": "scripts-delete-moment scripts delete moment delete moment 2026-04-01 2026 04 01"
     },
     {
       "id": "search-validation-checklist",

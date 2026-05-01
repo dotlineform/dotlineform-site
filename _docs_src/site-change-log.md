@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed standalone moment delete script
+
+**Status:** implemented
+
+**Area:** Studio / moment source cleanup
+
+**Summary:**
+Removed the standalone moment deletion script and its active script reference.
+
+**Reason:**
+Moment deletion is now a Studio-only workflow through `/studio/catalogue-moment/`. Keeping a separate delete command preserved an obsolete external-prose and front-matter-derived source-image model.
+
+**Effect:**
+`scripts/delete_moment.py` and its script doc were removed. The Scripts overview no longer lists standalone moment deletion. Current deletion behavior is owned by the Studio catalogue write service and the Moment editor delete flow.
+
+**Affected files/docs:**
+
+- `scripts/delete_moment.py`
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed moment external scan and manifest paths
 
 **Status:** implemented
@@ -4390,7 +4413,7 @@ The old model duplicated moment metadata between source prose files and the work
 - [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Copy Draft Media Files](/docs/?scope=studio&doc=scripts-copy-draft-media)
-- [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
+- Delete Moment script doc, later removed from the active script surface
 
 **Notes:**  
 This change retires the `Moments` worksheet as a pipeline source. During the migration, older workbook-backed fallbacks were briefly retained and then removed once moment front matter had been completed across the source tree.

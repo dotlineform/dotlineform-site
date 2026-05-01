@@ -129,7 +129,7 @@ Slice status:
 
 - Done: remove front-matter detection and rejection from active moment preview/import paths.
 - Done: remove external moment source scanning and moment source manifest support.
-- Planned: remove or retire standalone moment delete script and active script docs.
+- Done: remove standalone moment delete script and active script docs.
 - Planned: remove workbook/front-matter moment checks from deprecated preflight paths.
 - Planned: rewrite stale current-workflow docs while preserving clearly marked historical context.
 

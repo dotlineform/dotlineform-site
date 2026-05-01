@@ -119,10 +119,6 @@ Catalogue/runtime maintenance:
   Report source project folders and primary images that are not represented by `works.json`.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
   Export derived Studio lookup payloads for focused editor reads.
-- [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
-  Remove one moment from generated artifacts, with optional source-file deletion.
-- [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
-  Remove one moment from canonical source files and generated artifacts.
 - [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
   Run the local Studio tag-save/import service with explicit write allowlists.
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
