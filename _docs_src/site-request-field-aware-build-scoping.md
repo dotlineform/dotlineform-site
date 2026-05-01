@@ -10,7 +10,7 @@ sort_order: 100
 
 Status:
 
-- planned
+- in progress
 
 ## Summary
 
