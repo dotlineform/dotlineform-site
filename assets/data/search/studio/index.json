@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-002e24b283e13eb1b6715c5f7f919861",
-    "generated_at_utc": "2026-05-01T16:44:12Z",
+    "version": "blake2b-8f64ed43e7b95c26943580434f1d6c47",
+    "generated_at_utc": "2026-05-01T18:37:10Z",
     "count": 154
   },
   "entries": [
@@ -14,8 +14,8 @@
       "href": "/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs",
       "last_updated": "2026-04-30",
       "parent_id": "site-request-field-aware-build-scoping",
-      "parent_title": "Field-Aware Catalogue Build Scoping Request",
-      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request",
+      "parent_title": "Field-Aware Catalogue Build Scoping Request ✅",
+      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request ✅",
       "search_terms": [
         "site-request-route-anchor-collection-stubs",
         "site",
@@ -26,7 +26,7 @@
         "stubs",
         "route-anchor collection stubs spec",
         "spec",
-        "field-aware catalogue build scoping request",
+        "field-aware catalogue build scoping request ✅",
         "field",
         "aware",
         "catalogue",
@@ -37,7 +37,7 @@
         "04",
         "30"
       ],
-      "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping request field aware catalogue build scoping 2026-04-30 2026 04 30"
+      "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping request ✅ field aware catalogue build scoping 2026-04-30 2026 04 30"
     },
     {
       "id": "site-request-studio-record-hash-simplification",
@@ -46,8 +46,8 @@
       "href": "/docs/?scope=studio&doc=site-request-studio-record-hash-simplification",
       "last_updated": "2026-04-30",
       "parent_id": "site-request-field-aware-build-scoping",
-      "parent_title": "Field-Aware Catalogue Build Scoping Request",
-      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request",
+      "parent_title": "Field-Aware Catalogue Build Scoping Request ✅",
+      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request ✅",
       "search_terms": [
         "site-request-studio-record-hash-simplification",
         "site",
@@ -58,7 +58,7 @@
         "simplification",
         "studio record hash simplification analysis",
         "analysis",
-        "field-aware catalogue build scoping request",
+        "field-aware catalogue build scoping request ✅",
         "field",
         "aware",
         "catalogue",
@@ -69,7 +69,7 @@
         "04",
         "30"
       ],
-      "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping request field aware catalogue build scoping 2026-04-30 2026 04 30"
+      "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping request ✅ field aware catalogue build scoping 2026-04-30 2026 04 30"
     },
     {
       "id": "new-pipeline-current-pipeline-map",
@@ -174,8 +174,8 @@
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
       "last_updated": "2026-05-01",
       "parent_id": "site-request-field-aware-build-scoping",
-      "parent_title": "Field-Aware Catalogue Build Scoping Request",
-      "display_meta": "2026-05-01 • Field-Aware Catalogue Build Scoping Request",
+      "parent_title": "Field-Aware Catalogue Build Scoping Request ✅",
+      "display_meta": "2026-05-01 • Field-Aware Catalogue Build Scoping Request ✅",
       "search_terms": [
         "site-request-field-aware-build-scoping-inventory",
         "site",
@@ -186,14 +186,14 @@
         "scoping",
         "inventory",
         "field-aware build scoping inventory",
-        "field-aware catalogue build scoping request",
+        "field-aware catalogue build scoping request ✅",
         "catalogue",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request catalogue 2026-05-01 2026 05 01"
+      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request ✅ catalogue 2026-05-01 2026 05 01"
     },
     {
       "id": "config-jekyll-site-config",
@@ -2573,7 +2573,7 @@
     {
       "id": "site-request-field-aware-build-scoping",
       "kind": "doc",
-      "title": "Field-Aware Catalogue Build Scoping Request",
+      "title": "Field-Aware Catalogue Build Scoping Request ✅",
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
       "last_updated": "2026-05-01",
       "parent_id": "change-requests",
@@ -2587,7 +2587,7 @@
         "aware",
         "build",
         "scoping",
-        "field-aware catalogue build scoping request",
+        "field-aware catalogue build scoping request ✅",
         "catalogue",
         "change requests",
         "change",
@@ -2597,7 +2597,7 @@
         "05",
         "01"
       ],
-      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request catalogue change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request ✅ catalogue change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-compatibility-cleanup",
