@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4dac668959c268abcf5b4c4817788776",
-    "generated_at_utc": "2026-05-01T16:12:16Z",
-    "count": 152
+    "version": "blake2b-002e24b283e13eb1b6715c5f7f919861",
+    "generated_at_utc": "2026-05-01T16:44:12Z",
+    "count": 154
   },
   "entries": [
     {
@@ -1000,6 +1000,28 @@
         "26"
       ],
       "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "scripts-run-checks",
+      "kind": "doc",
+      "title": "Run Checks",
+      "href": "/docs/?scope=studio&doc=scripts-run-checks",
+      "last_updated": "2026-05-01",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-01 • Scripts",
+      "search_terms": [
+        "scripts-run-checks",
+        "scripts",
+        "run",
+        "checks",
+        "run checks",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",
@@ -2833,16 +2855,16 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
+      "last_updated": "2026-05-01",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "scripts",
-        "2026-04-23",
+        "2026-05-01",
         "2026",
-        "04",
-        "23"
+        "05",
+        "01"
       ],
-      "search_text": "scripts 2026-04-23 2026 04 23"
+      "search_text": "scripts 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -2893,6 +2915,22 @@
         "29"
       ],
       "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow request change requests change requests 2026-04-29 2026 04 29"
+    },
+    {
+      "id": "testing",
+      "kind": "doc",
+      "title": "Testing",
+      "href": "/docs/?scope=studio&doc=testing",
+      "last_updated": "2026-05-01",
+      "display_meta": "2026-05-01",
+      "search_terms": [
+        "testing",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "testing 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-unified-editor-cleanup",

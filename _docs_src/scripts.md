@@ -2,7 +2,7 @@
 doc_id: scripts
 title: "Scripts"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-05-01
 parent_id: ""
 sort_order: 130
 ---
@@ -28,6 +28,7 @@ The current script surface falls into four groups:
 - search builders for scope-owned search artifacts
 - JSON-led catalogue maintenance and scoped rebuild helpers
 - local tooling for audits, CSS analysis, and Studio write flows
+- optional check profiles for larger-risk changes
 
 ## Common Runtime Assumptions
 
@@ -79,6 +80,8 @@ Search builds:
 
 Catalogue/runtime maintenance:
 
+- `./scripts/run_checks.py`
+  - runs optional repo check profiles and writes local logs under `var/test-runs/`
 - `python3 ./scripts/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
 - `python3 ./scripts/verify_catalogue_field_registry.py`
@@ -94,6 +97,8 @@ Catalogue/runtime maintenance:
 
 ## Script References
 
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+  Run optional check profiles and capture local run logs for larger-risk changes.
 - [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
   Run the integrated local Studio development stack, including Jekyll, localhost write services, optional startup docs refreshes, and live docs watching.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T16:12:14Z",
+  "generated_at": "2026-05-01T16:44:10Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -595,6 +595,20 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-run-checks",
+      "title": "Run Checks",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "scripts",
+      "sort_order": 28,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-run-checks.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json"
     },
     {
       "scope": "studio",
@@ -1665,7 +1679,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-01",
       "parent_id": "",
       "sort_order": 130,
       "published": true,
@@ -1701,6 +1715,20 @@
       "source_path": "site-request-catalogue-publication-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-publication-workflow.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "testing",
+      "title": "Testing",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "",
+      "sort_order": 135,
+      "published": true,
+      "viewable": true,
+      "source_path": "testing.md",
+      "viewer_url": "/docs/?scope=studio&doc=testing",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/testing.json"
     },
     {
       "scope": "studio",

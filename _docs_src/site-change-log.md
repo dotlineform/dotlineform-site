@@ -8,6 +8,33 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Added lightweight optional test framework
+
+**Status:** implemented
+
+**Area:** testing / Codex workflow
+
+**Summary:**
+Added an opt-in repo check runner, test-script directories, and local run-log convention for larger-risk changes.
+
+**Reason:**
+The repo needed a pragmatic place for repeatable checks such as catalogue field-registry verification without turning every change request into a broad test-suite run. Codex also needs a standard way to run checks, capture logs, and report what still needs manual Studio review.
+
+**Effect:**
+`./scripts/run_checks.py` now runs coarse profiles such as `quick`, `catalogue`, `docs`, and `studio-smoke`, writing summaries and command logs under ignored `var/test-runs/`. `tests/python/`, `tests/smoke/`, and `tests/fixtures/` now define where retained checks and small fixtures belong, and `AGENTS.md` tells Codex to use the runner only when the change blast radius justifies it.
+
+**Affected files/docs:**
+
+- `scripts/run_checks.py`
+- `tests/`
+- `.gitignore`
+- `AGENTS.md`
+- [Testing](/docs/?scope=studio&doc=testing)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Added catalogue field registry review page
 
 **Status:** implemented

@@ -112,6 +112,8 @@
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
 - For Studio Playwright smoke tests, follow `_docs_src/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
+- Use `_docs_src/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
+- When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
 - Always define targeted verification for both:
   - Codex-run checks
   - manual checks

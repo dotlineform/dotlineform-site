@@ -14,6 +14,12 @@ Script:
 ./scripts/verify_catalogue_field_registry.py
 ```
 
+Test wrapper:
+
+```bash
+tests/python/test_catalogue_field_registry.py
+```
+
 This read-only helper verifies representative catalogue field-registry build plans.
 
 ## Purpose
@@ -23,6 +29,7 @@ Use this script after changing:
 - `assets/studio/data/catalogue_field_registry.json`
 - `scripts/catalogue_field_registry.py`
 - field-aware preview or save-time build planning
+- the optional `catalogue` check profile in `./scripts/run_checks.py`
 
 It loads the registry path through `assets/studio/data/studio_config.json`, then checks that target rules and fallback defaults still produce the expected artifact, generator, catalogue-search, and local-media selections.
 
