@@ -630,7 +630,7 @@ def payload_for_map(kind: str, records: Mapping[str, Dict[str, Any]]) -> Dict[st
     }
 
 
-def payloads_from_records(records: CatalogueSourceRecords, *, workbook_path: Path | None = None) -> Dict[str, Dict[str, Any]]:
+def payloads_from_records(records: CatalogueSourceRecords) -> Dict[str, Dict[str, Any]]:
     payloads = {
         kind: payload_for_map(kind, record_map)
         for kind, record_map in records.as_maps().items()
@@ -641,7 +641,6 @@ def payloads_from_records(records: CatalogueSourceRecords, *, workbook_path: Pat
         },
         "source": {
             "canonical": "json",
-            "created_from": workbook_path.as_posix() if workbook_path is not None else None,
         },
         "id_policy": {
             "work_id_width": 5,

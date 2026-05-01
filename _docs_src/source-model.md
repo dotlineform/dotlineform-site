@@ -242,11 +242,10 @@ Field notes:
 
 Purpose:
 
-- record source schema metadata and migration state that does not belong to one table
-- record import/export history
+- record source schema metadata that does not belong to one table
 - record next-ID helper state only if it cannot be derived safely
 
-Recommended initial shape:
+Shape:
 
 ```json
 {
@@ -254,8 +253,7 @@ Recommended initial shape:
     "schema": "catalogue_source_meta_v1"
   },
   "source": {
-    "canonical": "json",
-    "created_from": "data/works.xlsx"
+    "canonical": "json"
   },
   "id_policy": {
     "work_id_width": 5,
@@ -412,7 +410,7 @@ Recommended import modes:
 
 Initial implemented workbook import scope:
 
-- fixed workbook source: `data/works.xlsx`
+- configured workbook source from `_data/pipeline.json`, currently `data/works_bulk_import.xlsx`
 - one Studio route with two modes:
   - new `Works`
   - new `WorkDetails`

@@ -8,6 +8,52 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed workbook provenance from source metadata
+
+**Status:** implemented
+
+**Area:** catalogue source model / compatibility cleanup
+
+**Summary:**
+Removed obsolete `data/works.xlsx` provenance from catalogue source metadata.
+
+**Reason:**
+The canonical catalogue source is now JSON under `assets/studio/data/catalogue/`, and `data/works.xlsx` is no longer an intended workflow input. Keeping workbook migration provenance in current metadata made the source model look partially workbook-owned.
+
+**Effect:**
+`assets/studio/data/catalogue/meta.json` now records the canonical source mode without a `created_from` workbook path. `scripts/catalogue_source.py` no longer emits workbook provenance from `payloads_from_records`, and [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model) documents the current metadata shape.
+
+**Affected files/docs:**
+
+- `assets/studio/data/catalogue/meta.json`
+- `scripts/catalogue_source.py`
+- [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+## [2026-05-01] Moved workbook row helpers into bulk import adapter
+
+**Status:** implemented
+
+**Area:** catalogue source model / compatibility cleanup
+
+**Summary:**
+Moved the workbook row helper boundary used by the active bulk-import workflow into `scripts/catalogue_workbook_import.py`.
+
+**Reason:**
+The active `data/works_bulk_import.xlsx` workflow remains an import adapter, but workbook-specific helpers should not live in the canonical JSON source helper module just because the old `data/works.xlsx` pipeline once did.
+
+**Effect:**
+`scripts/catalogue_workbook_import.py` now owns its own `header_map` and `cell` helpers. Its imports from `scripts/catalogue_source.py` are limited to canonical source records, field lists, normalization, sorting, loading, and validation APIs.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_workbook_import.py`
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Completed compatibility cleanup planning pass
 
 **Status:** implemented

@@ -16,8 +16,6 @@ try:
         DETAIL_TEXT_FIELDS,
         WORK_FIELDS,
         WORK_TEXT_FIELDS,
-        cell,
-        header_map,
         normalize_json_value,
         normalize_scalar_text,
         normalize_source_record,
@@ -35,8 +33,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         DETAIL_TEXT_FIELDS,
         WORK_FIELDS,
         WORK_TEXT_FIELDS,
-        cell,
-        header_map,
         normalize_json_value,
         normalize_scalar_text,
         normalize_source_record,
@@ -177,6 +173,33 @@ def _load_workbook(workbook_path: Path):
     if not resolved_path.exists():
         raise ValueError(f"Workbook not found: {resolved_path}")
     return openpyxl.load_workbook(resolved_path, read_only=True, data_only=True)
+
+
+def _normalize_header_text(value: Any) -> str:
+    if value is None:
+        return ""
+    text = str(value).strip()
+    if text.startswith("'") and len(text) > 1:
+        text = text[1:]
+    return text
+
+
+def header_map(row: Iterable[Any]) -> Dict[str, int]:
+    out: Dict[str, int] = {}
+    for idx, raw in enumerate(row):
+        key = _normalize_header_text(raw)
+        if not key:
+            continue
+        out[key] = idx
+        out[key.lower()] = idx
+    return out
+
+
+def cell(row: tuple[Any, ...], headers: Mapping[str, int], name: str) -> Any:
+    idx = headers.get(name)
+    if idx is None or idx >= len(row):
+        return None
+    return row[idx]
 
 
 def _require_sheet(wb, sheet_name: str) -> tuple[list[tuple[Any, ...]], Dict[str, int]]:

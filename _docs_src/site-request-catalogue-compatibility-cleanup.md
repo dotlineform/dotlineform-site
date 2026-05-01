@@ -110,7 +110,12 @@ Task 3 implementation order and verification matrix:
 
 Status:
 
-- ready
+- in progress
+
+Implemented slices:
+
+- moved workbook row helpers such as `header_map` and `cell` into the active bulk-import adapter boundary in `scripts/catalogue_workbook_import.py`
+- removed obsolete `data/works.xlsx` provenance from catalogue source metadata and source metadata generation
 
 Apply approved removals in small slices.
 
