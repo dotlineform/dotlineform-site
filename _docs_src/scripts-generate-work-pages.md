@@ -200,7 +200,7 @@ Catalogue search note:
 Current behavior:
 
 - reads canonical source JSON from `assets/studio/data/catalogue/`
-- builds retained mutable row-list projections for generator sections that have not yet been refactored to direct JSON-record access
+- builds work, series, work-detail, and moment artifacts from canonical source records rather than workbook-shaped row projections
 - writes the same runtime artifacts as workbook mode
 - when `--write` is used, mutates generator-updated mutable fields directly on canonical source records before source JSON write-back:
   - work `status`, `published_date`, `width_px`, `height_px`

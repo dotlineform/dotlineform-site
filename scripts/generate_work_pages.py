@@ -200,21 +200,6 @@ def parse_list(raw: Any, sep: str = ",") -> List[str]:
     return [item.strip() for item in s.split(sep) if item.strip()]
 
 
-def workbook_cell_value(value: Any) -> Any:
-    if isinstance(value, list):
-        return ",".join(str(item) for item in value if item is not None)
-    return value
-
-
-def rows_from_records(headers: List[str], records: List[Dict[str, Any]]) -> List[List[Any]]:
-    header_row = list(headers)
-    data_rows = [
-        [workbook_cell_value(record.get(header)) for header in headers]
-        for record in records
-    ]
-    return [header_row, *data_rows]
-
-
 def parse_work_id_selection(raw: str) -> set[str]:
     """
     Parse comma-separated work-id selectors supporting individual IDs and ranges.
@@ -447,13 +432,34 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
 ]
 
 
-def build_work_record_projection(works_row: tuple, works_hi: Dict[str, int]) -> Dict[str, Any]:
+def build_work_record_projection(work_record: Dict[str, Any]) -> Dict[str, Any]:
     """Build the scalar portion of the public work record projection."""
     fm: Dict[str, Any] = {}
     for fm_key, col_name, coercer in WORKS_SCHEMA:
-        raw = works_row[works_hi[col_name]] if col_name in works_hi else None
+        raw = work_record.get(col_name)
         fm[fm_key] = coercer(raw)
     return fm
+
+
+def parse_source_list(raw: Any, sep: str = ",") -> List[str]:
+    if isinstance(raw, list):
+        return [str(item).strip() for item in raw if not is_empty(item)]
+    return parse_list(raw, sep=sep)
+
+
+def parse_work_record_series_ids(work_record: Dict[str, Any]) -> List[str]:
+    series_ids: List[str] = []
+    seen_series_ids: set[str] = set()
+    for raw_series_id in parse_source_list(work_record.get("series_ids")):
+        try:
+            sid = normalize_series_id(raw_series_id)
+        except ValueError:
+            continue
+        if sid in seen_series_ids:
+            continue
+        seen_series_ids.add(sid)
+        series_ids.append(sid)
+    return series_ids
 
 
 def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
@@ -814,9 +820,8 @@ def load_tag_registry_payload(path: Path) -> Dict[str, Any]:
 # High-level flow:
 # 1) Parse CLI args (scope + output options)
 # 2) Load canonical source JSON
-# 3) Build the internal sheet-like read projection still used by retained generator helpers
-# 4) Iterate the projected rows -> build generated artifacts
-# 5) Persist mutable source fields directly against canonical source records
+# 3) Build generated artifacts from canonical source records
+# 4) Persist mutable source fields directly against canonical source records
 def main() -> None:
     # CLI arguments define the internal JSON-source run and where output files go.
     ap = argparse.ArgumentParser()
@@ -830,12 +835,6 @@ def main() -> None:
         action="store_true",
         help=argparse.SUPPRESS,
     )
-
-    # Worksheet names
-    ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
-    ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
-    ap.add_argument("--series-sort-sheet", default="SeriesSort", help="Worksheet name for custom per-series sorting rules")
-    ap.add_argument("--work-details-sheet", default="WorkDetails", help="Worksheet name for work detail metadata")
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
@@ -1006,109 +1005,20 @@ def main() -> None:
             f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
             "or pass --projects-base-dir."
         )
-    works_rows = rows_from_records(WORKBOOK_HEADERS["Works"], list(source_records.works.values()))
-    series_rows = rows_from_records(WORKBOOK_HEADERS["Series"], list(source_records.series.values()))
-    series_sort_rows = rows_from_records(
-        WORKBOOK_HEADERS["SeriesSort"],
-        [
-            {
-                "series_id": record.get("series_id"),
-                "sort_fields": record.get("sort_fields") or "work_id",
-            }
-            for record in source_records.series.values()
-        ],
-    )
-    work_details_rows = rows_from_records(WORKBOOK_HEADERS["WorkDetails"], list(source_records.work_details.values()))
-
-    def read_sheet_rows(sheet_name: str) -> List[tuple]:
-        mapping = {
-            args.works_sheet: works_rows,
-            args.series_sheet: series_rows,
-            args.series_sort_sheet: series_sort_rows,
-            args.work_details_sheet: work_details_rows,
-        }
-        if sheet_name not in mapping:
-            raise SystemExit(f"Sheet not found in JSON source projection: {sheet_name}")
-        return mapping[sheet_name]
-
-    def build_header_index(rows: List[tuple]) -> Dict[str, int]:
-        if not rows:
-            return {}
-        headers = [str(h).strip() if h is not None else "" for h in rows[0]]
-        hi: Dict[str, int] = {}
-        for i, h in enumerate(headers):
-            if not h:
-                continue
-            # Preserve original header and also store a lowercase alias for case-insensitive lookups.
-            hi[h] = i
-            hi[h.lower()] = i
-        return hi
-
-    def cell(row: tuple, header_index: Dict[str, int], col_name: str) -> Any:
-        i = header_index.get(col_name)
-        return None if i is None or i >= len(row) else row[i]
-
     def require_series_primary_work_id(
         sid: str,
-        sr: tuple,
+        series_record: Dict[str, Any],
         *,
         ordered_work_ids: Optional[List[str]] = None,
     ) -> str:
         """Return a required primary_work_id for a series and validate membership when provided."""
-        if "primary_work_id" not in series_hi:
-            raise ValueError("Series sheet missing primary_work_id column")
-        raw = cell(sr, series_hi, "primary_work_id")
+        raw = series_record.get("primary_work_id")
         if is_empty(raw):
             raise ValueError(f"Series '{sid}' missing primary_work_id")
         wid = slug_id(raw)
         if ordered_work_ids and wid not in ordered_work_ids:
             raise ValueError(f"Series '{sid}' primary_work_id '{wid}' is not in its works list")
         return wid
-
-    def read_cell_value(row: List[Any], header_index: Dict[str, int], col_name: str) -> Any:
-        i = header_index.get(col_name)
-        if i is None:
-            return None
-        if i < len(row):
-            return row[i]
-        return None
-
-    def ensure_projection_column(rows: List[List[Any]], header_index: Dict[str, int], col_name: str) -> int:
-        existing_index = header_index.get(col_name)
-        if existing_index is not None:
-            return existing_index
-        if not rows:
-            rows.append([])
-        column_index = len(rows[0])
-        rows[0].append(col_name)
-        header_index[col_name] = column_index
-        header_index[col_name.lower()] = column_index
-        for row in rows[1:]:
-            row.append(None)
-        return column_index
-
-    def first_present_col(header_index: Dict[str, int], names: List[str]) -> Optional[str]:
-        for n in names:
-            if n in header_index:
-                return n
-        return None
-
-    def parse_work_series_ids(row: tuple) -> List[str]:
-        series_ids_col = first_present_col(works_hi, ["series_ids"])
-        if series_ids_col is None:
-            return []
-        series_ids: List[str] = []
-        seen_series_ids: set[str] = set()
-        for raw_series_id in parse_list(cell(row, works_hi, series_ids_col)):
-            try:
-                sid = normalize_series_id(raw_series_id)
-            except ValueError:
-                continue
-            if sid in seen_series_ids:
-                continue
-            seen_series_ids.add(sid)
-            series_ids.append(sid)
-        return series_ids
 
     # Output directory:
     # - Use `works` for a normal pages folder.
@@ -1148,20 +1058,6 @@ def main() -> None:
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
-    # Load the internal sheet-like projection up-front.
-    works_rows = read_sheet_rows(args.works_sheet)
-    series_rows = read_sheet_rows(args.series_sheet)
-    series_sort_rows = read_sheet_rows(args.series_sort_sheet)
-    work_details_rows = read_sheet_rows(args.work_details_sheet)
-
-    if not works_rows:
-        raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
-
-    works_hi = build_header_index(works_rows)
-    series_hi = build_header_index(series_rows) if series_rows else {}
-    series_sort_hi = build_header_index(series_sort_rows) if series_sort_rows else {}
-    work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
-
     def validate_source_records_for_writeback() -> None:
         validation_errors = validate_source_records(source_records)
         if validation_errors:
@@ -1181,55 +1077,19 @@ def main() -> None:
         for key, value in updates.items():
             record[key] = value
 
-    if "status" not in works_hi:
-        raise SystemExit("Works sheet missing required column: status")
-    if "series_ids" not in works_hi:
-        raise SystemExit("Works sheet missing required column: series_ids")
-    if series_sort_rows:
-        required_series_sort = ["series_id", "sort_fields"]
-        missing_series_sort = [c for c in required_series_sort if c not in series_sort_hi]
-        if missing_series_sort:
-            raise SystemExit(f"{args.series_sort_sheet} sheet missing required columns: {', '.join(missing_series_sort)}")
-    if work_details_rows and "status" not in work_details_hi:
-        raise SystemExit("WorkDetails sheet missing required column: status")
-    series_duplicate_rows: Dict[str, List[int]] = {}
-    if series_rows and len(series_rows) > 1 and "series_id" in series_hi:
-        first_row_by_series_id: Dict[str, int] = {}
-        for row_number, row in enumerate(series_rows[1:], start=2):
-            raw_series_id = cell(row, series_hi, "series_id")
-            if is_empty(raw_series_id):
-                continue
-            try:
-                sid = normalize_series_id(raw_series_id)
-            except ValueError:
-                continue
-            if sid not in first_row_by_series_id:
-                first_row_by_series_id[sid] = row_number
-                continue
-            series_duplicate_rows.setdefault(sid, [first_row_by_series_id[sid]]).append(row_number)
-        if series_duplicate_rows:
-            duplicate_summary = "; ".join(
-                f"{sid} (rows {', '.join(str(row_number) for row_number in row_numbers)})"
-                for sid, row_numbers in sorted(series_duplicate_rows.items())
-            )
-            print(
-                "Warning: Series sheet has duplicate series_id values; later rows overwrite earlier rows in generated output: "
-                f"{duplicate_summary}"
-            )
-
     # Pre-index series titles/statuses by series_id
     series_title_by_id: Dict[str, str] = {}
     series_status_by_id: Dict[str, str] = {}
-    for r in series_rows[1:] if len(series_rows) > 1 else []:
-        sid_raw = cell(r, series_hi, "series_id")
+    for series_record in source_records.series.values():
+        sid_raw = series_record.get("series_id")
         if is_empty(sid_raw):
             continue
         try:
             sid = normalize_series_id(sid_raw)
         except ValueError:
             continue
-        series_status_by_id[sid] = normalize_status(cell(r, series_hi, "status"))
-        title_raw = cell(r, series_hi, "title")
+        series_status_by_id[sid] = normalize_status(series_record.get("status"))
+        title_raw = series_record.get("title")
         title = coerce_string(title_raw)
         if title is None:
             continue
@@ -1237,21 +1097,20 @@ def main() -> None:
 
     # Pre-index unique project folders by series_id from Works.
     series_project_folders_by_id: Dict[str, List[str]] = {}
-    if "project_folder" in works_hi:
-        project_folder_sets_by_series: Dict[str, set[str]] = {}
-        for wr in works_rows[1:]:
-            folder = coerce_string(cell(wr, works_hi, "project_folder"))
-            series_ids = parse_work_series_ids(wr)
-            if not series_ids or folder is None:
-                continue
-            for sid in series_ids:
-                project_folder_sets_by_series.setdefault(sid, set()).add(folder)
-        for sid, folder_set in project_folder_sets_by_series.items():
-            series_project_folders_by_id[sid] = sorted(folder_set, key=lambda v: v.lower())
+    project_folder_sets_by_series: Dict[str, set[str]] = {}
+    for work_record in source_records.works.values():
+        folder = coerce_string(work_record.get("project_folder"))
+        series_ids = parse_work_record_series_ids(work_record)
+        if not series_ids or folder is None:
+            continue
+        for sid in series_ids:
+            project_folder_sets_by_series.setdefault(sid, set()).add(folder)
+    for sid, folder_set in project_folder_sets_by_series.items():
+        series_project_folders_by_id[sid] = sorted(folder_set, key=lambda v: v.lower())
 
     # Compile canonical series_sort per work:
     # - default is work_id
-    # - optional custom per-series rules come from SeriesSort(series_id, sort_fields)
+    # - optional custom per-series rules come from source series sort_fields
     # - sort_fields supports comma-separated keys and optional '-' prefix for descending
     # - 'title' aliases to 'title_sort' for numeric-aware ordering
     # - work_id is always appended as final ascending tiebreaker
@@ -1261,14 +1120,14 @@ def main() -> None:
     work_meta_by_id: Dict[str, Dict[str, Any]] = {}
     work_status_by_id: Dict[str, str] = {}
     work_ids_by_series_all: Dict[str, List[str]] = {}
-    for wr in works_rows[1:]:
-        wid_raw = cell(wr, works_hi, "work_id")
+    for work_record in source_records.works.values():
+        wid_raw = work_record.get("work_id")
         if is_empty(wid_raw):
             continue
         wid = slug_id(wid_raw)
-        meta = build_work_record_projection(wr, works_hi)
-        work_status_by_id[wid] = normalize_status(cell(wr, works_hi, "status"))
-        series_ids = parse_work_series_ids(wr)
+        meta = build_work_record_projection(work_record)
+        work_status_by_id[wid] = normalize_status(work_record.get("status"))
+        series_ids = parse_work_record_series_ids(work_record)
         sid = series_ids[0] if series_ids else ""
         meta["work_id"] = wid
         meta["series_ids"] = series_ids
@@ -1283,25 +1142,23 @@ def main() -> None:
         for sid, work_ids in work_ids_by_series_all.items()
     }
     # Effective per-series sort_fields in user-facing terms (e.g. "title,work_id").
-    # Defaults to work_id when no custom SeriesSort row exists.
+    # Defaults to work_id when no custom series sort_fields value exists.
     series_sort_fields_by_series_id: Dict[str, List[str]] = {
         sid: ["work_id"] for sid in work_ids_by_series_all.keys()
     }
 
-    if series_sort_rows and len(series_sort_rows) > 1:
+    if source_records.series:
         seen_series_ids: set[str] = set()
-        for sr in series_sort_rows[1:]:
-            sid_raw = cell(sr, series_sort_hi, "series_id")
+        for series_record in source_records.series.values():
+            sid_raw = series_record.get("series_id")
             if is_empty(sid_raw):
                 continue
             sid = normalize_series_id(sid_raw)
             if sid in seen_series_ids:
-                raise SystemExit(f"{args.series_sort_sheet} has duplicate series_id: {sid}")
+                raise SystemExit(f"Catalogue source has duplicate series_id: {sid}")
             seen_series_ids.add(sid)
 
-            sort_fields_raw = coerce_string(cell(sr, series_sort_hi, "sort_fields"))
-            if sort_fields_raw is None or sort_fields_raw.strip() == "":
-                raise SystemExit(f"{args.series_sort_sheet} has empty sort_fields for series_id: {sid}")
+            sort_fields_raw = coerce_string(series_record.get("sort_fields")) or "work_id"
 
             parsed_fields: List[tuple[str, bool]] = []
             display_fields: List[str] = []
@@ -1320,7 +1177,7 @@ def main() -> None:
                     display_field = "title"
                 if field not in works_sortable_fields:
                     raise SystemExit(
-                        f"{args.series_sort_sheet} has unknown sort field '{field}' for series_id '{sid}'"
+                        f"Series source has unknown sort field '{field}' for series_id '{sid}'"
                     )
                 if field == "work_id":
                     continue
@@ -1357,14 +1214,13 @@ def main() -> None:
 
     # Pre-index project folder by work_id for source media and dimension lookups.
     work_project_folder_by_id: Dict[str, str] = {}
-    has_project_folder_col = "project_folder" in works_hi
-    if has_project_folder_col:
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
-            pf_raw = cell(wr, works_hi, "project_folder")
-            if is_empty(wid_raw) or is_empty(pf_raw):
-                continue
-            work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
+    has_project_folder_col = any("project_folder" in work_record for work_record in source_records.works.values())
+    for work_record in source_records.works.values():
+        wid_raw = work_record.get("work_id")
+        pf_raw = work_record.get("project_folder")
+        if is_empty(wid_raw) or is_empty(pf_raw):
+            continue
+        work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
 
     def resolve_work_prose_source_path(wid: str) -> Path:
         return catalogue_prose_source_root / "works" / f"{wid}.md"
@@ -1603,12 +1459,12 @@ def main() -> None:
     if selected_series_ids is not None and not explicit_work_filter:
         if selected_artifacts is not None and run_work_selection_scope:
             selected_ids = set()
-            for r in works_rows[1:]:
-                raw_work_id = cell(r, works_hi, "work_id")
+            for work_record in source_records.works.values():
+                raw_work_id = work_record.get("work_id")
                 if is_empty(raw_work_id):
                     continue
                 wid = slug_id(raw_work_id)
-                series_ids = parse_work_series_ids(r)
+                series_ids = parse_work_record_series_ids(work_record)
                 if any(sid in selected_series_ids for sid in series_ids):
                     selected_ids.add(wid)
         else:
@@ -1628,31 +1484,23 @@ def main() -> None:
     if source_validation_errors:
         raise SystemExit("JSON source validation failed: " + "; ".join(source_validation_errors[:20]))
 
-    works_width_px_idx = works_hi.get("width_px")
-    works_height_px_idx = works_hi.get("height_px")
-    if args.write and run_work_dimension_refresh:
-        if works_width_px_idx is None:
-            works_width_px_idx = ensure_projection_column(works_rows, works_hi, "width_px")
-        if works_height_px_idx is None:
-            works_height_px_idx = ensure_projection_column(works_rows, works_hi, "height_px")
-
     work_dimensions_updated = 0
     work_project_folder_missing_warned = False
     if run_work_dimension_refresh:
-        for wr in works_rows[1:]:
-            raw_work_id = cell(wr, works_hi, "work_id")
+        for work_record in source_records.works.values():
+            raw_work_id = work_record.get("work_id")
             if is_empty(raw_work_id):
                 continue
             wid = slug_id(raw_work_id)
             if selected_ids is not None and wid not in selected_ids:
                 continue
-            status = normalize_status(cell(wr, works_hi, "status"))
+            status = normalize_status(work_record.get("status"))
             if status not in {"draft", "published"}:
                 continue
 
-            width_px = coerce_int(read_cell_value(wr, works_hi, "width_px")) if "width_px" in works_hi else None
-            height_px = coerce_int(read_cell_value(wr, works_hi, "height_px")) if "height_px" in works_hi else None
-            project_filename = coerce_string(read_cell_value(wr, works_hi, "project_filename")) if "project_filename" in works_hi else None
+            width_px = coerce_int(work_record.get("width_px"))
+            height_px = coerce_int(work_record.get("height_px"))
+            project_filename = coerce_string(work_record.get("project_filename"))
 
             src_path: Optional[Path] = None
             if project_filename:
@@ -1664,7 +1512,7 @@ def main() -> None:
                         src_path = projects_root / project_folder / project_filename
                     elif not work_project_folder_missing_warned:
                         if not has_project_folder_col:
-                            print("Warning: Works sheet has no project_folder column; cannot persist work image dimensions.")
+                            print("Warning: work source records have no project_folder values; cannot persist work image dimensions.")
                         else:
                             print("Warning: missing Works.project_folder for one or more works; cannot persist those image dimensions.")
                         work_project_folder_missing_warned = True
@@ -1672,16 +1520,13 @@ def main() -> None:
             if src_path is not None:
                 src_w, src_h = read_image_dims_px(src_path)
                 if src_w is not None and src_h is not None:
+                    prev_w = width_px
+                    prev_h = height_px
                     width_px = src_w
                     height_px = src_h
-                    if args.write and works_width_px_idx is not None and works_height_px_idx is not None:
-                        prev_w = wr[works_width_px_idx] if works_width_px_idx < len(wr) else None
-                        prev_h = wr[works_height_px_idx] if works_height_px_idx < len(wr) else None
-                        if prev_w != src_w or prev_h != src_h:
-                            wr[works_width_px_idx] = src_w
-                            wr[works_height_px_idx] = src_h
-                            update_source_work_record(wid, width_px=src_w, height_px=src_h)
-                            work_dimensions_updated += 1
+                    if args.write and (prev_w != src_w or prev_h != src_h):
+                        update_source_work_record(wid, width_px=src_w, height_px=src_h)
+                        work_dimensions_updated += 1
                 else:
                     print(f"Warning: could not read dimensions for work primary source image: {display_projects_path(src_path)}")
             elif project_filename:
@@ -1700,30 +1545,28 @@ def main() -> None:
 
     total = 0
     if run_work_processing:
-        for r in works_rows[1:]:
-            raw_work_id = cell(r, works_hi, "work_id")
+        for work_record in source_records.works.values():
+            raw_work_id = work_record.get("work_id")
             if is_empty(raw_work_id):
                 continue
             wid = slug_id(raw_work_id)
             if selected_ids is not None and wid not in selected_ids:
                 continue
-            status = normalize_status(cell(r, works_hi, "status"))
+            status = normalize_status(work_record.get("status"))
             if is_actionable_status(status):
                 total += 1
 
     processed = 0
     status_updated = 0
     published_date_updated = 0
-    published_date_idx = works_hi.get("published_date")
-    published_date_missing_warned = False
     today = dt.date.today()
     work_publish_transitions: List[Dict[str, Any]] = []
 
     # Iterate each Works row and emit one Markdown file per work.
     if run_work_processing:
-        for r in works_rows[1:]:
-            status = normalize_status(cell(r, works_hi, "status"))
-            raw_work_id = cell(r, works_hi, "work_id")
+        for work_record in source_records.works.values():
+            status = normalize_status(work_record.get("status"))
+            raw_work_id = work_record.get("work_id")
             if is_empty(raw_work_id):
                 skipped += 1
                 continue
@@ -1762,20 +1605,13 @@ def main() -> None:
                 if write_page(out_path, "work", work_page_content):
                     written += 1
                     if args.write:
-                        status_idx = works_hi["status"]
-                        status_was = normalize_status(r[status_idx] if status_idx < len(r) else None)
+                        status_was = normalize_status(work_record.get("status"))
                         if status_was != "published":
-                            r[status_idx] = "published"
                             update_source_work_record(wid, status="published")
                             status_updated += 1
                         if status_was != "published":
-                            if published_date_idx is not None:
-                                r[published_date_idx] = today
-                                update_source_work_record(wid, published_date=today.isoformat())
-                                published_date_updated += 1
-                            elif not published_date_missing_warned:
-                                print("Warning: Works sheet missing published_date column; skipping date updates.")
-                                published_date_missing_warned = True
+                            update_source_work_record(wid, published_date=today.isoformat())
+                            published_date_updated += 1
                         if status_was != "published":
                             work_meta = work_meta_by_id.get(wid, {})
                             series_ids = work_meta.get("series_ids") if isinstance(work_meta, dict) else []
@@ -1822,7 +1658,7 @@ def main() -> None:
     # ----------------------------
     # Series page generation (Series)
     # ----------------------------
-    # Series worksheet required columns:
+    # Series source required fields:
     # - series_id
     # - title
     # Optional columns:
@@ -1831,8 +1667,8 @@ def main() -> None:
 
     series_publish_transitions: List[Dict[str, Any]] = []
 
-    if not series_rows or len(series_rows) < 2:
-        print("No series pages to generate (Series sheet empty).")
+    if not source_records.series:
+        print("No series pages to generate (series source records empty).")
     else:
         def is_actionable_series_status(status_value: str) -> bool:
             if status_value == "published" and refresh_published:
@@ -1845,8 +1681,6 @@ def main() -> None:
         series_json_skipped = 0
         series_status_updated = 0
         series_published_date_updated = 0
-        series_published_date_idx = series_hi.get("published_date")
-        series_published_date_missing_warned = False
         studio_series_written = 0
         studio_series_skipped = 0
         tag_assignments_payload = load_tag_assignments_payload(tag_assignments_path)
@@ -1854,21 +1688,21 @@ def main() -> None:
         tag_assignments_changed = False
         tag_assignments_added = 0
         s_total = 0
-        for sr in series_rows[1:]:
-            sid_raw = cell(sr, series_hi, "series_id")
+        for series_record in source_records.series.values():
+            sid_raw = series_record.get("series_id")
             if is_empty(sid_raw):
                 continue
             sid = normalize_series_id(sid_raw)
             if series_page_selected_ids is not None and sid not in series_page_selected_ids:
                 continue
-            status = normalize_status(cell(sr, series_hi, "status"))
+            status = normalize_status(series_record.get("status"))
             if is_actionable_series_status(status):
                 s_total += 1
         s_processed = 0
 
         if run_series_pages:
-            for sr in series_rows[1:]:
-                sid_raw = cell(sr, series_hi, "series_id")
+            for series_record in source_records.series.values():
+                sid_raw = series_record.get("series_id")
                 if is_empty(sid_raw):
                     series_skipped += 1
                     continue
@@ -1877,7 +1711,7 @@ def main() -> None:
                     series_skipped += 1
                     continue
 
-                status = normalize_status(cell(sr, series_hi, "status"))
+                status = normalize_status(series_record.get("status"))
                 if not is_actionable_series_status(status):
                     series_skipped += 1
                     continue
@@ -1885,20 +1719,18 @@ def main() -> None:
                 s_processed += 1
                 prefix_s = f"[series {s_processed}/{s_total}] "
 
-                title_raw = cell(sr, series_hi, "title")
+                title_raw = series_record.get("title")
                 series_title = coerce_string(title_raw) or series_id
 
                 # Numeric year (optional)
-                year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
+                year = coerce_int(series_record.get("year"))
 
                 # year_display handling:
-                # - If Series sheet has a year_display column, use it (may be null).
-                # - If it does NOT have year_display, fall back to numeric year rendered as text
+                # - If source has a year_display value, use it.
+                # - Otherwise fall back to numeric year rendered as text.
                 year_display: Optional[str]
-                if "year_display" in series_hi:
-                    year_display = coerce_string(cell(sr, series_hi, "year_display"))
-                else:
-                    # Fall back to numeric year rendered as text
+                year_display = coerce_string(series_record.get("year_display"))
+                if year_display is None:
                     year_display = str(year) if year is not None else None
 
                 series_work_ids_sorted = sorted(
@@ -1907,25 +1739,25 @@ def main() -> None:
                 )
                 primary_work_id = require_series_primary_work_id(
                     series_id,
-                    sr,
+                    series_record,
                     ordered_work_ids=series_work_ids_sorted,
                 )
-                published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
-                series_record = compact_json_object({
+                published_date = parse_date(series_record.get("published_date"))
+                series_output_record = compact_json_object({
                     "series_id": series_id,
                     "layout": "series",
                     "status": status,
                     "published_date": published_date,
                     "title": series_title,
                     "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
-                    "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
+                    "series_type": coerce_string(series_record.get("series_type")),
                     "year": year,
                     "year_display": year_display,
-                    "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+                    "notes": coerce_string(series_record.get("notes")),
                     "project_folders": series_project_folders_by_id.get(series_id, []),
                 })
 
-                public_series_record = build_series_json_record(series_record)
+                public_series_record = build_series_json_record(series_output_record)
                 source_prose_path = resolve_series_prose_source_path(series_id)
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
@@ -1990,7 +1822,7 @@ def main() -> None:
                         "year": year,
                         "year_display": year_display,
                         "project_folders": series_project_folders_by_id.get(series_id, []),
-                        "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+                        "notes": coerce_string(series_record.get("notes")),
                         "primary_work_id": primary_work_id,
                     }
                     studio_series_content = build_front_matter(tsm) + "\n"
@@ -2087,15 +1919,15 @@ def main() -> None:
             print("Studio series pages retired: skipped.")
 
     work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}
-    for wr in works_rows[1:]:
-        wid_raw = cell(wr, works_hi, "work_id")
+    for work_record in source_records.works.values():
+        wid_raw = work_record.get("work_id")
         if is_empty(wid_raw):
             continue
-        status = normalize_status(cell(wr, works_hi, "status"))
+        status = normalize_status(work_record.get("status"))
         if status != "published":
             continue
         wid = slug_id(wid_raw)
-        for sid in parse_work_series_ids(wr):
+        for sid in parse_work_record_series_ids(work_record):
             series_sort = series_sort_by_series_id.get(sid, {}).get(wid, wid)
             work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
 
@@ -2105,28 +1937,27 @@ def main() -> None:
         ordered_work_ids_by_series_for_index[sid] = [wid for _, wid in rows_sorted]
 
     series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
-    for sr in series_rows[1:] if len(series_rows) > 1 else []:
-        sid_raw = cell(sr, series_hi, "series_id")
+    for series_record in source_records.series.values():
+        sid_raw = series_record.get("series_id")
         if is_empty(sid_raw):
             continue
         sid = normalize_series_id(sid_raw)
-        status = normalize_status(cell(sr, series_hi, "status"))
+        status = normalize_status(series_record.get("status"))
         if status != "published":
             continue
 
-        title_raw = cell(sr, series_hi, "title")
+        title_raw = series_record.get("title")
         series_title = coerce_string(title_raw) or sid
-        year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
-        if "year_display" in series_hi:
-            year_display = coerce_string(cell(sr, series_hi, "year_display"))
-        else:
+        year = coerce_int(series_record.get("year"))
+        year_display = coerce_string(series_record.get("year_display"))
+        if year_display is None:
             year_display = str(year) if year is not None else None
-        published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
+        published_date = parse_date(series_record.get("published_date"))
 
         ordered_work_ids = ordered_work_ids_by_series_for_index.get(sid, [])
         primary_work_id = require_series_primary_work_id(
             sid,
-            sr,
+            series_record,
             ordered_work_ids=ordered_work_ids,
         )
 
@@ -2138,11 +1969,11 @@ def main() -> None:
             "published_date": published_date,
             "title": series_title,
             "sort_fields": sort_fields,
-            "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
+            "series_type": coerce_string(series_record.get("series_type")),
             "year": year,
             "year_display": year_display,
             "primary_work_id": primary_work_id,
-            "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+            "notes": coerce_string(series_record.get("notes")),
             "project_folders": series_project_folders_by_id.get(sid, []),
             "works": ordered_work_ids,
         })
@@ -2186,33 +2017,19 @@ def main() -> None:
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)
     # ----------------------------
-    if not work_details_rows or len(work_details_rows) < 2:
+    if not source_records.work_details:
         if run_work_details_pages or run_work_json or run_works_index_json:
-            print("No work detail pages/JSON/index rows found (WorkDetails sheet empty or missing).")
+            print("No work detail pages/JSON/index rows found (work detail source records empty or missing).")
         else:
             print("Work detail pages/JSON skipped: not selected by --only.")
     else:
-        required_details = ["work_id", "detail_id", "title", "status", "project_subfolder", "project_filename"]
-        missing_details = [c for c in required_details if c not in work_details_hi]
-        if missing_details:
-            raise SystemExit(f"WorkDetails sheet missing required columns: {', '.join(missing_details)}")
-
         projects_base_dir = Path(args.projects_base_dir).expanduser()
         projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
-        # Ensure width/height columns exist when writing so dimensions persist in the sheet.
-        width_px_idx = work_details_hi.get("width_px")
-        height_px_idx = work_details_hi.get("height_px")
-        if args.write and run_work_details_pages:
-            if width_px_idx is None:
-                width_px_idx = ensure_projection_column(work_details_rows, work_details_hi, "width_px")
-            if height_px_idx is None:
-                height_px_idx = ensure_projection_column(work_details_rows, work_details_hi, "height_px")
-
-        # Build known works from the Works sheet to validate foreign-key references.
+        # Build known works from source records to validate foreign-key references.
         known_work_ids: set[str] = set()
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
+        for work_record in source_records.works.values():
+            wid_raw = work_record.get("work_id")
             if is_empty(wid_raw):
                 continue
             known_work_ids.add(slug_id(wid_raw))
@@ -2230,26 +2047,24 @@ def main() -> None:
             details_status_updated = 0
             details_published_date_updated = 0
             details_dimensions_updated = 0
-            details_published_date_idx = work_details_hi.get("published_date")
-            details_published_date_missing_warned = False
             project_folder_missing_warned = False
             details_total = 0
 
-            for dr in work_details_rows[1:]:
-                wid_raw = cell(dr, work_details_hi, "work_id")
+            for detail_source_record in source_records.work_details.values():
+                wid_raw = detail_source_record.get("work_id")
                 if is_empty(wid_raw):
                     continue
                 wid = slug_id(wid_raw)
                 if selected_ids is not None and wid not in selected_ids:
                     continue
-                status = normalize_status(cell(dr, work_details_hi, "status"))
+                status = normalize_status(detail_source_record.get("status"))
                 if is_actionable_detail_status(status):
                     details_total += 1
 
             details_processed = 0
-            for dr in work_details_rows[1:]:
-                wid_raw = cell(dr, work_details_hi, "work_id")
-                did_raw = cell(dr, work_details_hi, "detail_id")
+            for detail_source_record in source_records.work_details.values():
+                wid_raw = detail_source_record.get("work_id")
+                did_raw = detail_source_record.get("detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
                     details_skipped += 1
                     continue
@@ -2264,7 +2079,7 @@ def main() -> None:
                     details_skipped += 1
                     continue
 
-                status = normalize_status(cell(dr, work_details_hi, "status"))
+                status = normalize_status(detail_source_record.get("status"))
                 if not is_actionable_detail_status(status):
                     details_skipped += 1
                     continue
@@ -2274,11 +2089,10 @@ def main() -> None:
 
                 did = slug_id(did_raw, width=3)
                 detail_uid = f"{wid}-{did}"
-                title = coerce_string(cell(dr, work_details_hi, "title"))
-                project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder"))
-                project_filename = coerce_string(cell(dr, work_details_hi, "project_filename"))
-                width_px = coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None
-                height_px = coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None
+                project_subfolder = coerce_string(detail_source_record.get("project_subfolder"))
+                project_filename = coerce_string(detail_source_record.get("project_filename"))
+                width_px = coerce_int(detail_source_record.get("width_px"))
+                height_px = coerce_int(detail_source_record.get("height_px"))
 
                 # Resolve source image and persist dimensions back to WorkDetails for stable future rebuilds.
                 project_folder = work_project_folder_by_id.get(wid)
@@ -2290,24 +2104,21 @@ def main() -> None:
                     src_path = src_path / project_filename
                 elif not project_folder_missing_warned:
                     if not has_project_folder_col:
-                        print("Warning: Works sheet has no project_folder column; cannot persist WorkDetails image dimensions.")
+                        print("Warning: work source records have no project_folder values; cannot persist work detail image dimensions.")
                     else:
-                        print("Warning: missing Works.project_folder for one or more WorkDetails rows; cannot persist those image dimensions.")
+                        print("Warning: missing work project_folder for one or more work detail records; cannot persist those image dimensions.")
                     project_folder_missing_warned = True
 
                 if src_path is not None:
                     src_w, src_h = read_image_dims_px(src_path)
                     if src_w is not None and src_h is not None:
+                        prev_w = width_px
+                        prev_h = height_px
                         width_px = src_w
                         height_px = src_h
-                        if args.write and width_px_idx is not None and height_px_idx is not None:
-                            prev_w = dr[width_px_idx] if width_px_idx < len(dr) else None
-                            prev_h = dr[height_px_idx] if height_px_idx < len(dr) else None
-                            if prev_w != src_w or prev_h != src_h:
-                                dr[width_px_idx] = src_w
-                                dr[height_px_idx] = src_h
-                                update_source_detail_record(detail_uid, width_px=src_w, height_px=src_h)
-                                details_dimensions_updated += 1
+                        if args.write and (prev_w != src_w or prev_h != src_h):
+                            update_source_detail_record(detail_uid, width_px=src_w, height_px=src_h)
+                            details_dimensions_updated += 1
                     else:
                         print(f"Warning: could not read dimensions for detail source image: {display_projects_path(src_path)}")
                 elif project_filename:
@@ -2325,21 +2136,12 @@ def main() -> None:
                     print(f"{prefix_d}WRITE: {display_path(d_path)}")
                     details_written += 1
 
-                    status_idx = work_details_hi.get("status")
-                    if status_idx is not None:
-                        status_was = normalize_status(dr[status_idx] if status_idx < len(dr) else None)
-                        if status_was != "published":
-                            dr[status_idx] = "published"
-                            update_source_detail_record(detail_uid, status="published")
-                            details_status_updated += 1
-                        if status_was != "published":
-                            if details_published_date_idx is not None:
-                                dr[details_published_date_idx] = today
-                                update_source_detail_record(detail_uid, published_date=today.isoformat())
-                                details_published_date_updated += 1
-                            elif not details_published_date_missing_warned:
-                                print("Warning: WorkDetails sheet missing published_date column; skipping date updates.")
-                                details_published_date_missing_warned = True
+                    status_was = normalize_status(detail_source_record.get("status"))
+                    if status_was != "published":
+                        update_source_detail_record(detail_uid, status="published")
+                        details_status_updated += 1
+                        update_source_detail_record(detail_uid, published_date=today.isoformat())
+                        details_published_date_updated += 1
                 else:
                     print(f"{prefix_d}DRY-RUN: would write {display_path(d_path)} (overwrite={d_exists})")
                     details_written += 1
@@ -2364,16 +2166,15 @@ def main() -> None:
             encountered_work_ids: List[str] = []
             encountered_work_id_set: set[str] = set()
             detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
-            detail_status_idx = work_details_hi.get("status")
 
-            for wr in works_rows[1:]:
-                wid_raw = cell(wr, works_hi, "work_id")
+            for work_record in source_records.works.values():
+                wid_raw = work_record.get("work_id")
                 if is_empty(wid_raw):
                     continue
                 wid = slug_id(wid_raw)
                 if selected_ids is not None and wid not in selected_ids:
                     continue
-                status = normalize_status(cell(wr, works_hi, "status"))
+                status = normalize_status(work_record.get("status"))
                 if status not in {"draft", "published"}:
                     continue
                 if wid not in canonical_work_record_by_id:
@@ -2382,9 +2183,9 @@ def main() -> None:
                     encountered_work_ids.append(wid)
                     encountered_work_id_set.add(wid)
 
-            for dr in work_details_rows[1:]:
-                wid_raw = cell(dr, work_details_hi, "work_id")
-                did_raw = cell(dr, work_details_hi, "detail_id")
+            for detail_source_record in source_records.work_details.values():
+                wid_raw = detail_source_record.get("work_id")
+                did_raw = detail_source_record.get("detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
                     continue
 
@@ -2392,18 +2193,17 @@ def main() -> None:
                 if wid not in encountered_work_id_set:
                     continue
 
-                status_val = dr[detail_status_idx] if detail_status_idx is not None and detail_status_idx < len(dr) else cell(dr, work_details_hi, "status")
-                if normalize_status(status_val) != "published":
+                if normalize_status(detail_source_record.get("status")) != "published":
                     continue
 
                 did = slug_id(did_raw, width=3)
                 detail_record = build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(read_cell_value(dr, work_details_hi, "title")),
-                    project_subfolder=coerce_string(read_cell_value(dr, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(dr[work_details_hi["width_px"]]) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr) else None,
-                    height_px=coerce_int(dr[work_details_hi["height_px"]]) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr) else None,
+                    title=coerce_string(detail_source_record.get("title")),
+                    project_subfolder=coerce_string(detail_source_record.get("project_subfolder")),
+                    width_px=coerce_int(detail_source_record.get("width_px")),
+                    height_px=coerce_int(detail_source_record.get("height_px")),
                 )
                 detail_records_by_work.setdefault(wid, []).append(detail_record)
 
@@ -2463,11 +2263,11 @@ def main() -> None:
             print("Work detail JSON skipped: not selected by --only.")
 
     works_payload: Dict[str, Dict[str, Any]] = {}
-    for wr in works_rows[1:]:
-        wid_raw = cell(wr, works_hi, "work_id")
+    for work_record in source_records.works.values():
+        wid_raw = work_record.get("work_id")
         if is_empty(wid_raw):
             continue
-        status = normalize_status(cell(wr, works_hi, "status"))
+        status = normalize_status(work_record.get("status"))
         if status not in {"draft", "published"}:
             continue
         wid = slug_id(wid_raw)
@@ -2481,31 +2281,6 @@ def main() -> None:
         storage_record = build_work_storage_index_record(canonical_work_record_by_id.get(wid, {}))
         if storage_record is not None:
             work_storage_payload[wid] = storage_record
-
-    detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
-    if work_details_rows and len(work_details_rows) > 1:
-        for dr in work_details_rows[1:]:
-            wid_raw = cell(dr, work_details_hi, "work_id")
-            did_raw = cell(dr, work_details_hi, "detail_id")
-            if is_empty(wid_raw) or is_empty(did_raw):
-                continue
-            wid = slug_id(wid_raw)
-            if wid not in works_payload:
-                continue
-            status = normalize_status(dr[work_details_hi["status"]] if work_details_hi["status"] < len(dr) else cell(dr, work_details_hi, "status"))
-            if status not in {"draft", "published"}:
-                continue
-            did = slug_id(did_raw, width=3)
-            detail_records_by_work.setdefault(wid, []).append(
-                build_canonical_detail_record(
-                    wid=wid,
-                    did=did,
-                    title=coerce_string(read_cell_value(dr, work_details_hi, "title")),
-                    project_subfolder=coerce_string(read_cell_value(dr, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(dr[work_details_hi["width_px"]]) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr) else None,
-                    height_px=coerce_int(dr[work_details_hi["height_px"]]) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr) else None,
-                )
-            )
 
     version_payload = compact_json_object({
         "schema": "works_index_v4",

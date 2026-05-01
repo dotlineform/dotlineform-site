@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed generator row projection
+
+**Status:** implemented
+
+**Area:** generator / compatibility cleanup
+
+**Summary:**
+Removed the retained workbook-shaped row projection from `generate_work_pages.py`.
+
+**Reason:**
+After source write-back moved to canonical source records and proxy worksheet/cell wrappers were removed, the remaining header-indexed row lists were only preserving an old workbook implementation shape inside the JSON-source generator.
+
+**Effect:**
+The generator now builds work, series, work-detail, and index artifacts from canonical source records directly. Per-series sort rules are read from `series.<series_id>.sort_fields`, and generator-updated work/detail status, published dates, and image dimensions are still written back to canonical source records during write runs.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed generator proxy worksheet wrapper
 
 **Status:** implemented

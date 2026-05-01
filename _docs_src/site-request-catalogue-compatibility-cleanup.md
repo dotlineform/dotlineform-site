@@ -25,7 +25,7 @@ The catalogue pipeline still has compatibility surfaces from earlier workbook-le
 Known examples to review:
 
 - workbook-shaped source headers and schema helpers in `scripts/catalogue_source.py`
-- internal sheet-like projection used by `scripts/generate_work_pages.py`
+- removed internal row-list projection formerly used by `scripts/generate_work_pages.py`
 - retained source fields that may only exist for old workbook compatibility
 - Studio lookup payloads that expose full source records, including retired or compatibility-only fields
 - deprecated workbook-led scripts and docs that should remain clearly separated from live workflow behavior
@@ -110,7 +110,7 @@ Task 3 implementation order and verification matrix:
 
 Status:
 
-- in progress
+- completed
 
 Implemented slices:
 
@@ -119,10 +119,10 @@ Implemented slices:
 - removed `work_files` and `work_links` compatibility maps from live source records, validation, delete previews, lookup invalidation, and activity summaries
 - rewrote stale current docs and archived workbook-led workflow pages so they point to the current JSON-source pipeline instead of live workbook/file-link workflows
 - replaced deprecated workbook-led script implementations with short clean-exit stubs, including the old source export and workbook/source comparison commands
-- narrowed generator write-back so mutable work and detail source fields are persisted directly on canonical source records instead of rebuilding source JSON from the sheet-like projection
-- removed the generator proxy worksheet/cell wrapper; remaining compatibility projection now uses mutable row lists only
+- narrowed generator write-back so mutable work and detail source fields are persisted directly on canonical source records
+- removed the generator proxy worksheet/cell wrapper and remaining row-list projection so work, series, and work-detail generation now read canonical source records directly
 
-Apply approved removals in small slices.
+Approved removals were applied in small slices.
 
 Expected cleanup areas:
 

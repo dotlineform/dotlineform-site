@@ -41,7 +41,7 @@ It is an architecture note because it defines where ordering is owned and how di
 
 ## Regeneration Contract
 
-Whenever series ordering might change (new work in series, title/year edits affecting sort, SeriesSort changes):
+Whenever series ordering might change (new work in series, title/year edits affecting sort, or source `series.<series_id>.sort_fields` changes):
 
 1. Regenerate `work-pages` for affected series (refresh `_works` `series_sort` cache).
 2. Regenerate `series-index-json` (refresh canonical runtime JSON order).
