@@ -9,7 +9,6 @@
     "series_ids": [
       "050"
     ],
-    "series_title": null,
     "project_folder": "field",
     "project_filename": "field I.jpg",
     "title": "field I",
@@ -20,7 +19,6 @@
     "medium_type": "painting",
     "medium_caption": "acrylic on canvas",
     "storage_location": null,
-    "work_prose_file": null,
     "notes": null,
     "duration": null,
     "depth_cm": null,

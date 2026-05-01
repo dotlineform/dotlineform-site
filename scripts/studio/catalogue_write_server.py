@@ -194,7 +194,6 @@ BULK_WORK_EDITABLE_FIELDS = {
     "width_cm",
     "depth_cm",
     "storage_location",
-    "work_prose_file",
     "notes",
     "provenance",
     "artist",
@@ -262,10 +261,6 @@ WORK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "artifacts": ["work_record"],
     },
     "storage_location": {
-        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
-        "artifacts": ["work_record"],
-    },
-    "work_prose_file": {
         "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
         "artifacts": ["work_record"],
     },
@@ -439,10 +434,6 @@ SERIES_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "artifacts": ["series_record"],
     },
     "published_date": {
-        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
-        "artifacts": ["series_record"],
-    },
-    "series_prose_file": {
         "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
         "artifacts": ["series_record"],
     },
@@ -711,7 +702,6 @@ def locked_first_pass_work_fields() -> set[str]:
         "width_cm",
         "depth_cm",
         "storage_location",
-        "work_prose_file",
         "notes",
         "provenance",
         "artist",
