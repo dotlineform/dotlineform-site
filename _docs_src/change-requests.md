@@ -43,6 +43,7 @@ Those still belong in the owning reference docs and change logs.
 - [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
 - [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
 - [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
 - [Catalogue Media And Detail Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)
 - [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
 - [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)

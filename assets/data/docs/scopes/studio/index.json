@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T19:59:39Z",
+  "generated_at": "2026-05-01T20:43:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1561,6 +1561,20 @@
       "source_path": "site-request-catalogue-compatibility-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-compatibility-cleanup.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-moment-source-cleanup",
+      "title": "Moment Source Cleanup",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "change-requests",
+      "sort_order": 102,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-moment-source-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-moment-source-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moment-source-cleanup.json"
     },
     {
       "scope": "studio",

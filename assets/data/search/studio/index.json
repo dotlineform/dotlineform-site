@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-53997e50d05378e02d3b3e1e8e1333c9",
-    "generated_at_utc": "2026-05-01T19:59:40Z",
-    "count": 155
+    "version": "blake2b-2dbb4fee6a9d4783f49791dedadc8856",
+    "generated_at_utc": "2026-05-01T20:43:47Z",
+    "count": 156
   },
   "entries": [
     {
@@ -2650,6 +2650,33 @@
         "01"
       ],
       "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup change requests change requests 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "site-request-moment-source-cleanup",
+      "kind": "doc",
+      "title": "Moment Source Cleanup",
+      "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup",
+      "last_updated": "2026-05-01",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-01 • Change Requests",
+      "search_terms": [
+        "site-request-moment-source-cleanup",
+        "site",
+        "request",
+        "moment",
+        "source",
+        "cleanup",
+        "moment source cleanup",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-media-section-schema",
