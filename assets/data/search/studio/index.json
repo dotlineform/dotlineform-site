@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5bdb4bcef7bc7e8d259ee9b568e6f724",
-    "generated_at_utc": "2026-05-01T21:35:24Z",
+    "version": "blake2b-4bf492ace7f69400d42279b539743beb",
+    "generated_at_utc": "2026-05-01T22:14:40Z",
     "count": 156
   },
   "entries": [
@@ -202,8 +202,8 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory",
       "last_updated": "2026-05-01",
       "parent_id": "site-request-catalogue-compatibility-cleanup",
-      "parent_title": "Compatibility Cleanup",
-      "display_meta": "2026-05-01 • Compatibility Cleanup",
+      "parent_title": "Compatibility Cleanup ✅",
+      "display_meta": "2026-05-01 • Compatibility Cleanup ✅",
       "search_terms": [
         "site-request-catalogue-compatibility-cleanup-inventory",
         "site",
@@ -212,13 +212,13 @@
         "compatibility",
         "cleanup",
         "inventory",
-        "compatibility cleanup",
+        "compatibility cleanup ✅",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "site-request-catalogue-compatibility-cleanup-inventory site request catalogue compatibility cleanup inventory compatibility cleanup 2026-05-01 2026 05 01"
+      "search_text": "site-request-catalogue-compatibility-cleanup-inventory site request catalogue compatibility cleanup inventory compatibility cleanup ✅ 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-moment-source-cleanup-inventory",
@@ -227,8 +227,8 @@
       "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory",
       "last_updated": "2026-05-01",
       "parent_id": "site-request-moment-source-cleanup",
-      "parent_title": "Moment Source Cleanup",
-      "display_meta": "2026-05-01 • Moment Source Cleanup",
+      "parent_title": "Moment Source Cleanup ✅",
+      "display_meta": "2026-05-01 • Moment Source Cleanup ✅",
       "search_terms": [
         "site-request-moment-source-cleanup-inventory",
         "site",
@@ -237,13 +237,13 @@
         "source",
         "cleanup",
         "inventory",
-        "moment source cleanup",
+        "moment source cleanup ✅",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "site-request-moment-source-cleanup-inventory site request moment source cleanup inventory moment source cleanup 2026-05-01 2026 05 01"
+      "search_text": "site-request-moment-source-cleanup-inventory site request moment source cleanup inventory moment source cleanup ✅ 2026-05-01 2026 05 01"
     },
     {
       "id": "config-jekyll-site-config",
@@ -2630,7 +2630,7 @@
     {
       "id": "site-request-catalogue-compatibility-cleanup",
       "kind": "doc",
-      "title": "Compatibility Cleanup",
+      "title": "Compatibility Cleanup ✅",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup",
       "last_updated": "2026-05-01",
       "parent_id": "change-requests",
@@ -2643,7 +2643,7 @@
         "catalogue",
         "compatibility",
         "cleanup",
-        "compatibility cleanup",
+        "compatibility cleanup ✅",
         "change requests",
         "change",
         "requests",
@@ -2652,12 +2652,12 @@
         "05",
         "01"
       ],
-      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup ✅ change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-moment-source-cleanup",
       "kind": "doc",
-      "title": "Moment Source Cleanup",
+      "title": "Moment Source Cleanup ✅",
       "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup",
       "last_updated": "2026-05-01",
       "parent_id": "change-requests",
@@ -2670,7 +2670,7 @@
         "moment",
         "source",
         "cleanup",
-        "moment source cleanup",
+        "moment source cleanup ✅",
         "change requests",
         "change",
         "requests",
@@ -2679,7 +2679,7 @@
         "05",
         "01"
       ],
-      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup ✅ change requests change requests 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-media-section-schema",

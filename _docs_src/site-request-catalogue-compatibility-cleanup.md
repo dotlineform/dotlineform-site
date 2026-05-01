@@ -1,6 +1,6 @@
 ---
 doc_id: site-request-catalogue-compatibility-cleanup
-title: Compatibility Cleanup
+title: "Compatibility Cleanup ✅"
 added_date: 2026-05-01
 last_updated: 2026-05-01
 parent_id: change-requests

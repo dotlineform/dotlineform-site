@@ -1,6 +1,6 @@
 ---
 doc_id: site-request-moment-source-cleanup
-title: "Moment Source Cleanup"
+title: "Moment Source Cleanup ✅"
 added_date: 2026-05-01
 last_updated: 2026-05-01
 parent_id: change-requests
