@@ -444,6 +444,8 @@ Current prose resolution is ID-derived:
 
 Follow-up implementation should remove the obsolete retained fields from canonical source records, source schemas, editor surfaces, and any compatibility payloads that still expose them.
 
+Task 1A in the parent request should also record obvious adjacent retired-field candidates, but broader compatibility cleanup belongs in [Catalogue Compatibility Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup).
+
 ## Structural Operations
 
 Create, delete, and identity changes should keep conservative fallback until they have explicit rules.
@@ -465,6 +467,7 @@ These confirmations should guide Task 2 executable rules.
 
 - Route page artifacts are selected only for create/delete/identity operations.
 - `work_prose_file` and `series_prose_file` are obsolete retained fields and should be removed rather than supported as overrides.
+- Retained compatibility paths should not become active Task 2 registry dependencies by default. Confirmed-retired fields are handled by Task 1A; broader compatibility-layer cleanup is tracked separately.
 - No source field outside the media-affecting summary changes media manifests, copy lists, or media readiness output.
 - Work `width_px` and `height_px` are derived from source images during the media/dimension workflow. They are not user-editable, but media replacement can require a canonical works JSON update when the image aspect ratio changes.
 - Work `notes` and `provenance` are Studio/editor-only fields and are not published to the public site.

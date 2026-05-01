@@ -180,6 +180,12 @@ This can live in code or config, but it should be explicit enough for:
 
 Before building the executable registry, run a retired-field cleanup pass so obsolete source fields do not become permanent registry entries.
 
+Broader catalogue compatibility cleanup should stay separate from this request. Task 1A may remove obvious retired fields, but it should not refactor workbook-shaped generator bridges or lookup compatibility surfaces unless that is required to remove a confirmed-retired field.
+
+Related follow-up:
+
+- [Catalogue Compatibility Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+
 ### Stage 2. Use The Registry In Build Planning
 
 Update work-scoped build planning so callers can pass changed-field context.
@@ -262,7 +268,13 @@ Inventory doc:
 Open questions:
 
 - none blocking for Task 1
-- confirm whether any non-image metadata currently changes generated JSON artifacts through retained compatibility paths
+
+Resolved Task 1 note:
+
+- retained compatibility paths should not be treated as active field dependencies for Task 2
+- no non-image metadata should change generated JSON artifacts through retained compatibility paths unless that dependency is explicitly documented as active
+- compatibility fields discovered during inventory should be classified as active, editor-only, derived, migration-only, or retired before registry rules are created
+- broader compatibility cleanup is tracked separately in [Catalogue Compatibility Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
 
 ### Task 1A. Retired Field Cleanup
 
@@ -277,7 +289,16 @@ Initial known cleanup targets:
 - `works.<work_id>.work_prose_file`
 - `series.<series_id>.series_prose_file`
 
+Also scan for obvious adjacent workbook-era or retained compatibility fields. If a field is clearly obsolete and its removal is narrow, remove it in this task. If the field still has unclear generator, lookup, import/export, or editor implications, document it as follow-up in [Catalogue Compatibility Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup) rather than turning Task 1A into a compatibility-layer refactor.
+
 Remove confirmed-retired fields before creating executable field-to-artifact rules, so the new registry does not preserve obsolete compatibility surface.
+
+Out of scope for Task 1A:
+
+- redesigning the internal workbook-shaped projection used by generator helpers
+- removing deprecated workbook-led scripts or their clean-exit behavior
+- changing public runtime payload contracts except to remove confirmed-retired fields
+- pruning Studio lookup payloads beyond fields that are confirmed retired
 
 Acceptance checks:
 
@@ -286,6 +307,7 @@ Acceptance checks:
 - retired fields are absent from source schema/normalization helpers unless a migration-only compatibility path is explicitly documented
 - generated public artifacts do not expose retired fields
 - docs identify ID-derived prose paths as the supported model
+- any suspicious compatibility fields that remain are listed in the separate compatibility cleanup request
 
 ### Task 2. Define Field-To-Artifact Rules
 

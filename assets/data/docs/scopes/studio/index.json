@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T10:02:53Z",
+  "generated_at": "2026-05-01T10:18:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1477,6 +1477,20 @@
       "source_path": "site-request-field-aware-build-scoping.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-compatibility-cleanup",
+      "title": "Catalogue Compatibility Cleanup Request",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-01",
+      "parent_id": "change-requests",
+      "sort_order": 101,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-compatibility-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-compatibility-cleanup.json"
     },
     {
       "scope": "studio",
