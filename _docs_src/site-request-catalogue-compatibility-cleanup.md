@@ -117,6 +117,7 @@ Implemented slices:
 - moved workbook row helpers such as `header_map` and `cell` into the active bulk-import adapter boundary in `scripts/catalogue_workbook_import.py`
 - removed obsolete `data/works.xlsx` provenance from catalogue source metadata and source metadata generation
 - removed `work_files` and `work_links` compatibility maps from live source records, validation, delete previews, lookup invalidation, and activity summaries
+- rewrote stale current docs and archived workbook-led workflow pages so they point to the current JSON-source pipeline instead of live workbook/file-link workflows
 
 Apply approved removals in small slices.
 

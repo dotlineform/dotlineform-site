@@ -82,8 +82,8 @@ A work delete should remove or update:
 
 - canonical work source row in `assets/studio/data/catalogue/works.json`
 - dependent work-detail source rows in `assets/studio/data/catalogue/work_details.json`
-- dependent work-file source rows in `assets/studio/data/catalogue/work_files.json`
-- dependent work-link source rows in `assets/studio/data/catalogue/work_links.json`
+- dependent work-owned download metadata on the work source row
+- dependent work-owned link metadata on the work source row
 - `_works/<work_id>.md`
 - `assets/works/index/<work_id>.json`
 - `assets/works/img/<work_id>-thumb-*`

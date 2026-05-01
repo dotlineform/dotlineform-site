@@ -2,7 +2,7 @@
 doc_id: new-pipeline-web-system-spec
 title: "Web System Specification"
 added_date: 2026-04-17
-last_updated: 2026-04-17
+last_updated: 2026-05-01
 parent_id: new-pipeline
 sort_order: 30
 ---
@@ -465,14 +465,14 @@ First target:
 
 - make JSON source generation produce byte-for-byte equivalent generated artifacts for unchanged data, except for expected timestamp/version changes.
 
-Generator CLI should gain a source mode:
+The live user-facing generator path is the scoped JSON build CLI:
 
 ```bash
-./scripts/generate_work_pages.py --source json --write
-./scripts/generate_work_pages.py --source xlsx data/works.xlsx --write
+./scripts/catalogue_json_build.py --work-id <work_id>
+./scripts/catalogue_json_build.py --work-id <work_id> --write
 ```
 
-After migration, JSON should become the default.
+`generate_work_pages.py` remains the internal generation engine behind that command.
 
 ## Build Flow
 

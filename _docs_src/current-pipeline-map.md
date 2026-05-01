@@ -2,316 +2,81 @@
 doc_id: new-pipeline-current-pipeline-map
 title: "Current Pipeline Map"
 added_date: 2026-04-17
-last_updated: 2026-04-27
+last_updated: 2026-05-01
 parent_id: new-pipeline
 sort_order: 10
 ---
 
 # Current Pipeline Map
 
-This document maps the current workbook-led catalogue pipeline to the responsibilities a web-based Studio system must replace or preserve.
+This document maps the current JSON-source catalogue pipeline.
 
-## Current Source Boundary
+## Source Boundary
 
-Current canonical catalogue source:
+Canonical catalogue metadata lives under:
 
-- `data/works.xlsx`
-  - `Works`
-  - `Series`
-  - `SeriesSort`
-  - `WorkDetails`
-  - file/link metadata now lives on work records as `downloads` and `links`
-- canonical source media and legacy prose under `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - work primary images
-  - work detail images
-- current media source images
+```text
+assets/studio/data/catalogue/
+```
+
+Current source families:
+
+- `works.json`
+- `work_details.json`
+- `series.json`
+- `meta.json`
+
+Work-owned downloads and links are stored directly on work records as `downloads` and `links`. Retired standalone file/link source families are not part of the current source boundary.
+
+Other canonical inputs:
+
+- source media under `DOTLINEFORM_PROJECTS_BASE_DIR`
 - repo-local catalogue prose under `_docs_src_catalogue/`
-  - work prose Markdown
-  - series prose Markdown
-  - moment prose Markdown
-- moment metadata records under `assets/studio/data/catalogue/moments.json`
+- moment prose and metadata sources under `moments/`
+- Studio-owned local state such as tag assignments and activity feeds where documented by their owning pages
 
-The workbook is currently both an editing interface and a source database. The generator also writes operational state back into the workbook, including `status`, `published_date`, and image dimensions.
+## Studio Maintenance
 
-## Current Orchestrator
+Studio is the normal editing surface for catalogue source records. Local write services validate requests, write only allowlisted files, and create backups for write operations.
 
-Current entrypoint:
+Main Studio flows:
 
-```bash
-./scripts/build_catalogue.py
-```
+- edit works, work details, and series
+- add new works and details through the configured bulk-import workflow
+- preview delete operations before applying them
+- preview and run scoped builds
+- review catalogue build/source activity
 
-Primary responsibilities:
+## Build Boundary
 
-- load `data/works.xlsx`
-- fingerprint workbook rows for works, series, work details, work files, and work links
-- fingerprint moment metadata and repo-local moment prose sources
-- fingerprint source media and prose files
-- compare those fingerprints with `var/build_catalogue_state.json`
-- infer affected work IDs, detail UIDs, series IDs, and moment IDs
-- preflight workbook/source validity
-- run media copy and srcset scripts for affected media records
-- call `generate_work_pages.py` with scoped ID manifests and `--only` artifact flags
-- clean stale generated files and local media for removed source rows
-- migrate or prune Studio tag assignments when series IDs or works are removed
-- rebuild catalogue search with `build_search.rb --scope catalogue`
-- update build activity feeds
-- update planner state after successful write runs
-
-The key design point is that `build_catalogue.py` is a planner and orchestrator. It is not the main transformation layer from source metadata to public JSON.
-
-## Current Generator
-
-Current generator:
+The live rebuild entrypoint is:
 
 ```bash
-./scripts/generate_work_pages.py
+./scripts/catalogue_json_build.py
 ```
 
-Primary responsibilities:
+The build path reads canonical JSON source records and invokes the internal generator boundary. `generate_work_pages.py` remains the internal generation engine, not the user-facing command.
 
-- read workbook sheets
-- normalize IDs, dates, lists, text, dimensions, and status values
-- validate workbook/source references with the shared preflight
-- build canonical in-memory records for works, work details, series, files, and links
-- render work, series, and moment prose through the local Jekyll stack
-- write minimal route stubs:
-  - `_works/*.md`
-  - `_series/*.md`
-  - `_work_details/*.md`
-  - `_moments/*.md`
-- write existing runtime JSON artifacts:
-  - `assets/data/series_index.json`
-  - `assets/data/works_index.json`
-  - `assets/data/recent_index.json`
-  - `assets/data/moments_index.json`
-  - `assets/series/index/<series_id>.json`
-  - `assets/works/index/<work_id>.json`
-  - `assets/moments/index/<moment_id>.json`
-- write the Studio-only storage companion:
-  - `assets/studio/data/work_storage_index.json`
-- update workbook-backed publication state:
-  - `status`
-  - `published_date`
-  - `width_px`
-  - `height_px`
-- sync missing series rows into `assets/studio/data/tag_assignments.json`
+Generated runtime artifacts include:
 
-The generator is the main source-to-runtime transformation layer. The new system should preserve most transformation logic while replacing its workbook reader/writer with a JSON source adapter.
+- route stubs under `_works/`, `_series/`, `_work_details/`, and `_moments/`
+- aggregate indexes under `assets/data/`
+- per-record runtime payloads under `assets/works/index/`, `assets/series/index/`, and `assets/moments/index/`
+- Studio lookup and storage helper artifacts where selected by the build rules
 
-## Current Workbook Sheet Mapping
+Search remains downstream of generated/runtime artifacts:
 
-### `Works`
+```bash
+./scripts/build_search.rb --scope catalogue --write
+```
 
-Role:
+## Deprecated Boundary
 
-- one source row per work
-- primary key is `work_id`
-- controls public work metadata, series membership, source image lookup, source prose lookup, and curator storage metadata
+Workbook-led scripts and historical workflow docs are retained only where they provide clean-exit guidance or archived implementation context. They should not be treated as current source ownership or as hidden compatibility paths.
 
-Important current fields:
+## Related References
 
-- `work_id`
-- `status`
-- `published_date`
-- `series_ids`
-- `project_folder`
-- `project_filename`
-- `title`
-- `width_cm`
-- `height_cm`
-- `depth_cm`
-- `year`
-- `year_display`
-- `medium_type`
-- `medium_caption`
-- `storage_location`
-- `work_prose_file`
-- `notes`
-- `duration`
-- `width_px`
-- `height_px`
-- `provenance`
-- `artist`
-
-Current generated outputs:
-
-- `_works/<work_id>.md`
-- `assets/works/index/<work_id>.json`
-- `assets/data/works_index.json`
-- `assets/studio/data/work_storage_index.json`
-- `assets/data/recent_index.json` when a work is newly published
-- `assets/data/search/catalogue/index.json` after search rebuild
-
-### `WorkDetails`
-
-Role:
-
-- one source row per additional image/detail for a work
-- composite identity is `<work_id>-<detail_id>`
-- grouped into sections by `project_subfolder`
-
-Important current fields:
-
-- `work_id`
-- `detail_id`
-- `project_subfolder`
-- `project_filename`
-- `title`
-- `status`
-- `published_date`
-- `width_px`
-- `height_px`
-
-Current generated outputs:
-
-- `_work_details/<work_id>-<detail_id>.md`
-- detail sections inside `assets/works/index/<work_id>.json`
-- search rebuild after generation
-
-### `Series`
-
-Role:
-
-- one source row per series
-- primary key is `series_id`
-- controls series metadata, series prose lookup, primary thumbnail work, and the series page route
-
-Important current fields:
-
-- `series_id`
-- `title`
-- `series_type`
-- `status`
-- `published_date`
-- `year`
-- `year_display`
-- `primary_work_id`
-- `series_prose_file`
-- `notes`
-
-Current generated outputs:
-
-- `_series/<series_id>.md`
-- `assets/series/index/<series_id>.json`
-- `assets/data/series_index.json`
-- `assets/data/recent_index.json` when a series is newly published
-- `assets/studio/data/tag_assignments.json` missing-row sync
-- search rebuild after generation
-
-### `SeriesSort`
-
-Role:
-
-- optional per-series sort rules
-- primary key is `series_id`
-- currently feeds `series_sort` and ordered membership calculations
-
-Important current fields:
-
-- `series_id`
-- `sort_fields`
-
-Replacement note:
-
-- this should become a `sort_fields` property on the canonical series JSON record unless keeping it separate materially improves editing or import behavior
-
-### Work-Owned Files And Links
-
-Role:
-
-- optional downloadable files and published links for a work
-- stored directly on the work record as `downloads` and `links`
-- edited in the work editor rather than standalone workflows
-
-Current generated outputs:
-
-- `work.downloads` and `work.links` inside `assets/works/index/<work_id>.json`
-
-Current generated outputs:
-
-- `work.links` inside `assets/works/index/<work_id>.json`
-
-## Current Runtime-Critical Artifacts
-
-The new pipeline should avoid schema changes to these files unless a later requirement explicitly needs them:
-
-- `assets/data/series_index.json`
-- `assets/data/works_index.json`
-- `assets/data/recent_index.json`
-- `assets/data/moments_index.json`
-- `assets/series/index/<series_id>.json`
-- `assets/works/index/<work_id>.json`
-- `assets/moments/index/<moment_id>.json`
-- `assets/data/search/catalogue/index.json`
-- `_works/*.md`
-- `_series/*.md`
-- `_work_details/*.md`
-- `_moments/*.md`
-
-These files are generated public/runtime artifacts. They should not become the editing source of truth because they already contain derived values, rendered prose HTML, aggregate indexes, and runtime-oriented projections.
-
-## Replacement Mapping
-
-| Current responsibility | Current owner | New owner |
-| --- | --- | --- |
-| edit work metadata | Excel workbook | Studio work editor writing canonical source JSON |
-| edit work-detail metadata | Excel workbook | Studio work-detail editor writing canonical source JSON |
-| edit series metadata | Excel workbook | Studio series editor writing canonical source JSON |
-| edit series membership | `Works.series_ids` cells | Studio work editor and series editor writing canonical source JSON |
-| add a series | `Series` row | Studio new-series flow writing canonical source JSON |
-| bulk metadata edits | Excel filtering/fill | Studio bulk edit preview/apply flow |
-| import new works/details | Excel workbook | optional workbook/CSV import into source JSON |
-| source validation | generator preflight | shared JSON source validator used by Studio and generator |
-| publish state updates | generator writes workbook | generator or write service updates source JSON |
-| dimension updates | generator writes workbook | generator or media probe updates source JSON |
-| public route and JSON generation | `generate_work_pages.py` | refactored generator using JSON source adapter |
-| media copy/srcset | `copy_draft_media_files.py`, `make_srcset_images.sh`, orchestrated by `build_catalogue.py` | scoped JSON build stages work/detail/moment source images under `var/catalogue/media/`, generates srcset derivatives there, copies thumbnails into `assets/`, and leaves primary derivatives staged for remote publishing |
-| catalogue search rebuild | `build_catalogue.py` tail | explicit local build action after source/generation changes |
-| planner state | `var/build_catalogue_state.json` based on workbook fingerprints | new planner state based on canonical source JSON fingerprints |
-
-## Logic To Preserve
-
-The new system should preserve the following current logic unless a later phase intentionally changes it:
-
-- ID normalization:
-  - work IDs remain five-digit strings
-  - detail IDs remain three-digit strings within a work
-  - detail UIDs remain `<work_id>-<detail_id>`
-  - series IDs use existing `normalize_series_id` behavior
-- status gating:
-  - source records with blank or unknown status are not generated
-  - `draft` records are actionable
-  - `published` records are included in indexes and regenerated when selected or forced
-- publish transition semantics:
-  - first publication sets `published_date`
-  - `/recent/` entries are snapshots, not always-live title mirrors
-- series membership:
-  - works can belong to more than one series
-  - the first series ID is the primary series
-  - `Series.primary_work_id` must belong to the series
-- prose resolution:
-  - work prose is resolved from `project_folder` plus `work_prose_file`
-  - series prose is resolved from `primary_work_id` project folder plus `series_prose_file`
-- work detail grouping:
-  - `project_subfolder` defines detail sections
-  - details sort by `detail_id` inside a section
-- generated output determinism:
-  - stable ordering
-  - stable checksums/versions
-  - compact JSON objects where the current generator compacts them
-- stale cleanup:
-  - removed works, work details, series, and moments require generated-artifact cleanup
-  - removed works and series require tag assignment cleanup
-
-## Logic To Retire Or Isolate
-
-The new system should retire or isolate these workbook-specific behaviors:
-
-- treating `data/works.xlsx` as canonical
-- writing publication state and dimensions back to `data/works.xlsx`
-- reading formula cache values from Excel
-- relying on worksheet names and column positions at runtime
-- using Excel as the normal way to edit existing published records
-
-The workbook can remain useful as an import format, an export/reporting format, or a bulk-add staging surface. It should not be a second source of truth for currently published records.
+- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
+- [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
+- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
+- [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)

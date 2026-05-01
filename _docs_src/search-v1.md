@@ -119,7 +119,7 @@ Search generation should remain a self-contained pipeline concern:
 
 - it reads canonical source data and existing generated metadata
 - it writes a search-specific artifact
-- it does not change canonical ownership of `works.xlsx`
+- it does not make search the source of truth for catalogue metadata
 - it does not make search the source of truth for non-search pages
 
 ## Search Artifact Contract

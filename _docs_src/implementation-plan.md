@@ -2,7 +2,7 @@
 doc_id: new-pipeline-implementation-plan
 title: "Implementation Plan"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-05-01
 parent_id: new-pipeline
 sort_order: 40
 ---
@@ -19,8 +19,8 @@ Goal:
 
 Work:
 
-- add `scripts/export_catalogue_source.py` to read `data/works.xlsx` and write proposed JSON source files under `assets/studio/data/catalogue/`
-- include `Works`, `Series`, `SeriesSort`, `WorkDetails`, `WorkFiles`, and `WorkLinks`
+- add `scripts/export_catalogue_source.py` to read the retired workbook source and write proposed JSON source files under `assets/studio/data/catalogue/`
+- include the then-current work, series, detail, file, and link workbook sections
 - normalize IDs and field names during export
 - include migration metadata in `meta.json`
 - add `scripts/validate_catalogue_source.py` to read the exported JSON source and report the same classes of errors as the current workbook preflight
@@ -29,7 +29,7 @@ Work:
 
 Acceptance:
 
-- exported JSON contains the same effective source data as `data/works.xlsx`
+- exported JSON contains the same effective source data as the retired workbook source
 - validation passes on exported JSON
 - comparison against workbook-normalized records is empty or only contains documented normalization differences
 - no runtime-critical JSON files are changed by this phase
@@ -456,7 +456,7 @@ Mitigation:
 
 Goal:
 
-- replace the remaining `WorkFiles` and `WorkLinks` workbook editing workflows in Studio
+- replace the remaining file/link workbook editing workflows in Studio
 
 Work:
 
@@ -472,8 +472,8 @@ Work:
 
 Acceptance:
 
-- user can maintain `WorkFiles` records for a work without opening Excel
-- user can maintain `WorkLinks` records for a work without opening Excel
+- user can maintain file metadata for a work without opening Excel
+- user can maintain link metadata for a work without opening Excel
 - source JSON remains valid after file/link updates
 - scoped rebuild of the parent work updates the expected work-page metadata
 
@@ -491,7 +491,7 @@ Mitigation:
 
 - keep files and links as focused work-attached child editors, similar to work details
 - keep the initial UI narrow: list current records on the work editor and open focused add/edit flows for changes
-- implemented first increment as work-editor file/link summaries plus focused create/edit routes for `WorkFiles` and `WorkLinks`
+- implemented first increment as work-editor file/link summaries plus focused create/edit routes for file/link child records
 
 ## Phase 12: Workbook Import And Export
 
@@ -502,7 +502,7 @@ Goal:
 Work:
 
 - add one Studio route for workbook import with two modes: `works` and `work_details`
-- read a fixed workbook source at `data/works.xlsx`
+- read a fixed workbook source
 - works import adds new work records only
 - work-details import adds new detail records only
 - imported records default to `draft`
@@ -517,8 +517,8 @@ Work:
 
 Acceptance:
 
-- user can import new work records from `data/works.xlsx` without opening JSON files
-- user can import new work-detail records from `data/works.xlsx` without opening JSON files
+- user can import new work records without opening JSON files
+- user can import new work-detail records without opening JSON files
 - existing source records are reported as duplicates and are not overwritten
 - canonical source JSON remains valid after import
 - workbook remains a transient import surface rather than a write target
@@ -645,8 +645,8 @@ Work:
 
 Acceptance:
 
-- normal catalogue maintenance no longer requires opening or saving `data/works.xlsx`
-- `data/works.xlsx` is not used to edit currently published works
+- normal catalogue maintenance no longer requires opening or saving the retired workbook source
+- the retired workbook source is not used to edit currently published works
 - workbook-led commands exit cleanly with deprecation guidance instead of running legacy behavior
 - the active docs viewer surfaces only the JSON-led workflow while retaining deprecated references in the archive
 - public runtime artifacts remain stable

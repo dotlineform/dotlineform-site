@@ -2,7 +2,7 @@
 doc_id: scripts-project-state-report
 title: "Project State Report"
 added_date: 2026-04-27
-last_updated: 2026-04-27
+last_updated: 2026-05-01
 parent_id: scripts
 sort_order: 65
 ---
@@ -18,7 +18,7 @@ Script:
 
 This script reports source project folders and primary source images that are not represented by `assets/studio/data/catalogue/works.json`.
 
-It is meant to replace the old habit of using `data/works.xlsx` to infer what still needs to be imported.
+It is meant to replace ad hoc catalogue/source-folder comparisons when deciding what still needs to be imported.
 
 ## Inputs
 

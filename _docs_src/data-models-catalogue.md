@@ -105,7 +105,7 @@ The current source fields are:
 
 Empty arrays are omitted from source records.
 
-The retired `work_files.json` and `work_links.json` files are no longer canonical source, and live source records no longer expose derived `work_files` / `work_links` compatibility maps. Workbook import helpers may still read legacy `WorkFiles` and `WorkLinks` sheets only to fold those rows into work-owned `downloads` and `links`.
+Retired standalone file/link source files are no longer canonical source, and live source records no longer expose derived file/link compatibility maps. Workbook import helpers may still read legacy file/link sheets only to fold those rows into work-owned `downloads` and `links`.
 
 ## Why The Model Is Split This Way
 

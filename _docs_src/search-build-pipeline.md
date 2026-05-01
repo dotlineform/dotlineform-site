@@ -46,7 +46,7 @@ Current build principles:
 
 Current source boundary:
 
-- `catalogue` search reads canonical repo JSON artifacts, not `works.xlsx` and not non-repo source files
+- `catalogue` search reads canonical repo JSON artifacts, not retired workbook sources or non-repo source files
 - `studio`, `analysis`, and `library` search read canonical generated docs indexes and include only rows where `viewable !== false`
 
 This means search now has one owner even though the upstream source artifacts are different per scope.

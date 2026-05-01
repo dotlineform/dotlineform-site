@@ -214,8 +214,7 @@ Minimum payload families:
 - `work_detail_search.json`
 - `works/<work_id>.json`
 - `work_details/<detail_uid>.json`
-- `work_files/<file_uid>.json`
-- `work_links/<link_uid>.json`
+- work-owned download/link summaries embedded in `works/<work_id>.json`
 - `series/<series_id>.json`
 - `assets/moments/index/<moment_id>.json`
 - `assets/data/moments_index.json`
@@ -237,8 +236,7 @@ Implemented outcome:
 
 - work save fields now map to actual downstream lookup dependencies, including title-driven summaries in related detail/file/link lookup records
 - detail save fields now map to `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records where detail sections are embedded
-- work-file save fields now map to `work_files/<file_uid>.json` and related work lookup records where file summaries are embedded
-- work-link save fields now map to `work_links/<link_uid>.json` and related work lookup records where link summaries are embedded
+- file/link save fields now map to related work lookup records where work-owned summaries are embedded
 - series save fields now map to `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the current series title
 - moment fields now map to per-moment JSON, `assets/data/moments_index.json`, and current catalogue search entries
 - unknown fields still collapse to `full`, preserving the current safe fallback
@@ -317,8 +315,7 @@ Implemented outcome:
   - focused `work_search.json`
   - focused `series/<series_id>.json`
   - focused `work_details/<detail_uid>.json`
-  - focused `work_files/<file_uid>.json`
-  - focused `work_links/<link_uid>.json`
+  - focused work-owned file/link summaries
 - full refresh remains available as the fallback path
 
 ### Task 5. Route Work Save Through Invalidation Rules
@@ -349,8 +346,7 @@ Implemented outcome:
   - `work_search.json`
   - related `series/<series_id>.json`
   - related `work_details/<detail_uid>.json`
-  - related `work_files/<file_uid>.json`
-  - related `work_links/<link_uid>.json`
+  - related work-owned file/link summaries
 - unknown or broader cases still fall back to `full`
 
 ### Task 6. Add Invalidation Logging

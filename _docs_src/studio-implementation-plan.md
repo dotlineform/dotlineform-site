@@ -2,7 +2,7 @@
 doc_id: new-pipeline-studio-implementation-plan
 title: "Studio Implementation Plan"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-05-01
 parent_id: new-pipeline
 sort_order: 50
 ---
@@ -585,7 +585,7 @@ Deliverables:
 
 Verification:
 
-- the live JSON rebuild path no longer depends on materializing `works.xlsx`
+- the live JSON rebuild path no longer depends on materializing a temporary workbook
 - generated artifacts remain equivalent aside from expected timestamps or documented metadata differences
 
 Benefits:
@@ -611,11 +611,11 @@ Task list:
 11. Review how the refactor interacts with the newly added local media/build-preview phases, and confirm that the generator change does not silently break readiness, preview assumptions, or Build Activity reporting.
 12. Keep explicit notes on any remaining workbook-shaped compatibility code after the refactor lands, so Phase 10 starts with a known cleanup list rather than another discovery pass.
 13. Run a final artifact-equivalence pass on representative work, series, detail, and moment scopes before calling the phase complete.
-14. Update the plan/docs trail so the repository clearly states that the live JSON rebuild path is now generator-native and no longer depends on materializing `works.xlsx`.
+14. Update the plan/docs trail so the repository clearly states that the live JSON rebuild path is now generator-native and no longer depends on materializing a temporary workbook.
 
 Implemented:
 
-1. Removed the temporary workbook materialization step from the live JSON rebuild path in `generate_work_pages.py`, so scoped runtime rebuilds no longer depend on writing `works.xlsx` into a temp location before generation begins.
+1. Removed the temporary workbook materialization step from the live JSON rebuild path in `generate_work_pages.py`, so scoped runtime rebuilds no longer depend on writing a temporary workbook before generation begins.
 2. Replaced the old workbook-sync tail for JSON runs with direct canonical-source write-back, rebuilding normalized source records from the live in-memory generation state and writing those payloads back through the catalogue source helpers.
 3. Kept the refactor narrowly scoped to the live JSON route: workbook save points still exist only for the non-live workbook branch, while JSON runs now validate and persist through the canonical source layer instead.
 4. Added an explicit in-memory compatibility projection for the retained generator sections that still expect sheet-like rows, so the runtime boundary is now `canonical source records -> in-memory projection -> generated artifacts`, rather than `canonical source records -> temp workbook -> generated artifacts`.
@@ -627,15 +627,15 @@ Follow-on note:
 
 Pre-Phase 10 task:
 
-- switch the bulk import workflow from the fixed workbook `data/works.xlsx` to `data/works_bulk_import.xlsx`, and make the workbook filename configurable in the relevant scripts/UI/docs rather than hard-coded
+- switch the bulk import workflow to the configured import workbook, and make the workbook filename configurable in the relevant scripts/UI/docs rather than hard-coded
 - confirm the reduced bulk-import workbook remains aligned with the importer's required schema for `Works` and `WorkDetails`
 - check the retained additional metadata fields in the Excel workbook and confirm which of them are currently eligible for import, so bulk import can carry as much intended metadata as possible without creating avoidable follow-on bulk-edit work
-- update Studio bulk-import UI copy, write-server import endpoints, and related docs so they reference the configured workbook path instead of assuming `data/works.xlsx`
+- update Studio bulk-import UI copy, write-server import endpoints, and related docs so they reference the configured workbook path instead of assuming a fixed retired source workbook
 
 Completed on 2026-04-19:
 
-- bulk import workbook path is now configured in `_data/pipeline.json` and currently resolves to `data/works_bulk_import.xlsx`
-- the bulk-import script, write server, and Studio import page now all read or display that configured workbook path instead of a hard-coded `data/works.xlsx`
+- bulk import workbook path is now configured in `_data/pipeline.json`
+- the bulk-import script, write server, and Studio import page now all read or display that configured workbook path instead of a hard-coded retired source workbook
 - the current `Works` sheet still includes the required headers `work_id`, `series_ids`, and `title`
 - the current `WorkDetails` sheet still includes the required headers `work_id`, `detail_id`, and `title`
 - every retained additional workbook header in both sheets is currently eligible for import; no current headers fall outside the recognized import schema

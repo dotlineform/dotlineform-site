@@ -2,7 +2,7 @@
 doc_id: site-request-work-owned-files-links
 title: Work-Owned Files And Links Request
 added_date: 2026-04-27
-last_updated: 2026-04-27
+last_updated: 2026-05-01
 parent_id: change-requests
 sort_order: 90
 ---
@@ -16,12 +16,7 @@ Status:
 
 This change request tracks the planned simplification of catalogue files and links.
 
-The current source model treats files and links as first-class child records:
-
-- `assets/studio/data/catalogue/work_files.json`
-- `assets/studio/data/catalogue/work_links.json`
-
-That shape is heavier than the current product need. Files and links no longer need independent workflows, independent publication state, or separate editor routes. They are metadata owned by a work and should be edited as part of the work record.
+The previous source model treated files and links as first-class child records. That shape was heavier than the product need. Files and links no longer need independent workflows, independent publication state, or separate editor routes. They are metadata owned by a work and should be edited as part of the work record.
 
 The desired end state is:
 
@@ -35,8 +30,8 @@ The desired end state is:
 Current source data:
 
 - work records live in `assets/studio/data/catalogue/works.json`
-- file records live in `assets/studio/data/catalogue/work_files.json`
-- link records live in `assets/studio/data/catalogue/work_links.json`
+- file metadata lives on work records as `downloads`
+- link metadata lives on work records as `links`
 
 Current public output:
 
@@ -192,10 +187,7 @@ Status:
 
 - implemented
 
-Write a deterministic migration from:
-
-- `work_files.json` into `works.json[].downloads`
-- `work_links.json` into `works.json[].links`
+Write a deterministic migration from retired standalone file/link source records into `works.json[].downloads` and `works.json[].links`.
 
 Migration behavior:
 
@@ -247,12 +239,7 @@ Status:
 
 Update lookup generation so work lookup payloads include embedded file/link summaries from the work record.
 
-Focused lookup payloads for the old child-record routes have been retired:
-
-- `catalogue_lookup/work_files/<file_uid>.json`
-- `catalogue_lookup/work_links/<link_uid>.json`
-
-The work editor now reads editable file/link metadata from the canonical work record. The focused work lookup payload keeps work-owned `downloads` and `links` summaries only as part of the owning work payload.
+Focused lookup payloads for the old child-record routes have been retired. The work editor now reads editable file/link metadata from the canonical work record. The focused work lookup payload keeps work-owned `downloads` and `links` summaries only as part of the owning work payload.
 
 ### Task 6. Update Write Server Source Boundary
 

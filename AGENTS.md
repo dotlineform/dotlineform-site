@@ -15,7 +15,7 @@
 - If work/detail/moment dimension lookups fail unexpectedly, verify `DOTLINEFORM_PROJECTS_BASE_DIR` in the current shell before supplying a manual `--projects-base-dir`.
 - In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed:
   - use `./scripts/...` rather than `python3 scripts/...`
-  - omit the positional `data/works.xlsx` argument when using the default workbook
+  - omit positional workbook arguments unless intentionally overriding the configured import workbook
 
 ## Codex Cloud / Codespaces Runtime Contract
 
@@ -67,7 +67,7 @@
 ## Pipeline Conventions
 
 - Treat `assets/studio/data/catalogue/*.json` as canonical source for catalogue metadata.
-- Treat `data/works.xlsx` as a bulk-import source for new works and new work details only.
+- Treat the configured bulk-import workbook as an import source for new works and new work details only.
 - Do not treat workbook-led scripts as part of the live workflow. `build_catalogue.py`, `copy_draft_media_files.py`, and `export_catalogue_source.py` are retained as deprecated reference entrypoints and should exit cleanly.
 - Treat `scripts/catalogue_json_build.py` as the live CLI rebuild path for generated catalogue/runtime artifacts.
 - Treat `scripts/generate_work_pages.py` as an internal generator entrypoint, not a user-facing command.

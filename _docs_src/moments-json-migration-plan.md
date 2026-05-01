@@ -69,8 +69,8 @@ This document is now a historical migration record. The active end-state is:
 
 ### Canonical Source Inputs
 
-- Workbook metadata:
-  - `data/works.xlsx` worksheet `Moments`
+- Moment metadata:
+  - source front matter and JSON records managed by the catalogue pipeline
 - Canonical prose:
   - `moments/<moment_id>.md`
 - Canonical source image:

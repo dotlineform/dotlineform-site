@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-source
 title: "Catalogue Source Utilities"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: 2026-05-01
 parent_id: scripts
 sort_order: 60
 ---
@@ -24,14 +24,14 @@ The Phase 0 workbook export fixture is now retired. Canonical source JSON is mai
 ./scripts/validate_catalogue_source.py
 ```
 
-Validation checks the source JSON for the same core relationship errors covered by the current catalogue validations:
+Validation checks the source JSON for core relationship errors:
 
 - malformed work, detail, and series IDs
 - source map keys that do not match normalized record IDs
 - work `series_ids` references to unknown series
 - series `primary_work_id` references to unknown works
 - series `primary_work_id` values that are not members of that series
-- work details, files, and links that reference unknown works when actionable
+- work details that reference unknown works when actionable
 
 ## Compare
 
@@ -39,12 +39,9 @@ Validation checks the source JSON for the same core relationship errors covered 
 ./scripts/compare_catalogue_sources.py
 ```
 
-The comparison loads:
+This comparison command is retained for transition diagnostics only. It is not part of the live catalogue maintenance workflow.
 
-- workbook-normalized records from `data/works.xlsx`
-- JSON-normalized records from `assets/studio/data/catalogue/`
-
-It reports count mismatches, missing IDs, extra IDs, and record differences. During the transition away from workbook-led maintenance, intentional JSON-side edits may also appear here and should be inspected case by case.
+Use source validation and scoped build previews for current JSON-source checks.
 
 ## Project State Report
 
@@ -64,7 +61,7 @@ Shared source loading, normalization, validation, and comparison logic lives in:
 scripts/catalogue_source.py
 ```
 
-This module is a migration fixture and compatibility adapter. It is not yet the final native generator data layer.
+This module is the shared source-data helper for current JSON source records plus retained import/diagnostic adapters.
 
 ## Related References
 

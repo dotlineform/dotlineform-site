@@ -15,7 +15,7 @@ This draft documents a migration away from the current series model where `serie
 
 - the internal record key
 - the public URL path segment
-- a user-authored slug-safe value in `works.xlsx`
+- a user-authored slug-safe source value
 
 The goal is to remove the authoring burden of maintaining slug-safe series identifiers while ending with a simpler catalogue model.
 

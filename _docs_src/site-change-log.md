@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Rewrote stale workbook workflow docs
+
+**Status:** implemented
+
+**Area:** documentation / compatibility cleanup
+
+**Summary:**
+Rewrote current catalogue docs and archived workflow guides so they no longer route users through retired workbook-led or standalone file/link workflows.
+
+**Reason:**
+The live catalogue source is canonical JSON maintained through Studio and scoped JSON builds. Keeping old workflow detail in current docs made the source boundary look ambiguous.
+
+**Effect:**
+The current pipeline map now describes the JSON-source workflow. Deprecated workbook-led script/use-case pages are concise archive stubs that point to current references. Catalogue source, search, delete cleanup, lookup invalidation, work-owned file/link, and planning docs now describe work-owned downloads/links and scoped JSON builds rather than retired workflow paths.
+
+**Affected files/docs:**
+
+- `AGENTS.md`
+- [Current Pipeline Map](/docs/?scope=studio&doc=new-pipeline-current-pipeline-map)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
+- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed file and link compatibility maps
 
 **Status:** implemented
