@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed moment external scan and manifest paths
+
+**Status:** implemented
+
+**Area:** generator / moment source cleanup
+
+**Summary:**
+Removed generator fallback scanning of external moment Markdown files and removed moment source manifest support.
+
+**Reason:**
+`assets/studio/data/catalogue/moments.json` is the canonical moment metadata source, and moment prose is resolved from `_docs_src_catalogue/moments/`. External Markdown scanning and manifest-driven generation preserved an older source model that is no longer part of the Studio workflow.
+
+**Effect:**
+`generate_work_pages.py` now builds moment records only from canonical JSON metadata and repo-local prose paths. The `--moment-sources-manifest` flag was removed, `scripts/moment_sources.py` no longer exposes source-file scanner or manifest helpers, and empty moment metadata now reports no moment metadata rather than deriving records from external files.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- `scripts/moment_sources.py`
+- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Removed active moment front-matter rejection
 
 **Status:** implemented

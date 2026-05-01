@@ -92,7 +92,6 @@ try:
         env_var_value,
         load_pipeline_config,
         source_moments_images_subdir,
-        source_moments_root_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -101,7 +100,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         env_var_value,
         load_pipeline_config,
         source_moments_images_subdir,
-        source_moments_root_subdir,
         source_works_root_subdir,
     )
 
@@ -129,9 +127,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id
 
 try:
-    from moment_sources import build_moment_metadata_source_index, load_moment_sources_manifest, scan_moment_source_files
+    from moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.moment_sources import build_moment_metadata_source_index, load_moment_sources_manifest, scan_moment_source_files
+    from scripts.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -897,11 +895,6 @@ def main() -> None:
         help="Path to moment_ids file (one id per line). If set, only these moments are processed.",
     )
     ap.add_argument(
-        "--moment-sources-manifest",
-        default="",
-        help="Optional JSON manifest of resolved moment source records.",
-    )
-    ap.add_argument(
         "--only",
         action="append",
         default=[],
@@ -1446,13 +1439,6 @@ def main() -> None:
             if mid.strip()
         }
     explicit_moment_filter = bool(args.moment_ids_file or args.moment_ids)
-    moment_sources_manifest_records: Dict[str, Dict[str, Any]] = {}
-    if args.moment_sources_manifest:
-        manifest_path = Path(args.moment_sources_manifest).expanduser()
-        if not manifest_path.exists():
-            raise SystemExit(f"moment sources manifest not found: {manifest_path}")
-        moment_sources_manifest_records = load_moment_sources_manifest(manifest_path)
-
     # If caller scopes by series but does not provide an explicit work filter:
     # - when work artifacts are explicitly selected via --only, derive selected work_ids from those series
     # - otherwise skip work-page processing by default (backward compatible behavior)
@@ -2546,45 +2532,23 @@ def main() -> None:
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
     moment_source_records: List[Dict[str, Any]] = []
     projects_base_dir = Path(args.projects_base_dir).expanduser()
-    moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+    moments_prose_root = repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR
     source_moment_index = build_moment_metadata_source_index(
         json_source_dir,
         repo_root=repo_root,
         moments_images_root=moments_images_root,
     )
-    if not source_moment_index and not moment_sources_manifest_records:
-        source_moment_index = scan_moment_source_files(moments_root)
     if not run_moments and not run_moments_index_json:
         if selected_artifacts is not None and not run_moments_artifact and not run_moments_index_json:
             print("Moment pages/JSON skipped: not selected by --only.")
         else:
             print("Moment pages/JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
-    elif not moment_sources_manifest_records and not source_moment_index:
-        print("No moment artifacts to generate (no moment source files found).")
+    elif not source_moment_index:
+        print("No moment artifacts to generate (no moment metadata records found).")
     else:
         def collect_moment_source_records() -> List[Dict[str, Any]]:
             records: List[Dict[str, Any]] = []
-            if moment_sources_manifest_records:
-                for moment_id in sorted(moment_sources_manifest_records.keys()):
-                    manifest_record = moment_sources_manifest_records[moment_id]
-                    records.append({
-                        "moment_id": moment_id,
-                        "title": coerce_string(manifest_record.get("title")) or moment_id,
-                        "status": normalize_status(manifest_record.get("status")),
-                        "published_date": parse_date(manifest_record.get("published_date")),
-                        "date": parse_date(manifest_record.get("date")),
-                        "date_display": coerce_string(manifest_record.get("date_display")),
-                        "width_px": coerce_int(manifest_record.get("width_px")),
-                        "height_px": coerce_int(manifest_record.get("height_px")),
-                        "image_file": coerce_string(manifest_record.get("image_file")) or f"{moment_id}.jpg",
-                        "source_image_file": coerce_string(manifest_record.get("source_image_file")) or f"{moment_id}.jpg",
-                        "image_alt": coerce_string(manifest_record.get("image_alt")),
-                        "source_prose_path": Path(coerce_string(manifest_record.get("source_prose_path")) or (moments_root / f"{moment_id}.md")),
-                        "source_image_path": Path(coerce_string(manifest_record.get("source_image_path")) or (moments_images_root / (coerce_string(manifest_record.get('source_image_file')) or f"{moment_id}.jpg"))),
-                    })
-                return records
-
             for moment_id in sorted(source_moment_index.keys()):
                 source_record = source_moment_index[moment_id]
                 records.append({
@@ -2599,7 +2563,7 @@ def main() -> None:
                     "image_file": f"{moment_id}.jpg",
                     "source_image_file": coerce_string(source_record.get("source_image_file")) or f"{moment_id}.jpg",
                     "image_alt": coerce_string(source_record.get("image_alt")),
-                    "source_prose_path": Path(coerce_string(source_record.get("source_prose_path")) or (moments_root / f"{moment_id}.md")),
+                    "source_prose_path": Path(coerce_string(source_record.get("source_prose_path")) or (moments_prose_root / f"{moment_id}.md")),
                     "source_image_path": moments_images_root / ((coerce_string(source_record.get("source_image_file")) or f"{moment_id}.jpg")),
                 })
             return records
@@ -2709,7 +2673,7 @@ def main() -> None:
                 "layout": "moment",
             }
             source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
-            source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_root / f"{moment_id}.md")
+            source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
             if not source_prose_path.exists():
                 print(f"{prefix_m}WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moment.")
                 if moment_actionable:
@@ -2821,7 +2785,7 @@ def main() -> None:
             )
 
         source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
-        source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_root / f"{moment_id}.md")
+        source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
         if not source_prose_path.exists():
             print(f"[moment {moment_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moments index.")
             continue
