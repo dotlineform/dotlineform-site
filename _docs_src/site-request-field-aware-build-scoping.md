@@ -10,7 +10,7 @@ sort_order: 100
 
 Status:
 
-- in progress
+- implemented
 
 ## Summary
 
@@ -26,6 +26,10 @@ The desired end state is field-aware build scoping:
 - series artifacts are rebuilt only when a changed field can affect series output
 - ambiguous changes keep the current conservative fallback
 - dry-runs explain which artifacts were selected and why
+
+Completion note:
+
+- Tasks 1 through 7 are implemented. The registry-backed planner now drives save-time build scoping, build previews, dry-run explanations, verification, and a simple Studio review page.
 
 ## Current Behavior
 

@@ -21,7 +21,7 @@ Added `/studio/catalogue-field-registry/` as a read-only Studio page for inspect
 The field-aware build registry is now the source of truth for save-time and preview scoping. It needed a simple Studio review surface so fields and rules can be inspected without opening implementation code.
 
 **Effect:**
-The page loads the registry path from `studio_config.json`, displays the formatted raw registry JSON in a read-only text box, and filters by field name to show the complete matching rule object. The Resources section on `/studio/` now links to the page. The Jekyll exclude rules for runtime catalogue data are directory-specific so `assets/studio/data/catalogue_field_registry.json` is still served.
+The page loads the registry path from `studio_config.json`, displays the formatted raw registry JSON in a read-only text box, and filters by field name to show the complete matching rule object. The Resources section on `/studio/` now links to the page. The Jekyll exclude rules for runtime catalogue data are directory-specific so `assets/studio/data/catalogue_field_registry.json` is still served. This closes the field-aware catalogue build scoping request.
 
 **Affected files/docs:**
 
