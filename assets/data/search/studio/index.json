@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4cefc88a74059d52e3d10eba7d37f085",
-    "generated_at_utc": "2026-05-01T16:03:18Z",
-    "count": 151
+    "version": "blake2b-4dac668959c268abcf5b4c4817788776",
+    "generated_at_utc": "2026-05-01T16:12:16Z",
+    "count": 152
   },
   "entries": [
     {
@@ -3404,6 +3404,30 @@
         "01"
       ],
       "search_text": "studio-works studio works studio works 2026-04-01 2026 04 01"
+    },
+    {
+      "id": "catalogue-field-registry-review",
+      "kind": "doc",
+      "title": "Catalogue Field Registry Review",
+      "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
+      "last_updated": "2026-05-01",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-01 • Studio",
+      "search_terms": [
+        "catalogue-field-registry-review",
+        "catalogue",
+        "field",
+        "registry",
+        "review",
+        "catalogue field registry review",
+        "studio",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review studio 2026-05-01 2026 05 01"
     },
     {
       "id": "registry-driven-scoring-architecture",

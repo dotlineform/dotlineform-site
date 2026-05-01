@@ -8,6 +8,7 @@
       "series_tags": "/studio/series-tags/",
       "series_tag_editor": "/studio/series-tag-editor/",
       "build_activity": "/studio/build-activity/",
+      "catalogue_field_registry_review": "/studio/catalogue-field-registry/",
       "docs_broken_links": "/studio/docs-broken-links/",
       "project_state": "/studio/project-state/",
       "docs_html_import": "/studio/docs-import/",
@@ -813,6 +814,18 @@
       "summary_rebuild_label": "runtime",
       "summary_rebuild_needed": "public update failed in this session",
       "summary_rebuild_current": "source and public catalogue are aligned in this session"
+    },
+    "catalogue_field_registry_review": {
+      "page_heading": "catalogue field registry",
+      "context_hint": "Read-only view of the active field-to-artifact registry used by catalogue build planning.",
+      "loading": "loading catalogue field registry...",
+      "empty_state": "",
+      "search_placeholder": "field name",
+      "output_label": "registry extract",
+      "status_loaded": "Registry loaded.",
+      "meta_all": "Showing full registry.",
+      "meta_exact": "Showing {count} exact rule match(es) for field `{field}`.",
+      "meta_partial": "Showing {count} partial rule match(es) for field search `{field}`."
     },
     "catalogue_moment_import": {
       "preview_button": "Preview",

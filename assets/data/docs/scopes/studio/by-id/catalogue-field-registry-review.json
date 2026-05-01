@@ -1,0 +1,14 @@
+{
+  "scope": "studio",
+  "doc_id": "catalogue-field-registry-review",
+  "title": "Catalogue Field Registry Review",
+  "added_date": "2026-05-01",
+  "last_updated": "2026-05-01",
+  "parent_id": "studio",
+  "sort_order": 235,
+  "published": true,
+  "viewable": true,
+  "source_path": "catalogue-field-registry-review.md",
+  "viewer_url": "/docs/?scope=studio&doc=catalogue-field-registry-review",
+  "content_html": "<h1 id=\"catalogue-field-registry-review\">Catalogue Field Registry Review</h1>\n\n<p>Route:</p>\n\n<ul>\n  <li><code class=\"language-plaintext highlighter-rouge\">/studio/catalogue-field-registry/</code></li>\n</ul>\n\n<p>This Studio page is a read-only review surface for <code class=\"language-plaintext highlighter-rouge\">assets/studio/data/catalogue_field_registry.json</code>.</p>\n\n<h2 id=\"purpose\">Purpose</h2>\n\n<p>Use this page to inspect the active field-to-artifact registry that catalogue build planning uses for field-aware previews and save-time public updates.</p>\n\n<p>The page intentionally renders the registry source directly rather than recreating planner behavior in the browser.</p>\n\n<h2 id=\"behavior\">Behavior</h2>\n\n<p>The page:</p>\n\n<ul>\n  <li>loads the registry path from <code class=\"language-plaintext highlighter-rouge\">assets/studio/data/studio_config.json</code></li>\n  <li>displays the formatted registry JSON in a read-only text box</li>\n  <li>accepts a field-name search</li>\n  <li>when search is empty, shows the whole registry</li>\n  <li>when search has an exact field-name match, shows the complete rule object that contains the field</li>\n  <li>when no exact match exists, shows any complete rules whose field names contain the search text</li>\n  <li>leaves the source registry unchanged</li>\n</ul>\n\n<h2 id=\"current-scope\">Current Scope</h2>\n\n<p>This first review page is deliberately simple.</p>\n\n<p>It does not:</p>\n\n<ul>\n  <li>edit registry rules</li>\n  <li>compute build plans</li>\n  <li>group rules into a custom table or tree</li>\n  <li>replace <code class=\"language-plaintext highlighter-rouge\">./scripts/verify_catalogue_field_registry.py</code></li>\n</ul>\n\n<h2 id=\"related-references\">Related References</h2>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&doc=site-request-field-aware-build-scoping\">Field-Aware Catalogue Build Scoping Request</a></li>\n  <li><a href=\"/docs/?scope=studio&doc=data-models-catalogue\">Data Models: Catalogue</a></li>\n  <li><a href=\"/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry\">Catalogue Field Registry Verification</a></li>\n</ul>\n"
+}

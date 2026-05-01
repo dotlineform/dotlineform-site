@@ -2352,6 +2352,17 @@ button.tagStudioList__cellLink {
   overflow-wrap: anywhere;
 }
 
+.fieldRegistryReviewPage__outputField {
+  margin-top: 0.8rem;
+}
+
+.fieldRegistryReviewPage__output {
+  min-height: 32rem;
+  resize: vertical;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  white-space: pre;
+}
+
 .catalogueThumbPreview {
   position: relative;
   overflow: hidden;

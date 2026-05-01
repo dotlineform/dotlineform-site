@@ -68,6 +68,7 @@ Current Studio landing routes:
 Current workflow/detail routes:
 
 - `/studio/build-activity/`
+- `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
 - `/studio/docs-import/`
 - `/studio/catalogue-status/`

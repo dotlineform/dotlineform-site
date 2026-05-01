@@ -446,7 +446,7 @@ Current limits:
 
 Status:
 
-- planned
+- implemented
 
 Create a Studio page that surfaces the active field-to-artifact registry for review.
 
@@ -465,6 +465,19 @@ Acceptance checks:
 - current inventory tables are treated as frozen evidence, not an editable live dependency source
 - adding a new active source field requires updating the registry before the page can display a complete dependency model
 - manual review can confirm work, detail, series, moment, media, and catalogue-search dependency groups without reading implementation code
+
+Implemented behavior:
+
+- added `/studio/catalogue-field-registry/` as a read-only registry review route
+- linked the route from the Resources section on `/studio/`
+- the page loads the registry path from `studio_config.json`
+- the page displays the formatted raw registry JSON in a read-only text box
+- searching by field name displays the complete matching rule object; clearing search displays the whole registry
+
+Current limits:
+
+- the first page is intentionally a raw registry/extract viewer rather than a grouped table or tree
+- the browser does not recompute planner decisions; executable planner verification remains in `./scripts/verify_catalogue_field_registry.py`
 
 ## Benefits
 

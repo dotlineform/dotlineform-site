@@ -8,6 +8,7 @@ const DEFAULT_STUDIO_CONFIG = {
       series_tags: "/studio/series-tags/",
       series_tag_editor: "/studio/series-tag-editor/",
       build_activity: "/studio/build-activity/",
+      catalogue_field_registry_review: "/studio/catalogue-field-registry/",
       docs_broken_links: "/studio/docs-broken-links/",
       docs_html_import: "/studio/docs-import/",
       catalogue_status: "/studio/catalogue-status/",
@@ -47,7 +48,8 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_lookup_meta: "/assets/studio/data/catalogue_lookup/meta.json",
         catalogue_lookup_work_base: "/assets/studio/data/catalogue_lookup/works/",
         catalogue_lookup_work_detail_base: "/assets/studio/data/catalogue_lookup/work_details/",
-        catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/"
+        catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/",
+        catalogue_field_registry: "/assets/studio/data/catalogue_field_registry.json"
       },
       site: {
         series_index: "/assets/data/series_index.json",
@@ -397,6 +399,18 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_rebuild_label: "runtime",
       summary_rebuild_needed: "source saved; site update pending",
       summary_rebuild_current: "source and public catalogue are aligned in this session"
+    },
+    catalogue_field_registry_review: {
+      page_heading: "catalogue field registry",
+      context_hint: "Read-only view of the active field-to-artifact registry used by catalogue build planning.",
+      loading: "loading catalogue field registry...",
+      empty_state: "",
+      search_placeholder: "field name",
+      output_label: "registry extract",
+      status_loaded: "Registry loaded.",
+      meta_all: "Showing full registry.",
+      meta_exact: "Showing {count} exact rule match(es) for field `{field}`.",
+      meta_partial: "Showing {count} partial rule match(es) for field search `{field}`."
     },
     catalogue_moment_import: {
       preview_button: "Preview Source File",

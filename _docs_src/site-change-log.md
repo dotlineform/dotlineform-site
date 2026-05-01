@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Added catalogue field registry review page
+
+**Status:** implemented
+
+**Area:** Studio / catalogue build planning
+
+**Summary:**
+Added `/studio/catalogue-field-registry/` as a read-only Studio page for inspecting the active catalogue field registry.
+
+**Reason:**
+The field-aware build registry is now the source of truth for save-time and preview scoping. It needed a simple Studio review surface so fields and rules can be inspected without opening implementation code.
+
+**Effect:**
+The page loads the registry path from `studio_config.json`, displays the formatted raw registry JSON in a read-only text box, and filters by field name to show the complete matching rule object. The Resources section on `/studio/` now links to the page. The Jekyll exclude rules for runtime catalogue data are directory-specific so `assets/studio/data/catalogue_field_registry.json` is still served.
+
+**Affected files/docs:**
+
+- `studio/catalogue-field-registry/index.md`
+- `assets/studio/js/catalogue-field-registry-review.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `_config.yml`
+- `studio/index.md`
+- [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review)
+- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Documented Studio smoke-test harness guidance
 
 **Status:** implemented
