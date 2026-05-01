@@ -19,10 +19,10 @@ Lightweight moments index JSON is written to assets/data/moments_index.json (obj
 - WorkDetails: additional detail images associated with a work
 - Moments: standalone moment entries sourced from catalogue moment metadata JSON plus repo-local body Markdown
 
-YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
+YAML typing rules enforced by this script:
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
 - Everything else is emitted as a quoted string (including fields like year_display)
-- Empty cells become YAML null
+- Empty values become YAML null
 
 Safe by default:
 - dry-run unless you pass --write
@@ -37,7 +37,7 @@ specify work_ids to process with --work-ids (comma-separated list)
   - Only those IDs are processed; others are skipped early.
   - Status filtering still applies to the selected IDs unless you also pass --force.
 This script is an internal JSON-build engine used by `catalogue_json_build.py`.
-It is not a user-facing workbook command.
+It is not a user-facing command.
 
 Common flags:
 - --write: persist generated files + canonical source status/date updates
@@ -107,7 +107,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 try:
     from catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
-        WORKBOOK_HEADERS,
         records_from_json_source,
         validate_source_records,
         write_source_record_payloads,
@@ -115,7 +114,6 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
-        WORKBOOK_HEADERS,
         records_from_json_source,
         validate_source_records,
         write_source_record_payloads,
@@ -140,13 +138,12 @@ CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
 # ----------------------------
 # Helpers (ID/date/YAML parsing)
 # ----------------------------
-# These functions exist to normalise common Excel quirks (e.g. numeric IDs like 361.0)
-# and to keep YAML output safe/consistent.
+# These functions normalise source values and keep YAML output safe/consistent.
 def slug_id(raw: Any, width: int = 5) -> str:
     if raw is None:
         raise ValueError("Missing id")
     s = normalize_text(raw)
-    # Handle numeric IDs like 361.0 from Excel
+    # Handle numeric IDs that may arrive as 361.0.
     s = re.sub(r"\.0$", "", s)
     # NOTE: This strips ALL non-digits. If your IDs ever include prefixes/suffixes, change this logic.
     s = re.sub(r"\D", "", s)  # keep digits only
@@ -179,7 +176,6 @@ def parse_date(raw: Any) -> Optional[str]:
     if isinstance(raw, dt.date):
         return raw.isoformat()
     s = normalize_text(raw)
-    # NOTE: Prefer real Excel date cells or ISO strings in the workbook; anything else may pass through unchanged.
     # Accept YYYY-M-D and normalise to YYYY-MM-DD if possible
     m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})$", s)
     if m:
@@ -227,7 +223,7 @@ def normalize_status(value: Any) -> str:
 
 
 def normalize_text(value: Any) -> str:
-    """Normalize Excel text by trimming and stripping a leading apostrophe prefix."""
+    """Normalize source text by trimming and stripping a leading apostrophe prefix."""
     if value is None:
         return ""
     s = str(value).strip()
@@ -910,7 +906,7 @@ def main() -> None:
         print(
             "Deprecated direct entrypoint: scripts/generate_work_pages.py is now an internal JSON build engine.\n"
             "Use `python3 ./scripts/catalogue_json_build.py --work-id <work_id> [--write]` for scoped runtime rebuilds.\n"
-            "Workbook-led direct generation is retired."
+            "Direct generation through this script is retired."
         )
         return
 

@@ -15,7 +15,7 @@
 - If work/detail/moment dimension lookups fail unexpectedly, verify `DOTLINEFORM_PROJECTS_BASE_DIR` in the current shell before supplying a manual `--projects-base-dir`.
 - In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed:
   - use `./scripts/...` rather than `python3 scripts/...`
-  - omit positional workbook arguments unless intentionally overriding the configured import workbook
+  - only mention workbook paths for the configured Studio bulk-import workflow
 
 ## Codex Cloud / Codespaces Runtime Contract
 
@@ -68,7 +68,8 @@
 
 - Treat `assets/studio/data/catalogue/*.json` as canonical source for catalogue metadata.
 - Treat the configured bulk-import workbook as an import source for new works and new work details only.
-- Do not treat workbook-led scripts as part of the live workflow. `build_catalogue.py`, `copy_draft_media_files.py`, `export_catalogue_source.py`, and `compare_catalogue_sources.py` are retained as deprecated reference entrypoints and should exit cleanly.
+- Do not keep workbook-led scripts or helpers outside the Studio bulk-import path.
+- Do not reintroduce deprecated clean-exit script stubs for retired workbook workflows.
 - Treat `scripts/catalogue_json_build.py` as the live CLI rebuild path for generated catalogue/runtime artifacts.
 - Treat `scripts/generate_work_pages.py` as an internal generator entrypoint, not a user-facing command.
 - Keep generated output deterministic (stable ordering, stable checksums, stable formatting).
@@ -77,8 +78,8 @@
 
 ## Moments-Specific Rules
 
-- Generate `_moments/*.md` from worksheet `Moments`.
-- Canonical moment prose content lives in `moments/<slug>.md`.
+- Generate `_moments/*.md` from canonical moment metadata in `assets/studio/data/catalogue/moments.json` plus body-only prose in `_docs_src_catalogue/moments/`.
+- Canonical moment prose content lives in `_docs_src_catalogue/moments/<moment_id>.md`.
 - Keep `_moments/*.md` minimal; richer moment metadata belongs in generated JSON artifacts.
 - `/moments/` should read aggregate moment metadata from `assets/data/moments_index.json`.
 - `generate_work_pages.py` should always rebuild aggregate index JSON artifacts for series, works, and moments on every run, even when `--only` scopes page/file artifacts.
@@ -88,9 +89,7 @@
 ## Validation Checklist
 
 - After changing Python scripts, run a syntax check with the configured interpreter.
-- After generator or pipeline-entrypoint changes, verify both:
-  - deprecated user-facing commands exit cleanly with guidance
-  - `scripts/catalogue_json_build.py` still previews or runs successfully
+- After generator or pipeline-entrypoint changes, verify `scripts/catalogue_json_build.py` still previews or runs successfully.
 - After generator changes, run a dry-run and summarize what would be written.
 - After layout/template changes, verify behavior on desktop and mobile.
 - For a Codex-run browser smoke test on this machine, prefer local Playwright Chromium via the Miniconda Python environment:

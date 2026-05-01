@@ -144,7 +144,7 @@ Catalogue editor local save behavior:
 - bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
-- work delete removes the selected work plus dependent detail/file/link source records
+- work delete removes the selected work plus dependent detail records and work-owned file/link metadata on that work record
 - work delete is disabled while the work editor is in bulk mode
 
 Catalogue work detail local save behavior:
@@ -203,7 +203,7 @@ Catalogue scoped rebuild behavior:
 - the series editor requests a series-scoped preview from the same endpoint, including any removed member works that still need rebuild
 - `POST /catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
 - the apply step then rebuilds `assets/data/search/catalogue/index.json`
-- Studio build activity now records these JSON-source scoped rebuilds alongside the older workbook-led pipeline runs
+- Studio build activity records these JSON-source scoped rebuilds in the current build feed
 
 ### Offline Session Mode
 

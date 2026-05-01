@@ -43,7 +43,7 @@ The implementation should preserve the current safety posture:
 Before this request was implemented, `work`, `work_detail`, and `series` deletes in `scripts/studio/catalogue_write_server.py`:
 
 - remove canonical catalogue source JSON records
-- cascade work deletes to dependent detail/file/link source rows
+- cascade work deletes to dependent detail records and work-owned file/link metadata
 - remove a deleted series id from affected work source records
 - refresh Studio catalogue lookup payloads
 - write a Catalogue Activity entry

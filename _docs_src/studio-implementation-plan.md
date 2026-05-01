@@ -51,7 +51,7 @@ Parallel domain planning lives in:
 
 - canonical catalogue metadata already lives under `assets/studio/data/catalogue/`
 - current Studio pages are functional but still uneven in layout, navigation, and operational cues
-- scoped rebuilds still rely on the temporary workbook bridge inside `generate_work_pages.py`
+- scoped rebuilds now use the JSON-source generator path directly
 - prose files remain external to canonical source JSON and are not yet Studio-managed records
 - R2-backed primary media remains out of scope for current automation
 

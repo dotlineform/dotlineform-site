@@ -14,7 +14,7 @@ Status:
 - retired workbook-led media staging reference
 - kept only as an archive stub so old docs links do not break
 
-This page no longer documents a current media workflow. Current catalogue builds use source JSON for metadata; media staging and derivative generation should be handled through the active media/build surfaces when a change explicitly requires them.
+`scripts/copy_draft_media_files.py` has been removed. This page no longer documents a current media workflow. Current catalogue builds use source JSON for metadata; media staging and derivative generation should be handled through the active media/build surfaces when a change explicitly requires them.
 
 Current references:
 

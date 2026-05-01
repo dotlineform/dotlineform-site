@@ -147,7 +147,7 @@ or:
 Request behavior:
 
 - returns a delete summary, affected records, blockers, and validation errors
-- work delete preview includes dependent detail/file/link source records
+- work delete preview includes dependent detail records and work-owned file/link metadata
 - work delete blocks when the work is still used as `primary_work_id` by a published series
 - work delete clears `primary_work_id` when a draft series points at the deleted work
 - series delete preview includes affected member works

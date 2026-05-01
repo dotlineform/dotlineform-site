@@ -14,7 +14,7 @@ Status:
 - retired workbook-led pipeline reference
 - kept only as an archive stub so old docs links do not break
 
-`build_catalogue.py` is not part of the live catalogue workflow. Current catalogue metadata is maintained as canonical JSON source under `assets/studio/data/catalogue/`, and runtime artifacts are refreshed through the scoped JSON build path.
+`scripts/build_catalogue.py` has been removed and is not part of the live catalogue workflow. Current catalogue metadata is maintained as canonical JSON source under `assets/studio/data/catalogue/`, and runtime artifacts are refreshed through the scoped JSON build path.
 
 Use:
 

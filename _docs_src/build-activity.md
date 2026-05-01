@@ -63,7 +63,7 @@ Current planner mode labels:
 - `bootstrap`
 - `incremental`
 
-Historical entries may still include retired workbook-led planner labels or workbook change groups. Current scoped JSON build entries use the JSON-led rebuild flow and share this same activity surface.
+Historical local journal entries may still contain retired workbook-led planner labels or workbook change groups, but the current Studio feed and UI ignore those retired fields. Current scoped JSON build entries use the JSON-led rebuild flow and share this same activity surface.
 
 ## Current Boundaries
 

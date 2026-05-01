@@ -16,7 +16,7 @@ They do not write runtime-critical public catalogue artifacts. They work against
 assets/studio/data/catalogue/
 ```
 
-The Phase 0 workbook export fixture is now retired. Canonical source JSON is maintained directly through Studio and the workbook import flow.
+The Phase 0 workbook export fixture is now retired. Canonical source JSON is maintained directly through Studio and the configured bulk-import flow.
 
 ## Validate
 
@@ -51,7 +51,7 @@ Shared source loading, normalization, and validation logic lives in:
 scripts/catalogue_source.py
 ```
 
-This module is the shared source-data helper for current JSON source records plus retained import adapters.
+This module is the shared source-data helper for current JSON source records. Workbook parsing helpers live beside the only retained Excel flow in `scripts/catalogue_workbook_import.py`.
 
 ## Related References
 

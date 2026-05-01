@@ -1696,12 +1696,6 @@ def build_activity_entry_for_scoped_json_build(
                 "series": sorted(series_ids_list),
                 "work_details": [],
             },
-            "workbook": {
-                "works": [],
-                "series": [],
-                "work_details": [],
-                "moments": [],
-            },
             "media": {
                 "work": generated_work_ids_list,
                 "work_details": generated_detail_uids_list,
@@ -1760,12 +1754,6 @@ def build_activity_entry_for_scoped_moment_build(
                 "series": [],
                 "work_details": [],
                 "moments": moment_ids_list,
-            },
-            "workbook": {
-                "works": [],
-                "series": [],
-                "work_details": [],
-                "moments": [],
             },
             "media": {
                 "work": [],

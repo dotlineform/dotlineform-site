@@ -8,6 +8,37 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Removed retired workbook scripts
+
+**Status:** implemented
+
+**Area:** catalogue compatibility cleanup
+
+**Summary:**
+Removed the remaining retired workbook-led script files and narrowed workbook code to the Studio bulk-import path.
+
+**Reason:**
+The only current Excel requirement is the configured Studio bulk import for new works and new work details. Keeping unrelated workbook-led commands or generic workbook helpers preserved compatibility artifacts that no longer support the current Studio workflow.
+
+**Effect:**
+Workbook-specific parsing now lives beside `scripts/catalogue_workbook_import.py`. The retired build, media-copy, export, comparison, preflight, recent-backfill, and standalone work-delete scripts were removed. Build-activity summaries no longer expose workbook change groups, and docs now route current catalogue work through Studio, canonical source JSON, and `catalogue_json_build.py`.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_workbook_import.py`
+- `scripts/catalogue_source.py`
+- `scripts/generate_work_pages.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/build_activity.py`
+- `assets/studio/js/build-activity.js`
+- `AGENTS.md`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Rewrote stale moment workflow docs
 
 **Status:** implemented

@@ -53,14 +53,12 @@ function countText(label, group) {
 
 function summarizeBuildChanges(entry) {
   const source = entry && entry.changes && entry.changes.source;
-  const workbook = entry && entry.changes && entry.changes.workbook;
   const media = entry && entry.changes && entry.changes.media;
   const parts = [
     countText("works", source && source.works),
     countText("series", source && source.series),
     countText("details", source && source.work_details),
     countText("moments", source && source.moments),
-    countText("workbook", { count: (Number(workbook && workbook.works && workbook.works.count) || 0) + (Number(workbook && workbook.series && workbook.series.count) || 0) + (Number(workbook && workbook.work_details && workbook.work_details.count) || 0) + (Number(workbook && workbook.moments && workbook.moments.count) || 0) }),
     countText("media", { count: (Number(media && media.work && media.work.count) || 0) + (Number(media && media.work_details && media.work_details.count) || 0) + (Number(media && media.moment && media.moment.count) || 0) })
   ].filter(Boolean);
   if (entry && entry.search_rebuilt) parts.push("search rebuilt");

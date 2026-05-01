@@ -304,7 +304,7 @@ Checks:
 - run delete preview for one disposable work detail
 - if clean, run delete apply and confirm the parent work rebuild scope is clear
 - run delete preview for one disposable work
-- review dependent detail/file/link impacts before apply
+- review dependent detail impacts and work-owned file/link metadata before apply
 - apply only if the record is safe to remove in the current environment
 
 Expected results:

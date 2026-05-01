@@ -14,7 +14,7 @@ Status:
 - retired workbook-led delete reference
 - kept only as an archive stub so old docs links do not break
 
-This page no longer documents a current delete workflow. Current source deletion is handled through Studio-backed delete preview/apply actions against canonical catalogue JSON.
+`scripts/delete_work.py` has been removed. This page no longer documents a current delete workflow. Current source deletion is handled through Studio-backed delete preview/apply actions against canonical catalogue JSON.
 
 Current references:
 

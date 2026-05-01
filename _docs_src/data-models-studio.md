@@ -78,7 +78,6 @@ Current content families:
   - status
   - short summary
   - source change groups for JSON-source scoped rebuilds
-  - workbook change groups
   - media change groups
   - action counts
   - result flags

@@ -136,7 +136,6 @@ def _result_label(entry: Dict[str, Any], actions: Dict[str, Any]) -> str:
 def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
     changes = entry.get("changes", {}) if isinstance(entry.get("changes"), dict) else {}
     source = changes.get("source", {}) if isinstance(changes.get("source"), dict) else {}
-    workbook = changes.get("workbook", {}) if isinstance(changes.get("workbook"), dict) else {}
     media = changes.get("media", {}) if isinstance(changes.get("media"), dict) else {}
     actions = entry.get("actions", {}) if isinstance(entry.get("actions"), dict) else {}
     compact_changes = {
@@ -145,12 +144,6 @@ def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
             "series": _compact_id_group(list(source.get("series", []))),
             "work_details": _compact_id_group(list(source.get("work_details", []))),
             "moments": _compact_id_group(list(source.get("moments", []))),
-        },
-        "workbook": {
-            "works": _compact_id_group(list(workbook.get("works", []))),
-            "series": _compact_id_group(list(workbook.get("series", []))),
-            "work_details": _compact_id_group(list(workbook.get("work_details", []))),
-            "moments": _compact_id_group(list(workbook.get("moments", []))),
         },
         "media": {
             "work": _compact_id_group(list(media.get("work", []))),

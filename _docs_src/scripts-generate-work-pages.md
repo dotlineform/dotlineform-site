@@ -99,7 +99,7 @@ Moment canonical source model:
   - snapshots only first-time `draft -> published` transitions for series and works
   - groups multiple newly published works in the same existing series into one work entry anchored to the first published work in that run
   - prunes entries whose target series or work no longer exists or is no longer published in the current catalogue
-  - existing ledgers can be seeded once from workbook git history with `scripts/backfill_recent_index_from_git_history.py`
+  - the old workbook-history backfill script has been removed; current updates come from scoped JSON-source publish runs
 - `--series-json-dir` with default `assets/series/index`
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
   - resolves canonical series prose from `_docs_src_catalogue/series/<series_id>.md`
@@ -201,7 +201,7 @@ Current behavior:
 
 - reads canonical source JSON from `assets/studio/data/catalogue/`
 - builds work, series, work-detail, and moment artifacts from canonical source records rather than workbook-shaped row projections
-- writes the same runtime artifacts as workbook mode
+- writes the runtime artifacts selected by the scoped JSON build flow
 - when `--write` is used, mutates generator-updated mutable fields directly on canonical source records before source JSON write-back:
   - work `status`, `published_date`, `width_px`, `height_px`
   - work-detail `status`, `published_date`, `width_px`, `height_px`
