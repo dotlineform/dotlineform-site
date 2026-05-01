@@ -10,8 +10,8 @@ sort_order: 10
 
 Status:
 
-- initial findings started
-- initial retention direction recorded
+- Task 1 inventory complete for implementation planning
+- Task 2 retention direction recorded
 
 ## Purpose
 
@@ -50,6 +50,10 @@ Use these classifications consistently:
 | CCI-004 | Direct `generate_work_pages.py` entrypoint | `scripts/generate_work_pages.py` | no direct user workflow | `deprecated-clean-exit` | Direct use without `--internal-json-source-run` exits with guidance and states workbook-led direct generation is retired. | Keep only if still needed as a user-facing clean exit during cleanup. Do not let the clean-exit path preserve workbook helper placement or workbook-era runtime assumptions. | Running the deprecated direct command exits cleanly with guidance until the clean-exit contract is intentionally retired. |
 | CCI-005 | Source metadata provenance | `assets/studio/data/catalogue/meta.json` | no | `removable` | `source.created_from` still records `data/works.xlsx`, but `works.xlsx` is no longer in use and is kept only as a backup of historical data state. | Remove this provenance or replace it with current canonical JSON ownership metadata that does not refer to `data/works.xlsx`. | Catalogue source validation and generated metadata remain deterministic. |
 | CCI-006 | Work file/link compatibility records | `scripts/catalogue_source.py`; `scripts/catalogue_lookup.py`; `scripts/studio/catalogue_write_server.py` | no | `removable` | `downloads` and `links` are canonical arrays on work records. `work_files` and `work_links` are no longer needed by current editor, lookup, delete, or validation paths. | Remove retained `work_files` and `work_links` compatibility maps rather than preserving them as derived compatibility artifacts. | Work editor file/link saves, work delete preview/apply, source validation, lookup export, and field-aware build previews still behave correctly without `work_files` / `work_links`. |
+| CCI-007 | Workbook-shaped internal generator projection | `scripts/generate_work_pages.py` | yes, as internal implementation shape | `active-live` needing refactor | The live JSON-source generator still uses worksheet-like rows, header maps, and `cell(...)` access internally after loading canonical JSON. That shape is no longer justified by an external workbook contract. | Refactor toward direct JSON-record access in focused slices. Do not preserve worksheet/proxy abstractions simply because the old pipeline used them. | Scoped work, detail, series, and moment previews still select the same artifacts and produce deterministic output. |
+| CCI-008 | Deprecated workbook-led scripts | `scripts/build_catalogue.py`; `scripts/copy_draft_media_files.py`; `scripts/export_catalogue_source.py`; `scripts/compare_catalogue_sources.py` | no live workflow, except explicit migration/comparison if still retained | `deprecated-clean-exit` / `removable` | Several retained scripts still default to, describe, or compare against `data/works.xlsx`. Some are already deprecated reference entrypoints; others may only remain for transition diagnostics. | Either keep a minimal clean-exit path with current guidance or remove the script from active docs. Do not keep full workbook-led behavior as hidden compatibility. | Deprecated commands that remain exit cleanly with guidance; active docs no longer route users to workbook-led flows. |
+| CCI-009 | Stale workbook workflow docs | `_docs_src/pipeline-use-cases.md`; `_docs_src/source-model.md`; `_docs_src/current-pipeline-map.md`; `_docs_src/web-system-spec.md`; script docs that still mention `data/works.xlsx` as workflow input | no | `docs-stale` | Current docs still contain many `data/works.xlsx`, worksheet, `WorkFiles`, and `WorkLinks` workflow references. The retained workbook file has no intended future operational role. | Remove or rewrite stale references. Prefer current JSON-source and Studio/import workflows. Keep only narrow deprecated-command notes where necessary. | Docs search for `data/works.xlsx`, `WorkFiles`, and `WorkLinks` no longer suggests current workflow usage. |
+| CCI-010 | Activity affected keys for retired file/link maps | `scripts/catalogue_activity.py`; `assets/studio/js/catalogue-activity.js`; activity payload docs | partial display only | `removable` | Activity summaries still know about `work_files` and `work_links` affected collections. Once compatibility maps are removed, these keys should not remain as current affected-source families. | Remove affected-key handling for `work_files` and `work_links`, or replace with work-owned `downloads` / `links` field reporting if still useful. | Catalogue activity still renders affected works/details/series/moments and does not show obsolete files/links families. |
 
 ## Bulk Import Boundary
 
@@ -84,3 +88,25 @@ Practical consequences:
 - `assets/studio/data/catalogue/meta.json` should not continue recording original migration provenance from `data/works.xlsx`.
 - Current docs should not keep `data/works.xlsx` references as useful workflow or historical context.
 - `work_files` and `work_links` are not needed by current editor, lookup, delete, or validation paths after work-owned `downloads` and `links` became canonical.
+
+## Task 3 Slices
+
+Use this order for cleanup implementation:
+
+1. Move workbook row helpers into the active bulk-import adapter boundary.
+2. Remove `data/works.xlsx` provenance from catalogue source metadata.
+3. Remove `work_files` and `work_links` compatibility maps and dependent lookup/delete/activity handling.
+4. Remove or rewrite stale `data/works.xlsx`, `WorkFiles`, and `WorkLinks` docs.
+5. Simplify deprecated workbook-led scripts to clean exits or remove their active docs surface.
+6. Refactor internal generator worksheet/proxy access toward direct JSON-record access in smaller follow-up slices.
+
+## Verification Matrix
+
+| Slice | Codex-run checks | Manual checks |
+|---|---|---|
+| Bulk-import adapter helper move | `./scripts/run_checks.py --profile quick --profile catalogue`; bulk import preview endpoint if the local catalogue server is in scope | Open `/studio/bulk-add-work/`, confirm configured workbook path displays, preview works/details import if sample rows are available |
+| Metadata provenance removal | catalogue source validation; docs/search rebuild when docs change | Confirm Studio catalogue pages still load source metadata without showing obsolete `works.xlsx` provenance |
+| `work_files` / `work_links` removal | source validation; lookup export; field-aware `downloads` preview; work delete preview if local server is in scope | In Work editor, add/remove a download and link; preview public update; confirm delete preview no longer reports obsolete file/link source families |
+| Stale docs cleanup | `./scripts/build_docs.rb --scope studio --write`; `./scripts/build_search.rb --scope studio --write`; docs search for `data/works.xlsx`, `WorkFiles`, `WorkLinks` | Review Docs Viewer search results for stale workbook workflow wording |
+| Deprecated script cleanup | run retained deprecated commands and confirm clean-exit guidance; `./scripts/run_checks.py --profile quick` | Confirm script docs route users to current JSON-source commands |
+| Generator projection refactor | `./scripts/run_checks.py --profile quick --profile catalogue`; representative dry-run previews for work/detail/series/moment scopes; Jekyll build if generated output changes | Spot-check public work/detail/series/moment pages touched by the representative scope |

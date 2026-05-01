@@ -65,7 +65,7 @@ These surfaces may be harmless individually, but together they make it harder to
 
 Status:
 
-- in progress
+- completed
 
 List compatibility surfaces in code, canonical source JSON, generated Studio lookup payloads, generated public JSON, deprecated scripts, and docs.
 
@@ -90,7 +90,7 @@ Initial Task 1 finding:
 
 Status:
 
-- in progress
+- completed
 
 For each retained path, decide whether to remove it, narrow it, or keep it as documented migration/deprecated behavior.
 
@@ -102,11 +102,15 @@ Particular decisions:
 - remove `work_files` and `work_links` compatibility maps after confirming current flows no longer depend on them
 - keep deprecated clean-exit paths only where they still provide useful guidance during transition
 
+Task 3 implementation order and verification matrix:
+
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+
 ### Task 3. Remove Or Narrow Compatibility Surfaces
 
 Status:
 
-- planned
+- ready
 
 Apply approved removals in small slices.
 

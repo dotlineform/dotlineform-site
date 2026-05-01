@@ -8,6 +8,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-01] Completed compatibility cleanup planning pass
+
+**Status:** implemented
+
+**Area:** catalogue source model / cleanup planning
+
+**Summary:**
+Completed the first inventory and retention-policy pass for compatibility cleanup, leaving Task 3 ready for implementation slices.
+
+**Reason:**
+Code cleanup should not begin until the retained compatibility paths, removal decisions, implementation order, and verification expectations are explicit.
+
+**Effect:**
+The inventory now records additional findings for the generator's worksheet-shaped projection, deprecated workbook-led scripts, stale workbook workflow docs, and activity keys for retired file/link maps. The parent request marks Tasks 1 and 2 complete and Task 3 ready.
+
+**Affected files/docs:**
+
+- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
+- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-01] Recorded compatibility cleanup retention direction
 
 **Status:** implemented
