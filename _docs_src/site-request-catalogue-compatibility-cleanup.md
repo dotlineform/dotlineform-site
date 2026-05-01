@@ -10,7 +10,7 @@ sort_order: 101
 
 Status:
 
-- in progress
+- complete
 
 ## Summary
 
