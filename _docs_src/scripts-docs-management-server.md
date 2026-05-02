@@ -191,6 +191,8 @@ Open-source behavior:
   "scope": "studio",
   "doc_id": "docs-viewer-management",
   "title": "Docs Viewer Management",
+  "summary": "Manage-mode source editing contract.",
+  "ui_status": "done",
   "parent_id": "ui-requests",
   "sort_order": 21
 }
@@ -199,15 +201,20 @@ Open-source behavior:
 Metadata-update behavior:
 
 - updates only front matter; body content and filename remain unchanged
-- currently supports `title`, `parent_id`, and `sort_order`
+- currently supports `title`, `summary`, `ui_status`, `parent_id`, and `sort_order`
 - title changes do not mutate `doc_id` or filename
 - `added_date` is preserved; `last_updated` is refreshed after a successful metadata write
+- blank `summary` removes the front matter field
+- blank `ui_status` removes the front matter field
+- non-blank `ui_status` is stored as the raw status key supplied by the client; the write server does not validate it against Docs Viewer config
+- responses include `changes.status_changed` alongside the other metadata change flags
 - `parent_id` may be blank for root, but must otherwise resolve inside the same scope
 - `parent_id` cannot point at the current doc or any of its descendants
 - `sort_order` accepts a non-negative integer, blank, or `append`
 - `append` stores the next available sparse `sort_order` under the requested `parent_id`
 - always rebuilds docs payloads for the scope
 - runs a targeted same-scope docs-search update for affected ids after a successful write
+- skips docs-search updates when `ui_status` is the only changed field, because status emoji are viewer-only metadata
 
 `POST /docs/update-viewability` expects:
 

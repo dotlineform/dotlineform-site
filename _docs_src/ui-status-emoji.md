@@ -121,6 +121,8 @@ Status: implemented.
 
 ### 5. Persist status writes
 
+Status: implemented.
+
 - Update `scripts/docs/docs_management_server.py` to accept `ui_status` in `/docs/update-metadata`.
 - Rewrite front matter so blank status removes `ui_status` and non-blank status writes the selected value.
 - Keep dry-run and write responses clear about whether status changed.
