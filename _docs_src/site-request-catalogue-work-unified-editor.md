@@ -2,7 +2,8 @@
 doc_id: site-request-catalogue-work-unified-editor
 title: Catalogue Work Unified Editor Request
 added_date: 2026-04-28
-last_updated: 2026-04-28
+last_updated: 2026-05-02
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 110
 ---
@@ -10,7 +11,7 @@ sort_order: 110
 
 Status:
 
-- pending discussion
+- task 6 bulk edit - not yet implemented?
 
 ## Summary
 

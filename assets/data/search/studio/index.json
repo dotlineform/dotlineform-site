@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a7e6902274746291134140b0137dafc6",
-    "generated_at_utc": "2026-05-02T21:26:15Z",
+    "version": "blake2b-d35a486697a5c2e821545c87ed840069",
+    "generated_at_utc": "2026-05-02T23:06:09Z",
     "count": 158
   },
   "entries": [
@@ -1662,10 +1662,10 @@
       "kind": "doc",
       "title": "Work And Series Prose Source Model Request",
       "href": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-27 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-work-series-prose-source-model",
         "site",
@@ -1680,12 +1680,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-27",
+        "2026-05-02",
         "2026",
-        "04",
-        "27"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and change requests change requests 2026-04-27 2026 04 27"
+      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "project-state-page",
@@ -1812,10 +1812,10 @@
       "kind": "doc",
       "title": "Moments Prose Source Model Request",
       "href": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-27 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-moments-prose-source-model",
         "site",
@@ -1828,12 +1828,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-27",
+        "2026-05-02",
         "2026",
-        "04",
-        "27"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request change requests change requests 2026-04-27 2026 04 27"
+      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "search-normalisation-rules",
@@ -1979,10 +1979,10 @@
       "kind": "doc",
       "title": "Analysis Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-26 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-analysis-doc-viewer",
         "site",
@@ -1995,12 +1995,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-26",
+        "2026-05-02",
         "2026",
-        "04",
-        "26"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs change requests change requests 2026-04-26 2026 04 26"
+      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "catalogue-activity",
@@ -2246,10 +2246,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-27 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-moment-editor",
         "site",
@@ -2261,12 +2261,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-27",
+        "2026-05-02",
         "2026",
-        "04",
-        "27"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request change requests change requests 2026-04-27 2026 04 27"
+      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "catalogue-series-editor",
@@ -2411,10 +2411,10 @@
       "kind": "doc",
       "title": "Catalogue Delete Cleanup Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-27 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-delete-cleanup",
         "site",
@@ -2426,12 +2426,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-27",
+        "2026-05-02",
         "2026",
-        "04",
-        "27"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request change requests change requests 2026-04-27 2026 04 27"
+      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "search-validation-checklist",
@@ -2528,10 +2528,10 @@
       "kind": "doc",
       "title": "Work-Owned Files And Links Request",
       "href": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-01 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-work-owned-files-links",
         "site",
@@ -2545,12 +2545,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "search-catalogue-targeted-plan",
@@ -2769,10 +2769,10 @@
       "kind": "doc",
       "title": "Catalogue Work Unified Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
-      "last_updated": "2026-04-28",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-28 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-work-unified-editor",
         "site",
@@ -2785,12 +2785,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-28",
+        "2026-05-02",
         "2026",
-        "04",
-        "28"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-work-unified-editor site request catalogue work unified editor catalogue work unified editor request change requests change requests 2026-04-28 2026 04 28"
+      "search_text": "site-request-catalogue-work-unified-editor site request catalogue work unified editor catalogue work unified editor request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "data-models",
@@ -2816,10 +2816,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Unified Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-29 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-work-detail-unified-editor",
         "site",
@@ -2833,12 +2833,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-29",
+        "2026-05-02",
         "2026",
-        "04",
-        "29"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "config",
