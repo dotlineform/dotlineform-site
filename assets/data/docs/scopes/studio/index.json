@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T12:35:00Z",
+  "generated_at": "2026-05-02T12:42:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1592,6 +1592,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-catalogue-source-registry-drift-verification",
+      "title": "Catalogue Source And Registry Drift Verification Request",
+      "added_date": "2026-05-02",
+      "last_updated": "2026-05-02",
+      "parent_id": "change-requests",
+      "sort_order": 106,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-catalogue-source-registry-drift-verification.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-source-registry-drift-verification.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-catalogue-lookup",
       "title": "Catalogue Lookup Export",
       "added_date": "2026-04-17",
@@ -2043,7 +2057,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "",
       "sort_order": 220,
       "published": true,

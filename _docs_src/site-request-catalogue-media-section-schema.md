@@ -282,6 +282,7 @@ Implemented:
 - section ids are assigned deterministically per parent work and first-seen legacy section title, using ids such as `00001-1`
 - focused checks live in `tests/python/test_catalogue_media_section_migration.py`
 - the field registry and canonical source field order were pre-aligned so later source writes can preserve `project_subfolder`, `details_subfolder`, `section_id`, `section_title`, and `sort_order`
+- follow-on source/registry drift verification is tracked separately in [Catalogue Source And Registry Drift Verification Request](/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification)
 
 Initial dry-run result:
 
