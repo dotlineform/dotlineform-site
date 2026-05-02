@@ -353,10 +353,10 @@ Acceptance checks:
 
 Implementation notes:
 
-- `scripts/catalogue_json_build.py` now resolves work source media through `project_folder` plus optional `project_subfolder`, and detail source media through `details_subfolder` plus `project_filename` with legacy read fallback until migration write.
-- `scripts/generate_work_pages.py` now resolves work/detail dimension lookups through source media fields only, groups generated work JSON sections by `section_id`, displays `section_title`, and orders sections by `sort_order` then `section_id`. Nested detail records do not repeat section-level `section_id`, `section_title`, or `sort_order` fields. Before the source migration is written, legacy detail rows synthesize migration-equivalent section ids such as `00001-1` rather than using legacy `project_subfolder` labels as section keys.
+- `scripts/catalogue_json_build.py` now resolves work source media through `project_folder` plus optional `project_subfolder`, and detail source media through `details_subfolder` plus `project_filename`.
+- `scripts/generate_work_pages.py` now resolves work/detail dimension lookups through source media fields only, groups generated work JSON sections by `section_id`, displays `section_title`, and orders sections by `sort_order` then `section_id`. Nested detail records do not repeat section-level `section_id`, `section_title`, or `sort_order` fields.
 - Public work/detail layouts read `section_id` and `section_title` from generated work JSON, with legacy fallbacks for currently generated payloads.
-- `scripts/catalogue_lookup.py` now emits `section_id`, `section_title`, `sort_order`, `details_subfolder`, and `project_filename` in focused work lookup detail summaries and focused detail records so Studio can reconstruct source paths and section grouping. Focused detail lookup records omit legacy detail `project_subfolder` even while canonical source JSON remains legacy-readable before the write migration.
+- `scripts/catalogue_lookup.py` now emits `section_id`, `section_title`, `sort_order`, `details_subfolder`, and `project_filename` in focused work lookup detail summaries and focused detail records so Studio can reconstruct source paths and section grouping. Focused detail lookup records omit legacy detail `project_subfolder`.
 - Project-state reporting and generated JSON audit checks now understand the separated fields.
 
 ### Task 5. Update Studio Editing And Import Surfaces
@@ -395,7 +395,7 @@ Implementation notes:
 
 Status:
 
-- not started
+- implemented
 
 Update stable reference docs once the implementation contract is final.
 
@@ -413,6 +413,14 @@ Acceptance checks:
 - Studio docs payloads are rebuilt with `./scripts/build_docs.rb --scope studio --write`
 - Studio search is rebuilt if changed docs need search output to stay current
 - docs avoid machine-specific paths or local credentials
+
+Implementation notes:
+
+- Stable source-model and catalogue data-model docs now describe the migrated work-detail source shape.
+- Build and generator docs now describe source-media resolution for work and detail records and the section-level shape of generated per-work JSON.
+- Catalogue lookup docs now describe target-shaped focused detail payloads without legacy detail `project_subfolder`.
+- Field-registry docs now call out the migrated work-detail source-media and section-metadata fields.
+- The request and site change log record that Task 6 is complete.
 
 ### Task 7. Verify Migration And Runtime Behavior
 

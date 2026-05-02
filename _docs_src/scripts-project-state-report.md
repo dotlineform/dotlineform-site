@@ -2,7 +2,7 @@
 doc_id: scripts-project-state-report
 title: "Project State Report"
 added_date: 2026-04-27
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: scripts
 sort_order: 65
 ---
@@ -23,7 +23,7 @@ It is meant to replace ad hoc catalogue/source-folder comparisons when deciding 
 ## Inputs
 
 - `assets/studio/data/catalogue/works.json`
-- `assets/studio/data/catalogue/work_details.json`, only to identify detail subfolders to skip
+- `assets/studio/data/catalogue/work_details.json`, only to identify `details_subfolder` paths to skip
 - `$DOTLINEFORM_PROJECTS_BASE_DIR/projects`
 
 Do not pass `--projects-base-dir` during normal local or cloud runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` instead.
@@ -63,7 +63,7 @@ The report compares only primary work image data:
 - `Works.project_folder`
 - `Works.project_filename`
 
-Work details are out of scope. Known detail subfolders from `work_details.json` and folders named `details` are skipped.
+Work details are out of scope. Known `details_subfolder` paths from `work_details.json` and folders named `details` are skipped.
 
 By default, the report scans every direct `/projects/<project_folder>` folder. Image mismatch sections still inspect only direct image files inside those folders.
 

@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-02] Documented migrated catalogue media-section contract
+
+**Status:** implemented
+
+**Area:** documentation / catalogue data model
+
+**Summary:**
+Updated the stable catalogue source, build, lookup, and field-registry docs to describe the migrated work-detail media-section schema.
+
+**Reason:**
+After the source migration and generated work JSON rebuild, the active contract no longer uses detail `project_subfolder`. Stable reference docs needed to distinguish source-media fields, public section metadata, Studio lookup payloads, and generated per-work runtime JSON.
+
+**Effect:**
+The documentation now states that detail source records use `details_subfolder`, `section_id`, `section_title`, optional `sort_order`, and `project_filename`; generated work JSON keeps section metadata at section level; and lookup payloads expose the target shape without legacy detail `project_subfolder`.
+
+**Affected files/docs:**
+
+- [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+- [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
+- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+- [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review)
+- [Catalogue Media Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-02] Fixed catalogue media-section legacy lookup IDs
 
 **Status:** implemented

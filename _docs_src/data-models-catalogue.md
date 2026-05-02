@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue
 title: "Catalogue Scope"
 added_date: 2026-04-01
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: data-models
 sort_order: 20
 ---
@@ -51,6 +51,43 @@ Primary writers:
 Primary validator:
 
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+
+## Source Record Shape
+
+### Work Source Records
+
+Work records in `assets/studio/data/catalogue/works.json` own the primary work source-image path:
+
+- `project_folder`
+- optional `project_subfolder`
+- `project_filename`
+
+`project_subfolder` is persisted only when non-empty. Public runtime work images still resolve generated media by `work_id`; the source path fields are for Studio editing, local media readiness, and generator/source media lookup.
+
+### Work Detail Source Records
+
+Work-detail records in `assets/studio/data/catalogue/work_details.json` use the migrated media-section schema:
+
+- `details_subfolder`: optional source-image folder under the parent work's `project_folder`
+- `section_id`: stable generated public-section key, such as `00001-1`
+- `section_title`: public section label
+- `sort_order`: optional section ordering value
+- `project_filename`: detail source-image filename
+
+Detail records no longer use legacy `project_subfolder`. Empty `details_subfolder` values are omitted from source JSON; when absent, the detail source image resolves directly under the parent work's `project_folder`.
+
+### Per-Work Runtime JSON
+
+`assets/works/index/<work_id>.json` groups published detail records under `sections[]`.
+
+Each section owns:
+
+- `section_id`
+- `section_title`
+- optional `sort_order`
+- `details[]`
+
+Nested `details[]` records do not repeat section-level `section_id`, `section_title`, or `sort_order`. Detail records within a section remain sorted by `detail_id`.
 
 ## Catalogue Field Registry
 

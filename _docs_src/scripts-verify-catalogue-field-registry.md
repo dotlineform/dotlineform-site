@@ -2,7 +2,7 @@
 doc_id: scripts-verify-catalogue-field-registry
 title: "Catalogue Field Registry Verification"
 added_date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: scripts
 sort_order: 75
 ---
@@ -43,7 +43,8 @@ The verification covers:
 - work search enrichment fields such as `medium_type`
 - work display fields with a related series `sort_fields` dependency
 - work publication and membership fields such as `series_ids`
-- work-detail public metadata and media source fields
+- work-detail public section metadata such as `section_title` and `sort_order`
+- work-detail source media fields such as `details_subfolder` and `project_filename`
 - series publication fields and series notes
 - moment display fields and moment media source fields
 - unknown-field fallback
@@ -55,7 +56,7 @@ The verification covers:
 Successful output:
 
 ```text
-catalogue field registry verification passed (16 checks)
+catalogue field registry verification passed (17 checks)
 ```
 
 A failing check exits non-zero and reports the first mismatched plan field.

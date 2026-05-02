@@ -34,7 +34,7 @@ Validation checks the source JSON for core relationship errors:
 - series `primary_work_id` values that are not members of that series
 - work details that reference unknown works when actionable
 
-After the media-section migration is written, run the target schema check:
+Use the target media-section schema check for the current migrated source shape:
 
 ```bash
 ./scripts/validate_catalogue_source.py --target-media-section-schema
@@ -62,9 +62,9 @@ Apply the migration only when the preview is accepted:
 ./scripts/migrate_catalogue_media_sections.py --write
 ```
 
-Write mode creates a backup under `var/studio/catalogue/backups/` before updating `assets/studio/data/catalogue/work_details.json`.
+Write mode creates a backup under `var/studio/catalogue/backups/` before updating `assets/studio/data/catalogue/work_details.json`. After the migration has been applied, dry-run output should report `Legacy records: 0`, `Already migrated records: 2681`, and `Result: no changes`.
 
-The migration does not move external source image files and does not update generated public runtime artifacts. Those follow through later catalogue build and generator tasks.
+The migration does not move external source image files. Public runtime artifacts under `assets/works/index/` must be regenerated separately by the catalogue build/generator path.
 
 ## Project State Report
 

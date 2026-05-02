@@ -2,7 +2,7 @@
 doc_id: new-pipeline-source-model
 title: "Source Model"
 added_date: 2026-04-17
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: new-pipeline
 sort_order: 20
 ---
@@ -159,7 +159,9 @@ Primary map:
       "detail_uid": "00456-001",
       "work_id": "00456",
       "detail_id": "001",
-      "project_subfolder": "details",
+      "details_subfolder": "details",
+      "section_id": "00456-1",
+      "section_title": "details",
       "project_filename": "detail.jpg",
       "title": "detail",
       "status": "published",
@@ -176,6 +178,11 @@ Field notes:
 - The map key is `detail_uid`.
 - `detail_uid` is derived from `work_id` and `detail_id`, but it should be stored in the record to keep import/export and preview output clear.
 - `work_id` must reference an existing work.
+- `details_subfolder` is optional source-image path metadata under the parent work's `project_folder`. Empty values are omitted.
+- `section_id` is the stable generated logical section key for public work JSON, using `<work_id>-<number>`.
+- `section_title` is the public section label and is required.
+- `sort_order` is optional section ordering metadata. It applies to sections, not to detail ordering within a section.
+- Detail records no longer use legacy `project_subfolder`; source image paths and public section labels are separate fields.
 
 ## `series.json`
 

@@ -2,7 +2,7 @@
 doc_id: catalogue-field-registry-review
 title: "Catalogue Field Registry Review"
 added_date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: studio
 sort_order: 235
 ---
@@ -19,6 +19,8 @@ This Studio page is a read-only review surface for `assets/studio/data/catalogue
 Use this page to inspect the active field-to-artifact registry that catalogue build planning uses for field-aware previews and save-time public updates.
 
 The page intentionally renders the registry source directly rather than recreating planner behavior in the browser.
+
+The current registry includes the migrated work-detail media-section fields. `details_subfolder` and `project_filename` are source-media fields, while `section_title` and `sort_order` are parent work JSON section metadata fields.
 
 ## Behavior
 

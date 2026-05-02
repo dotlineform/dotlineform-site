@@ -2,7 +2,7 @@
 doc_id: new-pipeline-web-system-spec
 title: "Web System Specification"
 added_date: 2026-04-17
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: new-pipeline
 sort_order: 30
 ---
@@ -229,7 +229,9 @@ Initial editable fields:
 
 - `status`
 - `published_date`
-- `project_subfolder`
+- `details_subfolder`
+- `section_title`
+- `sort_order`
 - `project_filename`
 - `title`
 
@@ -238,6 +240,7 @@ Read-only or generated fields in v1:
 - `detail_uid`
 - `work_id`
 - `detail_id`
+- `section_id`
 - `width_px`
 - `height_px`
 

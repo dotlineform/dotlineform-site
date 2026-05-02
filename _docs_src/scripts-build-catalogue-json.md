@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: "Scoped JSON Catalogue Build"
 added_date: 2026-04-18
-last_updated: 2026-04-29
+last_updated: 2026-05-02
 parent_id: scripts
 sort_order: 70
 ---
@@ -103,7 +103,9 @@ The helper:
 - requires every series in the build scope to have `status: published`
 - requires a series primary work to exist, belong to the series, and have `status: published`
 - lets the generator render optional work and series prose from `_docs_src_catalogue/works/<work_id>.md` and `_docs_src_catalogue/series/<series_id>.md`
-- stages in-scope work and work-detail source images under `var/catalogue/media/`
+- stages in-scope source images under `var/catalogue/media/`
+  - work source media resolves through `project_folder`, optional `project_subfolder`, and `project_filename`
+  - work-detail source media resolves through the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
 - generates local primary and thumbnail srcset derivatives under `var/catalogue/media/`
 - copies generated thumbnail derivatives into `assets/works/img/` or `assets/work_details/img/`
 - passes the generator's narrow `--refresh-published` mode so selected published records can be recomputed without forcing unchanged writes
@@ -119,6 +121,8 @@ The helper:
 When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. The preview prints `Field-aware reasons` lines that group selected artifact families by the changed fields and registry reason. Unknown fields and mixed rule classes use conservative fallback and explain the fallback selection.
 
 Planner behavior is covered by `./scripts/verify_catalogue_field_registry.py`.
+
+For work scopes, `work-json` writes `assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Each section carries `section_id`, `section_title`, optional `sort_order`, and `details[]`; nested detail records do not repeat section-level metadata.
 
 For `--moment-file`, the helper:
 

@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: _archive
 sort_order: 50
 ---
@@ -148,7 +148,7 @@ Artifact behavior:
 - `recent-index-json`
   writes `assets/data/recent_index.json` as a capped recent-publications ledger for `/recent/`; retained entries must still point at currently published series or works
 - `work-json`
-  writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
+  writes `assets/works/index/<work_id>.json` with full `work`, section-level detail grouping, and rendered `content_html` when work prose exists. Sections carry `section_id`, `section_title`, optional `sort_order`, and `details[]`; nested detail records do not repeat section-level metadata.
 
 There is no separate `works-prose` artifact; use `work-json` for prose-only refreshes.
 
@@ -171,6 +171,7 @@ The internal generator currently stops the run when actionable canonical source 
 - `series.primary_work_id` values that do not resolve to a `works` record
 - `series.primary_work_id` values whose `works.series_ids` do not include that series
 - `work_details.work_id` values that do not resolve to `works`
+- work-detail section metadata that is missing or malformed under the migrated source schema
 - non-slug-safe moment ids in `assets/studio/data/catalogue/moments.json`
 
 This validation runs before generated files or canonical source status/date updates are written, so those failures no longer appear after a partially written run.
@@ -201,6 +202,9 @@ Current behavior:
 
 - reads canonical source JSON from `assets/studio/data/catalogue/`
 - builds work, series, work-detail, and moment artifacts from canonical source records rather than workbook-shaped row projections
+- resolves work source media from `project_folder`, optional `project_subfolder`, and `project_filename`
+- resolves work-detail source media from the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
+- writes per-work runtime detail sections with section-level `section_id`, `section_title`, and optional `sort_order`; nested detail records do not repeat those section fields
 - writes the runtime artifacts selected by the scoped JSON build flow
 - when `--write` is used, mutates generator-updated mutable fields directly on canonical source records before source JSON write-back:
   - work `status`, `published_date`, `width_px`, `height_px`

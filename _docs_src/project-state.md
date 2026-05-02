@@ -2,7 +2,7 @@
 doc_id: project-state
 title: "Project State"
 added_date: 2026-04-27
-last_updated: 2026-04-27
+last_updated: 2026-05-02
 published: false
 parent_id: ""
 sort_order: 999
@@ -15,7 +15,7 @@ This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_D
 
 Scan mode: direct source folders and their direct images.
 
-Work details are intentionally out of scope. Known detail subfolders from `assets/studio/data/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.
+Work details are intentionally out of scope. Known `details_subfolder` paths from `assets/studio/data/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.
 
 ## Summary
 

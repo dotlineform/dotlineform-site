@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c2620f408a75d72b0c40d292aa18242d",
-    "generated_at_utc": "2026-05-02T14:42:10Z",
+    "version": "blake2b-abeafb186bcec25060373135911c8f08",
+    "generated_at_utc": "2026-05-02T15:56:17Z",
     "count": 157
   },
   "entries": [
@@ -619,10 +619,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-01 • Data Models",
+      "display_meta": "2026-05-02 • Data Models",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -631,12 +631,12 @@
         "catalogue scope",
         "scope",
         "data models",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-05-01 2026 05 01"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -876,10 +876,10 @@
       "kind": "doc",
       "title": "Source Model",
       "href": "/docs/?scope=studio&doc=new-pipeline-source-model",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-01 • New Cat Pipeline",
+      "display_meta": "2026-05-02 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-source-model",
         "new",
@@ -889,12 +889,12 @@
         "source model",
         "new cat pipeline",
         "cat",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-05-02 2026 05 02"
     },
     {
       "id": "docs-viewer-source-organisation",
@@ -1356,10 +1356,10 @@
       "kind": "doc",
       "title": "Web System Specification",
       "href": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-01 • New Cat Pipeline",
+      "display_meta": "2026-05-02 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-web-system-spec",
         "new",
@@ -1371,12 +1371,12 @@
         "specification",
         "new cat pipeline",
         "cat",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification new cat pipeline cat 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification new cat pipeline cat 2026-05-02 2026 05 02"
     },
     {
       "id": "data-models-analysis",
@@ -1788,10 +1788,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "_archive",
       "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-02 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -1800,12 +1800,12 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-01 2026 05 01"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -2223,10 +2223,10 @@
       "kind": "doc",
       "title": "Project State Report",
       "href": "/docs/?scope=studio&doc=scripts-project-state-report",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-01 • Scripts",
+      "display_meta": "2026-05-02 • Scripts",
       "search_terms": [
         "scripts-project-state-report",
         "scripts",
@@ -2234,12 +2234,12 @@
         "state",
         "report",
         "project state report",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "scripts-project-state-report scripts project state report project state report 2026-05-01 2026 05 01"
+      "search_text": "scripts-project-state-report scripts project state report project state report 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-moment-editor",
@@ -2298,10 +2298,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-29 • Scripts",
+      "display_meta": "2026-05-02 • Scripts",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -2310,12 +2310,12 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-04-29",
+        "2026-05-02",
         "2026",
-        "04",
-        "29"
+        "05",
+        "02"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-04-29 2026 04 29"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-02 2026 05 02"
     },
     {
       "id": "search-build-pipeline",
@@ -2344,10 +2344,10 @@
       "kind": "doc",
       "title": "Catalogue Field Registry Verification",
       "href": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-01 • Scripts",
+      "display_meta": "2026-05-02 • Scripts",
       "search_terms": [
         "scripts-verify-catalogue-field-registry",
         "scripts",
@@ -2357,12 +2357,12 @@
         "registry",
         "catalogue field registry verification",
         "verification",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-01 2026 05 01"
+      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-02 2026 05 02"
     },
     {
       "id": "search-studio-v1-index-shape",
@@ -3533,10 +3533,10 @@
       "kind": "doc",
       "title": "Catalogue Field Registry Review",
       "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-01 • Studio",
+      "display_meta": "2026-05-02 • Studio",
       "search_terms": [
         "catalogue-field-registry-review",
         "catalogue",
@@ -3545,12 +3545,12 @@
         "review",
         "catalogue field registry review",
         "studio",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review studio 2026-05-01 2026 05 01"
+      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review studio 2026-05-02 2026 05 02"
     },
     {
       "id": "registry-driven-scoring-architecture",
