@@ -141,12 +141,16 @@ Status: implemented.
 
 ### 7. Style and accessibility
 
+Status: implemented.
+
 - Reuse the compact Docs Viewer pill styling direction established by favourites.
 - Provide selected/unselected states that do not rely on color alone.
 - If monochrome emoji are implemented with CSS filters, verify emoji rendering remains legible across Chromium and Safari.
 - Add accessible labels such as `Set status: Done` and `Clear status: Done`.
 
 ### 8. Verification
+
+Status: implemented.
 
 - Run `./scripts/build_docs.rb --scope studio --write` after docs-source changes.
 - Run `node --check assets/js/docs-viewer.js` after runtime changes.
