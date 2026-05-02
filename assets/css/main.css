@@ -1223,6 +1223,12 @@ th{ background: var(--panel-2); }
   border-color: var(--border);
 }
 
+.docsViewer__navStatus{
+  display: inline-block;
+  margin-right: 0.35rem;
+  line-height: 1;
+}
+
 .docsViewer__navRow.is-draft .docsViewer__navLink{
   color: var(--docs-viewer-draft-color);
   font-weight: var(--docs-viewer-draft-font-weight);

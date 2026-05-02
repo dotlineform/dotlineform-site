@@ -329,6 +329,9 @@
     state.managementText.viewableAncestorPrompt = getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
     state.managementText.viewableDescendantPrompt = getConfigText(config, "docs_viewer.viewable_descendant_prompt", state.managementText.viewableDescendantPrompt);
     state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
+    if (state.docs.length) {
+      renderSidebar();
+    }
     if (state.recentModeActive) {
       renderRecentMode();
     }
@@ -799,6 +802,12 @@
     return Boolean(doc) && state.nonLoadableDocIds.has(doc.doc_id);
   }
 
+  function statusForIndexDoc(doc) {
+    if (!doc || !isDocViewable(doc) || isNonLoadableDoc(doc) || isManageOnlyTreeDoc(doc)) return null;
+    var statusValue = String(doc.ui_status || "").trim();
+    return statusValue ? state.uiStatusByValue.get(statusValue) || null : null;
+  }
+
   function firstLoadableDescendantDocId(parentId) {
     var children = state.childrenByParent.get(parentId) || [];
     for (var i = 0; i < children.length; i += 1) {
@@ -941,7 +950,16 @@
         link.draggable = true;
         link.dataset.dragDocId = doc.doc_id;
       }
-      link.textContent = doc.title;
+      link.textContent = "";
+      var uiStatus = statusForIndexDoc(doc);
+      if (uiStatus) {
+        var statusIcon = document.createElement("span");
+        statusIcon.className = "docsViewer__navStatus";
+        statusIcon.setAttribute("aria-hidden", "true");
+        statusIcon.textContent = uiStatus.emoji;
+        link.appendChild(statusIcon);
+      }
+      link.appendChild(document.createTextNode(doc.title));
       row.appendChild(link);
       item.appendChild(row);
 

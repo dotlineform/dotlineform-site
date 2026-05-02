@@ -100,6 +100,8 @@ Status: implemented.
 
 ### 3. Render status in the index panel
 
+Status: implemented.
+
 - Load configured statuses through the existing Docs Viewer config request.
 - Build a scope-specific lookup from `ui_status` to emoji/label.
 - Prefix the rendered index title with the configured emoji when the active doc record has a matching status.
