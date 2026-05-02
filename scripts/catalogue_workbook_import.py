@@ -16,6 +16,7 @@ try:
         DETAIL_TEXT_FIELDS,
         WORK_FIELDS,
         WORK_TEXT_FIELDS,
+        next_detail_section_id,
         normalize_json_value,
         normalize_scalar_text,
         normalize_source_record,
@@ -25,6 +26,8 @@ try:
         slug_id,
         sort_record_map,
         validate_source_records,
+        validate_work_detail_media_section_record,
+        validate_work_detail_section_metadata_consistency,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_source import (
@@ -33,6 +36,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         DETAIL_TEXT_FIELDS,
         WORK_FIELDS,
         WORK_TEXT_FIELDS,
+        next_detail_section_id,
         normalize_json_value,
         normalize_scalar_text,
         normalize_source_record,
@@ -42,6 +46,8 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         slug_id,
         sort_record_map,
         validate_source_records,
+        validate_work_detail_media_section_record,
+        validate_work_detail_section_metadata_consistency,
     )
 
 try:
@@ -335,9 +341,10 @@ def _build_work_import_plan(source_records: CatalogueSourceRecords, workbook, wo
 
 def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workbook, workbook_path: Path) -> WorkbookImportPlan:
     rows, headers = _require_sheet(workbook, "WorkDetails")
-    _require_headers(headers, ["work_id", "detail_id", "title"], sheet_name="WorkDetails")
+    _require_headers(headers, ["work_id", "detail_id", "title", "section_title"], sheet_name="WorkDetails")
 
     importable: Dict[str, Dict[str, Any]] = {}
+    assigned_section_ids: Dict[tuple[str, str], str] = {}
     duplicate_ids: list[str] = []
     blocked_rows: list[Dict[str, str]] = []
     blocked_reason_counts: Dict[str, int] = {}
@@ -381,14 +388,38 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
         if not title:
             _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="missing_title", message="title is required")
             continue
+        if "project_subfolder" in headers and normalize_scalar_text(cell(row, headers, "project_subfolder")):
+            _append_blocked(
+                blocked_rows,
+                blocked_reason_counts,
+                row_number=row_number,
+                record_id=detail_uid,
+                reason="legacy_project_subfolder",
+                message="use details_subfolder instead of project_subfolder",
+            )
+            continue
+        section_title = normalize_scalar_text(cell(row, headers, "section_title"))
+        if not section_title:
+            _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="missing_section_title", message="section_title is required")
+            continue
 
         record = {
             "detail_uid": detail_uid,
             "work_id": work_id,
             "detail_id": detail_id,
+            "section_title": section_title,
             "status": "draft",
             "published_date": None,
         }
+        raw_section_id = normalize_scalar_text(cell(row, headers, "section_id"))
+        if raw_section_id:
+            record["section_id"] = raw_section_id
+        else:
+            section_key = (work_id, section_title)
+            if section_key not in assigned_section_ids:
+                existing_detail_records = [*source_records.work_details.values(), *importable.values()]
+                assigned_section_ids[section_key] = next_detail_section_id(work_id, existing_detail_records)
+            record["section_id"] = assigned_section_ids[section_key]
         for field in DETAIL_FIELDS:
             if field in record or field in {"status", "published_date"}:
                 continue
@@ -418,6 +449,7 @@ def _validate_imported_records(
     if not importable_records:
         return []
 
+    errors: list[str] = []
     if mode == IMPORT_MODE_WORKS:
         merged = dict(source_records.works)
         merged.update(importable_records)
@@ -429,13 +461,17 @@ def _validate_imported_records(
     else:
         merged = dict(source_records.work_details)
         merged.update(importable_records)
+        for detail_uid, detail_record in importable_records.items():
+            errors.extend(validate_work_detail_media_section_record(detail_uid, detail_record))
+        errors.extend(validate_work_detail_section_metadata_consistency(merged))
         candidate_records = CatalogueSourceRecords(
             works=source_records.works,
             work_details=sort_record_map(merged),
             series=source_records.series,
         )
 
-    return validate_source_records(candidate_records)
+    errors.extend(validate_source_records(candidate_records))
+    return sorted(dict.fromkeys(errors))
 
 
 def _require_headers(headers: Mapping[str, int], names: Iterable[str], *, sheet_name: str) -> None:

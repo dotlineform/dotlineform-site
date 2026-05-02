@@ -32,6 +32,9 @@ SOURCE_FILES = {
     "meta": "meta.json",
 }
 
+DETAIL_LEGACY_SUBFOLDER_FIELD = "project_subfolder"
+DETAIL_SECTION_ID_SEPARATOR = "-"
+
 WORK_FIELDS = [
     "work_id",
     "status",
@@ -105,6 +108,52 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px"}
 OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "sort_order"}
+
+
+def build_detail_section_id(work_id: str, section_number: int) -> str:
+    if section_number < 1:
+        raise ValueError("section_number must be greater than zero")
+    return f"{work_id}{DETAIL_SECTION_ID_SEPARATOR}{section_number}"
+
+
+def detail_section_id_number(work_id: str, section_id: Any) -> int | None:
+    text = normalize_text(section_id)
+    prefix = f"{work_id}{DETAIL_SECTION_ID_SEPARATOR}"
+    if not text.startswith(prefix):
+        return None
+    suffix = text[len(prefix):]
+    if not re.fullmatch(r"[1-9]\d*", suffix):
+        return None
+    return int(suffix)
+
+
+def next_detail_section_id(
+    work_id: str,
+    detail_records: Iterable[Mapping[str, Any]],
+) -> str:
+    max_section_number = 0
+    for record in detail_records:
+        if normalize_text(record.get("work_id")) != work_id:
+            continue
+        section_number = detail_section_id_number(work_id, record.get("section_id"))
+        if section_number is not None:
+            max_section_number = max(max_section_number, section_number)
+    return build_detail_section_id(work_id, max_section_number + 1)
+
+
+def normalize_optional_int(value: Any) -> int | None:
+    if is_empty(value):
+        return None
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    text = normalize_text(value)
+    if re.fullmatch(r"-?\d+", text):
+        return int(text)
+    return None
 
 
 @dataclass(frozen=True)
@@ -226,6 +275,14 @@ def normalize_source_record(
             entries = normalize_links(value)
             if entries:
                 out[field] = entries
+        elif field == "sort_order":
+            normalized_int = normalize_optional_int(value)
+            if normalized_int is not None:
+                out[field] = normalized_int
+            elif not is_empty(value):
+                out[field] = normalize_text(value)
+            elif field not in OMIT_EMPTY_SOURCE_FIELDS:
+                out[field] = None
         elif isinstance(value, list):
             out[field] = [normalize_json_value(item) for item in value]
         elif field in text_fields:
@@ -338,13 +395,83 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
     )
 
 
-def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
+def validate_record_fields(
+    errors: list[str],
+    *,
+    kind: str,
+    key: str,
+    record: Mapping[str, Any],
+    allowed_fields: Iterable[str],
+    allowed_legacy_fields: Iterable[str] = (),
+) -> None:
+    allowed = set(allowed_fields)
+    allowed.update(allowed_legacy_fields)
+    unknown = sorted(str(field) for field in record.keys() if str(field) not in allowed)
+    if unknown:
+        errors.append(f"{kind} {key}: unsupported field(s): {', '.join(unknown)}")
+
+
+def validate_work_detail_media_section_record(key: str, record: Mapping[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if DETAIL_LEGACY_SUBFOLDER_FIELD in record:
+        errors.append(f"work_details {key}: legacy project_subfolder is not supported; use details_subfolder")
+    raw_work_id = record.get("work_id")
+    try:
+        work_id = slug_id(raw_work_id)
+    except ValueError as exc:
+        errors.append(f"work_details {key}: invalid work_id ({exc})")
+        work_id = normalize_text(raw_work_id)
+    raw_section_id = record.get("section_id")
+    raw_section_title = record.get("section_title")
+    if is_empty(raw_section_id):
+        errors.append(f"work_details {key}: missing section_id")
+    elif work_id and detail_section_id_number(work_id, raw_section_id) is None:
+        errors.append(f"work_details {key}: section_id must match {work_id}{DETAIL_SECTION_ID_SEPARATOR}<number>")
+    if is_empty(raw_section_title):
+        errors.append(f"work_details {key}: missing section_title")
+    if "sort_order" in record and not is_empty(record.get("sort_order")):
+        sort_order = normalize_optional_int(record.get("sort_order"))
+        if sort_order is None:
+            errors.append(f"work_details {key}: sort_order must be a whole number")
+        elif sort_order < 0:
+            errors.append(f"work_details {key}: sort_order must be zero or greater")
+    return errors
+
+
+def validate_work_detail_section_metadata_consistency(
+    detail_records: Mapping[str, Mapping[str, Any]],
+) -> list[str]:
+    errors: list[str] = []
+    section_metadata_by_key: Dict[tuple[str, str], tuple[str, int | None]] = {}
+    for key, record in sorted(detail_records.items()):
+        work_id = normalize_text(record.get("work_id"))
+        section_id = normalize_text(record.get("section_id"))
+        section_title = normalize_text(record.get("section_title"))
+        if not work_id or not section_id or not section_title:
+            continue
+        section_key = (work_id, section_id)
+        section_metadata = (section_title, normalize_optional_int(record.get("sort_order")))
+        previous_metadata = section_metadata_by_key.get(section_key)
+        if previous_metadata is None:
+            section_metadata_by_key[section_key] = section_metadata
+        elif previous_metadata != section_metadata:
+            errors.append(f"work_details {key}: section metadata conflicts for section_id {section_id}")
+    return errors
+
+
+def validate_source_records(
+    records: CatalogueSourceRecords,
+    *,
+    require_detail_media_sections: bool = False,
+    allow_legacy_detail_project_subfolder: bool = True,
+) -> list[str]:
     errors: list[str] = []
     all_work_ids: set[str] = set()
     all_series_ids: set[str] = set()
     work_series_ids_by_work_id: Dict[str, list[str]] = {}
 
     for key, record in records.works.items():
+        validate_record_fields(errors, kind="works", key=key, record=record, allowed_fields=WORK_FIELDS)
         try:
             work_id = slug_id(record.get("work_id") or key)
         except ValueError as exc:
@@ -392,6 +519,7 @@ def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
                         errors.append(f"works {key}: links item {idx} missing label")
 
     for key, record in records.series.items():
+        validate_record_fields(errors, kind="series", key=key, record=record, allowed_fields=SERIES_FIELDS)
         try:
             series_id = normalize_series_id(record.get("series_id") or key)
         except ValueError as exc:
@@ -430,6 +558,21 @@ def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
                 errors.append(f"works {work_id}: references unknown series_id {series_id!r}")
 
     for key, record in records.work_details.items():
+        allowed_legacy_fields = (
+            [DETAIL_LEGACY_SUBFOLDER_FIELD]
+            if allow_legacy_detail_project_subfolder and not require_detail_media_sections
+            else []
+        )
+        validate_record_fields(
+            errors,
+            kind="work_details",
+            key=key,
+            record=record,
+            allowed_fields=DETAIL_FIELDS,
+            allowed_legacy_fields=allowed_legacy_fields,
+        )
+        if DETAIL_LEGACY_SUBFOLDER_FIELD in record and not allow_legacy_detail_project_subfolder:
+            errors.append(f"work_details {key}: legacy project_subfolder is not supported; use details_subfolder")
         raw_work_id = record.get("work_id")
         raw_detail_id = record.get("detail_id")
         if is_empty(raw_work_id) or is_empty(raw_detail_id):
@@ -446,6 +589,10 @@ def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
             errors.append(f"work_details {key}: key/detail_uid does not match normalized detail_uid {detail_uid}")
         if normalize_status(record.get("status")) in ACTIONABLE_STATUSES and work_id not in all_work_ids:
             errors.append(f"work_details {key}: work_id {work_id!r} not found in works")
+        if require_detail_media_sections:
+            errors.extend(validate_work_detail_media_section_record(key, record))
+    if require_detail_media_sections:
+        errors.extend(validate_work_detail_section_metadata_consistency(records.work_details))
 
     return sorted(dict.fromkeys(errors))
 

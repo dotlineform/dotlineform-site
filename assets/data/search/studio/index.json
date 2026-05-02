@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cdd8c9e412c206f24ae32fe920787d7e",
-    "generated_at_utc": "2026-05-02T12:36:08Z",
-    "count": 156
+    "version": "blake2b-6dddd32ee5bb5bcdfd6ed31c2a0a4a8a",
+    "generated_at_utc": "2026-05-02T12:56:21Z",
+    "count": 157
   },
   "entries": [
     {
@@ -2712,6 +2712,36 @@
       "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-05-02 2026 05 02"
     },
     {
+      "id": "site-request-catalogue-source-registry-drift-verification",
+      "kind": "doc",
+      "title": "Catalogue Source And Registry Drift Verification Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification",
+      "last_updated": "2026-05-02",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-source-registry-drift-verification",
+        "site",
+        "request",
+        "catalogue",
+        "source",
+        "registry",
+        "drift",
+        "verification",
+        "catalogue source and registry drift verification request",
+        "and",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-catalogue-source-registry-drift-verification site request catalogue source registry drift verification catalogue source and registry drift verification request and change requests change requests 2026-05-02 2026 05 02"
+    },
+    {
       "id": "scripts-catalogue-lookup",
       "kind": "doc",
       "title": "Catalogue Lookup Export",
@@ -3420,19 +3450,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "last_updated": "2026-05-02",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "change-requests change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "tag-editor",

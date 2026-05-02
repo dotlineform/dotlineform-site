@@ -27,11 +27,20 @@ The Phase 0 workbook export fixture is now retired. Canonical source JSON is mai
 Validation checks the source JSON for core relationship errors:
 
 - malformed work, detail, and series IDs
+- source fields that are not part of the canonical source schema
 - source map keys that do not match normalized record IDs
 - work `series_ids` references to unknown series
 - series `primary_work_id` references to unknown works
 - series `primary_work_id` values that are not members of that series
 - work details that reference unknown works when actionable
+
+After the media-section migration is written, run the target schema check:
+
+```bash
+./scripts/validate_catalogue_source.py --target-media-section-schema
+```
+
+The target check requires detail `section_id` and `section_title`, accepts `details_subfolder`, validates `sort_order`, and rejects legacy detail `project_subfolder`.
 
 ## Media Section Migration
 

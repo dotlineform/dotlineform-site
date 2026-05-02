@@ -99,7 +99,7 @@ Work details should replace the path/grouping overload with separate fields:
 
 `details_subfolder` can be null, empty, or absent. If it is empty or absent, the detail source image path resolves to the parent work's `project_folder`. Non-empty `details_subfolder` values are persisted in source JSON so Studio can reconstruct the external source image path. Empty `details_subfolder` values should not be written to source JSON.
 
-`section_id` should be a stable logical grouping key for generated work JSON. The key is automatically generated on creation by combining parent `work_id` with an incremented 1-digit number. e.g. `[work_id]_1`, `[work_id]_2`... 
+`section_id` should be a stable logical grouping key for generated work JSON. The key is automatically generated on creation by combining parent `work_id` with an incremented 1-digit number using a hyphen. e.g. `[work_id]-1`, `[work_id]-2`...
 `section_id` is read-only on the UI and is not user-editable.
 
 `sort_order` is an optional numeric field and is not written to JSON if value is null. If completed it determines the order of the sections displayed on the public work page. Sections are ordered by `sort_order` and then `section_id`. So if `sort_order` is missing, the sections are sorted by `section_id` which is effectively the order in which they were created (this matches current behaviour). Detail records within a section remain sorted by `detail_id`.
@@ -217,7 +217,7 @@ These source-schema decisions are locked for the first implementation:
 - Work source media continues to use `project_folder`, optional `project_subfolder`, and the existing source-image filename flow. The implementation does not add a new combined source image path field. Non-empty `project_subfolder` values are persisted in source JSON so Studio can reconstruct the external source image path used by media generation; public runtime image display still resolves generated srcset files by `work_id`.
 - Detail source media follows the same principle as work media. It uses `details_subfolder` plus `project_filename` for source path resolution and does not add a new combined source image path field. Non-empty `details_subfolder` values are persisted in source JSON for Studio editing.
 - `details_subfolder` is optional. It can be null, empty, or absent. Empty values are not written to source JSON. When `details_subfolder` is missing, the resolved source path for a detail image is the parent work's `project_folder`.
-- `section_id` is generated automatically by combining the parent `work_id` with an incremented one-digit suffix such as `[work_id]_1`, `[work_id]_2`, and so on. It is read-only in Studio and is not user-editable.
+- `section_id` is generated automatically by combining the parent `work_id` with an incremented one-digit suffix using a hyphen, such as `[work_id]-1`, `[work_id]-2`, and so on. It is read-only in Studio and is not user-editable.
 - `section_title` does not need to be unique within a work. No uniqueness validation is needed because `section_id` is the unique key.
 - `sort_order` applies to sections only. It does not order detail records within a section. Detail records continue to sort by `detail_id`.
 
@@ -237,7 +237,7 @@ Locked decisions:
 - do not add a new combined source image path field for works or details
 - persist non-empty `project_subfolder` and `details_subfolder` values so Studio can reconstruct external source image paths
 - make `details_subfolder` optional and omit empty values from source JSON
-- generate `section_id` from parent `work_id` plus an incremented suffix
+- generate `section_id` from parent `work_id` plus a hyphen and incremented suffix
 - allow duplicate `section_title` values within a work
 - apply `sort_order` to sections only, while detail records continue to sort by `detail_id`
 
@@ -295,7 +295,7 @@ Initial dry-run result:
 
 Status:
 
-- not started
+- implemented
 
 Update every source validation and payload-shaping path to understand the new fields.
 
@@ -314,6 +314,13 @@ Acceptance checks:
 
 - validation errors name the new user-facing fields
 - no new compatibility fallback silently preserves legacy detail `project_subfolder`
+
+Implementation notes:
+
+- `scripts/catalogue_source.py` now defines the target work-detail source field order, validates required `section_id` and `section_title`, accepts optional `details_subfolder`, and rejects legacy detail `project_subfolder` when target media-section validation is requested.
+- Default whole-source validation remains legacy-readable until the dry-run migration is written, while `./scripts/validate_catalogue_source.py --target-media-section-schema` verifies the migrated target shape.
+- Studio write-server work-detail create/save and bulk-save validation reject incoming legacy `project_subfolder`; create generates `section_id` server-side as `[work_id]-1`, `[work_id]-2`, and so on.
+- Bulk-import work-detail rows now use `details_subfolder` and `section_title`; non-empty legacy `project_subfolder` cells are blocked instead of silently mapped.
 - Studio source-image path fields round-trip through source JSON when non-empty
 - source edits can distinguish media-path changes from public section changes
 - syntax checks pass for changed Python scripts

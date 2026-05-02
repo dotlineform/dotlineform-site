@@ -69,6 +69,7 @@ from catalogue_source import (  # noqa: E402
     WORK_TEXT_FIELDS,
     CatalogueSourceRecords,
     load_json_file,
+    next_detail_section_id,
     normalize_source_record,
     normalize_status,
     normalize_text,
@@ -77,6 +78,8 @@ from catalogue_source import (  # noqa: E402
     slug_id,
     sort_record_map,
     validate_source_records,
+    validate_work_detail_media_section_record,
+    validate_work_detail_section_metadata_consistency,
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
 from catalogue_lookup import (  # noqa: E402
@@ -198,7 +201,9 @@ BULK_WORK_EDITABLE_FIELDS = {
 }
 
 BULK_DETAIL_EDITABLE_FIELDS = {
-    "project_subfolder",
+    "details_subfolder",
+    "section_title",
+    "sort_order",
     "project_filename",
     "title",
     "status",
@@ -334,7 +339,19 @@ DETAIL_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
         "artifacts": ["work_detail_record", "work_detail_search", "related_work_records"],
     },
-    "project_subfolder": {
+    "details_subfolder": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "related_work_records"],
+    },
+    "section_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "related_work_records"],
+    },
+    "section_title": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "related_work_records"],
+    },
+    "sort_order": {
         "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
         "artifacts": ["work_detail_record", "related_work_records"],
     },
@@ -1118,19 +1135,23 @@ def validate_bulk_records(
     work_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
     detail_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
 ) -> list[str]:
+    errors: list[str] = []
     source_records = records_from_json_source(source_dir)
     if work_updates:
         for work_id, work_record in work_updates.items():
             source_records.works[work_id] = work_record
     if detail_updates:
         for detail_uid, detail_record in detail_updates.items():
+            errors.extend(validate_work_detail_media_section_record(detail_uid, detail_record))
             source_records.work_details[detail_uid] = detail_record
+        errors.extend(validate_work_detail_section_metadata_consistency(source_records.work_details))
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(source_records.works),
         work_details=sort_record_map(source_records.work_details),
         series=source_records.series,
     )
-    return validate_source_records(normalized_records)
+    errors.extend(validate_source_records(normalized_records))
+    return sorted(dict.fromkeys(errors))
 
 
 def apply_work_bulk_series_operation(
@@ -1769,25 +1790,31 @@ def validate_created_work_records(source_dir: Path, work_id: str, work_record: D
 
 
 def validate_updated_detail_records(source_dir: Path, detail_uid: str, detail_record: Dict[str, Any]) -> list[str]:
+    errors = validate_work_detail_media_section_record(detail_uid, detail_record)
     source_records = records_from_json_source(source_dir)
     source_records.work_details[detail_uid] = detail_record
+    errors.extend(validate_work_detail_section_metadata_consistency(source_records.work_details))
     normalized_records = CatalogueSourceRecords(
         works=source_records.works,
         work_details=sort_record_map(source_records.work_details),
         series=source_records.series,
     )
-    return validate_source_records(normalized_records)
+    errors.extend(validate_source_records(normalized_records))
+    return sorted(dict.fromkeys(errors))
 
 
 def validate_created_detail_records(source_dir: Path, detail_uid: str, detail_record: Dict[str, Any]) -> list[str]:
+    errors = validate_work_detail_media_section_record(detail_uid, detail_record)
     source_records = records_from_json_source(source_dir)
     source_records.work_details[detail_uid] = detail_record
+    errors.extend(validate_work_detail_section_metadata_consistency(source_records.work_details))
     normalized_records = CatalogueSourceRecords(
         works=source_records.works,
         work_details=sort_record_map(source_records.work_details),
         series=source_records.series,
     )
-    return validate_source_records(normalized_records)
+    errors.extend(validate_source_records(normalized_records))
+    return sorted(dict.fromkeys(errors))
 
 
 def validate_updated_series_records(
@@ -4071,6 +4098,11 @@ class Handler(BaseHTTPRequestHandler):
         detail_update["detail_uid"] = detail_uid
         detail_update["work_id"] = work_id
         detail_update["detail_id"] = detail_id
+        if normalize_text(detail_update.get("section_id")):
+            raise ValueError("record.section_id is generated by the server")
+        if not normalize_text(detail_update.get("section_title")):
+            raise ValueError("work detail section_title is required")
+        detail_update["section_id"] = next_detail_section_id(work_id, work_details.values())
         if not normalize_status(detail_update.get("status")):
             detail_update["status"] = "draft"
         created_record = normalize_work_detail_update(detail_uid, blank_detail_record, detail_update)
@@ -4147,6 +4179,10 @@ class Handler(BaseHTTPRequestHandler):
         current_record = work_details.get(detail_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"detail_uid not found: {detail_uid}")
+        current_section_id = normalize_text(current_record.get("section_id"))
+        requested_section_id = normalize_text(detail_update.get("section_id"))
+        if requested_section_id and current_section_id and requested_section_id != current_section_id:
+            raise ValueError("record.section_id is read-only")
 
         updated_record = normalize_work_detail_update(detail_uid, current_record, detail_update)
         work_id = str(updated_record.get("work_id") or "")

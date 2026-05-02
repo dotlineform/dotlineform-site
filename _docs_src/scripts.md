@@ -82,15 +82,15 @@ Catalogue/runtime maintenance:
 
 - `./scripts/run_checks.py`
   - runs optional repo check profiles and writes local logs under `var/test-runs/`
-- `python3 ./scripts/catalogue_json_build.py`
+- `./scripts/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
-- `python3 ./scripts/verify_catalogue_field_registry.py`
+- `./scripts/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
-- `python3 ./scripts/validate_catalogue_source.py`
-  - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`
-- `python3 ./scripts/migrate_catalogue_media_sections.py`
+- `./scripts/validate_catalogue_source.py`
+  - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
+- `./scripts/migrate_catalogue_media_sections.py`
   - previews or applies the work-detail source migration from legacy `project_subfolder` to separated `details_subfolder`, `section_id`, and `section_title`
-- `python3 ./scripts/export_catalogue_lookup.py`
+- `./scripts/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
 - `bash scripts/make_srcset_images.sh`
   - builds derivative image outputs when media work is needed outside the Studio metadata flow

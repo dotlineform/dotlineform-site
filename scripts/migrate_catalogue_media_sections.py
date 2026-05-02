@@ -12,9 +12,27 @@ from pathlib import Path
 from typing import Any, Mapping
 
 try:
-    from catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, is_empty, load_json_file, normalize_text, slug_id
+    from catalogue_source import (
+        DEFAULT_SOURCE_DIR,
+        SOURCE_FILES,
+        build_detail_section_id,
+        detail_section_id_number,
+        is_empty,
+        load_json_file,
+        normalize_text,
+        slug_id,
+    )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, is_empty, load_json_file, normalize_text, slug_id
+    from scripts.catalogue_source import (
+        DEFAULT_SOURCE_DIR,
+        SOURCE_FILES,
+        build_detail_section_id,
+        detail_section_id_number,
+        is_empty,
+        load_json_file,
+        normalize_text,
+        slug_id,
+    )
 
 try:
     from display_paths import format_display_path
@@ -23,7 +41,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 
 DEFAULT_BACKUP_DIR = Path("var/studio/catalogue/backups")
-SECTION_ID_SEPARATOR = "-"
 
 
 @dataclass(frozen=True)
@@ -81,7 +98,7 @@ def detail_sort_key(item: tuple[str, Mapping[str, Any]]) -> tuple[str, str, str]
 
 
 def next_section_id(work_id: str, existing_count: int) -> str:
-    return f"{work_id}{SECTION_ID_SEPARATOR}{existing_count + 1}"
+    return build_detail_section_id(work_id, existing_count + 1)
 
 
 def copied_record_with_new_fields(
@@ -135,6 +152,17 @@ def build_migration_plan(source_dir: Path) -> MigrationPlan:
                 stats.omitted_empty_work_project_subfolder += 1
     assignments_by_work: dict[str, dict[str, str]] = {}
     detail_counts_by_section: dict[tuple[str, str], int] = {}
+    existing_section_count_by_work: dict[str, int] = {}
+    for _key, raw_record in sorted(raw_records.items(), key=detail_sort_key):
+        if not isinstance(raw_record, Mapping) or "project_subfolder" in raw_record:
+            continue
+        work_id = normalize_text(raw_record.get("work_id"))
+        section_number = detail_section_id_number(work_id, raw_record.get("section_id"))
+        if section_number is not None:
+            existing_section_count_by_work[work_id] = max(
+                existing_section_count_by_work.get(work_id, 0),
+                section_number,
+            )
 
     for key, raw_record in sorted(raw_records.items(), key=detail_sort_key):
         if not isinstance(raw_record, Mapping):
@@ -158,7 +186,8 @@ def build_migration_plan(source_dir: Path) -> MigrationPlan:
         stats.legacy_records += 1
         work_assignments = assignments_by_work.setdefault(work_id, {})
         if legacy_value not in work_assignments:
-            work_assignments[legacy_value] = next_section_id(work_id, len(work_assignments))
+            existing_count = existing_section_count_by_work.get(work_id, 0)
+            work_assignments[legacy_value] = next_section_id(work_id, existing_count + len(work_assignments))
         detail_counts_by_section[(work_id, legacy_value)] = detail_counts_by_section.get((work_id, legacy_value), 0) + 1
 
         existing_details_subfolder = normalize_text(raw_record.get("details_subfolder"))
