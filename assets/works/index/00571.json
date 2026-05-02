@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-e2ded459a7376fb773428e346bf4da16",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-e7f0db8111e7c478186ce49ca8ad6098",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00571",
     "count": 1
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00571-001",
           "title": "2012-01-06 - 12-30-44",
           "width_px": 3264,
-          "height_px": 2448,
-          "layout": "work_details"
+          "height_px": 2448
         }
       ]
     }

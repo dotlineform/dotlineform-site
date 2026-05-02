@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-61fd98cb976010325605004b8accb7b3",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-34d7bfe4264cb2ccead33bbe8ecaaf62",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01196",
     "count": 65
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01196-001",
           "title": "source - form 27",
           "width_px": 3000,
-          "height_px": 2664,
-          "layout": "work_details"
+          "height_px": 2664
         }
       ]
     },
@@ -47,8 +46,7 @@
           "detail_uid": "01196-002",
           "title": "form 01",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -56,8 +54,7 @@
           "detail_uid": "01196-003",
           "title": "form 02",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -65,8 +62,7 @@
           "detail_uid": "01196-004",
           "title": "form 03",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -74,8 +70,7 @@
           "detail_uid": "01196-005",
           "title": "form 04",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -83,8 +78,7 @@
           "detail_uid": "01196-006",
           "title": "form 05",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -92,8 +86,7 @@
           "detail_uid": "01196-007",
           "title": "form 06",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -101,8 +94,7 @@
           "detail_uid": "01196-008",
           "title": "form 07",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -110,8 +102,7 @@
           "detail_uid": "01196-009",
           "title": "form 08",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -119,8 +110,7 @@
           "detail_uid": "01196-010",
           "title": "form 09",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -128,8 +118,7 @@
           "detail_uid": "01196-011",
           "title": "form 10",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -137,8 +126,7 @@
           "detail_uid": "01196-012",
           "title": "form 11",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -146,8 +134,7 @@
           "detail_uid": "01196-013",
           "title": "form 12",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -155,8 +142,7 @@
           "detail_uid": "01196-014",
           "title": "form 13",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -164,8 +150,7 @@
           "detail_uid": "01196-015",
           "title": "form 14",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -173,8 +158,7 @@
           "detail_uid": "01196-016",
           "title": "form 15",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -182,8 +166,7 @@
           "detail_uid": "01196-017",
           "title": "form 16",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -191,8 +174,7 @@
           "detail_uid": "01196-018",
           "title": "form 17",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -200,8 +182,7 @@
           "detail_uid": "01196-019",
           "title": "form 18",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -209,8 +190,7 @@
           "detail_uid": "01196-020",
           "title": "form 19",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -218,8 +198,7 @@
           "detail_uid": "01196-021",
           "title": "form 20",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -227,8 +206,7 @@
           "detail_uid": "01196-022",
           "title": "form 21",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -236,8 +214,7 @@
           "detail_uid": "01196-023",
           "title": "form 22",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -245,8 +222,7 @@
           "detail_uid": "01196-024",
           "title": "form 23",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -254,8 +230,7 @@
           "detail_uid": "01196-025",
           "title": "form 24",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -263,8 +238,7 @@
           "detail_uid": "01196-026",
           "title": "form 25",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -272,8 +246,7 @@
           "detail_uid": "01196-027",
           "title": "form 26",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -281,8 +254,7 @@
           "detail_uid": "01196-028",
           "title": "form 27",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -290,8 +262,7 @@
           "detail_uid": "01196-029",
           "title": "form 28",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -299,8 +270,7 @@
           "detail_uid": "01196-030",
           "title": "form 29",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -308,8 +278,7 @@
           "detail_uid": "01196-031",
           "title": "form 30",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -317,8 +286,7 @@
           "detail_uid": "01196-032",
           "title": "form 31",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -326,8 +294,7 @@
           "detail_uid": "01196-033",
           "title": "form 32",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -335,8 +302,7 @@
           "detail_uid": "01196-034",
           "title": "form 33",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -344,8 +310,7 @@
           "detail_uid": "01196-035",
           "title": "form 34",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -353,8 +318,7 @@
           "detail_uid": "01196-036",
           "title": "form 35",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -362,8 +326,7 @@
           "detail_uid": "01196-037",
           "title": "form 36",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -371,8 +334,7 @@
           "detail_uid": "01196-038",
           "title": "form 37",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -380,8 +342,7 @@
           "detail_uid": "01196-039",
           "title": "form 38",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -389,8 +350,7 @@
           "detail_uid": "01196-040",
           "title": "form 39",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -398,8 +358,7 @@
           "detail_uid": "01196-041",
           "title": "form 40",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -407,8 +366,7 @@
           "detail_uid": "01196-042",
           "title": "form 41",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -416,8 +374,7 @@
           "detail_uid": "01196-043",
           "title": "form 42",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -425,8 +382,7 @@
           "detail_uid": "01196-044",
           "title": "form 43",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -434,8 +390,7 @@
           "detail_uid": "01196-045",
           "title": "form 44",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -443,8 +398,7 @@
           "detail_uid": "01196-046",
           "title": "form 45",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -452,8 +406,7 @@
           "detail_uid": "01196-047",
           "title": "form 46",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -461,8 +414,7 @@
           "detail_uid": "01196-048",
           "title": "form 47",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -470,8 +422,7 @@
           "detail_uid": "01196-049",
           "title": "form 48",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -479,8 +430,7 @@
           "detail_uid": "01196-050",
           "title": "form 49",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -488,8 +438,7 @@
           "detail_uid": "01196-051",
           "title": "form 50",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -497,8 +446,7 @@
           "detail_uid": "01196-052",
           "title": "form 51",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -506,8 +454,7 @@
           "detail_uid": "01196-053",
           "title": "form 52",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -515,8 +462,7 @@
           "detail_uid": "01196-054",
           "title": "form 53",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -524,8 +470,7 @@
           "detail_uid": "01196-055",
           "title": "form 54",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -533,8 +478,7 @@
           "detail_uid": "01196-056",
           "title": "form 55",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -542,8 +486,7 @@
           "detail_uid": "01196-057",
           "title": "form 56",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -551,8 +494,7 @@
           "detail_uid": "01196-058",
           "title": "form 57",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -560,8 +502,7 @@
           "detail_uid": "01196-059",
           "title": "form 58",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -569,8 +510,7 @@
           "detail_uid": "01196-060",
           "title": "form 59",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -578,8 +518,7 @@
           "detail_uid": "01196-061",
           "title": "form 60",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -587,8 +526,7 @@
           "detail_uid": "01196-062",
           "title": "form 61",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -596,8 +534,7 @@
           "detail_uid": "01196-063",
           "title": "form 62",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -605,8 +542,7 @@
           "detail_uid": "01196-064",
           "title": "form 63",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01196",
@@ -614,8 +550,7 @@
           "detail_uid": "01196-065",
           "title": "form 64",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         }
       ]
     }

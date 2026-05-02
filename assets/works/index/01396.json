@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4038535fba83cb91acdce05b067488b1",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-74805e4cc3bbba94516c8db307827538",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01396",
     "count": 6
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01396-001",
           "title": "kylie wax model - iteration 3.0",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01396",
@@ -41,8 +40,7 @@
           "detail_uid": "01396-002",
           "title": "kylie wax model - iteration 3.1",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01396",
@@ -50,8 +48,7 @@
           "detail_uid": "01396-003",
           "title": "kylie wax model - iteration 3.2",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01396",
@@ -59,8 +56,7 @@
           "detail_uid": "01396-004",
           "title": "kylie wax model - iteration 3.3",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01396",
@@ -68,8 +64,7 @@
           "detail_uid": "01396-005",
           "title": "kylie wax model - iteration 3.4",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01396",
@@ -77,8 +72,7 @@
           "detail_uid": "01396-006",
           "title": "kylie wax model - iteration 3.5",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         }
       ]
     }

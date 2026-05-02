@@ -1297,7 +1297,6 @@ def main() -> None:
             "sort_order": sort_order,
             "width_px": width_px,
             "height_px": height_px,
-            "layout": "work_details",
         }
         return compact_json_object(dfm)
 

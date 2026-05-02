@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4308b0f28deeaa8bfc829a45691075b2",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-ce9e6d3b24aca183b63886309d1c8af9",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00530",
     "count": 4
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00530-001",
           "title": "body detail",
           "width_px": 3024,
-          "height_px": 4032,
-          "layout": "work_details"
+          "height_px": 4032
         },
         {
           "work_id": "00530",
@@ -41,8 +40,7 @@
           "detail_uid": "00530-002",
           "title": "body detail",
           "width_px": 3024,
-          "height_px": 4032,
-          "layout": "work_details"
+          "height_px": 4032
         },
         {
           "work_id": "00530",
@@ -50,8 +48,7 @@
           "detail_uid": "00530-003",
           "title": "body detail",
           "width_px": 4032,
-          "height_px": 3024,
-          "layout": "work_details"
+          "height_px": 3024
         },
         {
           "work_id": "00530",
@@ -59,8 +56,7 @@
           "detail_uid": "00530-004",
           "title": "body detail",
           "width_px": 4000,
-          "height_px": 2667,
-          "layout": "work_details"
+          "height_px": 2667
         }
       ]
     }

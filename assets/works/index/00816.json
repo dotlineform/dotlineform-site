@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b78418414545c546c1b95552946df562",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-f52e7ff275c1119a84c639a28515bc60",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00816",
     "count": 5
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00816-001",
           "title": "colours kylie.1",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00816",
@@ -41,8 +40,7 @@
           "detail_uid": "00816-002",
           "title": "colours kylie.2",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00816",
@@ -50,8 +48,7 @@
           "detail_uid": "00816-003",
           "title": "colours kylie.3",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00816",
@@ -59,8 +56,7 @@
           "detail_uid": "00816-004",
           "title": "colours kylie.4",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00816",
@@ -68,8 +64,7 @@
           "detail_uid": "00816-005",
           "title": "colours kylie.5",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         }
       ]
     }

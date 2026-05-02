@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b49d75a62eccaeed4c1b610737df0f01",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-f628c94ae884ce82eee3b282d7ccb0c7",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01054",
     "count": 3
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01054-001",
           "title": "flowers 3 - detail 1",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01054",
@@ -41,8 +40,7 @@
           "detail_uid": "01054-002",
           "title": "flowers 3 - detail 2",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01054",
@@ -50,8 +48,7 @@
           "detail_uid": "01054-003",
           "title": "flowers 3 - detail 3",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         }
       ]
     }

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-152fe8b87cb348dc04869b11bc6b8556",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-3454762545114d353f026427656daf56",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01870",
     "count": 4
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01870-001",
           "title": "tulips 2 - detail 1",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01870",
@@ -41,8 +40,7 @@
           "detail_uid": "01870-002",
           "title": "tulips 2 - detail 2",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01870",
@@ -50,8 +48,7 @@
           "detail_uid": "01870-003",
           "title": "tulips 2 - detail 3",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01870",
@@ -59,8 +56,7 @@
           "detail_uid": "01870-004",
           "title": "tulips 2 - detail 4",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         }
       ]
     }

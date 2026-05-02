@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-5bceb7603ae4b2ef57e65048ddebdaf4",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-9ddb52c51fbbd1b86052184f4493a6a1",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01051",
     "count": 6
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01051-001",
           "title": "fireworks particles version - detail 1",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "01051",
@@ -41,8 +40,7 @@
           "detail_uid": "01051-002",
           "title": "fireworks particles version - detail 2",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "01051",
@@ -50,8 +48,7 @@
           "detail_uid": "01051-003",
           "title": "fireworks particles version - detail 3",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "01051",
@@ -59,8 +56,7 @@
           "detail_uid": "01051-004",
           "title": "fireworks particles version - detail 4",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "01051",
@@ -68,8 +64,7 @@
           "detail_uid": "01051-005",
           "title": "fireworks particles version - detail 5",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "01051",
@@ -77,8 +72,7 @@
           "detail_uid": "01051-006",
           "title": "fireworks particles version - detail 6",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         }
       ]
     }

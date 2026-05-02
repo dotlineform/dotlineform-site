@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-3510052722f689d9d8e0fe8c89a2ca50",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-6dfd9e9ea8f9fd6328b47f70a859c374",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00481",
     "count": 13
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00481-001",
           "title": "mm negative future .1",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -41,8 +40,7 @@
           "detail_uid": "00481-002",
           "title": "mm negative future .2",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -50,8 +48,7 @@
           "detail_uid": "00481-003",
           "title": "mm negative future .3",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -59,8 +56,7 @@
           "detail_uid": "00481-004",
           "title": "mm negative future .4.1",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -68,8 +64,7 @@
           "detail_uid": "00481-005",
           "title": "mm negative future .4.2",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -77,8 +72,7 @@
           "detail_uid": "00481-006",
           "title": "mm negative future .4.3",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -86,8 +80,7 @@
           "detail_uid": "00481-007",
           "title": "mm negative future .4.4.1",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -95,8 +88,7 @@
           "detail_uid": "00481-008",
           "title": "mm negative future .4.4.2",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -104,8 +96,7 @@
           "detail_uid": "00481-009",
           "title": "mm negative future .4.4.3",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -113,8 +104,7 @@
           "detail_uid": "00481-010",
           "title": "mm negative future .4.4.4",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -122,8 +112,7 @@
           "detail_uid": "00481-011",
           "title": "mm negative future .4.4",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -131,8 +120,7 @@
           "detail_uid": "00481-012",
           "title": "mm negative future .4",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00481",
@@ -140,8 +128,7 @@
           "detail_uid": "00481-013",
           "title": "versions II (mm)",
           "width_px": 5906,
-          "height_px": 11811,
-          "layout": "work_details"
+          "height_px": 11811
         }
       ]
     }

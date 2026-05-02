@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-498832f1d8465c422a60a99ff96003c4",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-f5b96081cf765c1209e5e6385f68cab3",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01524",
     "count": 3
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01524-001",
           "title": "pi molecule grid - detail 1",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01524",
@@ -41,8 +40,7 @@
           "detail_uid": "01524-002",
           "title": "pi molecule grid - detail 2",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01524",
@@ -50,8 +48,7 @@
           "detail_uid": "01524-003",
           "title": "pi molecule grid - detail 3",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         }
       ]
     }

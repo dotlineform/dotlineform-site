@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-84a0bd0a79c21a6a380348d887766697",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-01f395e2bdb51ce180f4e88cabdc7392",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01398",
     "count": 8
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01398-001",
           "title": "kylie wax model - iteration 5.0",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -41,8 +40,7 @@
           "detail_uid": "01398-002",
           "title": "kylie wax model - iteration 5.1",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -50,8 +48,7 @@
           "detail_uid": "01398-003",
           "title": "kylie wax model - iteration 5.2",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -59,8 +56,7 @@
           "detail_uid": "01398-004",
           "title": "kylie wax model - iteration 5.3",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -68,8 +64,7 @@
           "detail_uid": "01398-005",
           "title": "kylie wax model - iteration 5.4",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -77,8 +72,7 @@
           "detail_uid": "01398-006",
           "title": "kylie wax model - iteration 5.5",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -86,8 +80,7 @@
           "detail_uid": "01398-007",
           "title": "kylie wax model - iteration 5.6",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         },
         {
           "work_id": "01398",
@@ -95,8 +88,7 @@
           "detail_uid": "01398-008",
           "title": "kylie wax model - iteration 5.7",
           "width_px": 4724,
-          "height_px": 4724,
-          "layout": "work_details"
+          "height_px": 4724
         }
       ]
     }

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-32f3ab11d2a9985fa3e7fdcd84a8fcfd",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-8ca074fc69f45633c7b7a3ccb9c1c248",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00166",
     "count": 19
   },
@@ -33,8 +33,7 @@
           "detail_uid": "00166-001",
           "title": "nerve (formaldehyde form) - front cover",
           "width_px": 1859,
-          "height_px": 2676,
-          "layout": "work_details"
+          "height_px": 2676
         },
         {
           "work_id": "00166",
@@ -42,8 +41,7 @@
           "detail_uid": "00166-002",
           "title": "nerve (formaldehyde form) - 1",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -51,8 +49,7 @@
           "detail_uid": "00166-003",
           "title": "nerve (formaldehyde form) - 2",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -60,8 +57,7 @@
           "detail_uid": "00166-004",
           "title": "nerve (formaldehyde form) - 3",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -69,8 +65,7 @@
           "detail_uid": "00166-005",
           "title": "nerve (formaldehyde form) - 4",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -78,8 +73,7 @@
           "detail_uid": "00166-006",
           "title": "nerve (formaldehyde form) - 5",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -87,8 +81,7 @@
           "detail_uid": "00166-007",
           "title": "nerve (formaldehyde form) - 6",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -96,8 +89,7 @@
           "detail_uid": "00166-008",
           "title": "nerve (formaldehyde form) - 7",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -105,8 +97,7 @@
           "detail_uid": "00166-009",
           "title": "nerve (formaldehyde form) - 8",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -114,8 +105,7 @@
           "detail_uid": "00166-010",
           "title": "nerve (formaldehyde form) - 9",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -123,8 +113,7 @@
           "detail_uid": "00166-011",
           "title": "nerve (formaldehyde form) - 10",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -132,8 +121,7 @@
           "detail_uid": "00166-012",
           "title": "nerve (formaldehyde form) - 11",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -141,8 +129,7 @@
           "detail_uid": "00166-013",
           "title": "nerve (formaldehyde form) - 12",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -150,8 +137,7 @@
           "detail_uid": "00166-014",
           "title": "nerve (formaldehyde form) - 13",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -159,8 +145,7 @@
           "detail_uid": "00166-015",
           "title": "nerve (formaldehyde form) - 14",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -168,8 +153,7 @@
           "detail_uid": "00166-016",
           "title": "nerve (formaldehyde form) - 15",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -177,8 +161,7 @@
           "detail_uid": "00166-017",
           "title": "nerve (formaldehyde form) - 16",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -186,8 +169,7 @@
           "detail_uid": "00166-018",
           "title": "nerve (formaldehyde form) - 17",
           "width_px": 3566,
-          "height_px": 2594,
-          "layout": "work_details"
+          "height_px": 2594
         },
         {
           "work_id": "00166",
@@ -195,8 +177,7 @@
           "detail_uid": "00166-019",
           "title": "nerve (formaldehyde form) - back cover",
           "width_px": 1828,
-          "height_px": 2624,
-          "layout": "work_details"
+          "height_px": 2624
         }
       ]
     }

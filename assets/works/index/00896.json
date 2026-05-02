@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-5e2072bcd95b4ae25160bc80f4c0c46a",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-4b89e833f227468badb0980eae3bd820",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00896",
     "count": 6
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00896-001",
           "title": "doll still life 1 (version 1)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00896",
@@ -41,8 +40,7 @@
           "detail_uid": "00896-002",
           "title": "doll still life 1 (version 2)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00896",
@@ -50,8 +48,7 @@
           "detail_uid": "00896-003",
           "title": "doll still life 1 (version 3)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00896",
@@ -59,8 +56,7 @@
           "detail_uid": "00896-004",
           "title": "doll still life 1 (version 4)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00896",
@@ -68,8 +64,7 @@
           "detail_uid": "00896-005",
           "title": "doll still life 1 (version 5)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00896",
@@ -77,8 +72,7 @@
           "detail_uid": "00896-006",
           "title": "doll still life 1 (version 6)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         }
       ]
     }

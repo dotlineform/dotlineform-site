@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-2149e86d096d6ee5094920babe6dba94",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-b30a6dddc04af1bed7cd86c3081534b7",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00893",
     "count": 8
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00893-001",
           "title": "doll moiré (version 1)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00893",
@@ -41,8 +40,7 @@
           "detail_uid": "00893-002",
           "title": "doll moiré (version 2)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00893",
@@ -50,8 +48,7 @@
           "detail_uid": "00893-003",
           "title": "doll moiré (version 3)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00893",
@@ -59,8 +56,7 @@
           "detail_uid": "00893-004",
           "title": "doll moiré (version 4)",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00893",
@@ -68,8 +64,7 @@
           "detail_uid": "00893-005",
           "title": "doll moiré (version 4.1)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00893",
@@ -77,8 +72,7 @@
           "detail_uid": "00893-006",
           "title": "doll moiré (version 4.2)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00893",
@@ -86,8 +80,7 @@
           "detail_uid": "00893-007",
           "title": "doll moiré (version 4.3)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00893",
@@ -95,8 +88,7 @@
           "detail_uid": "00893-008",
           "title": "doll moiré (version 4.4)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         }
       ]
     }

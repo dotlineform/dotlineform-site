@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-7853cc4d584427d4e0bf5668acedf636",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-17ea7e9e5dd249b039e3ead19984b0d6",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00875",
     "count": 4
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00875-001",
           "title": "doll cell - 2007-04-03 - 14-17-59",
           "width_px": 3780,
-          "height_px": 2835,
-          "layout": "work_details"
+          "height_px": 2835
         },
         {
           "work_id": "00875",
@@ -41,8 +40,7 @@
           "detail_uid": "00875-002",
           "title": "doll cell - 2007-04-08 - 22-13-45",
           "width_px": 3780,
-          "height_px": 2837,
-          "layout": "work_details"
+          "height_px": 2837
         },
         {
           "work_id": "00875",
@@ -50,8 +48,7 @@
           "detail_uid": "00875-003",
           "title": "doll cell - 2007-04-08 - 22-14-01",
           "width_px": 3780,
-          "height_px": 2837,
-          "layout": "work_details"
+          "height_px": 2837
         },
         {
           "work_id": "00875",
@@ -59,8 +56,7 @@
           "detail_uid": "00875-004",
           "title": "doll cell - 2007-04-08 - 22-14-13",
           "width_px": 3780,
-          "height_px": 2837,
-          "layout": "work_details"
+          "height_px": 2837
         }
       ]
     }

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-83f9ae4536a5d22e73ba91ad02fb0d0c",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-9546ed55abc7e5ac4c221caa47ce4499",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01525",
     "count": 3
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01525-001",
           "title": "pi circle - detail 1",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01525",
@@ -41,8 +40,7 @@
           "detail_uid": "01525-002",
           "title": "pi circle - detail 2",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01525",
@@ -50,8 +48,7 @@
           "detail_uid": "01525-003",
           "title": "pi circle - detail 3",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         }
       ]
     }

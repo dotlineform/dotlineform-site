@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8195b7453ba3d51bdc5077161b37258e",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-c12dd8886bcac527cf2a5986ff3760d1",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01197",
     "count": 8
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01197-001",
           "title": "form paths 1-8",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -41,8 +40,7 @@
           "detail_uid": "01197-002",
           "title": "form paths 9-16",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -50,8 +48,7 @@
           "detail_uid": "01197-003",
           "title": "form paths 17-24",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -59,8 +56,7 @@
           "detail_uid": "01197-004",
           "title": "form paths 25-32",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -68,8 +64,7 @@
           "detail_uid": "01197-005",
           "title": "form paths 33-40",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -77,8 +72,7 @@
           "detail_uid": "01197-006",
           "title": "form paths 41-48",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -86,8 +80,7 @@
           "detail_uid": "01197-007",
           "title": "form paths 49-56",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01197",
@@ -95,8 +88,7 @@
           "detail_uid": "01197-008",
           "title": "form paths 57-64",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         }
       ]
     }

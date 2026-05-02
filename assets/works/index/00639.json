@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-29c6cedc17917ee1e5b3a2a277c9af38",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-f6c2dd562d838137120e2937aa0ff027",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00639",
     "count": 48
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00639-001",
           "title": "16 forms - source photo",
           "width_px": 4453,
-          "height_px": 4453,
-          "layout": "work_details"
+          "height_px": 4453
         }
       ]
     },
@@ -47,8 +46,7 @@
           "detail_uid": "00639-002",
           "title": "form 1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -56,8 +54,7 @@
           "detail_uid": "00639-003",
           "title": "form 2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -65,8 +62,7 @@
           "detail_uid": "00639-004",
           "title": "form 3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -74,8 +70,7 @@
           "detail_uid": "00639-005",
           "title": "form 4",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -83,8 +78,7 @@
           "detail_uid": "00639-006",
           "title": "form 5",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -92,8 +86,7 @@
           "detail_uid": "00639-007",
           "title": "form 6",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -101,8 +94,7 @@
           "detail_uid": "00639-008",
           "title": "form 7",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -110,8 +102,7 @@
           "detail_uid": "00639-009",
           "title": "form 8",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -119,8 +110,7 @@
           "detail_uid": "00639-010",
           "title": "form 9",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -128,8 +118,7 @@
           "detail_uid": "00639-011",
           "title": "form 10",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -137,8 +126,7 @@
           "detail_uid": "00639-012",
           "title": "form 11",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -146,8 +134,7 @@
           "detail_uid": "00639-013",
           "title": "form 12",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -155,8 +142,7 @@
           "detail_uid": "00639-014",
           "title": "form 13",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -164,8 +150,7 @@
           "detail_uid": "00639-015",
           "title": "form 14",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -173,8 +158,7 @@
           "detail_uid": "00639-016",
           "title": "form 15",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -182,8 +166,7 @@
           "detail_uid": "00639-017",
           "title": "form 16",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -191,8 +174,7 @@
           "detail_uid": "00639-018",
           "title": "form 17",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -200,8 +182,7 @@
           "detail_uid": "00639-019",
           "title": "form 18",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -209,8 +190,7 @@
           "detail_uid": "00639-020",
           "title": "form 19",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -218,8 +198,7 @@
           "detail_uid": "00639-021",
           "title": "form 20",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -227,8 +206,7 @@
           "detail_uid": "00639-022",
           "title": "form 21",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -236,8 +214,7 @@
           "detail_uid": "00639-023",
           "title": "form 22",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -245,8 +222,7 @@
           "detail_uid": "00639-024",
           "title": "form 23",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -254,8 +230,7 @@
           "detail_uid": "00639-025",
           "title": "form 24",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -263,8 +238,7 @@
           "detail_uid": "00639-026",
           "title": "form 25",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -272,8 +246,7 @@
           "detail_uid": "00639-027",
           "title": "form 26",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -281,8 +254,7 @@
           "detail_uid": "00639-028",
           "title": "form 27",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -290,8 +262,7 @@
           "detail_uid": "00639-029",
           "title": "form 28",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -299,8 +270,7 @@
           "detail_uid": "00639-030",
           "title": "form 29",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -308,8 +278,7 @@
           "detail_uid": "00639-031",
           "title": "form 30",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00639",
@@ -317,8 +286,7 @@
           "detail_uid": "00639-032",
           "title": "form 31",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         }
       ]
     },
@@ -332,8 +300,7 @@
           "detail_uid": "00639-033",
           "title": "transformed form 1",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -341,8 +308,7 @@
           "detail_uid": "00639-034",
           "title": "transformed form 2",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -350,8 +316,7 @@
           "detail_uid": "00639-035",
           "title": "transformed form 3",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -359,8 +324,7 @@
           "detail_uid": "00639-036",
           "title": "transformed form 4",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -368,8 +332,7 @@
           "detail_uid": "00639-037",
           "title": "transformed form 5",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -377,8 +340,7 @@
           "detail_uid": "00639-038",
           "title": "transformed form 6",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -386,8 +348,7 @@
           "detail_uid": "00639-039",
           "title": "transformed form 7",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -395,8 +356,7 @@
           "detail_uid": "00639-040",
           "title": "transformed form 8",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -404,8 +364,7 @@
           "detail_uid": "00639-041",
           "title": "transformed form 9",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -413,8 +372,7 @@
           "detail_uid": "00639-042",
           "title": "transformed form 10",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -422,8 +380,7 @@
           "detail_uid": "00639-043",
           "title": "transformed form 11",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -431,8 +388,7 @@
           "detail_uid": "00639-044",
           "title": "transformed form 12",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -440,8 +396,7 @@
           "detail_uid": "00639-045",
           "title": "transformed form 13",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -449,8 +404,7 @@
           "detail_uid": "00639-046",
           "title": "transformed form 14",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -458,8 +412,7 @@
           "detail_uid": "00639-047",
           "title": "transformed form 15",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         },
         {
           "work_id": "00639",
@@ -467,8 +420,7 @@
           "detail_uid": "00639-048",
           "title": "transformed form 16",
           "width_px": 1600,
-          "height_px": 1600,
-          "layout": "work_details"
+          "height_px": 1600
         }
       ]
     }

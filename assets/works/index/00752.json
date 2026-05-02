@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-a70ff76c3845db472365d4789c549087",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-1e04eff51841984b267a6bbda6988b86",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00752",
     "count": 4
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00752-005",
           "title": "all the little cracks again - detail 1",
           "width_px": 3000,
-          "height_px": 3307,
-          "layout": "work_details"
+          "height_px": 3307
         },
         {
           "work_id": "00752",
@@ -41,8 +40,7 @@
           "detail_uid": "00752-006",
           "title": "all the little cracks again - detail 2",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "00752",
@@ -50,8 +48,7 @@
           "detail_uid": "00752-007",
           "title": "all the little cracks again - detail 3",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "00752",
@@ -59,8 +56,7 @@
           "detail_uid": "00752-008",
           "title": "all the little cracks again - detail 4",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         }
       ]
     }

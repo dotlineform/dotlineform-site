@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-02] Removed work-detail route layout from per-work JSON
+
+**Status:** implemented
+
+**Area:** catalogue runtime payload
+
+**Summary:**
+Removed the redundant `layout: work_details` field from nested detail records in generated `assets/works/index/<work_id>.json` payloads.
+
+**Reason:**
+Work and work-detail route layouts are fixed by Jekyll collection defaults rather than per-record runtime JSON. Keeping `layout` in nested detail records implied a choice that does not exist and added unnecessary generated payload weight.
+
+**Effect:**
+Per-work JSON detail entries now carry only the fields used by public work/detail runtime consumers: identity, title, and dimensions. Section metadata remains section-level, and route layout remains configuration-owned.
+
+**Affected files/docs:**
+
+- `scripts/generate_work_pages.py`
+- `assets/works/index/*.json`
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-02] Verified catalogue media-section migration and runtime output
 
 **Status:** implemented

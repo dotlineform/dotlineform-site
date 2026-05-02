@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-1ae565182e52aa3d8104b96b05ffabb5",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-ca38a71d61205ba0d0245b4eca44cb91",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00753",
     "count": 3
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00753-001",
           "title": "assembly code 1 (detail 1)",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00753",
@@ -41,8 +40,7 @@
           "detail_uid": "00753-002",
           "title": "assembly code 1 (detail 2)",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00753",
@@ -50,8 +48,7 @@
           "detail_uid": "00753-003",
           "title": "assembly code 1 (detail 3)",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         }
       ]
     }

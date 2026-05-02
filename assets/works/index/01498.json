@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-effd825572900def3307dbb8f6c3cdc8",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-4d267f5210290f06dce1b13db2c35302",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01498",
     "count": 4
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01498-001",
           "title": "k particles - detail 1",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01498",
@@ -41,8 +40,7 @@
           "detail_uid": "01498-002",
           "title": "k particles - detail 2",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01498",
@@ -50,8 +48,7 @@
           "detail_uid": "01498-003",
           "title": "k particles - detail 3",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01498",
@@ -59,8 +56,7 @@
           "detail_uid": "01498-004",
           "title": "k particles - detail 4",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         }
       ]
     }

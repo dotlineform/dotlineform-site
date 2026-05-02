@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-798284e903f97102fcfb029232b4c361",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-f4722cd83fc91d141aa9fb6d72ae81b2",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00464",
     "count": 60
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00464-001",
           "title": "memories of the forest 1",
           "width_px": 8268,
-          "height_px": 8268,
-          "layout": "work_details"
+          "height_px": 8268
         },
         {
           "work_id": "00464",
@@ -41,8 +40,7 @@
           "detail_uid": "00464-002",
           "title": "memories of the forest 2",
           "width_px": 8268,
-          "height_px": 8268,
-          "layout": "work_details"
+          "height_px": 8268
         },
         {
           "work_id": "00464",
@@ -50,8 +48,7 @@
           "detail_uid": "00464-003",
           "title": "memories of the forest 3",
           "width_px": 8268,
-          "height_px": 8268,
-          "layout": "work_details"
+          "height_px": 8268
         },
         {
           "work_id": "00464",
@@ -59,8 +56,7 @@
           "detail_uid": "00464-004",
           "title": "3 moments",
           "width_px": 4000,
-          "height_px": 4000,
-          "layout": "work_details"
+          "height_px": 4000
         }
       ]
     },
@@ -74,8 +70,7 @@
           "detail_uid": "00464-005",
           "title": "memory - 1.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -83,8 +78,7 @@
           "detail_uid": "00464-006",
           "title": "memory - 1.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -92,8 +86,7 @@
           "detail_uid": "00464-007",
           "title": "memory - 1.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -101,8 +94,7 @@
           "detail_uid": "00464-008",
           "title": "memory - 2.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -110,8 +102,7 @@
           "detail_uid": "00464-009",
           "title": "memory - 2.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -119,8 +110,7 @@
           "detail_uid": "00464-010",
           "title": "memory - 2.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -128,8 +118,7 @@
           "detail_uid": "00464-011",
           "title": "memory - 3.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -137,8 +126,7 @@
           "detail_uid": "00464-012",
           "title": "memory - 3.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -146,8 +134,7 @@
           "detail_uid": "00464-013",
           "title": "memory - 3.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -155,8 +142,7 @@
           "detail_uid": "00464-014",
           "title": "memory - 4.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -164,8 +150,7 @@
           "detail_uid": "00464-015",
           "title": "memory - 4.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -173,8 +158,7 @@
           "detail_uid": "00464-016",
           "title": "memory - 4.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -182,8 +166,7 @@
           "detail_uid": "00464-017",
           "title": "memory - 5.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -191,8 +174,7 @@
           "detail_uid": "00464-018",
           "title": "memory - 5.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -200,8 +182,7 @@
           "detail_uid": "00464-019",
           "title": "memory - 5.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -209,8 +190,7 @@
           "detail_uid": "00464-020",
           "title": "memory - 6.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -218,8 +198,7 @@
           "detail_uid": "00464-021",
           "title": "memory - 6.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -227,8 +206,7 @@
           "detail_uid": "00464-022",
           "title": "memory - 6.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -236,8 +214,7 @@
           "detail_uid": "00464-023",
           "title": "memory - 7.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -245,8 +222,7 @@
           "detail_uid": "00464-024",
           "title": "memory - 7.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -254,8 +230,7 @@
           "detail_uid": "00464-025",
           "title": "memory - 7.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -263,8 +238,7 @@
           "detail_uid": "00464-026",
           "title": "memory - 8.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -272,8 +246,7 @@
           "detail_uid": "00464-027",
           "title": "memory - 8.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -281,8 +254,7 @@
           "detail_uid": "00464-028",
           "title": "memory - 8.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -290,8 +262,7 @@
           "detail_uid": "00464-029",
           "title": "memory - 9.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -299,8 +270,7 @@
           "detail_uid": "00464-030",
           "title": "memory - 9.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -308,8 +278,7 @@
           "detail_uid": "00464-031",
           "title": "memory - 9.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -317,8 +286,7 @@
           "detail_uid": "00464-032",
           "title": "memory - 10.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -326,8 +294,7 @@
           "detail_uid": "00464-033",
           "title": "memory - 10.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -335,8 +302,7 @@
           "detail_uid": "00464-034",
           "title": "memory - 10.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -344,8 +310,7 @@
           "detail_uid": "00464-035",
           "title": "memory - 11.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -353,8 +318,7 @@
           "detail_uid": "00464-036",
           "title": "memory - 11.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -362,8 +326,7 @@
           "detail_uid": "00464-037",
           "title": "memory - 11.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -371,8 +334,7 @@
           "detail_uid": "00464-038",
           "title": "memory - 12.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -380,8 +342,7 @@
           "detail_uid": "00464-039",
           "title": "memory - 12.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -389,8 +350,7 @@
           "detail_uid": "00464-040",
           "title": "memory - 12.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -398,8 +358,7 @@
           "detail_uid": "00464-041",
           "title": "memory - 13.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -407,8 +366,7 @@
           "detail_uid": "00464-042",
           "title": "memory - 13.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -416,8 +374,7 @@
           "detail_uid": "00464-043",
           "title": "memory - 13.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -425,8 +382,7 @@
           "detail_uid": "00464-044",
           "title": "memory - 14.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -434,8 +390,7 @@
           "detail_uid": "00464-045",
           "title": "memory - 14.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -443,8 +398,7 @@
           "detail_uid": "00464-046",
           "title": "memory - 14.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -452,8 +406,7 @@
           "detail_uid": "00464-047",
           "title": "memory - 15.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -461,8 +414,7 @@
           "detail_uid": "00464-048",
           "title": "memory - 15.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -470,8 +422,7 @@
           "detail_uid": "00464-049",
           "title": "memory - 15.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -479,8 +430,7 @@
           "detail_uid": "00464-050",
           "title": "memory - 16.1",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -488,8 +438,7 @@
           "detail_uid": "00464-051",
           "title": "memory - 16.2",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         },
         {
           "work_id": "00464",
@@ -497,8 +446,7 @@
           "detail_uid": "00464-052",
           "title": "memory - 16.3",
           "width_px": 2362,
-          "height_px": 2362,
-          "layout": "work_details"
+          "height_px": 2362
         }
       ]
     },
@@ -512,8 +460,7 @@
           "detail_uid": "00464-053",
           "title": "memories 1-6",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -521,8 +468,7 @@
           "detail_uid": "00464-054",
           "title": "memories 7-12",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -530,8 +476,7 @@
           "detail_uid": "00464-055",
           "title": "memories 13-18",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -539,8 +484,7 @@
           "detail_uid": "00464-056",
           "title": "memories 19-24",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -548,8 +492,7 @@
           "detail_uid": "00464-057",
           "title": "memories 25-30",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -557,8 +500,7 @@
           "detail_uid": "00464-058",
           "title": "memories 31-36",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -566,8 +508,7 @@
           "detail_uid": "00464-059",
           "title": "memories 37-42",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "00464",
@@ -575,8 +516,7 @@
           "detail_uid": "00464-060",
           "title": "memories 43-48",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         }
       ]
     }

@@ -380,7 +380,7 @@ Current content families:
 - canonical work metadata
 - rendered prose as optional `content_html`
 - `sections[]`
-- ordered detail records grouped by section
+- ordered detail records grouped by section; nested detail records carry detail identity, title, and dimensions only, not route layout metadata
 
 Current site mapping:
 

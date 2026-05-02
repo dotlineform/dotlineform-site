@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4081e53eacfd5d0716b094ff5bfdc569",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-6900fbfe2900295526cdbf9db87f2211",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01003",
     "count": 3
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01003-001",
           "title": "dots (second normal form) [detail 1]",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01003",
@@ -41,8 +40,7 @@
           "detail_uid": "01003-002",
           "title": "dots (second normal form) [detail 2]",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         },
         {
           "work_id": "01003",
@@ -50,8 +48,7 @@
           "detail_uid": "01003-003",
           "title": "dots (second normal form) [detail 3]",
           "width_px": 5906,
-          "height_px": 5906,
-          "layout": "work_details"
+          "height_px": 5906
         }
       ]
     }

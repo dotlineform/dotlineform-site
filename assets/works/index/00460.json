@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-d0e14767962897dfe9019fa25e90ca38",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-304736b59ef9fe60d1771c7d3165862d",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00460",
     "count": 20
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00460-001",
           "title": "molecules (positive)",
           "width_px": 9000,
-          "height_px": 9000,
-          "layout": "work_details"
+          "height_px": 9000
         },
         {
           "work_id": "00460",
@@ -41,8 +40,7 @@
           "detail_uid": "00460-002",
           "title": "molecules (negative)",
           "width_px": 9000,
-          "height_px": 9000,
-          "layout": "work_details"
+          "height_px": 9000
         },
         {
           "work_id": "00460",
@@ -50,8 +48,7 @@
           "detail_uid": "00460-003",
           "title": "molecules mist (positive)",
           "width_px": 9000,
-          "height_px": 9000,
-          "layout": "work_details"
+          "height_px": 9000
         },
         {
           "work_id": "00460",
@@ -59,8 +56,7 @@
           "detail_uid": "00460-004",
           "title": "molecules mist (negative)",
           "width_px": 9000,
-          "height_px": 9000,
-          "layout": "work_details"
+          "height_px": 9000
         }
       ]
     },
@@ -74,8 +70,7 @@
           "detail_uid": "00460-005",
           "title": "molecules (detail 1)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -83,8 +78,7 @@
           "detail_uid": "00460-006",
           "title": "molecules (detail 2)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -92,8 +86,7 @@
           "detail_uid": "00460-007",
           "title": "molecules (detail 3)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -101,8 +94,7 @@
           "detail_uid": "00460-008",
           "title": "molecules (detail 4)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -110,8 +102,7 @@
           "detail_uid": "00460-009",
           "title": "molecules (detail 5)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -119,8 +110,7 @@
           "detail_uid": "00460-010",
           "title": "molecules (detail 6)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -128,8 +118,7 @@
           "detail_uid": "00460-011",
           "title": "molecules (detail 7)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -137,8 +126,7 @@
           "detail_uid": "00460-012",
           "title": "molecules (detail 8)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -146,8 +134,7 @@
           "detail_uid": "00460-013",
           "title": "molecules (detail 9)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -155,8 +142,7 @@
           "detail_uid": "00460-014",
           "title": "molecules (detail 10)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -164,8 +150,7 @@
           "detail_uid": "00460-015",
           "title": "molecules (detail 11)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -173,8 +158,7 @@
           "detail_uid": "00460-016",
           "title": "molecules (detail 12)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -182,8 +166,7 @@
           "detail_uid": "00460-017",
           "title": "molecules (detail 13)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -191,8 +174,7 @@
           "detail_uid": "00460-018",
           "title": "molecules (detail 14)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -200,8 +182,7 @@
           "detail_uid": "00460-019",
           "title": "molecules (detail 15)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00460",
@@ -209,8 +190,7 @@
           "detail_uid": "00460-020",
           "title": "molecules (detail 16)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         }
       ]
     }

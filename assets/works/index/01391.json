@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-6c6ac7faea62ed42db1ee3e569cf7898",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-402ab717b681d18505bfc20397af09d2",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01391",
     "count": 3
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01391-001",
           "title": "interior design 1 - detail 1",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01391",
@@ -41,8 +40,7 @@
           "detail_uid": "01391-002",
           "title": "interior design 1 - detail 2",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         },
         {
           "work_id": "01391",
@@ -50,8 +48,7 @@
           "detail_uid": "01391-003",
           "title": "interior design 1 - detail 3",
           "width_px": 3000,
-          "height_px": 3000,
-          "layout": "work_details"
+          "height_px": 3000
         }
       ]
     }

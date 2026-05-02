@@ -204,7 +204,7 @@ Current behavior:
 - builds work, series, work-detail, and moment artifacts from canonical source records rather than workbook-shaped row projections
 - resolves work source media from `project_folder`, optional `project_subfolder`, and `project_filename`
 - resolves work-detail source media from the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
-- writes per-work runtime detail sections with section-level `section_id`, `section_title`, and optional `sort_order`; nested detail records do not repeat those section fields
+- writes per-work runtime detail sections with section-level `section_id`, `section_title`, and optional `sort_order`; nested detail records do not repeat those section fields and do not carry route `layout`
 - writes the runtime artifacts selected by the scoped JSON build flow
 - when `--write` is used, mutates generator-updated mutable fields directly on canonical source records before source JSON write-back:
   - work `status`, `published_date`, `width_px`, `height_px`

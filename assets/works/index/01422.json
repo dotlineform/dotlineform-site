@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b919e5ba33ba2ff8d10788e7552aeb36",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-a30f366aa90228cf8d9bae1841de29dc",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01422",
     "count": 9
   },
@@ -32,8 +32,7 @@
           "detail_uid": "01422-001",
           "title": "matter - detail 1",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -41,8 +40,7 @@
           "detail_uid": "01422-002",
           "title": "matter - detail 2",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -50,8 +48,7 @@
           "detail_uid": "01422-003",
           "title": "matter - detail 3",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -59,8 +56,7 @@
           "detail_uid": "01422-004",
           "title": "matter - detail 4",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -68,8 +64,7 @@
           "detail_uid": "01422-005",
           "title": "matter - detail 5",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -77,8 +72,7 @@
           "detail_uid": "01422-006",
           "title": "matter - detail 6",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -86,8 +80,7 @@
           "detail_uid": "01422-007",
           "title": "matter - detail 7",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -95,8 +88,7 @@
           "detail_uid": "01422-008",
           "title": "matter - detail 8",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "01422",
@@ -104,8 +96,7 @@
           "detail_uid": "01422-009",
           "title": "matter - detail 9",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         }
       ]
     }

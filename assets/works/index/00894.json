@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-2f73549adb84a904e4bb3f4011729312",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-d8c5677951333b1ed138ea6f20e27ab9",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00894",
     "count": 4
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00894-001",
           "title": "doll moiré reduced (version 1)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00894",
@@ -41,8 +40,7 @@
           "detail_uid": "00894-002",
           "title": "doll moiré reduced (version 2)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00894",
@@ -50,8 +48,7 @@
           "detail_uid": "00894-003",
           "title": "doll moiré reduced (version 3)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         },
         {
           "work_id": "00894",
@@ -59,8 +56,7 @@
           "detail_uid": "00894-004",
           "title": "doll moiré reduced (version 4)",
           "width_px": 3543,
-          "height_px": 3543,
-          "layout": "work_details"
+          "height_px": 3543
         }
       ]
     }

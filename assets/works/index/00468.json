@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-6b7283c4f8b18625f9205bf0c2599be2",
-    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "version": "blake2b-d2d27dc4855d445862c70abb728480c2",
+    "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00468",
     "count": 6
   },
@@ -32,8 +32,7 @@
           "detail_uid": "00468-001",
           "title": "forest 4 - detail 1",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00468",
@@ -41,8 +40,7 @@
           "detail_uid": "00468-002",
           "title": "forest 4 - detail 2",
           "width_px": 2000,
-          "height_px": 2000,
-          "layout": "work_details"
+          "height_px": 2000
         },
         {
           "work_id": "00468",
@@ -50,8 +48,7 @@
           "detail_uid": "00468-003",
           "title": "forest 4 - detail 3",
           "width_px": 2688,
-          "height_px": 2688,
-          "layout": "work_details"
+          "height_px": 2688
         },
         {
           "work_id": "00468",
@@ -59,8 +56,7 @@
           "detail_uid": "00468-004",
           "title": "forest 4 - detail 4",
           "width_px": 2688,
-          "height_px": 2688,
-          "layout": "work_details"
+          "height_px": 2688
         },
         {
           "work_id": "00468",
@@ -68,8 +64,7 @@
           "detail_uid": "00468-005",
           "title": "forest 4 - detail 5",
           "width_px": 2084,
-          "height_px": 2084,
-          "layout": "work_details"
+          "height_px": 2084
         },
         {
           "work_id": "00468",
@@ -77,8 +72,7 @@
           "detail_uid": "00468-006",
           "title": "forest 4 - detail 6",
           "width_px": 2084,
-          "height_px": 2084,
-          "layout": "work_details"
+          "height_px": 2084
         }
       ]
     }
