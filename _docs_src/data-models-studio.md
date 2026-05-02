@@ -271,6 +271,7 @@ Current content families:
   - `added_date`
   - `last_updated`
   - optional `summary`
+  - optional `ui_status`
   - `parent_id`
   - `sort_order`
   - optional `published`
@@ -291,7 +292,7 @@ Purpose:
 Current content families:
 
 - one row per generated Studio doc
-- identity, title, added/update dates, optional `summary`, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
+- identity, title, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
 - `viewer_options` declaring `_archive` as non-loadable while leaving it visible in the normal Studio tree and keeping document-view updated dates visible
 
 Current site mapping:
@@ -313,7 +314,7 @@ Purpose:
 Current content families:
 
 - the same identity metadata as the index row
-- optional `summary` metadata when the source front matter defines it
+- optional `summary` and `ui_status` metadata when the source front matter defines them
 - rendered `content_html`
 
 Current site mapping:

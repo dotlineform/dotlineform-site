@@ -44,6 +44,7 @@ Current design:
 - separate source root so Library can grow without being folded into Studio docs
 - Library import/create defaults new docs to `published: true`, `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
 - optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
+- optional `ui_status` front matter stores a Docs Viewer status key that is carried into generated docs payloads and interpreted against scope-specific viewer config
 
 Current implementation note:
 
@@ -63,7 +64,7 @@ Purpose:
 Current content families:
 
 - one row per generated Library doc
-- identity, added/update dates, optional `summary`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
+- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
 - `viewer_options` declaring `_archive` as a non-loadable, manage-only tree root and hiding document-view updated dates
 
 Current site mapping:
@@ -81,7 +82,7 @@ Purpose:
 Current content families:
 
 - doc identity metadata
-- optional `summary` metadata when the source front matter defines it
+- optional `summary` and `ui_status` metadata when the source front matter defines them
 - rendered `content_html`
 
 Current site mapping:

@@ -32,6 +32,7 @@ DocRecord = Struct.new(
   :added_date,
   :last_updated,
   :summary,
+  :ui_status,
   :parent_id,
   :sort_order,
   :published,
@@ -145,6 +146,7 @@ class DocsDataBuilder
       last_updated = front_matter["last_updated"] ? front_matter["last_updated"].to_s : ""
       added_date = front_matter["added_date"] ? front_matter["added_date"].to_s : last_updated
       summary = normalize_summary(front_matter["summary"])
+      ui_status = normalize_ui_status(front_matter["ui_status"])
       sort_order = normalize_sort_order(front_matter["sort_order"])
       published = true
       viewable = boolean_front_matter_value(front_matter, "viewable", true)
@@ -156,6 +158,7 @@ class DocsDataBuilder
         added_date: added_date,
         last_updated: last_updated,
         summary: summary,
+        ui_status: ui_status,
         parent_id: parent_id,
         sort_order: sort_order,
         published: published,
@@ -216,6 +219,10 @@ class DocsDataBuilder
     value.to_s.gsub(/\s+/, " ").strip
   end
 
+  def normalize_ui_status(value)
+    value.to_s.strip
+  end
+
   def viewer_url_for(doc_id, anchor = nil)
     query_pairs = []
     query_pairs << "scope=#{CGI.escape(@scope_id)}" if @include_scope_param && !@scope_id.empty?
@@ -256,6 +263,7 @@ class DocsDataBuilder
       "content_url" => doc.content_url
     }
     entry["summary"] = doc.summary unless doc.summary.empty?
+    entry["ui_status"] = doc.ui_status unless doc.ui_status.empty?
     entry
   end
 
@@ -279,6 +287,7 @@ class DocsDataBuilder
       )
     }
     entry["summary"] = doc.summary unless doc.summary.empty?
+    entry["ui_status"] = doc.ui_status unless doc.ui_status.empty?
     entry
   end
 

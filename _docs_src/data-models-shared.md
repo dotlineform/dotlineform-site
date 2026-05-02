@@ -57,7 +57,14 @@ Docs-scope indexes also carry `viewer_options` for scope-level runtime behavior 
 - `show_updated_date`
   controls whether document view metadata displays the generated row's `last_updated` date
 
-Docs-scope index rows can also carry optional `summary` metadata when source front matter defines it. The field is plain text and single-paragraph in the shared management flow. Search indexes do not consume that field until a scope-specific search task explicitly promotes it.
+Docs-scope index rows can also carry optional metadata from source front matter:
+
+- `summary`
+  plain-text, single-paragraph summary used by the Docs Viewer metadata surface
+- `ui_status`
+  raw UI status key used by the Docs Viewer to resolve scope-configured status emoji
+
+Search indexes do not consume these optional fields until a scope-specific search task explicitly promotes them.
 
 ### 3. Generated per-record JSON
 

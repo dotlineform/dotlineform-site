@@ -40,7 +40,7 @@ Generated outputs:
 ## What The Builder Does
 
 - reads Markdown source docs from each configured scope source root
-- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, `parent_id`, optional `sort_order`, optional `published`, and optional `viewable`
+- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, optional `sort_order`, optional `published`, and optional `viewable`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
@@ -74,6 +74,10 @@ Generated outputs:
   generated docs index metadata for recently-added lists; legacy source docs without this field fall back to `last_updated`
 - `last_updated`
   display metadata for viewer scopes whose generated `viewer_options.show_updated_date` is not `false`, and search metadata for docs-domain search
+- `summary`
+  optional plain-text summary carried into docs-viewer index and per-doc payloads
+- `ui_status`
+  optional UI status key carried into docs-viewer index and per-doc payloads; the builder normalizes whitespace but does not validate the value against viewer config
 - `parent_id`
   empty string for a top-level doc
 - `sort_order`

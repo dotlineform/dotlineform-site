@@ -81,6 +81,8 @@ The viewer can also treat overlong emoji strings as invalid to keep the index an
 
 ### 1. Define the config contract
 
+Status: implemented.
+
 - Add a `docs_viewer.ui_statuses_by_scope` object to `assets/studio/data/studio_config.json`.
 - Define scope keys for current and planned docs-viewer scopes, starting with `studio`, `library`, and `analysis`.
 - Use stable values such as `ui_status`, `label`, and `emoji`.
@@ -88,6 +90,8 @@ The viewer can also treat overlong emoji strings as invalid to keep the index an
 - Document the config contract in [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json) or the current Docs Viewer config reference.
 
 ### 2. Carry status through docs generation
+
+Status: implemented.
 
 - Update `scripts/build_docs.rb` so `ui_status` is parsed from document front matter.
 - Include the normalized raw status value in generated docs index entries and per-doc payloads.

@@ -63,7 +63,7 @@ Purpose:
 Current content families:
 
 - one row per generated Analysis doc
-- identity, added/update dates, optional `summary`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
+- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
 - `viewer_options` using the shared docs-scope option shape
 
 Current site mapping:
@@ -79,7 +79,7 @@ Purpose:
 Current content families:
 
 - doc identity metadata
-- optional `summary` metadata when the source front matter defines it
+- optional `summary` and `ui_status` metadata when the source front matter defines them
 - rendered `content_html`
 
 Current site mapping:

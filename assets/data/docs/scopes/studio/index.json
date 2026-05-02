@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T18:58:53Z",
+  "generated_at": "2026-05-02T19:02:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1756,7 +1756,8 @@
       "viewable": true,
       "source_path": "site-request-catalogue-publication-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-publication-workflow.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-publication-workflow.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2036,7 +2037,8 @@
       "viewable": true,
       "source_path": "ui-status-emoji.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json",
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
