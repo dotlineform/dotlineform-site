@@ -5,6 +5,45 @@
   },
   "entries": [
     {
+      "id": "2026-05-02T21:41:41Z-work-save",
+      "time_utc": "2026-05-02T21:41:41Z",
+      "kind": "source_save",
+      "operation": "work.save",
+      "status": "completed",
+      "summary": "Saved 1 work source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work",
+      "scope_label": "work 00001",
+      "scope_id": "00001",
+      "affected": {
+        "works": {
+          "count": 1,
+          "sample_ids": [
+            "00001"
+          ],
+          "truncated": 0
+        },
+        "series": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
       "id": "2026-04-30T19:22:32Z-work-save",
       "time_utc": "2026-04-30T19:22:32Z",
       "kind": "source_save",
@@ -31,16 +70,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -84,16 +113,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -129,16 +148,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -182,16 +191,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -227,16 +226,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -280,16 +269,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -325,16 +304,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -378,16 +347,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -427,16 +386,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -472,16 +421,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -527,16 +466,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -572,16 +501,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -625,16 +544,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -670,16 +579,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -723,16 +622,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -768,16 +657,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -821,16 +700,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -866,16 +735,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -919,16 +778,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -964,16 +813,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1017,16 +856,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1062,16 +891,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1115,16 +934,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1160,16 +969,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1213,16 +1012,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1258,16 +1047,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1313,16 +1092,6 @@
           ],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1364,16 +1133,6 @@
           ],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1407,16 +1166,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1458,16 +1207,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1505,16 +1244,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1548,16 +1277,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1601,16 +1320,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1629,9 +1338,9 @@
       "event_label": "Saved",
       "attention_label": "rebuild pending",
       "needs_attention": true,
-      "scope_kind": "work_file",
-      "scope_label": "work file 00008:nerve",
-      "scope_id": "00008:nerve",
+      "scope_kind": "work",
+      "scope_label": "work 00008",
+      "scope_id": "00008",
       "affected": {
         "works": {
           "count": 1,
@@ -1646,18 +1355,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 1,
-          "sample_ids": [
-            "00008:nerve"
-          ],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1680,9 +1377,9 @@
       "event_label": "Saved",
       "attention_label": "rebuild pending",
       "needs_attention": true,
-      "scope_kind": "work_file",
-      "scope_label": "work file 00008:nerve",
-      "scope_id": "00008:nerve",
+      "scope_kind": "work",
+      "scope_label": "work 00001",
+      "scope_id": "00001",
       "affected": {
         "works": {
           "count": 1,
@@ -1697,18 +1394,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 1,
-          "sample_ids": [
-            "00008:nerve"
-          ],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1752,16 +1437,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -1801,12 +1476,41 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
+      "id": "2026-04-22T21:33:34Z-work-link-save",
+      "time_utc": "2026-04-22T21:33:34Z",
+      "kind": "source_save",
+      "operation": "work-link.save",
+      "status": "completed",
+      "summary": "Saved 1 work link source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work",
+      "scope_label": "work 00457",
+      "scope_id": "00457",
+      "affected": {
+        "works": {
+          "count": 1,
+          "sample_ids": [
+            "00457"
+          ],
+          "truncated": 0
+        },
+        "series": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
         },
-        "work_links": {
+        "work_details": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1829,9 +1533,9 @@
       "event_label": "Saved",
       "attention_label": "rebuild pending",
       "needs_attention": true,
-      "scope_kind": "work_link",
-      "scope_label": "work link 00457:bandcamp",
-      "scope_id": "00457:bandcamp",
+      "scope_kind": "work",
+      "scope_label": "work 00457",
+      "scope_id": "00457",
       "affected": {
         "works": {
           "count": 1,
@@ -1846,120 +1550,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 1,
-          "sample_ids": [
-            "00457:bandcamp"
-          ],
-          "truncated": 0
-        },
-        "moments": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-22T21:33:34Z-work-link-save",
-      "time_utc": "2026-04-22T21:33:34Z",
-      "kind": "source_save",
-      "operation": "work-link.save",
-      "status": "completed",
-      "summary": "Saved 1 work link source record.",
-      "event_label": "Saved",
-      "attention_label": "rebuild pending",
-      "needs_attention": true,
-      "scope_kind": "work_link",
-      "scope_label": "work link 00457:bandcamp",
-      "scope_id": "00457:bandcamp",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00457"
-          ],
-          "truncated": 0
-        },
-        "series": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 1,
-          "sample_ids": [
-            "00457:bandcamp"
-          ],
-          "truncated": 0
-        },
-        "moments": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-22T21:33:34Z-work-file-save",
-      "time_utc": "2026-04-22T21:33:34Z",
-      "kind": "source_save",
-      "operation": "work-file.save",
-      "status": "completed",
-      "summary": "Saved 1 work file source record.",
-      "event_label": "Saved",
-      "attention_label": "rebuild pending",
-      "needs_attention": true,
-      "scope_kind": "work_file",
-      "scope_label": "work file 00008:nerve",
-      "scope_id": "00008:nerve",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00008"
-          ],
-          "truncated": 0
-        },
-        "series": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 1,
-          "sample_ids": [
-            "00008:nerve"
-          ],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -1982,9 +1572,9 @@
       "event_label": "Saved",
       "attention_label": "rebuild pending",
       "needs_attention": true,
-      "scope_kind": "work_file",
-      "scope_label": "work file 00008:nerve",
-      "scope_id": "00008:nerve",
+      "scope_kind": "work",
+      "scope_label": "work 00008",
+      "scope_id": "00008",
       "affected": {
         "works": {
           "count": 1,
@@ -2003,14 +1593,41 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
+      "id": "2026-04-22T21:33:34Z-work-file-save",
+      "time_utc": "2026-04-22T21:33:34Z",
+      "kind": "source_save",
+      "operation": "work-file.save",
+      "status": "completed",
+      "summary": "Saved 1 work file source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work",
+      "scope_label": "work 00008",
+      "scope_id": "00008",
+      "affected": {
+        "works": {
           "count": 1,
           "sample_ids": [
-            "00008:nerve"
+            "00008"
           ],
           "truncated": 0
         },
-        "work_links": {
+        "series": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_details": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -2056,16 +1673,6 @@
           ],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -2107,16 +1714,6 @@
           ],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -2154,16 +1751,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -2209,12 +1796,41 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
+      "id": "2026-04-22T21:20:48Z-work-save",
+      "time_utc": "2026-04-22T21:20:48Z",
+      "kind": "source_save",
+      "operation": "work.save",
+      "status": "completed",
+      "summary": "Saved 1 work source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work",
+      "scope_label": "work 00001",
+      "scope_id": "00001",
+      "affected": {
+        "works": {
+          "count": 1,
+          "sample_ids": [
+            "00001"
+          ],
+          "truncated": 0
+        },
+        "series": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
         },
-        "work_links": {
+        "work_details": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -2258,65 +1874,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "moments": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-22T21:20:48Z-work-save",
-      "time_utc": "2026-04-22T21:20:48Z",
-      "kind": "source_save",
-      "operation": "work.save",
-      "status": "completed",
-      "summary": "Saved 1 work source record.",
-      "event_label": "Saved",
-      "attention_label": "rebuild pending",
-      "needs_attention": true,
-      "scope_kind": "work",
-      "scope_label": "work 00001",
-      "scope_id": "00001",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00001"
-          ],
-          "truncated": 0
-        },
-        "series": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -2356,16 +1913,6 @@
           "sample_ids": [],
           "truncated": 0
         },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
         "moments": {
           "count": 0,
           "sample_ids": [],
@@ -2401,65 +1948,6 @@
           "truncated": 0
         },
         "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "moments": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-22T21:16:22Z-work-save",
-      "time_utc": "2026-04-22T21:16:22Z",
-      "kind": "source_save",
-      "operation": "work.save",
-      "status": "completed",
-      "summary": "Saved 1 work source record.",
-      "event_label": "Saved",
-      "attention_label": "rebuild pending",
-      "needs_attention": true,
-      "scope_kind": "work",
-      "scope_label": "work 00160",
-      "scope_id": "00160",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00160"
-          ],
-          "truncated": 0
-        },
-        "series": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_files": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "work_links": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0

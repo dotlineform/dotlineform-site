@@ -3,6 +3,7 @@ doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
 last_updated: 2026-05-02
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 37
 ---
@@ -74,6 +75,44 @@ The page also exposes:
 - `data-studio-record-loaded="true|false"`
 
 Remaining rollout still needs to adopt the helper on the other catalogue editors and then non-catalogue Studio pages where useful.
+
+## Rollout Checklist
+
+Primary async or service-backed Studio routes:
+
+- [ ] `/studio/build-activity/` root `#buildActivityRoot`
+- [ ] `/studio/bulk-add-work/` root `#bulkAddWorkRoot`
+- [ ] `/studio/catalogue-activity/` root `#catalogueActivityRoot`
+- [ ] `/studio/catalogue-field-registry/` root `#fieldRegistryReviewRoot`
+- [ ] `/studio/catalogue-moment/` root `#catalogueMomentRoot`
+- [ ] `/studio/catalogue-series/` root `#catalogueSeriesRoot`
+- [ ] `/studio/catalogue-status/` root `#catalogueStatusRoot`
+- [ ] `/studio/catalogue-work-detail/` root `#catalogueWorkDetailRoot`
+- [x] `/studio/catalogue-work/` root `#catalogueWorkRoot`
+- [ ] `/studio/docs-broken-links/` root `#docsBrokenLinksRoot`
+- [ ] `/studio/docs-import/` root `#docsHtmlImportRoot`
+- [ ] `/studio/project-state/` root `#projectStateRoot`
+- [ ] `/studio/series-tag-editor/` root `#seriesTagEditorRoot`
+- [ ] `/studio/series-tags/` root from `data-role="series-tags"`
+- [ ] `/studio/studio-works/` root `#worksStudioRoot`
+- [ ] `/studio/tag-aliases/` root from `data-role="tag-aliases"`
+- [ ] `/studio/tag-groups/` root from `data-role="tag-groups"`
+- [ ] `/studio/tag-registry/` root from `data-role="tag-registry"`
+
+Lower-priority dashboard, landing, and reference routes:
+
+- [ ] `/studio/`
+- [ ] `/studio/analytics/`
+- [ ] `/studio/catalogue/`
+- [ ] `/studio/library/`
+- [ ] `/studio/search/`
+- [ ] `/studio/ui-catalogue/`
+- [ ] `/studio/ui-catalogue/button/`
+- [ ] `/studio/ui-catalogue/input/`
+- [ ] `/studio/ui-catalogue/list/`
+- [ ] `/studio/ui-catalogue/panel/`
+
+These lower-priority routes may need a dedicated route root before they can expose the same attributes consistently. They should still adopt the contract if a page loads async metrics, local service state, or interactive reference content that smoke tests need to wait on.
 
 ## Event Option
 

@@ -116,6 +116,11 @@
           "ui_status": "urgent",
           "label": "Urgent",
           "emoji": "❗"
+        },
+        {
+          "ui_status": "in-progress",
+          "label": "In progress",
+          "emoji": "🔄"
         }
       ],
       "library": [],

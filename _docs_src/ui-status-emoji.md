@@ -13,6 +13,16 @@ sort_order: 200
 
 The purpose is to enable a single emoji to be inserted at the beginning of a document title as displayed in the Docs Viewer index panel.
 
+A simple set could be:
+
+✅ Done<br>
+🔄 In progress<br>
+❗ Urgent<br>
+⏸️ Paused / blocked<br>
+📝 Needs review<br>
+🧪 Testing<br>
+🚫 Cancelled / rejected
+
 The emoji would be determined by a ui_status field in the document’s front matter, with the options for this field enumerated in a section of the appropriate JSON config file:
 
 For example:
