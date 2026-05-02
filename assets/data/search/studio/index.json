@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f7424e997d82a9a0f07a3843689ff625",
-    "generated_at_utc": "2026-05-02T17:05:50Z",
+    "version": "blake2b-34b5574b8d16b3e3b020d89684397179",
+    "generated_at_utc": "2026-05-02T17:10:11Z",
     "count": 157
   },
   "entries": [
@@ -2882,7 +2882,7 @@
     {
       "id": "site-request-catalogue-series-unified-editor",
       "kind": "doc",
-      "title": "Catalogue Series Unified Editor Request ✅",
+      "title": "Catalogue Series Unified Editor ✅",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor",
       "last_updated": "2026-04-29",
       "parent_id": "change-requests",
@@ -2896,7 +2896,7 @@
         "series",
         "unified",
         "editor",
-        "catalogue series unified editor request ✅",
+        "catalogue series unified editor ✅",
         "change requests",
         "change",
         "requests",
@@ -2905,12 +2905,12 @@
         "04",
         "29"
       ],
-      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor request ✅ change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor ✅ change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
       "kind": "doc",
-      "title": "Docs Viewer Favourites Spec",
+      "title": "Docs Viewer Favourites Spec ✅",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
       "last_updated": "2026-04-19",
       "parent_id": "change-requests",
@@ -2924,7 +2924,7 @@
         "viewer",
         "favourites",
         "spec",
-        "docs viewer favourites spec",
+        "docs viewer favourites spec ✅",
         "change requests",
         "change",
         "requests",
@@ -2933,7 +2933,7 @@
         "04",
         "19"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec change requests change requests 2026-04-19 2026 04 19"
+      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec ✅ change requests change requests 2026-04-19 2026 04 19"
     },
     {
       "id": "scripts",
@@ -2977,7 +2977,7 @@
     {
       "id": "site-request-catalogue-publication-workflow",
       "kind": "doc",
-      "title": "Catalogue Publication Workflow Request",
+      "title": "Catalogue Publication Workflow ✅",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
       "last_updated": "2026-04-29",
       "parent_id": "change-requests",
@@ -2990,7 +2990,7 @@
         "catalogue",
         "publication",
         "workflow",
-        "catalogue publication workflow request",
+        "catalogue publication workflow ✅",
         "change requests",
         "change",
         "requests",
@@ -2999,7 +2999,7 @@
         "04",
         "29"
       ],
-      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow request change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow ✅ change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "testing",

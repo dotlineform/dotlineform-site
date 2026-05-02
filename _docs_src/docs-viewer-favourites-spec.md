@@ -1,6 +1,6 @@
 ---
 doc_id: ui-request-docs-viewer-favourites-spec
-title: Docs Viewer Favourites Spec
+title: Docs Viewer Favourites Spec ✅
 added_date: 2026-04-19
 last_updated: 2026-04-19
 parent_id: change-requests
@@ -10,8 +10,7 @@ sort_order: 130
 
 Status:
 
-- requested UI feature spec
-- shared Docs Viewer module change
+- implemented
 
 ## Summary
 
