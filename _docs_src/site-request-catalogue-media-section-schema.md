@@ -10,13 +10,13 @@ sort_order: 105
 
 Status:
 
-- deferred
+- proposed
 
 ## Summary
 
-This change request tracks a future catalogue schema migration that separates source-media filesystem paths from public catalogue structure.
+This change request describes a catalogue schema migration that separates source-media filesystem paths from public catalogue structure.
 
-The current detail model uses `project_subfolder` for two unrelated concepts:
+The current work-detail model uses `project_subfolder` for two unrelated concepts:
 
 - resolving the source image path for a work detail
 - naming and grouping public detail sections in the generated work JSON and on the site
@@ -73,36 +73,40 @@ The result is operationally tolerable for existing records, but it is conceptual
 
 ## Non-Goals
 
-- do not change this schema as part of the current field-aware build-scoping cleanup
 - do not move source image files on disk as part of the schema migration
 - do not introduce standalone public detail JSON unless a separate request establishes that need
 - do not make section records more complex than needed for current work-detail grouping
 
 ## Target Schema Direction
 
-Works should keep `project_folder` as the root folder for the work's source media and prose-adjacent project files.
+### Project folder
 
-Works should replace `project_filename` with a path field that can point anywhere inside `project_folder`:
+- Works should keep `project_folder` as the root folder for the work's source media and prose-adjacent project files.
+- Works should include an optional `project_subfolder` field that can point to a subfolder inside `project_folder`. `project_subfolder` should allow a nested folder e.g. `[subfolder_1]/[subfolder_2]`
 
-- `source_image_path`
+### Work Details folder
 
 Work details should replace the path/grouping overload with separate fields:
 
-- `source_image_path`
+- `details_folder`
 - `section_id`
 - `section_title`
+- `sort_order`
 
-`source_image_path` should be a relative path under the parent work's `project_folder`.
+`details_folder` should be a optional relative path under the parent work's `project_folder`. It should allow nested folders, e.g. `[subfolder_1]/[subfolder_2]`
 
-`section_id` should be a stable logical grouping key for generated work JSON.
+`section_id` should be a stable logical grouping key for generated work JSON. The key is automatically generated on creation by combining parent `work_id` with an incremented 1-digit number. e.g. `[work_id]_1`, `[work_id]_2`... 
+`section_id` is read-only on the UI and is not user-editable.
 
-`section_title` should be the display label for the public section. It may initially equal `section_id`, but it should not be derived from the filesystem after migration.
+`sort-order` is an optional numeric field and is not written to JSON if value is null. If completed it determines the order of the sections displayed on the public work page. Sections are ordered by `sort_order` and then `section_id`. So if `sort_order` is missing, the sections are sorted by `section_id` which is effectively the order in which they were created (this matches current behaviour).
+
+`section_title` should be the display label for the public section. This is a required field and will be entered by user in the UI.
 
 For existing records, the section migration is mostly a semantic rename and propagation:
 
 - existing generated `project_subfolder` section values become `section_title`
 - records can keep the same visible section labels after migration
-- Studio can then treat the value as editable section metadata
+- Studio can then treat the value as editable `section_title` metadata
 
 The separate source path field becomes essential when source image organization diverges from the old rule that detail images live under a folder named by the public section.
 
@@ -110,26 +114,23 @@ The separate source path field becomes essential when source image organization 
 
 The legacy fields should map onto the new schema in a one-time source migration, not remain as permanent fallback behavior.
 
-Work migration:
-
-| Existing field | New field |
-|---|---|
-| `project_folder` | keep as `project_folder` |
-| `project_filename` | `source_image_path` |
+Work migration: none required, because new field `project_subfolder` is optional and default = null.
 
 Work detail migration:
 
 | Existing field | New field |
 |---|---|
-| `project_subfolder` + `project_filename` | `source_image_path` |
-| `project_subfolder` | `section_id` |
+| `project_subfolder` | `details_folder` |
 | `project_subfolder` | `section_title` |
+
+- `project_subfolder` is effectively a field rename to `details_folder`
+- and a data copy from `project_subfolder` to the new field `section_title`
 
 The migration should write normalized source JSON so existing records immediately use the new schema without hand edits.
 
-Compatibility logic should live at the migration or source-normalization boundary only. Generator, lookup, editor, validation, and media code should move toward consuming the new fields directly.
+No compatibility logic is needed because the old fields map exactly to the new fields and current data is already validated.
 
-If the initial migration keeps all existing source files in their current locations, `source_image_path` should preserve the current relative path exactly. Later edits can then move source images into arbitrary nested paths without changing the public section title.
+The migration keeps all existing source files in their current locations. Later edits can then move source images into arbitrary nested paths by editing the `details_folder` without changing the public section title `section_title`.
 
 ## Build-Scoping Implications
 
@@ -139,18 +140,20 @@ After migration, field-aware planning becomes clearer:
 |---|---|
 | work `source_image_path` | `local-media`; Studio media readiness |
 | detail `source_image_path` | `local-media`; Studio media readiness |
-| detail `section_id` | `work-json`; possibly catalogue search if section context becomes indexed |
+| detail `section_id` | `work-json`; not on public display or search. internal ID only. |
 | detail `section_title` | `work-json`; public display; possibly catalogue search if section context becomes indexed |
+| detail `sort_order` | `work-json`; not on public display but needed to sort sections on the public work page. not included in search. |
 
-Changing source image paths should not imply public section regrouping.
-
-Changing section metadata should not imply local media regeneration unless the user explicitly requests media refresh.
+Changing source image paths or section metadata should **not** imply:
+- public section regrouping.
+- local media regeneration unless the user explicitly requests media refresh.
 
 ## Implementation Notes
 
-A later implementation should update:
+The implementation should update:
 
 - canonical source JSON schemas and validation
+- bulk import work/work details (the bulk import file `data/works_bulk_import.xlsx` will be updated to align with the new fields)
 - import/export helpers
 - Studio work and work-detail editors
 - Studio lookup payloads and media readiness summaries
@@ -170,14 +173,7 @@ The implementation should include a dry-run migration command or preview mode be
 
 ## Risks
 
-- existing records are numerous, so migration needs careful validation and deterministic output
+- existing records are numerous, so migration needs validation and deterministic output
 - all source consumers must move together or stale legacy assumptions will produce path or grouping errors
 - section ordering and duplicate section labels need explicit policy
 - any workbook import/export compatibility path must avoid reintroducing the old overloaded fields
-
-## Open Questions
-
-- Should `section_title` be optional when it matches `section_id`, or always written for clarity?
-- Should section ordering be derived from first detail order, an explicit `section_sort`, or a future section registry?
-- Should work primary source images use `source_image_path` only, or should details use a more explicit name such as `detail_source_image_path`?
-- Should migration retain retired legacy fields temporarily for audit, or remove them immediately once generated outputs validate?
