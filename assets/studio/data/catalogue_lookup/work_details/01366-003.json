@@ -6,15 +6,15 @@
     "detail_uid": "01366-003",
     "work_id": "01366",
     "detail_id": "003",
+    "section_id": "01366-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "heaven and earth (green).jpg",
     "title": "heaven and earth (green)",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 5906,
-    "height_px": 4429,
-    "section_id": "01366-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 4429
   },
   "work_summary": {
     "work_id": "01366",

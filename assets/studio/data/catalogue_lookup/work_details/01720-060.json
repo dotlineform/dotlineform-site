@@ -6,15 +6,15 @@
     "detail_uid": "01720-060",
     "work_id": "01720",
     "detail_id": "060",
+    "section_id": "01720-1",
+    "section_title": "symbols",
+    "details_subfolder": "symbols",
     "project_filename": "rush (cheerful) slow.jpg",
     "title": "rush (cheerful) slow",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 1600,
-    "height_px": 1553,
-    "section_id": "01720-1",
-    "section_title": "symbols",
-    "details_subfolder": "symbols"
+    "height_px": 1553
   },
   "work_summary": {
     "work_id": "01720",

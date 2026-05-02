@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-61f4f097163210287d58028eb0187be2",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-53533274bd5f3d29f1346337d2eb6591",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00869",
     "count": 12
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00869-1",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00869",
           "detail_id": "001",
           "detail_uid": "00869-001",
           "title": "curve machine [1]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00869-002",
           "title": "curve machine [2]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00869-003",
           "title": "curve machine [3]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00869-004",
           "title": "curve machine [4]",
-          "project_subfolder": "versions",
           "width_px": 4032,
           "height_px": 3024,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00869-005",
           "title": "curve machine [5]",
-          "project_subfolder": "versions",
           "width_px": 4032,
           "height_px": 3024,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "00869-006",
           "title": "curve machine [6]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "00869-007",
           "title": "curve machine [7]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "00869-008",
           "title": "curve machine [8]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -110,7 +103,6 @@
           "detail_id": "009",
           "detail_uid": "00869-009",
           "title": "curve machine [9]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -120,7 +112,6 @@
           "detail_id": "010",
           "detail_uid": "00869-010",
           "title": "curve machine [10]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -130,7 +121,6 @@
           "detail_id": "011",
           "detail_uid": "00869-011",
           "title": "curve machine [11]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"
@@ -140,7 +130,6 @@
           "detail_id": "012",
           "detail_uid": "00869-012",
           "title": "curve machine [12]",
-          "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
           "layout": "work_details"

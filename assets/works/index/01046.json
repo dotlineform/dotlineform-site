@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-faba572662dce5309f2b36ed7d28abb4",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-27938f2dca0352ec16d68007d0769166",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01046",
     "count": 25
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "espressos",
+      "section_id": "01046-1",
+      "section_title": "espressos",
       "details": [
         {
           "work_id": "01046",
           "detail_id": "001",
           "detail_uid": "01046-001",
           "title": "espresso 1",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01046-002",
           "title": "espresso 2",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01046-003",
           "title": "espresso 3",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01046-004",
           "title": "espresso 4",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "01046-005",
           "title": "espresso 5",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "01046-006",
           "title": "espresso 6",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "01046-007",
           "title": "espresso 7",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "01046-008",
           "title": "espresso 8",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -110,7 +103,6 @@
           "detail_id": "009",
           "detail_uid": "01046-009",
           "title": "espresso 9",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -120,7 +112,6 @@
           "detail_id": "010",
           "detail_uid": "01046-010",
           "title": "espresso 10",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -130,7 +121,6 @@
           "detail_id": "011",
           "detail_uid": "01046-011",
           "title": "espresso 11",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -140,7 +130,6 @@
           "detail_id": "012",
           "detail_uid": "01046-012",
           "title": "espresso 12",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -150,7 +139,6 @@
           "detail_id": "013",
           "detail_uid": "01046-013",
           "title": "espresso 13",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -160,7 +148,6 @@
           "detail_id": "014",
           "detail_uid": "01046-014",
           "title": "espresso 14",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -170,7 +157,6 @@
           "detail_id": "015",
           "detail_uid": "01046-015",
           "title": "espresso 15",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -180,7 +166,6 @@
           "detail_id": "016",
           "detail_uid": "01046-016",
           "title": "espresso 16",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -190,7 +175,6 @@
           "detail_id": "017",
           "detail_uid": "01046-017",
           "title": "espresso 17",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -200,7 +184,6 @@
           "detail_id": "018",
           "detail_uid": "01046-018",
           "title": "espresso 18",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -210,7 +193,6 @@
           "detail_id": "019",
           "detail_uid": "01046-019",
           "title": "espresso 19",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -220,7 +202,6 @@
           "detail_id": "020",
           "detail_uid": "01046-020",
           "title": "espresso 20",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -230,7 +211,6 @@
           "detail_id": "021",
           "detail_uid": "01046-021",
           "title": "espresso 21",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -240,7 +220,6 @@
           "detail_id": "022",
           "detail_uid": "01046-022",
           "title": "espresso 22",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -250,7 +229,6 @@
           "detail_id": "023",
           "detail_uid": "01046-023",
           "title": "espresso 23",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -260,7 +238,6 @@
           "detail_id": "024",
           "detail_uid": "01046-024",
           "title": "espresso 24",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -270,7 +247,6 @@
           "detail_id": "025",
           "detail_uid": "01046-025",
           "title": "espresso 25",
-          "project_subfolder": "espressos",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"

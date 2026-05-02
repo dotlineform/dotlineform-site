@@ -6,15 +6,15 @@
     "detail_uid": "00389-146",
     "work_id": "00389",
     "detail_id": "146",
+    "section_id": "00389-1",
+    "section_title": "photos",
+    "details_subfolder": "photos",
     "project_filename": "2012-02-20 - 19-57-19.jpg",
     "title": "2012-02-20 - 19-57-19",
     "status": "published",
     "published_date": "2026-03-13",
     "width_px": 1536,
-    "height_px": 2048,
-    "section_id": "00389-1",
-    "section_title": "photos",
-    "details_subfolder": "photos"
+    "height_px": 2048
   },
   "work_summary": {
     "work_id": "00389",

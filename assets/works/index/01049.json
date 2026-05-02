@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-bbc8204a8c92b613559f453993b24f4f",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-7fb430df6d6671154a892445bc20c331",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01049",
     "count": 6
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01049-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01049",
           "detail_id": "001",
           "detail_uid": "01049-001",
           "title": "fireworks form - detail 1",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01049-002",
           "title": "fireworks form - detail 2",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01049-003",
           "title": "fireworks form - detail 3",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01049-004",
           "title": "fireworks form - detail 4",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "01049-005",
           "title": "fireworks form - detail 5",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "01049-006",
           "title": "fireworks form - detail 6",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"

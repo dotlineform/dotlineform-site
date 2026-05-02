@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-bad437f3db7506eb15a005c4d9ee91c2",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-293f2c62e2d921af55544ae5f657903c",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00638",
     "count": 53
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00638-1",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00638",
           "detail_id": "001",
           "detail_uid": "00638-001",
           "title": "3 symbols (composite)",
-          "project_subfolder": "versions",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "00638-002",
           "title": "3 symbols (untreated)",
-          "project_subfolder": "versions",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -49,14 +48,14 @@
       ]
     },
     {
-      "project_subfolder": "details",
+      "section_id": "00638-2",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00638",
           "detail_id": "003",
           "detail_uid": "00638-003",
           "title": "3 symbols (detail 1)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -66,7 +65,6 @@
           "detail_id": "004",
           "detail_uid": "00638-004",
           "title": "3 symbols (detail 2)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -76,7 +74,6 @@
           "detail_id": "005",
           "detail_uid": "00638-005",
           "title": "3 symbols (detail 3)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -86,7 +83,6 @@
           "detail_id": "006",
           "detail_uid": "00638-006",
           "title": "3 symbols (detail 4)",
-          "project_subfolder": "details",
           "width_px": 2468,
           "height_px": 2000,
           "layout": "work_details"
@@ -96,7 +92,6 @@
           "detail_id": "007",
           "detail_uid": "00638-007",
           "title": "3 symbols (detail 5)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -106,7 +101,6 @@
           "detail_id": "008",
           "detail_uid": "00638-008",
           "title": "3 symbols (detail 6)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -116,7 +110,6 @@
           "detail_id": "009",
           "detail_uid": "00638-009",
           "title": "3 symbols (detail 7)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -126,7 +119,6 @@
           "detail_id": "010",
           "detail_uid": "00638-010",
           "title": "3 symbols (detail 8)",
-          "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
           "layout": "work_details"
@@ -134,14 +126,14 @@
       ]
     },
     {
-      "project_subfolder": "source",
+      "section_id": "00638-3",
+      "section_title": "source",
       "details": [
         {
           "work_id": "00638",
           "detail_id": "011",
           "detail_uid": "00638-011",
           "title": "source - bandage",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -151,7 +143,6 @@
           "detail_id": "012",
           "detail_uid": "00638-012",
           "title": "source - before",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -161,7 +152,6 @@
           "detail_id": "013",
           "detail_uid": "00638-013",
           "title": "source - blessing",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -171,7 +161,6 @@
           "detail_id": "014",
           "detail_uid": "00638-014",
           "title": "source - blindness",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -181,7 +170,6 @@
           "detail_id": "015",
           "detail_uid": "00638-015",
           "title": "source - bridge",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -191,7 +179,6 @@
           "detail_id": "016",
           "detail_uid": "00638-016",
           "title": "source - burma",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -201,7 +188,6 @@
           "detail_id": "017",
           "detail_uid": "00638-017",
           "title": "source - burn",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -211,7 +197,6 @@
           "detail_id": "018",
           "detail_uid": "00638-018",
           "title": "source - genocide",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -221,7 +206,6 @@
           "detail_id": "019",
           "detail_uid": "00638-019",
           "title": "source - gesture",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -231,7 +215,6 @@
           "detail_id": "020",
           "detail_uid": "00638-020",
           "title": "source - give",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -241,7 +224,6 @@
           "detail_id": "021",
           "detail_uid": "00638-021",
           "title": "source - grave",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -251,7 +233,6 @@
           "detail_id": "022",
           "detail_uid": "00638-022",
           "title": "source - grieve",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -261,7 +242,6 @@
           "detail_id": "023",
           "detail_uid": "00638-023",
           "title": "source - grow",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -271,7 +251,6 @@
           "detail_id": "024",
           "detail_uid": "00638-024",
           "title": "source - guilt",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -281,7 +260,6 @@
           "detail_id": "025",
           "detail_uid": "00638-025",
           "title": "source - radius",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -291,7 +269,6 @@
           "detail_id": "026",
           "detail_uid": "00638-026",
           "title": "source - rarefied",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -301,7 +278,6 @@
           "detail_id": "027",
           "detail_uid": "00638-027",
           "title": "source - reincarnation",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -311,7 +287,6 @@
           "detail_id": "028",
           "detail_uid": "00638-028",
           "title": "source - replenish",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -321,7 +296,6 @@
           "detail_id": "029",
           "detail_uid": "00638-029",
           "title": "source - restrict",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -331,7 +305,6 @@
           "detail_id": "030",
           "detail_uid": "00638-030",
           "title": "source - ruin",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -341,7 +314,6 @@
           "detail_id": "031",
           "detail_uid": "00638-031",
           "title": "source - rwanda",
-          "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
           "layout": "work_details"
@@ -351,7 +323,6 @@
           "detail_id": "032",
           "detail_uid": "00638-032",
           "title": "source grid",
-          "project_subfolder": "source",
           "width_px": 14056,
           "height_px": 7029,
           "layout": "work_details"
@@ -359,14 +330,14 @@
       ]
     },
     {
-      "project_subfolder": "composites",
+      "section_id": "00638-4",
+      "section_title": "composites",
       "details": [
         {
           "work_id": "00638",
           "detail_id": "033",
           "detail_uid": "00638-033",
           "title": "composite - bandage",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -376,7 +347,6 @@
           "detail_id": "034",
           "detail_uid": "00638-034",
           "title": "composite - before",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -386,7 +356,6 @@
           "detail_id": "035",
           "detail_uid": "00638-035",
           "title": "composite - blessing",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -396,7 +365,6 @@
           "detail_id": "036",
           "detail_uid": "00638-036",
           "title": "composite - blindness",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -406,7 +374,6 @@
           "detail_id": "037",
           "detail_uid": "00638-037",
           "title": "composite - bridge",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -416,7 +383,6 @@
           "detail_id": "038",
           "detail_uid": "00638-038",
           "title": "composite - burma",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -426,7 +392,6 @@
           "detail_id": "039",
           "detail_uid": "00638-039",
           "title": "composite - burn",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -436,7 +401,6 @@
           "detail_id": "040",
           "detail_uid": "00638-040",
           "title": "composite - genocide",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -446,7 +410,6 @@
           "detail_id": "041",
           "detail_uid": "00638-041",
           "title": "composite - gesture",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -456,7 +419,6 @@
           "detail_id": "042",
           "detail_uid": "00638-042",
           "title": "composite - give",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -466,7 +428,6 @@
           "detail_id": "043",
           "detail_uid": "00638-043",
           "title": "composite - grave",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -476,7 +437,6 @@
           "detail_id": "044",
           "detail_uid": "00638-044",
           "title": "composite - grieve",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -486,7 +446,6 @@
           "detail_id": "045",
           "detail_uid": "00638-045",
           "title": "composite - grow",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -496,7 +455,6 @@
           "detail_id": "046",
           "detail_uid": "00638-046",
           "title": "composite - guilt",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -506,7 +464,6 @@
           "detail_id": "047",
           "detail_uid": "00638-047",
           "title": "composite - radius",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -516,7 +473,6 @@
           "detail_id": "048",
           "detail_uid": "00638-048",
           "title": "composite - rarefied",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -526,7 +482,6 @@
           "detail_id": "049",
           "detail_uid": "00638-049",
           "title": "composite - reincarnation",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -536,7 +491,6 @@
           "detail_id": "050",
           "detail_uid": "00638-050",
           "title": "composite - replenish",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -546,7 +500,6 @@
           "detail_id": "051",
           "detail_uid": "00638-051",
           "title": "composite - restrict",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -556,7 +509,6 @@
           "detail_id": "052",
           "detail_uid": "00638-052",
           "title": "composite - ruin",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -566,7 +518,6 @@
           "detail_id": "053",
           "detail_uid": "00638-053",
           "title": "composite - rwanda",
-          "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"

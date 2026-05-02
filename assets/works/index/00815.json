@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-32846bbdb235003b69526ff0d1b09ed0",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-c1e4d5ea4adc5f51d46bc7d7b907a8c1",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00815",
     "count": 1
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00815-1",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00815",
           "detail_id": "001",
           "detail_uid": "00815-001",
           "title": "colours dachau.1",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"

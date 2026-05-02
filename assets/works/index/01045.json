@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-875ca2cebd226185d65597dfccf3ac20",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-2d41f11e9cb74e0298133287722950af",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01045",
     "count": 2
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01045-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01045",
           "detail_id": "001",
           "detail_uid": "01045-001",
           "title": "entangled form' - spider",
-          "project_subfolder": "details",
           "width_px": 3316,
           "height_px": 1865,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "01045-002",
           "title": "entangled form' - spider (detail)",
-          "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
           "layout": "work_details"

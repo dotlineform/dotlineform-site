@@ -6,15 +6,15 @@
     "detail_uid": "00805-066",
     "work_id": "00805",
     "detail_id": "066",
+    "section_id": "00805-1",
+    "section_title": "dna",
+    "details_subfolder": "dna",
     "project_filename": "book dna 66.jpg",
     "title": "book dna 66",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 1200,
-    "height_px": 1200,
-    "section_id": "00805-1",
-    "section_title": "dna",
-    "details_subfolder": "dna"
+    "height_px": 1200
   },
   "work_summary": {
     "work_id": "00805",

@@ -6,15 +6,15 @@
     "detail_uid": "01365-001",
     "work_id": "01365",
     "detail_id": "001",
+    "section_id": "01365-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "heaven and earth (grey 1).jpg",
     "title": "heaven and earth (grey 1)",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 5906,
-    "height_px": 4429,
-    "section_id": "01365-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 4429
   },
   "work_summary": {
     "work_id": "01365",

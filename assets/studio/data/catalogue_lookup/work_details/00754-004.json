@@ -6,15 +6,15 @@
     "detail_uid": "00754-004",
     "work_id": "00754",
     "detail_id": "004",
+    "section_id": "00754-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "assembly code 2 (detail 1).jpg",
     "title": "assembly code 2 (detail 1)",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 2000,
-    "height_px": 2000,
-    "section_id": "00754-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 2000
   },
   "work_summary": {
     "work_id": "00754",

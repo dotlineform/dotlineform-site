@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-fcf56c1165c448876b8c349fa826ef18",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-26481e7312687e84e6742abe4ea2aee3",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00813",
     "count": 5
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00813-1",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00813",
           "detail_id": "001",
           "detail_uid": "00813-001",
           "title": "colours 1958-2001.1",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00813-002",
           "title": "colours 1958-2001.2",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00813-003",
           "title": "colours 1958-2001.3",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00813-004",
           "title": "colours 1958-2001.4",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00813-005",
           "title": "colours 1958-2001.5",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"

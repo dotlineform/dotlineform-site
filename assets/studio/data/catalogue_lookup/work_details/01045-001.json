@@ -6,15 +6,15 @@
     "detail_uid": "01045-001",
     "work_id": "01045",
     "detail_id": "001",
+    "section_id": "01045-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "entangled form' - spider.jpg",
     "title": "entangled form' - spider",
     "status": "published",
     "published_date": "2026-03-19",
     "width_px": 3316,
-    "height_px": 1865,
-    "section_id": "01045-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 1865
   },
   "work_summary": {
     "work_id": "01045",

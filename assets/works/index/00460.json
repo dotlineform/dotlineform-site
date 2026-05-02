@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-1568459c9eb4a684eb7d926905f577cb",
-    "generated_at_utc": "2026-04-17T20:47:28Z",
+    "version": "blake2b-d0e14767962897dfe9019fa25e90ca38",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00460",
     "count": 20
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00460-1",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00460",
           "detail_id": "001",
           "detail_uid": "00460-001",
           "title": "molecules (positive)",
-          "project_subfolder": "versions",
           "width_px": 9000,
           "height_px": 9000,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00460-002",
           "title": "molecules (negative)",
-          "project_subfolder": "versions",
           "width_px": 9000,
           "height_px": 9000,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00460-003",
           "title": "molecules mist (positive)",
-          "project_subfolder": "versions",
           "width_px": 9000,
           "height_px": 9000,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00460-004",
           "title": "molecules mist (negative)",
-          "project_subfolder": "versions",
           "width_px": 9000,
           "height_px": 9000,
           "layout": "work_details"
@@ -68,14 +65,14 @@
       ]
     },
     {
-      "project_subfolder": "details",
+      "section_id": "00460-2",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00460",
           "detail_id": "005",
           "detail_uid": "00460-005",
           "title": "molecules (detail 1)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -85,7 +82,6 @@
           "detail_id": "006",
           "detail_uid": "00460-006",
           "title": "molecules (detail 2)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -95,7 +91,6 @@
           "detail_id": "007",
           "detail_uid": "00460-007",
           "title": "molecules (detail 3)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -105,7 +100,6 @@
           "detail_id": "008",
           "detail_uid": "00460-008",
           "title": "molecules (detail 4)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -115,7 +109,6 @@
           "detail_id": "009",
           "detail_uid": "00460-009",
           "title": "molecules (detail 5)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -125,7 +118,6 @@
           "detail_id": "010",
           "detail_uid": "00460-010",
           "title": "molecules (detail 6)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -135,7 +127,6 @@
           "detail_id": "011",
           "detail_uid": "00460-011",
           "title": "molecules (detail 7)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -145,7 +136,6 @@
           "detail_id": "012",
           "detail_uid": "00460-012",
           "title": "molecules (detail 8)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -155,7 +145,6 @@
           "detail_id": "013",
           "detail_uid": "00460-013",
           "title": "molecules (detail 9)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -165,7 +154,6 @@
           "detail_id": "014",
           "detail_uid": "00460-014",
           "title": "molecules (detail 10)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -175,7 +163,6 @@
           "detail_id": "015",
           "detail_uid": "00460-015",
           "title": "molecules (detail 11)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -185,7 +172,6 @@
           "detail_id": "016",
           "detail_uid": "00460-016",
           "title": "molecules (detail 12)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -195,7 +181,6 @@
           "detail_id": "017",
           "detail_uid": "00460-017",
           "title": "molecules (detail 13)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -205,7 +190,6 @@
           "detail_id": "018",
           "detail_uid": "00460-018",
           "title": "molecules (detail 14)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -215,7 +199,6 @@
           "detail_id": "019",
           "detail_uid": "00460-019",
           "title": "molecules (detail 15)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -225,7 +208,6 @@
           "detail_id": "020",
           "detail_uid": "00460-020",
           "title": "molecules (detail 16)",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"

@@ -6,15 +6,15 @@
     "detail_uid": "00571-001",
     "work_id": "00571",
     "detail_id": "001",
+    "section_id": "00571-1",
+    "section_title": "working",
+    "details_subfolder": "working",
     "project_filename": "2012-01-06 - 12-30-44.jpg",
     "title": "2012-01-06 - 12-30-44",
     "status": "published",
     "published_date": "2026-03-13",
     "width_px": 3264,
-    "height_px": 2448,
-    "section_id": "00571-1",
-    "section_title": "working",
-    "details_subfolder": "working"
+    "height_px": 2448
   },
   "work_summary": {
     "work_id": "00571",

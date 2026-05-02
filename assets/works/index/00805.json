@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-7c4e9f0cc918b62bd79ea8d92afb7a2a",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-cb50067eac210c7742dac408b00b57c3",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00805",
     "count": 80
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "dna",
+      "section_id": "00805-1",
+      "section_title": "dna",
       "details": [
         {
           "work_id": "00805",
           "detail_id": "001",
           "detail_uid": "00805-001",
           "title": "book dna 1",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00805-002",
           "title": "book dna 2",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00805-003",
           "title": "book dna 3",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00805-004",
           "title": "book dna 4",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00805-005",
           "title": "book dna 5",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "00805-006",
           "title": "book dna 6",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "00805-007",
           "title": "book dna 7",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "00805-008",
           "title": "book dna 8",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -110,7 +103,6 @@
           "detail_id": "009",
           "detail_uid": "00805-009",
           "title": "book dna 9",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -120,7 +112,6 @@
           "detail_id": "010",
           "detail_uid": "00805-010",
           "title": "book dna 10",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -130,7 +121,6 @@
           "detail_id": "011",
           "detail_uid": "00805-011",
           "title": "book dna 11",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -140,7 +130,6 @@
           "detail_id": "012",
           "detail_uid": "00805-012",
           "title": "book dna 12",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -150,7 +139,6 @@
           "detail_id": "013",
           "detail_uid": "00805-013",
           "title": "book dna 13",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -160,7 +148,6 @@
           "detail_id": "014",
           "detail_uid": "00805-014",
           "title": "book dna 14",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -170,7 +157,6 @@
           "detail_id": "015",
           "detail_uid": "00805-015",
           "title": "book dna 15",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -180,7 +166,6 @@
           "detail_id": "016",
           "detail_uid": "00805-016",
           "title": "book dna 16",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -190,7 +175,6 @@
           "detail_id": "017",
           "detail_uid": "00805-017",
           "title": "book dna 17",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -200,7 +184,6 @@
           "detail_id": "018",
           "detail_uid": "00805-018",
           "title": "book dna 18",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -210,7 +193,6 @@
           "detail_id": "019",
           "detail_uid": "00805-019",
           "title": "book dna 19",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -220,7 +202,6 @@
           "detail_id": "020",
           "detail_uid": "00805-020",
           "title": "book dna 20",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -230,7 +211,6 @@
           "detail_id": "021",
           "detail_uid": "00805-021",
           "title": "book dna 21",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -240,7 +220,6 @@
           "detail_id": "022",
           "detail_uid": "00805-022",
           "title": "book dna 22",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -250,7 +229,6 @@
           "detail_id": "023",
           "detail_uid": "00805-023",
           "title": "book dna 23",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -260,7 +238,6 @@
           "detail_id": "024",
           "detail_uid": "00805-024",
           "title": "book dna 24",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -270,7 +247,6 @@
           "detail_id": "025",
           "detail_uid": "00805-025",
           "title": "book dna 25",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -280,7 +256,6 @@
           "detail_id": "026",
           "detail_uid": "00805-026",
           "title": "book dna 26",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -290,7 +265,6 @@
           "detail_id": "027",
           "detail_uid": "00805-027",
           "title": "book dna 27",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -300,7 +274,6 @@
           "detail_id": "028",
           "detail_uid": "00805-028",
           "title": "book dna 28",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -310,7 +283,6 @@
           "detail_id": "029",
           "detail_uid": "00805-029",
           "title": "book dna 29",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -320,7 +292,6 @@
           "detail_id": "030",
           "detail_uid": "00805-030",
           "title": "book dna 30",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -330,7 +301,6 @@
           "detail_id": "031",
           "detail_uid": "00805-031",
           "title": "book dna 31",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -340,7 +310,6 @@
           "detail_id": "032",
           "detail_uid": "00805-032",
           "title": "book dna 32",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -350,7 +319,6 @@
           "detail_id": "033",
           "detail_uid": "00805-033",
           "title": "book dna 33",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -360,7 +328,6 @@
           "detail_id": "034",
           "detail_uid": "00805-034",
           "title": "book dna 34",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -370,7 +337,6 @@
           "detail_id": "035",
           "detail_uid": "00805-035",
           "title": "book dna 35",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -380,7 +346,6 @@
           "detail_id": "036",
           "detail_uid": "00805-036",
           "title": "book dna 36",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -390,7 +355,6 @@
           "detail_id": "037",
           "detail_uid": "00805-037",
           "title": "book dna 37",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -400,7 +364,6 @@
           "detail_id": "038",
           "detail_uid": "00805-038",
           "title": "book dna 38",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -410,7 +373,6 @@
           "detail_id": "039",
           "detail_uid": "00805-039",
           "title": "book dna 39",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -420,7 +382,6 @@
           "detail_id": "040",
           "detail_uid": "00805-040",
           "title": "book dna 40",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -430,7 +391,6 @@
           "detail_id": "041",
           "detail_uid": "00805-041",
           "title": "book dna 41",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -440,7 +400,6 @@
           "detail_id": "042",
           "detail_uid": "00805-042",
           "title": "book dna 42",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -450,7 +409,6 @@
           "detail_id": "043",
           "detail_uid": "00805-043",
           "title": "book dna 43",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -460,7 +418,6 @@
           "detail_id": "044",
           "detail_uid": "00805-044",
           "title": "book dna 44",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -470,7 +427,6 @@
           "detail_id": "045",
           "detail_uid": "00805-045",
           "title": "book dna 45",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -480,7 +436,6 @@
           "detail_id": "046",
           "detail_uid": "00805-046",
           "title": "book dna 46",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -490,7 +445,6 @@
           "detail_id": "047",
           "detail_uid": "00805-047",
           "title": "book dna 47",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -500,7 +454,6 @@
           "detail_id": "048",
           "detail_uid": "00805-048",
           "title": "book dna 48",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -510,7 +463,6 @@
           "detail_id": "049",
           "detail_uid": "00805-049",
           "title": "book dna 49",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -520,7 +472,6 @@
           "detail_id": "050",
           "detail_uid": "00805-050",
           "title": "book dna 50",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -530,7 +481,6 @@
           "detail_id": "051",
           "detail_uid": "00805-051",
           "title": "book dna 51",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -540,7 +490,6 @@
           "detail_id": "052",
           "detail_uid": "00805-052",
           "title": "book dna 52",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -550,7 +499,6 @@
           "detail_id": "053",
           "detail_uid": "00805-053",
           "title": "book dna 53",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -560,7 +508,6 @@
           "detail_id": "054",
           "detail_uid": "00805-054",
           "title": "book dna 54",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -570,7 +517,6 @@
           "detail_id": "055",
           "detail_uid": "00805-055",
           "title": "book dna 55",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -580,7 +526,6 @@
           "detail_id": "056",
           "detail_uid": "00805-056",
           "title": "book dna 56",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -590,7 +535,6 @@
           "detail_id": "057",
           "detail_uid": "00805-057",
           "title": "book dna 57",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -600,7 +544,6 @@
           "detail_id": "058",
           "detail_uid": "00805-058",
           "title": "book dna 58",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -610,7 +553,6 @@
           "detail_id": "059",
           "detail_uid": "00805-059",
           "title": "book dna 59",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -620,7 +562,6 @@
           "detail_id": "060",
           "detail_uid": "00805-060",
           "title": "book dna 60",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -630,7 +571,6 @@
           "detail_id": "061",
           "detail_uid": "00805-061",
           "title": "book dna 61",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -640,7 +580,6 @@
           "detail_id": "062",
           "detail_uid": "00805-062",
           "title": "book dna 62",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -650,7 +589,6 @@
           "detail_id": "063",
           "detail_uid": "00805-063",
           "title": "book dna 63",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -660,7 +598,6 @@
           "detail_id": "064",
           "detail_uid": "00805-064",
           "title": "book dna 64",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -670,7 +607,6 @@
           "detail_id": "065",
           "detail_uid": "00805-065",
           "title": "book dna 65",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -680,7 +616,6 @@
           "detail_id": "066",
           "detail_uid": "00805-066",
           "title": "book dna 66",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -690,7 +625,6 @@
           "detail_id": "067",
           "detail_uid": "00805-067",
           "title": "book dna 67",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -700,7 +634,6 @@
           "detail_id": "068",
           "detail_uid": "00805-068",
           "title": "book dna 68",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -710,7 +643,6 @@
           "detail_id": "069",
           "detail_uid": "00805-069",
           "title": "book dna 69",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -720,7 +652,6 @@
           "detail_id": "070",
           "detail_uid": "00805-070",
           "title": "book dna 70",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -730,7 +661,6 @@
           "detail_id": "071",
           "detail_uid": "00805-071",
           "title": "book dna 71",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -740,7 +670,6 @@
           "detail_id": "072",
           "detail_uid": "00805-072",
           "title": "book dna 72",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -750,7 +679,6 @@
           "detail_id": "073",
           "detail_uid": "00805-073",
           "title": "book dna 73",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -760,7 +688,6 @@
           "detail_id": "074",
           "detail_uid": "00805-074",
           "title": "book dna 74",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -770,7 +697,6 @@
           "detail_id": "075",
           "detail_uid": "00805-075",
           "title": "book dna 75",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -780,7 +706,6 @@
           "detail_id": "076",
           "detail_uid": "00805-076",
           "title": "book dna 76",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -790,7 +715,6 @@
           "detail_id": "077",
           "detail_uid": "00805-077",
           "title": "book dna 77",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -800,7 +724,6 @@
           "detail_id": "078",
           "detail_uid": "00805-078",
           "title": "book dna 78",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -810,7 +733,6 @@
           "detail_id": "079",
           "detail_uid": "00805-079",
           "title": "book dna 79",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"
@@ -820,7 +742,6 @@
           "detail_id": "080",
           "detail_uid": "00805-080",
           "title": "book dna 80",
-          "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
           "layout": "work_details"

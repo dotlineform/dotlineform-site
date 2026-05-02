@@ -6,15 +6,15 @@
     "detail_uid": "00638-032",
     "work_id": "00638",
     "detail_id": "032",
+    "section_id": "00638-3",
+    "section_title": "source",
+    "details_subfolder": "source",
     "project_filename": "source grid.jpg",
     "title": "source grid",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 14056,
-    "height_px": 7029,
-    "section_id": "00638-3",
-    "section_title": "source",
-    "details_subfolder": "source"
+    "height_px": 7029
   },
   "work_summary": {
     "work_id": "00638",

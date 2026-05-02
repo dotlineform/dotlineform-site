@@ -6,15 +6,15 @@
     "detail_uid": "00622-006",
     "work_id": "00622",
     "detail_id": "006",
+    "section_id": "00622-1",
+    "section_title": "derivation",
+    "details_subfolder": "derivation",
     "project_filename": "k crystals colours.jpg",
     "title": "k crystals colours",
     "status": "published",
     "published_date": "2026-03-13",
     "width_px": 4341,
-    "height_px": 3150,
-    "section_id": "00622-1",
-    "section_title": "derivation",
-    "details_subfolder": "derivation"
+    "height_px": 3150
   },
   "work_summary": {
     "work_id": "00622",

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-64ac8eb4cc2feb5df70cc0cd82529f2b",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-2f73549adb84a904e4bb3f4011729312",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00894",
     "count": 4
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions (2022)",
+      "section_id": "00894-1",
+      "section_title": "versions (2022)",
       "details": [
         {
           "work_id": "00894",
           "detail_id": "001",
           "detail_uid": "00894-001",
           "title": "doll moiré reduced (version 1)",
-          "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00894-002",
           "title": "doll moiré reduced (version 2)",
-          "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00894-003",
           "title": "doll moiré reduced (version 3)",
-          "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00894-004",
           "title": "doll moiré reduced (version 4)",
-          "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"

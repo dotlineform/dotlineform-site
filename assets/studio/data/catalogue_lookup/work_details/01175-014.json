@@ -6,15 +6,15 @@
     "detail_uid": "01175-014",
     "work_id": "01175",
     "detail_id": "014",
+    "section_id": "01175-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "forest detail 14.jpg",
     "title": "forest detail 14",
     "status": "published",
     "published_date": "2026-03-22",
     "width_px": 3543,
-    "height_px": 3543,
-    "section_id": "01175-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 3543
   },
   "work_summary": {
     "work_id": "01175",

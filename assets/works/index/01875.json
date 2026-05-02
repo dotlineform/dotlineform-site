@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-c013eac9ca72f093d5b5235979acd973",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-3d7d757a7a2f2d175086e1db4225fc2c",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01875",
     "count": 4
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01875-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01875",
           "detail_id": "001",
           "detail_uid": "01875-001",
           "title": "untitled composite 1 - detail 1",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01875-002",
           "title": "untitled composite 1 - detail 2",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01875-003",
           "title": "untitled composite 1 - detail 3",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01875-004",
           "title": "untitled composite 1 - detail 4",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"

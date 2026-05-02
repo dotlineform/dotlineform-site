@@ -6,15 +6,15 @@
     "detail_uid": "00532-001",
     "work_id": "00532",
     "detail_id": "001",
+    "section_id": "00532-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "00532-001.jpg",
     "title": "body detail",
     "status": "published",
     "published_date": "2026-03-13",
     "width_px": 3024,
-    "height_px": 4032,
-    "section_id": "00532-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 4032
   },
   "work_summary": {
     "work_id": "00532",

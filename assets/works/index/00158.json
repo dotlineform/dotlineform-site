@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-669d2dd1c527abab3e3918e7631067d4",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-f5734b2ca6173adb2c899f85179b1bc6",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00158",
     "count": 9
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00158-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00158",
           "detail_id": "001",
           "detail_uid": "00158-001",
           "title": "grid dissection - cover",
-          "project_subfolder": "details",
           "width_px": 2138,
           "height_px": 3024,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "00158-002",
           "title": "grid dissection - detail 1",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -51,7 +50,6 @@
           "detail_id": "003",
           "detail_uid": "00158-003",
           "title": "grid dissection - detail 2",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -61,7 +59,6 @@
           "detail_id": "004",
           "detail_uid": "00158-004",
           "title": "grid dissection - detail 3",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -71,7 +68,6 @@
           "detail_id": "005",
           "detail_uid": "00158-005",
           "title": "grid dissection - detail 4",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -81,7 +77,6 @@
           "detail_id": "006",
           "detail_uid": "00158-006",
           "title": "grid dissection - detail 5",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -91,7 +86,6 @@
           "detail_id": "007",
           "detail_uid": "00158-007",
           "title": "grid dissection - detail 6",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -101,7 +95,6 @@
           "detail_id": "008",
           "detail_uid": "00158-008",
           "title": "grid dissection - detail 7",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -111,7 +104,6 @@
           "detail_id": "009",
           "detail_uid": "00158-009",
           "title": "grid dissection - detail 8",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"

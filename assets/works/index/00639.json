@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-0a4ea72920fbad9d3b99f934461424a7",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-29c6cedc17917ee1e5b3a2a277c9af38",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00639",
     "count": 48
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "source",
+      "section_id": "00639-1",
+      "section_title": "source",
       "details": [
         {
           "work_id": "00639",
           "detail_id": "001",
           "detail_uid": "00639-001",
           "title": "16 forms - source photo",
-          "project_subfolder": "source",
           "width_px": 4453,
           "height_px": 4453,
           "layout": "work_details"
@@ -38,14 +38,14 @@
       ]
     },
     {
-      "project_subfolder": "forms",
+      "section_id": "00639-2",
+      "section_title": "forms",
       "details": [
         {
           "work_id": "00639",
           "detail_id": "002",
           "detail_uid": "00639-002",
           "title": "form 1",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -55,7 +55,6 @@
           "detail_id": "003",
           "detail_uid": "00639-003",
           "title": "form 2",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -65,7 +64,6 @@
           "detail_id": "004",
           "detail_uid": "00639-004",
           "title": "form 3",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -75,7 +73,6 @@
           "detail_id": "005",
           "detail_uid": "00639-005",
           "title": "form 4",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -85,7 +82,6 @@
           "detail_id": "006",
           "detail_uid": "00639-006",
           "title": "form 5",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -95,7 +91,6 @@
           "detail_id": "007",
           "detail_uid": "00639-007",
           "title": "form 6",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -105,7 +100,6 @@
           "detail_id": "008",
           "detail_uid": "00639-008",
           "title": "form 7",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -115,7 +109,6 @@
           "detail_id": "009",
           "detail_uid": "00639-009",
           "title": "form 8",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -125,7 +118,6 @@
           "detail_id": "010",
           "detail_uid": "00639-010",
           "title": "form 9",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -135,7 +127,6 @@
           "detail_id": "011",
           "detail_uid": "00639-011",
           "title": "form 10",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -145,7 +136,6 @@
           "detail_id": "012",
           "detail_uid": "00639-012",
           "title": "form 11",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -155,7 +145,6 @@
           "detail_id": "013",
           "detail_uid": "00639-013",
           "title": "form 12",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -165,7 +154,6 @@
           "detail_id": "014",
           "detail_uid": "00639-014",
           "title": "form 13",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -175,7 +163,6 @@
           "detail_id": "015",
           "detail_uid": "00639-015",
           "title": "form 14",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -185,7 +172,6 @@
           "detail_id": "016",
           "detail_uid": "00639-016",
           "title": "form 15",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -195,7 +181,6 @@
           "detail_id": "017",
           "detail_uid": "00639-017",
           "title": "form 16",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -205,7 +190,6 @@
           "detail_id": "018",
           "detail_uid": "00639-018",
           "title": "form 17",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -215,7 +199,6 @@
           "detail_id": "019",
           "detail_uid": "00639-019",
           "title": "form 18",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -225,7 +208,6 @@
           "detail_id": "020",
           "detail_uid": "00639-020",
           "title": "form 19",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -235,7 +217,6 @@
           "detail_id": "021",
           "detail_uid": "00639-021",
           "title": "form 20",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -245,7 +226,6 @@
           "detail_id": "022",
           "detail_uid": "00639-022",
           "title": "form 21",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -255,7 +235,6 @@
           "detail_id": "023",
           "detail_uid": "00639-023",
           "title": "form 22",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -265,7 +244,6 @@
           "detail_id": "024",
           "detail_uid": "00639-024",
           "title": "form 23",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -275,7 +253,6 @@
           "detail_id": "025",
           "detail_uid": "00639-025",
           "title": "form 24",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -285,7 +262,6 @@
           "detail_id": "026",
           "detail_uid": "00639-026",
           "title": "form 25",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -295,7 +271,6 @@
           "detail_id": "027",
           "detail_uid": "00639-027",
           "title": "form 26",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -305,7 +280,6 @@
           "detail_id": "028",
           "detail_uid": "00639-028",
           "title": "form 27",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -315,7 +289,6 @@
           "detail_id": "029",
           "detail_uid": "00639-029",
           "title": "form 28",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -325,7 +298,6 @@
           "detail_id": "030",
           "detail_uid": "00639-030",
           "title": "form 29",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -335,7 +307,6 @@
           "detail_id": "031",
           "detail_uid": "00639-031",
           "title": "form 30",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -345,7 +316,6 @@
           "detail_id": "032",
           "detail_uid": "00639-032",
           "title": "form 31",
-          "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -353,14 +323,14 @@
       ]
     },
     {
-      "project_subfolder": "transformed forms",
+      "section_id": "00639-3",
+      "section_title": "transformed forms",
       "details": [
         {
           "work_id": "00639",
           "detail_id": "033",
           "detail_uid": "00639-033",
           "title": "transformed form 1",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -370,7 +340,6 @@
           "detail_id": "034",
           "detail_uid": "00639-034",
           "title": "transformed form 2",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -380,7 +349,6 @@
           "detail_id": "035",
           "detail_uid": "00639-035",
           "title": "transformed form 3",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -390,7 +358,6 @@
           "detail_id": "036",
           "detail_uid": "00639-036",
           "title": "transformed form 4",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -400,7 +367,6 @@
           "detail_id": "037",
           "detail_uid": "00639-037",
           "title": "transformed form 5",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -410,7 +376,6 @@
           "detail_id": "038",
           "detail_uid": "00639-038",
           "title": "transformed form 6",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -420,7 +385,6 @@
           "detail_id": "039",
           "detail_uid": "00639-039",
           "title": "transformed form 7",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -430,7 +394,6 @@
           "detail_id": "040",
           "detail_uid": "00639-040",
           "title": "transformed form 8",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -440,7 +403,6 @@
           "detail_id": "041",
           "detail_uid": "00639-041",
           "title": "transformed form 9",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -450,7 +412,6 @@
           "detail_id": "042",
           "detail_uid": "00639-042",
           "title": "transformed form 10",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -460,7 +421,6 @@
           "detail_id": "043",
           "detail_uid": "00639-043",
           "title": "transformed form 11",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -470,7 +430,6 @@
           "detail_id": "044",
           "detail_uid": "00639-044",
           "title": "transformed form 12",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -480,7 +439,6 @@
           "detail_id": "045",
           "detail_uid": "00639-045",
           "title": "transformed form 13",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -490,7 +448,6 @@
           "detail_id": "046",
           "detail_uid": "00639-046",
           "title": "transformed form 14",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -500,7 +457,6 @@
           "detail_id": "047",
           "detail_uid": "00639-047",
           "title": "transformed form 15",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"
@@ -510,7 +466,6 @@
           "detail_id": "048",
           "detail_uid": "00639-048",
           "title": "transformed form 16",
-          "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
           "layout": "work_details"

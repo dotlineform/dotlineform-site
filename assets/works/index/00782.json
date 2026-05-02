@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-3f5fbc5f8007709ecc320a85c67ff6a0",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-c876aa0bbcd957f4445f160ef536ded2",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00782",
     "count": 46
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00782-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00782",
           "detail_id": "001",
           "detail_uid": "00782-001",
           "title": "birth of forms - detail 1",
-          "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00782-002",
           "title": "birth of forms - detail 2",
-          "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00782-003",
           "title": "birth of forms - detail 3",
-          "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00782-004",
           "title": "birth of forms - detail 4",
-          "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -68,14 +65,14 @@
       ]
     },
     {
-      "project_subfolder": "versions",
+      "section_id": "00782-2",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00782",
           "detail_id": "005",
           "detail_uid": "00782-005",
           "title": "birth of forms (generation 3 version 1)",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -85,7 +82,6 @@
           "detail_id": "006",
           "detail_uid": "00782-006",
           "title": "birth of forms (generation 3 version 2)",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -95,7 +91,6 @@
           "detail_id": "007",
           "detail_uid": "00782-007",
           "title": "birth of forms (generation 3 version 3)",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -105,7 +100,6 @@
           "detail_id": "008",
           "detail_uid": "00782-008",
           "title": "birth of forms (generation 3 version 4)",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -115,7 +109,6 @@
           "detail_id": "009",
           "detail_uid": "00782-009",
           "title": "birth of healing forms - 1.01",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -125,7 +118,6 @@
           "detail_id": "010",
           "detail_uid": "00782-010",
           "title": "birth of healing forms - 1.02",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -135,7 +127,6 @@
           "detail_id": "011",
           "detail_uid": "00782-011",
           "title": "birth of healing forms - 1.03",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -145,7 +136,6 @@
           "detail_id": "012",
           "detail_uid": "00782-012",
           "title": "birth of healing forms - 1.04",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -155,7 +145,6 @@
           "detail_id": "013",
           "detail_uid": "00782-013",
           "title": "birth of healing forms - 2.01",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -165,7 +154,6 @@
           "detail_id": "014",
           "detail_uid": "00782-014",
           "title": "birth of healing forms - 2.02",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -175,7 +163,6 @@
           "detail_id": "015",
           "detail_uid": "00782-015",
           "title": "birth of healing forms - 2.03",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -185,7 +172,6 @@
           "detail_id": "016",
           "detail_uid": "00782-016",
           "title": "birth of healing forms - 2.04",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -195,7 +181,6 @@
           "detail_id": "017",
           "detail_uid": "00782-017",
           "title": "birth of healing forms - 2.05",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -205,7 +190,6 @@
           "detail_id": "018",
           "detail_uid": "00782-018",
           "title": "birth of healing forms - 2.06",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -215,7 +199,6 @@
           "detail_id": "019",
           "detail_uid": "00782-019",
           "title": "birth of healing forms - 2.07",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -225,7 +208,6 @@
           "detail_id": "020",
           "detail_uid": "00782-020",
           "title": "birth of healing forms - 2.09",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -235,7 +217,6 @@
           "detail_id": "021",
           "detail_uid": "00782-021",
           "title": "birth of healing forms - 2.10",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -245,7 +226,6 @@
           "detail_id": "022",
           "detail_uid": "00782-022",
           "title": "birth of healing forms - 2.11",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -255,7 +235,6 @@
           "detail_id": "023",
           "detail_uid": "00782-023",
           "title": "birth of healing forms - 2.12",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -265,7 +244,6 @@
           "detail_id": "024",
           "detail_uid": "00782-024",
           "title": "birth of healing forms - 2.13",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -275,7 +253,6 @@
           "detail_id": "025",
           "detail_uid": "00782-025",
           "title": "birth of healing forms - 2.14",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -285,7 +262,6 @@
           "detail_id": "026",
           "detail_uid": "00782-026",
           "title": "birth of healing forms - 2.15",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -295,7 +271,6 @@
           "detail_id": "027",
           "detail_uid": "00782-027",
           "title": "birth of healing forms - 2.16",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -305,7 +280,6 @@
           "detail_id": "028",
           "detail_uid": "00782-028",
           "title": "birth of healing forms - 2.17",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -315,7 +289,6 @@
           "detail_id": "029",
           "detail_uid": "00782-029",
           "title": "birth of healing forms - 2.18",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -325,7 +298,6 @@
           "detail_id": "030",
           "detail_uid": "00782-030",
           "title": "birth of healing forms - 2.19",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -335,7 +307,6 @@
           "detail_id": "031",
           "detail_uid": "00782-031",
           "title": "birth of healing forms - 2.20",
-          "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
           "layout": "work_details"
@@ -345,7 +316,6 @@
           "detail_id": "032",
           "detail_uid": "00782-032",
           "title": "birth of healing forms - 2.25",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -355,7 +325,6 @@
           "detail_id": "033",
           "detail_uid": "00782-033",
           "title": "birth of healing forms - 2.26",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -365,7 +334,6 @@
           "detail_id": "034",
           "detail_uid": "00782-034",
           "title": "birth of healing forms - 2.27",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -375,7 +343,6 @@
           "detail_id": "035",
           "detail_uid": "00782-035",
           "title": "birth of healing forms - 2.28",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -385,7 +352,6 @@
           "detail_id": "036",
           "detail_uid": "00782-036",
           "title": "birth of healing forms - 2.29",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -395,7 +361,6 @@
           "detail_id": "037",
           "detail_uid": "00782-037",
           "title": "birth of healing forms - 2.30",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -405,7 +370,6 @@
           "detail_id": "038",
           "detail_uid": "00782-038",
           "title": "birth of healing forms - 2.31",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -415,7 +379,6 @@
           "detail_id": "039",
           "detail_uid": "00782-039",
           "title": "birth of healing forms - 2.32",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -425,7 +388,6 @@
           "detail_id": "040",
           "detail_uid": "00782-040",
           "title": "birth of healing forms - 3.01",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -435,7 +397,6 @@
           "detail_id": "041",
           "detail_uid": "00782-041",
           "title": "birth of healing forms - 3.02",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -445,7 +406,6 @@
           "detail_id": "042",
           "detail_uid": "00782-042",
           "title": "birth of healing forms - 3.04",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -455,7 +415,6 @@
           "detail_id": "043",
           "detail_uid": "00782-043",
           "title": "birth of healing forms - 3.05",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -465,7 +424,6 @@
           "detail_id": "044",
           "detail_uid": "00782-044",
           "title": "birth of healing forms - 3.06",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -475,7 +433,6 @@
           "detail_id": "045",
           "detail_uid": "00782-045",
           "title": "birth of healing forms - 3.07",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -485,7 +442,6 @@
           "detail_id": "046",
           "detail_uid": "00782-046",
           "title": "birth of healing forms - 3.08",
-          "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"

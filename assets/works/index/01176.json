@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b22eb02daf35e83bb8bb706fc2f3b0e2",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-203376c58c0980eecb8289964eb014b9",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01176",
     "count": 44
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "noise particles",
+      "section_id": "01176-1",
+      "section_title": "noise particles",
       "details": [
         {
           "work_id": "01176",
           "detail_id": "001",
           "detail_uid": "01176-001",
           "title": "form space noise 1",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01176-002",
           "title": "form space noise 2",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01176-003",
           "title": "form space noise 3",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01176-004",
           "title": "form space noise 4",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "01176-005",
           "title": "form space noise 5",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "01176-006",
           "title": "form space noise 6",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "01176-007",
           "title": "form space noise 7",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "01176-008",
           "title": "form space noise 8",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -110,7 +103,6 @@
           "detail_id": "009",
           "detail_uid": "01176-009",
           "title": "form space noise 9",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -120,7 +112,6 @@
           "detail_id": "010",
           "detail_uid": "01176-010",
           "title": "form space noise 10",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -130,7 +121,6 @@
           "detail_id": "011",
           "detail_uid": "01176-011",
           "title": "form space noise 11",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -140,7 +130,6 @@
           "detail_id": "012",
           "detail_uid": "01176-012",
           "title": "form space noise 12",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -150,7 +139,6 @@
           "detail_id": "013",
           "detail_uid": "01176-013",
           "title": "form space noise 13",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -160,7 +148,6 @@
           "detail_id": "014",
           "detail_uid": "01176-014",
           "title": "form space noise 14",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -170,7 +157,6 @@
           "detail_id": "015",
           "detail_uid": "01176-015",
           "title": "form space noise 15",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -180,7 +166,6 @@
           "detail_id": "016",
           "detail_uid": "01176-016",
           "title": "form space noise 16",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -190,7 +175,6 @@
           "detail_id": "017",
           "detail_uid": "01176-017",
           "title": "form space noise 17",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -200,7 +184,6 @@
           "detail_id": "018",
           "detail_uid": "01176-018",
           "title": "form space noise 18",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -210,7 +193,6 @@
           "detail_id": "019",
           "detail_uid": "01176-019",
           "title": "form space noise 19",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -220,7 +202,6 @@
           "detail_id": "020",
           "detail_uid": "01176-020",
           "title": "form space noise 20",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -230,7 +211,6 @@
           "detail_id": "021",
           "detail_uid": "01176-021",
           "title": "form space noise 21",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -240,7 +220,6 @@
           "detail_id": "022",
           "detail_uid": "01176-022",
           "title": "form space noise 22",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -250,7 +229,6 @@
           "detail_id": "023",
           "detail_uid": "01176-023",
           "title": "form space noise 23",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -260,7 +238,6 @@
           "detail_id": "024",
           "detail_uid": "01176-024",
           "title": "form space noise 24",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -270,7 +247,6 @@
           "detail_id": "025",
           "detail_uid": "01176-025",
           "title": "form space noise 25",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -280,7 +256,6 @@
           "detail_id": "026",
           "detail_uid": "01176-026",
           "title": "form space noise 26",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -290,7 +265,6 @@
           "detail_id": "027",
           "detail_uid": "01176-027",
           "title": "form space noise 27",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -300,7 +274,6 @@
           "detail_id": "028",
           "detail_uid": "01176-028",
           "title": "form space noise 28",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -310,7 +283,6 @@
           "detail_id": "029",
           "detail_uid": "01176-029",
           "title": "form space noise 29",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -320,7 +292,6 @@
           "detail_id": "030",
           "detail_uid": "01176-030",
           "title": "form space noise 30",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -330,7 +301,6 @@
           "detail_id": "031",
           "detail_uid": "01176-031",
           "title": "form space noise 31",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -340,7 +310,6 @@
           "detail_id": "032",
           "detail_uid": "01176-032",
           "title": "form space noise 32",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -350,7 +319,6 @@
           "detail_id": "033",
           "detail_uid": "01176-033",
           "title": "form space noise 33",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -360,7 +328,6 @@
           "detail_id": "034",
           "detail_uid": "01176-034",
           "title": "form space noise 34",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -370,7 +337,6 @@
           "detail_id": "035",
           "detail_uid": "01176-035",
           "title": "form space noise 35",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -380,7 +346,6 @@
           "detail_id": "036",
           "detail_uid": "01176-036",
           "title": "form space noise 36",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -390,7 +355,6 @@
           "detail_id": "037",
           "detail_uid": "01176-037",
           "title": "form space noise 37",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -400,7 +364,6 @@
           "detail_id": "038",
           "detail_uid": "01176-038",
           "title": "form space noise 38",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -410,7 +373,6 @@
           "detail_id": "039",
           "detail_uid": "01176-039",
           "title": "form space noise 39",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -420,7 +382,6 @@
           "detail_id": "040",
           "detail_uid": "01176-040",
           "title": "form space noise 40",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -430,7 +391,6 @@
           "detail_id": "041",
           "detail_uid": "01176-041",
           "title": "form space noise 41",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -440,7 +400,6 @@
           "detail_id": "042",
           "detail_uid": "01176-042",
           "title": "form space noise 42",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -450,7 +409,6 @@
           "detail_id": "043",
           "detail_uid": "01176-043",
           "title": "form space noise 43",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"
@@ -460,7 +418,6 @@
           "detail_id": "044",
           "detail_uid": "01176-044",
           "title": "form space noise 44",
-          "project_subfolder": "noise particles",
           "width_px": 4880,
           "height_px": 3660,
           "layout": "work_details"

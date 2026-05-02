@@ -6,15 +6,15 @@
     "detail_uid": "01197-003",
     "work_id": "01197",
     "detail_id": "003",
+    "section_id": "01197-1",
+    "section_title": "paths",
+    "details_subfolder": "paths",
     "project_filename": "form paths 17-24.jpg",
     "title": "form paths 17-24",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 5906,
-    "height_px": 5906,
-    "section_id": "01197-1",
-    "section_title": "paths",
-    "details_subfolder": "paths"
+    "height_px": 5906
   },
   "work_summary": {
     "work_id": "01197",

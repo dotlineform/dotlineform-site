@@ -6,15 +6,15 @@
     "detail_uid": "00875-002",
     "work_id": "00875",
     "detail_id": "002",
+    "section_id": "00875-1",
+    "section_title": "cell",
+    "details_subfolder": "cell",
     "project_filename": "doll cell - 2007-04-08 - 22-13-45.jpg",
     "title": "doll cell - 2007-04-08 - 22-13-45",
     "status": "published",
     "published_date": "2026-03-17",
     "width_px": 3780,
-    "height_px": 2837,
-    "section_id": "00875-1",
-    "section_title": "cell",
-    "details_subfolder": "cell"
+    "height_px": 2837
   },
   "work_summary": {
     "work_id": "00875",

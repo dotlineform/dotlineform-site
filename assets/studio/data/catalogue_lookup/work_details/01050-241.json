@@ -6,15 +6,15 @@
     "detail_uid": "01050-241",
     "work_id": "01050",
     "detail_id": "241",
+    "section_id": "01050-2",
+    "section_title": "particles",
+    "details_subfolder": "particles",
     "project_filename": "particle 235.jpg",
     "title": "particle 235",
     "status": "published",
     "published_date": "2026-03-19",
     "width_px": 1890,
-    "height_px": 1890,
-    "section_id": "01050-2",
-    "section_title": "particles",
-    "details_subfolder": "particles"
+    "height_px": 1890
   },
   "work_summary": {
     "work_id": "01050",

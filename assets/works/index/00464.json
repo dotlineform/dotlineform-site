@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8c97461432690c00919d9bf93ddc42c3",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-798284e903f97102fcfb029232b4c361",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00464",
     "count": 60
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "moments",
+      "section_id": "00464-1",
+      "section_title": "moments",
       "details": [
         {
           "work_id": "00464",
           "detail_id": "001",
           "detail_uid": "00464-001",
           "title": "memories of the forest 1",
-          "project_subfolder": "moments",
           "width_px": 8268,
           "height_px": 8268,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00464-002",
           "title": "memories of the forest 2",
-          "project_subfolder": "moments",
           "width_px": 8268,
           "height_px": 8268,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00464-003",
           "title": "memories of the forest 3",
-          "project_subfolder": "moments",
           "width_px": 8268,
           "height_px": 8268,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00464-004",
           "title": "3 moments",
-          "project_subfolder": "moments",
           "width_px": 4000,
           "height_px": 4000,
           "layout": "work_details"
@@ -68,14 +65,14 @@
       ]
     },
     {
-      "project_subfolder": "memories",
+      "section_id": "00464-2",
+      "section_title": "memories",
       "details": [
         {
           "work_id": "00464",
           "detail_id": "005",
           "detail_uid": "00464-005",
           "title": "memory - 1.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -85,7 +82,6 @@
           "detail_id": "006",
           "detail_uid": "00464-006",
           "title": "memory - 1.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -95,7 +91,6 @@
           "detail_id": "007",
           "detail_uid": "00464-007",
           "title": "memory - 1.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -105,7 +100,6 @@
           "detail_id": "008",
           "detail_uid": "00464-008",
           "title": "memory - 2.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -115,7 +109,6 @@
           "detail_id": "009",
           "detail_uid": "00464-009",
           "title": "memory - 2.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -125,7 +118,6 @@
           "detail_id": "010",
           "detail_uid": "00464-010",
           "title": "memory - 2.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -135,7 +127,6 @@
           "detail_id": "011",
           "detail_uid": "00464-011",
           "title": "memory - 3.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -145,7 +136,6 @@
           "detail_id": "012",
           "detail_uid": "00464-012",
           "title": "memory - 3.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -155,7 +145,6 @@
           "detail_id": "013",
           "detail_uid": "00464-013",
           "title": "memory - 3.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -165,7 +154,6 @@
           "detail_id": "014",
           "detail_uid": "00464-014",
           "title": "memory - 4.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -175,7 +163,6 @@
           "detail_id": "015",
           "detail_uid": "00464-015",
           "title": "memory - 4.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -185,7 +172,6 @@
           "detail_id": "016",
           "detail_uid": "00464-016",
           "title": "memory - 4.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -195,7 +181,6 @@
           "detail_id": "017",
           "detail_uid": "00464-017",
           "title": "memory - 5.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -205,7 +190,6 @@
           "detail_id": "018",
           "detail_uid": "00464-018",
           "title": "memory - 5.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -215,7 +199,6 @@
           "detail_id": "019",
           "detail_uid": "00464-019",
           "title": "memory - 5.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -225,7 +208,6 @@
           "detail_id": "020",
           "detail_uid": "00464-020",
           "title": "memory - 6.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -235,7 +217,6 @@
           "detail_id": "021",
           "detail_uid": "00464-021",
           "title": "memory - 6.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -245,7 +226,6 @@
           "detail_id": "022",
           "detail_uid": "00464-022",
           "title": "memory - 6.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -255,7 +235,6 @@
           "detail_id": "023",
           "detail_uid": "00464-023",
           "title": "memory - 7.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -265,7 +244,6 @@
           "detail_id": "024",
           "detail_uid": "00464-024",
           "title": "memory - 7.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -275,7 +253,6 @@
           "detail_id": "025",
           "detail_uid": "00464-025",
           "title": "memory - 7.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -285,7 +262,6 @@
           "detail_id": "026",
           "detail_uid": "00464-026",
           "title": "memory - 8.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -295,7 +271,6 @@
           "detail_id": "027",
           "detail_uid": "00464-027",
           "title": "memory - 8.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -305,7 +280,6 @@
           "detail_id": "028",
           "detail_uid": "00464-028",
           "title": "memory - 8.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -315,7 +289,6 @@
           "detail_id": "029",
           "detail_uid": "00464-029",
           "title": "memory - 9.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -325,7 +298,6 @@
           "detail_id": "030",
           "detail_uid": "00464-030",
           "title": "memory - 9.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -335,7 +307,6 @@
           "detail_id": "031",
           "detail_uid": "00464-031",
           "title": "memory - 9.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -345,7 +316,6 @@
           "detail_id": "032",
           "detail_uid": "00464-032",
           "title": "memory - 10.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -355,7 +325,6 @@
           "detail_id": "033",
           "detail_uid": "00464-033",
           "title": "memory - 10.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -365,7 +334,6 @@
           "detail_id": "034",
           "detail_uid": "00464-034",
           "title": "memory - 10.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -375,7 +343,6 @@
           "detail_id": "035",
           "detail_uid": "00464-035",
           "title": "memory - 11.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -385,7 +352,6 @@
           "detail_id": "036",
           "detail_uid": "00464-036",
           "title": "memory - 11.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -395,7 +361,6 @@
           "detail_id": "037",
           "detail_uid": "00464-037",
           "title": "memory - 11.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -405,7 +370,6 @@
           "detail_id": "038",
           "detail_uid": "00464-038",
           "title": "memory - 12.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -415,7 +379,6 @@
           "detail_id": "039",
           "detail_uid": "00464-039",
           "title": "memory - 12.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -425,7 +388,6 @@
           "detail_id": "040",
           "detail_uid": "00464-040",
           "title": "memory - 12.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -435,7 +397,6 @@
           "detail_id": "041",
           "detail_uid": "00464-041",
           "title": "memory - 13.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -445,7 +406,6 @@
           "detail_id": "042",
           "detail_uid": "00464-042",
           "title": "memory - 13.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -455,7 +415,6 @@
           "detail_id": "043",
           "detail_uid": "00464-043",
           "title": "memory - 13.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -465,7 +424,6 @@
           "detail_id": "044",
           "detail_uid": "00464-044",
           "title": "memory - 14.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -475,7 +433,6 @@
           "detail_id": "045",
           "detail_uid": "00464-045",
           "title": "memory - 14.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -485,7 +442,6 @@
           "detail_id": "046",
           "detail_uid": "00464-046",
           "title": "memory - 14.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -495,7 +451,6 @@
           "detail_id": "047",
           "detail_uid": "00464-047",
           "title": "memory - 15.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -505,7 +460,6 @@
           "detail_id": "048",
           "detail_uid": "00464-048",
           "title": "memory - 15.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -515,7 +469,6 @@
           "detail_id": "049",
           "detail_uid": "00464-049",
           "title": "memory - 15.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -525,7 +478,6 @@
           "detail_id": "050",
           "detail_uid": "00464-050",
           "title": "memory - 16.1",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -535,7 +487,6 @@
           "detail_id": "051",
           "detail_uid": "00464-051",
           "title": "memory - 16.2",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -545,7 +496,6 @@
           "detail_id": "052",
           "detail_uid": "00464-052",
           "title": "memory - 16.3",
-          "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
           "layout": "work_details"
@@ -553,14 +503,14 @@
       ]
     },
     {
-      "project_subfolder": "composite memories",
+      "section_id": "00464-3",
+      "section_title": "composite memories",
       "details": [
         {
           "work_id": "00464",
           "detail_id": "053",
           "detail_uid": "00464-053",
           "title": "memories 1-6",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -570,7 +520,6 @@
           "detail_id": "054",
           "detail_uid": "00464-054",
           "title": "memories 7-12",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -580,7 +529,6 @@
           "detail_id": "055",
           "detail_uid": "00464-055",
           "title": "memories 13-18",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -590,7 +538,6 @@
           "detail_id": "056",
           "detail_uid": "00464-056",
           "title": "memories 19-24",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -600,7 +547,6 @@
           "detail_id": "057",
           "detail_uid": "00464-057",
           "title": "memories 25-30",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -610,7 +556,6 @@
           "detail_id": "058",
           "detail_uid": "00464-058",
           "title": "memories 31-36",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -620,7 +565,6 @@
           "detail_id": "059",
           "detail_uid": "00464-059",
           "title": "memories 37-42",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -630,7 +574,6 @@
           "detail_id": "060",
           "detail_uid": "00464-060",
           "title": "memories 43-48",
-          "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"

@@ -6,15 +6,15 @@
     "detail_uid": "00638-027",
     "work_id": "00638",
     "detail_id": "027",
+    "section_id": "00638-3",
+    "section_title": "source",
+    "details_subfolder": "source",
     "project_filename": "source - reincarnation.jpg",
     "title": "source - reincarnation",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 1681,
-    "height_px": 1393,
-    "section_id": "00638-3",
-    "section_title": "source",
-    "details_subfolder": "source"
+    "height_px": 1393
   },
   "work_summary": {
     "work_id": "00638",

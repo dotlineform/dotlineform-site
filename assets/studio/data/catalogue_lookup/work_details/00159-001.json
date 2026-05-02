@@ -6,15 +6,15 @@
     "detail_uid": "00159-001",
     "work_id": "00159",
     "detail_id": "001",
+    "section_id": "00159-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "Michelle Pfeiffer - page 1.jpg",
     "title": "Michelle Pfeiffer - page 1",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 4038,
-    "height_px": 5712,
-    "section_id": "00159-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 5712
   },
   "work_summary": {
     "work_id": "00159",

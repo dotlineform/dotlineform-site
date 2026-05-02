@@ -6,15 +6,15 @@
     "detail_uid": "01037-011",
     "work_id": "01037",
     "detail_id": "011",
+    "section_id": "01037-2",
+    "section_title": "work in progress",
+    "details_subfolder": "work in progress",
     "project_filename": "2024-05-30 17-32 4.jpg",
     "title": "2024-05-30 17-32 4",
     "status": "published",
     "published_date": "2026-03-18",
     "width_px": 1679,
-    "height_px": 1679,
-    "section_id": "01037-2",
-    "section_title": "work in progress",
-    "details_subfolder": "work in progress"
+    "height_px": 1679
   },
   "work_summary": {
     "work_id": "01037",

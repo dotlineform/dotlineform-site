@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-0993886b3b01774d37bb03abcbf5c203",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-dda207f261889a994f0f54cde0f0ef66",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00622",
     "count": 6
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "derivation",
+      "section_id": "00622-1",
+      "section_title": "derivation",
       "details": [
         {
           "work_id": "00622",
           "detail_id": "001",
           "detail_uid": "00622-001",
           "title": "k source",
-          "project_subfolder": "derivation",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00622-002",
           "title": "k crystals bits - detail",
-          "project_subfolder": "derivation",
           "width_px": 2893,
           "height_px": 1808,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00622-003",
           "title": "k crystals bits - screenshot - detail",
-          "project_subfolder": "derivation",
           "width_px": 800,
           "height_px": 500,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00622-004",
           "title": "k crystals bits - screenshot",
-          "project_subfolder": "derivation",
           "width_px": 5802,
           "height_px": 4148,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00622-005",
           "title": "k crystals bits",
-          "project_subfolder": "derivation",
           "width_px": 8681,
           "height_px": 6300,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "00622-006",
           "title": "k crystals colours",
-          "project_subfolder": "derivation",
           "width_px": 4341,
           "height_px": 3150,
           "layout": "work_details"

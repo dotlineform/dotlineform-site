@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-6d5234a4fc73460c9964d441d609aa3c",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-d9e42c711a15a188df6d4e84b8bf3312",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00519",
     "count": 75
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00519-1",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00519",
           "detail_id": "001",
           "detail_uid": "00519-001",
           "title": "version dall-e - 1.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00519-002",
           "title": "version dall-e - 1.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00519-003",
           "title": "version dall-e - 1.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00519-004",
           "title": "version dall-e - 1.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00519-005",
           "title": "version dall-e - 1.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "00519-006",
           "title": "version dall-e - 2.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "00519-007",
           "title": "version dall-e - 2.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "00519-008",
           "title": "version dall-e - 2.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -110,7 +103,6 @@
           "detail_id": "009",
           "detail_uid": "00519-009",
           "title": "version dall-e - 2.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -120,7 +112,6 @@
           "detail_id": "010",
           "detail_uid": "00519-010",
           "title": "version dall-e - 2.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -130,7 +121,6 @@
           "detail_id": "011",
           "detail_uid": "00519-011",
           "title": "version dall-e - 3.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -140,7 +130,6 @@
           "detail_id": "012",
           "detail_uid": "00519-012",
           "title": "version dall-e - 3.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -150,7 +139,6 @@
           "detail_id": "013",
           "detail_uid": "00519-013",
           "title": "version dall-e - 3.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -160,7 +148,6 @@
           "detail_id": "014",
           "detail_uid": "00519-014",
           "title": "version dall-e - 3.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -170,7 +157,6 @@
           "detail_id": "015",
           "detail_uid": "00519-015",
           "title": "version dall-e - 3.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -180,7 +166,6 @@
           "detail_id": "016",
           "detail_uid": "00519-016",
           "title": "version dall-e - 4.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -190,7 +175,6 @@
           "detail_id": "017",
           "detail_uid": "00519-017",
           "title": "version dall-e - 4.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -200,7 +184,6 @@
           "detail_id": "018",
           "detail_uid": "00519-018",
           "title": "version dall-e - 4.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -210,7 +193,6 @@
           "detail_id": "019",
           "detail_uid": "00519-019",
           "title": "version dall-e - 4.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -220,7 +202,6 @@
           "detail_id": "020",
           "detail_uid": "00519-020",
           "title": "version dall-e - 4.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -230,7 +211,6 @@
           "detail_id": "021",
           "detail_uid": "00519-021",
           "title": "version dall-e - 5.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -240,7 +220,6 @@
           "detail_id": "022",
           "detail_uid": "00519-022",
           "title": "version dall-e - 5.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -250,7 +229,6 @@
           "detail_id": "023",
           "detail_uid": "00519-023",
           "title": "version dall-e - 5.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -260,7 +238,6 @@
           "detail_id": "024",
           "detail_uid": "00519-024",
           "title": "version dall-e - 5.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -270,7 +247,6 @@
           "detail_id": "025",
           "detail_uid": "00519-025",
           "title": "version dall-e - 5.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -280,7 +256,6 @@
           "detail_id": "026",
           "detail_uid": "00519-026",
           "title": "version dall-e - 6.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -290,7 +265,6 @@
           "detail_id": "027",
           "detail_uid": "00519-027",
           "title": "version dall-e - 6.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -300,7 +274,6 @@
           "detail_id": "028",
           "detail_uid": "00519-028",
           "title": "version dall-e - 6.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -310,7 +283,6 @@
           "detail_id": "029",
           "detail_uid": "00519-029",
           "title": "version dall-e - 6.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -320,7 +292,6 @@
           "detail_id": "030",
           "detail_uid": "00519-030",
           "title": "version dall-e - 6.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -330,7 +301,6 @@
           "detail_id": "031",
           "detail_uid": "00519-031",
           "title": "version dall-e - 7.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -340,7 +310,6 @@
           "detail_id": "032",
           "detail_uid": "00519-032",
           "title": "version dall-e - 7.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -350,7 +319,6 @@
           "detail_id": "033",
           "detail_uid": "00519-033",
           "title": "version dall-e - 7.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -360,7 +328,6 @@
           "detail_id": "034",
           "detail_uid": "00519-034",
           "title": "version dall-e - 7.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -370,7 +337,6 @@
           "detail_id": "035",
           "detail_uid": "00519-035",
           "title": "version dall-e - 7.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -380,7 +346,6 @@
           "detail_id": "036",
           "detail_uid": "00519-036",
           "title": "version dall-e - 8.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -390,7 +355,6 @@
           "detail_id": "037",
           "detail_uid": "00519-037",
           "title": "version dall-e - 8.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -400,7 +364,6 @@
           "detail_id": "038",
           "detail_uid": "00519-038",
           "title": "version dall-e - 8.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -410,7 +373,6 @@
           "detail_id": "039",
           "detail_uid": "00519-039",
           "title": "version dall-e - 8.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -420,7 +382,6 @@
           "detail_id": "040",
           "detail_uid": "00519-040",
           "title": "version dall-e - 8.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -430,7 +391,6 @@
           "detail_id": "041",
           "detail_uid": "00519-041",
           "title": "version dall-e - 9.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -440,7 +400,6 @@
           "detail_id": "042",
           "detail_uid": "00519-042",
           "title": "version dall-e - 9.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -450,7 +409,6 @@
           "detail_id": "043",
           "detail_uid": "00519-043",
           "title": "version dall-e - 9.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -460,7 +418,6 @@
           "detail_id": "044",
           "detail_uid": "00519-044",
           "title": "version dall-e - 9.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -470,7 +427,6 @@
           "detail_id": "045",
           "detail_uid": "00519-045",
           "title": "version dall-e - 9.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -480,7 +436,6 @@
           "detail_id": "046",
           "detail_uid": "00519-046",
           "title": "version dall-e - 10.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -490,7 +445,6 @@
           "detail_id": "047",
           "detail_uid": "00519-047",
           "title": "version dall-e - 10.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -500,7 +454,6 @@
           "detail_id": "048",
           "detail_uid": "00519-048",
           "title": "version dall-e - 10.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -510,7 +463,6 @@
           "detail_id": "049",
           "detail_uid": "00519-049",
           "title": "version dall-e - 10.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -520,7 +472,6 @@
           "detail_id": "050",
           "detail_uid": "00519-050",
           "title": "version dall-e - 10.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -530,7 +481,6 @@
           "detail_id": "051",
           "detail_uid": "00519-051",
           "title": "version dall-e - 11.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -540,7 +490,6 @@
           "detail_id": "052",
           "detail_uid": "00519-052",
           "title": "version dall-e - 11.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -550,7 +499,6 @@
           "detail_id": "053",
           "detail_uid": "00519-053",
           "title": "version dall-e - 11.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -560,7 +508,6 @@
           "detail_id": "054",
           "detail_uid": "00519-054",
           "title": "version dall-e - 11.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -570,7 +517,6 @@
           "detail_id": "055",
           "detail_uid": "00519-055",
           "title": "version dall-e - 11.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -580,7 +526,6 @@
           "detail_id": "056",
           "detail_uid": "00519-056",
           "title": "version dall-e - 12.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -590,7 +535,6 @@
           "detail_id": "057",
           "detail_uid": "00519-057",
           "title": "version dall-e - 12.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -600,7 +544,6 @@
           "detail_id": "058",
           "detail_uid": "00519-058",
           "title": "version dall-e - 12.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -610,7 +553,6 @@
           "detail_id": "059",
           "detail_uid": "00519-059",
           "title": "version dall-e - 12.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -620,7 +562,6 @@
           "detail_id": "060",
           "detail_uid": "00519-060",
           "title": "version dall-e - 12.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -630,7 +571,6 @@
           "detail_id": "061",
           "detail_uid": "00519-061",
           "title": "version dall-e - 13.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -640,7 +580,6 @@
           "detail_id": "062",
           "detail_uid": "00519-062",
           "title": "version dall-e - 13.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -650,7 +589,6 @@
           "detail_id": "063",
           "detail_uid": "00519-063",
           "title": "version dall-e - 13.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -660,7 +598,6 @@
           "detail_id": "064",
           "detail_uid": "00519-064",
           "title": "version dall-e - 13.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -670,7 +607,6 @@
           "detail_id": "065",
           "detail_uid": "00519-065",
           "title": "version dall-e - 13.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -680,7 +616,6 @@
           "detail_id": "066",
           "detail_uid": "00519-066",
           "title": "version dall-e - 14.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -690,7 +625,6 @@
           "detail_id": "067",
           "detail_uid": "00519-067",
           "title": "version dall-e - 14.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -700,7 +634,6 @@
           "detail_id": "068",
           "detail_uid": "00519-068",
           "title": "version dall-e - 14.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -710,7 +643,6 @@
           "detail_id": "069",
           "detail_uid": "00519-069",
           "title": "version dall-e - 14.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -720,7 +652,6 @@
           "detail_id": "070",
           "detail_uid": "00519-070",
           "title": "version dall-e - 14.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -730,7 +661,6 @@
           "detail_id": "071",
           "detail_uid": "00519-071",
           "title": "version dall-e - 15.0 (run source)",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -740,7 +670,6 @@
           "detail_id": "072",
           "detail_uid": "00519-072",
           "title": "version dall-e - 15.1",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -750,7 +679,6 @@
           "detail_id": "073",
           "detail_uid": "00519-073",
           "title": "version dall-e - 15.2",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -760,7 +688,6 @@
           "detail_id": "074",
           "detail_uid": "00519-074",
           "title": "version dall-e - 15.3",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -770,7 +697,6 @@
           "detail_id": "075",
           "detail_uid": "00519-075",
           "title": "version dall-e - 15.4",
-          "project_subfolder": "versions",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"

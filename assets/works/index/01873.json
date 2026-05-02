@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-2062c771f68a23cd3c26b5be1bfbfa7a",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-a67dc97041e96845261671ea3fd87c35",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01873",
     "count": 4
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01873-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01873",
           "detail_id": "001",
           "detail_uid": "01873-001",
           "title": "tulips 5 - detail 1",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01873-002",
           "title": "tulips 5 - detail 2",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01873-003",
           "title": "tulips 5 - detail 3",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01873-004",
           "title": "tulips 5 - detail 4",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"

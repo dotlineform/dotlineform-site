@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-7336e1966ea4b55f6af94a912e725bb0",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-d78b08c4f0d28e6ac3c0e674967d70ea",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00163",
     "count": 10
   },
@@ -23,21 +23,21 @@
     "height_px": 2193,
     "downloads": [
       {
-        "filename": "nerve-abattoir.pdf",
+        "filename": "nerve (abattoir).pdf",
         "label": "nerve (abattoir).pdf"
       }
     ]
   },
   "sections": [
     {
-      "project_subfolder": "pages",
+      "section_id": "00163-1",
+      "section_title": "pages",
       "details": [
         {
           "work_id": "00163",
           "detail_id": "001",
           "detail_uid": "00163-001",
           "title": "nerve (abattoir) - front cover",
-          "project_subfolder": "pages",
           "width_px": 2242,
           "height_px": 2242,
           "layout": "work_details"
@@ -47,7 +47,6 @@
           "detail_id": "002",
           "detail_uid": "00163-002",
           "title": "nerve (abattoir) - inside cover",
-          "project_subfolder": "pages",
           "width_px": 3240,
           "height_px": 2268,
           "layout": "work_details"
@@ -57,7 +56,6 @@
           "detail_id": "003",
           "detail_uid": "00163-003",
           "title": "nerve (abattoir) - 1",
-          "project_subfolder": "pages",
           "width_px": 2869,
           "height_px": 2008,
           "layout": "work_details"
@@ -67,7 +65,6 @@
           "detail_id": "004",
           "detail_uid": "00163-004",
           "title": "nerve (abattoir) - 2",
-          "project_subfolder": "pages",
           "width_px": 2750,
           "height_px": 1925,
           "layout": "work_details"
@@ -77,7 +74,6 @@
           "detail_id": "005",
           "detail_uid": "00163-005",
           "title": "nerve (abattoir) - 3",
-          "project_subfolder": "pages",
           "width_px": 2665,
           "height_px": 1866,
           "layout": "work_details"
@@ -87,7 +83,6 @@
           "detail_id": "006",
           "detail_uid": "00163-006",
           "title": "nerve (abattoir) - 4",
-          "project_subfolder": "pages",
           "width_px": 2971,
           "height_px": 2080,
           "layout": "work_details"
@@ -97,7 +92,6 @@
           "detail_id": "007",
           "detail_uid": "00163-007",
           "title": "nerve (abattoir) - 5",
-          "project_subfolder": "pages",
           "width_px": 2979,
           "height_px": 2085,
           "layout": "work_details"
@@ -107,7 +101,6 @@
           "detail_id": "008",
           "detail_uid": "00163-008",
           "title": "nerve (abattoir) - 6",
-          "project_subfolder": "pages",
           "width_px": 2896,
           "height_px": 2027,
           "layout": "work_details"
@@ -117,7 +110,6 @@
           "detail_id": "009",
           "detail_uid": "00163-009",
           "title": "nerve (abattoir) - 7",
-          "project_subfolder": "pages",
           "width_px": 3015,
           "height_px": 2111,
           "layout": "work_details"
@@ -127,7 +119,6 @@
           "detail_id": "010",
           "detail_uid": "00163-010",
           "title": "nerve (abattoir) - back cover",
-          "project_subfolder": "pages",
           "width_px": 1985,
           "height_px": 1985,
           "layout": "work_details"

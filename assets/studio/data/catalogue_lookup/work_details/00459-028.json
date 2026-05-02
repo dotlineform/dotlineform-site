@@ -6,15 +6,15 @@
     "detail_uid": "00459-028",
     "work_id": "00459",
     "detail_id": "028",
+    "section_id": "00459-1",
+    "section_title": "molecules",
+    "details_subfolder": "molecules",
     "project_filename": "molecule form 28 (2007-03-18).jpg",
     "title": "molecule form 28 (2007-03-18)",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 4724,
-    "height_px": 4724,
-    "section_id": "00459-1",
-    "section_title": "molecules",
-    "details_subfolder": "molecules"
+    "height_px": 4724
   },
   "work_summary": {
     "work_id": "00459",

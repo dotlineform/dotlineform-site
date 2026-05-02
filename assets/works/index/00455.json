@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-a42873326bef7cd878e08daa2f44d4d0",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-5e8acec2e4f16a5b55c83387b37bbc09",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00455",
     "count": 50
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00455-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00455",
           "detail_id": "001",
           "detail_uid": "00455-001",
           "title": "dotlineform - detail 1",
-          "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00455-002",
           "title": "dotlineform - detail 2",
-          "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00455-003",
           "title": "dotlineform - detail 3",
-          "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00455-004",
           "title": "dotlineform - detail 4",
-          "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00455-005",
           "title": "dotlineform - detail 5",
-          "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "00455-006",
           "title": "dotlineform - detail 6",
-          "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -88,14 +83,14 @@
       ]
     },
     {
-      "project_subfolder": "work in progress",
+      "section_id": "00455-2",
+      "section_title": "work in progress",
       "details": [
         {
           "work_id": "00455",
           "detail_id": "007",
           "detail_uid": "00455-007",
           "title": "2023-10-01 17꞉53",
-          "project_subfolder": "work in progress",
           "width_px": 1772,
           "height_px": 3595,
           "layout": "work_details"
@@ -105,7 +100,6 @@
           "detail_id": "008",
           "detail_uid": "00455-008",
           "title": "2015-01-21 13꞉21",
-          "project_subfolder": "work in progress",
           "width_px": 3264,
           "height_px": 2448,
           "layout": "work_details"
@@ -115,7 +109,6 @@
           "detail_id": "009",
           "detail_uid": "00455-009",
           "title": "2015-06-13 02꞉30",
-          "project_subfolder": "work in progress",
           "width_px": 2448,
           "height_px": 2448,
           "layout": "work_details"
@@ -125,7 +118,6 @@
           "detail_id": "010",
           "detail_uid": "00455-010",
           "title": "2023-10-01 17꞉53 2",
-          "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
           "layout": "work_details"
@@ -135,7 +127,6 @@
           "detail_id": "011",
           "detail_uid": "00455-011",
           "title": "2023-10-01 18꞉07 2",
-          "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
           "layout": "work_details"
@@ -145,7 +136,6 @@
           "detail_id": "012",
           "detail_uid": "00455-012",
           "title": "2023-10-01 18꞉07 3",
-          "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
           "layout": "work_details"
@@ -155,7 +145,6 @@
           "detail_id": "013",
           "detail_uid": "00455-013",
           "title": "2023-10-01 18꞉07",
-          "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
           "layout": "work_details"
@@ -165,7 +154,6 @@
           "detail_id": "014",
           "detail_uid": "00455-014",
           "title": "2023-10-01 19꞉18",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -175,7 +163,6 @@
           "detail_id": "015",
           "detail_uid": "00455-015",
           "title": "2023-10-02 00꞉03 2",
-          "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 4032,
           "layout": "work_details"
@@ -185,7 +172,6 @@
           "detail_id": "016",
           "detail_uid": "00455-016",
           "title": "2023-10-02 00꞉03",
-          "project_subfolder": "work in progress",
           "width_px": 4032,
           "height_px": 2268,
           "layout": "work_details"
@@ -195,7 +181,6 @@
           "detail_id": "017",
           "detail_uid": "00455-017",
           "title": "2023-10-02 19꞉13 2",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -205,7 +190,6 @@
           "detail_id": "018",
           "detail_uid": "00455-018",
           "title": "2023-10-02 19꞉13 3",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -215,7 +199,6 @@
           "detail_id": "019",
           "detail_uid": "00455-019",
           "title": "2023-10-02 19꞉13",
-          "project_subfolder": "work in progress",
           "width_px": 2397,
           "height_px": 2397,
           "layout": "work_details"
@@ -225,7 +208,6 @@
           "detail_id": "020",
           "detail_uid": "00455-020",
           "title": "2023-10-02 20꞉44",
-          "project_subfolder": "work in progress",
           "width_px": 4032,
           "height_px": 2268,
           "layout": "work_details"
@@ -235,7 +217,6 @@
           "detail_id": "021",
           "detail_uid": "00455-021",
           "title": "2023-10-02 20꞉45",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -245,7 +226,6 @@
           "detail_id": "022",
           "detail_uid": "00455-022",
           "title": "2023-10-03 20꞉59 2",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -255,7 +235,6 @@
           "detail_id": "023",
           "detail_uid": "00455-023",
           "title": "2023-10-03 20꞉59 3",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -265,7 +244,6 @@
           "detail_id": "024",
           "detail_uid": "00455-024",
           "title": "2023-10-03 20꞉59",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -275,7 +253,6 @@
           "detail_id": "025",
           "detail_uid": "00455-025",
           "title": "2023-10-03 22꞉12 2",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -285,7 +262,6 @@
           "detail_id": "026",
           "detail_uid": "00455-026",
           "title": "2023-10-03 22꞉12",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -295,7 +271,6 @@
           "detail_id": "027",
           "detail_uid": "00455-027",
           "title": "2023-10-05 01꞉17",
-          "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 4032,
           "layout": "work_details"
@@ -305,7 +280,6 @@
           "detail_id": "028",
           "detail_uid": "00455-028",
           "title": "2023-10-05 01꞉18",
-          "project_subfolder": "work in progress",
           "width_px": 5249,
           "height_px": 2953,
           "layout": "work_details"
@@ -315,7 +289,6 @@
           "detail_id": "029",
           "detail_uid": "00455-029",
           "title": "2023-10-05 01꞉19",
-          "project_subfolder": "work in progress",
           "width_px": 5249,
           "height_px": 2953,
           "layout": "work_details"
@@ -325,7 +298,6 @@
           "detail_id": "030",
           "detail_uid": "00455-030",
           "title": "2023-10-05 20꞉23",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -335,7 +307,6 @@
           "detail_id": "031",
           "detail_uid": "00455-031",
           "title": "2023-10-05 21꞉35",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -345,7 +316,6 @@
           "detail_id": "032",
           "detail_uid": "00455-032",
           "title": "2023-10-06 00꞉43 2",
-          "project_subfolder": "work in progress",
           "width_px": 2765,
           "height_px": 2765,
           "layout": "work_details"
@@ -355,7 +325,6 @@
           "detail_id": "033",
           "detail_uid": "00455-033",
           "title": "2023-10-06 00꞉43",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -365,7 +334,6 @@
           "detail_id": "034",
           "detail_uid": "00455-034",
           "title": "2023-10-06 19꞉26",
-          "project_subfolder": "work in progress",
           "width_px": 2281,
           "height_px": 2281,
           "layout": "work_details"
@@ -375,7 +343,6 @@
           "detail_id": "035",
           "detail_uid": "00455-035",
           "title": "2023-10-06 19꞉35",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -385,7 +352,6 @@
           "detail_id": "036",
           "detail_uid": "00455-036",
           "title": "2023-10-06 20꞉39",
-          "project_subfolder": "work in progress",
           "width_px": 2953,
           "height_px": 5850,
           "layout": "work_details"
@@ -395,7 +361,6 @@
           "detail_id": "037",
           "detail_uid": "00455-037",
           "title": "2023-10-06 23꞉49",
-          "project_subfolder": "work in progress",
           "width_px": 2953,
           "height_px": 5249,
           "layout": "work_details"
@@ -405,7 +370,6 @@
           "detail_id": "038",
           "detail_uid": "00455-038",
           "title": "2023-10-08 00꞉22",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -415,7 +379,6 @@
           "detail_id": "039",
           "detail_uid": "00455-039",
           "title": "2023-10-09 22꞉32",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -425,7 +388,6 @@
           "detail_id": "040",
           "detail_uid": "00455-040",
           "title": "2023-10-09 22꞉33 2",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -435,7 +397,6 @@
           "detail_id": "041",
           "detail_uid": "00455-041",
           "title": "2023-10-09 22꞉33",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -445,7 +406,6 @@
           "detail_id": "042",
           "detail_uid": "00455-042",
           "title": "2023-10-09 22꞉34",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -455,7 +415,6 @@
           "detail_id": "043",
           "detail_uid": "00455-043",
           "title": "2023-10-09 23꞉13",
-          "project_subfolder": "work in progress",
           "width_px": 2953,
           "height_px": 2953,
           "layout": "work_details"
@@ -465,7 +424,6 @@
           "detail_id": "044",
           "detail_uid": "00455-044",
           "title": "2023-10-09 23꞉43",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -475,7 +433,6 @@
           "detail_id": "045",
           "detail_uid": "00455-045",
           "title": "2023-11-13 18꞉51 2",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -485,7 +442,6 @@
           "detail_id": "046",
           "detail_uid": "00455-046",
           "title": "2023-11-13 18꞉51 3",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -495,7 +451,6 @@
           "detail_id": "047",
           "detail_uid": "00455-047",
           "title": "2023-11-13 18꞉51",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -505,7 +460,6 @@
           "detail_id": "048",
           "detail_uid": "00455-048",
           "title": "2023-11-13 18꞉52",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -515,7 +469,6 @@
           "detail_id": "049",
           "detail_uid": "00455-049",
           "title": "2023-11-13 18꞉54 2",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"
@@ -525,7 +478,6 @@
           "detail_id": "050",
           "detail_uid": "00455-050",
           "title": "2023-11-13 18꞉54",
-          "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
           "layout": "work_details"

@@ -6,15 +6,15 @@
     "detail_uid": "00464-041",
     "work_id": "00464",
     "detail_id": "041",
+    "section_id": "00464-2",
+    "section_title": "memories",
+    "details_subfolder": "memories",
     "project_filename": "memory - 13.1.jpg",
     "title": "memory - 13.1",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 2362,
-    "height_px": 2362,
-    "section_id": "00464-2",
-    "section_title": "memories",
-    "details_subfolder": "memories"
+    "height_px": 2362
   },
   "work_summary": {
     "work_id": "00464",

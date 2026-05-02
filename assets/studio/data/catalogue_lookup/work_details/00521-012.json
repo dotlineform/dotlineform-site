@@ -6,15 +6,15 @@
     "detail_uid": "00521-012",
     "work_id": "00521",
     "detail_id": "012",
+    "section_id": "00521-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "kylie structure 2.6.jpg",
     "title": "kylie structure 2.6",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 2000,
-    "height_px": 2000,
-    "section_id": "00521-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 2000
   },
   "work_summary": {
     "work_id": "00521",

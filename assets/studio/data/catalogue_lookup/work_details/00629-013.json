@@ -6,15 +6,15 @@
     "detail_uid": "00629-013",
     "work_id": "00629",
     "detail_id": "013",
+    "section_id": "00629-2",
+    "section_title": "install",
+    "details_subfolder": "install",
     "project_filename": "qrnt - Searching for God exhibition - install 3.jpg",
     "title": "qrnt - Searching for God exhibition - install 3",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 1296,
-    "height_px": 1304,
-    "section_id": "00629-2",
-    "section_title": "install",
-    "details_subfolder": "install"
+    "height_px": 1304
   },
   "work_summary": {
     "work_id": "00629",

@@ -6,15 +6,15 @@
     "detail_uid": "01370-003",
     "work_id": "01370",
     "detail_id": "003",
+    "section_id": "01370-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "home 4 - detail 3.jpg",
     "title": "home 4 - detail 3",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 3000,
-    "height_px": 3000,
-    "section_id": "01370-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 3000
   },
   "work_summary": {
     "work_id": "01370",

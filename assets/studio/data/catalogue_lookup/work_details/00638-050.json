@@ -6,15 +6,15 @@
     "detail_uid": "00638-050",
     "work_id": "00638",
     "detail_id": "050",
+    "section_id": "00638-4",
+    "section_title": "composites",
+    "details_subfolder": "composites",
     "project_filename": "composite - replenish.jpg",
     "title": "composite - replenish",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 3000,
-    "height_px": 3000,
-    "section_id": "00638-4",
-    "section_title": "composites",
-    "details_subfolder": "composites"
+    "height_px": 3000
   },
   "work_summary": {
     "work_id": "00638",

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-70019311ca3cbb56193186836d99ff97",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-036e6a5725acee946320766f2c2c3284",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00620",
     "count": 13
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00620-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00620",
           "detail_id": "001",
           "detail_uid": "00620-001",
           "title": "harmony 3.1",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00620-002",
           "title": "harmony 3.2",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00620-003",
           "title": "harmony 3.3",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "00620-004",
           "title": "harmony 3.4",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "00620-005",
           "title": "harmony 3.5",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "00620-006",
           "title": "harmony 3.6",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "00620-007",
           "title": "harmony 3.7",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "00620-008",
           "title": "harmony 3.8",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -110,7 +103,6 @@
           "detail_id": "009",
           "detail_uid": "00620-009",
           "title": "harmony 3.9",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -120,7 +112,6 @@
           "detail_id": "010",
           "detail_uid": "00620-010",
           "title": "harmony 3.10",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -130,7 +121,6 @@
           "detail_id": "011",
           "detail_uid": "00620-011",
           "title": "harmony 3.11",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -140,7 +130,6 @@
           "detail_id": "012",
           "detail_uid": "00620-012",
           "title": "harmony 3.12",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"
@@ -150,7 +139,6 @@
           "detail_id": "013",
           "detail_uid": "00620-013",
           "title": "harmony 3.13",
-          "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
           "layout": "work_details"

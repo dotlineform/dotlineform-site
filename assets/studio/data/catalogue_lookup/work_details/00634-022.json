@@ -6,15 +6,15 @@
     "detail_uid": "00634-022",
     "work_id": "00634",
     "detail_id": "022",
+    "section_id": "00634-3",
+    "section_title": "details ^2",
+    "details_subfolder": "details ^2",
     "project_filename": "bits symbols 1.2.3.jpg",
     "title": "bits symbols 1.2.3",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 1535,
-    "height_px": 1535,
-    "section_id": "00634-3",
-    "section_title": "details ^2",
-    "details_subfolder": "details ^2"
+    "height_px": 1535
   },
   "work_summary": {
     "work_id": "00634",

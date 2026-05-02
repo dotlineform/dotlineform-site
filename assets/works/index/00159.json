@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4b1437a0cf1735c1d0bcbd351b491f6b",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-ed22a54fa1402279a7e4e8429bbe67c1",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00159",
     "count": 2
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00159-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00159",
           "detail_id": "001",
           "detail_uid": "00159-001",
           "title": "Michelle Pfeiffer - page 1",
-          "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "00159-002",
           "title": "Michelle Pfeiffer - pages 2-3",
-          "project_subfolder": "details",
           "width_px": 5712,
           "height_px": 4038,
           "layout": "work_details"

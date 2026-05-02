@@ -6,15 +6,15 @@
     "detail_uid": "00227-001",
     "work_id": "00227",
     "detail_id": "001",
+    "section_id": "00227-1",
+    "section_title": "reverse",
+    "details_subfolder": "reverse",
     "project_filename": "227-001.jpg",
     "title": "untitled [227] reverse",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 2480,
-    "height_px": 3508,
-    "section_id": "00227-1",
-    "section_title": "reverse",
-    "details_subfolder": "reverse"
+    "height_px": 3508
   },
   "work_summary": {
     "work_id": "00227",

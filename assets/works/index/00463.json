@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-ce738033ae232c5bf73c7eb2eb470d2b",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-64fc8d3cedd5b0bccf30025d3ed9dd3f",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00463",
     "count": 7
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "original painting",
+      "section_id": "00463-1",
+      "section_title": "original painting",
       "details": [
         {
           "work_id": "00463",
           "detail_id": "001",
           "detail_uid": "00463-001",
           "title": "living surface hand form (original painting, 1989)",
-          "project_subfolder": "original painting",
           "width_px": 2169,
           "height_px": 2830,
           "layout": "work_details"
@@ -38,14 +38,14 @@
       ]
     },
     {
-      "project_subfolder": "versions",
+      "section_id": "00463-2",
+      "section_title": "versions",
       "details": [
         {
           "work_id": "00463",
           "detail_id": "002",
           "detail_uid": "00463-002",
           "title": "living surface (version 1)",
-          "project_subfolder": "versions",
           "width_px": 5315,
           "height_px": 5315,
           "layout": "work_details"
@@ -55,7 +55,6 @@
           "detail_id": "003",
           "detail_uid": "00463-003",
           "title": "living surface (version 2)",
-          "project_subfolder": "versions",
           "width_px": 7087,
           "height_px": 7087,
           "layout": "work_details"
@@ -65,7 +64,6 @@
           "detail_id": "004",
           "detail_uid": "00463-004",
           "title": "living surface (version 3)",
-          "project_subfolder": "versions",
           "width_px": 7087,
           "height_px": 7087,
           "layout": "work_details"
@@ -75,7 +73,6 @@
           "detail_id": "005",
           "detail_uid": "00463-005",
           "title": "living surface (version 3) detail",
-          "project_subfolder": "versions",
           "width_px": 1400,
           "height_px": 1400,
           "layout": "work_details"
@@ -85,7 +82,6 @@
           "detail_id": "006",
           "detail_uid": "00463-006",
           "title": "living surface (version 4)",
-          "project_subfolder": "versions",
           "width_px": 7087,
           "height_px": 7087,
           "layout": "work_details"
@@ -95,7 +91,6 @@
           "detail_id": "007",
           "detail_uid": "00463-007",
           "title": "living surface (version 4) detail",
-          "project_subfolder": "versions",
           "width_px": 1400,
           "height_px": 1400,
           "layout": "work_details"

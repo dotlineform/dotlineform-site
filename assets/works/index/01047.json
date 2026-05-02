@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b4a869e08c4aac401a64e7bc4d18ad88",
-    "generated_at_utc": "2026-04-29T08:51:58Z",
+    "version": "blake2b-b1139ff685c9acefa5acdaade4dbbaa2",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01047",
     "count": 3
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01047-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01047",
           "detail_id": "001",
           "detail_uid": "01047-001",
           "title": "field I - detail 1",
-          "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 1125,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01047-002",
           "title": "field I - detail 2",
-          "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 1125,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01047-003",
           "title": "field I - detail 3",
-          "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 1125,
           "layout": "work_details"

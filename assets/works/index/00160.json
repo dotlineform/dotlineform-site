@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b54fbf432b2de0f3fae03c796700903a",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-05a30c7c213f85f5b3a273893ca421a3",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00160",
     "count": 10
   },
@@ -23,21 +23,21 @@
     "height_px": 3498,
     "downloads": [
       {
-        "filename": "mouse-story.pdf",
+        "filename": "mouse story.pdf",
         "label": "mouse story.pdf"
       }
     ]
   },
   "sections": [
     {
-      "project_subfolder": "pages",
+      "section_id": "00160-1",
+      "section_title": "pages",
       "details": [
         {
           "work_id": "00160",
           "detail_id": "001",
           "detail_uid": "00160-001",
           "title": "mouse story - 1",
-          "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
           "layout": "work_details"
@@ -47,7 +47,6 @@
           "detail_id": "002",
           "detail_uid": "00160-002",
           "title": "mouse story - 2",
-          "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
           "layout": "work_details"
@@ -57,7 +56,6 @@
           "detail_id": "003",
           "detail_uid": "00160-003",
           "title": "mouse story - 3",
-          "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
           "layout": "work_details"
@@ -67,7 +65,6 @@
           "detail_id": "004",
           "detail_uid": "00160-004",
           "title": "mouse story - 4",
-          "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
           "layout": "work_details"
@@ -77,7 +74,6 @@
           "detail_id": "005",
           "detail_uid": "00160-005",
           "title": "mouse story - 5",
-          "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
           "layout": "work_details"
@@ -85,14 +81,14 @@
       ]
     },
     {
-      "project_subfolder": "details",
+      "section_id": "00160-2",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00160",
           "detail_id": "006",
           "detail_uid": "00160-006",
           "title": "mouse story - detail 1",
-          "project_subfolder": "details",
           "width_px": 5192,
           "height_px": 2921,
           "layout": "work_details"
@@ -102,7 +98,6 @@
           "detail_id": "007",
           "detail_uid": "00160-007",
           "title": "mouse story - detail 2",
-          "project_subfolder": "details",
           "width_px": 6525,
           "height_px": 3671,
           "layout": "work_details"
@@ -112,7 +107,6 @@
           "detail_id": "008",
           "detail_uid": "00160-008",
           "title": "mouse story - detail 3",
-          "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 1125,
           "layout": "work_details"
@@ -122,7 +116,6 @@
           "detail_id": "009",
           "detail_uid": "00160-009",
           "title": "mouse story - detail 4",
-          "project_subfolder": "details",
           "width_px": 4179,
           "height_px": 2350,
           "layout": "work_details"
@@ -132,7 +125,6 @@
           "detail_id": "010",
           "detail_uid": "00160-010",
           "title": "mouse story - detail 5",
-          "project_subfolder": "details",
           "width_px": 5983,
           "height_px": 3367,
           "layout": "work_details"

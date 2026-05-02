@@ -6,15 +6,15 @@
     "detail_uid": "00896-005",
     "work_id": "00896",
     "detail_id": "005",
+    "section_id": "00896-1",
+    "section_title": "versions (2022)",
+    "details_subfolder": "versions (2022)",
     "project_filename": "doll still life 1 (version 5).jpg",
     "title": "doll still life 1 (version 5)",
     "status": "published",
     "published_date": "2026-03-17",
     "width_px": 3543,
-    "height_px": 3543,
-    "section_id": "00896-1",
-    "section_title": "versions (2022)",
-    "details_subfolder": "versions (2022)"
+    "height_px": 3543
   },
   "work_summary": {
     "work_id": "00896",

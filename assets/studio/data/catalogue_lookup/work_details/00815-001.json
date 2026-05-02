@@ -6,15 +6,15 @@
     "detail_uid": "00815-001",
     "work_id": "00815",
     "detail_id": "001",
+    "section_id": "00815-1",
+    "section_title": "versions",
+    "details_subfolder": "versions",
     "project_filename": "colours dachau.1.jpg",
     "title": "colours dachau.1",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 5906,
-    "height_px": 5906,
-    "section_id": "00815-1",
-    "section_title": "versions",
-    "details_subfolder": "versions"
+    "height_px": 5906
   },
   "work_summary": {
     "work_id": "00815",

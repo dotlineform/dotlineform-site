@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-167e3899c8fbb0e93b4afeeb5e0d70b4",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-effd825572900def3307dbb8f6c3cdc8",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01498",
     "count": 4
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01498-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01498",
           "detail_id": "001",
           "detail_uid": "01498-001",
           "title": "k particles - detail 1",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01498-002",
           "title": "k particles - detail 2",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01498-003",
           "title": "k particles - detail 3",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01498-004",
           "title": "k particles - detail 4",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"

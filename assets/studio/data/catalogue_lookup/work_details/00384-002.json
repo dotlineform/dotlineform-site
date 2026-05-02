@@ -6,15 +6,15 @@
     "detail_uid": "00384-002",
     "work_id": "00384",
     "detail_id": "002",
+    "section_id": "00384-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "glass forms 002.jpg",
     "title": "glass forms 002",
     "status": "published",
     "published_date": "2026-03-13",
     "width_px": 4032,
-    "height_px": 3024,
-    "section_id": "00384-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 3024
   },
   "work_summary": {
     "work_id": "00384",

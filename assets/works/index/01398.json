@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8b68f9692207c0ec3908fc26670ee084",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-84a0bd0a79c21a6a380348d887766697",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01398",
     "count": 8
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "iterations",
+      "section_id": "01398-1",
+      "section_title": "iterations",
       "details": [
         {
           "work_id": "01398",
           "detail_id": "001",
           "detail_uid": "01398-001",
           "title": "kylie wax model - iteration 5.0",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01398-002",
           "title": "kylie wax model - iteration 5.1",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01398-003",
           "title": "kylie wax model - iteration 5.2",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "004",
           "detail_uid": "01398-004",
           "title": "kylie wax model - iteration 5.3",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -70,7 +67,6 @@
           "detail_id": "005",
           "detail_uid": "01398-005",
           "title": "kylie wax model - iteration 5.4",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -80,7 +76,6 @@
           "detail_id": "006",
           "detail_uid": "01398-006",
           "title": "kylie wax model - iteration 5.5",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -90,7 +85,6 @@
           "detail_id": "007",
           "detail_uid": "01398-007",
           "title": "kylie wax model - iteration 5.6",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"
@@ -100,7 +94,6 @@
           "detail_id": "008",
           "detail_uid": "01398-008",
           "title": "kylie wax model - iteration 5.7",
-          "project_subfolder": "iterations",
           "width_px": 4724,
           "height_px": 4724,
           "layout": "work_details"

@@ -6,15 +6,15 @@
     "detail_uid": "01721-009",
     "work_id": "01721",
     "detail_id": "009",
+    "section_id": "01721-2",
+    "section_title": "source",
+    "details_subfolder": "source",
     "project_filename": "state of mind - source 3.jpg",
     "title": "state of mind - source 3",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 2816,
-    "height_px": 2112,
-    "section_id": "01721-2",
-    "section_title": "source",
-    "details_subfolder": "source"
+    "height_px": 2112
   },
   "work_summary": {
     "work_id": "01721",

@@ -1,0 +1,24 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-2df8d17fd84a39e1ef572104ec6e2c32",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
+    "work_id": "00377",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00377",
+    "title": "00377 - residue - monoprint",
+    "year": 2024,
+    "year_display": "2024?",
+    "series_ids": [
+      "102"
+    ],
+    "storage": "13",
+    "height_cm": 21.0,
+    "width_cm": 29.4,
+    "width_px": 3472,
+    "height_px": 2480
+  },
+  "sections": []
+}

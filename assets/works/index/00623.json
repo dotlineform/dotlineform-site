@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8e58f7c9c316339144ad3f9fedf3a203",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-89c9f329c9c9a2ff19f1e741d1508018",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00623",
     "count": 3
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00623-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00623",
           "detail_id": "001",
           "detail_uid": "00623-001",
           "title": "k crystals (transparent) - detail 1",
-          "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 4134,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "00623-002",
           "title": "k crystals (transparent) - detail 2",
-          "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 4134,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "00623-003",
           "title": "k crystals (transparent) - detail 3",
-          "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 4134,
           "layout": "work_details"

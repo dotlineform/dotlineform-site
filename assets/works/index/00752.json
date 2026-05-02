@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-ece0d26eaa1d297dee4e91d23e92c915",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-a70ff76c3845db472365d4789c549087",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00752",
     "count": 4
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00752-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00752",
           "detail_id": "005",
           "detail_uid": "00752-005",
           "title": "all the little cracks again - detail 1",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3307,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "006",
           "detail_uid": "00752-006",
           "title": "all the little cracks again - detail 2",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "007",
           "detail_uid": "00752-007",
           "title": "all the little cracks again - detail 3",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"
@@ -60,7 +58,6 @@
           "detail_id": "008",
           "detail_uid": "00752-008",
           "title": "all the little cracks again - detail 4",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"

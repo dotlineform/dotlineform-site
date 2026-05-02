@@ -6,15 +6,15 @@
     "detail_uid": "00751-001",
     "work_id": "00751",
     "detail_id": "001",
+    "section_id": "00751-1",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "all the little cracks - detail 1.jpg",
     "title": "all the little cracks - detail 1",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 3000,
-    "height_px": 3000,
-    "section_id": "00751-1",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 3000
   },
   "work_summary": {
     "work_id": "00751",

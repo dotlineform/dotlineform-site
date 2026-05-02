@@ -6,15 +6,15 @@
     "detail_uid": "00944-002",
     "work_id": "00944",
     "detail_id": "002",
+    "section_id": "00944-1",
+    "section_title": "edges",
+    "details_subfolder": "edges",
     "project_filename": "edges 1.2.jpg",
     "title": "edges 1.2",
     "status": "published",
     "published_date": "2026-03-17",
     "width_px": 4724,
-    "height_px": 4724,
-    "section_id": "00944-1",
-    "section_title": "edges",
-    "details_subfolder": "edges"
+    "height_px": 4724
   },
   "work_summary": {
     "work_id": "00944",

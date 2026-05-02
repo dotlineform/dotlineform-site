@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-c474b910eb1820b49b887eace11126d4",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-86573b0f7b4d72c413857a2068c1ecb5",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00631",
     "count": 4
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00631-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00631",
           "detail_id": "001",
           "detail_uid": "00631-001",
           "title": "qrnt form (2015-06-06)",
-          "project_subfolder": "details",
           "width_px": 3088,
           "height_px": 3088,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "00631-002",
           "title": "qrnt form (2015-06-06) detail 1",
-          "project_subfolder": "details",
           "width_px": 3088,
           "height_px": 3088,
           "layout": "work_details"
@@ -51,7 +50,6 @@
           "detail_id": "003",
           "detail_uid": "00631-003",
           "title": "qrnt form (2015-06-06) detail 2",
-          "project_subfolder": "details",
           "width_px": 3088,
           "height_px": 3088,
           "layout": "work_details"
@@ -61,7 +59,6 @@
           "detail_id": "004",
           "detail_uid": "00631-004",
           "title": "qrnt form (2015-06-06) detail 3",
-          "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
           "layout": "work_details"

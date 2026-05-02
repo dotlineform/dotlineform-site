@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-abdcc82d8634b2bd06219dac86a1f032",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-90752be208fa6c06a51ded45e4bbf017",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00227",
     "count": 1
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "reverse",
+      "section_id": "00227-1",
+      "section_title": "reverse",
       "details": [
         {
           "work_id": "00227",
           "detail_id": "001",
           "detail_uid": "00227-001",
           "title": "untitled [227] reverse",
-          "project_subfolder": "reverse",
           "width_px": 2480,
           "height_px": 3508,
           "layout": "work_details"

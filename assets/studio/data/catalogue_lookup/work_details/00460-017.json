@@ -6,15 +6,15 @@
     "detail_uid": "00460-017",
     "work_id": "00460",
     "detail_id": "017",
+    "section_id": "00460-2",
+    "section_title": "details",
+    "details_subfolder": "details",
     "project_filename": "molecules (detail 13).jpg",
     "title": "molecules (detail 13)",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 3543,
-    "height_px": 3543,
-    "section_id": "00460-2",
-    "section_title": "details",
-    "details_subfolder": "details"
+    "height_px": 3543
   },
   "work_summary": {
     "work_id": "00460",

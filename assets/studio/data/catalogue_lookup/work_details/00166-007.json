@@ -6,15 +6,15 @@
     "detail_uid": "00166-007",
     "work_id": "00166",
     "detail_id": "007",
+    "section_id": "00166-1",
+    "section_title": "pages",
+    "details_subfolder": "pages",
     "project_filename": "nerve (formaldehyde form) - 6.jpg",
     "title": "nerve (formaldehyde form) - 6",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 3566,
-    "height_px": 2594,
-    "section_id": "00166-1",
-    "section_title": "pages",
-    "details_subfolder": "pages"
+    "height_px": 2594
   },
   "work_summary": {
     "work_id": "00166",

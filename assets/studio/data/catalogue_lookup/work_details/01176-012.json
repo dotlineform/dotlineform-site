@@ -6,15 +6,15 @@
     "detail_uid": "01176-012",
     "work_id": "01176",
     "detail_id": "012",
+    "section_id": "01176-1",
+    "section_title": "noise particles",
+    "details_subfolder": "noise particles",
     "project_filename": "form space noise 12.jpg",
     "title": "form space noise 12",
     "status": "published",
     "published_date": "2026-03-22",
     "width_px": 4880,
-    "height_px": 3660,
-    "section_id": "01176-1",
-    "section_title": "noise particles",
-    "details_subfolder": "noise particles"
+    "height_px": 3660
   },
   "work_summary": {
     "work_id": "01176",

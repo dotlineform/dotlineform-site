@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-6456f77812dfbb2492627e958fd0de33",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-7ed964f1dc397245ab5456cf5fb5f1af",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "00384",
     "count": 4
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00384-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00384",
           "detail_id": "001",
           "detail_uid": "00384-001",
           "title": "glass forms 001",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "00384-002",
           "title": "glass forms 002",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
           "layout": "work_details"
@@ -51,7 +50,6 @@
           "detail_id": "003",
           "detail_uid": "00384-003",
           "title": "glass forms 003",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
           "layout": "work_details"
@@ -61,7 +59,6 @@
           "detail_id": "004",
           "detail_uid": "00384-004",
           "title": "glass forms 004",
-          "project_subfolder": "details",
           "width_px": 3444,
           "height_px": 2528,
           "layout": "work_details"

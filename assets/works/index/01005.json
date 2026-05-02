@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-101dea0a9d49ad5eb50259c7811554ab",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-09e258059bf5f06ca1bac93c804e21e1",
+    "generated_at_utc": "2026-05-02T15:44:23Z",
     "work_id": "01005",
     "count": 3
   },
@@ -23,14 +23,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01005-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "01005",
           "detail_id": "001",
           "detail_uid": "01005-001",
           "title": "dots (equations particles) [detail 1]",
-          "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -40,7 +40,6 @@
           "detail_id": "002",
           "detail_uid": "01005-002",
           "title": "dots (equations particles) [detail 2]",
-          "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"
@@ -50,7 +49,6 @@
           "detail_id": "003",
           "detail_uid": "01005-003",
           "title": "dots (equations particles) [detail 3]",
-          "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
           "layout": "work_details"

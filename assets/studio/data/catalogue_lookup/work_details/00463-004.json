@@ -6,15 +6,15 @@
     "detail_uid": "00463-004",
     "work_id": "00463",
     "detail_id": "004",
+    "section_id": "00463-2",
+    "section_title": "versions",
+    "details_subfolder": "versions",
     "project_filename": "living surface version 3.jpg",
     "title": "living surface (version 3)",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 7087,
-    "height_px": 7087,
-    "section_id": "00463-2",
-    "section_title": "versions",
-    "details_subfolder": "versions"
+    "height_px": 7087
   },
   "work_summary": {
     "work_id": "00463",
