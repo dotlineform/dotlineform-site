@@ -111,6 +111,8 @@ Status: implemented.
 
 ### 4. Add manage-mode editing
 
+Status: implemented.
+
 - Add a `ui_status` select control to the shared metadata modal in `_includes/docs_viewer_shell.html`.
 - Populate the dropdown from the normalized config values for the active scope, with a fixed blank `<none>` option for no status.
 - Initialize the dropdown from the active doc's generated `ui_status`.

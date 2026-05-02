@@ -34,6 +34,8 @@
   var metadataDocId = document.getElementById("docsViewerMetadataDocId");
   var metadataTitleInput = document.getElementById("docsViewerMetadataTitleInput");
   var metadataSummaryInput = document.getElementById("docsViewerMetadataSummaryInput");
+  var metadataStatusLabel = document.getElementById("docsViewerMetadataStatusLabel");
+  var metadataStatusInput = document.getElementById("docsViewerMetadataStatusInput");
   var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
   var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
   var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
@@ -115,7 +117,9 @@
       unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope.",
       viewableAncestorPrompt: "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",
       viewableDescendantPrompt: "Make descendant docs viewable too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
-      viewableInvalidChoice: "Viewability update cancelled: expected `all` or `selected`."
+      viewableInvalidChoice: "Viewability update cancelled: expected `all` or `selected`.",
+      metadataStatusLabel: "status",
+      metadataStatusNoneOption: "<none>"
     },
     showDrafts: false,
     reloadNonce: "",
@@ -329,6 +333,15 @@
     state.managementText.viewableAncestorPrompt = getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
     state.managementText.viewableDescendantPrompt = getConfigText(config, "docs_viewer.viewable_descendant_prompt", state.managementText.viewableDescendantPrompt);
     state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
+    state.managementText.metadataStatusLabel = getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
+    state.managementText.metadataStatusNoneOption = getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
+    if (metadataStatusLabel) {
+      metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
+    }
+    if (state.metadataEditingDocId && metadataStatusInput) {
+      var metadataDoc = state.docsById.get(state.metadataEditingDocId);
+      renderMetadataStatusOptions(metadataDoc);
+    }
     if (state.docs.length) {
       renderSidebar();
     }
@@ -1270,6 +1283,29 @@
     return options;
   }
 
+  function metadataStatusOptions(doc) {
+    var options = [{
+      value: "",
+      label: state.managementText.metadataStatusNoneOption
+    }];
+    state.uiStatuses.forEach(function (status) {
+      options.push({
+        value: status.ui_status,
+        label: status.emoji + " " + status.label
+      });
+    });
+    return options;
+  }
+
+  function renderMetadataStatusOptions(doc) {
+    if (!metadataStatusInput) return;
+    var selectedValue = String(doc && doc.ui_status || "").trim();
+    metadataStatusInput.innerHTML = metadataStatusOptions(doc).map(function (option) {
+      var selected = option.value === selectedValue ? ' selected' : "";
+      return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(option.label) + "</option>";
+    }).join("");
+  }
+
   function closeMetadataModal() {
     if (!metadataModal) return;
     metadataModal.hidden = true;
@@ -1283,7 +1319,7 @@
 
   function openMetadataModal() {
     var doc = currentSelectedDoc();
-    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataParentInput || !metadataSortOrderInput) return;
     if (doc.doc_id === "_archive") return;
 
     hideContextMenu();
@@ -1295,6 +1331,7 @@
 
     metadataTitleInput.value = doc.title || "";
     metadataSummaryInput.value = doc.summary || "";
+    renderMetadataStatusOptions(doc);
     metadataSortOrderInput.value = doc.sort_order == null ? "" : String(doc.sort_order);
     metadataSortOrderInput.min = "0";
     metadataParentInput.innerHTML = metadataParentOptions(doc).map(function (option) {
@@ -1603,7 +1640,7 @@
 
   function handleEditMetadataSubmit() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataParentInput || !metadataSortOrderInput) return;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
@@ -1630,6 +1667,7 @@
       doc_id: doc.doc_id,
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
+      ui_status: String(metadataStatusInput.value || "").trim(),
       parent_id: parentId,
       sort_order: payloadSortOrder
     };
