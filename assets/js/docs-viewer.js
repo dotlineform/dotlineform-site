@@ -12,6 +12,7 @@
   var summaryEl = document.getElementById("docsViewerSummary");
   var bookmarkRow = document.getElementById("docsViewerBookmarkRow");
   var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
+  var statusPills = document.getElementById("docsViewerStatusPills");
   var content = document.getElementById("docsViewerContent");
   var contextMenu = document.getElementById("docsViewerContextMenu");
   var recentButton = document.getElementById("docsViewerRecentButton");
@@ -119,7 +120,13 @@
       viewableDescendantPrompt: "Make descendant docs viewable too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
       viewableInvalidChoice: "Viewability update cancelled: expected `all` or `selected`.",
       metadataStatusLabel: "status",
-      metadataStatusNoneOption: "<none>"
+      metadataStatusNoneOption: "<none>",
+      statusPillSetLabel: "Set status: {label}",
+      statusPillClearLabel: "Clear status: {label}",
+      statusPillReadonlyLabel: "Status: {label}",
+      statusPillSaving: "Saving status for {title}...",
+      statusPillSaved: "Status saved.",
+      statusPillFailed: "Status update failed."
     },
     showDrafts: false,
     reloadNonce: "",
@@ -335,6 +342,12 @@
     state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
     state.managementText.metadataStatusLabel = getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
     state.managementText.metadataStatusNoneOption = getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
+    state.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
+    state.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
+    state.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
+    state.managementText.statusPillSaving = getConfigText(config, "docs_viewer.status_pill_saving", state.managementText.statusPillSaving);
+    state.managementText.statusPillSaved = getConfigText(config, "docs_viewer.status_pill_saved", state.managementText.statusPillSaved);
+    state.managementText.statusPillFailed = getConfigText(config, "docs_viewer.status_pill_failed", state.managementText.statusPillFailed);
     if (metadataStatusLabel) {
       metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
     }
@@ -344,6 +357,7 @@
     }
     if (state.docs.length) {
       renderSidebar();
+      renderStatusPills();
     }
     if (state.recentModeActive) {
       renderRecentMode();
@@ -466,6 +480,7 @@
   function renderBookmarkUi() {
     renderBookmarkToggle();
     renderBookmarkRow();
+    renderStatusPills();
   }
 
   function renderBookmarkToggle() {
@@ -482,6 +497,49 @@
     bookmarkToggle.setAttribute("aria-pressed", active ? "true" : "false");
     bookmarkToggle.setAttribute("aria-label", active ? "Remove bookmark" : "Add bookmark");
     bookmarkToggle.title = active ? "Remove bookmark" : "Add bookmark";
+  }
+
+  function currentStatusValue(doc) {
+    return String(doc && doc.ui_status || "").trim();
+  }
+
+  function statusPillsCanWrite(doc) {
+    return Boolean(
+      doc &&
+      state.managementMode &&
+      state.managementAvailable &&
+      !state.managementBusy &&
+      !state.searchRouteActive &&
+      doc.doc_id !== "_archive"
+    );
+  }
+
+  function renderStatusPills() {
+    if (!statusPills) return;
+    var doc = state.docsById.get(state.selectedDocId);
+    var canShow = Boolean(doc) && state.uiStatuses.length > 0 && !state.searchRouteActive;
+    statusPills.hidden = !canShow;
+    if (!canShow) {
+      statusPills.innerHTML = "";
+      return;
+    }
+
+    var activeStatus = currentStatusValue(doc);
+    var canWrite = statusPillsCanWrite(doc);
+    statusPills.innerHTML = state.uiStatuses.map(function (statusConfig) {
+      var selected = statusConfig.ui_status === activeStatus;
+      var labelTemplate = canWrite
+        ? (selected ? state.managementText.statusPillClearLabel : state.managementText.statusPillSetLabel)
+        : state.managementText.statusPillReadonlyLabel;
+      var label = formatText(labelTemplate, { label: statusConfig.label, title: doc.title });
+      var className = "docsViewer__statusPill" + (selected ? " is-active" : "");
+      return (
+        '<button type="button" class="' + className + '" data-ui-status="' + escapeHtml(statusConfig.ui_status) + '" aria-pressed="' + (selected ? "true" : "false") + '" aria-label="' + escapeHtml(label) + '" title="' + escapeHtml(label) + '"' + (canWrite ? "" : " disabled") + '>' +
+          '<span class="docsViewer__statusPillEmoji" aria-hidden="true">' + escapeHtml(statusConfig.emoji) + '</span>' +
+          '<span class="visually-hidden">' + escapeHtml(statusConfig.label) + '</span>' +
+        '</button>'
+      );
+    }).join("");
   }
 
   function renderBookmarkRow() {
@@ -1023,6 +1081,7 @@
     }
     meta.hidden = false;
     renderBookmarkToggle();
+    renderStatusPills();
   }
 
   function setStatus(message, isError) {
@@ -1472,6 +1531,7 @@
     if (metadataSaveButton) {
       metadataSaveButton.disabled = state.managementBusy;
     }
+    renderStatusPills();
   }
 
   function fetchManagementJson(path, method, payload) {
@@ -1689,6 +1749,50 @@
       .finally(function () {
         state.managementBusy = false;
         renderManagementUi();
+      });
+  }
+
+  function metadataPayloadForStatus(doc, uiStatus) {
+    return {
+      scope: viewerScope,
+      doc_id: doc.doc_id,
+      title: String(doc.title || "").trim(),
+      summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
+      ui_status: String(uiStatus || "").trim(),
+      parent_id: String(doc.parent_id || "").trim(),
+      sort_order: normalizeSortOrderValue(doc.sort_order)
+    };
+  }
+
+  function handleStatusPillClick(statusValue) {
+    var doc = currentSelectedDoc();
+    if (!statusPillsCanWrite(doc)) return;
+    var selectedStatus = String(statusValue || "").trim();
+    if (!selectedStatus || !state.uiStatusByValue.has(selectedStatus)) return;
+
+    var nextStatus = currentStatusValue(doc) === selectedStatus ? "" : selectedStatus;
+    var savingText = formatText(state.managementText.statusPillSaving, { title: doc.title });
+
+    state.managementBusy = true;
+    setManagementMessage(savingText, false);
+    setStatus(savingText, false);
+    renderStatusPills();
+
+    fetchManagementJson("/docs/update-metadata", "POST", metadataPayloadForStatus(doc, nextStatus))
+      .then(function (response) {
+        var savedText = response.summary_text || state.managementText.statusPillSaved;
+        setManagementMessage(savedText, false);
+        return reloadDocsIndex(doc.doc_id, savedText);
+      })
+      .catch(function (error) {
+        var failedText = error.message || state.managementText.statusPillFailed;
+        setManagementMessage(failedText, true);
+        setStatus(failedText, true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+        renderStatusPills();
       });
   }
 
@@ -2003,6 +2107,7 @@
     meta.hidden = true;
     content.hidden = true;
     renderBookmarkToggle();
+    renderStatusPills();
   }
 
   function showDocPane() {
@@ -2365,6 +2470,15 @@
         var input = event.target.closest("[data-bookmark-input]");
         if (!input) return;
         finishBookmarkRename(input.dataset.bookmarkInput, input.value, false);
+      });
+    }
+
+    if (statusPills) {
+      statusPills.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-ui-status]");
+        if (!button) return;
+        event.preventDefault();
+        handleStatusPillClick(button.dataset.uiStatus);
       });
     }
 

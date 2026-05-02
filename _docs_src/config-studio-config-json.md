@@ -111,6 +111,15 @@ Contract:
 - `emoji` is the compact visual marker for index and status-pill UI
 - malformed, duplicate, blank, or overlong entries are ignored by the viewer rather than treated as build failures
 
+Related status-pill labels and save-state messages live under `ui_text.docs_viewer`, including:
+
+- `status_pill_set_label`
+- `status_pill_clear_label`
+- `status_pill_readonly_label`
+- `status_pill_saving`
+- `status_pill_saved`
+- `status_pill_failed`
+
 The config is scope-aware even while the shared Docs Viewer continues to fetch `studio_config.json` as its single browser-facing config payload.
 
 What does not stay here:

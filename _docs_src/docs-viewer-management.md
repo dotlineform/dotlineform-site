@@ -58,6 +58,9 @@ Implemented now:
   - `sort_order`
 - blank `summary` removes the front matter field
 - blank `ui_status` removes the front matter field
+- configured `ui_status` values also render as compact document status pills beside the bookmark control
+- status pills are read-only outside available manage mode
+- in available manage mode, status pill clicks write immediately through the metadata endpoint and reload the docs payload
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
 - when the metadata modal changes `parent_id` and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent

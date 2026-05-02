@@ -1,13 +1,12 @@
 ---
 doc_id: ui-status-emoji
-title: "UI Status Emoji"
-ui_status: "urgent"
+title: UI Status Emoji
 added_date: 2026-05-02
 last_updated: 2026-05-02
+ui_status: urgent
 parent_id: change-requests
 sort_order: 200
 ---
-
 # UI Status Emoji
 
 ## Purpose
@@ -130,6 +129,8 @@ Status: implemented.
 - Do not trigger docs search rebuilds solely for status changes.
 
 ### 6. Add status pill controls
+
+Status: implemented.
 
 - Render configured status pills beside the existing favourites/bookmark row area.
 - Treat a selected pill as the current document's source-backed `ui_status`.
