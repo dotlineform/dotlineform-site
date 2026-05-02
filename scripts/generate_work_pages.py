@@ -1203,13 +1203,16 @@ def main() -> None:
 
     # Pre-index project folder by work_id for source media and dimension lookups.
     work_project_folder_by_id: Dict[str, str] = {}
+    work_project_subfolder_by_id: Dict[str, str] = {}
     has_project_folder_col = any("project_folder" in work_record for work_record in source_records.works.values())
     for work_record in source_records.works.values():
         wid_raw = work_record.get("work_id")
         pf_raw = work_record.get("project_folder")
         if is_empty(wid_raw) or is_empty(pf_raw):
             continue
-        work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
+        wid = slug_id(wid_raw)
+        work_project_folder_by_id[wid] = normalize_text(pf_raw)
+        work_project_subfolder_by_id[wid] = normalize_text(work_record.get("project_subfolder"))
 
     def resolve_work_prose_source_path(wid: str) -> Path:
         return catalogue_prose_source_root / "works" / f"{wid}.md"
@@ -1275,7 +1278,9 @@ def main() -> None:
         wid: str,
         did: str,
         title: Optional[str],
-        project_subfolder: Optional[str],
+        section_id: Optional[str],
+        section_title: Optional[str],
+        sort_order: Optional[int],
         width_px: Optional[int],
         height_px: Optional[int],
     ) -> Dict[str, Any]:
@@ -1285,7 +1290,9 @@ def main() -> None:
             "detail_id": did,
             "detail_uid": detail_uid,
             "title": title,
-            "project_subfolder": project_subfolder,
+            "section_id": section_id,
+            "section_title": section_title,
+            "sort_order": sort_order,
             "width_px": width_px,
             "height_px": height_px,
             "layout": "work_details",
@@ -1355,20 +1362,31 @@ def main() -> None:
         section_index: Dict[str, int] = {}
         sections: List[Dict[str, Any]] = []
         for detail in detail_records:
-            project_subfolder = coerce_string(detail.get("project_subfolder")) or ""
-            if project_subfolder not in section_index:
-                section_index[project_subfolder] = len(sections)
+            section_title = coerce_string(detail.get("section_title") or detail.get("project_subfolder")) or ""
+            section_id = coerce_string(detail.get("section_id")) or section_title or "details"
+            sort_order = coerce_int(detail.get("sort_order"))
+            if section_id not in section_index:
+                section_index[section_id] = len(sections)
                 sections.append(
                     {
-                        "project_subfolder": project_subfolder,
+                        "section_id": section_id,
+                        "section_title": section_title,
+                        "sort_order": sort_order,
                         "details": [],
                     }
                 )
-            sections[section_index[project_subfolder]]["details"].append(dict(detail))
+            sections[section_index[section_id]]["details"].append(dict(detail))
         for sec in sections:
             details = sec.get("details")
             if isinstance(details, list):
                 details.sort(key=lambda item: str(item.get("detail_id", "")))
+        sections.sort(
+            key=lambda sec: (
+                1 if sec.get("sort_order") is None else 0,
+                sec.get("sort_order") if sec.get("sort_order") is not None else 0,
+                str(sec.get("section_id", "")),
+            )
+        )
         return sections
 
     written = 0
@@ -1491,7 +1509,11 @@ def main() -> None:
                 else:
                     project_folder = work_project_folder_by_id.get(wid)
                     if project_folder:
-                        src_path = projects_root / project_folder / project_filename
+                        src_path = projects_root / project_folder
+                        project_subfolder = work_project_subfolder_by_id.get(wid)
+                        if project_subfolder:
+                            src_path = src_path / project_subfolder
+                        src_path = src_path / project_filename
                     elif not work_project_folder_missing_warned:
                         if not has_project_folder_col:
                             print("Warning: work source records have no project_folder values; cannot persist work image dimensions.")
@@ -2071,7 +2093,9 @@ def main() -> None:
 
                 did = slug_id(did_raw, width=3)
                 detail_uid = f"{wid}-{did}"
-                project_subfolder = coerce_string(detail_source_record.get("project_subfolder"))
+                details_subfolder = coerce_string(
+                    detail_source_record.get("details_subfolder") or detail_source_record.get("project_subfolder")
+                )
                 project_filename = coerce_string(detail_source_record.get("project_filename"))
                 width_px = coerce_int(detail_source_record.get("width_px"))
                 height_px = coerce_int(detail_source_record.get("height_px"))
@@ -2081,8 +2105,8 @@ def main() -> None:
                 src_path: Optional[Path] = None
                 if project_folder and project_filename:
                     src_path = projects_root / project_folder
-                    if project_subfolder:
-                        src_path = src_path / project_subfolder
+                    if details_subfolder:
+                        src_path = src_path / details_subfolder
                     src_path = src_path / project_filename
                 elif not project_folder_missing_warned:
                     if not has_project_folder_col:
@@ -2183,7 +2207,15 @@ def main() -> None:
                     wid=wid,
                     did=did,
                     title=coerce_string(detail_source_record.get("title")),
-                    project_subfolder=coerce_string(detail_source_record.get("project_subfolder")),
+                    section_id=coerce_string(
+                        detail_source_record.get("section_id")
+                        or detail_source_record.get("project_subfolder")
+                    ),
+                    section_title=coerce_string(
+                        detail_source_record.get("section_title")
+                        or detail_source_record.get("project_subfolder")
+                    ),
+                    sort_order=coerce_int(detail_source_record.get("sort_order")),
                     width_px=coerce_int(detail_source_record.get("width_px")),
                     height_px=coerce_int(detail_source_record.get("height_px")),
                 )

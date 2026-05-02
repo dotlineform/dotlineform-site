@@ -329,7 +329,7 @@ Implementation notes:
 
 Status:
 
-- not started
+- implemented
 
 Move generated-output and readiness consumers to the separated media-path and section fields.
 
@@ -350,6 +350,14 @@ Acceptance checks:
 - changing only `details_subfolder` does not rename the public section
 - public runtime image display still resolves generated media by work/detail ids rather than by the persisted source subfolder fields
 - existing generated output changes are explainable and limited to the schema migration
+
+Implementation notes:
+
+- `scripts/catalogue_json_build.py` now resolves work source media through `project_folder` plus optional `project_subfolder`, and detail source media through `details_subfolder` plus `project_filename` with legacy read fallback until migration write.
+- `scripts/generate_work_pages.py` now resolves work/detail dimension lookups through source media fields only, groups generated work JSON sections by `section_id`, displays `section_title`, and orders sections by `sort_order` then `section_id`.
+- Public work/detail layouts read `section_id` and `section_title` from generated work JSON, with legacy fallbacks for currently generated payloads.
+- `scripts/catalogue_lookup.py` now emits `section_id`, `section_title`, `sort_order`, `details_subfolder`, and `project_filename` in focused work lookup detail summaries so Studio can reconstruct source paths and section grouping.
+- Project-state reporting and generated JSON audit checks now understand the separated fields.
 
 ### Task 5. Update Studio Editing And Import Surfaces
 

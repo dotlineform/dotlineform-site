@@ -131,9 +131,13 @@ def resolve_work_media_source(
 
     works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
     project_folder = str(work_record.get("project_folder") or "").strip()
+    project_subfolder = str(work_record.get("project_subfolder") or "").strip()
     project_filename = normalize_filename(work_record.get("project_filename"))
     if project_folder and project_filename and works_root is not None:
-        return works_root / project_folder / project_filename, "", projects_base_dir, availability_error
+        media_path = works_root / project_folder
+        if project_subfolder:
+            media_path = media_path / project_subfolder
+        return media_path / project_filename, "", projects_base_dir, availability_error
     if project_filename:
         return None, "missing_project_folder", projects_base_dir, availability_error
     return None, "missing_project_filename", projects_base_dir, availability_error
@@ -154,7 +158,9 @@ def resolve_detail_media_source(
     work_id = slug_id(detail_record.get("work_id"))
     work_record = records.works.get(work_id)
     project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
-    project_subfolder = str(detail_record.get("project_subfolder") or "").strip()
+    details_subfolder = str(
+        detail_record.get("details_subfolder") or detail_record.get("project_subfolder") or ""
+    ).strip()
     project_filename = normalize_filename(detail_record.get("project_filename"))
     if not project_filename:
         return None, "missing_project_filename", projects_base_dir, availability_error
@@ -163,8 +169,8 @@ def resolve_detail_media_source(
     if works_root is None:
         return None, "", projects_base_dir, availability_error
     media_path = works_root / project_folder
-    if project_subfolder:
-        media_path = media_path / project_subfolder
+    if details_subfolder:
+        media_path = media_path / details_subfolder
     return media_path / project_filename, "", projects_base_dir, availability_error
 
 

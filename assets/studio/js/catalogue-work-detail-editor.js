@@ -353,7 +353,7 @@ function renderReadonlyField(field, readonlyNode, state) {
 
 function buildRecordSummary(record) {
   const title = normalizeText(record && record.title);
-  const section = normalizeText(record && record.project_subfolder);
+  const section = normalizeText(record && record.section_title) || normalizeText(record && record.project_subfolder);
   if (title && section) return `${title} · ${section}`;
   return title || section || "—";
 }
@@ -745,7 +745,7 @@ function updateSummary(state) {
     </div>
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_section_label", "detail section"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(record && record.project_subfolder))}</div>
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(record && (record.section_title || record.project_subfolder)))}</div>
     </div>
   `;
 

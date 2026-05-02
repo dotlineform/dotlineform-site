@@ -850,16 +850,32 @@ function getWorkDetails(state, workId) {
 function groupWorkDetailsBySection(state, details) {
   const groups = new Map();
   details.forEach((detail) => {
-    const key = normalizeText(detail && detail.project_subfolder);
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(detail);
+    const sectionId = normalizeText(detail && detail.section_id) || normalizeText(detail && detail.project_subfolder);
+    const sectionTitle = normalizeText(detail && detail.section_title) || normalizeText(detail && detail.project_subfolder);
+    const rawSortOrder = normalizeText(detail && detail.sort_order);
+    const key = sectionId || sectionTitle;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        sectionKey: key,
+        sectionTitle,
+        sortOrder: rawSortOrder && Number.isFinite(Number(rawSortOrder)) ? Number(rawSortOrder) : null,
+        items: []
+      });
+    }
+    groups.get(key).items.push(detail);
   });
-  return Array.from(groups.entries())
-    .map(([sectionKey, items]) => ({
-      sectionKey,
-      items: items.slice().sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid))
+  return Array.from(groups.values())
+    .map((group) => ({
+      sectionKey: group.sectionTitle || group.sectionKey,
+      sortOrder: group.sortOrder,
+      items: group.items.slice().sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid))
     }))
-    .sort((a, b) => a.sectionKey.localeCompare(b.sectionKey, undefined, { sensitivity: "base" }));
+    .sort((a, b) => {
+      if (a.sortOrder !== null && b.sortOrder !== null && a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+      if (a.sortOrder !== null && b.sortOrder === null) return -1;
+      if (a.sortOrder === null && b.sortOrder !== null) return 1;
+      return a.sectionKey.localeCompare(b.sectionKey, undefined, { sensitivity: "base" });
+    });
 }
 
 function getCurrentWorkDetailMatches(state, rawQuery) {

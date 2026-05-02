@@ -123,6 +123,7 @@ def collect_work_project_references(records: Any) -> tuple[set[str], set[str], D
 
     for work_id, record in sorted(records.works.items()):
         folder = normalize_rel_value(record.get("project_folder"))
+        subfolder = normalize_rel_value(record.get("project_subfolder"))
         filename = normalize_rel_value(record.get("project_filename"))
         if not folder or not filename:
             incomplete_works.append(
@@ -133,8 +134,13 @@ def collect_work_project_references(records: Any) -> tuple[set[str], set[str], D
                 }
             )
             continue
-        rel_image = relative_posix(Path(folder) / filename)
+        rel_dir = Path(folder)
+        if subfolder:
+            rel_dir = rel_dir / subfolder
+        rel_image = relative_posix(rel_dir / filename)
         project_folders.add(folder)
+        if subfolder:
+            project_folders.add(relative_posix(rel_dir))
         project_images.add(rel_image)
         works_by_image.setdefault(rel_image, []).append(str(work_id))
 
@@ -145,13 +151,13 @@ def collect_detail_dirs(records: Any, works_by_id: Mapping[str, Mapping[str, Any
     detail_dirs: set[str] = set()
     for record in records.work_details.values():
         work_id = normalize_text(record.get("work_id"))
-        project_subfolder = normalize_rel_value(record.get("project_subfolder"))
-        if not work_id or not project_subfolder:
+        details_subfolder = normalize_rel_value(record.get("details_subfolder") or record.get("project_subfolder"))
+        if not work_id or not details_subfolder:
             continue
         work = works_by_id.get(work_id) or {}
         project_folder = normalize_rel_value(work.get("project_folder"))
         if project_folder:
-            detail_dirs.add(relative_posix(Path(project_folder) / project_subfolder))
+            detail_dirs.add(relative_posix(Path(project_folder) / details_subfolder))
     return detail_dirs
 
 

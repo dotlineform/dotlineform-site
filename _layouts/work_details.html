@@ -241,7 +241,7 @@ layout: default
         for (var j = 0; j < details.length; j += 1) {
           var d = details[j] || {};
           if (normalize(d.detail_uid) === ctx.detailUid) {
-            return { detail: d, section_id: slug(sec.project_subfolder || 'details') };
+            return { detail: d, section_id: slug(sec.section_id || sec.section_title || sec.project_subfolder || 'details') };
           }
         }
       }
@@ -260,7 +260,9 @@ layout: default
       if (ctx.section) {
         for (var i = 0; i < sections.length; i += 1) {
           var sec = sections[i] || {};
-          if (slug(sec.project_subfolder || '') === ctx.section) {
+          var sectionId = slug(sec.section_id || '');
+          var legacySectionId = slug(sec.section_title || sec.project_subfolder || '');
+          if (sectionId === ctx.section || legacySectionId === ctx.section) {
             details = Array.isArray(sec.details) ? sec.details : [];
             break;
           }

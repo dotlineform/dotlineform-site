@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-lookup
 title: "Catalogue Lookup Export"
 added_date: 2026-04-17
-last_updated: 2026-04-30
+last_updated: 2026-05-02
 parent_id: scripts
 sort_order: 110
 ---
@@ -55,6 +55,8 @@ Focused record lookup files:
 - `assets/studio/data/catalogue_lookup/works/<work_id>.json`
 - `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
 - `assets/studio/data/catalogue_lookup/series/<series_id>.json`
+
+Work lookup `detail_sections` group details by `section_id`, display `section_title`, and preserve section `sort_order`. Detail summaries include `details_subfolder` and `project_filename` so Studio can reconstruct source-image edit paths without treating public section labels as media paths.
 
 ## Runtime Use
 

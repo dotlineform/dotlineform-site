@@ -34,6 +34,16 @@ SCHEMAS = {
 }
 
 
+def normalize_optional_int(value: Any) -> int | None:
+    text = normalize_text(value)
+    if not text:
+        return None
+    try:
+        return int(text)
+    except ValueError:
+        return None
+
+
 def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> Dict[str, Any]:
     record = records.works.get(work_id)
     if not isinstance(record, Mapping):
@@ -44,27 +54,53 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
         for series_id, series_record in records.series.items()
     }
 
-    grouped_details: Dict[str, list[Dict[str, Any]]] = {}
+    grouped_details: Dict[str, Dict[str, Any]] = {}
     for detail_uid, detail_record in records.work_details.items():
         if normalize_text(detail_record.get("work_id")) != work_id:
             continue
-        section_key = normalize_text(detail_record.get("project_subfolder"))
-        grouped_details.setdefault(section_key, []).append(
+        legacy_section = normalize_text(detail_record.get("project_subfolder"))
+        section_id = normalize_text(detail_record.get("section_id")) or legacy_section
+        section_title = normalize_text(detail_record.get("section_title")) or legacy_section
+        sort_order = normalize_optional_int(detail_record.get("sort_order"))
+        details_subfolder = normalize_text(detail_record.get("details_subfolder")) or legacy_section
+        section = grouped_details.setdefault(
+            section_id,
+            {
+                "section_id": section_id,
+                "section_title": section_title,
+                "sort_order": sort_order,
+                "details": [],
+            },
+        )
+        section["details"].append(
             {
                 "detail_uid": detail_uid,
                 "detail_id": normalize_text(detail_record.get("detail_id")),
                 "title": normalize_text(detail_record.get("title")),
-                "project_subfolder": section_key,
+                "section_id": section_id,
+                "section_title": section_title,
+                "sort_order": sort_order,
+                "details_subfolder": details_subfolder,
+                "project_filename": normalize_text(detail_record.get("project_filename")),
                 "status": normalize_text(detail_record.get("status")),
             }
         )
 
     detail_sections = []
-    for section_key in sorted(grouped_details):
-        items = sorted(grouped_details[section_key], key=lambda item: item["detail_uid"])
+    for section in sorted(
+        grouped_details.values(),
+        key=lambda item: (
+            1 if item.get("sort_order") is None else 0,
+            item.get("sort_order") if item.get("sort_order") is not None else 0,
+            str(item.get("section_id", "")),
+        ),
+    ):
+        items = sorted(section["details"], key=lambda item: item["detail_uid"])
         detail_sections.append(
             {
-                "project_subfolder": section_key,
+                "section_id": section["section_id"],
+                "section_title": section["section_title"],
+                "sort_order": section["sort_order"],
                 "count": len(items),
                 "details": items,
             }

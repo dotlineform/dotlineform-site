@@ -90,7 +90,7 @@ Catalogue/runtime maintenance:
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
 - `./scripts/migrate_catalogue_media_sections.py`
   - previews or applies the work-detail source migration from legacy `project_subfolder` to separated `details_subfolder`, `section_id`, and `section_title`
-- `./scripts/export_catalogue_lookup.py`
+- `python3 ./scripts/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
 - `bash scripts/make_srcset_images.sh`
   - builds derivative image outputs when media work is needed outside the Studio metadata flow

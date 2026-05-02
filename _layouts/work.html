@@ -644,8 +644,9 @@ layout: default
         content.innerHTML = '';
 
         sections.forEach(function (sec) {
-          var label = String((sec && sec.project_subfolder) || '').trim();
-          var secId = slug(label || 'details');
+          var label = String((sec && (sec.section_title || sec.project_subfolder)) || '').trim();
+          var sectionKey = String((sec && sec.section_id) || label || 'details').trim();
+          var secId = slug(sectionKey || 'details');
           var details = (sec && Array.isArray(sec.details)) ? sec.details : [];
           if (!details.length) return;
 

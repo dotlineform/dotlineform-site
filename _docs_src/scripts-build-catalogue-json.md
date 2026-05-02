@@ -148,8 +148,8 @@ The helper does not:
 
 Work, work-detail, and moment image generation uses the source-image metadata in canonical catalogue JSON:
 
-- works resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/projects/<project_folder>/<project_filename>`
-- work details resolve from the parent work project folder plus `<project_subfolder>/<project_filename>`
+- works resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/projects/<project_folder>/<project_subfolder>/<project_filename>` when `project_subfolder` is present, otherwise directly from `<project_folder>/<project_filename>`
+- work details resolve from the parent work `project_folder` plus optional `details_subfolder` and `project_filename`
 - moments resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/moments/images/<source_image_file>`
 - renamed source images are copied to `var/catalogue/media/works/make_srcset_images/<work_id>.<ext>`, `var/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`, or `var/catalogue/media/moments/make_srcset_images/<moment_id>.<ext>`
 - primary derivatives are staged under `var/catalogue/media/<kind>/srcset_images/primary/`

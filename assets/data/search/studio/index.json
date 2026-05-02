@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6dddd32ee5bb5bcdfd6ed31c2a0a4a8a",
-    "generated_at_utc": "2026-05-02T12:56:21Z",
+    "version": "blake2b-72ca7001e91c6f79bb3882740781fa15",
+    "generated_at_utc": "2026-05-02T13:26:07Z",
     "count": 157
   },
   "entries": [
@@ -2746,10 +2746,10 @@
       "kind": "doc",
       "title": "Catalogue Lookup Export",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-30 • Scripts",
+      "display_meta": "2026-05-02 • Scripts",
       "search_terms": [
         "scripts-catalogue-lookup",
         "scripts",
@@ -2757,12 +2757,12 @@
         "lookup",
         "catalogue lookup export",
         "export",
-        "2026-04-30",
+        "2026-05-02",
         "2026",
-        "04",
-        "30"
+        "05",
+        "02"
       ],
-      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export 2026-04-30 2026 04 30"
+      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-work-unified-editor",

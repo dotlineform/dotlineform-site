@@ -845,9 +845,12 @@ def check_json_schema(
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section item must be object"}, max_samples)
                 continue
-            if "project_subfolder" not in sec:
+            if "section_id" not in sec and "project_subfolder" not in sec:
                 errors += 1
-                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section missing project_subfolder"}, max_samples)
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section missing section_id"}, max_samples)
+            if "section_title" not in sec and "project_subfolder" not in sec:
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section missing section_title"}, max_samples)
             details = sec.get("details")
             if not isinstance(details, list):
                 errors += 1
