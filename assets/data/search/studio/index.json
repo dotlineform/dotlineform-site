@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-abeafb186bcec25060373135911c8f08",
-    "generated_at_utc": "2026-05-02T15:56:17Z",
+    "version": "blake2b-f7424e997d82a9a0f07a3843689ff625",
+    "generated_at_utc": "2026-05-02T17:05:50Z",
     "count": 157
   },
   "entries": [
@@ -2684,7 +2684,7 @@
     {
       "id": "site-request-catalogue-media-section-schema",
       "kind": "doc",
-      "title": "Catalogue Media And Detail Section Schema Request",
+      "title": "Catalogue Media And Detail Section Schema Request ✅",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
       "last_updated": "2026-05-02",
       "parent_id": "change-requests",
@@ -2698,7 +2698,7 @@
         "media",
         "section",
         "schema",
-        "catalogue media and detail section schema request",
+        "catalogue media and detail section schema request ✅",
         "and",
         "detail",
         "change requests",
@@ -2709,7 +2709,7 @@
         "05",
         "02"
       ],
-      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request ✅ and detail change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-source-registry-drift-verification",
