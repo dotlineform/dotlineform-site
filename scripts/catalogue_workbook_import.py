@@ -21,6 +21,7 @@ try:
         normalize_scalar_text,
         normalize_source_record,
         normalize_status,
+        normalize_text,
         parse_series_ids,
         records_from_json_source,
         slug_id,
@@ -41,6 +42,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         normalize_scalar_text,
         normalize_source_record,
         normalize_status,
+        normalize_text,
         parse_series_ids,
         records_from_json_source,
         slug_id,
@@ -141,7 +143,7 @@ def plan_to_response(plan: WorkbookImportPlan, repo_root: Path | None = None) ->
         except ValueError:
             workbook_display = str(plan.workbook_path.resolve())
 
-    return {
+    response = {
         "mode": plan.mode,
         "workbook_path": workbook_display,
         "target_kind": plan.target_kind,
@@ -166,6 +168,36 @@ def plan_to_response(plan: WorkbookImportPlan, repo_root: Path | None = None) ->
         },
         "ready_to_apply": plan.blocked_count == 0 and plan.importable_count > 0,
     }
+    if plan.mode == IMPORT_MODE_WORK_DETAILS:
+        response["importable_sections"] = detail_import_section_summary(plan.importable_records)
+    return response
+
+
+def detail_import_section_summary(records: Mapping[str, Mapping[str, Any]]) -> list[Dict[str, Any]]:
+    grouped: Dict[tuple[str, str], Dict[str, Any]] = {}
+    for detail_uid, record in records.items():
+        work_id = normalize_text(record.get("work_id"))
+        section_id = normalize_text(record.get("section_id"))
+        section_title = normalize_text(record.get("section_title"))
+        if not work_id or not section_id:
+            continue
+        entry = grouped.setdefault(
+            (work_id, section_id),
+            {
+                "work_id": work_id,
+                "section_id": section_id,
+                "section_title": section_title,
+                "count": 0,
+                "sample_detail_ids": [],
+            },
+        )
+        entry["count"] += 1
+        if len(entry["sample_detail_ids"]) < PREVIEW_SAMPLE_LIMIT:
+            entry["sample_detail_ids"].append(str(detail_uid))
+    return sorted(
+        grouped.values(),
+        key=lambda item: (str(item.get("work_id", "")), str(item.get("section_id", ""))),
+    )[:PREVIEW_SAMPLE_LIMIT]
 
 
 def _load_workbook(workbook_path: Path):

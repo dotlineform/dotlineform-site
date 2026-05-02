@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T13:26:06Z",
+  "generated_at": "2026-05-02T14:42:08Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -657,7 +657,7 @@
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "user-guide",
       "sort_order": 30,
       "published": true,
@@ -1035,7 +1035,7 @@
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "user-guide",
       "sort_order": 50,
       "published": true,

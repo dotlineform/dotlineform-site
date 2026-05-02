@@ -2,7 +2,10 @@ const WORK_DETAIL_FIELD_DEFINITIONS = Object.freeze({
   detail_uid: Object.freeze({ key: "detail_uid", label: "detail id" }),
   work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
   detail_id: Object.freeze({ key: "detail_id", label: "detail id", type: "text" }),
-  project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
+  details_subfolder: Object.freeze({ key: "details_subfolder", label: "details subfolder", type: "text" }),
+  section_id: Object.freeze({ key: "section_id", label: "section id", type: "text", readonly: true }),
+  section_title: Object.freeze({ key: "section_title", label: "section title", type: "text" }),
+  sort_order: Object.freeze({ key: "sort_order", label: "section sort order", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
   title: Object.freeze({ key: "title", label: "title", type: "text" }),
   status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
@@ -12,7 +15,9 @@ const WORK_DETAIL_FIELD_DEFINITIONS = Object.freeze({
 });
 
 const WORK_DETAIL_EDITABLE_FIELDS = Object.freeze([
-  WORK_DETAIL_FIELD_DEFINITIONS.project_subfolder,
+  WORK_DETAIL_FIELD_DEFINITIONS.details_subfolder,
+  WORK_DETAIL_FIELD_DEFINITIONS.section_title,
+  WORK_DETAIL_FIELD_DEFINITIONS.sort_order,
   WORK_DETAIL_FIELD_DEFINITIONS.project_filename,
   WORK_DETAIL_FIELD_DEFINITIONS.title,
   WORK_DETAIL_FIELD_DEFINITIONS.status
@@ -22,7 +27,9 @@ const NEW_WORK_DETAIL_EDITABLE_FIELDS = Object.freeze([
   WORK_DETAIL_FIELD_DEFINITIONS.work_id,
   WORK_DETAIL_FIELD_DEFINITIONS.detail_id,
   WORK_DETAIL_FIELD_DEFINITIONS.title,
-  WORK_DETAIL_FIELD_DEFINITIONS.project_subfolder,
+  WORK_DETAIL_FIELD_DEFINITIONS.section_title,
+  WORK_DETAIL_FIELD_DEFINITIONS.details_subfolder,
+  WORK_DETAIL_FIELD_DEFINITIONS.sort_order,
   WORK_DETAIL_FIELD_DEFINITIONS.project_filename
 ]);
 
@@ -30,6 +37,7 @@ const WORK_DETAIL_READONLY_FIELDS = Object.freeze([
   WORK_DETAIL_FIELD_DEFINITIONS.detail_uid,
   Object.freeze({ key: "work_id", label: "work id" }),
   Object.freeze({ key: "detail_id", label: "detail row id" }),
+  WORK_DETAIL_FIELD_DEFINITIONS.section_id,
   WORK_DETAIL_FIELD_DEFINITIONS.published_date,
   WORK_DETAIL_FIELD_DEFINITIONS.width_px,
   WORK_DETAIL_FIELD_DEFINITIONS.height_px
@@ -80,11 +88,25 @@ function canonicalizeWorkDetailScalar(_field, value) {
   return normalizeText(value);
 }
 
+function normalizeSortOrder(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  return /^-?\d+$/.test(text) ? String(Number(text)) : text;
+}
+
 function buildWorkDetailDraftFromRecord(record, options = {}) {
   const fields = Array.isArray(options.fields) ? options.fields : WORK_DETAIL_EDITABLE_FIELDS;
   const draft = {};
   fields.forEach((field) => {
-    draft[field.key] = normalizeText(record && record[field.key]);
+    if (field.key === "details_subfolder") {
+      draft[field.key] = normalizeText(record && (record.details_subfolder || record.project_subfolder));
+    } else if (field.key === "section_title") {
+      draft[field.key] = normalizeText(record && (record.section_title || record.project_subfolder));
+    } else if (field.key === "sort_order") {
+      draft[field.key] = normalizeSortOrder(record && record.sort_order);
+    } else {
+      draft[field.key] = normalizeText(record && record[field.key]);
+    }
   });
   return draft;
 }
@@ -94,17 +116,22 @@ function buildWorkDetailRecordFromDraft(draft, options = {}) {
   const workId = normalizeWorkId(options.workId == null ? source.work_id : options.workId);
   const detailId = normalizeDetailId(options.detailId == null ? source.detail_id : options.detailId);
   const detailUid = normalizeDetailUid(options.detailUid) || normalizeDetailUid(workId, detailId);
-  return {
+  const record = {
     detail_uid: detailUid,
     work_id: workId,
     detail_id: detailId,
-    project_subfolder: normalizeText(source.project_subfolder) || null,
+    details_subfolder: normalizeText(source.details_subfolder) || null,
+    section_title: normalizeText(source.section_title) || null,
+    sort_order: normalizeSortOrder(source.sort_order) || null,
     project_filename: normalizeText(source.project_filename) || null,
     title: normalizeText(source.title) || null,
     status: Object.prototype.hasOwnProperty.call(options, "status")
       ? options.status
       : normalizeText(source.status).toLowerCase() || null
   };
+  const sectionId = normalizeText(options.sectionId == null ? source.section_id : options.sectionId);
+  if (sectionId) record.section_id = sectionId;
+  return record;
 }
 
 function buildSaveWorkDetailPayload(state) {
@@ -116,7 +143,8 @@ function buildSaveWorkDetailPayload(state) {
     record: buildWorkDetailRecordFromDraft(draft, {
       detailUid: state.currentDetailUid,
       workId: state.currentWorkId,
-      detailId: state.currentRecord && state.currentRecord.detail_id
+      detailId: state.currentRecord && state.currentRecord.detail_id,
+      sectionId: state.currentRecord && state.currentRecord.section_id
     })
   };
 }
@@ -134,7 +162,9 @@ function buildCreateWorkDetailPayload(draft) {
       work_id: workId,
       detail_id: detailId,
       title: normalizeText(draft && draft.title) || null,
-      project_subfolder: normalizeText(draft && draft.project_subfolder) || null,
+      section_title: normalizeText(draft && draft.section_title) || null,
+      details_subfolder: normalizeText(draft && draft.details_subfolder) || null,
+      sort_order: normalizeSortOrder(draft && draft.sort_order) || null,
       project_filename: normalizeText(draft && draft.project_filename) || null,
       status: "draft"
     }
@@ -177,6 +207,13 @@ function validateCreateWorkDetailDraft(draft, options = {}) {
 
   if (!normalizeText(draft && draft.title)) {
     errors.set("title", t("field_required_title", "Enter a title."));
+  }
+  if (!normalizeText(draft && draft.section_title)) {
+    errors.set("section_title", t("field_required_section_title", "Enter a section title."));
+  }
+  const rawSortOrder = normalizeText(draft && draft.sort_order);
+  if (rawSortOrder && !/^\d+$/.test(rawSortOrder)) {
+    errors.set("sort_order", t("field_invalid_sort_order", "Use a whole number or leave blank."));
   }
   return errors;
 }

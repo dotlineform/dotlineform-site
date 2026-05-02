@@ -363,7 +363,7 @@ Implementation notes:
 
 Status:
 
-- not started
+- implemented
 
 Update Studio UI and workbook-led import flows to expose the new contract without reintroducing the old overloaded field.
 
@@ -382,6 +382,14 @@ Acceptance checks:
 - new detail creation produces a stable `section_id`
 - section title edits are clear as public catalogue metadata, not folder changes
 - existing parent-work detail navigation still works after the schema migration
+
+Implementation notes:
+
+- The work editor field registry now exposes optional work `project_subfolder` alongside `project_folder` and `project_filename`.
+- The work-detail editor field registry now sends `details_subfolder`, `section_title`, and `sort_order` in save/create payloads, and no longer sends detail `project_subfolder`.
+- Work-detail create mode requires `section_title`; `section_id` remains server-generated and is displayed read-only after create.
+- Work-detail field labels and validation copy for the new fields were added to `assets/studio/data/studio_config.json`.
+- The workbook import path requires `section_title`, accepts `details_subfolder`, blocks non-empty legacy `project_subfolder`, generates section ids during preview/apply, and returns `importable_sections` in preview responses.
 
 ### Task 6. Update Documentation And Field Inventory
 

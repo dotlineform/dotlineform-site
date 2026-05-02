@@ -291,7 +291,8 @@ function renderField(field, fieldsNode, state) {
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
-  label.textContent = field.label;
+  label.dataset.fieldLabel = field.key;
+  label.textContent = t(state, `field_label_${field.key}`, field.label);
   wrapper.appendChild(label);
 
   let input;
@@ -338,7 +339,8 @@ function renderReadonlyField(field, readonlyNode, state) {
 
   const label = document.createElement("span");
   label.className = "tagStudioForm__label";
-  label.textContent = field.label;
+  label.dataset.fieldLabel = field.key;
+  label.textContent = t(state, `field_label_${field.key}`, field.label);
   wrapper.appendChild(label);
 
   const value = document.createElement("div");
@@ -351,9 +353,18 @@ function renderReadonlyField(field, readonlyNode, state) {
   state.readonlyNodes.set(field.key, value);
 }
 
+function applyFieldLabels(state) {
+  [...FORM_FIELDS, ...READONLY_FIELDS].forEach((field) => {
+    const labels = document.querySelectorAll(`[data-field-label="${field.key}"]`);
+    labels.forEach((label) => {
+      label.textContent = t(state, `field_label_${field.key}`, field.label);
+    });
+  });
+}
+
 function buildRecordSummary(record) {
   const title = normalizeText(record && record.title);
-  const section = normalizeText(record && record.section_title) || normalizeText(record && record.project_subfolder);
+  const section = normalizeText(record && record.section_title);
   if (title && section) return `${title} · ${section}`;
   return title || section || "—";
 }
@@ -364,6 +375,21 @@ function buildParentWorkSummary(record) {
   const yearDisplay = normalizeText(record && record.year_display);
   const label = [title, yearDisplay].filter(Boolean).join(" · ");
   return label ? `${workId} · ${label}` : workId || "—";
+}
+
+function buildDetailSearchRecord(detailUid, record) {
+  return {
+    detail_uid: detailUid,
+    work_id: normalizeText(record && record.work_id),
+    detail_id: normalizeText(record && record.detail_id),
+    title: normalizeText(record && record.title),
+    section_id: normalizeText(record && record.section_id),
+    section_title: normalizeText(record && record.section_title),
+    sort_order: normalizeText(record && record.sort_order),
+    details_subfolder: normalizeText(record && record.details_subfolder),
+    project_filename: normalizeText(record && record.project_filename),
+    status: normalizeText(record && record.status)
+  };
 }
 
 function getSearchMatches(state, rawQuery) {
@@ -641,9 +667,19 @@ function validateDraft(state) {
     });
   }
   const errors = new Map();
-  if (state.mode === "bulk" && !state.bulkTouchedFields.has("status")) {
-    return errors;
+  const rawSortOrder = normalizeText(state.draft.sort_order);
+  if (rawSortOrder && !/^\d+$/.test(rawSortOrder)) {
+    if (state.mode !== "bulk" || state.bulkTouchedFields.has("sort_order")) {
+      errors.set("sort_order", t(state, "field_invalid_sort_order", "Use a whole number or leave blank."));
+    }
   }
+  if (state.mode === "bulk" && state.bulkTouchedFields.has("section_title") && !normalizeText(state.draft.section_title)) {
+    errors.set("section_title", t(state, "field_required_section_title", "Enter a section title."));
+  }
+  if (state.mode !== "bulk" && !normalizeText(state.draft.section_title)) {
+    errors.set("section_title", t(state, "field_required_section_title", "Enter a section title."));
+  }
+  if (state.mode === "bulk" && !state.bulkTouchedFields.has("status")) return errors;
   const status = normalizeText(state.draft.status).toLowerCase();
   if (!STATUS_OPTIONS.has(status)) {
     errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
@@ -1037,13 +1073,7 @@ async function saveCurrentDetail(state) {
         if (!detailUid || !record) return;
         state.bulkRecords.set(detailUid, record);
         state.bulkRecordHashes.set(detailUid, normalizeText(item.record_hash) || "");
-        state.detailSearchByUid.set(detailUid, {
-          detail_uid: detailUid,
-          work_id: normalizeText(record.work_id),
-          detail_id: normalizeText(record.detail_id),
-          title: normalizeText(record.title),
-          status: normalizeText(record.status)
-        });
+        state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
       });
       const fallbackBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
       const outcome = applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets);
@@ -1110,13 +1140,7 @@ async function saveCurrentDetail(state) {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkDetail, buildPayload(state));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
-    state.detailSearchByUid.set(state.currentDetailUid, {
-      detail_uid: state.currentDetailUid,
-      work_id: normalizeText(record.work_id),
-      detail_id: normalizeText(record.detail_id),
-      title: normalizeText(record.title),
-      status: normalizeText(record.status)
-    });
+    state.detailSearchByUid.set(state.currentDetailUid, buildDetailSearchRecord(state.currentDetailUid, record));
     const outcome = applySingleSaveBuildOutcome(state, response);
     const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
     setLoadedRecord(state, state.currentDetailUid, record, {
@@ -1199,13 +1223,7 @@ async function createCurrentDetail(state) {
       throw new Error("create response missing detail id");
     }
     if (record) {
-      state.detailSearchByUid.set(detailUid, {
-        detail_uid: detailUid,
-        work_id: normalizeText(record.work_id),
-        detail_id: normalizeText(record.detail_id),
-        title: normalizeText(record.title),
-        status: normalizeText(record.status)
-      });
+      state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
     }
     state.isSaving = false;
     await openDetailByUid(state, detailUid);
@@ -1354,13 +1372,7 @@ async function applyPublicationChange(state) {
 
     const detailUid = state.currentDetailUid;
     const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    state.detailSearchByUid.set(detailUid, {
-      detail_uid: detailUid,
-      work_id: normalizeText(record.work_id),
-      detail_id: normalizeText(record.detail_id),
-      title: normalizeText(record.title),
-      status: normalizeText(record.status)
-    });
+    state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
     state.rebuildPending = response.status === "public_update_failed";
     const lookup = await loadDetailLookupRecord(state, detailUid).catch(() => null);
     setLoadedRecord(state, detailUid, record, {
@@ -1640,6 +1652,7 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
+    applyFieldLabels(state);
     searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");

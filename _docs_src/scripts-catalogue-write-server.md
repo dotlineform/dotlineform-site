@@ -483,7 +483,7 @@ Request behavior:
 - legacy detail `project_subfolder` is rejected
 - the server derives and validates the normalized `detail_uid`
 
-Bulk workbook imports in `work_details` mode apply the same parent-published rule. Rows whose parent work is still draft are blocked in preview with `parent_work_unpublished`. Detail import rows use `details_subfolder` and `section_title`; non-empty legacy `project_subfolder` cells are blocked in preview.
+Bulk workbook imports in `work_details` mode apply the same parent-published rule. Rows whose parent work is still draft are blocked in preview with `parent_work_unpublished`. Detail import rows use `details_subfolder` and `section_title`; non-empty legacy `project_subfolder` cells are blocked in preview. The preview response includes `importable_sections` so generated `section_id` values, section titles, and grouped detail counts are visible before apply.
 
 `POST /catalogue/import-preview` expects:
 

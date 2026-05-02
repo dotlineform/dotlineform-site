@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: user-guide
 sort_order: 30
 ---
@@ -27,13 +27,14 @@ The first implementation covers:
 - open multiple work records by comma-delimited `work_id` values and `start-end` ranges
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit core scalar metadata fields
+- edit optional `project_subfolder` source-image path metadata for work media
 - show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
 - edit ordered work series through a title-search series picker
 - bulk-edit core scalar metadata across the selected works
 - bulk-change `series_ids` by exact replacement or `+series_id` / `-series_id` diff entries
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
 - show a compact current-record media preview at the top of the summary rail
-- list the current work's detail records grouped by `project_subfolder`
+- list the current work's detail records grouped by `section_id` and labeled by `section_title`
 - show thumbnail images beside detail rows in those work-detail lists
 - cap visible detail rows at 10 per section
 - provide per-work detail search by `detail_uid`
@@ -202,7 +203,7 @@ The work editor now includes a detail navigation section below the main editor.
 
 Locked constraints for this phase:
 
-- grouping follows `project_subfolder`
+- grouping follows `section_id`, labels display `section_title`, and section order follows `sort_order` when present
 - each section shows at most 10 rows by default
 - the detail search box searches within the current work by `detail_uid`
 - the detail search box only appears when at least one section exceeds the fixed visible row limit

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-72ca7001e91c6f79bb3882740781fa15",
-    "generated_at_utc": "2026-05-02T13:26:07Z",
+    "version": "blake2b-c2620f408a75d72b0c40d292aa18242d",
+    "generated_at_utc": "2026-05-02T14:42:10Z",
     "count": 157
   },
   "entries": [
@@ -1105,10 +1105,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-01 • User Guide",
+      "display_meta": "2026-05-02 • User Guide",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -1118,12 +1118,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-01 2026 05 01"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-02 2026 05 02"
     },
     {
       "id": "scripts-copy-draft-media",
@@ -1738,10 +1738,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-30 • User Guide",
+      "display_meta": "2026-05-02 • User Guide",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -1752,12 +1752,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-30",
+        "2026-05-02",
         "2026",
-        "04",
-        "30"
+        "05",
+        "02"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-04-30 2026 04 30"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-05-02 2026 05 02"
     },
     {
       "id": "css-audit-spec",
