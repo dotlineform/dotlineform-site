@@ -6,13 +6,15 @@
     "detail_uid": "01720-040",
     "work_id": "01720",
     "detail_id": "040",
-    "project_subfolder": "symbols",
     "project_filename": "lazy rush.jpg",
     "title": "lazy rush",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 1600,
-    "height_px": 1553
+    "height_px": 1553,
+    "section_id": "01720-1",
+    "section_title": "symbols",
+    "details_subfolder": "symbols"
   },
   "work_summary": {
     "work_id": "01720",

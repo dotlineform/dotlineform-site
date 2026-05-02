@@ -6,13 +6,15 @@
     "detail_uid": "01422-007",
     "work_id": "01422",
     "detail_id": "007",
-    "project_subfolder": "details",
     "project_filename": "matter - detail 7.jpg",
     "title": "matter - detail 7",
     "status": "published",
     "published_date": "2026-03-24",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_id": "01422-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01422",

@@ -107,6 +107,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 try:
     from catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+        build_detail_section_resolution_by_uid,
         records_from_json_source,
         validate_source_records,
         write_source_record_payloads,
@@ -114,6 +115,7 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+        build_detail_section_resolution_by_uid,
         records_from_json_source,
         validate_source_records,
         write_source_record_payloads,
@@ -1375,7 +1377,11 @@ def main() -> None:
                         "details": [],
                     }
                 )
-            sections[section_index[section_id]]["details"].append(dict(detail))
+            detail_payload = dict(detail)
+            detail_payload.pop("section_id", None)
+            detail_payload.pop("section_title", None)
+            detail_payload.pop("sort_order", None)
+            sections[section_index[section_id]]["details"].append(detail_payload)
         for sec in sections:
             details = sec.get("details")
             if isinstance(details, list):
@@ -2172,6 +2178,7 @@ def main() -> None:
             encountered_work_ids: List[str] = []
             encountered_work_id_set: set[str] = set()
             detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
+            section_resolution_by_uid = build_detail_section_resolution_by_uid(source_records.work_details)
 
             for work_record in source_records.works.values():
                 wid_raw = work_record.get("work_id")
@@ -2189,7 +2196,7 @@ def main() -> None:
                     encountered_work_ids.append(wid)
                     encountered_work_id_set.add(wid)
 
-            for detail_source_record in source_records.work_details.values():
+            for detail_uid, detail_source_record in source_records.work_details.items():
                 wid_raw = detail_source_record.get("work_id")
                 did_raw = detail_source_record.get("detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
@@ -2203,19 +2210,14 @@ def main() -> None:
                     continue
 
                 did = slug_id(did_raw, width=3)
+                section_resolution = section_resolution_by_uid.get(detail_uid, {})
                 detail_record = build_canonical_detail_record(
                     wid=wid,
                     did=did,
                     title=coerce_string(detail_source_record.get("title")),
-                    section_id=coerce_string(
-                        detail_source_record.get("section_id")
-                        or detail_source_record.get("project_subfolder")
-                    ),
-                    section_title=coerce_string(
-                        detail_source_record.get("section_title")
-                        or detail_source_record.get("project_subfolder")
-                    ),
-                    sort_order=coerce_int(detail_source_record.get("sort_order")),
+                    section_id=coerce_string(section_resolution.get("section_id")),
+                    section_title=coerce_string(section_resolution.get("section_title")),
+                    sort_order=coerce_int(section_resolution.get("sort_order")),
                     width_px=coerce_int(detail_source_record.get("width_px")),
                     height_px=coerce_int(detail_source_record.get("height_px")),
                 )

@@ -29,14 +29,20 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "versions",
+      "section_id": "00815-1",
+      "section_title": "versions",
+      "sort_order": null,
       "count": 1,
       "details": [
         {
           "detail_uid": "00815-001",
           "detail_id": "001",
           "title": "colours dachau.1",
-          "project_subfolder": "versions",
+          "section_id": "00815-1",
+          "section_title": "versions",
+          "sort_order": null,
+          "details_subfolder": "versions",
+          "project_filename": "colours dachau.1.jpg",
           "status": "published"
         }
       ]

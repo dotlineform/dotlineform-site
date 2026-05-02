@@ -340,7 +340,7 @@ Expected changes:
 - `scripts/generate_work_pages.py` groups detail output by `section_id` and displays `section_title`
 - generated work JSON orders sections by `sort_order` and then `section_id`
 - lookup payloads and media readiness summaries report the new source fields
-- generated lookup payloads retain non-empty `project_subfolder` and `details_subfolder` for Studio editing
+- generated lookup payloads retain non-empty work `project_subfolder` and detail `details_subfolder` for Studio editing
 - local media generation only follows source media fields, not public section metadata
 
 Acceptance checks:
@@ -354,9 +354,9 @@ Acceptance checks:
 Implementation notes:
 
 - `scripts/catalogue_json_build.py` now resolves work source media through `project_folder` plus optional `project_subfolder`, and detail source media through `details_subfolder` plus `project_filename` with legacy read fallback until migration write.
-- `scripts/generate_work_pages.py` now resolves work/detail dimension lookups through source media fields only, groups generated work JSON sections by `section_id`, displays `section_title`, and orders sections by `sort_order` then `section_id`.
+- `scripts/generate_work_pages.py` now resolves work/detail dimension lookups through source media fields only, groups generated work JSON sections by `section_id`, displays `section_title`, and orders sections by `sort_order` then `section_id`. Nested detail records do not repeat section-level `section_id`, `section_title`, or `sort_order` fields. Before the source migration is written, legacy detail rows synthesize migration-equivalent section ids such as `00001-1` rather than using legacy `project_subfolder` labels as section keys.
 - Public work/detail layouts read `section_id` and `section_title` from generated work JSON, with legacy fallbacks for currently generated payloads.
-- `scripts/catalogue_lookup.py` now emits `section_id`, `section_title`, `sort_order`, `details_subfolder`, and `project_filename` in focused work lookup detail summaries so Studio can reconstruct source paths and section grouping.
+- `scripts/catalogue_lookup.py` now emits `section_id`, `section_title`, `sort_order`, `details_subfolder`, and `project_filename` in focused work lookup detail summaries and focused detail records so Studio can reconstruct source paths and section grouping. Focused detail lookup records omit legacy detail `project_subfolder` even while canonical source JSON remains legacy-readable before the write migration.
 - Project-state reporting and generated JSON audit checks now understand the separated fields.
 
 ### Task 5. Update Studio Editing And Import Surfaces

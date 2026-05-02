@@ -6,13 +6,15 @@
     "detail_uid": "00734-005",
     "work_id": "00734",
     "detail_id": "005",
-    "project_subfolder": "layers",
     "project_filename": "physics.jpg",
     "title": "physics",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 8858,
-    "height_px": 8858
+    "height_px": 8858,
+    "section_id": "00734-1",
+    "section_title": "layers",
+    "details_subfolder": "layers"
   },
   "work_summary": {
     "work_id": "00734",

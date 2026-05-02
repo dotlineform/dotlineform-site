@@ -6,13 +6,15 @@
     "detail_uid": "00160-007",
     "work_id": "00160",
     "detail_id": "007",
-    "project_subfolder": "details",
     "project_filename": "mouse story - detail 2.jpg",
     "title": "mouse story - detail 2",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 6525,
-    "height_px": 3671
+    "height_px": 3671,
+    "section_id": "00160-2",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00160",

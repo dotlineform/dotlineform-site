@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8c5a584cb9e01230c80582c2b3350659",
-    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "version": "blake2b-0170e59e4d790ddcc291f5dfd4688234",
+    "generated_at_utc": "2026-05-02T15:10:29Z",
     "work_id": "00001",
     "count": 17
   },
@@ -24,14 +24,14 @@
   },
   "sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00001-1",
+      "section_title": "details",
       "details": [
         {
           "work_id": "00001",
           "detail_id": "001",
           "detail_uid": "00001-001",
           "title": "a poem divided into 4 parts - end 1",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 2268,
           "layout": "work_details"
@@ -41,7 +41,6 @@
           "detail_id": "002",
           "detail_uid": "00001-002",
           "title": "a poem divided into 4 parts - end 2",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 2268,
           "layout": "work_details"
@@ -51,7 +50,6 @@
           "detail_id": "003",
           "detail_uid": "00001-003",
           "title": "a poem divided into 4 parts - end 3",
-          "project_subfolder": "details",
           "width_px": 3047,
           "height_px": 1714,
           "layout": "work_details"
@@ -61,7 +59,6 @@
           "detail_id": "004",
           "detail_uid": "00001-004",
           "title": "a poem divided into 4 parts - end 4",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 2268,
           "layout": "work_details"
@@ -71,7 +68,6 @@
           "detail_id": "005",
           "detail_uid": "00001-005",
           "title": "a poem divided into 4 parts - end 5",
-          "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 2268,
           "layout": "work_details"
@@ -81,7 +77,6 @@
           "detail_id": "006",
           "detail_uid": "00001-006",
           "title": "a poem divided into 4 parts - end 6",
-          "project_subfolder": "details",
           "width_px": 3661,
           "height_px": 2059,
           "layout": "work_details"
@@ -91,7 +86,6 @@
           "detail_id": "007",
           "detail_uid": "00001-007",
           "title": "a poem divided into 4 parts - end 7",
-          "project_subfolder": "details",
           "width_px": 3607,
           "height_px": 2029,
           "layout": "work_details"
@@ -101,7 +95,6 @@
           "detail_id": "008",
           "detail_uid": "00001-008",
           "title": "a poem divided into 4 parts - end 8",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -111,7 +104,6 @@
           "detail_id": "009",
           "detail_uid": "00001-009",
           "title": "a poem divided into 4 parts - end 9",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -121,7 +113,6 @@
           "detail_id": "010",
           "detail_uid": "00001-010",
           "title": "a poem divided into 4 parts - end 10",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -131,7 +122,6 @@
           "detail_id": "011",
           "detail_uid": "00001-011",
           "title": "a poem divided into 4 parts - end 11",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -141,7 +131,6 @@
           "detail_id": "012",
           "detail_uid": "00001-012",
           "title": "a poem divided into 4 parts - end 12",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -151,7 +140,6 @@
           "detail_id": "013",
           "detail_uid": "00001-013",
           "title": "a poem divided into 4 parts - end 13",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -161,7 +149,6 @@
           "detail_id": "014",
           "detail_uid": "00001-014",
           "title": "a poem divided into 4 parts - end 14",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"
@@ -171,7 +158,6 @@
           "detail_id": "015",
           "detail_uid": "00001-015",
           "title": "a poem divided into 4 parts - end 15",
-          "project_subfolder": "details",
           "width_px": 3895,
           "height_px": 2191,
           "layout": "work_details"
@@ -181,7 +167,6 @@
           "detail_id": "016",
           "detail_uid": "00001-016",
           "title": "a poem divided into 4 parts - end 16",
-          "project_subfolder": "details",
           "width_px": 2784,
           "height_px": 1566,
           "layout": "work_details"
@@ -191,7 +176,6 @@
           "detail_id": "017",
           "detail_uid": "00001-017",
           "title": "a poem divided into 4 parts - end 17",
-          "project_subfolder": "details",
           "width_px": 4028,
           "height_px": 2266,
           "layout": "work_details"

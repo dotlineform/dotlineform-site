@@ -6,13 +6,15 @@
     "detail_uid": "00735-027",
     "work_id": "00735",
     "detail_id": "027",
-    "project_subfolder": "64 degrees",
     "project_filename": "happiness 27.jpg",
     "title": "happiness 27°",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 2362,
-    "height_px": 2362
+    "height_px": 2362,
+    "section_id": "00735-1",
+    "section_title": "64 degrees",
+    "details_subfolder": "64 degrees"
   },
   "work_summary": {
     "work_id": "00735",

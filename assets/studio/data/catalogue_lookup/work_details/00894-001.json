@@ -6,13 +6,15 @@
     "detail_uid": "00894-001",
     "work_id": "00894",
     "detail_id": "001",
-    "project_subfolder": "versions (2022)",
     "project_filename": "doll moiré reduced (version 1).jpg",
     "title": "doll moiré reduced (version 1)",
     "status": "published",
     "published_date": "2026-03-17",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_id": "00894-1",
+    "section_title": "versions (2022)",
+    "details_subfolder": "versions (2022)"
   },
   "work_summary": {
     "work_id": "00894",

@@ -29,28 +29,42 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01366-1",
+      "section_title": "details",
+      "sort_order": null,
       "count": 3,
       "details": [
         {
           "detail_uid": "01366-001",
           "detail_id": "001",
           "title": "heaven and earth (blue)",
-          "project_subfolder": "details",
+          "section_id": "01366-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "heaven and earth (blue).jpg",
           "status": "published"
         },
         {
           "detail_uid": "01366-002",
           "detail_id": "002",
           "title": "heaven and earth (cyan)",
-          "project_subfolder": "details",
+          "section_id": "01366-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "heaven and earth (cyan).jpg",
           "status": "published"
         },
         {
           "detail_uid": "01366-003",
           "detail_id": "003",
           "title": "heaven and earth (green)",
-          "project_subfolder": "details",
+          "section_id": "01366-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "heaven and earth (green).jpg",
           "status": "published"
         }
       ]

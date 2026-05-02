@@ -6,13 +6,15 @@
     "detail_uid": "01196-001",
     "work_id": "01196",
     "detail_id": "001",
-    "project_subfolder": "source",
     "project_filename": "source - form 27.jpg",
     "title": "source - form 27",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 3000,
-    "height_px": 2664
+    "height_px": 2664,
+    "section_id": "01196-1",
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "01196",

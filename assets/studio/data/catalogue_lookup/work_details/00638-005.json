@@ -6,13 +6,15 @@
     "detail_uid": "00638-005",
     "work_id": "00638",
     "detail_id": "005",
-    "project_subfolder": "details",
     "project_filename": "3 symbols (detail 3).jpg",
     "title": "3 symbols (detail 3)",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 2816,
-    "height_px": 2112
+    "height_px": 2112,
+    "section_id": "00638-2",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00638",

@@ -58,6 +58,8 @@ Focused record lookup files:
 
 Work lookup `detail_sections` group details by `section_id`, display `section_title`, and preserve section `sort_order`. Detail summaries include `details_subfolder` and `project_filename` so Studio can reconstruct source-image edit paths without treating public section labels as media paths.
 
+Until the media-section source migration is written, lookup export derives the same section ids the migration would write. Legacy detail rows with `project_subfolder: "details"` are exposed to Studio as generated ids such as `00001-1`, with `section_title` and `details_subfolder` set from the legacy value. Focused detail lookup records omit legacy detail `project_subfolder`; that field remains only in canonical source JSON until the write migration removes it.
+
 ## Runtime Use
 
 The catalogue editors use these files as follows:

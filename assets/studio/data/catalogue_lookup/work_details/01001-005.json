@@ -6,13 +6,15 @@
     "detail_uid": "01001-005",
     "work_id": "01001",
     "detail_id": "005",
-    "project_subfolder": "details",
     "project_filename": "dots (inside) [detail 5].jpg",
     "title": "dots (inside) [detail 5]",
     "status": "published",
     "published_date": "2026-03-18",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_id": "01001-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01001",

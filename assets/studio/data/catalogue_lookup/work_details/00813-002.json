@@ -6,13 +6,15 @@
     "detail_uid": "00813-002",
     "work_id": "00813",
     "detail_id": "002",
-    "project_subfolder": "versions",
     "project_filename": "colours 1958-2001.2.jpg",
     "title": "colours 1958-2001.2",
     "status": "published",
     "published_date": "2026-03-15",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_id": "00813-1",
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00813",

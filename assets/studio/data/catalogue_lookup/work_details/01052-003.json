@@ -6,13 +6,15 @@
     "detail_uid": "01052-003",
     "work_id": "01052",
     "detail_id": "003",
-    "project_subfolder": "details",
     "project_filename": "flowers 1 - detail 3.jpg",
     "title": "flowers 1 - detail 3",
     "status": "published",
     "published_date": "2026-03-19",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_id": "01052-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01052",

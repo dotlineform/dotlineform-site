@@ -6,13 +6,15 @@
     "detail_uid": "01199-020",
     "work_id": "01199",
     "detail_id": "020",
-    "project_subfolder": "particles",
     "project_filename": "particle (gesture).jpg",
     "title": "particle (gesture)",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_id": "01199-1",
+    "section_title": "particles",
+    "details_subfolder": "particles"
   },
   "work_summary": {
     "work_id": "01199",

@@ -6,13 +6,15 @@
     "detail_uid": "01049-006",
     "work_id": "01049",
     "detail_id": "006",
-    "project_subfolder": "details",
     "project_filename": "fireworks form - detail 6.jpg",
     "title": "fireworks form - detail 6",
     "status": "published",
     "published_date": "2026-03-19",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_id": "01049-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01049",

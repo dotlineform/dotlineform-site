@@ -6,13 +6,15 @@
     "detail_uid": "01721-002",
     "work_id": "01721",
     "detail_id": "002",
-    "project_subfolder": "details",
     "project_filename": "state of mind - detail (leaf).jpg",
     "title": "state of mind - detail (leaf)",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_id": "01721-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01721",

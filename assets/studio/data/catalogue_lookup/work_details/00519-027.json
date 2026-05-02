@@ -6,13 +6,15 @@
     "detail_uid": "00519-027",
     "work_id": "00519",
     "detail_id": "027",
-    "project_subfolder": "versions",
     "project_filename": "version dall-e - 6.1.jpg",
     "title": "version dall-e - 6.1",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_id": "00519-1",
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00519",

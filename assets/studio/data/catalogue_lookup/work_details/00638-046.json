@@ -6,13 +6,15 @@
     "detail_uid": "00638-046",
     "work_id": "00638",
     "detail_id": "046",
-    "project_subfolder": "composites",
     "project_filename": "composite - guilt.jpg",
     "title": "composite - guilt",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_id": "00638-4",
+    "section_title": "composites",
+    "details_subfolder": "composites"
   },
   "work_summary": {
     "work_id": "00638",

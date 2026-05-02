@@ -6,13 +6,15 @@
     "detail_uid": "00001-002",
     "work_id": "00001",
     "detail_id": "002",
-    "project_subfolder": "details",
     "project_filename": "a poem divided into 4 parts - end 2.jpg",
     "title": "a poem divided into 4 parts - end 2",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 4032,
-    "height_px": 2268
+    "height_px": 2268,
+    "section_id": "00001-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00001",

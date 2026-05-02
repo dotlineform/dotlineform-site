@@ -6,13 +6,15 @@
     "detail_uid": "00464-053",
     "work_id": "00464",
     "detail_id": "053",
-    "project_subfolder": "composite memories",
     "project_filename": "memories 1-6.jpg",
     "title": "memories 1-6",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_id": "00464-3",
+    "section_title": "composite memories",
+    "details_subfolder": "composite memories"
   },
   "work_summary": {
     "work_id": "00464",

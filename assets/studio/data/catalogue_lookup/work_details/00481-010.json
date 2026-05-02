@@ -6,13 +6,15 @@
     "detail_uid": "00481-010",
     "work_id": "00481",
     "detail_id": "010",
-    "project_subfolder": "versions",
     "project_filename": "mm negative future .4.4.4.jpg",
     "title": "mm negative future .4.4.4",
     "status": "published",
     "published_date": "2026-03-13",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_id": "00481-1",
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00481",

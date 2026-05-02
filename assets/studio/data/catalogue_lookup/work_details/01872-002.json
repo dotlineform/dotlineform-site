@@ -6,13 +6,15 @@
     "detail_uid": "01872-002",
     "work_id": "01872",
     "detail_id": "002",
-    "project_subfolder": "details",
     "project_filename": "tulips 4 - detail 2.jpg",
     "title": "tulips 4 - detail 2",
     "status": "published",
     "published_date": "2026-03-27",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_id": "01872-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01872",

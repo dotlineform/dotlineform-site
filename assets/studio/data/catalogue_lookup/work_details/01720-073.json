@@ -6,13 +6,15 @@
     "detail_uid": "01720-073",
     "work_id": "01720",
     "detail_id": "073",
-    "project_subfolder": "source",
     "project_filename": "symbols decoded.jpg",
     "title": "symbols decoded",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 3000,
-    "height_px": 1687
+    "height_px": 1687,
+    "section_id": "01720-2",
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "01720",

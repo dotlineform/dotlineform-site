@@ -6,13 +6,15 @@
     "detail_uid": "01051-003",
     "work_id": "01051",
     "detail_id": "003",
-    "project_subfolder": "details",
     "project_filename": "fireworks particles version - detail 3.jpg",
     "title": "fireworks particles version - detail 3",
     "status": "published",
     "published_date": "2026-03-19",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_id": "01051-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01051",

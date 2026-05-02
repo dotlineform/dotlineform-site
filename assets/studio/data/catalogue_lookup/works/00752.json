@@ -29,35 +29,53 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00752-1",
+      "section_title": "details",
+      "sort_order": null,
       "count": 4,
       "details": [
         {
           "detail_uid": "00752-005",
           "detail_id": "005",
           "title": "all the little cracks again - detail 1",
-          "project_subfolder": "details",
+          "section_id": "00752-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "all the little cracks again - detail 1.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00752-006",
           "detail_id": "006",
           "title": "all the little cracks again - detail 2",
-          "project_subfolder": "details",
+          "section_id": "00752-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "all the little cracks again - detail 2.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00752-007",
           "detail_id": "007",
           "title": "all the little cracks again - detail 3",
-          "project_subfolder": "details",
+          "section_id": "00752-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "all the little cracks again - detail 3.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00752-008",
           "detail_id": "008",
           "title": "all the little cracks again - detail 4",
-          "project_subfolder": "details",
+          "section_id": "00752-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "all the little cracks again - detail 4.jpg",
           "status": "published"
         }
       ]

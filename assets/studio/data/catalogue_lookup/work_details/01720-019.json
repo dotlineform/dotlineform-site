@@ -6,13 +6,15 @@
     "detail_uid": "01720-019",
     "work_id": "01720",
     "detail_id": "019",
-    "project_subfolder": "symbols",
     "project_filename": "funny (wrong rude) impossible.jpg",
     "title": "funny (wrong rude) impossible",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 1600,
-    "height_px": 1553
+    "height_px": 1553,
+    "section_id": "01720-1",
+    "section_title": "symbols",
+    "details_subfolder": "symbols"
   },
   "work_summary": {
     "work_id": "01720",

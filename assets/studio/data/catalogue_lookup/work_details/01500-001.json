@@ -6,13 +6,15 @@
     "detail_uid": "01500-001",
     "work_id": "01500",
     "detail_id": "001",
-    "project_subfolder": "details",
     "project_filename": "k particles grid - detail 1.jpg",
     "title": "k particles grid - detail 1",
     "status": "published",
     "published_date": "2026-03-25",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_id": "01500-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01500",

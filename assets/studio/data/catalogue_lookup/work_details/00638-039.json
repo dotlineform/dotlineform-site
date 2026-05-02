@@ -6,13 +6,15 @@
     "detail_uid": "00638-039",
     "work_id": "00638",
     "detail_id": "039",
-    "project_subfolder": "composites",
     "project_filename": "composite - burn.jpg",
     "title": "composite - burn",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_id": "00638-4",
+    "section_title": "composites",
+    "details_subfolder": "composites"
   },
   "work_summary": {
     "work_id": "00638",

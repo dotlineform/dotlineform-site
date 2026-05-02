@@ -8,6 +8,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-02] Fixed catalogue media-section legacy lookup IDs
+
+**Status:** implemented
+
+**Area:** catalogue build / Studio lookup
+
+**Summary:**
+Fixed legacy work-detail source rows so derived work JSON and Studio lookup payloads synthesize migration-equivalent `section_id` values such as `00001-1` instead of reusing legacy `project_subfolder` labels such as `details`.
+
+**Reason:**
+Before the source migration is written, canonical detail rows still carry legacy `project_subfolder`. The read fallback was preserving that value as the generated section key, which made public work JSON and Studio current-record panels disagree with the locked `section_id` format.
+
+**Effect:**
+`scripts/generate_work_pages.py` and `scripts/catalogue_lookup.py` now share the same legacy section-resolution helper from `scripts/catalogue_source.py`. Studio detail lookup records include derived `section_id`, `section_title`, and `details_subfolder`, so the read-only current-record field is populated even before the source migration write.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_source.py`
+- `scripts/catalogue_lookup.py`
+- `scripts/generate_work_pages.py`
+- [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
+- [Catalogue Media Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-02] Updated catalogue media-section Studio surfaces
 
 **Status:** implemented

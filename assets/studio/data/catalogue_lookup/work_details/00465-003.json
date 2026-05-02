@@ -6,13 +6,15 @@
     "detail_uid": "00465-003",
     "work_id": "00465",
     "detail_id": "003",
-    "project_subfolder": "details",
     "project_filename": "forest 1 - detail 3.jpg",
     "title": "forest 1 - detail 3",
     "status": "published",
     "published_date": "2026-03-19",
     "width_px": 4000,
-    "height_px": 4000
+    "height_px": 4000,
+    "section_id": "00465-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00465",

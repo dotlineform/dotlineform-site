@@ -6,13 +6,15 @@
     "detail_uid": "01196-020",
     "work_id": "01196",
     "detail_id": "020",
-    "project_subfolder": "forms",
     "project_filename": "form 19.jpg",
     "title": "form 19",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_id": "01196-2",
+    "section_title": "forms",
+    "details_subfolder": "forms"
   },
   "work_summary": {
     "work_id": "01196",

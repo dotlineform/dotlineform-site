@@ -29,28 +29,42 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "01047-1",
+      "section_title": "details",
+      "sort_order": null,
       "count": 3,
       "details": [
         {
           "detail_uid": "01047-001",
           "detail_id": "001",
           "title": "field I - detail 1",
-          "project_subfolder": "details",
+          "section_id": "01047-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "field I - detail 1.jpeg",
           "status": "published"
         },
         {
           "detail_uid": "01047-002",
           "detail_id": "002",
           "title": "field I - detail 2",
-          "project_subfolder": "details",
+          "section_id": "01047-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "field I - detail 2.jpeg",
           "status": "published"
         },
         {
           "detail_uid": "01047-003",
           "detail_id": "003",
           "title": "field I - detail 3",
-          "project_subfolder": "details",
+          "section_id": "01047-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "field I - detail 3.jpeg",
           "status": "published"
         }
       ]

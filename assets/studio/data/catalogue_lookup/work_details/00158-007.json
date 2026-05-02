@@ -6,13 +6,15 @@
     "detail_uid": "00158-007",
     "work_id": "00158",
     "detail_id": "007",
-    "project_subfolder": "details",
     "project_filename": "grid dissection - detail 6.jpg",
     "title": "grid dissection - detail 6",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 4038,
-    "height_px": 5712
+    "height_px": 5712,
+    "section_id": "00158-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00158",

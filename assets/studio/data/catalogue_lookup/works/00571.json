@@ -29,14 +29,20 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "working",
+      "section_id": "00571-1",
+      "section_title": "working",
+      "sort_order": null,
       "count": 1,
       "details": [
         {
           "detail_uid": "00571-001",
           "detail_id": "001",
           "title": "2012-01-06 - 12-30-44",
-          "project_subfolder": "working",
+          "section_id": "00571-1",
+          "section_title": "working",
+          "sort_order": null,
+          "details_subfolder": "working",
+          "project_filename": "2012-01-06 - 12-30-44.jpg",
           "status": "published"
         }
       ]

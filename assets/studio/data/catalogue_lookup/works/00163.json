@@ -35,77 +35,119 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "pages",
+      "section_id": "00163-1",
+      "section_title": "pages",
+      "sort_order": null,
       "count": 10,
       "details": [
         {
           "detail_uid": "00163-001",
           "detail_id": "001",
           "title": "nerve (abattoir) - front cover",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - front cover.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-002",
           "detail_id": "002",
           "title": "nerve (abattoir) - inside cover",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - inside cover.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-003",
           "detail_id": "003",
           "title": "nerve (abattoir) - 1",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 1.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-004",
           "detail_id": "004",
           "title": "nerve (abattoir) - 2",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 2.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-005",
           "detail_id": "005",
           "title": "nerve (abattoir) - 3",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 3.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-006",
           "detail_id": "006",
           "title": "nerve (abattoir) - 4",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 4.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-007",
           "detail_id": "007",
           "title": "nerve (abattoir) - 5",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 5.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-008",
           "detail_id": "008",
           "title": "nerve (abattoir) - 6",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 6.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-009",
           "detail_id": "009",
           "title": "nerve (abattoir) - 7",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - 7.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00163-010",
           "detail_id": "010",
           "title": "nerve (abattoir) - back cover",
-          "project_subfolder": "pages",
+          "section_id": "00163-1",
+          "section_title": "pages",
+          "sort_order": null,
+          "details_subfolder": "pages",
+          "project_filename": "nerve (abattoir) - back cover.jpg",
           "status": "published"
         }
       ]

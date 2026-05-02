@@ -6,13 +6,15 @@
     "detail_uid": "01395-003",
     "work_id": "01395",
     "detail_id": "003",
-    "project_subfolder": "iterations",
     "project_filename": "kylie wax model - iteration 2.2.jpg",
     "title": "kylie wax model - iteration 2.2",
     "status": "published",
     "published_date": "2026-03-23",
     "width_px": 4724,
-    "height_px": 4724
+    "height_px": 4724,
+    "section_id": "01395-1",
+    "section_title": "iterations",
+    "details_subfolder": "iterations"
   },
   "work_summary": {
     "work_id": "01395",

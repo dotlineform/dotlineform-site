@@ -29,56 +29,86 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "iterations",
+      "section_id": "01397-1",
+      "section_title": "iterations",
+      "sort_order": null,
       "count": 7,
       "details": [
         {
           "detail_uid": "01397-001",
           "detail_id": "001",
           "title": "kylie wax model - iteration 4.0",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.0.jpg",
           "status": "published"
         },
         {
           "detail_uid": "01397-002",
           "detail_id": "002",
           "title": "kylie wax model - iteration 4.1",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.1.jpg",
           "status": "published"
         },
         {
           "detail_uid": "01397-003",
           "detail_id": "003",
           "title": "kylie wax model - iteration 4.2",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.2.jpg",
           "status": "published"
         },
         {
           "detail_uid": "01397-004",
           "detail_id": "004",
           "title": "kylie wax model - iteration 4.3",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.3.jpg",
           "status": "published"
         },
         {
           "detail_uid": "01397-005",
           "detail_id": "005",
           "title": "kylie wax model - iteration 4.4",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.4.jpg",
           "status": "published"
         },
         {
           "detail_uid": "01397-006",
           "detail_id": "006",
           "title": "kylie wax model - iteration 4.5",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.5.jpg",
           "status": "published"
         },
         {
           "detail_uid": "01397-007",
           "detail_id": "007",
           "title": "kylie wax model - iteration 4.6",
-          "project_subfolder": "iterations",
+          "section_id": "01397-1",
+          "section_title": "iterations",
+          "sort_order": null,
+          "details_subfolder": "iterations",
+          "project_filename": "kylie wax model - iteration 4.6.jpg",
           "status": "published"
         }
       ]

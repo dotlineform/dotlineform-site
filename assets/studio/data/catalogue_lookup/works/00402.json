@@ -29,49 +29,75 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "photos",
+      "section_id": "00402-1",
+      "section_title": "photos",
+      "sort_order": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "00402-001",
           "detail_id": "001",
           "title": "spiders (2006-06-08 - 21-26-10)",
-          "project_subfolder": "photos",
+          "section_id": "00402-1",
+          "section_title": "photos",
+          "sort_order": null,
+          "details_subfolder": "photos",
+          "project_filename": "2006-06-08 - 21-26-10.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00402-002",
           "detail_id": "002",
           "title": "spiders (2006-06-08 - 21-25-05)",
-          "project_subfolder": "photos",
+          "section_id": "00402-1",
+          "section_title": "photos",
+          "sort_order": null,
+          "details_subfolder": "photos",
+          "project_filename": "2006-06-08 - 21-25-05.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00402-003",
           "detail_id": "003",
           "title": "spiders (2006-06-08 - 20-19-05)",
-          "project_subfolder": "photos",
+          "section_id": "00402-1",
+          "section_title": "photos",
+          "sort_order": null,
+          "details_subfolder": "photos",
+          "project_filename": "2006-06-08 - 20-19-05.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00402-004",
           "detail_id": "004",
           "title": "spiders (2006-06-08 - 20-18-27)",
-          "project_subfolder": "photos",
+          "section_id": "00402-1",
+          "section_title": "photos",
+          "sort_order": null,
+          "details_subfolder": "photos",
+          "project_filename": "2006-06-08 - 20-18-27.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00402-005",
           "detail_id": "005",
           "title": "spiders (2006-06-08 - 20-16-41)",
-          "project_subfolder": "photos",
+          "section_id": "00402-1",
+          "section_title": "photos",
+          "sort_order": null,
+          "details_subfolder": "photos",
+          "project_filename": "2006-06-08 - 20-16-41.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00402-006",
           "detail_id": "006",
           "title": "spiders (2006-06-08 - 20-15-37)",
-          "project_subfolder": "photos",
+          "section_id": "00402-1",
+          "section_title": "photos",
+          "sort_order": null,
+          "details_subfolder": "photos",
+          "project_filename": "2006-06-08 - 20-15-37.jpg",
           "status": "published"
         }
       ]

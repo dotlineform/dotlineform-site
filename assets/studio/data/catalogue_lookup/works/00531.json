@@ -29,35 +29,53 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00531-1",
+      "section_title": "details",
+      "sort_order": null,
       "count": 4,
       "details": [
         {
           "detail_uid": "00531-001",
           "detail_id": "001",
           "title": "body detail",
-          "project_subfolder": "details",
+          "section_id": "00531-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "00531-001.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00531-002",
           "detail_id": "002",
           "title": "body detail",
-          "project_subfolder": "details",
+          "section_id": "00531-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "00531-002.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00531-003",
           "detail_id": "003",
           "title": "body detail",
-          "project_subfolder": "details",
+          "section_id": "00531-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "00531-003.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00531-004",
           "detail_id": "004",
           "title": "body detail",
-          "project_subfolder": "details",
+          "section_id": "00531-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "00531-004.jpg",
           "status": "published"
         }
       ]

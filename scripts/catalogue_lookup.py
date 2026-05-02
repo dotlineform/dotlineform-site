@@ -9,6 +9,7 @@ try:
     from catalogue_source import (
         DEFAULT_SOURCE_DIR,
         CatalogueSourceRecords,
+        build_detail_section_resolution_by_uid,
         normalize_text,
         records_from_json_source,
     )
@@ -16,6 +17,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_source import (  # type: ignore
         DEFAULT_SOURCE_DIR,
         CatalogueSourceRecords,
+        build_detail_section_resolution_by_uid,
         normalize_text,
         records_from_json_source,
     )
@@ -44,6 +46,16 @@ def normalize_optional_int(value: Any) -> int | None:
         return None
 
 
+def build_resolved_work_detail_record(record: Mapping[str, Any], section_resolution: Mapping[str, Any]) -> Dict[str, Any]:
+    detail_payload = dict(record)
+    detail_payload.pop("project_subfolder", None)
+    for field in ("section_id", "section_title", "details_subfolder", "sort_order"):
+        value = section_resolution.get(field)
+        if value is not None and value != "":
+            detail_payload[field] = value
+    return detail_payload
+
+
 def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> Dict[str, Any]:
     record = records.works.get(work_id)
     if not isinstance(record, Mapping):
@@ -55,14 +67,15 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
     }
 
     grouped_details: Dict[str, Dict[str, Any]] = {}
+    section_resolution_by_uid = build_detail_section_resolution_by_uid(records.work_details)
     for detail_uid, detail_record in records.work_details.items():
         if normalize_text(detail_record.get("work_id")) != work_id:
             continue
-        legacy_section = normalize_text(detail_record.get("project_subfolder"))
-        section_id = normalize_text(detail_record.get("section_id")) or legacy_section
-        section_title = normalize_text(detail_record.get("section_title")) or legacy_section
+        section_resolution = section_resolution_by_uid.get(detail_uid, {})
+        section_id = normalize_text(section_resolution.get("section_id"))
+        section_title = normalize_text(section_resolution.get("section_title"))
         sort_order = normalize_optional_int(detail_record.get("sort_order"))
-        details_subfolder = normalize_text(detail_record.get("details_subfolder")) or legacy_section
+        details_subfolder = normalize_text(section_resolution.get("details_subfolder"))
         section = grouped_details.setdefault(
             section_id,
             {
@@ -130,13 +143,15 @@ def build_work_detail_lookup_payload(records: CatalogueSourceRecords, detail_uid
     record = records.work_details.get(detail_uid)
     if not isinstance(record, Mapping):
         raise KeyError(f"detail_uid not found: {detail_uid}")
+    section_resolution = build_detail_section_resolution_by_uid(records.work_details).get(detail_uid, {})
+    detail_payload = build_resolved_work_detail_record(record, section_resolution)
     work_id = normalize_text(record.get("work_id"))
     work_record = records.works.get(work_id) or {}
     return {
         "header": {
             "schema": SCHEMAS["work_detail_record"],
         },
-        "work_detail": dict(record),
+        "work_detail": detail_payload,
         "work_summary": {
             "work_id": work_id,
             "title": normalize_text(work_record.get("title")),
@@ -251,14 +266,21 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
         series_id: normalize_text(record.get("title"))
         for series_id, record in records.series.items()
     }
+    section_resolution_by_uid = build_detail_section_resolution_by_uid(records.work_details)
 
     for detail_uid, record in records.work_details.items():
         work_id = normalize_text(record.get("work_id"))
+        section_resolution = section_resolution_by_uid.get(detail_uid, {})
         detail_item = {
             "detail_uid": detail_uid,
             "work_id": work_id,
             "detail_id": normalize_text(record.get("detail_id")),
             "title": normalize_text(record.get("title")),
+            "section_id": normalize_text(section_resolution.get("section_id")),
+            "section_title": normalize_text(section_resolution.get("section_title")),
+            "sort_order": normalize_text(section_resolution.get("sort_order")),
+            "details_subfolder": normalize_text(section_resolution.get("details_subfolder")),
+            "project_filename": normalize_text(record.get("project_filename")),
             "status": normalize_text(record.get("status")),
         }
         detail_search_items.append(detail_item)
@@ -268,7 +290,7 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
             "header": {
                 "schema": SCHEMAS["work_detail_record"],
             },
-            "work_detail": record,
+            "work_detail": build_resolved_work_detail_record(record, section_resolution),
             "work_summary": {
                 "work_id": work_id,
                 "title": normalize_text(work_record.get("title")),

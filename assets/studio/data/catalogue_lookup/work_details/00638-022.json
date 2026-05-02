@@ -6,13 +6,15 @@
     "detail_uid": "00638-022",
     "work_id": "00638",
     "detail_id": "022",
-    "project_subfolder": "source",
     "project_filename": "source - grieve.jpg",
     "title": "source - grieve",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 1681,
-    "height_px": 1393
+    "height_px": 1393,
+    "section_id": "00638-3",
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "00638",

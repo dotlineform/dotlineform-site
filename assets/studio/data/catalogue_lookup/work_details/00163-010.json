@@ -6,13 +6,15 @@
     "detail_uid": "00163-010",
     "work_id": "00163",
     "detail_id": "010",
-    "project_subfolder": "pages",
     "project_filename": "nerve (abattoir) - back cover.jpg",
     "title": "nerve (abattoir) - back cover",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 1985,
-    "height_px": 1985
+    "height_px": 1985,
+    "section_id": "00163-1",
+    "section_title": "pages",
+    "details_subfolder": "pages"
   },
   "work_summary": {
     "work_id": "00163",

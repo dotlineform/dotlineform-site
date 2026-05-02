@@ -6,13 +6,15 @@
     "detail_uid": "01720-016",
     "work_id": "01720",
     "detail_id": "016",
-    "project_subfolder": "symbols",
     "project_filename": "dizzy (clever) funny.jpg",
     "title": "dizzy (clever) funny",
     "status": "published",
     "published_date": "2026-03-26",
     "width_px": 1600,
-    "height_px": 1448
+    "height_px": 1448,
+    "section_id": "01720-1",
+    "section_title": "symbols",
+    "details_subfolder": "symbols"
   },
   "work_summary": {
     "work_id": "01720",

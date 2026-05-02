@@ -29,21 +29,31 @@
   },
   "detail_sections": [
     {
-      "project_subfolder": "details",
+      "section_id": "00523-1",
+      "section_title": "details",
+      "sort_order": null,
       "count": 2,
       "details": [
         {
           "detail_uid": "00523-015",
           "detail_id": "015",
           "title": "kylie structure 4.1",
-          "project_subfolder": "details",
+          "section_id": "00523-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "kylie structure 4.1.jpg",
           "status": "published"
         },
         {
           "detail_uid": "00523-016",
           "detail_id": "016",
           "title": "kylie structure 4.2",
-          "project_subfolder": "details",
+          "section_id": "00523-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "kylie structure 4.2.jpg",
           "status": "published"
         }
       ]

@@ -141,6 +141,52 @@ def next_detail_section_id(
     return build_detail_section_id(work_id, max_section_number + 1)
 
 
+def detail_record_sort_key(item: tuple[str, Mapping[str, Any]]) -> tuple[str, str, str]:
+    key, record = item
+    work_id = normalize_text(record.get("work_id"))
+    detail_id = normalize_text(record.get("detail_id"))
+    return (work_id, detail_id, key)
+
+
+def build_detail_section_resolution_by_uid(
+    detail_records: Mapping[str, Mapping[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    existing_section_count_by_work: Dict[str, int] = {}
+    for _key, record in sorted(detail_records.items(), key=detail_record_sort_key):
+        work_id = normalize_text(record.get("work_id"))
+        section_number = detail_section_id_number(work_id, record.get("section_id"))
+        if section_number is not None:
+            existing_section_count_by_work[work_id] = max(
+                existing_section_count_by_work.get(work_id, 0),
+                section_number,
+            )
+
+    assignments_by_work: Dict[str, Dict[str, str]] = {}
+    resolutions: Dict[str, Dict[str, Any]] = {}
+    for detail_uid, record in sorted(detail_records.items(), key=detail_record_sort_key):
+        work_id = normalize_text(record.get("work_id"))
+        legacy_section = normalize_text(record.get(DETAIL_LEGACY_SUBFOLDER_FIELD))
+        section_id = normalize_text(record.get("section_id"))
+        if detail_section_id_number(work_id, section_id) is None and legacy_section:
+            work_assignments = assignments_by_work.setdefault(work_id, {})
+            if legacy_section not in work_assignments:
+                existing_count = existing_section_count_by_work.get(work_id, 0)
+                work_assignments[legacy_section] = build_detail_section_id(
+                    work_id,
+                    existing_count + len(work_assignments) + 1,
+                )
+            section_id = work_assignments[legacy_section]
+        section_title = normalize_text(record.get("section_title")) or legacy_section
+        details_subfolder = normalize_text(record.get("details_subfolder")) or legacy_section
+        resolutions[detail_uid] = {
+            "section_id": section_id,
+            "section_title": section_title,
+            "details_subfolder": details_subfolder,
+            "sort_order": normalize_optional_int(record.get("sort_order")),
+        }
+    return resolutions
+
+
 def normalize_optional_int(value: Any) -> int | None:
     if is_empty(value):
         return None

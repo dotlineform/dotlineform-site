@@ -6,13 +6,15 @@
     "detail_uid": "00631-004",
     "work_id": "00631",
     "detail_id": "004",
-    "project_subfolder": "details",
     "project_filename": "qrnt form (2015-06-06) detail 3.jpg",
     "title": "qrnt form (2015-06-06) detail 3",
     "status": "published",
     "published_date": "2026-03-14",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_id": "00631-1",
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00631",

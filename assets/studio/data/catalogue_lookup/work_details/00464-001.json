@@ -6,13 +6,15 @@
     "detail_uid": "00464-001",
     "work_id": "00464",
     "detail_id": "001",
-    "project_subfolder": "moments",
     "project_filename": "memories of the forest 1.jpg",
     "title": "memories of the forest 1",
     "status": "published",
     "published_date": "2026-03-05",
     "width_px": 8268,
-    "height_px": 8268
+    "height_px": 8268,
+    "section_id": "00464-1",
+    "section_title": "moments",
+    "details_subfolder": "moments"
   },
   "work_summary": {
     "work_id": "00464",
