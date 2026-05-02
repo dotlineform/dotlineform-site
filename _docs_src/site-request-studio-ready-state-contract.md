@@ -2,7 +2,7 @@
 doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: change-requests
 sort_order: 37
 ---
@@ -10,7 +10,7 @@ sort_order: 37
 
 Status:
 
-- proposed
+- partially implemented
 
 ## Summary
 
@@ -54,6 +54,27 @@ Pages may also expose route-specific detail attributes when useful:
 
 The shared attributes should live on the main route root, such as `#catalogueWorkRoot`, not on a nested panel.
 
+## Current Implementation
+
+First adopted route:
+
+- `/studio/catalogue-work/`
+
+Current shared helper:
+
+- `assets/studio/js/studio-route-state.js`
+
+The catalogue work editor now exposes the shared route attributes on `#catalogueWorkRoot`. Initial route loading keeps `data-studio-ready="false"`, the route switches to `data-studio-ready="true"` after the initial route mode or requested work selection has completed, and command-state updates keep `data-studio-busy` synchronized with save, create, preview, import, refresh, publish, unpublish, rebuild, and delete flows.
+
+The page also exposes:
+
+- `data-studio-route="catalogue-work"`
+- `data-studio-mode="empty|single|bulk|new"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
+
+Remaining rollout still needs to adopt the helper on the other catalogue editors and then non-catalogue Studio pages where useful.
+
 ## Event Option
 
 In addition to attributes, each page may dispatch a shared event after readiness changes:
@@ -79,7 +100,7 @@ After adoption, smoke tests should prefer:
 page.wait_for_selector("#catalogueWorkRoot[data-studio-ready='true']")
 page.wait_for_function(
     "selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'",
-    "#catalogueWorkRoot",
+    arg="#catalogueWorkRoot",
 )
 ```
 

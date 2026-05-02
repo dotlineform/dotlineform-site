@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: "Studio Runtime"
 added_date: 2026-04-24
-last_updated: 2026-04-30
+last_updated: 2026-05-02
 parent_id: studio
 sort_order: 10
 ---
@@ -104,6 +104,8 @@ Shared Studio runtime and wiring currently live in:
   provides shared JSON loading and common shaping helpers for Studio pages
 - `assets/studio/js/studio-transport.js`
   provides local-write endpoint definitions, health probing, and shared JSON POST transport
+- `assets/studio/js/studio-route-state.js`
+  provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
 - `assets/studio/js/studio-dashboard.js`
   hydrates lightweight dashboard metrics for the new domain landing pages
 - `assets/studio/js/docs-rebuild-button.js`
@@ -152,6 +154,26 @@ Controller splits that are already live:
   - `tag-aliases-domain.js`
   - `tag-aliases-save.js`
   - `tag-aliases-service.js`
+
+## Route Ready State
+
+Studio pages can expose a shared machine-readable route state on their main page root.
+
+Shared attributes:
+
+- `data-studio-ready="false"` while initial route data and first render are still loading
+- `data-studio-ready="true"` after the route has reached its initial stable interaction state
+- `data-studio-busy="true"` while a route-level command is running
+- `data-studio-busy="false"` when no route-level command is running
+
+Optional route detail attributes:
+
+- `data-studio-route`
+- `data-studio-mode`
+- `data-studio-service`
+- `data-studio-record-loaded`
+
+`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work editor is the first adopted route; remaining routes should adopt the helper incrementally rather than duplicating route-local attribute logic.
 
 ## Relation to `/docs/`
 

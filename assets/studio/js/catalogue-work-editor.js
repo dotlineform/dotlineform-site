@@ -13,6 +13,11 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
@@ -728,6 +733,40 @@ function setTextWithState(node, text, state = "") {
   } else {
     delete node.dataset.state;
   }
+}
+
+function routeModeForState(state) {
+  if (state.mode === "new") return "new";
+  if (state.mode === "bulk") return "bulk";
+  if (state.currentRecord) return "single";
+  return "empty";
+}
+
+function routeRecordLoadedForState(state) {
+  if (state.mode === "bulk") return state.bulkWorkIds.length > 0;
+  if (state.mode === "single") return Boolean(state.currentRecord);
+  return false;
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "catalogue-work",
+    mode: routeModeForState(state),
+    service: state.serverAvailable ? "available" : "unavailable",
+    recordLoaded: routeRecordLoadedForState(state)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(
+    state.root,
+    Boolean(state.isSaving || state.isBuilding || state.isPreviewingBuild || state.isDeleting),
+    routeStateDetail(state)
+  );
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function setPopupVisibility(state, visible) {
@@ -2028,6 +2067,7 @@ function updateEditorState(state) {
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
+  syncRouteBusyState(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -2270,12 +2310,12 @@ async function createCurrentWork(state) {
         record_hash: normalizeText(response.record_hash)
       });
     }
-    state.isSaving = false;
     await openWorkById(state, workId);
     setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft work {work_id}. Opening edit mode...", { work_id: workId }), "success");
     setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft work {work_id}.", { work_id: workId }), "success");
   } catch (error) {
     setTextWithState(state.statusNode, `${t(state, "create_status_failed", "Draft work create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+  } finally {
     state.isSaving = false;
     updateEditorState(state);
   }
@@ -2830,6 +2870,7 @@ async function init() {
   if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchRowNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !publicationButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
+  initializeStudioRouteState(root, { route: "catalogue-work" });
 
   const state = {
     root,
@@ -2933,6 +2974,7 @@ async function init() {
       updateEditorState(state);
       root.hidden = false;
       loadingNode.hidden = true;
+      markRouteReady(state, true);
       return;
     }
 
@@ -3084,9 +3126,17 @@ async function init() {
     const requestedMode = normalizeText(params.get("mode")).toLowerCase();
     const requestedWorkValue = normalizeText(params.get("work"));
     if (requestedWorkValue) {
-      openWorkSelection(state, requestedWorkValue).catch((error) => {
+      try {
+        await openWorkSelection(state, requestedWorkValue);
+      } catch (error) {
         console.warn("catalogue_work_editor: failed to open requested work selection", error);
-      });
+        setEmptySearchMode(state, { keepSearchValue: true });
+        setTextWithState(
+          state.statusNode,
+          `${t(state, "load_requested_work_failed", "Failed to load the requested work.")} ${normalizeText(error && error.message)}`.trim(),
+          "error"
+        );
+      }
     } else if (requestedMode === "new") {
       setNewWorkMode(state);
     } else {
@@ -3095,6 +3145,7 @@ async function init() {
 
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("catalogue_work_editor: init failed", error);
     try {

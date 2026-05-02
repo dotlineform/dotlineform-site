@@ -289,6 +289,7 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     catalogue_work_editor: {
       load_failed_error: "Failed to load catalogue source data for the work editor.",
+      load_requested_work_failed: "Failed to load the requested work.",
       search_placeholder: "find work by id",
       search_empty: "Enter a work id.",
       search_no_match: "No matching work ids.",

@@ -2,7 +2,7 @@
 doc_id: studio-smoke-testing
 title: "Studio Smoke Testing"
 added_date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: studio
 sort_order: 25
 ---
@@ -36,6 +36,20 @@ Do not use a raw `file://` URL for Studio pages that depend on module imports, l
 
 Do not interact with a Studio page immediately after `domcontentloaded`.
 
+For routes that have adopted the shared ready-state contract, prefer the route root attributes:
+
+```python
+def wait_for_studio_route_ready(page, root_selector):
+    page.wait_for_selector(f"{root_selector}:not([hidden])")
+    page.wait_for_selector(f"{root_selector}[data-studio-ready='true']")
+    page.wait_for_function(
+        "selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'",
+        arg=root_selector,
+    )
+```
+
+The route root may also expose `data-studio-mode`, `data-studio-service`, and `data-studio-record-loaded` for route-specific checks.
+
 Minimum readiness for page-level smoke tests:
 
 1. wait for the page root to be visible, such as `#catalogueWorkRoot:not([hidden])`
@@ -49,12 +63,12 @@ def wait_for_studio_loaded(page, root_selector, loaded_text):
     page.wait_for_selector(f"{root_selector}:not([hidden])")
     page.wait_for_function(
         """([selector, text]) => document.querySelector(selector)?.textContent.includes(text)""",
-        ["#catalogueWorkStatus", loaded_text],
+        arg=["#catalogueWorkStatus", loaded_text],
     )
     page.wait_for_timeout(300)
 ```
 
-The status selector and loaded text should be route-specific. Do not assume every Studio page uses the same ids.
+The status selector and loaded text should be route-specific. Do not assume every Studio page uses the same ids. Use this status-text pattern only for routes that have not adopted the shared ready-state attributes yet, or as a fallback assertion for route-specific content.
 
 ## Pointer Clicks
 
@@ -80,7 +94,7 @@ def click_when_hit_testable(page, selector):
             );
             return hit === el || el.contains(hit);
         }""",
-        selector,
+        arg=selector,
     )
     target.click()
 ```
@@ -101,11 +115,17 @@ This is acceptable when the test goal is a later control, such as a public-updat
 
 Do not use DOM activation for the primary action being verified. If the action being verified cannot be clicked with a real pointer after readiness and hit-test checks, report that as a UI issue.
 
-## Current Known Gap
+## Current Adoption
 
-Studio does not yet expose a shared route-ready contract. Smoke tests currently need route-specific root selectors and loaded status text.
+The shared route-ready contract is partially implemented.
 
-A proposed shared contract is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
+Adopted routes:
+
+- `/studio/catalogue-work/` with `#catalogueWorkRoot`
+
+Remaining Studio routes still need route-specific root selectors and loaded status text until they adopt the shared attributes.
+
+The rollout is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
 
 ## Manual Check Pairing
 

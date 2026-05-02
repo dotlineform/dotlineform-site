@@ -44,6 +44,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   class="tagStudioPage catalogueWorkPage"
   id="catalogueWorkRoot"
   hidden
+  data-studio-route="catalogue-work"
+  data-studio-ready="false"
+  data-studio-busy="false"
   data-works-primary-base="{{ works_primary_base_out | escape }}"
   data-thumb-works-base="{{ works_thumb_base_out | escape }}"
   data-thumb-work-details-base="{{ details_thumb_base_out | escape }}"

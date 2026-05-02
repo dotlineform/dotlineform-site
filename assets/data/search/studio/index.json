@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e852a6bfc56fcb72a0ba98c6e24e8e33",
-    "generated_at_utc": "2026-05-02T21:16:10Z",
+    "version": "blake2b-a7e6902274746291134140b0137dafc6",
+    "generated_at_utc": "2026-05-02T21:26:15Z",
     "count": 158
   },
   "entries": [
@@ -407,21 +407,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-30 • Studio",
+      "display_meta": "2026-05-02 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-04-30",
+        "2026-05-02",
         "2026",
-        "04",
-        "30"
+        "05",
+        "02"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-04-30 2026 04 30"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-02 2026 05 02"
     },
     {
       "id": "ui-audit-catalogue-moment-import-20260421",
@@ -1012,22 +1012,22 @@
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-01 • Studio",
+      "display_meta": "2026-05-02 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-01 2026 05 01"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-02 2026 05 02"
     },
     {
       "id": "ui-catalogue",
@@ -1457,10 +1457,10 @@
       "kind": "doc",
       "title": "Studio Ready State Contract Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-01 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-studio-ready-state-contract",
         "site",
@@ -1473,12 +1473,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "bulk-add-work",

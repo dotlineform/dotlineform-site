@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-02] Added Studio ready-state contract first slice
+
+**Status:** partially implemented
+
+**Area:** Studio runtime / smoke testing
+
+**Summary:**
+Added the shared Studio route-state helper and adopted `data-studio-ready` / `data-studio-busy` on the catalogue work editor route.
+
+**Reason:**
+Studio smoke tests previously had to wait on route-specific user-facing status text. The work editor is async-rendered and can load focused records, lookup payloads, media previews, detail sections, and public-update previews after the route shell becomes visible.
+
+**Effect:**
+`#catalogueWorkRoot` now exposes stable route attributes for ready, busy, mode, service availability, and record-loaded state. Initial `?work=<work_id>` route selection is awaited before the route is marked ready, and route-level command flags synchronize the busy attribute.
+
+**Affected files/docs:**
+
+- `assets/studio/js/studio-route-state.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- `studio/catalogue-work/index.md`
+- `tests/smoke/catalogue_work_ready_state.py`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-02] Added filtering and sorting to Docs Broken Links
 
 **Status:** implemented

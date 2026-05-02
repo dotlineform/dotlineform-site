@@ -56,6 +56,7 @@ The first implementation covers:
 - when the public update path runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `assets/works/img/`
 - delete one work source record in single-record mode
 - show saved-state feedback and public-update failure state after save
+- expose the shared Studio route-ready attributes on `#catalogueWorkRoot` for browser smoke tests and future automation
 
 It does not yet:
 
@@ -170,6 +171,24 @@ Current save/publication flow:
 15. generator lookup now reads `_docs_src_catalogue/works/<work_id>.md` for public work prose
 
 The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
+
+## Route Ready State
+
+The page root `#catalogueWorkRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial route setup
+- `data-studio-ready="true"` after the initial empty, new, single-work, or bulk-work render completes
+- `data-studio-busy="true"` while route-level commands are running
+- `data-studio-busy="false"` when the route is stable for interaction
+
+Route-specific state attributes:
+
+- `data-studio-route="catalogue-work"`
+- `data-studio-mode="empty|single|bulk|new"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
+
+Initial `?work=<work_id>` loading is awaited before the ready attribute switches to `true`, so smoke tests do not need to race the focused lookup payload, source-record hydration, current-record render, detail lists, media preview, or public-update preview.
 
 Bulk save flow:
 
