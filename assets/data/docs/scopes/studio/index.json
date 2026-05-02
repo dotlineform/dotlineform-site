@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T18:24:10Z",
+  "generated_at": "2026-05-02T18:58:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1747,7 +1747,7 @@
     {
       "scope": "studio",
       "doc_id": "site-request-catalogue-publication-workflow",
-      "title": "Catalogue Publication Workflow ✅",
+      "title": "Catalogue Publication Workflow",
       "added_date": "2026-04-29",
       "last_updated": "2026-04-29",
       "parent_id": "change-requests",

@@ -1,6 +1,7 @@
 ---
 doc_id: site-request-catalogue-publication-workflow
-title: Catalogue Publication Workflow ✅
+title: Catalogue Publication Workflow
+ui_status: "done"
 added_date: 2026-04-29
 last_updated: 2026-04-29
 parent_id: change-requests

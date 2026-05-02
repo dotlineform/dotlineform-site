@@ -1,6 +1,7 @@
 ---
 doc_id: ui-status-emoji
 title: "UI Status Emoji"
+ui_status: "urgent"
 added_date: 2026-05-02
 last_updated: 2026-05-02
 parent_id: change-requests

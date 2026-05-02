@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-634c857f1f1b0ac84c4cef694a40d229",
-    "generated_at_utc": "2026-05-02T18:24:13Z",
+    "version": "blake2b-7813bb920ea01beffe9d70cf8e386302",
+    "generated_at_utc": "2026-05-02T18:58:55Z",
     "count": 158
   },
   "entries": [
@@ -2977,7 +2977,7 @@
     {
       "id": "site-request-catalogue-publication-workflow",
       "kind": "doc",
-      "title": "Catalogue Publication Workflow ✅",
+      "title": "Catalogue Publication Workflow",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
       "last_updated": "2026-04-29",
       "parent_id": "change-requests",
@@ -2990,7 +2990,7 @@
         "catalogue",
         "publication",
         "workflow",
-        "catalogue publication workflow ✅",
+        "catalogue publication workflow",
         "change requests",
         "change",
         "requests",
@@ -2999,7 +2999,7 @@
         "04",
         "29"
       ],
-      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow ✅ change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow change requests change requests 2026-04-29 2026 04 29"
     },
     {
       "id": "testing",
