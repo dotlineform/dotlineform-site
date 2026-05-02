@@ -61,6 +61,7 @@
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = 500;
   var RELOAD_RETRY_ATTEMPTS = 12;
   var RELOAD_RETRY_DELAY_MS = 250;
+  var UI_STATUS_EMOJI_MAX_LENGTH = 8;
   var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
   var SIDEBAR_STORAGE_PREFIX = "dotlineform-docs-viewer-sidebar:";
   var bookmarkScope = viewerScope || viewerPathname || "docs";
@@ -87,6 +88,8 @@
     recentLimit: DEFAULT_RECENT_LIMIT,
     viewerConfigLoaded: false,
     viewerConfigRequestPromise: null,
+    uiStatuses: [],
+    uiStatusByValue: new Map(),
     bookmarks: [],
     bookmarksLoaded: false,
     bookmarkDbPromise: null,
@@ -250,6 +253,30 @@
     return String(value || fallback || "");
   }
 
+  function normalizeUiStatuses(config, scope) {
+    var statusesByScope = getConfigValue(config, "docs_viewer.ui_statuses_by_scope");
+    var rawStatuses = statusesByScope && typeof statusesByScope === "object" ? statusesByScope[scope] : null;
+    if (!Array.isArray(rawStatuses)) return [];
+
+    var seen = new Set();
+    return rawStatuses.reduce(function (statuses, rawStatus) {
+      if (!rawStatus || typeof rawStatus !== "object") return statuses;
+      var value = typeof rawStatus.ui_status === "string" ? rawStatus.ui_status.trim() : "";
+      var label = typeof rawStatus.label === "string" ? rawStatus.label.trim() : "";
+      var emoji = typeof rawStatus.emoji === "string" ? rawStatus.emoji.trim() : "";
+      if (!value || !label || !emoji || emoji.length > UI_STATUS_EMOJI_MAX_LENGTH || seen.has(value)) {
+        return statuses;
+      }
+      seen.add(value);
+      statuses.push({
+        ui_status: value,
+        label: label,
+        emoji: emoji
+      });
+      return statuses;
+    }, []);
+  }
+
   function formatText(template, tokens) {
     var text = String(template || "");
     Object.keys(tokens || {}).forEach(function (key) {
@@ -261,6 +288,10 @@
   function applyViewerConfig(config) {
     state.viewerConfigLoaded = true;
     state.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), DEFAULT_RECENT_LIMIT);
+    state.uiStatuses = normalizeUiStatuses(config, viewerScope);
+    state.uiStatusByValue = new Map(state.uiStatuses.map(function (status) {
+      return [status.ui_status, status];
+    }));
     var draftColor = String(getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
     var draftFontWeight = String(getConfigValue(config, "docs_viewer.draft_nav_font_weight") || "").trim();
     if (draftColor) {

@@ -22,6 +22,7 @@ Current responsibilities include:
 - route paths used by Studio and search UI
 - JSON data paths used by Studio and search loaders
 - shared Docs Viewer settings used by `/docs/` and `/library/`
+- scope-specific Docs Viewer UI status emoji definitions
 - the route and feed path for the current Studio build-activity page
 - route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
 - catalogue UI options such as the Studio series-type dropdown values
@@ -68,12 +69,49 @@ What stays here:
 
 - route and data-path lookup used by browser-side modules
 - shared Docs Viewer UI settings such as `docs_viewer.recently_added_limit`
+- shared Docs Viewer status emoji config under `docs_viewer.ui_statuses_by_scope`
 - catalogue UI option lists such as `catalogue.series_type_options`, currently used by the series editor as a client-side dropdown while the write server remains permissive
 - shared Studio UI text
 - shared Studio analysis policy used by current tag metrics/RAG helpers
 - the lookup path for dedicated search policy and scope-owned search indexes
 
 Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs under `ui_text.catalogue_series_editor` because create mode now lives at `/studio/catalogue-series/?mode=new`.
+
+## Docs Viewer status emoji
+
+`docs_viewer.ui_statuses_by_scope` defines the status values that the shared Docs Viewer may expose for each docs scope.
+
+The current shape is:
+
+```json
+{
+  "docs_viewer": {
+    "ui_statuses_by_scope": {
+      "studio": [
+        {
+          "ui_status": "done",
+          "label": "Done",
+          "emoji": "✅"
+        }
+      ],
+      "library": [],
+      "analysis": []
+    }
+  }
+}
+```
+
+Contract:
+
+- scope keys are docs-viewer scope ids such as `studio`, `library`, and `analysis`
+- each scope value must be an array
+- each status entry uses `ui_status`, `label`, and `emoji`
+- `ui_status` is the stable front-matter value
+- `label` is UI copy for controls and accessible labels
+- `emoji` is the compact visual marker for index and status-pill UI
+- malformed, duplicate, blank, or overlong entries are ignored by the viewer rather than treated as build failures
+
+The config is scope-aware even while the shared Docs Viewer continues to fetch `studio_config.json` as its single browser-facing config payload.
 
 What does not stay here:
 

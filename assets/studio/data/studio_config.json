@@ -104,7 +104,23 @@
   "docs_viewer": {
     "recently_added_limit": 10,
     "draft_nav_color": "var(--muted)",
-    "draft_nav_font_weight": "600"
+    "draft_nav_font_weight": "600",
+    "ui_statuses_by_scope": {
+      "studio": [
+        {
+          "ui_status": "done",
+          "label": "Done",
+          "emoji": "✅"
+        },
+        {
+          "ui_status": "urgent",
+          "label": "Urgent",
+          "emoji": "❗"
+        }
+      ],
+      "library": [],
+      "analysis": []
+    }
   },
   "catalogue": {
     "series_type_options": ["primary", "holding"]
