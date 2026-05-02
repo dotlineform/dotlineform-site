@@ -6,7 +6,7 @@ Checks:
 - cross_refs: validate key cross-artifact references and duplicate IDs
 - schema: route-anchor ID format + generated JSON consistency rules
 - json_schema: generated JSON shape and count checks (series/work indexes + work detail JSON)
-- links: sitemap/link target existence + query-contract sanity
+- links: generated link target existence + query-contract sanity
 - media: expected media/download file presence checks
 - orphans: orphan pages/JSON (and optional media scan)
 """
@@ -240,31 +240,6 @@ def normalize_url(url: str) -> str:
     if not s.endswith("/"):
         s = s + "/"
     return s
-
-
-def parse_sitemap_rows(path: Path) -> List[Dict[str, str]]:
-    rows: List[Dict[str, str]] = []
-    if not path.exists():
-        return rows
-    current: Dict[str, str] = {}
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if line.startswith("url:"):
-            current["url"] = normalize_url(str(parse_scalar_from_fm_line(line.split(":", 1)[1]) or ""))
-        elif line.startswith("source:"):
-            current["source"] = normalize_text(parse_scalar_from_fm_line(line.split(":", 1)[1]) or "")
-        elif line.startswith("title:"):
-            current["title"] = normalize_text(parse_scalar_from_fm_line(line.split(":", 1)[1]) or "")
-        if "url" in current and "source" in current:
-            rows.append(
-                {
-                    "url": current.get("url", ""),
-                    "source": current.get("source", ""),
-                    "title": current.get("title", ""),
-                }
-            )
-            current = {}
-    return rows
 
 
 def check_cross_refs(
@@ -908,51 +883,6 @@ def check_links(
     errors = 0
     warnings = 0
     samples: List[Dict[str, Any]] = []
-
-    # Sitemap target existence (source file/glob + canonical route sanity).
-    sitemap_rows = parse_sitemap_rows(site_root / "_data/sitemap.yml")
-    pattern_source_to_count = {
-        "_works/*.md": len(works),
-        "_series/*.md": len(series),
-        "_work_details/*.md": len(work_details),
-        "_moments/*.md": len(moments),
-    }
-    static_target_urls: Set[str] = set()
-    static_candidates = [
-        ("index.md", "/"),
-        ("about.md", "/about/"),
-        ("works/index.md", "/works/"),
-        ("series/index.md", "/series/"),
-        ("moments/index.md", "/moments/"),
-        ("palette.html", "/palette/"),
-    ]
-    for rel, default_url in static_candidates:
-        path = site_root / rel
-        if not path.exists():
-            continue
-        fm = parse_front_matter(path)
-        static_target_urls.add(normalize_url(normalize_text(fm.get("permalink")) or default_url))
-
-    for row in sitemap_rows:
-        source = row["source"]
-        url = row["url"]
-        title = row.get("title", "") or url
-        if "*" in source:
-            if source in pattern_source_to_count:
-                if pattern_source_to_count[source] == 0:
-                    errors += 1
-                    add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap source glob has no matches: {source}"}, max_samples)
-            else:
-                if len(list(site_root.glob(source))) == 0:
-                    errors += 1
-                    add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap source glob has no matches: {source}"}, max_samples)
-        else:
-            if not (site_root / source).exists():
-                errors += 1
-                add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap source file missing: {source}"}, max_samples)
-        if ":id" not in url and not url.startswith(("http://", "https://")) and url not in static_target_urls:
-            warnings += 1
-            add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap url has no known static target: {url}"}, max_samples)
 
     # Generated link target existence.
     for wid, row in works.items():

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4bf492ace7f69400d42279b539743beb",
-    "generated_at_utc": "2026-05-01T22:14:40Z",
+    "version": "blake2b-a38cbf279e948f1882516d0459b1855e",
+    "generated_at_utc": "2026-05-02T08:42:28Z",
     "count": 156
   },
   "entries": [
@@ -2926,10 +2926,10 @@
       "kind": "doc",
       "title": "Site Consistency Audit",
       "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-30 • Scripts",
+      "display_meta": "2026-05-02 • Scripts",
       "search_terms": [
         "scripts-audit-site-consistency",
         "scripts",
@@ -2937,12 +2937,12 @@
         "site",
         "consistency",
         "site consistency audit",
-        "2026-04-30",
+        "2026-05-02",
         "2026",
-        "04",
-        "30"
+        "05",
+        "02"
       ],
-      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-04-30 2026 04 30"
+      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-publication-workflow",
@@ -3598,20 +3598,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "last_updated": "2026-05-02",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-01 2026 05 01"
+      "search_text": "site-change-log site change log site change log 2026-05-02 2026 05 02"
     },
     {
       "id": "tiered-dimension-policy",

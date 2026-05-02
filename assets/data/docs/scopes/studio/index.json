@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T22:14:39Z",
+  "generated_at": "2026-05-02T08:42:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1721,7 +1721,7 @@
       "doc_id": "scripts-audit-site-consistency",
       "title": "Site Consistency Audit",
       "added_date": "2026-03-31",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "sort_order": 130,
       "published": true,
@@ -2155,7 +2155,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

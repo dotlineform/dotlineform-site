@@ -21,7 +21,6 @@ studio_page_doc: /docs/?scope=studio&doc=studio-works
     <p class="worksList__count" id="worksListCount"></p>
     <div class="worksList__metaActions">
       <button class="tagStudio__button worksList__metaButton" type="button" id="worksListCopySeriesButton">copy series</button>
-      <a class="worksList__metaLink" href="{{ '/site_map/' | relative_url }}">site map</a>
     </div>
   </div>
 

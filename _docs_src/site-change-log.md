@@ -2,11 +2,38 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-02] Removed public site map page
+
+**Status:** implemented
+
+**Area:** site route cleanup
+
+**Summary:**
+Removed the retired `/site_map/` page and its dedicated sitemap data build path.
+
+**Reason:**
+The page is no longer required, and its generated `_data/sitemap.yml` source only supported that route plus a now-obsolete audit precheck.
+
+**Effect:**
+The public site no longer builds `/site_map/`. Studio Works no longer links to it, `studio_config.json` no longer advertises a site-map route, and the site consistency audit now keeps generated link/query checks without validating the removed sitemap data file.
+
+**Affected files/docs:**
+
+- `site_map.html`
+- `_data/sitemap.yml`
+- `scripts/build_sitemap_data.py`
+- `studio/studio-works/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `scripts/audit_site_consistency.py`
+- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## [2026-05-01] Closed moment source cleanup
 

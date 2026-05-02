@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "updated_at_utc": "2026-05-02T00:00:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -28,8 +28,7 @@
       "library_page": "/library/",
       "moments_page_base": "/moments/",
       "works_page_base": "/works/",
-      "work_details_page_base": "/work_details/",
-      "site_map": "/site_map/"
+      "work_details_page_base": "/work_details/"
     },
     "data": {
       "studio": {

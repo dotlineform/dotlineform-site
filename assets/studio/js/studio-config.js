@@ -27,8 +27,7 @@ const DEFAULT_STUDIO_CONFIG = {
       library_page: "/library/",
       moments_page_base: "/moments/",
       works_page_base: "/works/",
-      work_details_page_base: "/work_details/",
-      site_map: "/site_map/"
+      work_details_page_base: "/work_details/"
     },
     data: {
       studio: {

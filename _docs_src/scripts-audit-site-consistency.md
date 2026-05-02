@@ -2,7 +2,7 @@
 doc_id: scripts-audit-site-consistency
 title: "Site Consistency Audit"
 added_date: 2026-03-31
-last_updated: 2026-04-30
+last_updated: 2026-05-02
 parent_id: scripts
 sort_order: 130
 ---
@@ -56,7 +56,7 @@ Multiple repeated checks:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
   - `assets/works/index/*.json`
-- `links`: validates sitemap source and URL-target query-contract sanity across generated pages
+- `links`: validates generated link targets and URL query-contract sanity across generated pages
 - `media`: validates expected local thumbs for published `_works` and `_work_details`
 - `orphans`: reports orphan pages and JSON, with optional orphan media via `--orphans-media`
 
