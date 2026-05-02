@@ -3,7 +3,7 @@ doc_id: ui-status-emoji
 title: UI Status Emoji
 added_date: 2026-05-02
 last_updated: 2026-05-02
-ui_status: urgent
+ui_status: done
 parent_id: change-requests
 sort_order: 200
 ---

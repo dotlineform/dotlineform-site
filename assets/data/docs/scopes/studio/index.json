@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T19:36:22Z",
+  "generated_at": "2026-05-02T19:41:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -2038,7 +2038,7 @@
       "source_path": "ui-status-emoji.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json",
-      "ui_status": "urgent"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
