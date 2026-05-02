@@ -2,7 +2,7 @@
 doc_id: scripts
 title: "Scripts"
 added_date: 2026-04-23
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: ""
 sort_order: 130
 ---
@@ -88,6 +88,8 @@ Catalogue/runtime maintenance:
   - verifies representative field-aware catalogue build plans without writing files
 - `python3 ./scripts/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`
+- `python3 ./scripts/migrate_catalogue_media_sections.py`
+  - previews or applies the work-detail source migration from legacy `project_subfolder` to separated `details_subfolder`, `section_id`, and `section_title`
 - `python3 ./scripts/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
 - `bash scripts/make_srcset_images.sh`

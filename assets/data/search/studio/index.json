@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6245cb74836f27c6c29c574513fda57b",
-    "generated_at_utc": "2026-05-02T11:45:31Z",
+    "version": "blake2b-cdd8c9e412c206f24ae32fe920787d7e",
+    "generated_at_utc": "2026-05-02T12:36:08Z",
     "count": 156
   },
   "entries": [
@@ -2029,10 +2029,10 @@
       "kind": "doc",
       "title": "Catalogue Source Utilities",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-source",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-01 • Scripts",
+      "display_meta": "2026-05-02 • Scripts",
       "search_terms": [
         "scripts-catalogue-source",
         "scripts",
@@ -2040,12 +2040,12 @@
         "source",
         "catalogue source utilities",
         "utilities",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-01 2026 05 01"
+      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-02 2026 05 02"
     },
     {
       "id": "css-refactor",
@@ -2910,16 +2910,16 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "last_updated": "2026-05-02",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "scripts",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "scripts 2026-05-01 2026 05 01"
+      "search_text": "scripts 2026-05-02 2026 05 02"
     },
     {
       "id": "scripts-audit-site-consistency",

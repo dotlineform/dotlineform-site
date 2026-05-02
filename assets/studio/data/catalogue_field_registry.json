@@ -1,7 +1,7 @@
 {
   "schema": "catalogue_field_registry_v1",
   "status": "task_2_initial_registry",
-  "last_updated": "2026-05-01",
+  "last_updated": "2026-05-02",
   "source_doc": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
   "inventory_doc": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
   "description": "Field-to-artifact dependency registry for catalogue source edits. Task 2 records current selected behavior and target behavior; later tasks wire the target rules into build planning.",
@@ -164,7 +164,7 @@
       "id": "work_media_source",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["project_folder", "project_filename"],
+      "fields": ["project_folder", "project_subfolder", "project_filename"],
       "current": {
         "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search", "local-media"],
         "fallback": false
@@ -178,7 +178,7 @@
           }
         ],
         "fallback": false,
-        "reason": "Source media path fields control media readiness and derivative generation; JSON rebuild follows only if derived dimensions change."
+        "reason": "Work source media folder and filename fields control Studio source-image editing, media readiness, and derivative generation; JSON rebuild follows only if derived dimensions change."
       }
     },
     {
@@ -251,7 +251,7 @@
       "id": "work_detail_media_source",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["project_subfolder", "project_filename"],
+      "fields": ["details_subfolder", "project_filename"],
       "current": {
         "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
         "fallback": true
@@ -265,7 +265,22 @@
           }
         ],
         "fallback": false,
-        "reason": "Detail media filename controls media readiness and derivatives; JSON rebuild follows when public detail metadata changes."
+        "reason": "Detail source media folder and filename fields control Studio source-image editing, media readiness, and derivative generation; JSON rebuild follows only if derived dimensions change."
+      }
+    },
+    {
+      "id": "work_detail_section_metadata",
+      "record_family": "work_detail",
+      "operation": "metadata_update",
+      "fields": ["section_id", "section_title", "sort_order"],
+      "current": {
+        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "fallback": false
+      },
+      "target": {
+        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "fallback": false,
+        "reason": "Detail section metadata controls parent work JSON grouping, section labels, and section ordering without affecting source media generation."
       }
     },
     {

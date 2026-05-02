@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-source
 title: "Catalogue Source Utilities"
 added_date: 2026-04-18
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: scripts
 sort_order: 60
 ---
@@ -32,6 +32,30 @@ Validation checks the source JSON for core relationship errors:
 - series `primary_work_id` references to unknown works
 - series `primary_work_id` values that are not members of that series
 - work details that reference unknown works when actionable
+
+## Media Section Migration
+
+```bash
+./scripts/migrate_catalogue_media_sections.py
+```
+
+This previews the work-detail source migration from legacy `project_subfolder` to separated source-folder and public-section metadata:
+
+- `details_subfolder`
+- `section_id`
+- `section_title`
+
+The command is dry-run by default. It reports changed record counts, generated section ids, persisted source-folder metadata, and any blocking validation errors.
+
+Apply the migration only when the preview is accepted:
+
+```bash
+./scripts/migrate_catalogue_media_sections.py --write
+```
+
+Write mode creates a backup under `var/studio/catalogue/backups/` before updating `assets/studio/data/catalogue/work_details.json`.
+
+The migration does not move external source image files and does not update generated public runtime artifacts. Those follow through later catalogue build and generator tasks.
 
 ## Project State Report
 

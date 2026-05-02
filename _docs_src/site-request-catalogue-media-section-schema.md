@@ -251,7 +251,7 @@ Acceptance checks:
 
 Status:
 
-- not started
+- implemented
 
 Add a migration path that previews and then writes the canonical source JSON changes.
 
@@ -273,6 +273,22 @@ Acceptance checks:
 - write mode creates a backup before modifying canonical catalogue JSON
 - repeated dry-runs after migration report no additional writes
 - migration rejects ambiguous or invalid legacy records before write mode
+
+Implemented:
+
+- added `./scripts/migrate_catalogue_media_sections.py`
+- dry-run is the default; `--write` is required to update source JSON
+- write mode backs up `assets/studio/data/catalogue/work_details.json` under `var/studio/catalogue/backups/`
+- section ids are assigned deterministically per parent work and first-seen legacy section title, using ids such as `00001-1`
+- focused checks live in `tests/python/test_catalogue_media_section_migration.py`
+- the field registry and canonical source field order were pre-aligned so later source writes can preserve `project_subfolder`, `details_subfolder`, `section_id`, `section_title`, and `sort_order`
+
+Initial dry-run result:
+
+- 2,681 legacy detail records would change
+- 163 section ids would be generated
+- no empty legacy detail `project_subfolder` values were found
+- no duplicate section-title conflicts were found; duplicate section titles remain allowed because `section_id` is the unique key
 
 ### Task 3. Update Source Schemas And Validators
 

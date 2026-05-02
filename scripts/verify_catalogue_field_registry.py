@@ -164,7 +164,7 @@ def main() -> None:
         ),
         (
             "work media source metadata",
-            plan_for(registry, record_family="work", fields=["project_filename"]),
+            plan_for(registry, record_family="work", fields=["project_subfolder", "project_filename"]),
             {
                 "rule_id": "work_media_source",
                 "artifacts": ["source-json", "studio-lookup", "local-media"],
@@ -240,13 +240,25 @@ def main() -> None:
         ),
         (
             "work-detail media source metadata",
-            plan_for(registry, record_family="work_detail", fields=["project_filename"]),
+            plan_for(registry, record_family="work_detail", fields=["details_subfolder", "project_filename"]),
             {
                 "rule_id": "work_detail_media_source",
                 "artifacts": ["source-json", "studio-lookup", "local-media"],
                 "generate_only": [],
                 "rebuild_search": False,
                 "generate_local_media": True,
+                "build_required": True,
+            },
+        ),
+        (
+            "work-detail section metadata",
+            plan_for(registry, record_family="work_detail", fields=["section_title", "sort_order"]),
+            {
+                "rule_id": "work_detail_section_metadata",
+                "artifacts": ["source-json", "studio-lookup", "work-json"],
+                "generate_only": ["work-json"],
+                "rebuild_search": False,
+                "generate_local_media": False,
                 "build_required": True,
             },
         ),

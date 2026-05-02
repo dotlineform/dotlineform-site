@@ -38,6 +38,7 @@ WORK_FIELDS = [
     "published_date",
     "series_ids",
     "project_folder",
+    "project_subfolder",
     "project_filename",
     "title",
     "width_cm",
@@ -75,7 +76,10 @@ DETAIL_FIELDS = [
     "detail_uid",
     "work_id",
     "detail_id",
-    "project_subfolder",
+    "details_subfolder",
+    "section_id",
+    "section_title",
+    "sort_order",
     "project_filename",
     "title",
     "status",
@@ -100,6 +104,7 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
 }
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px"}
+OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "sort_order"}
 
 
 @dataclass(frozen=True)
@@ -224,9 +229,13 @@ def normalize_source_record(
         elif isinstance(value, list):
             out[field] = [normalize_json_value(item) for item in value]
         elif field in text_fields:
-            out[field] = normalize_scalar_text(value)
+            normalized_text = normalize_scalar_text(value)
+            if normalized_text is not None or field not in OMIT_EMPTY_SOURCE_FIELDS:
+                out[field] = normalized_text
         else:
-            out[field] = normalize_json_value(value)
+            normalized_value = normalize_json_value(value)
+            if normalized_value is not None or field not in OMIT_EMPTY_SOURCE_FIELDS:
+                out[field] = normalized_value
     return out
 
 
