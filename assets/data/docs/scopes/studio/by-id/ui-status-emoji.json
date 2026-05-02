@@ -1,0 +1,14 @@
+{
+  "scope": "studio",
+  "doc_id": "ui-status-emoji",
+  "title": "UI Status Emoji",
+  "added_date": "2026-05-02",
+  "last_updated": "2026-05-02",
+  "parent_id": "change-requests",
+  "sort_order": 200,
+  "published": true,
+  "viewable": true,
+  "source_path": "ui-status-emoji.md",
+  "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
+  "content_html": "<h1 id=\"ui-status-emoji\">UI Status Emoji</h1>\n\n<h2 id=\"purpose\">Purpose</h2>\n\n<p>The purpose is to enable a single emoji to be inserted at the beginning of a document title as displayed in the Docs Viewer index panel.</p>\n\n<p>The emoji would be determined by a ui_status field in the document’s front matter, with the options for this field enumerated in a section of the appropriate JSON config file:</p>\n\n<p>For example:</p>\n\n<div class=\"language-plaintext highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>“ui_status\": [\n    {\n    \t“ui_status\": “done”,\n    \t“emoji\": ✅\n    }\n    {\n    \t“ui_status”: “urgent”,\n    \t“emoji\": ❗️\n    }\n    }\n  ]\n</code></pre></div></div>\n\n<ul>\n  <li>This would be a shared feature available to all scopes (Studio docs, Library, Analysis).</li>\n  <li>If the status is not present in front-matter, or the value does not correspond to a value in config, it is ignored by the viewer.</li>\n  <li>The status can be edited in the Doc Viewer ‘Edit’ modal (in manage mode) by selecting from a dropdown control which lists the available config values. The default is the value entered in the front-matter, if that value corresponds to one defined in config. Otherwise the dropdown is blank.</li>\n  <li>The available status values are also displayed as small circular pills next to the ‘favourites’ pill displayed above the document. The pills contain the associated emoji. When not selected, the pills show the emoji in grey. When selected, the pills show the coloured emoji. The pills can be toggle on/off in the same way as the favourites pill.</li>\n</ul>\n\n"
+}

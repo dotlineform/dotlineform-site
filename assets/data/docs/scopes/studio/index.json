@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T17:30:31Z",
+  "generated_at": "2026-05-02T18:24:10Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -2023,6 +2023,20 @@
       "source_path": "tag-aliases.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-aliases.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-status-emoji",
+      "title": "UI Status Emoji",
+      "added_date": "2026-05-02",
+      "last_updated": "2026-05-02",
+      "parent_id": "change-requests",
+      "sort_order": 200,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-status-emoji.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json"
     },
     {
       "scope": "studio",

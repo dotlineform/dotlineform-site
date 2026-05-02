@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ab309e28832595d2015b2eaaf7f840b1",
-    "generated_at_utc": "2026-05-02T17:30:33Z",
-    "count": 157
+    "version": "blake2b-634c857f1f1b0ac84c4cef694a40d229",
+    "generated_at_utc": "2026-05-02T18:24:13Z",
+    "count": 158
   },
   "entries": [
     {
@@ -3403,6 +3403,31 @@
         "31"
       ],
       "search_text": "tag-aliases tag aliases tag aliases studio 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "ui-status-emoji",
+      "kind": "doc",
+      "title": "UI Status Emoji",
+      "href": "/docs/?scope=studio&doc=ui-status-emoji",
+      "last_updated": "2026-05-02",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
+      "search_terms": [
+        "ui-status-emoji",
+        "ui",
+        "status",
+        "emoji",
+        "ui status emoji",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "ui-status-emoji ui status emoji ui status emoji change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "series-tags",
