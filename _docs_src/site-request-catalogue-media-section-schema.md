@@ -426,7 +426,7 @@ Implementation notes:
 
 Status:
 
-- not started
+- implemented
 
 Run a focused verification pass that proves the migration and public output are stable.
 
@@ -446,6 +446,17 @@ Acceptance checks:
 - public work pages preserve existing section labels unless explicitly changed
 - media readiness uses the new source-folder fields
 - changed files pass sanitization checks before close-out
+
+Implementation notes:
+
+- The post-migration dry-run reports zero changed records, zero legacy records, and no pending writes.
+- Target source validation passes for migrated work and work-detail records.
+- Catalogue build previews for representative work-detail media-source and section-metadata edits select the expected local-media, lookup, source JSON, and work JSON outputs.
+- Work `00160` was used as the multiple-section runtime sample; generated work JSON keeps `pages` and `details` as section labels with stable section ids `00160-1` and `00160-2`.
+- Generated work JSON and focused work-detail lookup files no longer carry legacy detail `project_subfolder`; nested generated detail records also do not repeat section-level metadata.
+- Studio work-detail create/edit payload smoke checks confirm `details_subfolder` is persisted, `section_id` remains existing/server-owned, and legacy detail `project_subfolder` is not emitted.
+- Remaining `project_subfolder` references in active code are either the valid work source-media field, migration/import guardrails, or defensive legacy-read fallbacks; they are not unresolved detail-source assumptions.
+- The catalogue and Studio smoke check profiles pass through `./scripts/run_checks.py`, including the separate-destination Jekyll build profile.
 
 ## Benefits
 

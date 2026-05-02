@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-02] Verified catalogue media-section migration and runtime output
+
+**Status:** implemented
+
+**Area:** catalogue build / Studio verification
+
+**Summary:**
+Completed the final verification pass for the catalogue media-section migration across source data, generated work JSON, focused lookup files, Studio create/edit payloads, and the Jekyll build path.
+
+**Reason:**
+The migrated detail schema affects canonical source records, generated public work JSON, Studio editing payloads, and field-aware build scoping, so closeout needed evidence that the runtime contract stayed stable after the write migration.
+
+**Effect:**
+The migration dry-run now reports no pending source changes, target source validation passes, representative catalogue build previews select the expected outputs, and generated runtime payloads preserve existing section labels without carrying legacy detail `project_subfolder`.
+
+**Affected files/docs:**
+
+- [Catalogue Media Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-02] Documented migrated catalogue media-section contract
 
 **Status:** implemented
