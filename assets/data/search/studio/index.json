@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a38cbf279e948f1882516d0459b1855e",
-    "generated_at_utc": "2026-05-02T08:42:28Z",
+    "version": "blake2b-6245cb74836f27c6c29c574513fda57b",
+    "generated_at_utc": "2026-05-02T11:45:31Z",
     "count": 156
   },
   "entries": [
@@ -2686,10 +2686,10 @@
       "kind": "doc",
       "title": "Catalogue Media And Detail Section Schema Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-30 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-media-section-schema",
         "site",
@@ -2704,12 +2704,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-30",
+        "2026-05-02",
         "2026",
-        "04",
-        "30"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-04-30 2026 04 30"
+      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "scripts-catalogue-lookup",
