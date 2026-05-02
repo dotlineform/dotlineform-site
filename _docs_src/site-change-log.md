@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-02] Added filtering and sorting to Docs Broken Links
+
+**Status:** implemented
+
+**Area:** Studio docs maintenance UI
+
+**Summary:**
+Updated `/studio/docs-broken-links/` so audit results use count-bearing `all`, `not found`, and `wrong title` filter pills, default to the `not found` view, and sort by `from page` ascending by default.
+
+**Reason:**
+The old aggregate issue summary made it harder to focus the operational list on missing docs links first, and the fixed row order made larger reports slower to scan.
+
+**Effect:**
+The summary sentence is replaced by filter pills, all result columns are sortable, and `from page` is now the second column before `linked page`.
+
+**Affected files/docs:**
+
+- `studio/docs-broken-links/index.md`
+- `assets/studio/css/studio.css`
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/data/studio_config.json`
+- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-02] Removed work-detail route layout from per-work JSON
 
 **Status:** implemented

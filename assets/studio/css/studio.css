@@ -2612,7 +2612,9 @@ button.tagStudioList__cellLink {
   }
 
   .docsBrokenLinksPage__head {
-    display: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
   }
 
   .docsHtmlImportPage__controls,

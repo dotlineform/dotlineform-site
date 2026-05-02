@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-05-01
+last_updated: 2026-05-02
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,24 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-05-02 / UI-074
+
+- status: adopted
+- route: `/studio/docs-broken-links/`
+- issue: adding sortable result columns exposed that the route's mobile layout hid the list header, which would make column sorting unavailable on narrow screens.
+- triage: sortable list / mobile parity
+- reasoning: sortable list headers are controls, not decorative labels. If a Studio list is sortable on desktop, the same sort controls should remain reachable on mobile unless a separate mobile sort control is intentionally designed.
+- permanent rule: page-specific mobile list layouts must not hide sortable headers by default. If the header cannot fit as a grid, render the sort buttons as a compact wrapped control row.
+- outcome: Docs Broken Links now keeps its sortable headers visible on mobile as a wrapped row, while rows continue to stack with per-cell labels.
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `assets/studio/js/docs-broken-links.js`
+  - `studio/docs-broken-links/index.md`
+  - `_docs_src/docs-broken-links.md`
+- verification:
+  - run the broken-links page at desktop and mobile widths and confirm the `problem`, `from page`, `linked page`, and `link` sort controls are reachable
+  - confirm the default result view is `not found` and sorted by `from page` ascending
 
 ## UI Rule Log 2026-05-01 / UI-073
 

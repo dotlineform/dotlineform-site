@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: "Docs Broken Links"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-05-02
 parent_id: studio
 sort_order: 35
 ---
@@ -40,14 +40,18 @@ Current rule:
 The page shows:
 
 - `problem`
+- `from page`
 - `linked page`
 - `link`
-- `from page`
 
 Current behavior:
 
 - `linked page`, `link`, and `from page` all open in a new tab
 - when the problem is `not found`, the first two links intentionally point at the failing target so the broken case is visible directly
+- issue filters render as count-bearing pills for `all`, `not found`, and `wrong title`
+- the default filter is `not found`
+- all result columns are sortable
+- the default sort is `from page` ascending
 
 ## Runtime Boundary
 

@@ -21,7 +21,7 @@ studio_page_doc: /docs/?scope=studio&doc=docs-broken-links
       <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="docsBrokenLinksRun"></button>
     </div>
     <p class="tagStudio__status" id="docsBrokenLinksStatus"></p>
-    <p class="tagStudioForm__meta" id="docsBrokenLinksMeta"></p>
+    <div class="tagStudioFilters docsBrokenLinksPage__filters" id="docsBrokenLinksFilters" hidden></div>
     <div id="docsBrokenLinksListWrap" hidden></div>
     <p class="docsBrokenLinksPage__empty" id="docsBrokenLinksEmpty" hidden></p>
   </div>

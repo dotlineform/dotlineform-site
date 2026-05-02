@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-34b5574b8d16b3e3b020d89684397179",
-    "generated_at_utc": "2026-05-02T17:10:11Z",
+    "version": "blake2b-ab309e28832595d2015b2eaaf7f840b1",
+    "generated_at_utc": "2026-05-02T17:30:33Z",
     "count": 157
   },
   "entries": [
@@ -1289,10 +1289,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-05-01 • Design",
+      "display_meta": "2026-05-02 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -1303,12 +1303,12 @@
         "decision",
         "log",
         "design",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-05-01 2026 05 01"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-05-02 2026 05 02"
     },
     {
       "id": "tag-groups",
@@ -1407,10 +1407,10 @@
       "kind": "doc",
       "title": "Docs Broken Links",
       "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-02",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-23 • Studio",
+      "display_meta": "2026-05-02 • Studio",
       "search_terms": [
         "docs-broken-links",
         "docs",
@@ -1418,12 +1418,12 @@
         "links",
         "docs broken links",
         "studio",
-        "2026-04-23",
+        "2026-05-02",
         "2026",
-        "04",
-        "23"
+        "05",
+        "02"
       ],
-      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-04-23 2026 04 23"
+      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-05-02 2026 05 02"
     },
     {
       "id": "docs-viewer-draft-publishing-spec",
