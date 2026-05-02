@@ -1,8 +1,9 @@
 ---
 doc_id: site-request-catalogue-series-unified-editor
-title: "Catalogue Series Unified Editor ✅"
+title: Catalogue Series Unified Editor
 added_date: 2026-04-29
-last_updated: 2026-04-29
+last_updated: 2026-05-02
+ui_status: done
 parent_id: change-requests
 sort_order: 130
 ---

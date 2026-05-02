@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7813bb920ea01beffe9d70cf8e386302",
-    "generated_at_utc": "2026-05-02T18:58:55Z",
+    "version": "blake2b-e852a6bfc56fcb72a0ba98c6e24e8e33",
+    "generated_at_utc": "2026-05-02T21:16:10Z",
     "count": 158
   },
   "entries": [
@@ -14,8 +14,8 @@
       "href": "/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs",
       "last_updated": "2026-04-30",
       "parent_id": "site-request-field-aware-build-scoping",
-      "parent_title": "Field-Aware Catalogue Build Scoping Request ✅",
-      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request ✅",
+      "parent_title": "Field-Aware Catalogue Build Scoping",
+      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping",
       "search_terms": [
         "site-request-route-anchor-collection-stubs",
         "site",
@@ -26,7 +26,7 @@
         "stubs",
         "route-anchor collection stubs spec",
         "spec",
-        "field-aware catalogue build scoping request ✅",
+        "field-aware catalogue build scoping",
         "field",
         "aware",
         "catalogue",
@@ -37,7 +37,7 @@
         "04",
         "30"
       ],
-      "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping request ✅ field aware catalogue build scoping 2026-04-30 2026 04 30"
+      "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
     },
     {
       "id": "site-request-studio-record-hash-simplification",
@@ -46,8 +46,8 @@
       "href": "/docs/?scope=studio&doc=site-request-studio-record-hash-simplification",
       "last_updated": "2026-04-30",
       "parent_id": "site-request-field-aware-build-scoping",
-      "parent_title": "Field-Aware Catalogue Build Scoping Request ✅",
-      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping Request ✅",
+      "parent_title": "Field-Aware Catalogue Build Scoping",
+      "display_meta": "2026-04-30 • Field-Aware Catalogue Build Scoping",
       "search_terms": [
         "site-request-studio-record-hash-simplification",
         "site",
@@ -58,7 +58,7 @@
         "simplification",
         "studio record hash simplification analysis",
         "analysis",
-        "field-aware catalogue build scoping request ✅",
+        "field-aware catalogue build scoping",
         "field",
         "aware",
         "catalogue",
@@ -69,7 +69,7 @@
         "04",
         "30"
       ],
-      "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping request ✅ field aware catalogue build scoping 2026-04-30 2026 04 30"
+      "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
     },
     {
       "id": "new-pipeline-current-pipeline-map",
@@ -174,8 +174,8 @@
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
       "last_updated": "2026-05-01",
       "parent_id": "site-request-field-aware-build-scoping",
-      "parent_title": "Field-Aware Catalogue Build Scoping Request ✅",
-      "display_meta": "2026-05-01 • Field-Aware Catalogue Build Scoping Request ✅",
+      "parent_title": "Field-Aware Catalogue Build Scoping",
+      "display_meta": "2026-05-01 • Field-Aware Catalogue Build Scoping",
       "search_terms": [
         "site-request-field-aware-build-scoping-inventory",
         "site",
@@ -186,14 +186,14 @@
         "scoping",
         "inventory",
         "field-aware build scoping inventory",
-        "field-aware catalogue build scoping request ✅",
+        "field-aware catalogue build scoping",
         "catalogue",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping request ✅ catalogue 2026-05-01 2026 05 01"
+      "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping catalogue 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-catalogue-compatibility-cleanup-inventory",
@@ -202,8 +202,8 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory",
       "last_updated": "2026-05-01",
       "parent_id": "site-request-catalogue-compatibility-cleanup",
-      "parent_title": "Compatibility Cleanup ✅",
-      "display_meta": "2026-05-01 • Compatibility Cleanup ✅",
+      "parent_title": "Compatibility Cleanup",
+      "display_meta": "2026-05-01 • Compatibility Cleanup",
       "search_terms": [
         "site-request-catalogue-compatibility-cleanup-inventory",
         "site",
@@ -212,13 +212,13 @@
         "compatibility",
         "cleanup",
         "inventory",
-        "compatibility cleanup ✅",
+        "compatibility cleanup",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "site-request-catalogue-compatibility-cleanup-inventory site request catalogue compatibility cleanup inventory compatibility cleanup ✅ 2026-05-01 2026 05 01"
+      "search_text": "site-request-catalogue-compatibility-cleanup-inventory site request catalogue compatibility cleanup inventory compatibility cleanup 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-moment-source-cleanup-inventory",
@@ -643,10 +643,10 @@
       "kind": "doc",
       "title": "Docs Build Incremental Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-22 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-docs-build-incremental",
         "site",
@@ -658,12 +658,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-22",
+        "2026-05-02",
         "2026",
-        "04",
-        "22"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request change requests change requests 2026-04-22 2026 04 22"
+      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -1078,10 +1078,10 @@
       "kind": "doc",
       "title": "Catalogue Lookup Invalidation Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
-      "last_updated": "2026-04-22",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-22 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-lookup-invalidation",
         "site",
@@ -1093,12 +1093,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-22",
+        "2026-05-02",
         "2026",
-        "04",
-        "22"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-04-22 2026 04 22"
+      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "catalogue-work-editor",
@@ -2601,12 +2601,12 @@
     {
       "id": "site-request-field-aware-build-scoping",
       "kind": "doc",
-      "title": "Field-Aware Catalogue Build Scoping Request ✅",
+      "title": "Field-Aware Catalogue Build Scoping",
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-01 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-field-aware-build-scoping",
         "site",
@@ -2615,27 +2615,27 @@
         "aware",
         "build",
         "scoping",
-        "field-aware catalogue build scoping request ✅",
+        "field-aware catalogue build scoping",
         "catalogue",
         "change requests",
         "change",
         "requests",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping request ✅ catalogue change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping catalogue change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-compatibility-cleanup",
       "kind": "doc",
-      "title": "Compatibility Cleanup ✅",
+      "title": "Compatibility Cleanup",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-01 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-compatibility-cleanup",
         "site",
@@ -2643,16 +2643,16 @@
         "catalogue",
         "compatibility",
         "cleanup",
-        "compatibility cleanup ✅",
+        "compatibility cleanup",
         "change requests",
         "change",
         "requests",
-        "2026-05-01",
+        "2026-05-02",
         "2026",
         "05",
-        "01"
+        "02"
       ],
-      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup ✅ change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-moment-source-cleanup",
@@ -2684,7 +2684,7 @@
     {
       "id": "site-request-catalogue-media-section-schema",
       "kind": "doc",
-      "title": "Catalogue Media And Detail Section Schema Request ✅",
+      "title": "Catalogue Media And Detail Section Schema Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
       "last_updated": "2026-05-02",
       "parent_id": "change-requests",
@@ -2698,7 +2698,7 @@
         "media",
         "section",
         "schema",
-        "catalogue media and detail section schema request ✅",
+        "catalogue media and detail section schema request",
         "and",
         "detail",
         "change requests",
@@ -2709,7 +2709,7 @@
         "05",
         "02"
       ],
-      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request ✅ and detail change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-source-registry-drift-verification",
@@ -2882,12 +2882,12 @@
     {
       "id": "site-request-catalogue-series-unified-editor",
       "kind": "doc",
-      "title": "Catalogue Series Unified Editor ✅",
+      "title": "Catalogue Series Unified Editor",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-29 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "site-request-catalogue-series-unified-editor",
         "site",
@@ -2896,26 +2896,26 @@
         "series",
         "unified",
         "editor",
-        "catalogue series unified editor ✅",
+        "catalogue series unified editor",
         "change requests",
         "change",
         "requests",
-        "2026-04-29",
+        "2026-05-02",
         "2026",
-        "04",
-        "29"
+        "05",
+        "02"
       ],
-      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor ✅ change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
       "kind": "doc",
-      "title": "Docs Viewer Favourites Spec ✅",
+      "title": "Docs Viewer Favourites Spec",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-05-02",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-19 • Change Requests",
+      "display_meta": "2026-05-02 • Change Requests",
       "search_terms": [
         "ui-request-docs-viewer-favourites-spec",
         "ui",
@@ -2924,16 +2924,16 @@
         "viewer",
         "favourites",
         "spec",
-        "docs viewer favourites spec ✅",
+        "docs viewer favourites spec",
         "change requests",
         "change",
         "requests",
-        "2026-04-19",
+        "2026-05-02",
         "2026",
-        "04",
-        "19"
+        "05",
+        "02"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec ✅ change requests change requests 2026-04-19 2026 04 19"
+      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "scripts",

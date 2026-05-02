@@ -1,8 +1,9 @@
 ---
 doc_id: site-request-catalogue-media-section-schema
-title: Catalogue Media And Detail Section Schema Request ✅
+title: Catalogue Media And Detail Section Schema Request
 added_date: 2026-04-30
 last_updated: 2026-05-02
+ui_status: done
 parent_id: change-requests
 sort_order: 105
 ---

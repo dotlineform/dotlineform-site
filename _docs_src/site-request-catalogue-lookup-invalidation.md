@@ -2,7 +2,8 @@
 doc_id: site-request-catalogue-lookup-invalidation
 title: Catalogue Lookup Invalidation Request
 added_date: 2026-04-22
-last_updated: 2026-04-22
+last_updated: 2026-05-02
+ui_status: done
 parent_id: change-requests
 sort_order: 30
 ---

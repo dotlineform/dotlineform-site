@@ -1,8 +1,9 @@
 ---
 doc_id: site-request-field-aware-build-scoping
-title: "Field-Aware Catalogue Build Scoping Request ✅"
+title: Field-Aware Catalogue Build Scoping
 added_date: 2026-04-27
-last_updated: 2026-05-01
+last_updated: 2026-05-02
+ui_status: done
 parent_id: change-requests
 sort_order: 100
 ---
