@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T10:40:23Z",
+  "generated_at": "2026-05-03T11:37:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1672,7 +1672,7 @@
       "source_path": "site-request-catalogue-source-registry-drift-verification.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-source-registry-drift-verification.json",
-      "ui_status": "implemented"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1852,28 +1852,30 @@
       "doc_id": "site-request-catalogue-unified-editor-cleanup",
       "title": "Catalogue Unified Editor Cleanup Request",
       "added_date": "2026-04-29",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 140,
       "published": true,
       "viewable": true,
       "source_path": "site-request-catalogue-unified-editor-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-unified-editor-cleanup.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-unified-editor-cleanup.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",
       "doc_id": "ui-request-docs-viewer-favourites-task",
       "title": "Docs Viewer Favourites",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 140,
       "published": true,
       "viewable": true,
       "source_path": "docs-viewer-favourites-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1908,14 +1910,15 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
       "viewable": true,
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1936,14 +1939,15 @@
       "doc_id": "ui-request-docs-html-import-spec",
       "title": "Docs HTML Import Spec",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 160,
       "published": true,
       "viewable": true,
       "source_path": "ui-request-docs-html-import-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-spec.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-spec.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1978,14 +1982,15 @@
       "doc_id": "ui-request-docs-html-import-task",
       "title": "Docs HTML Import Task",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 170,
       "published": true,
       "viewable": true,
       "source_path": "ui-request-docs-html-import-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-task.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-task.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2006,14 +2011,15 @@
       "doc_id": "ui-request-docs-viewer-index-drag-undo-task",
       "title": "Docs Viewer Index Drag Undo",
       "added_date": "2026-04-25",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 180,
       "published": true,
       "viewable": true,
       "source_path": "ui-request-docs-viewer-index-drag-undo-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json",
+      "ui_status": "done"
     },
     {
       "scope": "studio",

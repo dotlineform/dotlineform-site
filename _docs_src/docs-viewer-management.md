@@ -2,7 +2,8 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: 2026-04-25
+last_updated: 2026-05-03
+ui_status: done
 parent_id: change-requests
 sort_order: 150
 ---

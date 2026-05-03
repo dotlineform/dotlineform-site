@@ -2,7 +2,8 @@
 doc_id: site-request-catalogue-unified-editor-cleanup
 title: Catalogue Unified Editor Cleanup Request
 added_date: 2026-04-29
-last_updated: 2026-04-29
+last_updated: 2026-05-03
+ui_status: done
 parent_id: change-requests
 sort_order: 140
 ---
@@ -10,7 +11,7 @@ sort_order: 140
 
 Status:
 
-- in progress
+- implemented
 
 ## Summary
 

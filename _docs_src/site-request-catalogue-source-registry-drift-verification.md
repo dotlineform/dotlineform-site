@@ -3,7 +3,7 @@ doc_id: site-request-catalogue-source-registry-drift-verification
 title: Catalogue Source And Registry Drift Verification Request
 added_date: 2026-05-02
 last_updated: 2026-05-03
-ui_status: implemented
+ui_status: done
 parent_id: change-requests
 sort_order: 106
 ---

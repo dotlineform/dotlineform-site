@@ -2,7 +2,8 @@
 doc_id: ui-request-docs-html-import-spec
 title: Docs HTML Import Spec
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-05-03
+ui_status: done
 parent_id: change-requests
 sort_order: 160
 ---
@@ -10,8 +11,8 @@ sort_order: 160
 
 Status:
 
-- requested feature spec
-- Studio page plus local docs-management pipeline change
+- implemented
+- on-going import issues to be addressed as separate patches
 
 ## Summary
 

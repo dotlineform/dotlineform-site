@@ -2,7 +2,8 @@
 doc_id: ui-request-docs-viewer-favourites-task
 title: Docs Viewer Favourites
 added_date: 2026-04-19
-last_updated: 2026-04-24
+last_updated: 2026-05-03
+ui_status: done
 parent_id: change-requests
 sort_order: 140
 ---

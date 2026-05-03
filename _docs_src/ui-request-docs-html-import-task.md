@@ -2,7 +2,8 @@
 doc_id: ui-request-docs-html-import-task
 title: Docs HTML Import Task
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: 2026-05-03
+ui_status: done
 parent_id: change-requests
 sort_order: 170
 ---
@@ -10,7 +11,7 @@ sort_order: 170
 
 Status:
 
-- implementation in progress
+- implementated
 - parser/sanitizer dependencies pinned in `requirements.txt`
 - initial dry-run importer scaffold landed in `scripts/docs/docs_html_import.py`
 - depends on [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)

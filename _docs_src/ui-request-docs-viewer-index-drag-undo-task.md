@@ -2,7 +2,8 @@
 doc_id: ui-request-docs-viewer-index-drag-undo-task
 title: Docs Viewer Index Drag Undo
 added_date: 2026-04-25
-last_updated: 2026-04-25
+last_updated: 2026-05-03
+ui_status: done
 parent_id: change-requests
 sort_order: 180
 ---
@@ -10,7 +11,7 @@ sort_order: 180
 
 Status:
 
-- implemented first pass
+- implemented
 - belongs to the shared Docs Viewer manage-mode surface
 
 Implemented files:
