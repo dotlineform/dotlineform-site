@@ -15,7 +15,7 @@ studio_page_doc: /docs/?scope=studio&doc=series-tags
   <div data-role="series-tags-session-modal-host"></div>
   <div data-role="series-tags-import-modal-host"></div>
   <div class="tagStudio__panel">
-    <div id="series-tags" data-role="series-tags"></div>
+    <div id="series-tags" data-role="series-tags" data-studio-ready="false" data-studio-busy="false"></div>
   </div>
 </div>
 

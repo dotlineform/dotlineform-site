@@ -57,6 +57,10 @@ import {
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   seriesTagEditorUi
 } from "./studio-ui.js";
 
@@ -75,11 +79,45 @@ if (document.readyState === "loading") {
   initTagStudio();
 }
 
+function routeRootForState(state) {
+  return state && state.routeRoot instanceof Element ? state.routeRoot : null;
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "series-tag-editor",
+    mode: state && state.selectedWorkId ? "single" : "edit",
+    service: state && state.saveMode === "post" ? "available" : "unavailable",
+    recordLoaded: Boolean(state && state.seriesId)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(routeRootForState(state), Boolean(state && state.isBusy), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(routeRootForState(state), ready, routeStateDetail(state));
+}
+
 async function initTagStudio() {
   const mount = document.getElementById("tag-studio");
   if (!mount) return;
+  const routeRoot = document.getElementById("seriesTagEditorRoot");
 
-  const config = await loadStudioConfig();
+  let config = null;
+  try {
+    config = await loadStudioConfig();
+  } catch (error) {
+    renderFatalError(mount, "Failed to load tag editor config.");
+    setStudioRouteReady(routeRoot, true, {
+      route: "series-tag-editor",
+      mode: "empty",
+      service: "unavailable",
+      recordLoaded: false
+    });
+    return;
+  }
   STUDIO_GROUPS = getStudioGroups(config);
   configureTagStudioDomain({
     groups: STUDIO_GROUPS,
@@ -119,6 +157,7 @@ async function initTagStudio() {
     if (!state.refs) return;
     wireEvents(state);
     renderAll(state);
+    markRouteReady(state, true);
     void probeSaveMode(state);
   } catch (error) {
     renderFatalError(
@@ -129,6 +168,12 @@ async function initTagStudio() {
         "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
       )
     );
+    setStudioRouteReady(routeRoot, true, {
+      route: "series-tag-editor",
+      mode: "empty",
+      service: "unavailable",
+      recordLoaded: false
+    });
   }
 }
 
@@ -208,6 +253,7 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
 
   return {
     mount,
+    routeRoot: document.getElementById("seriesTagEditorRoot"),
     config,
     seriesId,
     tagsById,
@@ -242,7 +288,8 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
     serverAvailableWhileOfflineNotified: false,
     modalSnippet: "",
     saveMode: "offline",
-    saveModeResolved: false
+    saveModeResolved: false,
+    isBusy: false
   };
 }
 
@@ -968,6 +1015,7 @@ function renderAll(state) {
   renderSaveState(state);
   broadcastSelectedWorkChange(state);
   syncOfflineAutosave(state);
+  syncRouteBusyState(state);
 }
 
 function syncOfflineAutosave(state) {
@@ -1550,6 +1598,7 @@ async function probeSaveMode(state) {
 
   renderSaveMode(state);
   renderAll(state);
+  syncRouteBusyState(state);
 }
 
 function stageOfflineState(state, options = {}) {
@@ -1612,6 +1661,17 @@ function stageOfflineState(state, options = {}) {
 }
 
 async function handleSave(state) {
+  state.isBusy = true;
+  syncRouteBusyState(state);
+  try {
+    return await handleSaveInner(state);
+  } finally {
+    state.isBusy = false;
+    syncRouteBusyState(state);
+  }
+}
+
+async function handleSaveInner(state) {
   const diff = buildStateDiff(state);
   if (!diff.seriesChanged && !diff.changedWorkIds.length) {
     setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));

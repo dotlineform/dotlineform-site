@@ -2,7 +2,7 @@
 doc_id: series-tags
 title: "Series Tags"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 210
 ---
@@ -16,6 +16,16 @@ Purpose:
 
 - review tags assigned to series
 - manage the cross-series offline assignment session, including export and local-server import
+
+## Route Ready State
+
+The page root `#series-tags` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` while config, series, assignment, registry, and group data load, then `true` after the table or empty/error state is rendered
+- `data-studio-busy` is `true` while assignment import preview or apply is running
+- `data-studio-mode` is `list`, `session`, or `import` depending on the active modal state
+- `data-studio-service` reports whether the local tag write server is available for assignment import
+- `data-studio-record-loaded` is `true` when series rows are loaded
 
 ## Page / Template Structure
 

@@ -50,7 +50,7 @@ Each Studio page root should expose shared state attributes:
 Pages may also expose route-specific detail attributes when useful:
 
 - `data-studio-record-loaded="true"`
-- `data-studio-mode="single|bulk|new|import|list|registry|preview|results|confirm|summary|idle|empty"`
+- `data-studio-mode="single|bulk|new|import|list|registry|preview|results|confirm|summary|session|edit|idle|empty"`
 - `data-studio-service="available|unavailable"`
 
 The shared attributes should live on the main route root, such as `#catalogueWorkRoot`, not on a nested panel.
@@ -71,6 +71,12 @@ Adopted routes:
 - `/studio/docs-broken-links/`
 - `/studio/docs-import/`
 - `/studio/project-state/`
+- `/studio/series-tag-editor/`
+- `/studio/series-tags/`
+- `/studio/studio-works/`
+- `/studio/tag-aliases/`
+- `/studio/tag-groups/`
+- `/studio/tag-registry/`
 
 Current shared helper:
 
@@ -80,12 +86,12 @@ The adopted catalogue editors and service-backed Studio tools now expose shared 
 
 The page also exposes:
 
-- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|project-state"`
-- `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary"`
+- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry"`
+- `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary|session|edit"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
 
-Remaining rollout still needs to adopt the helper on tag tools and then dashboard, landing, and reference Studio pages where useful.
+Primary async and service-backed Studio routes have adopted the helper. Remaining rollout is limited to lower-priority dashboard, landing, and reference Studio pages where useful.
 
 ## Rollout Checklist
 
@@ -103,12 +109,12 @@ Primary async or service-backed Studio routes:
 - [x] `/studio/docs-broken-links/` root `#docsBrokenLinksRoot`
 - [x] `/studio/docs-import/` root `#docsHtmlImportRoot`
 - [x] `/studio/project-state/` root `#projectStateRoot`
-- [ ] `/studio/series-tag-editor/` root `#seriesTagEditorRoot`
-- [ ] `/studio/series-tags/` root from `data-role="series-tags"`
-- [ ] `/studio/studio-works/` root `#worksStudioRoot`
-- [ ] `/studio/tag-aliases/` root from `data-role="tag-aliases"`
-- [ ] `/studio/tag-groups/` root from `data-role="tag-groups"`
-- [ ] `/studio/tag-registry/` root from `data-role="tag-registry"`
+- [x] `/studio/series-tag-editor/` root `#seriesTagEditorRoot`
+- [x] `/studio/series-tags/` root from `data-role="series-tags"`
+- [x] `/studio/studio-works/` root `#worksStudioRoot`
+- [x] `/studio/tag-aliases/` root from `data-role="tag-aliases"`
+- [x] `/studio/tag-groups/` root from `data-role="tag-groups"`
+- [x] `/studio/tag-registry/` root from `data-role="tag-registry"`
 
 Lower-priority dashboard, landing, and reference routes:
 
@@ -163,7 +169,8 @@ Route-specific status-text waits should become fallback checks rather than the n
 3. Update the smoke-test harness guidance in [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing).
 4. Roll the contract across the remaining catalogue editors. Completed for work-detail, series, and moment.
 5. Extend the contract across operational catalogue and docs-maintenance routes. Current pass completed Build Activity, Bulk Add Work, Catalogue Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, and Project State.
-6. Extend to tag tools and lower-priority non-catalogue Studio pages where useful.
+6. Extend the contract across tag tools and Studio Works. Current pass completed Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry.
+7. Extend to lower-priority dashboard, landing, and reference Studio pages where useful.
 
 ## Verification
 

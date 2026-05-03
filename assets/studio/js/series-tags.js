@@ -37,6 +37,11 @@ import {
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   seriesTagsUi
 } from "./studio-ui.js";
 
@@ -57,13 +62,55 @@ if (document.readyState === "loading") {
   initSeriesTagsPage();
 }
 
+function routeStateDetail(state) {
+  return {
+    route: "series-tags",
+    mode: state.importModalOpen ? "import" : state.sessionModalOpen ? "session" : "list",
+    service: state.importAvailable ? "available" : "unavailable",
+    recordLoaded: Boolean(state.seriesData && state.seriesData.length)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.refs && state.refs.mount, Boolean(state.isBusy), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.refs && state.refs.mount, ready, routeStateDetail(state));
+}
+
+async function withRouteBusy(state, task) {
+  state.isBusy = true;
+  syncRouteBusyState(state);
+  try {
+    return await task();
+  } finally {
+    state.isBusy = false;
+    syncRouteBusyState(state);
+  }
+}
+
 async function initSeriesTagsPage() {
   const mount = document.getElementById("series-tags");
   if (!mount) return;
+  initializeStudioRouteState(mount, { route: "series-tags" });
 
-  const config = await loadStudioConfig();
-  STUDIO_GROUPS = getStudioGroups(config);
-  GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+  let config = null;
+  try {
+    config = await loadStudioConfig();
+    STUDIO_GROUPS = getStudioGroups(config);
+    GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+  } catch (error) {
+    mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load series tag config.</div>`;
+    markRouteReady({
+      refs: { mount },
+      importAvailable: false,
+      seriesData: [],
+      importModalOpen: false,
+      sessionModalOpen: false
+    }, true);
+    return;
+  }
 
   const actions = document.querySelector(UI_SELECTOR.actions);
   const openSessionModal = document.querySelector(UI_SELECTOR.openSessionModal);
@@ -80,9 +127,29 @@ async function initSeriesTagsPage() {
     importModalHost
   };
 
-  const seriesData = await getSeriesData(config);
+  let seriesData = [];
+  try {
+    seriesData = await getSeriesData(config);
+  } catch (error) {
+    mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(seriesTagsText(config, "load_failed_error", "Failed to load series tag data."))}</div>`;
+    markRouteReady({
+      refs,
+      importAvailable: false,
+      seriesData: [],
+      importModalOpen: false,
+      sessionModalOpen: false
+    }, true);
+    return;
+  }
   if (!seriesData.length) {
     mount.innerHTML = `<p class="${UI_CLASS.empty}">${escapeHtml(seriesTagsText(config, "empty_state", "none"))}</p>`;
+    markRouteReady({
+      refs,
+      importAvailable: false,
+      seriesData,
+      importModalOpen: false,
+      sessionModalOpen: false
+    }, true);
     return;
   }
 
@@ -109,6 +176,7 @@ async function initSeriesTagsPage() {
       importResolutions: {},
       sessionModalOpen: false,
       importModalOpen: false,
+      isBusy: false,
       filterGroup: "all",
       sortKey: "series",
       sortDir: "asc",
@@ -123,9 +191,17 @@ async function initSeriesTagsPage() {
     }
     wireEvents(state);
     renderPage(state);
+    markRouteReady(state, true);
     void probeImportAvailability(state);
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(seriesTagsText(config, "load_failed_error", "Failed to load series tag data."))}</div>`;
+    markRouteReady({
+      refs,
+      importAvailable: false,
+      seriesData: [],
+      importModalOpen: false,
+      sessionModalOpen: false
+    }, true);
   }
 }
 
@@ -203,12 +279,14 @@ function wireEvents(state) {
       if (sessionButton && !sessionButton.disabled) {
         state.sessionModalOpen = true;
         renderChrome(state);
+        syncRouteBusyState(state);
         return;
       }
       const importButton = event.target.closest(UI_SELECTOR.openImportModal);
       if (importButton && !importButton.disabled) {
         state.importModalOpen = true;
         renderChrome(state);
+        syncRouteBusyState(state);
       }
     });
   }
@@ -239,6 +317,7 @@ function wireEvents(state) {
       if (event.target.closest(`[data-role="${UI.role.closeSessionModal}"]`)) {
         state.sessionModalOpen = false;
         renderChrome(state);
+        syncRouteBusyState(state);
         return;
       }
       const action = event.target.closest("button[data-session-action]");
@@ -263,6 +342,7 @@ function wireEvents(state) {
       if (event.target.closest(`[data-role="${UI.role.closeImportModal}"]`)) {
         state.importModalOpen = false;
         renderChrome(state);
+        syncRouteBusyState(state);
         return;
       }
       const action = event.target.closest("button[data-import-action]");
@@ -274,11 +354,11 @@ function wireEvents(state) {
         return;
       }
       if (actionName === "preview-import") {
-        await handlePreviewImport(state);
+        await withRouteBusy(state, () => handlePreviewImport(state));
         return;
       }
       if (actionName === "apply-import") {
-        await handleApplyImport(state);
+        await withRouteBusy(state, () => handleApplyImport(state));
       }
     });
 
@@ -573,6 +653,7 @@ function handleClearSession(state) {
 async function probeImportAvailability(state) {
   state.importAvailable = await probeStudioHealth(500);
   renderChrome(state);
+  syncRouteBusyState(state);
 }
 
 async function handlePreviewImport(state) {

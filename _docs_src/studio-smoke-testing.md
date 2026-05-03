@@ -133,8 +133,14 @@ Adopted routes:
 - `/studio/docs-broken-links/` with `#docsBrokenLinksRoot`
 - `/studio/docs-import/` with `#docsHtmlImportRoot`
 - `/studio/project-state/` with `#projectStateRoot`
+- `/studio/series-tag-editor/` with `#seriesTagEditorRoot`
+- `/studio/series-tags/` with `#series-tags`
+- `/studio/studio-works/` with `#worksStudioRoot`
+- `/studio/tag-aliases/` with `#tag-aliases`
+- `/studio/tag-groups/` with `#tag-groups`
+- `/studio/tag-registry/` with `#tag-registry`
 
-Remaining Studio routes still need route-specific root selectors and loaded status text until they adopt the shared attributes.
+Remaining dashboard, landing, and reference Studio routes still need route-specific root selectors and loaded status text until they adopt the shared attributes.
 
 The rollout is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
 

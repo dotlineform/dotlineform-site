@@ -8,6 +8,47 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Completed primary Studio ready-state route adoption
+
+**Status:** partially implemented
+
+**Area:** Studio runtime / smoke testing
+
+**Summary:**
+Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry.
+
+**Reason:**
+These were the remaining primary async or service-backed Studio routes in the ready-state request. They load tag data, assignment data, generated catalogue indexes, group descriptions, or work indexes before route state is stable, and several run local write-server commands.
+
+**Effect:**
+`#seriesTagEditorRoot`, `#series-tags`, `#worksStudioRoot`, `#tag-aliases`, `#tag-groups`, and `#tag-registry` now expose route, ready, busy, mode, service availability where applicable, and record-loaded attributes. Primary async and service-backed Studio routes now have the shared smoke-test readiness contract; only lower-priority dashboards, landing pages, and reference pages remain.
+
+**Affected files/docs:**
+
+- `assets/studio/js/series-tag-editor-page.js`
+- `assets/studio/js/tag-studio.js`
+- `assets/studio/js/series-tags.js`
+- `assets/studio/js/studio-works.js`
+- `assets/studio/js/tag-aliases.js`
+- `assets/studio/js/tag-groups.js`
+- `assets/studio/js/tag-registry.js`
+- `studio/series-tag-editor/index.md`
+- `studio/series-tags/index.md`
+- `studio/studio-works/index.md`
+- `studio/tag-aliases/index.md`
+- `studio/tag-groups/index.md`
+- `studio/tag-registry/index.md`
+- [Tag Editor](/docs/?scope=studio&doc=tag-editor)
+- [Series Tags](/docs/?scope=studio&doc=series-tags)
+- [Studio Works](/docs/?scope=studio&doc=studio-works)
+- [Tag Aliases](/docs/?scope=studio&doc=tag-aliases)
+- [Tag Groups](/docs/?scope=studio&doc=tag-groups)
+- [Tag Registry](/docs/?scope=studio&doc=tag-registry)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Extended Studio ready-state contract to bulk and docs tools
 
 **Status:** partially implemented

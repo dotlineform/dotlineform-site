@@ -2,7 +2,7 @@
 doc_id: tag-groups
 title: "Tag Groups"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 30
 ---
@@ -16,6 +16,15 @@ Route:
 Purpose:
 
 - review configured Studio tag groups and their short/long descriptions
+
+## Route Ready State
+
+The page root `#tag-groups` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` while config and group descriptions load, then `true` after the list or error state is rendered
+- `data-studio-busy` remains `false`; this route has no route-level commands
+- `data-studio-mode` is `list` when groups are shown and `empty` for empty or failed loads
+- `data-studio-record-loaded` is `true` when group descriptions are loaded
 
 ## Page / Template Structure
 

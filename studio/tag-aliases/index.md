@@ -8,7 +8,7 @@ studio_page_doc: /docs/?scope=studio&doc=tag-aliases
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 <div class="tagAliasesPage">
-  <div id="tag-aliases" data-role="tag-aliases">
+  <div id="tag-aliases" data-role="tag-aliases" data-studio-ready="false" data-studio-busy="false">
     <div class="seriesTagsActions">
       <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
       <button type="button" class="tagStudio__button" data-role="open-new-alias">New alias</button>

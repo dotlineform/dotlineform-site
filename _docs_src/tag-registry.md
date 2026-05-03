@@ -2,7 +2,7 @@
 doc_id: tag-registry
 title: "Tag Registry"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 180
 ---
@@ -15,6 +15,16 @@ Route:
 Purpose:
 
 - review and edit canonical tags
+
+## Route Ready State
+
+The page root `#tag-registry` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` while config, registry, aliases, assignment, series, and group data load, then `true` after the list or error state is rendered
+- `data-studio-busy` is `true` while import, edit, create, delete, demote, or delete-impact preview work is running
+- `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
+- `data-studio-service` reports whether the local tag write server is available for direct writes
+- `data-studio-record-loaded` is `true` when registry tags are loaded
 
 ## Page / Template Structure
 

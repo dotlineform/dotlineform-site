@@ -52,6 +52,11 @@ import {
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   tagAliasesUi
 } from "./studio-ui.js";
 
@@ -70,11 +75,52 @@ if (document.readyState === "loading") {
   initTagAliasesPage();
 }
 
+function routeStateDetail(state) {
+  return {
+    route: "tag-aliases",
+    mode: state.importModalOpen ? "import" : state.editState || state.promotionState || state.demoteState ? "edit" : "list",
+    service: state.saveMode === "post" ? "available" : "unavailable",
+    recordLoaded: Boolean(state.aliases && state.aliases.length)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.mount, Boolean(state.isBusy), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.mount, ready, routeStateDetail(state));
+}
+
+async function withRouteBusy(state, task) {
+  state.isBusy = true;
+  syncRouteBusyState(state);
+  try {
+    return await task();
+  } finally {
+    state.isBusy = false;
+    syncRouteBusyState(state);
+  }
+}
+
 async function initTagAliasesPage() {
   const mount = document.getElementById("tag-aliases");
   if (!mount) return;
+  initializeStudioRouteState(mount, { route: "tag-aliases", mode: "list" });
 
-  const config = await loadStudioConfig();
+  let config = null;
+  try {
+    config = await loadStudioConfig();
+  } catch (error) {
+    mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag aliases config.</div>`;
+    setStudioRouteReady(mount, true, {
+      route: "tag-aliases",
+      mode: "empty",
+      service: "unavailable",
+      recordLoaded: false
+    });
+    return;
+  }
   STUDIO_GROUPS = getStudioGroups(config);
   configureTagAliasesDomain({
     groups: STUDIO_GROUPS,
@@ -103,7 +149,8 @@ async function initTagAliasesPage() {
     promotionState: null,
     demoteState: null,
     editState: null,
-    refs: null
+    refs: null,
+    isBusy: false
   };
 
   renderShell(state);
@@ -114,11 +161,13 @@ async function initTagAliasesPage() {
     await loadData(state);
     renderControls(state);
     renderList(state);
+    markRouteReady(state, true);
   } catch (error) {
     renderError(
       state,
       aliasesText(state.config, "load_failed_error", "Failed to load aliases from /assets/studio/data/tag_aliases.json.")
     );
+    markRouteReady(state, true);
     return;
   }
 
@@ -350,6 +399,7 @@ function wireEvents(state) {
     clearImportResult(state);
     state.importModalOpen = true;
     state.refs.importModal.hidden = false;
+    syncRouteBusyState(state);
   });
 
   state.refs.chooseFile.addEventListener("click", () => {
@@ -370,7 +420,7 @@ function wireEvents(state) {
   });
 
   state.refs.importButton.addEventListener("click", () => {
-    void handleImport(state);
+    void withRouteBusy(state, () => handleImport(state));
   });
 
   state.refs.openNewAlias.addEventListener("click", () => {
@@ -395,7 +445,7 @@ function wireEvents(state) {
     const deleteButton = event.target.closest("button[data-delete-alias]");
     if (deleteButton) {
       const alias = normalize(deleteButton.getAttribute("data-delete-alias"));
-      if (alias) void handleAliasDelete(state, alias);
+      if (alias) void withRouteBusy(state, () => handleAliasDelete(state, alias));
       return;
     }
 
@@ -459,7 +509,7 @@ function wireEvents(state) {
   });
 
   state.refs.confirmPromotion.addEventListener("click", () => {
-    void submitAliasPromotion(state);
+    void withRouteBusy(state, () => submitAliasPromotion(state));
   });
 
   state.refs.demoteModal.addEventListener("click", (event) => {
@@ -505,7 +555,7 @@ function wireEvents(state) {
   });
 
   state.refs.confirmDemote.addEventListener("click", () => {
-    void handleTagDemoteFromAliases(state);
+    void withRouteBusy(state, () => handleTagDemoteFromAliases(state));
   });
 
   state.refs.copyPatch.addEventListener("click", async () => {
@@ -569,7 +619,7 @@ function wireEvents(state) {
   });
 
   state.refs.saveEditAlias.addEventListener("click", () => {
-    void saveAliasEdit(state);
+    void withRouteBusy(state, () => saveAliasEdit(state));
   });
 }
 
@@ -587,6 +637,7 @@ function syncImportModeFromControl(state) {
 function closeImportModal(state) {
   state.importModalOpen = false;
   state.refs.importModal.hidden = true;
+  syncRouteBusyState(state);
 }
 
 function openPromotionModal(state, aliasKey, suggestedGroup) {
@@ -596,6 +647,7 @@ function openPromotionModal(state, aliasKey, suggestedGroup) {
   };
   updatePromotionUi(state);
   state.refs.promotionModal.hidden = false;
+  syncRouteBusyState(state);
 }
 
 function closePromotionModal(state) {
@@ -605,6 +657,7 @@ function closePromotionModal(state) {
   state.refs.promotionGroupKey.innerHTML = "";
   setPromotionStatus(state, "", "");
   state.refs.confirmPromotion.disabled = true;
+  syncRouteBusyState(state);
 }
 
 function openDemoteModal(state, tagId) {
@@ -639,6 +692,7 @@ function openDemoteModal(state, tagId) {
   updateDemoteUi(state);
   state.refs.demoteModal.hidden = false;
   state.refs.demoteTagSearch.focus();
+  syncRouteBusyState(state);
 }
 
 function closeDemoteModal(state) {
@@ -651,6 +705,7 @@ function closeDemoteModal(state) {
   state.refs.confirmDemote.disabled = true;
   setDemoteStatus(state, "", "");
   hideDemoteTagPopup(state);
+  syncRouteBusyState(state);
 }
 
 function setDemoteStatus(state, kind, message) {
@@ -1078,6 +1133,7 @@ async function probeImportMode(state) {
   state.saveMode = ok ? "post" : "patch";
   state.importAvailable = ok;
   renderImportAvailability(state);
+  syncRouteBusyState(state);
 }
 
 function renderImportAvailability(state) {
@@ -1215,6 +1271,7 @@ function openAliasEditModal(state, aliasKey) {
   renderEditGroupKey(state);
   updateAliasEditUi(state);
   state.refs.editModal.hidden = false;
+  syncRouteBusyState(state);
 }
 
 function openAliasCreateModal(state) {
@@ -1234,6 +1291,7 @@ function openAliasCreateModal(state) {
   updateAliasEditUi(state);
   state.refs.editModal.hidden = false;
   state.refs.editAliasName.focus();
+  syncRouteBusyState(state);
 }
 
 function closeAliasEditModal(state) {
@@ -1248,6 +1306,7 @@ function closeAliasEditModal(state) {
   state.refs.saveEditAlias.disabled = true;
   state.refs.editTagList.innerHTML = "";
   hideEditTagPopup(state);
+  syncRouteBusyState(state);
 }
 
 function renderEditGroupKey(state) {

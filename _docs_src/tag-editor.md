@@ -2,7 +2,7 @@
 doc_id: tag-editor
 title: "Tag Editor"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 220
 ---
@@ -18,6 +18,16 @@ Purpose:
 
 - review and edit series-level tag assignments plus per-work override tags for one series
 - preserve optional historical alias metadata when a tag is added from an alias suggestion, without surfacing that metadata in the UI
+
+## Route Ready State
+
+The page root `#seriesTagEditorRoot` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` while the series header and editor data load, then `true` after the tag editor has rendered or a stable error state is shown
+- `data-studio-busy` is `true` while the editor save command is running
+- `data-studio-mode` is `single` when a work is selected, `edit` for the series-level editor state, and `empty` for missing or failed series loads
+- `data-studio-service` reports whether the local tag write server is available for direct saves
+- `data-studio-record-loaded` is `true` after a valid series id is loaded
 
 ## Page / Template Structure
 

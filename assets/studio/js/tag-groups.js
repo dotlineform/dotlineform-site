@@ -8,6 +8,10 @@ import {
   normalizeStudioGroups
 } from "./studio-data.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   tagGroupsUi
 } from "./studio-ui.js";
 
@@ -26,6 +30,7 @@ async function initTagGroupsPage() {
   if (!root) return;
   const content = root.querySelector(UI_SELECTOR.content);
   if (!content) return;
+  initializeStudioRouteState(root, { route: "tag-groups", mode: "list" });
 
   try {
     const config = await loadStudioConfig();
@@ -33,8 +38,18 @@ async function initTagGroupsPage() {
     const data = await loadStudioGroupsJson(config);
     const groups = normalizeStudioGroups(data, STUDIO_GROUPS);
     renderGroups(content, groups, config);
+    setStudioRouteReady(root, true, {
+      route: "tag-groups",
+      mode: groups.length ? "list" : "empty",
+      recordLoaded: groups.length > 0
+    });
   } catch (error) {
     content.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from /assets/studio/data/tag_groups.json."))}</div>`;
+    setStudioRouteReady(root, true, {
+      route: "tag-groups",
+      mode: "empty",
+      recordLoaded: false
+    });
   }
 }
 

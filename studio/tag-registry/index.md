@@ -8,7 +8,7 @@ studio_page_doc: /docs/?scope=studio&doc=tag-registry
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 <div class="tagRegistryPage">
-  <div id="tag-registry" data-role="tag-registry">
+  <div id="tag-registry" data-role="tag-registry" data-studio-ready="false" data-studio-busy="false">
     <div class="seriesTagsActions">
       <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
       <button type="button" class="tagStudio__button" data-role="open-new-tag">New tag</button>

@@ -52,6 +52,11 @@ import {
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   tagRegistryUi
 } from "./studio-ui.js";
 
@@ -69,11 +74,52 @@ if (document.readyState === "loading") {
   initTagRegistryPage();
 }
 
+function routeStateDetail(state) {
+  return {
+    route: "tag-registry",
+    mode: state.importModalOpen ? "import" : state.editTagId || state.newTagState || state.demoteState || state.deleteTagId ? "edit" : "list",
+    service: state.saveMode === "post" ? "available" : "unavailable",
+    recordLoaded: Boolean(state.tags && state.tags.length)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.mount, Boolean(state.isBusy), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.mount, ready, routeStateDetail(state));
+}
+
+async function withRouteBusy(state, task) {
+  state.isBusy = true;
+  syncRouteBusyState(state);
+  try {
+    return await task();
+  } finally {
+    state.isBusy = false;
+    syncRouteBusyState(state);
+  }
+}
+
 async function initTagRegistryPage() {
   const mount = document.getElementById("tag-registry");
   if (!mount) return;
+  initializeStudioRouteState(mount, { route: "tag-registry", mode: "list" });
 
-  const config = await loadStudioConfig();
+  let config = null;
+  try {
+    config = await loadStudioConfig();
+  } catch (error) {
+    mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag registry config.</div>`;
+    setStudioRouteReady(mount, true, {
+      route: "tag-registry",
+      mode: "empty",
+      service: "unavailable",
+      recordLoaded: false
+    });
+    return;
+  }
   STUDIO_GROUPS = getStudioGroups(config);
   configureTagRegistryDomain({ groups: STUDIO_GROUPS });
   GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
@@ -106,6 +152,7 @@ async function initTagRegistryPage() {
     assignmentsSeries: {},
     seriesMetaById: new Map()
   };
+  state.isBusy = false;
 
   renderShell(state);
   wireEvents(state);
@@ -115,6 +162,7 @@ async function initTagRegistryPage() {
     await loadRegistry(state);
     renderControls(state);
     renderList(state);
+    markRouteReady(state, true);
   } catch (error) {
     renderError(
       state,
@@ -124,6 +172,7 @@ async function initTagRegistryPage() {
         "Failed to load tag data from /assets/studio/data/tag_registry.json and /assets/studio/data/tag_aliases.json."
       )
     );
+    markRouteReady(state, true);
     return;
   }
 
@@ -379,6 +428,7 @@ function wireEvents(state) {
     clearImportResult(state);
     state.importModalOpen = true;
     state.refs.importModal.hidden = false;
+    syncRouteBusyState(state);
   });
 
   state.refs.chooseFile.addEventListener("click", () => {
@@ -406,7 +456,7 @@ function wireEvents(state) {
   });
 
   state.refs.importButton.addEventListener("click", () => {
-    void handleImport(state);
+    void withRouteBusy(state, () => handleImport(state));
   });
 
   state.refs.openNewTag.addEventListener("click", () => {
@@ -488,7 +538,7 @@ function wireEvents(state) {
   });
 
   state.refs.saveEdit.addEventListener("click", () => {
-    void handleTagEdit(state);
+    void withRouteBusy(state, () => handleTagEdit(state));
   });
 
   state.refs.newModal.addEventListener("click", (event) => {
@@ -513,7 +563,7 @@ function wireEvents(state) {
   });
 
   state.refs.createTag.addEventListener("click", () => {
-    void handleCreateTag(state);
+    void withRouteBusy(state, () => handleCreateTag(state));
   });
 
   state.refs.demoteModal.addEventListener("click", (event) => {
@@ -559,7 +609,7 @@ function wireEvents(state) {
   });
 
   state.refs.confirmDemote.addEventListener("click", () => {
-    void handleTagDemote(state);
+    void withRouteBusy(state, () => handleTagDemote(state));
   });
 
   state.refs.deleteModal.addEventListener("click", (event) => {
@@ -568,7 +618,7 @@ function wireEvents(state) {
   });
 
   state.refs.confirmDeleteTag.addEventListener("click", () => {
-    void handleDeleteFromModal(state);
+    void withRouteBusy(state, () => handleDeleteFromModal(state));
   });
 
   state.refs.editDescription.addEventListener("input", () => {
@@ -592,6 +642,7 @@ async function probeImportMode(state) {
   state.saveMode = ok ? "post" : "patch";
   state.importAvailable = ok;
   renderImportAvailability(state);
+  syncRouteBusyState(state);
 }
 
 function renderImportAvailability(state) {
@@ -771,6 +822,7 @@ function openEditModal(state, tagId) {
     : registryText(state.config, "local_edit_required", "Local server is required for edit.")
   );
   state.refs.editModal.hidden = false;
+  syncRouteBusyState(state);
 }
 
 function closeEditModal(state) {
@@ -778,6 +830,7 @@ function closeEditModal(state) {
   state.editTagId = "";
   state.refs.editTagName.value = "";
   state.refs.editDescription.value = "";
+  syncRouteBusyState(state);
 }
 
 function openNewTagModal(state) {
@@ -795,11 +848,13 @@ function openNewTagModal(state) {
   state.refs.createTag.disabled = true;
   state.refs.newModal.hidden = false;
   state.refs.newTagSlug.focus();
+  syncRouteBusyState(state);
 }
 
 function closeImportModal(state) {
   state.importModalOpen = false;
   state.refs.importModal.hidden = true;
+  syncRouteBusyState(state);
 }
 
 function closeNewTagModal(state) {
@@ -811,6 +866,7 @@ function closeNewTagModal(state) {
   setNewTagStatus(state, "", "");
   state.refs.newGroupKey.innerHTML = "";
   state.refs.createTag.disabled = true;
+  syncRouteBusyState(state);
 }
 
 function setNewTagStatus(state, kind, message) {
@@ -878,11 +934,19 @@ function setImpactPreview(target, kind, message) {
 
 async function refreshDeleteImpactPreview(state) {
   const seq = ++state.deletePreviewSeq;
-  const result = await previewDeleteImpact({
-    saveMode: state.saveMode,
-    tagId: state.deleteTagId,
-    config: state.config
-  });
+  state.isBusy = true;
+  syncRouteBusyState(state);
+  let result = null;
+  try {
+    result = await previewDeleteImpact({
+      saveMode: state.saveMode,
+      tagId: state.deleteTagId,
+      config: state.config
+    });
+  } finally {
+    state.isBusy = false;
+    syncRouteBusyState(state);
+  }
   if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
   if (result.ok) {
     state.deletePreview = result.summary;
@@ -1004,6 +1068,7 @@ function openDeleteModal(state, tagId) {
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
   state.refs.deleteModal.hidden = false;
+  syncRouteBusyState(state);
 
   if (state.saveMode !== "post") {
     setDeleteStatus(state, "error", registryText(state.config, "local_delete_required", "Local server is required for delete."));
@@ -1023,6 +1088,7 @@ function closeDeleteModal(state) {
   setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = false;
+  syncRouteBusyState(state);
 }
 
 async function handleDeleteFromModal(state) {
@@ -1079,6 +1145,7 @@ function openDemoteModal(state, tagId) {
   updateDemoteUi(state);
   state.refs.demoteModal.hidden = false;
   state.refs.demoteTagSearch.focus();
+  syncRouteBusyState(state);
 }
 
 function closeDemoteModal(state) {
@@ -1091,6 +1158,7 @@ function closeDemoteModal(state) {
   state.refs.confirmDemote.disabled = true;
   setDemoteStatus(state, "", "");
   hideDemoteTagPopup(state);
+  syncRouteBusyState(state);
 }
 
 function setDemoteStatus(state, kind, message) {

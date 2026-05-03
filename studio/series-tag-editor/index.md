@@ -37,6 +37,8 @@ studio_page_doc: /docs/?scope=studio&doc=tag-editor
   data-series-index-url="{{ '/assets/data/series_index.json' | relative_url }}"
   data-tag-studio-module-url="{{ '/assets/studio/js/tag-studio.js' | relative_url }}"
   hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
 >
   <header class="tagStudioPage__header">
     <figure class="tagStudioPage__media" id="seriesTagEditorMedia" hidden>

@@ -1,6 +1,10 @@
 import {
   fetchJson
 } from "./studio-data.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSeriesTagEditorPage);
@@ -13,6 +17,7 @@ function initSeriesTagEditorPage() {
   const emptyEl = document.getElementById("seriesTagEditorEmpty");
   const mount = document.getElementById("tag-studio");
   if (!root || !emptyEl || !mount) return;
+  initializeStudioRouteState(root, { route: "series-tag-editor", mode: "single" });
 
   const titleEl = document.getElementById("seriesTagEditorTitle");
   const catEl = document.getElementById("seriesTagEditorCat");
@@ -55,6 +60,11 @@ function initSeriesTagEditorPage() {
     root.hidden = true;
     emptyEl.hidden = false;
     emptyEl.textContent = message;
+    setStudioRouteReady(root, true, {
+      route: "series-tag-editor",
+      mode: "empty",
+      recordLoaded: false
+    });
   }
 
   function textOrDash(value) {
@@ -211,6 +221,11 @@ function initSeriesTagEditorPage() {
       mount.setAttribute("data-series-id", seriesIdQuery);
       root.hidden = false;
       emptyEl.hidden = true;
+      setStudioRouteReady(root, false, {
+        route: "series-tag-editor",
+        mode: "single",
+        recordLoaded: true
+      });
       import(tagStudioModuleUrl).catch((err) => {
         console.error("series_tag_editor: failed to load tag-studio.js", err);
         showError("Failed to load tag editor module.");

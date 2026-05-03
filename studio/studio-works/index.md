@@ -15,6 +15,8 @@ studio_page_doc: /docs/?scope=studio&doc=studio-works
   data-series-index-url="{{ '/assets/data/series_index.json' | relative_url }}"
   data-series-base-href="{{ '/series/' | relative_url }}"
   hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
 >
   <h1 class="index__heading visually-hidden">studio works</h1>
   <div class="worksList__metaRow">

@@ -2,7 +2,7 @@
 doc_id: studio-works
 title: "Studio Works"
 added_date: 2026-04-01
-last_updated: 2026-04-01
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 230
 ---
@@ -15,6 +15,15 @@ Route:
 Purpose:
 
 - review works with Studio-specific sort-state wiring
+
+## Route Ready State
+
+The page root `#worksStudioRoot` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` while config, works, series, and Studio storage data load, then `true` after the list or empty state is rendered
+- `data-studio-busy` is `true` during the initial data load and `false` after render
+- `data-studio-mode` is `list` for the full index, `single` for a series-filtered view, and `empty` when no rows can be rendered
+- `data-studio-record-loaded` is `true` when work rows are loaded
 
 ## Page / Template Structure
 

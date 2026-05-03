@@ -6,6 +6,11 @@ import {
   loadStudioConfig
 } from "./studio-config.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   studioWorksUi
 } from "./studio-ui.js";
 
@@ -18,6 +23,14 @@ if (document.readyState === "loading") {
   initStudioWorksPage();
 }
 
+function setWorksRouteReady(root, ready, detail = {}) {
+  setStudioRouteReady(root, ready, {
+    route: "studio-works",
+    mode: detail.mode || "list",
+    recordLoaded: Boolean(detail.recordLoaded)
+  });
+}
+
 function initStudioWorksPage() {
   const worksListRoot = document.getElementById("worksStudioRoot");
   const emptyEl = document.getElementById("worksStudioEmpty");
@@ -28,6 +41,8 @@ function initStudioWorksPage() {
   const copySeriesButton = document.getElementById("worksListCopySeriesButton");
   const buttons = Array.prototype.slice.call(document.querySelectorAll(UI_SELECTOR.sortButton));
   if (!worksListRoot || !emptyEl || !list || !countEl || !buttons.length || !copySeriesButton) return;
+  initializeStudioRouteState(worksListRoot, { route: "studio-works", mode: "list" });
+  setStudioRouteBusy(worksListRoot, true, { route: "studio-works", mode: "list" });
 
   const baseurl = String(worksListRoot.dataset.baseurl || "");
   const worksIndexUrl = String(worksListRoot.dataset.worksIndexUrl || "");
@@ -456,6 +471,8 @@ function initStudioWorksPage() {
         if (!hasRows) {
           worksListRoot.hidden = true;
           emptyEl.hidden = false;
+          setStudioRouteBusy(worksListRoot, false, { route: "studio-works", mode: "empty", recordLoaded: false });
+          setWorksRouteReady(worksListRoot, true, { mode: "empty", recordLoaded: false });
           return;
         }
       worksListRoot.hidden = false;
@@ -465,10 +482,14 @@ function initStudioWorksPage() {
       } catch (err) {
         console.error("studio_works: initSortUi failed", err);
       }
+      setStudioRouteBusy(worksListRoot, false, { route: "studio-works", mode: hasSeriesFilter ? "single" : "list", recordLoaded: true });
+      setWorksRouteReady(worksListRoot, true, { mode: hasSeriesFilter ? "single" : "list", recordLoaded: true });
     })
     .catch((err) => {
       console.error("studio_works: render failed", err);
       worksListRoot.hidden = true;
       emptyEl.hidden = false;
+      setStudioRouteBusy(worksListRoot, false, { route: "studio-works", mode: "empty", recordLoaded: false });
+      setWorksRouteReady(worksListRoot, true, { mode: "empty", recordLoaded: false });
     });
 }
