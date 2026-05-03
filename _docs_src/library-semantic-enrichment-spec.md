@@ -2,7 +2,7 @@
 doc_id: library-semantic-enrichment-spec
 title: "Library Semantic Enrichment Spec"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: 2026-05-03
 parent_id: library
 sort_order: 20
 ---
@@ -15,10 +15,8 @@ sort_order: 20
 - [Problems To Solve](#problems-to-solve)
 - [Proposed Source Metadata](#proposed-source-metadata)
 - [Docs Viewer Summary Display](#docs-viewer-summary-display)
-- [Summary Export Format](#summary-export-format)
+- [Library Export Boundary](#library-export-boundary)
 - [Summary Import Format](#summary-import-format)
-- [Bulk Export Selection UI](#bulk-export-selection-ui)
-- [Structure Review Export Format](#structure-review-export-format)
 - [Structure Recommendation Format](#structure-recommendation-format)
 - [Role Of Codex And ChatGPT](#role-of-codex-and-chatgpt)
 - [Suggested Phases](#suggested-phases)
@@ -132,81 +130,19 @@ Initial display direction:
 - do not require Studio docs to display summaries until that scope has a real use for them
 - consider a later UI option for showing summaries in Library search and recently-added results
 
-## Summary Export Format
+## Library Export Boundary
 
-A future exporter should write JSONL so files can be streamed, chunked, and recombined safely.
-Export files are ephemeral working artifacts, not canonical source.
-They should be created on demand with the selected options applied and should be safe to delete.
+Detailed export requirements now live in [Library Export](/docs/?scope=studio&doc=library-export).
 
-Expected location:
+That change request defines export as the creation of a specific file derived from the canonical Docs Viewer source, selected and run from a new Studio Library page.
+It covers the initial export patterns for parent-child relationship data, document summaries, and multi-document full-content files.
 
-```text
-var/docs/semantic-review/<timestamp>/summaries.jsonl
-```
-
-Canonical state remains in source Markdown front matter and generated docs/search artifacts after rebuilds.
-
-Candidate row shape:
-
-```json
-{"doc_id":"defining-information-for-cross-boundary-comparisons-concepts","title":"Defining \"Information\" for Cross-Boundary Comparisons — Concepts","parent_id":"","headings":["Generated","Prompt"],"current_summary":"","source_text":"..."}
-```
-
-Required fields:
-
-- `doc_id`
-- `title`
-- `parent_id`
-- `headings`
-- `current_summary`
-- `source_text`
-
-Useful export options:
-
-- `--scope library`
-- `--batch-size 20`
-- `--only-missing-summary`
-- `--include-body`
-- `--max-chars-per-doc`
-- `--output var/docs/semantic-review/<timestamp>/summaries.jsonl`
-
-The exporter should report:
-
-- docs exported
-- docs skipped because they already have summaries
-- docs truncated by character limit
-- unpublished docs excluded
-
-### `source_text` format
-
-`source_text` should be plain UTF-8 text derived from rendered content, not raw Markdown or raw HTML.
-
-Rules:
-
-- omit YAML front matter
-- omit HTML tags
-- omit the document title when it is already present in the `title` field
-- preserve paragraph breaks with blank lines
-- preserve list items as separate lines
-- preserve headings as text, while also exposing headings in the structured `headings` field
-- preserve blockquotes as separate lines, optionally prefixed with `> `
-- omit code blocks or replace them with a short marker unless the document is code-heavy
-- normalize whitespace enough for model input without destroying paragraph structure
-
-Reasons:
-
-- summary generation should spend attention on document meaning rather than markup
-- plain text is portable between Codex, ChatGPT, and future tooling
-- rendered-derived text avoids HTML import noise while still reflecting what the reader sees
-- keeping `headings` structured means `source_text` does not need to preserve hierarchy perfectly
-
-Optional future/debug fields may include `source_markdown`, but the default LLM handoff field should be `source_text`.
-`content_html` should not be part of summary export by default.
+The semantic enrichment workflow depends on those exports, but export configuration, file shapes, selection UI, and future format extensibility are owned by the Library Export spec rather than repeated here.
 
 ## Summary Import Format
 
-Returned summaries should also use JSONL.
-Returned JSONL is also an ephemeral working artifact until validated and applied.
+Returned summaries should use structured JSON or JSONL.
+Returned files are ephemeral working artifacts until validated and applied.
 
 Candidate row shape:
 
@@ -227,68 +163,6 @@ The importer should:
 - rebuild the affected docs scope after an apply run
 
 Summary import should be implemented before structure import because it is lower risk and creates useful context for later structure review.
-
-## Bulk Export Selection UI
-
-Bulk export needs a Studio Library UI that supports selecting many docs from the current Library hierarchy.
-The Library hierarchy is likely to become deeper than the Studio docs hierarchy because Library behaves more like a book, with parts, chapters, and pages.
-
-Recommended UI shape:
-
-- hierarchical checklist of Library docs
-- indentation to show depth
-- expand/collapse controls for branches
-- checkbox per doc
-- selecting a parent selects all descendants
-- deselecting a child puts ancestors into an indeterminate state
-- select all and clear controls
-- option to limit the view/export to docs missing summaries
-- optional include/exclude archived docs control
-
-The UI should show basic operational counts:
-
-- selected docs
-- selected docs missing summaries
-- estimated exported characters or size
-- number of batches that will be created
-
-Export options should be visible before the export runs:
-
-- include body text
-- maximum characters per doc
-- batch size
-- output format
-
-The exporter should resolve the UI selection to an explicit set of `doc_id` values before writing JSONL.
-The exported file should not depend on parent-selection state, because imports and later validation should operate against explicit doc ids.
-
-Reasons:
-
-- a flat list will not scale to a book-like Library hierarchy
-- users need to select meaningful branches, not individual docs one by one
-- parent selection makes large exports practical
-- explicit exported `doc_id` rows keep import validation simple and deterministic
-- selection and review are part of the product workflow, not merely decoration around a script
-
-## Structure Review Export Format
-
-Structure review does not need full body text once summaries exist.
-
-Candidate row shape:
-
-```json
-{"doc_id":"...","title":"...","parent_id":"...","parent_title":"...","summary":"...","headings":["..."]}
-```
-
-This export should include all published Library docs, not only docs missing summaries, because relationship review depends on corpus-wide context.
-
-The exporter may also include derived fields later:
-
-- ancestor trail
-- sibling titles
-- outgoing doc links
-- inbound doc links
-- tags or detected themes if those become part of the Library model
 
 ## Structure Recommendation Format
 
@@ -316,10 +190,10 @@ Applying parent changes should remain a later, explicit task.
 
 Codex is a good fit for:
 
-- creating and validating export files
+- creating and validating Library export files
 - reading source docs directly
 - producing first-pass summaries or structure reports in batches
-- applying validated JSONL imports
+- applying validated summary imports
 - updating source Markdown and generated docs payloads
 
 ### ChatGPT UI
@@ -341,16 +215,16 @@ Build a read-only Library semantic export command.
 
 Outputs:
 
-- summary-enrichment JSONL
-- structure-review JSONL
+- summary-enrichment export
+- structure-review export
 - a short report of counts, missing summaries, and truncation
 
 No source writes.
-The first export UI should be able to call this read-only path and show the same report back to the user.
+The first export UI should be able to call the Library export path and show the same report back to the user.
 
 ### Phase 2. Summary import preview/apply
 
-Build a summary importer that validates returned JSONL and previews front-matter changes.
+Build a summary importer that validates returned structured files and previews front-matter changes.
 
 Apply mode should:
 
@@ -430,9 +304,9 @@ This should probably reuse Docs Viewer management validation rules for:
 - Full body text search remains an unproven later option.
 - Library viewer summary display should be supported as document metadata when `summary` is present.
 - Library search/recently-added summary display remains a potential UI option.
-- Summary export/import JSONL files are ephemeral working artifacts, not canonical state.
-- Summary export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML.
-- Bulk export selection should be hierarchical and checkbox-driven, with parent selection applying to descendants.
+- Summary export/import files are ephemeral working artifacts, not canonical state.
+- Summary export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML; see [Library Export](/docs/?scope=studio&doc=library-export).
+- Bulk export selection should be hierarchical and checkbox-driven, with parent selection applying to descendants; see [Library Export](/docs/?scope=studio&doc=library-export).
 - Structure review should support recommendations that depend on new parent/category docs.
 - New parent/category docs can be created manually before document moves are applied.
 - A Studio Library page should become the user-facing entry point for running export/import/review scripts and seeing basic reports.

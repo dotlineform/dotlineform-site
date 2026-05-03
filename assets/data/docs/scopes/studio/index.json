@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T11:37:09Z",
+  "generated_at": "2026-05-03T12:17:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -420,7 +420,7 @@
       "doc_id": "library-semantic-enrichment-spec",
       "title": "Library Semantic Enrichment Spec",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-05-03",
       "parent_id": "library",
       "sort_order": 20,
       "published": true,
@@ -596,6 +596,21 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-export",
+      "title": "Library Export",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-03",
+      "parent_id": "library",
+      "sort_order": 25,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-export.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-export",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -1968,7 +1983,7 @@
       "doc_id": "library",
       "title": "Library",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-05-03",
       "parent_id": "",
       "sort_order": 165,
       "published": true,

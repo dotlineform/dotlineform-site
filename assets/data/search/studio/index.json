@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e4cf56ebff460f521b41685932d3697d",
-    "generated_at_utc": "2026-05-03T10:40:25Z",
-    "count": 162
+    "version": "blake2b-15e871c3f9a10f2a6b049ca2d68ae973",
+    "generated_at_utc": "2026-05-03T12:09:10Z",
+    "count": 163
   },
   "entries": [
     {
@@ -718,10 +718,10 @@
       "kind": "doc",
       "title": "Library Semantic Enrichment Spec",
       "href": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-05-03",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-04-24 • Library",
+      "display_meta": "2026-05-03 • Library",
       "search_terms": [
         "library-semantic-enrichment-spec",
         "library",
@@ -729,12 +729,12 @@
         "enrichment",
         "spec",
         "library semantic enrichment spec",
-        "2026-04-24",
+        "2026-05-03",
         "2026",
-        "04",
-        "24"
+        "05",
+        "03"
       ],
-      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-04-24 2026 04 24"
+      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-05-03 2026 05 03"
     },
     {
       "id": "llm-semantic-enrichment-spec",
@@ -1006,6 +1006,27 @@
         "21"
       ],
       "search_text": "studio-ui-conformance studio ui conformance studio ui conformance spec spec design 2026-04-21 2026 04 21"
+    },
+    {
+      "id": "library-export",
+      "kind": "doc",
+      "title": "Library Export",
+      "href": "/docs/?scope=studio&doc=library-export",
+      "last_updated": "2026-05-03",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-05-03 • Library",
+      "search_terms": [
+        "library-export",
+        "library",
+        "export",
+        "library export",
+        "2026-05-03",
+        "2026",
+        "05",
+        "03"
+      ],
+      "search_text": "library-export library export library export 2026-05-03 2026 05 03"
     },
     {
       "id": "studio-smoke-testing",
@@ -3117,10 +3138,10 @@
       "kind": "doc",
       "title": "Catalogue Unified Editor Cleanup Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-29 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "site-request-catalogue-unified-editor-cleanup",
         "site",
@@ -3133,22 +3154,22 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-29",
+        "2026-05-03",
         "2026",
-        "04",
-        "29"
+        "05",
+        "03"
       ],
-      "search_text": "site-request-catalogue-unified-editor-cleanup site request catalogue unified editor cleanup catalogue unified editor cleanup request change requests change requests 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-unified-editor-cleanup site request catalogue unified editor cleanup catalogue unified editor cleanup request change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
       "kind": "doc",
       "title": "Docs Viewer Favourites",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-24 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "ui-request-docs-viewer-favourites-task",
         "ui",
@@ -3161,12 +3182,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-24",
+        "2026-05-03",
         "2026",
-        "04",
-        "24"
+        "05",
+        "03"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites change requests change requests 2026-04-24 2026 04 24"
+      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-fix-missing-title-sort",
@@ -3214,10 +3235,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-25 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -3227,12 +3248,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-25",
+        "2026-05-03",
         "2026",
-        "04",
-        "25"
+        "05",
+        "03"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-04-25 2026 04 25"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "llm",
@@ -3255,10 +3276,10 @@
       "kind": "doc",
       "title": "Docs HTML Import Spec",
       "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-23 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "ui-request-docs-html-import-spec",
         "ui",
@@ -3271,12 +3292,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-23",
+        "2026-05-03",
         "2026",
-        "04",
-        "23"
+        "05",
+        "03"
       ],
-      "search_text": "ui-request-docs-html-import-spec ui request docs html import spec docs html import spec change requests change requests 2026-04-23 2026 04 23"
+      "search_text": "ui-request-docs-html-import-spec ui request docs html import spec docs html import spec change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "docs-viewer",
@@ -3302,26 +3323,26 @@
       "kind": "doc",
       "title": "Library",
       "href": "/docs/?scope=studio&doc=library",
-      "last_updated": "2026-04-24",
-      "display_meta": "2026-04-24",
+      "last_updated": "2026-05-03",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "library",
-        "2026-04-24",
+        "2026-05-03",
         "2026",
-        "04",
-        "24"
+        "05",
+        "03"
       ],
-      "search_text": "library 2026-04-24 2026 04 24"
+      "search_text": "library 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-request-docs-html-import-task",
       "kind": "doc",
       "title": "Docs HTML Import Task",
       "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-23 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "ui-request-docs-html-import-task",
         "ui",
@@ -3334,12 +3355,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-23",
+        "2026-05-03",
         "2026",
-        "04",
-        "23"
+        "05",
+        "03"
       ],
-      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task change requests change requests 2026-04-23 2026 04 23"
+      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "new-pipeline",
@@ -3366,10 +3387,10 @@
       "kind": "doc",
       "title": "Docs Viewer Index Drag Undo",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-04-25 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "ui-request-docs-viewer-index-drag-undo-task",
         "ui",
@@ -3384,12 +3405,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-04-25",
+        "2026-05-03",
         "2026",
-        "04",
-        "25"
+        "05",
+        "03"
       ],
-      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo change requests change requests 2026-04-25 2026 04 25"
+      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "search",
