@@ -2,11 +2,41 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 14:25"
+last_updated: "2026-05-03 14:35"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added JSON Schema adoption change request
+
+**Status:** documented
+
+**Area:** config / validation
+
+**Summary:**
+Added a change request for selective JSON Schema adoption.
+
+**Reason:**
+The Library export config schema raised the question of whether similar schema contracts would help elsewhere in the repo.
+
+**Effect:**
+The new request recommends using schemas selectively for compact hand-edited config contracts, with search policy and the catalogue field registry as the first likely candidates. It explicitly avoids broad schema adoption for generated payloads or unstable canonical records.
+
+**Affected files/docs:**
+
+- [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Config](/docs/?scope=studio&doc=config)
+- [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)
+- [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Benefits:**
+The repo now has a clear backlog item for where schemas are likely to add value, without committing to schema everything.
+
+**Risks:**
+Schema adoption still needs to stay disciplined so it does not duplicate unstable implementation details or replace semantic validation scripts.
 
 ## [2026-05-03] Added initial Library export configs
 

@@ -2,7 +2,7 @@
 doc_id: config-search-policy-json
 title: "Search Policy JSON"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-03 14:35"
 parent_id: config
 sort_order: 50
 ---
@@ -16,6 +16,9 @@ Config file:
 ## Scope
 
 `policy.json` is the dedicated runtime policy file for the public `/search/` page.
+
+It is a likely candidate for a future JSON Schema because it is compact, source-controlled runtime config with constrained option values.
+That follow-up is tracked in [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption).
 
 Current responsibilities include:
 

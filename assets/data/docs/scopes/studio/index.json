@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T13:21:09Z",
+  "generated_at": "2026-05-03T13:36:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -1094,6 +1094,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-json-schema-adoption",
+      "title": "JSON Schema Adoption Request",
+      "added_date": "2026-05-03 14:35",
+      "last_updated": "2026-05-03 14:35",
+      "parent_id": "change-requests",
+      "sort_order": 45,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-json-schema-adoption.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-json-schema-adoption",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-json-schema-adoption.json",
+      "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-status",
       "title": "Catalogue Drafts",
       "added_date": "2026-04-18",
@@ -1182,7 +1197,7 @@
       "doc_id": "config-search-policy-json",
       "title": "Search Policy JSON",
       "added_date": "2026-03-31",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-05-03 14:35",
       "parent_id": "config",
       "sort_order": 50,
       "published": true,
@@ -1766,7 +1781,7 @@
       "doc_id": "config",
       "title": "Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-03 14:25",
+      "last_updated": "2026-05-03 14:35",
       "parent_id": "",
       "sort_order": 120,
       "published": true,
@@ -2182,7 +2197,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03 14:35",
       "parent_id": "",
       "sort_order": 220,
       "published": true,
@@ -2238,7 +2253,7 @@
       "doc_id": "catalogue-field-registry-review",
       "title": "Catalogue Field Registry Review",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 14:35",
       "parent_id": "studio",
       "sort_order": 235,
       "published": true,
@@ -2294,7 +2309,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 14:25",
+      "last_updated": "2026-05-03 14:35",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

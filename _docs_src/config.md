@@ -2,7 +2,7 @@
 doc_id: config
 title: "Config"
 added_date: 2026-03-31
-last_updated: "2026-05-03 14:25"
+last_updated: "2026-05-03 14:35"
 parent_id: ""
 sort_order: 120
 ---
@@ -41,3 +41,4 @@ Related subsystem docs:
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)**
 - **[Search Overview](/docs/?scope=studio&doc=search-overview)**
 - **[Scripts](/docs/?scope=studio&doc=scripts)**
+- **[JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption)**

@@ -2,7 +2,7 @@
 doc_id: catalogue-field-registry-review
 title: "Catalogue Field Registry Review"
 added_date: 2026-05-01
-last_updated: 2026-05-03
+last_updated: "2026-05-03 14:35"
 parent_id: studio
 sort_order: 235
 ---
@@ -33,6 +33,9 @@ The page intentionally renders the registry source directly rather than recreati
 
 The current registry includes the migrated work-detail media-section fields. `details_subfolder` and `project_filename` are source-media fields, while `section_title` and `sort_order` are parent work JSON section metadata fields.
 
+The registry is a likely candidate for a future JSON Schema to validate static rule shape before deeper semantic verification runs.
+That follow-up is tracked in [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption).
+
 ## Behavior
 
 The page:
@@ -61,3 +64,4 @@ It does not:
 - [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
 - [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+- [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption)
