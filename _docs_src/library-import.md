@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 20:14"
+last_updated: "2026-05-03 20:25"
 ui_status: in-progress
 parent_id: library
 sort_order: 30
@@ -275,6 +275,10 @@ Implement a parser that reads staged `.json` and `.jsonl` files, detects support
 
 The parser should not write source docs.
 
+Status: implemented in `./scripts/docs/docs_import.py`.
+The parser reads only from `var/docs/import-staging/library/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
+It does not load current Library generated docs data, render Markdown previews, or write any output files.
+
 ### Task 3. Add Report Issues And Current-Library Lookup
 
 Load the generated Library Docs Viewer index and report staged records against current Library `doc_id`, publication, parent, and generated payload state.
@@ -330,6 +334,9 @@ Add focused tests for:
 - relationship whole-tree preview output
 - deterministic preview output
 - staged path allowlist behavior
+
+Parser coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, invalid JSONL blocking, and staged path allowlisting is implemented in `tests/python/test_docs_import.py`.
+Renderer and Studio page coverage should be added when those tasks are implemented.
 
 Add a light Studio smoke test once the page exists.
 

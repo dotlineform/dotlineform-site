@@ -80,6 +80,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Viewer export configs and representative Library export dry-runs.",
         ),
         CheckCommand(
+            "docs-import-tests",
+            (sys.executable, "tests/python/test_docs_import.py"),
+            "Verify read-only staged Library import parsing.",
+        ),
+        CheckCommand(
             "studio-docs-build",
             ("./scripts/build_docs.rb", "--scope", "studio", "--write"),
             "Regenerate Studio docs-viewer payloads.",

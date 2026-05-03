@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T19:14:14Z",
+  "generated_at": "2026-05-03T19:26:54Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -657,6 +657,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-docs-import",
+      "title": "Docs Import",
+      "added_date": "2026-05-03 20:25",
+      "last_updated": "2026-05-03 20:25",
+      "parent_id": "scripts",
+      "sort_order": 26,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-docs-import.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "studio-audits",
       "title": "Studio Audits",
       "added_date": "2026-05-03",
@@ -674,7 +688,7 @@
       "doc_id": "scripts-run-checks",
       "title": "Run Checks",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-03 18:06",
+      "last_updated": "2026-05-03 20:25",
       "parent_id": "scripts",
       "sort_order": 28,
       "published": true,
@@ -759,7 +773,7 @@
       "doc_id": "library-import",
       "title": "Library Import v1",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-03 20:14",
+      "last_updated": "2026-05-03 20:25",
       "parent_id": "library",
       "sort_order": 30,
       "published": true,
@@ -1056,7 +1070,7 @@
       "doc_id": "data-models-library",
       "title": "Library Scope",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-03 17:45",
+      "last_updated": "2026-05-03 20:25",
       "parent_id": "data-models",
       "sort_order": 40,
       "published": true,
@@ -1869,7 +1883,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-03 17:45",
+      "last_updated": "2026-05-03 20:25",
       "parent_id": "",
       "sort_order": 130,
       "published": true,
@@ -2339,7 +2353,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 20:01",
+      "last_updated": "2026-05-03 20:25",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

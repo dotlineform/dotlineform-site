@@ -2,7 +2,7 @@
 doc_id: scripts
 title: "Scripts"
 added_date: 2026-04-23
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 20:25"
 parent_id: ""
 sort_order: 130
 ---
@@ -90,6 +90,8 @@ Catalogue/runtime maintenance:
   - verifies representative field-aware catalogue build plans without writing files
 - `./scripts/docs/docs_export.py`
   - exports generated Docs Viewer data through source-controlled export configs into `var/docs/exports/`; also powers the Studio Library export service path
+- `./scripts/docs/docs_import.py`
+  - parses staged Library import JSON/JSONL files under `var/docs/import-staging/library/` and returns a read-only structured report
 - `./scripts/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
 - `./scripts/migrate_catalogue_media_sections.py`
@@ -119,6 +121,8 @@ Catalogue/runtime maintenance:
   Run the local Docs Viewer create/archive/delete service with explicit write allowlists.
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
   Export generated Docs Viewer data through configured export patterns.
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+  Parse staged Library import data without writing source or preview files.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)

@@ -2,11 +2,43 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 20:01"
+last_updated: "2026-05-03 20:25"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added the read-only Library import parser
+
+**Status:** implemented
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Completed Library import Task 2 by adding a read-only parser for staged Library import JSON and JSONL files.
+
+**Reason:**
+The import workflow needs a stable parsing/reporting layer before preview rendering, Studio service endpoints, or any future source apply path can be implemented safely.
+
+**Changes:**
+`./scripts/docs/docs_import.py` now reads files under `var/docs/import-staging/library/`, parses JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, normalizes known fields, preserves unknown file and record metadata, and returns a structured report.
+Focused parser tests cover JSONL rows, JSON envelopes, full-content structural detection, minimal rows, malformed record warnings, invalid JSONL blocking, and staged path allowlisting.
+The `docs` check profile now runs both export and import parser checks.
+
+**Files changed:**
+
+- `scripts/docs/docs_import.py`
+- `tests/python/test_docs_import.py`
+- `scripts/run_checks.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+
+**Impact:**
+Library import now has a source-read-only parser boundary that can feed Task 3 current-Library lookup and Task 4 Markdown preview rendering.
+It still does not write preview files, call the docs-management service, or mutate canonical Library source.
 
 ## [2026-05-03] Confirmed Library import v1 preview spec
 
@@ -23,6 +55,7 @@ The export workflow now produces local data artifacts, but the next step needs a
 **Changes:**
 The spec now defines the product boundary, confirmed staging and preview roots, supported input types, document-centric Markdown preview behavior, report issue categories, Studio workflow, v1 decisions, remaining open questions, and initial implementation tasks.
 The confirmed v1 imports from `var/docs/import-staging/library/`, writes one preview Markdown file per imported document under `var/docs/import-preview/library/`, keeps diagnostics in the Studio report, and does not perform apply-style flight checks.
+Relationship imports are the v1 exception to document-centric previews: one staged relationships file produces one Markdown preview of the whole candidate tree.
 [Library](/docs/?scope=studio&doc=library) now links to the import-preview spec from its candidate phases.
 
 **Files changed:**

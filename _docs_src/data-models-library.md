@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 20:25"
 parent_id: data-models
 sort_order: 40
 ---
@@ -30,6 +30,11 @@ Current source and generated artifacts:
 - local generated export artifacts:
   - `var/docs/exports/library/<export_id>-<timestamp>.json`
   - `var/docs/exports/library/<export_id>-<timestamp>.jsonl`
+- local import staging artifacts:
+  - `var/docs/import-staging/library/<filename>.json`
+  - `var/docs/import-staging/library/<filename>.jsonl`
+- local import preview artifacts:
+  - `var/docs/import-preview/library/<filename>.md`
 
 Current public route:
 
@@ -151,6 +156,38 @@ Current limits:
 - batching and long-document chunking are deferred
 - direct LLM API calls are out of scope
 - markdown target files and raw Markdown exports are future config extensions
+
+## Library Import Data
+
+Library import files are local working artifacts copied into a staging folder for preview-first review.
+
+Staged input:
+
+- `var/docs/import-staging/library/<filename>.json`
+- `var/docs/import-staging/library/<filename>.jsonl`
+
+Preview output:
+
+- `var/docs/import-preview/library/<filename>.md`
+
+Current model:
+
+- staged files are ignored by git and are safe to delete
+- import v1 reads staged data files but does not mutate `_docs_library_src/*.md`
+- the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
+- unknown file-level and record-level metadata is preserved in parser reports
+- Markdown preview files are a later task and remain local working artifacts
+
+Current consumers:
+
+- `./scripts/docs/docs_import.py`
+
+Current limits:
+
+- Library is the only supported v1 import scope
+- parser reports do not load current Library generated docs data yet
+- parser reports do not render Markdown previews yet
+- source apply workflows are out of scope until explicitly specified
 
 ## Why The Library Model Is Valuable Even While Small
 

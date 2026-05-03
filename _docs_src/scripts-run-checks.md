@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: "Run Checks"
 added_date: 2026-05-01
-last_updated: "2026-05-03 18:06"
+last_updated: "2026-05-03 20:25"
 parent_id: scripts
 sort_order: 28
 ---
@@ -45,7 +45,7 @@ Run the broad profile:
 - `catalogue`
   Runs catalogue field-registry verification and a representative field-aware build preview.
 - `docs`
-  Runs focused Docs Viewer export checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
+  Runs focused Docs Viewer export and import checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `studio-smoke`
   Builds the site to a temporary Jekyll destination for browser smoke checks.
 - `full`
@@ -67,3 +67,4 @@ The summary file is the path Codex should report in close-out.
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
