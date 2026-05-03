@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T12:57:59Z",
+  "generated_at": "2026-05-03T13:09:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -602,7 +602,7 @@
       "doc_id": "library-export",
       "title": "Library Export",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-03 13:55",
+      "last_updated": "2026-05-03 14:15",
       "parent_id": "library",
       "sort_order": 25,
       "published": true,
@@ -1026,7 +1026,7 @@
       "doc_id": "data-models-library",
       "title": "Library Scope",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-03 13:55",
+      "last_updated": "2026-05-03 14:15",
       "parent_id": "data-models",
       "sort_order": 40,
       "published": true,
@@ -1433,6 +1433,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-library-export-configs",
+      "title": "Library Export Configs",
+      "added_date": "2026-05-03 14:15",
+      "last_updated": "2026-05-03 14:15",
+      "parent_id": "config",
+      "sort_order": 70,
+      "published": true,
+      "viewable": true,
+      "source_path": "config-library-export-configs.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-library-export-configs.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
@@ -1752,7 +1766,7 @@
       "doc_id": "config",
       "title": "Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03 14:15",
       "parent_id": "",
       "sort_order": 120,
       "published": true,
@@ -2280,7 +2294,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 13:55",
+      "last_updated": "2026-05-03 14:15",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

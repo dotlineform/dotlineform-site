@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 13:55"
+last_updated: "2026-05-03 14:15"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -315,6 +315,8 @@ The Studio page should show this report after export and make the file path visi
 ### Task 1. Define Export Config Schema
 
 Create the config schema for export patterns, including scope support, output format, field mapping, transform rules, limits, and output path pattern.
+
+Status: implemented as `assets/studio/data/library_export_configs.schema.json`; see [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
 ### Task 2. Add Initial Export Configs
 

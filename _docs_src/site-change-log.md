@@ -2,11 +2,41 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 13:55"
+last_updated: "2026-05-03 14:15"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Defined Library export config schema
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Added the first formal JSON Schema for Library export config files and documented the config contract.
+
+**Reason:**
+Library export needs a stable config-driven boundary before adding initial export configs, exporter code, or Studio UI.
+
+**Effect:**
+Export patterns now have a defined shape for scope support, target format, output path pattern, selection rules, limits, run metadata, document field mappings, and transform names. The schema is Library-first but keeps scope support extensible for future Docs Viewer scopes.
+
+**Affected files/docs:**
+
+- `assets/studio/data/library_export_configs.schema.json`
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Config](/docs/?scope=studio&doc=config)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Benefits:**
+The next task can add concrete export configs against a reviewed shape, and the later Studio UI/export engine can avoid hardcoded field sets.
+
+**Risks:**
+The schema validates static config shape only; runtime validation still has to check selected docs, source-derived required fields, and resolved output paths.
 
 ## [2026-05-03] Added minute-precision Docs Viewer source timestamps
 

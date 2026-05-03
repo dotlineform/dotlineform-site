@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dotlineform.com/schemas/library_export_configs.schema.json",
+  "title": "Library Export Configs",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "configs"],
+  "properties": {
+    "schema_version": {
+      "const": "library_export_configs_v1"
+    },
+    "configs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/export_config"
+      }
+    }
+  },
+  "$defs": {
+    "export_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "description",
+        "enabled",
+        "scopes",
+        "target",
+        "output",
+        "selection",
+        "limits",
+        "metadata",
+        "document_fields"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/scope"
+          },
+          "uniqueItems": true
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "output": {
+          "$ref": "#/$defs/output"
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "limits": {
+          "$ref": "#/$defs/limits"
+        },
+        "metadata": {
+          "$ref": "#/$defs/metadata"
+        },
+        "document_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/field_mapping"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "record_shape"],
+      "properties": {
+        "format": {
+          "enum": ["json", "jsonl"]
+        },
+        "record_shape": {
+          "enum": ["envelope", "document_rows"]
+        },
+        "document_array_path": {
+          "$ref": "#/$defs/path"
+        },
+        "include_export_metadata": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path_pattern"],
+      "properties": {
+        "path_pattern": {
+          "type": "string",
+          "pattern": "^var/docs/exports/\\{scope\\}/\\{timestamp\\}/\\{export_id\\}\\.(json|jsonl)$"
+        },
+        "timestamp_format": {
+          "type": "string",
+          "default": "%Y%m%d-%H%M%S"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "include_descendants",
+        "include_non_viewable",
+        "exclude_archived",
+        "exclude_unpublished"
+      ],
+      "properties": {
+        "mode": {
+          "enum": ["explicit_doc_ids", "all_matching"]
+        },
+        "include_descendants": {
+          "type": "boolean"
+        },
+        "include_non_viewable": {
+          "type": "boolean"
+        },
+        "exclude_archived": {
+          "type": "boolean"
+        },
+        "exclude_unpublished": {
+          "type": "boolean"
+        },
+        "supports_missing_summary_only": {
+          "type": "boolean",
+          "default": false
+        },
+        "default_missing_summary_only": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_documents": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "max_chars_per_document": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "max_total_chars": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "truncate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "strategy"],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "strategy": {
+              "enum": ["hard", "paragraph_boundary"]
+            },
+            "marker": {
+              "type": "string",
+              "default": "[truncated]"
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["include"],
+      "properties": {
+        "include": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "export_id",
+              "config_id",
+              "config_checksum",
+              "scope",
+              "generated_at",
+              "selected_doc_ids",
+              "source_last_updated",
+              "counts"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "field_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "output_path"],
+      "properties": {
+        "source": {
+          "enum": [
+            "doc_id",
+            "title",
+            "parent_id",
+            "parent_title",
+            "ancestor_ids",
+            "ancestor_titles",
+            "child_ids",
+            "child_titles",
+            "summary",
+            "current_summary",
+            "headings",
+            "source_text",
+            "last_updated",
+            "viewable",
+            "published"
+          ]
+        },
+        "output_path": {
+          "$ref": "#/$defs/path"
+        },
+        "required": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_if_empty": {
+          "type": "boolean",
+          "default": true
+        },
+        "default": {},
+        "transforms": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "identity",
+              "plain_text_from_rendered_html",
+              "headings_from_rendered_html",
+              "normalize_whitespace",
+              "omit_code_blocks",
+              "truncate_chars"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "limit_key": {
+          "enum": ["max_chars_per_document", "max_total_chars"]
+        }
+      }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$"
+    },
+    "scope": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    }
+  }
+}
