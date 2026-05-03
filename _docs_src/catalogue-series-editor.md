@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: "Catalogue Series Editor"
 added_date: 2026-04-22
-last_updated: 2026-04-30
+last_updated: 2026-05-03
 parent_id: user-guide
 sort_order: 70
 ---
@@ -44,6 +44,17 @@ The first implementation covers:
 - delete one series source record and remove its membership from affected works
 
 Series prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_src_catalogue/series/<series_id>.md`; the generator reads that ID-derived source file for public prose.
+
+## Route Ready State
+
+The page root `#catalogueSeriesRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial route setup
+- `data-studio-ready="true"` after the initial empty, new, or focused-series render completes
+- `data-studio-busy="true"` while save, create, publish, unpublish, staged-prose import, build, or delete commands are running
+- `data-studio-mode="empty|single|new"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 Draft/publish rule:
 

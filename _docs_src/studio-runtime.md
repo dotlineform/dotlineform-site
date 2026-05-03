@@ -173,7 +173,7 @@ Optional route detail attributes:
 - `data-studio-service`
 - `data-studio-record-loaded`
 
-`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work editor is the first adopted route; remaining routes should adopt the helper incrementally rather than duplicating route-local attribute logic.
+`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work, work-detail, series, and moment editors have adopted the helper; remaining routes should adopt it incrementally rather than duplicating route-local attribute logic.
 
 ## Relation to `/docs/`
 

@@ -29,6 +29,8 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor
   data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}"
   data-thumb-suffix="{{ thumb_suffix | escape }}"
   data-asset-format="{{ asset_format | escape }}"
+  data-studio-ready="false"
+  data-studio-busy="false"
 >
   <section class="tagStudio__panel tagStudio__panel--editor">
     <div class="tagStudio__inputRow tagStudio__inputRow--editor">

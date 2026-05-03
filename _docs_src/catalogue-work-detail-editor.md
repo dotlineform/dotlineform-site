@@ -2,7 +2,7 @@
 doc_id: catalogue-work-detail-editor
 title: "Catalogue Work Detail Editor"
 added_date: 2026-04-22
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: user-guide
 sort_order: 50
 ---
@@ -45,6 +45,17 @@ The first implementation covers:
 The public update remains work-scoped. Saving a published detail updates the parent work outputs rather than introducing a separate detail-only planner.
 
 Implementation note: the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
+
+## Route Ready State
+
+The page root `#catalogueWorkDetailRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial route setup
+- `data-studio-ready="true"` after the initial empty, new, single-detail, or bulk-detail render completes
+- `data-studio-busy="true"` while save, create, publish, unpublish, media refresh, build, or delete commands are running
+- `data-studio-mode="empty|single|bulk|new"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 ## New Mode
 

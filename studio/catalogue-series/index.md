@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage catalogueWorkPage" id="catalogueSeriesRoot" hidden>
+<div
+  class="tagStudioPage catalogueWorkPage"
+  id="catalogueSeriesRoot"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudio__panel tagStudio__panel--editor">
     <div class="tagStudio__inputRow tagStudio__inputRow--editor">
       <div class="tagStudioForm__searchWrap catalogueWorkPage__searchWrap">

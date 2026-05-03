@@ -9,6 +9,11 @@ import {
   postJson,
   probeCatalogueHealth
 } from "./studio-transport.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 import { buildSaveModeText, utcTimestamp } from "./tag-studio-save.js";
 
 const EDITABLE_FIELDS = [
@@ -75,6 +80,33 @@ function setTextWithState(node, text, state = "") {
   node.textContent = text || "";
   if (state) node.dataset.state = state;
   else delete node.dataset.state;
+}
+
+function routeModeForState(state) {
+  if (state.isImportMode) return "import";
+  if (state.currentRecord) return "single";
+  return "empty";
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "catalogue-moment",
+    mode: routeModeForState(state),
+    service: state.serverAvailable ? "available" : "unavailable",
+    recordLoaded: Boolean(state.currentRecord)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(
+    state.root,
+    Boolean(state.isSaving || state.isBuilding || state.isDeleting || state.importIsBusy),
+    routeStateDetail(state)
+  );
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function t(state, key, fallback, tokens = null) {
@@ -500,6 +532,7 @@ function updateImportState(state) {
     state.importSourceNode.hidden = true;
     state.importSourceSummaryNode.textContent = "";
     state.importImageGuidanceNode.textContent = "";
+    syncRouteBusyState(state);
     return;
   }
   const fileValue = currentImportMomentFile(state);
@@ -515,6 +548,7 @@ function updateImportState(state) {
   state.importApplyButton.disabled = state.importIsBusy || editorBusy || !state.serverAvailable || !preview || !previewMatchesInput || !preview.valid;
   state.summaryNode.innerHTML = buildImportSummaryHtml(state, preview);
   state.readinessNode.innerHTML = buildImportDetailSections(state);
+  syncRouteBusyState(state);
 }
 
 function clearImportPreview(state) {
@@ -1075,6 +1109,8 @@ async function importMomentProse(state) {
     setTextWithState(state.statusNode, t(state, "dirty_warning", "Unsaved source changes."), "error");
     return;
   }
+  state.isBuilding = true;
+  updateDirtyState(state);
   setTextWithState(state.statusNode, t(state, "prose_import_preview_running", "Previewing staged prose..."), "pending");
   try {
     const preview = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewProseImport, {
@@ -1117,6 +1153,9 @@ async function importMomentProse(state) {
     renderSummary(state);
   } catch (error) {
     setTextWithState(state.statusNode, `${t(state, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+  } finally {
+    state.isBuilding = false;
+    updateDirtyState(state);
   }
 }
 
@@ -1288,6 +1327,7 @@ async function init() {
     importIsBusy: false,
     isImportMode: false
   };
+  initializeStudioRouteState(root, { route: "catalogue-moment" });
 
   try {
     state.serverAvailable = await probeCatalogueHealth();
@@ -1320,6 +1360,7 @@ async function init() {
       updateImportState(state);
       loadingNode.hidden = true;
       root.hidden = false;
+      markRouteReady(state, true);
       return;
     }
 
@@ -1340,6 +1381,7 @@ async function init() {
     } else if (initialImportFile) {
       emptyNode.hidden = true;
       enterImportMode(state, initialImportFile);
+      await previewMomentImport(state);
     } else {
       emptyNode.hidden = false;
       emptyNode.textContent = t(state, "missing_moment_param", "Search for a moment by id or title.");
@@ -1347,10 +1389,8 @@ async function init() {
     }
     updateDirtyState(state);
     updateImportState(state);
-    if (currentImportMomentFile(state) && state.serverAvailable) {
-      previewMomentImport(state).catch((error) => console.warn("catalogue_moment_editor: initial import preview failed", error));
-    }
-    refreshBuildPreview(state).catch((error) => console.warn("catalogue_moment_editor: initial build preview failed", error));
+    await refreshBuildPreview(state).catch((error) => console.warn("catalogue_moment_editor: initial build preview failed", error));
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("catalogue_moment_editor: init failed", error);
     loadingNode.hidden = true;

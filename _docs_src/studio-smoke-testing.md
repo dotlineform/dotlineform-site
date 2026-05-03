@@ -2,7 +2,7 @@
 doc_id: studio-smoke-testing
 title: "Studio Smoke Testing"
 added_date: 2026-05-01
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 25
 ---
@@ -122,6 +122,9 @@ The shared route-ready contract is partially implemented.
 Adopted routes:
 
 - `/studio/catalogue-work/` with `#catalogueWorkRoot`
+- `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
+- `/studio/catalogue-series/` with `#catalogueSeriesRoot`
+- `/studio/catalogue-moment/` with `#catalogueMomentRoot`
 
 Remaining Studio routes still need route-specific root selectors and loaded status text until they adopt the shared attributes.
 

@@ -10,6 +10,11 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
@@ -278,6 +283,40 @@ function setTextWithState(node, text, state = "") {
   node.textContent = text || "";
   if (state) node.dataset.state = state;
   else delete node.dataset.state;
+}
+
+function routeModeForState(state) {
+  if (state.mode === "new") return "new";
+  if (state.mode === "bulk") return "bulk";
+  if (state.currentRecord) return "single";
+  return "empty";
+}
+
+function routeRecordLoadedForState(state) {
+  if (state.mode === "bulk") return state.bulkDetailUids.length > 0;
+  if (state.mode === "single") return Boolean(state.currentRecord);
+  return false;
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "catalogue-work-detail",
+    mode: routeModeForState(state),
+    service: state.serverAvailable ? "available" : "unavailable",
+    recordLoaded: routeRecordLoadedForState(state)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(
+    state.root,
+    Boolean(state.isSaving || state.isBuilding || state.isDeleting),
+    routeStateDetail(state)
+  );
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function setPopupVisibility(state, visible) {
@@ -954,6 +993,7 @@ function updateEditorState(state) {
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
+  syncRouteBusyState(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -1055,6 +1095,7 @@ async function saveCurrentDetail(state) {
 
   state.isSaving = true;
   state.saveButton.disabled = true;
+  syncRouteBusyState(state);
   setTextWithState(
     state.statusNode,
     (state.mode === "bulk" ? bulkSelectionHasPublishedRecords(state) : currentDetailIsPublished(state))
@@ -1226,6 +1267,7 @@ async function createCurrentDetail(state) {
       state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
     }
     state.isSaving = false;
+    syncRouteBusyState(state);
     await openDetailByUid(state, detailUid);
     setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft detail {detail_uid}. Opening edit mode...", { detail_uid: detailUid }), "success");
     setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft detail {detail_uid}.", { detail_uid: detailUid }), "success");
@@ -1623,6 +1665,7 @@ async function init() {
     isBuilding: false,
     isDeleting: false,
     serverAvailable: false,
+    root,
     fieldWrappers: new Map(),
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
@@ -1645,6 +1688,7 @@ async function init() {
     runtimeStateNode,
     buildImpactNode
   };
+  initializeStudioRouteState(root, { route: "catalogue-work-detail" });
 
   FORM_FIELDS.forEach((field) => renderField(field, fieldsNode, state));
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
@@ -1667,6 +1711,7 @@ async function init() {
       updateEditorState(state);
       root.hidden = false;
       loadingNode.hidden = true;
+      markRouteReady(state, true);
       return;
     }
 
@@ -1758,8 +1803,13 @@ async function init() {
     if (requestedMode === "new") {
       setNewDetailMode(state, requestedWorkValue);
     } else if (requestedDetailValue) {
-      openDetailSelection(state, requestedDetailValue).catch((error) => {
+      await openDetailSelection(state, requestedDetailValue).catch((error) => {
         console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
+        setTextWithState(
+          state.statusNode,
+          `${t(state, "load_requested_detail_failed", "Failed to load the requested detail.")} ${normalizeText(error && error.message)}`.trim(),
+          "error"
+        );
       });
     } else {
       setTextWithState(contextNode, t(state, "missing_detail_param", "Search for a work detail by detail id."));
@@ -1769,6 +1819,7 @@ async function init() {
 
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("catalogue_work_detail_editor: init failed", error);
     try {

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d35a486697a5c2e821545c87ed840069",
-    "generated_at_utc": "2026-05-02T23:06:09Z",
+    "version": "blake2b-8ef1079bc36298f842b011fc293c3aec",
+    "generated_at_utc": "2026-05-03T09:07:50Z",
     "count": 158
   },
   "entries": [
@@ -1012,22 +1012,22 @@
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-02 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-02 2026 05 02"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-catalogue",
@@ -1457,10 +1457,10 @@
       "kind": "doc",
       "title": "Studio Ready State Contract Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "site-request-studio-ready-state-contract",
         "site",
@@ -1473,12 +1473,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "bulk-add-work",
@@ -1738,10 +1738,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-02 • User Guide",
+      "display_meta": "2026-05-03 • User Guide",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -1752,12 +1752,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-05-02 2026 05 02"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-05-03 2026 05 03"
     },
     {
       "id": "css-audit-spec",
@@ -2273,10 +2273,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-03",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-30 • User Guide",
+      "display_meta": "2026-05-03 • User Guide",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -2286,12 +2286,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-30",
+        "2026-05-03",
         "2026",
-        "04",
-        "30"
+        "05",
+        "03"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-04-30 2026 04 30"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -3339,10 +3339,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-03",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-30 • User Guide",
+      "display_meta": "2026-05-03 • User Guide",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -3352,12 +3352,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-04-30",
+        "2026-05-03",
         "2026",
-        "04",
-        "30"
+        "05",
+        "03"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-04-30 2026 04 30"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-03 2026 05 03"
     },
     {
       "id": "catalogue-moment-import",
@@ -3653,20 +3653,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-02",
-      "display_meta": "2026-05-02",
+      "last_updated": "2026-05-03",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-02 2026 05 02"
+      "search_text": "site-change-log site change log site change log 2026-05-03 2026 05 03"
     },
     {
       "id": "tiered-dimension-policy",

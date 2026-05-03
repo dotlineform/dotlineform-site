@@ -2,11 +2,42 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Extended Studio ready-state contract to catalogue editors
+
+**Status:** partially implemented
+
+**Area:** Studio runtime / smoke testing
+
+**Summary:**
+Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on the catalogue work-detail, series, and moment editors.
+
+**Reason:**
+These routes have async initial selections, service-backed lookup reads, build previews, import flows, and command buttons. Smoke tests need the same stable route-root signal already available on the work editor.
+
+**Effect:**
+`#catalogueWorkDetailRoot`, `#catalogueSeriesRoot`, and `#catalogueMomentRoot` now expose route, ready, busy, mode, service availability, and record-loaded attributes. Initial query-param selection/import setup is awaited before ready becomes true, and route command flags synchronize busy state during save, create, publish, unpublish, refresh, import, and delete flows.
+
+**Affected files/docs:**
+
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `studio/catalogue-work-detail/index.md`
+- `studio/catalogue-series/index.md`
+- `studio/catalogue-moment/index.md`
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## [2026-05-02] Added Studio ready-state contract first slice
 

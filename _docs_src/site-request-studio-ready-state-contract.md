@@ -2,7 +2,7 @@
 doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 37
@@ -50,31 +50,34 @@ Each Studio page root should expose shared state attributes:
 Pages may also expose route-specific detail attributes when useful:
 
 - `data-studio-record-loaded="true"`
-- `data-studio-mode="single|bulk|new|empty"`
+- `data-studio-mode="single|bulk|new|import|empty"`
 - `data-studio-service="available|unavailable"`
 
 The shared attributes should live on the main route root, such as `#catalogueWorkRoot`, not on a nested panel.
 
 ## Current Implementation
 
-First adopted route:
+Adopted routes:
 
 - `/studio/catalogue-work/`
+- `/studio/catalogue-work-detail/`
+- `/studio/catalogue-series/`
+- `/studio/catalogue-moment/`
 
 Current shared helper:
 
 - `assets/studio/js/studio-route-state.js`
 
-The catalogue work editor now exposes the shared route attributes on `#catalogueWorkRoot`. Initial route loading keeps `data-studio-ready="false"`, the route switches to `data-studio-ready="true"` after the initial route mode or requested work selection has completed, and command-state updates keep `data-studio-busy` synchronized with save, create, preview, import, refresh, publish, unpublish, rebuild, and delete flows.
+The adopted catalogue editors now expose shared route attributes on their route roots. Initial route loading keeps `data-studio-ready="false"`, each route switches to `data-studio-ready="true"` after the initial route mode or requested record/import selection has completed, and command-state updates keep `data-studio-busy` synchronized with save, create, preview, import, refresh, publish, unpublish, rebuild, and delete flows.
 
 The page also exposes:
 
-- `data-studio-route="catalogue-work"`
-- `data-studio-mode="empty|single|bulk|new"`
+- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment"`
+- `data-studio-mode="empty|single|bulk|new|import"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
 
-Remaining rollout still needs to adopt the helper on the other catalogue editors and then non-catalogue Studio pages where useful.
+Remaining rollout still needs to adopt the helper on operational catalogue routes and then non-catalogue Studio pages where useful.
 
 ## Rollout Checklist
 
@@ -84,10 +87,10 @@ Primary async or service-backed Studio routes:
 - [ ] `/studio/bulk-add-work/` root `#bulkAddWorkRoot`
 - [ ] `/studio/catalogue-activity/` root `#catalogueActivityRoot`
 - [ ] `/studio/catalogue-field-registry/` root `#fieldRegistryReviewRoot`
-- [ ] `/studio/catalogue-moment/` root `#catalogueMomentRoot`
-- [ ] `/studio/catalogue-series/` root `#catalogueSeriesRoot`
+- [x] `/studio/catalogue-moment/` root `#catalogueMomentRoot`
+- [x] `/studio/catalogue-series/` root `#catalogueSeriesRoot`
 - [ ] `/studio/catalogue-status/` root `#catalogueStatusRoot`
-- [ ] `/studio/catalogue-work-detail/` root `#catalogueWorkDetailRoot`
+- [x] `/studio/catalogue-work-detail/` root `#catalogueWorkDetailRoot`
 - [x] `/studio/catalogue-work/` root `#catalogueWorkRoot`
 - [ ] `/studio/docs-broken-links/` root `#docsBrokenLinksRoot`
 - [ ] `/studio/docs-import/` root `#docsHtmlImportRoot`
@@ -150,7 +153,7 @@ Route-specific status-text waits should become fallback checks rather than the n
 1. Define small shared helpers for setting `data-studio-ready` and `data-studio-busy`.
 2. Adopt the attributes on one catalogue editor route first.
 3. Update the smoke-test harness guidance in [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing).
-4. Roll the contract across the remaining catalogue editors.
+4. Roll the contract across the remaining catalogue editors. Current pass completed work-detail, series, and moment.
 5. Extend to non-catalogue Studio pages where useful.
 
 ## Verification

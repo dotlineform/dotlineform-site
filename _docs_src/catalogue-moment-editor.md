@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: "Catalogue Moment Editor"
 added_date: 2026-04-27
-last_updated: 2026-04-30
+last_updated: 2026-05-03
 parent_id: user-guide
 sort_order: 182
 ---
@@ -42,6 +42,17 @@ It also imports new draft moments from staged body-only Markdown, so moment crea
 `status` is visible with the Readonly Display treatment. Change publication state with `Publish` or `Unpublish`; do not edit status directly.
 
 The editor does not edit prose inline. Moment prose remains body-only Markdown under `_docs_src_catalogue/moments/<moment_id>.md`.
+
+## Route Ready State
+
+The page root `#catalogueMomentRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial route setup
+- `data-studio-ready="true"` after the initial empty, focused-moment, or staged-import render completes
+- `data-studio-busy="true"` while save, publish, unpublish, media refresh, import preview/apply, staged-prose import, or delete commands are running
+- `data-studio-mode="empty|single|import"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 ## Save And Publication
 

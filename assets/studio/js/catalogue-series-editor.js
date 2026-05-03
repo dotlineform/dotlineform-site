@@ -10,6 +10,11 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
+import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
@@ -128,6 +133,33 @@ function setTextWithState(node, text, state = "") {
   node.textContent = text || "";
   if (state) node.dataset.state = state;
   else delete node.dataset.state;
+}
+
+function routeModeForState(state) {
+  if (state.mode === "new") return "new";
+  if (state.currentRecord) return "single";
+  return "empty";
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "catalogue-series",
+    mode: routeModeForState(state),
+    service: state.serverAvailable ? "available" : "unavailable",
+    recordLoaded: Boolean(state.currentRecord)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(
+    state.root,
+    Boolean(state.isSaving || state.isBuilding || state.isDeleting),
+    routeStateDetail(state)
+  );
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function setPopupVisibility(state, visible) {
@@ -656,6 +688,7 @@ function updateEditorState(state) {
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
+  syncRouteBusyState(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -1093,6 +1126,7 @@ async function createCurrentSeries(state) {
       });
     }
     state.isSaving = false;
+    syncRouteBusyState(state);
     await openSeriesById(state, seriesId);
     setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft series {series_id}. Opening edit mode...", { series_id: seriesId }), "success");
     setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft series {series_id}.", { series_id: seriesId }), "success");
@@ -1375,6 +1409,7 @@ async function init() {
     isBuilding: false,
     isDeleting: false,
     serverAvailable: false,
+    root,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),
@@ -1406,6 +1441,7 @@ async function init() {
     membersStatusNode,
     membersResultsNode
   };
+  initializeStudioRouteState(root, { route: "catalogue-series" });
 
   EDITABLE_FIELDS.forEach((field) => renderField(field, fieldsNode, state));
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
@@ -1434,6 +1470,7 @@ async function init() {
       updateEditorState(state);
       root.hidden = false;
       loadingNode.hidden = true;
+      markRouteReady(state, true);
       return;
     }
 
@@ -1543,7 +1580,14 @@ async function init() {
     const requestedSeriesId = normalizeSeriesId(params.get("series"));
     const requestedMode = normalizeText(params.get("mode")).toLowerCase();
     if (requestedSeriesId && state.seriesById.has(requestedSeriesId)) {
-      openSeriesById(state, requestedSeriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
+      await openSeriesById(state, requestedSeriesId).catch((error) => {
+        console.warn("catalogue_series_editor: failed to open requested series", error);
+        setTextWithState(
+          state.statusNode,
+          `${t(state, "load_requested_series_failed", "Failed to load the requested series.")} ${normalizeText(error && error.message)}`.trim(),
+          "error"
+        );
+      });
     } else if (requestedMode === "new") {
       setNewSeriesMode(state, { seriesId: requestedSeriesId });
     } else {
@@ -1552,6 +1596,7 @@ async function init() {
 
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("catalogue_series_editor: init failed", error);
     try {
