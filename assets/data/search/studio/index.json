@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-61ae1d5a6d140ae5facded395b73faa9",
-    "generated_at_utc": "2026-05-03T21:36:11Z",
+    "version": "blake2b-1131fbffe1576f033118cb95f5b48ccd",
+    "generated_at_utc": "2026-05-03T21:40:43Z",
     "count": 169
   },
   "entries": [
@@ -1105,24 +1105,24 @@
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-03 22:40",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-03 22:38 • Studio",
+      "display_meta": "2026-05-03 22:40 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-03 22:38",
+        "2026-05-03 22:40",
         "2026",
         "05",
         "03",
         "22",
-        "38"
+        "40"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 22:40 2026 05 03 22 40"
     },
     {
       "id": "ui-catalogue",
@@ -1198,24 +1198,24 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-03 21:25",
+      "last_updated": "2026-05-03 22:40",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 21:25 • Scripts",
+      "display_meta": "2026-05-03 22:40 • Scripts",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
         "run",
         "checks",
         "run checks",
-        "2026-05-03 21:25",
+        "2026-05-03 22:40",
         "2026",
         "05",
         "03",
-        "21",
-        "25"
+        "22",
+        "40"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 21:25 2026 05 03 21 25"
+      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 22:40 2026 05 03 22 40"
     },
     {
       "id": "scripts-audit-studio-ready-state",
@@ -3318,16 +3318,18 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "last_updated": "2026-05-03 22:40",
+      "display_meta": "2026-05-03 22:40",
       "search_terms": [
         "testing",
-        "2026-05-01",
+        "2026-05-03 22:40",
         "2026",
         "05",
-        "01"
+        "03",
+        "22",
+        "40"
       ],
-      "search_text": "testing 2026-05-01 2026 05 01"
+      "search_text": "testing 2026-05-03 22:40 2026 05 03 22 40"
     },
     {
       "id": "site-request-catalogue-unified-editor-cleanup",

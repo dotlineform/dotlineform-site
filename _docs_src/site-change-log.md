@@ -34,6 +34,36 @@ Relationship tree previews keep the staged-filename-based path because they are 
 Preview runs can now be kept side by side for manual comparison.
 The preview folder can accumulate more local artifacts, so stale preview cleanup remains a later workflow consideration.
 
+## [2026-05-03] Added Library import verification to check profiles
+
+**Status:** implemented
+
+**Area:** Library / Studio data import / verification
+
+**Summary:**
+Completed Library import Task 8 by adding the retained Library import route smoke test to the `studio-smoke` check profile.
+
+**Reason:**
+Parser, renderer, and service verification existed, but the Studio route smoke test still needed to be part of the standard retained check runner.
+
+**Changes:**
+`tests/smoke/library_import.py` can now serve a built site root through a temporary loopback HTTP server for repeatable route checks.
+`./scripts/run_checks.py --profile studio-smoke` now builds the temporary Jekyll site and runs the Library import smoke with the docs-management service blocked.
+
+**Files changed:**
+
+- `tests/smoke/library_import.py`
+- `scripts/run_checks.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Testing](/docs/?scope=studio&doc=testing)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+
+**Impact:**
+Library import v1 now has retained verification for parser behavior, service handlers, and the Studio route unavailable-service state.
+The smoke profile now requires Playwright browser availability, so sandboxed runs may need the same browser permission handling as other Studio smoke tests.
+
 ## [2026-05-03] Added the Studio Library import page
 
 **Status:** implemented

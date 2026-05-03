@@ -375,6 +375,8 @@ Add focused tests for:
 Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output, deterministic preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection is implemented in `tests/python/test_docs_import_service.py`.
 A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/library_import.py`.
+The `docs` profile in `./scripts/run_checks.py` runs the parser and local service checks.
+The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs the Library import route smoke with the docs-management service blocked.
 
 ### Task 9. Decide Summary Apply Scope
 

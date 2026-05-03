@@ -2,7 +2,7 @@
 doc_id: testing
 title: "Testing"
 added_date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: "2026-05-03 22:40"
 parent_id: ""
 sort_order: 135
 ---
@@ -53,6 +53,8 @@ Examples:
 ```
 
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
+The `docs` profile includes Library import parser and service checks.
+The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the Library import route check.
 
 ## Expected Close-Out
 

@@ -106,6 +106,17 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             bundle_argv(),
             "Build the site to a temporary destination for browser smoke tests.",
         ),
+        CheckCommand(
+            "library-import-smoke",
+            (
+                sys.executable,
+                "tests/smoke/library_import.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+                "--block-docs-service",
+            ),
+            "Smoke-check the Studio Library import route ready state with docs-management unavailable.",
+        ),
     ),
 }
 

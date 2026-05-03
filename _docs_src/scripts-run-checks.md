@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: "Run Checks"
 added_date: 2026-05-01
-last_updated: "2026-05-03 21:25"
+last_updated: "2026-05-03 22:40"
 parent_id: scripts
 sort_order: 28
 ---
@@ -47,7 +47,7 @@ Run the broad profile:
 - `docs`
   Runs focused Docs Viewer export, Library import engine, and Library import service checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination for browser smoke checks.
+  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Studio Library import route with docs-management unavailable.
 - `full`
   Runs `quick`, `catalogue`, `docs`, and `studio-smoke`.
 

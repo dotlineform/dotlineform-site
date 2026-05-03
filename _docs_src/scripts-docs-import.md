@@ -157,8 +157,15 @@ tests/python/test_docs_import_service.py
 ```
 
 They cover staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection.
-The same check runs in the `docs` profile:
+The parser and service checks run in the `docs` profile:
 
 ```bash
 ./scripts/run_checks.py --profile docs
+```
+
+The Studio page shell and unavailable-service route behavior are covered by `tests/smoke/library_import.py`.
+That smoke check runs in the `studio-smoke` profile after a temporary Jekyll build:
+
+```bash
+./scripts/run_checks.py --profile studio-smoke
 ```

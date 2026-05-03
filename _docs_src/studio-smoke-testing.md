@@ -2,7 +2,7 @@
 doc_id: studio-smoke-testing
 title: "Studio Smoke Testing"
 added_date: 2026-05-01
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-03 22:40"
 parent_id: studio
 sort_order: 25
 ---
@@ -28,7 +28,8 @@ For one-off static review, use:
 - a local static HTTP server serving that build
 - the catalogue write server when the page reads or writes catalogue source data
 
-`./scripts/run_checks.py --profile studio-smoke` can prepare the temporary Jekyll build used by these checks. Route-specific Playwright scripts should live under `tests/smoke/` when the scenario is worth keeping.
+`./scripts/run_checks.py --profile studio-smoke` prepares the temporary Jekyll build used by retained route checks and runs the smoke scripts included in that profile.
+Route-specific Playwright scripts should live under `tests/smoke/` when the scenario is worth keeping.
 
 Do not use a raw `file://` URL for Studio pages that depend on module imports, local services, or same-origin asset paths.
 
