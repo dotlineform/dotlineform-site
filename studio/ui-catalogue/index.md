@@ -7,7 +7,14 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage studioUiCataloguePage">
+<div
+  class="tagStudioPage studioUiCataloguePage"
+  id="studioUiCatalogueRoot"
+  data-studio-static-route="studio-ui-catalogue"
+  data-studio-mode="reference"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudioPage__context tagStudioPage__context--meta">
     <p class="studioUiCataloguePage__intro">Use the UI catalogue as the live reference surface for shared primitives. Each primitive page should show the real implementation first, then short editable notes and canonical copyable markup.</p>
   </section>
@@ -45,3 +52,5 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
     </ul>
   </section>
 </div>
+
+<script type="module" src="{{ '/assets/studio/js/studio-static-route.js' | relative_url }}"></script>

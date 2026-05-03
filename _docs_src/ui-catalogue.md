@@ -2,7 +2,7 @@
 doc_id: ui-catalogue
 title: "UI Catalogue"
 added_date: 2026-04-21
-last_updated: 2026-04-26
+last_updated: 2026-05-03
 parent_id: design
 sort_order: 25
 ---
@@ -11,6 +11,18 @@ sort_order: 25
 This section is the working catalogue of shared UI elements.
 
 Use it to keep recurring elements visible as named, documented primitives rather than redesigning them inside page work.
+
+## Route Ready State
+
+The UI catalogue pages expose static/reference route-ready state:
+
+- `/studio/ui-catalogue/` uses `#studioUiCatalogueRoot`
+- `/studio/ui-catalogue/button/` uses `#studioUiCatalogueButtonRoot`
+- `/studio/ui-catalogue/input/` uses `#studioUiCatalogueInputRoot`
+- `/studio/ui-catalogue/list/` uses `#studioUiCatalogueListRoot`
+- `/studio/ui-catalogue/panel/` uses `#studioUiCataloguePanelRoot`
+
+These roots use `data-studio-mode="reference"` and mark ready after DOM load. The purpose is to give future primitive pages an obvious route-state contract to extend if a reference page later adds async demos or route-level controls.
 
 The docs-viewer role of this page is to explain the catalogue method and link out to the published primitive pages. Implementation details, code samples, and variant-specific notes should live on those published primitive pages rather than being duplicated here.
 

@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="studioDashboard">
+<div
+  class="studioDashboard"
+  id="studioLibraryDashboardRoot"
+  data-studio-dashboard-route="studio-library"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <p class="studioDashboard__intro">Use the Library dashboard as the admin-facing entry surface for the published library, its guidance docs, and future maintenance workflows.</p>
 
   <section class="studioDashboard__metrics" aria-label="Library metrics">

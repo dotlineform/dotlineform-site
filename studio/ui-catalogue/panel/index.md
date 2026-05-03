@@ -58,7 +58,14 @@ ui_catalogue_primitive: panel
 </a>
 {% endcapture %}
 
-<div class="tagStudioPage studioUiPrimitivePage">
+<div
+  class="tagStudioPage studioUiPrimitivePage"
+  id="studioUiCataloguePanelRoot"
+  data-studio-static-route="studio-ui-catalogue-panel"
+  data-studio-mode="reference"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
     <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/studio/ui-catalogue/' | relative_url }}">&larr; ui catalogue</a></p>
     <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-catalogue' | relative_url }}">Docs viewer: UI Catalogue</a></p>
@@ -126,3 +133,5 @@ ui_catalogue_primitive: panel
     </div>
   </section>
 </div>
+
+<script type="module" src="{{ '/assets/studio/js/studio-static-route.js' | relative_url }}"></script>

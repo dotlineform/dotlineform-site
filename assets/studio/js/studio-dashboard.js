@@ -1,6 +1,19 @@
 import { loadStudioConfig } from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 import { probeCatalogueHealth } from "./studio-transport.js";
+
+function dashboardRouteDetail(root) {
+  return {
+    route: root && root.dataset.studioDashboardRoute ? root.dataset.studioDashboardRoute : "studio-dashboard",
+    mode: "dashboard",
+    recordLoaded: Boolean(root && root.querySelector("[data-studio-metric]"))
+  };
+}
 
 async function loadJson(url) {
   const response = await fetch(url, { cache: "no-store" });
@@ -22,11 +35,22 @@ function formatNumber(value) {
 }
 
 async function initStudioDashboard() {
+  const root = document.querySelector("[data-studio-dashboard-route]");
+  if (root) {
+    initializeStudioRouteState(root, dashboardRouteDetail(root));
+    setStudioRouteBusy(root, true, dashboardRouteDetail(root));
+  }
   const metricNodes = document.querySelectorAll("[data-studio-metric]");
-  if (!metricNodes.length) return;
+  if (!metricNodes.length) {
+    if (root) {
+      setStudioRouteBusy(root, false, dashboardRouteDetail(root));
+      setStudioRouteReady(root, true, dashboardRouteDetail(root));
+    }
+    return;
+  }
   const [config, catalogueServerAvailable] = await Promise.all([
     loadStudioConfig().catch(() => null),
-    probeCatalogueHealth()
+    probeCatalogueHealth().catch(() => false)
   ]);
   const catalogueReadOptions = { cache: "no-store", catalogueServerAvailable };
 
@@ -67,6 +91,10 @@ async function initStudioDashboard() {
   ];
 
   await Promise.allSettled(tasks);
+  if (root) {
+    setStudioRouteBusy(root, false, dashboardRouteDetail(root));
+    setStudioRouteReady(root, true, dashboardRouteDetail(root));
+  }
 }
 
 initStudioDashboard();

@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-search
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="studioDashboard">
+<div
+  class="studioDashboard"
+  id="studioSearchDashboardRoot"
+  data-studio-dashboard-route="studio-search"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <p class="studioDashboard__intro">Search is the admin-facing dashboard for the indexed search layers used across catalogue, library, and Studio docs.</p>
 
   <section class="studioDashboard__metrics" aria-label="Search metrics">

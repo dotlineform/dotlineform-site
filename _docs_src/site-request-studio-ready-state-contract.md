@@ -3,7 +3,7 @@ doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
 last_updated: 2026-05-03
-ui_status: in-progress
+ui_status: implemented
 parent_id: change-requests
 sort_order: 37
 ---
@@ -11,7 +11,7 @@ sort_order: 37
 
 Status:
 
-- partially implemented
+- implemented
 
 ## Summary
 
@@ -50,7 +50,7 @@ Each Studio page root should expose shared state attributes:
 Pages may also expose route-specific detail attributes when useful:
 
 - `data-studio-record-loaded="true"`
-- `data-studio-mode="single|bulk|new|import|list|registry|preview|results|confirm|summary|session|edit|idle|empty"`
+- `data-studio-mode="single|bulk|new|import|list|registry|preview|results|confirm|summary|session|edit|dashboard|landing|reference|idle|empty"`
 - `data-studio-service="available|unavailable"`
 
 The shared attributes should live on the main route root, such as `#catalogueWorkRoot`, not on a nested panel.
@@ -84,14 +84,18 @@ Current shared helper:
 
 The adopted catalogue editors and service-backed Studio tools now expose shared route attributes on their route roots. Initial route loading keeps `data-studio-ready="false"`, each route switches to `data-studio-ready="true"` after the initial route mode, requested record/import selection, or empty/unavailable state has completed, and command-state updates keep `data-studio-busy` synchronized with save, create, preview, import, audit, report, refresh, publish, unpublish, rebuild, and delete flows.
 
+Static/reference route helper:
+
+- `assets/studio/js/studio-static-route.js`
+
 The page also exposes:
 
-- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry"`
-- `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary|session|edit"`
+- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
+- `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary|session|edit|dashboard|landing|reference"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
 
-Primary async and service-backed Studio routes have adopted the helper. Remaining rollout is limited to lower-priority dashboard, landing, and reference Studio pages where useful.
+Primary async, service-backed, dashboard, landing, and reference Studio routes have adopted the contract. Dashboard routes mark busy while lightweight metric hydration runs. Landing and UI catalogue routes expose static/reference ready state so future development has an obvious route-root contract to extend.
 
 ## Rollout Checklist
 
@@ -118,18 +122,18 @@ Primary async or service-backed Studio routes:
 
 Lower-priority dashboard, landing, and reference routes:
 
-- [ ] `/studio/`
-- [ ] `/studio/analytics/`
-- [ ] `/studio/catalogue/`
-- [ ] `/studio/library/`
-- [ ] `/studio/search/`
-- [ ] `/studio/ui-catalogue/`
-- [ ] `/studio/ui-catalogue/button/`
-- [ ] `/studio/ui-catalogue/input/`
-- [ ] `/studio/ui-catalogue/list/`
-- [ ] `/studio/ui-catalogue/panel/`
+- [x] `/studio/` root `#studioHomeRoot`
+- [x] `/studio/analytics/` root `#studioAnalyticsDashboardRoot`
+- [x] `/studio/catalogue/` root `#studioCatalogueDashboardRoot`
+- [x] `/studio/library/` root `#studioLibraryDashboardRoot`
+- [x] `/studio/search/` root `#studioSearchDashboardRoot`
+- [x] `/studio/ui-catalogue/` root `#studioUiCatalogueRoot`
+- [x] `/studio/ui-catalogue/button/` root `#studioUiCatalogueButtonRoot`
+- [x] `/studio/ui-catalogue/input/` root `#studioUiCatalogueInputRoot`
+- [x] `/studio/ui-catalogue/list/` root `#studioUiCatalogueListRoot`
+- [x] `/studio/ui-catalogue/panel/` root `#studioUiCataloguePanelRoot`
 
-These lower-priority routes may need a dedicated route root before they can expose the same attributes consistently. They should still adopt the contract if a page loads async metrics, local service state, or interactive reference content that smoke tests need to wait on.
+These lower-priority routes expose a deliberately small contract. Dashboard pages use the shared dashboard metric loader to mark ready after metric hydration settles. Static landing and reference pages use a generic static-route initializer that immediately marks the route ready after DOM load.
 
 ## Event Option
 
@@ -170,7 +174,7 @@ Route-specific status-text waits should become fallback checks rather than the n
 4. Roll the contract across the remaining catalogue editors. Completed for work-detail, series, and moment.
 5. Extend the contract across operational catalogue and docs-maintenance routes. Current pass completed Build Activity, Bulk Add Work, Catalogue Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, and Project State.
 6. Extend the contract across tag tools and Studio Works. Current pass completed Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry.
-7. Extend to lower-priority dashboard, landing, and reference Studio pages where useful.
+7. Extend to lower-priority dashboard, landing, and reference Studio pages. Current pass completed the Studio home, domain dashboards, and UI catalogue reference pages with static or lightweight dashboard ready state.
 
 ## Verification
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-19b214dc74ffa90ecdea7f94b3918d23",
-    "generated_at_utc": "2026-05-03T09:39:45Z",
+    "version": "blake2b-52662bbc4e8c1fdc3ccc40aac85f3ac6",
+    "generated_at_utc": "2026-05-03T09:48:41Z",
     "count": 158
   },
   "entries": [
@@ -925,16 +925,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "last_updated": "2026-05-03",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "studio",
-        "2026-05-01",
+        "2026-05-03",
         "2026",
         "05",
-        "01"
+        "03"
       ],
-      "search_text": "studio 2026-05-01 2026 05 01"
+      "search_text": "studio 2026-05-03 2026 05 03"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -1034,22 +1034,22 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-26 • Design",
+      "display_meta": "2026-05-03 • Design",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
         "design",
-        "2026-04-26",
+        "2026-05-03",
         "2026",
-        "04",
-        "26"
+        "05",
+        "03"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-04-26 2026 04 26"
+      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-run-checks",

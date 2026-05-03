@@ -173,7 +173,9 @@ Optional route detail attributes:
 - `data-studio-service`
 - `data-studio-record-loaded`
 
-`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work, work-detail, series, and moment editors plus Build Activity, Bulk Add Work, Catalogue Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, Project State, Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry have adopted the helper; remaining routes should adopt it incrementally rather than duplicating route-local attribute logic.
+`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work, work-detail, series, and moment editors plus Build Activity, Bulk Add Work, Catalogue Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, Project State, Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, Tag Registry, Studio landing, domain dashboards, and UI catalogue reference pages have adopted the contract.
+
+Dashboard routes use `assets/studio/js/studio-dashboard.js` to set `data-studio-busy="true"` while metric hydration runs, then mark the route ready after the metric reads settle. Static landing and reference routes use `assets/studio/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
 
 ## Relation to `/docs/`
 

@@ -20,7 +20,15 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 {% capture studio_home_analytics_panel_image_url %}{{ studio_home_panel_image_base }}/{{ studio_home_analytics_panel_image.asset_id }}-{{ studio_home_analytics_panel_image.variant }}-{{ studio_home_analytics_panel_image.width | default: studio_home_panel_image_default_width }}.{{ studio_home_panel_image_format }}{% endcapture %}
 {% capture studio_home_search_panel_image_url %}{{ studio_home_panel_image_base }}/{{ studio_home_search_panel_image.asset_id }}-{{ studio_home_search_panel_image.variant }}-{{ studio_home_search_panel_image.width | default: studio_home_panel_image_default_width }}.{{ studio_home_panel_image_format }}{% endcapture %}
 
-<section class="studioHome" aria-label="Studio domains">
+<section
+  class="studioHome"
+  id="studioHomeRoot"
+  aria-label="Studio domains"
+  data-studio-static-route="studio-home"
+  data-studio-mode="landing"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <a class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image" href="{{ '/studio/catalogue/' | relative_url }}" style="--panel-image: url('{{ studio_home_catalogue_panel_image_url | strip | relative_url }}');">
     <h3>Catalogue</h3>
     <p>Publish and maintain the works portfolio.</p>
@@ -46,3 +54,5 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
   <p><a href="{{ '/studio/project-state/' | relative_url }}">Project State</a></p>
   <p><a href="{{ '/studio/docs-broken-links/' | relative_url }}">Docs broken links</a></p>
 </section>
+
+<script type="module" src="{{ '/assets/studio/js/studio-static-route.js' | relative_url }}"></script>

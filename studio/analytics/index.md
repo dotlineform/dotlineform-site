@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-analytics
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="studioDashboard">
+<div
+  class="studioDashboard"
+  id="studioAnalyticsDashboardRoot"
+  data-studio-dashboard-route="studio-analytics"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <p class="studioDashboard__intro">Analytics groups together the analytical and contextual tools around the portfolio. Current tag tooling remains live here while the wider Analytics plan is developed.</p>
 
   <section class="studioDashboard__metrics" aria-label="Analytics metrics">

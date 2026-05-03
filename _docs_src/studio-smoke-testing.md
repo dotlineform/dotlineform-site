@@ -139,8 +139,18 @@ Adopted routes:
 - `/studio/tag-aliases/` with `#tag-aliases`
 - `/studio/tag-groups/` with `#tag-groups`
 - `/studio/tag-registry/` with `#tag-registry`
+- `/studio/` with `#studioHomeRoot`
+- `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
+- `/studio/library/` with `#studioLibraryDashboardRoot`
+- `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
+- `/studio/search/` with `#studioSearchDashboardRoot`
+- `/studio/ui-catalogue/` with `#studioUiCatalogueRoot`
+- `/studio/ui-catalogue/button/` with `#studioUiCatalogueButtonRoot`
+- `/studio/ui-catalogue/input/` with `#studioUiCatalogueInputRoot`
+- `/studio/ui-catalogue/list/` with `#studioUiCatalogueListRoot`
+- `/studio/ui-catalogue/panel/` with `#studioUiCataloguePanelRoot`
 
-Remaining dashboard, landing, and reference Studio routes still need route-specific root selectors and loaded status text until they adopt the shared attributes.
+The dashboard and reference-page routes use a minimal ready contract. For those routes, smoke tests should only treat the root attributes as initial page-shell readiness unless a future feature adds route-specific async behavior or commands.
 
 The rollout is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
 

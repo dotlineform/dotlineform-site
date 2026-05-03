@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: 2026-05-01
+last_updated: 2026-05-03
 parent_id: ""
 sort_order: 20
 ---
@@ -23,6 +23,15 @@ The current Studio shell is organized around domain dashboards:
 - `Docs`
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
+
+## Route Ready State
+
+Studio landing and dashboard routes expose the shared route-ready contract:
+
+- `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
+- `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/` use dashboard roots with `data-studio-mode="dashboard"`
+- dashboard routes set `data-studio-busy="true"` while lightweight metric hydration runs, then mark ready after metric reads settle
+- these routes are framework markers for future dashboard behavior; they do not imply a formal dashboard test suite
 
 Related references:
 

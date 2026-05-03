@@ -8,6 +8,42 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Added static ready-state framework to Studio dashboards and references
+
+**Status:** implemented
+
+**Area:** Studio runtime / smoke testing
+
+**Summary:**
+Adopted the shared ready-state contract on the remaining lower-priority Studio landing, dashboard, and UI catalogue reference pages.
+
+**Reason:**
+These pages do not currently have complex route behavior, but they still need a visible page-root framework so future dashboard metrics, reference demos, or route-level controls extend the shared `data-studio-ready` / `data-studio-busy` contract instead of inventing local readiness markers.
+
+**Effect:**
+The Studio home page and UI catalogue pages now use a generic static-route initializer with `landing` or `reference` mode. Catalogue, Library, Analytics, and Search dashboards now mark busy while lightweight metric hydration runs and ready after those reads settle. The ready-state request checklist now has every tracked Studio route adopted.
+
+**Affected files/docs:**
+
+- `assets/studio/js/studio-dashboard.js`
+- `assets/studio/js/studio-static-route.js`
+- `studio/index.md`
+- `studio/catalogue/index.md`
+- `studio/library/index.md`
+- `studio/analytics/index.md`
+- `studio/search/index.md`
+- `studio/ui-catalogue/index.md`
+- `studio/ui-catalogue/button/index.md`
+- `studio/ui-catalogue/input/index.md`
+- `studio/ui-catalogue/list/index.md`
+- `studio/ui-catalogue/panel/index.md`
+- [Studio](/docs/?scope=studio&doc=studio)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Completed primary Studio ready-state route adoption
 
 **Status:** partially implemented

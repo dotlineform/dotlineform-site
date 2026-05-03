@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T09:39:43Z",
+  "generated_at": "2026-05-03T09:49:05Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -546,7 +546,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-03",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -616,7 +616,7 @@
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03",
       "parent_id": "design",
       "sort_order": 25,
       "published": true,
@@ -877,7 +877,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "ui_status": "in-progress"
+      "ui_status": "implemented"
     },
     {
       "scope": "studio",

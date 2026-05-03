@@ -6,7 +6,13 @@ studio_domain: catalogue
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 ---
 
-<div class="studioDashboard">
+<div
+  class="studioDashboard"
+  id="studioCatalogueDashboardRoot"
+  data-studio-dashboard-route="studio-catalogue"
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="studioDashboard__metrics" aria-label="Catalogue metrics">
     <article class="studioMetricCard">
       <p class="studioMetricCard__value" data-studio-metric="series-count">--</p>
