@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 15:05"
+last_updated: "2026-05-03 15:20"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -143,6 +143,9 @@ Rules:
 - preserve quoted material only when it is an actual quotation, using either `> ` or `quote: ` consistently
 - omit code blocks or replace them with a short marker unless the export config explicitly includes code
 - normalize whitespace enough for model input without destroying paragraph structure
+- represent embedded images and SVGs according to the selected `source_text` field options
+- when image text extraction is enabled, prefer `img alt`, SVG `title`, SVG `desc`, and SVG `text`
+- when no image text is available, either emit `[image]` or omit the image based on config
 
 Optional future or debug configs may include raw source Markdown.
 `content_html` should not be part of the default LLM-oriented exports.
@@ -338,6 +341,8 @@ Status: implemented by `./scripts/docs/docs_export.py`; see [Docs Export](/docs/
 
 Add plain-text extraction from rendered Docs Viewer content for configs that include body text.
 Keep extraction deterministic and avoid including raw HTML in default exports.
+
+Status: implemented in `./scripts/docs/docs_export.py`, including config-driven image/SVG text handling.
 
 ### Task 5. Add Studio Library Export Page
 

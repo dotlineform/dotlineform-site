@@ -26,9 +26,14 @@ DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
 OUTPUT_ROOT = Path("var/docs/exports")
 SCHEMA_VERSION = "library_export_configs_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
+PUNCTUATION_SPACING_RE = re.compile(r"\s+([,.;:!?])")
 SUPPORTED_TRANSFORMS = {
     "identity",
     "headings_from_rendered_html",
+    "plain_text_from_rendered_html",
+    "omit_code_blocks",
+    "normalize_whitespace",
+    "truncate_chars",
 }
 
 
@@ -70,6 +75,176 @@ class HeadingCollector(HTMLParser):
             self._current_parts.append(data)
 
 
+class PlainTextExtractor(HTMLParser):
+    BLOCK_TAGS = {
+        "article",
+        "aside",
+        "blockquote",
+        "div",
+        "figure",
+        "footer",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "header",
+        "main",
+        "p",
+        "section",
+        "table",
+    }
+
+    def __init__(
+        self,
+        *,
+        title: str,
+        omit_code_blocks: bool,
+        image_text_mode: str,
+        empty_image_mode: str,
+    ) -> None:
+        super().__init__(convert_charrefs=True)
+        self.title = normalize_text(title)
+        self.omit_code_blocks = omit_code_blocks
+        self.image_text_mode = image_text_mode
+        self.empty_image_mode = empty_image_mode
+        self.lines: list[str] = []
+        self.current_line = ""
+        self.list_stack: list[dict[str, Any]] = []
+        self.skip_depth = 0
+        self.svg_depth = 0
+        self.svg_text_tag: str | None = None
+        self.svg_parts: list[str] = []
+        self.blockquote_depth = 0
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag_name = tag.lower()
+        attrs_by_name = {key.lower(): str(value or "") for key, value in attrs}
+
+        if tag_name in {"script", "style"} or (self.omit_code_blocks and tag_name in {"pre", "code"}):
+            self.skip_depth += 1
+            return
+        if self.skip_depth:
+            return
+
+        if self.svg_depth:
+            self.svg_depth += 1
+            if tag_name in {"title", "desc", "text"}:
+                self.svg_text_tag = tag_name
+            return
+
+        if tag_name == "svg":
+            self.flush_line()
+            self.svg_depth = 1
+            self.svg_parts = []
+            self.svg_text_tag = None
+            return
+        if tag_name in self.BLOCK_TAGS:
+            self.block_break()
+            if tag_name == "blockquote":
+                self.blockquote_depth += 1
+        elif tag_name == "br":
+            self.flush_line()
+        elif tag_name in {"ul", "ol"}:
+            self.block_break()
+            self.list_stack.append({"tag": tag_name, "counter": 0})
+        elif tag_name == "li":
+            self.flush_line()
+            prefix = "- "
+            if self.list_stack and self.list_stack[-1]["tag"] == "ol":
+                self.list_stack[-1]["counter"] += 1
+                prefix = f"{self.list_stack[-1]['counter']}. "
+            self.add_raw(prefix)
+        elif tag_name == "img":
+            self.add_image_marker(attrs_by_name.get("alt", ""))
+
+    def handle_endtag(self, tag: str) -> None:
+        tag_name = tag.lower()
+        if self.skip_depth:
+            if tag_name in {"script", "style", "pre", "code"}:
+                self.skip_depth = max(0, self.skip_depth - 1)
+            return
+        if self.svg_depth:
+            if tag_name == self.svg_text_tag:
+                self.svg_text_tag = None
+            self.svg_depth -= 1
+            if self.svg_depth == 0:
+                self.add_image_marker("; ".join(self.svg_parts))
+                self.svg_parts = []
+                self.svg_text_tag = None
+            return
+
+        if tag_name in self.BLOCK_TAGS:
+            self.block_break()
+            if tag_name == "blockquote":
+                self.blockquote_depth = max(0, self.blockquote_depth - 1)
+        elif tag_name == "li":
+            self.flush_line()
+        elif tag_name in {"ul", "ol"}:
+            if self.list_stack:
+                self.list_stack.pop()
+            self.block_break()
+
+    def handle_data(self, data: str) -> None:
+        if self.skip_depth:
+            return
+        if self.svg_depth:
+            if self.svg_text_tag:
+                text = normalize_text(data)
+                if text:
+                    self.svg_parts.append(text)
+            return
+        self.add_text(data)
+
+    def add_raw(self, value: str) -> None:
+        self.current_line += value
+
+    def add_text(self, value: str) -> None:
+        text = normalize_text(value)
+        if not text:
+            return
+        if self.current_line and not self.current_line.endswith((" ", "\n")):
+            self.current_line += " "
+        self.current_line += text
+
+    def add_image_marker(self, text: str) -> None:
+        if self.image_text_mode == "omit":
+            return
+        image_text = normalize_text(text)
+        if self.image_text_mode == "marker":
+            marker = "[image]"
+        elif self.image_text_mode == "extract_text" and image_text:
+            marker = f"[image: {image_text}]"
+        elif self.empty_image_mode == "marker":
+            marker = "[image]"
+        else:
+            return
+        self.flush_line()
+        self.lines.append(marker)
+        self.block_break()
+
+    def flush_line(self) -> None:
+        line = normalize_text(self.current_line)
+        if line:
+            if self.blockquote_depth and not line.startswith(">"):
+                line = f"> {line}"
+            self.lines.append(line)
+        self.current_line = ""
+
+    def block_break(self) -> None:
+        self.flush_line()
+        if self.lines and self.lines[-1] != "":
+            self.lines.append("")
+
+    def text(self) -> str:
+        self.flush_line()
+        lines = trim_blank_lines(self.lines)
+        if lines and self.title and lines[0] == self.title:
+            lines = trim_blank_lines(lines[1:])
+        return "\n".join(collapse_blank_lines(lines)).strip()
+
+
 def detect_repo_root(explicit_root: str | None = None) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
@@ -91,7 +266,30 @@ def detect_repo_root(explicit_root: str | None = None) -> Path:
 
 
 def normalize_text(value: Any) -> str:
-    return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()
+    text = TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()
+    return PUNCTUATION_SPACING_RE.sub(r"\1", text)
+
+
+def trim_blank_lines(lines: list[str]) -> list[str]:
+    start = 0
+    end = len(lines)
+    while start < end and lines[start] == "":
+        start += 1
+    while end > start and lines[end - 1] == "":
+        end -= 1
+    return lines[start:end]
+
+
+def collapse_blank_lines(lines: list[str]) -> list[str]:
+    collapsed: list[str] = []
+    previous_blank = False
+    for line in lines:
+        is_blank = line == ""
+        if is_blank and previous_blank:
+            continue
+        collapsed.append(line)
+        previous_blank = is_blank
+    return collapsed
 
 
 def read_json(path: Path, label: str) -> dict[str, Any]:
@@ -293,6 +491,90 @@ def collect_headings(content_html: str, title: str) -> list[str]:
     return headings
 
 
+def normalize_plain_text(value: str) -> str:
+    normalized_lines = [normalize_text(line) for line in str(value or "").splitlines()]
+    return "\n".join(collapse_blank_lines(trim_blank_lines(normalized_lines))).strip()
+
+
+def plain_text_from_rendered_html(
+    content_html: str,
+    *,
+    title: str,
+    omit_code_blocks: bool,
+    options: dict[str, Any],
+) -> str:
+    image_text_mode = normalize_text(options.get("image_text_mode") or "extract_text")
+    empty_image_mode = normalize_text(options.get("empty_image_mode") or "omit")
+    if image_text_mode not in {"omit", "marker", "extract_text"}:
+        image_text_mode = "extract_text"
+    if empty_image_mode not in {"omit", "marker"}:
+        empty_image_mode = "omit"
+    parser = PlainTextExtractor(
+        title=title,
+        omit_code_blocks=omit_code_blocks,
+        image_text_mode=image_text_mode,
+        empty_image_mode=empty_image_mode,
+    )
+    parser.feed(content_html)
+    parser.close()
+    return parser.text()
+
+
+def truncate_text(value: str, *, max_chars: int | None, marker: str, strategy: str) -> tuple[str, bool]:
+    text = str(value or "")
+    if not isinstance(max_chars, int) or max_chars < 1 or len(text) <= max_chars:
+        return text, False
+    marker_text = marker or "[truncated]"
+    limit = max(0, max_chars - len(marker_text) - 1)
+    truncated = text[:limit].rstrip()
+    if strategy == "paragraph_boundary":
+        boundary = truncated.rfind("\n\n")
+        if boundary > 0:
+            truncated = truncated[:boundary].rstrip()
+    if truncated:
+        return f"{truncated}\n{marker_text}", True
+    return marker_text[:max_chars], True
+
+
+def apply_transforms(
+    value: Any,
+    *,
+    transforms: list[str],
+    context: ExportContext,
+    doc: dict[str, Any],
+    mapping: dict[str, Any],
+) -> tuple[Any, bool]:
+    transformed = value
+    truncated = False
+    transform_set = set(transforms)
+    for transform in transforms:
+        if transform in {"identity", "headings_from_rendered_html", "omit_code_blocks"}:
+            continue
+        if transform == "plain_text_from_rendered_html":
+            transformed = plain_text_from_rendered_html(
+                str(transformed or ""),
+                title=normalize_text(doc.get("title")),
+                omit_code_blocks="omit_code_blocks" in transform_set,
+                options=mapping.get("options") if isinstance(mapping.get("options"), dict) else {},
+            )
+        elif transform == "normalize_whitespace":
+            transformed = normalize_plain_text(str(transformed or ""))
+        elif transform == "truncate_chars":
+            limit_key = normalize_text(mapping.get("limit_key"))
+            limit_value = context.config.get("limits", {}).get(limit_key)
+            truncate_config = context.config.get("limits", {}).get("truncate", {})
+            transformed, was_truncated = truncate_text(
+                str(transformed or ""),
+                max_chars=limit_value if isinstance(limit_value, int) else None,
+                marker=normalize_text(truncate_config.get("marker") or "[truncated]"),
+                strategy=normalize_text(truncate_config.get("strategy") or "hard"),
+            )
+            truncated = truncated or was_truncated
+        else:
+            raise ValueError(f"Unsupported transform: {transform}")
+    return transformed, truncated
+
+
 def ancestor_chain(context: ExportContext, doc: dict[str, Any]) -> list[dict[str, Any]]:
     chain: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -332,7 +614,8 @@ def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> An
         payload = load_doc_payload(context, doc_id)
         return collect_headings(str(payload.get("content_html") or ""), normalize_text(doc.get("title")))
     if source == "source_text":
-        raise NotImplementedError("source_text extraction is implemented in Task 4")
+        payload = load_doc_payload(context, doc_id)
+        return str(payload.get("content_html") or "")
     raise ValueError(f"Unsupported field source: {source}")
 
 
@@ -350,10 +633,11 @@ def set_output_path(record: dict[str, Any], output_path: str, value: Any) -> Non
     target[parts[-1]] = value
 
 
-def build_document_record(context: ExportContext, doc: dict[str, Any]) -> tuple[dict[str, Any], list[str], list[str]]:
+def build_document_record(context: ExportContext, doc: dict[str, Any]) -> tuple[dict[str, Any], list[str], list[str], bool]:
     record: dict[str, Any] = {}
     warnings: list[str] = []
     errors: list[str] = []
+    truncated = False
     doc_id = normalize_text(doc.get("doc_id"))
     for mapping in context.config.get("document_fields", []):
         if not isinstance(mapping, dict):
@@ -376,6 +660,18 @@ def build_document_record(context: ExportContext, doc: dict[str, Any]) -> tuple[
             value = copy.deepcopy(mapping.get("default"))
         if value is None:
             value = ""
+        try:
+            value, was_truncated = apply_transforms(
+                value,
+                transforms=transforms,
+                context=context,
+                doc=doc,
+                mapping=mapping,
+            )
+            truncated = truncated or was_truncated
+        except ValueError as exc:
+            errors.append(f"{doc_id}: {exc}")
+            continue
         if mapping.get("required") and value in ("", [], {}):
             errors.append(f"{doc_id}: required field {source} is empty")
             continue
@@ -385,7 +681,7 @@ def build_document_record(context: ExportContext, doc: dict[str, Any]) -> tuple[
             errors.append(f"{doc_id}: field {source} has blank output_path")
             continue
         set_output_path(record, output_path, value)
-    return record, warnings, errors
+    return record, warnings, errors, truncated
 
 
 def export_metadata(
@@ -516,18 +812,21 @@ def build_export(
     records: list[dict[str, Any]] = []
     warnings: list[str] = []
     errors: list[str] = list(selection_errors)
+    truncated_count = 0
     for doc in selected:
-        record, doc_warnings, doc_errors = build_document_record(context, doc)
+        record, doc_warnings, doc_errors, was_truncated = build_document_record(context, doc)
         warnings.extend(doc_warnings)
         errors.extend(doc_errors)
         if not doc_errors:
             records.append(record)
+            if was_truncated:
+                truncated_count += 1
 
     counts = {
         "selected": len(selected),
         "exported": len(records),
         "skipped": len(skipped),
-        "truncated": 0,
+        "truncated": truncated_count,
     }
     timestamp_format = normalize_text(config.get("output", {}).get("timestamp_format") or "%Y%m%d-%H%M%S")
     timestamp = generated_at_dt.strftime(timestamp_format)

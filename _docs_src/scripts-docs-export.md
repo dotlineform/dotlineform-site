@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 15:05"
+last_updated: "2026-05-03 15:20"
 parent_id: scripts
 sort_order: 25
 ---
@@ -50,18 +50,28 @@ Implemented now:
 - maps supported document fields into configured output paths
 - computes parent, ancestor, and child relationship fields from the generated index
 - extracts heading lists from rendered per-doc payload HTML
+- extracts deterministic plain-text `source_text` from rendered per-doc payload HTML
+- preserves paragraphs, headings, list items, and quoted text in `source_text`
+- omits code blocks when the selected field mapping includes `omit_code_blocks`
+- truncates `source_text` when the selected field mapping includes `truncate_chars`
+- handles image/SVG text according to field-level extraction options
 - writes JSON envelope exports
 - writes JSONL document-row exports
 - returns a structured JSON report
 
 Not implemented yet:
 
-- plain-text `source_text` extraction from rendered document content
-- code-block omission and character truncation transforms
 - batching or chunking
 - Studio UI/service invocation
 
-Configs that require `source_text` currently return a report error until the source-text extraction task is implemented.
+Image handling:
+
+- `image_text_mode: "omit"` omits image markers
+- `image_text_mode: "marker"` emits `[image]`
+- `image_text_mode: "extract_text"` emits `[image: ...]` when text is available
+- image text comes from `img alt`, SVG `title`, SVG `desc`, and SVG `text`
+- `empty_image_mode: "marker"` emits `[image]` when no useful text is available
+- `empty_image_mode: "omit"` omits empty images
 
 ## Commands
 

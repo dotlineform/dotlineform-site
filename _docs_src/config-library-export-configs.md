@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 15:05"
+last_updated: "2026-05-03 15:20"
 parent_id: config
 sort_order: 70
 ---
@@ -196,6 +196,8 @@ Optional field mapping controls:
   deterministic transforms applied before writing
 - `limit_key`
   named limit used by truncating transforms
+- `options`
+  field-specific transform options, currently used by `source_text`
 
 Supported transforms are:
 
@@ -207,6 +209,16 @@ Supported transforms are:
 - `truncate_chars`
 
 The default v1 content export should use rendered Docs Viewer HTML as the source for plain text extraction, not raw Markdown.
+
+`source_text` options:
+
+- `image_text_mode`
+  one of `omit`, `marker`, or `extract_text`
+- `empty_image_mode`
+  one of `omit` or `marker`
+
+The initial summary export uses `image_text_mode: "extract_text"` and `empty_image_mode: "omit"` so summary inputs stay focused.
+The initial full-content export uses `image_text_mode: "extract_text"` and `empty_image_mode: "marker"` so external review can see where a visual object existed even without useful text.
 
 ## Validation Boundary
 

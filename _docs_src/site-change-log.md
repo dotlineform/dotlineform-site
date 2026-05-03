@@ -2,11 +2,42 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 15:05"
+last_updated: "2026-05-03 15:20"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Docs Viewer export source-text extraction
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Extended the Docs Viewer export engine with deterministic plain-text extraction from rendered docs payload HTML.
+
+**Reason:**
+Summary and full-content Library export configs need body text suitable for LLM upload and external review without exposing raw HTML.
+
+**Effect:**
+`source_text` field mappings now convert rendered HTML into text with paragraphs, headings, lists, quote text, optional code omission, and character truncation. Image handling is config-driven at the field-mapping level: summary exports extract available image/SVG text and omit empty images, while full-content exports extract available image/SVG text and emit `[image]` for otherwise empty visuals.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_export.py`
+- `assets/studio/data/library_export_configs.json`
+- `assets/studio/data/library_export_configs.schema.json`
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Benefits:**
+The summary and full-content export configs are now runnable, and image/SVG semantics are preserved when the source provides useful text.
+
+**Risks:**
+The extractor is intentionally text-oriented; it does not attempt visual interpretation of images or diagrams without author-provided text.
 
 ## [2026-05-03] Added read-only Docs Viewer export engine
 

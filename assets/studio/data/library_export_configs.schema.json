@@ -262,8 +262,25 @@
           },
           "uniqueItems": true
         },
+        "options": {
+          "$ref": "#/$defs/field_options"
+        },
         "limit_key": {
           "enum": ["max_chars_per_document", "max_total_chars"]
+        }
+      }
+    },
+    "field_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image_text_mode": {
+          "enum": ["omit", "marker", "extract_text"],
+          "default": "extract_text"
+        },
+        "empty_image_mode": {
+          "enum": ["omit", "marker"],
+          "default": "omit"
         }
       }
     },

@@ -196,6 +196,10 @@
             "normalize_whitespace",
             "truncate_chars"
           ],
+          "options": {
+            "image_text_mode": "extract_text",
+            "empty_image_mode": "omit"
+          },
           "limit_key": "max_chars_per_document"
         },
         {
@@ -293,6 +297,10 @@
             "normalize_whitespace",
             "truncate_chars"
           ],
+          "options": {
+            "image_text_mode": "extract_text",
+            "empty_image_mode": "marker"
+          },
           "limit_key": "max_chars_per_document"
         },
         {
