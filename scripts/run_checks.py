@@ -75,6 +75,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "docs": (
         CheckCommand(
+            "docs-export-tests",
+            (sys.executable, "tests/python/test_docs_export.py"),
+            "Verify Docs Viewer export configs and representative Library export dry-runs.",
+        ),
+        CheckCommand(
             "studio-docs-build",
             ("./scripts/build_docs.rb", "--scope", "studio", "--write"),
             "Regenerate Studio docs-viewer payloads.",

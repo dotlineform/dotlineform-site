@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f3795f77566413c26402afabbd67a94c",
-    "generated_at_utc": "2026-05-03T16:52:37Z",
+    "version": "blake2b-a8a48a60870eba85754a23e3d19dfe46",
+    "generated_at_utc": "2026-05-03T17:06:54Z",
     "count": 166
   },
   "entries": [
@@ -1024,69 +1024,71 @@
       "kind": "doc",
       "title": "Docs Export",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-03 17:52",
+      "last_updated": "2026-05-03 18:06",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 17:52 • Scripts",
+      "display_meta": "2026-05-03 18:06 • Scripts",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
         "docs",
         "export",
         "docs export",
-        "2026-05-03 17:52",
+        "2026-05-03 18:06",
         "2026",
         "05",
         "03",
-        "17",
-        "52"
+        "18",
+        "06"
       ],
-      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-03 17:52 2026 05 03 17 52"
+      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-03 18:06 2026 05 03 18 06"
     },
     {
       "id": "library-export",
       "kind": "doc",
       "title": "Library Export",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03 17:52",
+      "last_updated": "2026-05-03 18:06",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 17:52 • Library",
+      "display_meta": "2026-05-03 18:06 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export",
-        "2026-05-03 17:52",
+        "2026-05-03 18:06",
         "2026",
         "05",
         "03",
-        "17",
-        "52"
+        "18",
+        "06"
       ],
-      "search_text": "library-export library export library export 2026-05-03 17:52 2026 05 03 17 52"
+      "search_text": "library-export library export library export 2026-05-03 18:06 2026 05 03 18 06"
     },
     {
       "id": "studio-smoke-testing",
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 18:06",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-03 • Studio",
+      "display_meta": "2026-05-03 18:06 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-03",
+        "2026-05-03 18:06",
         "2026",
         "05",
-        "03"
+        "03",
+        "18",
+        "06"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 2026 05 03"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 18:06 2026 05 03 18 06"
     },
     {
       "id": "ui-catalogue",
@@ -1136,22 +1138,24 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 18:06",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 • Scripts",
+      "display_meta": "2026-05-03 18:06 • Scripts",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
         "run",
         "checks",
         "run checks",
-        "2026-05-03",
+        "2026-05-03 18:06",
         "2026",
         "05",
-        "03"
+        "03",
+        "18",
+        "06"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 2026 05 03"
+      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 18:06 2026 05 03 18 06"
     },
     {
       "id": "scripts-audit-studio-ready-state",
@@ -3879,22 +3883,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 17:52",
-      "display_meta": "2026-05-03 17:52",
+      "last_updated": "2026-05-03 18:06",
+      "display_meta": "2026-05-03 18:06",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 17:52",
+        "2026-05-03 18:06",
         "2026",
         "05",
         "03",
-        "17",
-        "52"
+        "18",
+        "06"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 17:52 2026 05 03 17 52"
+      "search_text": "site-change-log site change log site change log 2026-05-03 18:06 2026 05 03 18 06"
     },
     {
       "id": "tiered-dimension-policy",

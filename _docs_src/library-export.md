@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 17:52"
+last_updated: "2026-05-03 18:06"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -478,3 +478,5 @@ Status: implemented across this doc, [Docs Export](/docs/?scope=studio&doc=scrip
 
 Add targeted checks for config loading, deterministic output, selected-doc resolution, and representative Library exports.
 Add a light Studio smoke test once the UI exists.
+
+Status: implemented in `tests/python/test_docs_export.py`, `tests/smoke/library_export.py`, and the `docs` profile in `./scripts/run_checks.py`.

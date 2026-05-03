@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 17:52"
+last_updated: "2026-05-03 18:06"
 parent_id: scripts
 sort_order: 25
 ---
@@ -126,6 +126,21 @@ Disable a summary config's default missing-summary-only filter:
 
 ```bash
 ./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
+```
+
+## Verification
+
+Focused export checks live in:
+
+```bash
+tests/python/test_docs_export.py
+```
+
+They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, and representative dry-runs for the three v1 Library export configs.
+The same check runs in the `docs` profile:
+
+```bash
+./scripts/run_checks.py --profile docs
 ```
 
 ## Report Shape

@@ -2,11 +2,42 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:52"
+last_updated: "2026-05-03 18:06"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Library export v1 verification checks
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Completed Library export Task 9 by adding retained checks for the export engine, real Library export configs, and the Studio Library export route.
+
+**Reason:**
+The v1 export path now spans config, CLI, generated docs data, local service integration, and Studio UI. It needs repeatable checks before the first iteration is considered stable.
+
+**Changes:**
+`tests/python/test_docs_export.py` now verifies config loading, selected-document descendant resolution, deterministic JSONL output for a fixed run time, and representative dry-runs for all three v1 Library export configs.
+`tests/smoke/library_export.py` smoke-checks `/studio/library-export/` route readiness, config loading, document-list rendering, archive exclusion, and disabled run behavior when the docs-management service is unavailable.
+The `docs` profile in `./scripts/run_checks.py` now runs the export checks before regenerating Studio docs and search payloads.
+
+**Files changed:**
+
+- `tests/python/test_docs_export.py`
+- `tests/smoke/library_export.py`
+- `scripts/run_checks.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+
+**Impact:**
+Library export v1 now has a repeatable verification path for engine behavior and basic UI load behavior.
+The smoke test is intentionally light and does not replace a manual Studio export run through the local write service.
 
 ## [2026-05-03] Switched Library export filename timestamps to local time
 

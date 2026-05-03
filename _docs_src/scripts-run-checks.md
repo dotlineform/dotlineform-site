@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: "Run Checks"
 added_date: 2026-05-01
-last_updated: 2026-05-03
+last_updated: "2026-05-03 18:06"
 parent_id: scripts
 sort_order: 28
 ---
@@ -45,7 +45,7 @@ Run the broad profile:
 - `catalogue`
   Runs catalogue field-registry verification and a representative field-aware build preview.
 - `docs`
-  Rebuilds Studio docs-viewer payloads and Studio docs search payloads.
+  Runs focused Docs Viewer export checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `studio-smoke`
   Builds the site to a temporary Jekyll destination for browser smoke checks.
 - `full`
