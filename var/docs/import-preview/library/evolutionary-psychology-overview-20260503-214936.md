@@ -3,7 +3,7 @@ doc_id: "evolutionary-psychology-overview"
 title: "Evolutionary Psychology — Overview"
 parent_id: "library"
 import_type: "full_document_content"
-preview_generated_at: "2026-05-03T21:27:13Z"
+preview_generated_at: "2026-05-03T21:49:36Z"
 ---
 
 # Evolutionary Psychology — Overview

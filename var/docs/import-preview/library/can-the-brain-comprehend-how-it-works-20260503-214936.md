@@ -3,7 +3,7 @@ doc_id: "can-the-brain-comprehend-how-it-works"
 title: "Can the Brain Comprehend How It Works?"
 parent_id: "library"
 import_type: "full_document_content"
-preview_generated_at: "2026-05-03T21:27:13Z"
+preview_generated_at: "2026-05-03T21:49:36Z"
 ---
 
 # Can the Brain Comprehend How It Works?
