@@ -268,14 +268,14 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
         ]
         write_staged(root, "summaries.json", json.dumps(payload))
         report = render(root, parse(root, "summaries.json"))
-        first_preview = (root / "var/docs/import-preview/library/alpha.md").read_text(encoding="utf-8")
-        missing_preview = (root / "var/docs/import-preview/library/record-3.md").read_text(encoding="utf-8")
+        first_preview = (root / "var/docs/import-preview/library/alpha-20260503-204000.md").read_text(encoding="utf-8")
+        missing_preview = (root / "var/docs/import-preview/library/record-3-20260503-204000.md").read_text(encoding="utf-8")
 
     assert report["preview_written"] is True
     assert [item["path"] for item in report["preview_files"]] == [
-        "var/docs/import-preview/library/alpha.md",
-        "var/docs/import-preview/library/alpha-record-2.md",
-        "var/docs/import-preview/library/record-3.md",
+        "var/docs/import-preview/library/alpha-20260503-204000.md",
+        "var/docs/import-preview/library/alpha-record-2-20260503-204000.md",
+        "var/docs/import-preview/library/record-3-20260503-204000.md",
     ]
     assert 'doc_id: "alpha"' in first_preview
     assert 'import_type: "document_summaries"' in first_preview
@@ -302,11 +302,11 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
             + "\n",
         )
         report = render(root, parse(root, "content.jsonl"))
-        preview = (root / "var/docs/import-preview/library/alpha.md").read_text(encoding="utf-8")
+        preview = (root / "var/docs/import-preview/library/alpha-20260503-204000.md").read_text(encoding="utf-8")
 
     assert report["preview_files"] == [
         {
-            "path": "var/docs/import-preview/library/alpha.md",
+            "path": "var/docs/import-preview/library/alpha-20260503-204000.md",
             "record_index": 0,
             "doc_id": "alpha",
             "kind": "document",
@@ -350,10 +350,10 @@ def test_preview_renderer_can_dry_run_without_writing_files() -> None:
         root = Path(temp)
         write_staged(root, "summaries.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
         report = render(root, parse(root, "summaries.json"), write=False)
-        preview_exists = (root / "var/docs/import-preview/library/alpha.md").exists()
+        preview_exists = (root / "var/docs/import-preview/library/alpha-20260503-204000.md").exists()
 
     assert report["preview_written"] is False
-    assert report["preview_files"][0]["path"] == "var/docs/import-preview/library/alpha.md"
+    assert report["preview_files"][0]["path"] == "var/docs/import-preview/library/alpha-20260503-204000.md"
     assert preview_exists is False
 
 

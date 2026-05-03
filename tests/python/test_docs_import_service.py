@@ -90,11 +90,13 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             {"scope": "library", "staged_filename": "summaries.jsonl"},
             dry_run=False,
         )
-        preview_text = (root / "var/docs/import-preview/library/alpha.md").read_text(encoding="utf-8")
+        preview_paths = sorted((root / "var/docs/import-preview/library").glob("alpha-*.md"))
+        preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["preview_written"] is True
-    assert payload["preview_files"][0]["path"] == "var/docs/import-preview/library/alpha.md"
+    assert len(preview_paths) == 1
+    assert payload["preview_files"][0]["path"] == f"var/docs/import-preview/library/{preview_paths[0].name}"
     assert payload["summary_text"] == "Generated 1 Library import preview file(s)."
     assert "Preview summary." in preview_text
 
@@ -108,13 +110,14 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
             {"scope": "library", "staged_filename": "summaries.jsonl"},
             dry_run=True,
         )
-        preview_exists = (root / "var/docs/import-preview/library/alpha.md").exists()
+        preview_exists = list((root / "var/docs/import-preview/library").glob("alpha-*.md"))
 
     assert payload["ok"] is True
     assert payload["preview_written"] is False
-    assert payload["preview_files"][0]["path"] == "var/docs/import-preview/library/alpha.md"
+    assert payload["preview_files"][0]["path"].startswith("var/docs/import-preview/library/alpha-")
+    assert payload["preview_files"][0]["path"].endswith(".md")
     assert payload["summary_text"] == "Validated 1 Library import preview file(s) without writing."
-    assert preview_exists is False
+    assert preview_exists == []
 
 
 def test_library_import_preview_rejects_non_library_scope() -> None:

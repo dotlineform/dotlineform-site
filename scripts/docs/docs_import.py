@@ -93,6 +93,14 @@ def preview_generated_at(generated_at_dt: dt.datetime | None = None) -> str:
     return value.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def preview_filename_timestamp(generated_at: str) -> str:
+    match = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z", normalize_text(generated_at))
+    if match:
+        year, month, day, hour, minute, second = match.groups()
+        return f"{year}{month}{day}-{hour}{minute}{second}"
+    return slugify_filename(generated_at, "preview")
+
+
 def slugify_filename(value: Any, fallback: str) -> str:
     slug = FILENAME_RE.sub("-", normalize_text(value).lower()).strip("-")
     return slug or fallback
@@ -599,15 +607,16 @@ def render_issue_list(items: list[dict[str, Any]]) -> list[str]:
     return lines
 
 
-def record_preview_filename(record: dict[str, Any], seen: dict[str, int]) -> str:
+def record_preview_filename(record: dict[str, Any], seen: dict[str, int], timestamp: str) -> str:
     record_index = int(record.get("record_index") or 0)
     doc_id = normalize_text(record.get("doc_id"))
     base = slugify_filename(doc_id, f"record-{record_index + 1}")
     count = seen.get(base, 0)
     seen[base] = count + 1
+    suffix = preview_filename_timestamp(timestamp)
     if count:
-        return f"{base}-record-{record_index + 1}.md"
-    return f"{base}.md"
+        return f"{base}-record-{record_index + 1}-{suffix}.md"
+    return f"{base}-{suffix}.md"
 
 
 def relationship_preview_filename(report: dict[str, Any]) -> str:
@@ -807,7 +816,7 @@ def render_markdown_previews(
     else:
         seen: dict[str, int] = {}
         for record in records:
-            filename = record_preview_filename(record, seen)
+            filename = record_preview_filename(record, seen, generated)
             path = resolve_preview_path(repo_root, scope, filename)
             if import_type == "full_document_content":
                 content = render_full_content_preview(report, record, generated)

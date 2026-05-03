@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-03 22:40"
 parent_id: scripts
 sort_order: 26
 ---
@@ -57,7 +57,8 @@ Implemented now:
 - renders summary and full-content imports as one Markdown preview per parsed document
 - renders relationship imports as one whole-tree Markdown preview file
 - writes previews only under `var/docs/import-preview/library/`
-- supports deterministic preview filenames based on `doc_id`, duplicate record index fallback, or staged relationship filename
+- supports timestamped summary and full-content preview filenames based on `doc_id` and duplicate record index fallback
+- supports deterministic relationship-tree preview filenames based on the staged relationship filename
 - is callable through docs-management endpoints for staged-file listing and preview generation
 - is exposed through the `/studio/library-import/` page for local preview generation
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths

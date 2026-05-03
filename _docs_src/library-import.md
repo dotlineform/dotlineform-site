@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-03 22:40"
 ui_status: in-progress
 parent_id: library
 sort_order: 30
@@ -84,6 +84,7 @@ They should be ignored by git, safe to delete, and reproducible from the staged 
 Preview output is document-centric for summary and full-content imports.
 Each imported summary or full-content document should produce one Markdown preview file.
 A staged summary or full-content JSON/JSONL file containing four documents should therefore generate four Markdown preview files.
+Summary and full-content preview filenames should include the preview-generation timestamp so repeated runs do not overwrite each other.
 Relationship imports are the v1 exception: a staged parent-child relationships file should produce one Markdown preview file showing the whole candidate tree contained in that input file.
 No generated Markdown index file is required in v1.
 
@@ -305,7 +306,7 @@ Source-file provenance and diagnostics should remain in the Studio report.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
 The parser can now render Markdown preview files with `--write-previews`.
-Summary and full-content imports write one file per parsed document under `var/docs/import-preview/library/`, using `<doc_id>.md`, `<doc_id>-record-<n>.md` for duplicate ids, and `record-<n>.md` for missing ids.
+Summary and full-content imports write one file per parsed document under `var/docs/import-preview/library/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
 Relationship imports write one whole-tree Markdown file based on the staged filename, such as `relationships-tree.md`.
 Preview files include front matter and readable Markdown sections for import metadata, relevant warnings, summaries, headings, source text, or candidate relationship trees.
 

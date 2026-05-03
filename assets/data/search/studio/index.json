@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-59909a8d2ce764c0ca1ee0449ed8a573",
-    "generated_at_utc": "2026-05-03T21:12:21Z",
+    "version": "blake2b-61ae1d5a6d140ae5facded395b73faa9",
+    "generated_at_utc": "2026-05-03T21:36:11Z",
     "count": 169
   },
   "entries": [
@@ -1153,24 +1153,24 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-03 22:40",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 22:38 • Scripts",
+      "display_meta": "2026-05-03 22:40 • Scripts",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
         "docs",
         "import",
         "docs import",
-        "2026-05-03 22:38",
+        "2026-05-03 22:40",
         "2026",
         "05",
         "03",
         "22",
-        "38"
+        "40"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 22:40 2026 05 03 22 40"
     },
     {
       "id": "studio-audits",
@@ -1346,24 +1346,24 @@
       "kind": "doc",
       "title": "Library Import v1",
       "href": "/docs/?scope=studio&doc=library-import",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-03 22:40",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 22:38 • Library",
+      "display_meta": "2026-05-03 22:40 • Library",
       "search_terms": [
         "library-import",
         "library",
         "import",
         "library import v1",
         "v1",
-        "2026-05-03 22:38",
+        "2026-05-03 22:40",
         "2026",
         "05",
         "03",
         "22",
-        "38"
+        "40"
       ],
-      "search_text": "library-import library import library import v1 v1 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "library-import library import library import v1 v1 2026-05-03 22:40 2026 05 03 22 40"
     },
     {
       "id": "local-setup",
@@ -3973,22 +3973,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 22:38",
-      "display_meta": "2026-05-03 22:38",
+      "last_updated": "2026-05-03 22:40",
+      "display_meta": "2026-05-03 22:40",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 22:38",
+        "2026-05-03 22:40",
         "2026",
         "05",
         "03",
         "22",
-        "38"
+        "40"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "site-change-log site change log site change log 2026-05-03 22:40 2026 05 03 22 40"
     },
     {
       "id": "tiered-dimension-policy",

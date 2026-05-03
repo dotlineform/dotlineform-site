@@ -2,11 +2,37 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-03 22:40"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Timestamped Library import document previews
+
+**Status:** implemented
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Added preview-generation timestamps to Library import summary and full-document preview filenames.
+
+**Reason:**
+Repeated summary or full-content preview runs for the same `doc_id` were overwriting earlier preview files, which made it harder to compare iterations.
+
+**Changes:**
+`./scripts/docs/docs_import.py` now writes summary and full-content preview files as `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md`, or `record-<n>-<timestamp>.md`.
+Relationship tree previews keep the staged-filename-based path because they are one-file review artifacts for the whole relationship import.
+
+**Files changed:**
+
+- `./scripts/docs/docs_import.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+
+**Impact:**
+Preview runs can now be kept side by side for manual comparison.
+The preview folder can accumulate more local artifacts, so stale preview cleanup remains a later workflow consideration.
 
 ## [2026-05-03] Added the Studio Library import page
 
