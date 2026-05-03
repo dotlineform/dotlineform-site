@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 17:52"
 parent_id: scripts
 sort_order: 25
 ---
@@ -32,6 +32,9 @@ Current output pattern:
 
 - `var/docs/exports/<scope>/<export_id>-<timestamp>.json`
 - `var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl`
+
+The filename timestamp is formatted in the local runtime timezone.
+Export metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
 
 ## Runtime Contract
 

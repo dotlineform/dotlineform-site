@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 17:52"
 parent_id: config
 sort_order: 70
 ---
@@ -123,6 +123,8 @@ The placeholders are resolved by the export engine.
 The path is intentionally constrained to keep generated export files out of source docs and public assets.
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
+It formats the filename timestamp in the local runtime timezone.
+Export metadata `generated_at` remains UTC.
 
 The first export engine is documented in [Docs Export](/docs/?scope=studio&doc=scripts-docs-export).
 

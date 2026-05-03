@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import copy
+import datetime as dt
 import importlib.util
 import json
 import sys
@@ -197,6 +198,15 @@ def test_jsonl_config_requires_jsonl_output_extension() -> None:
     assert "config library-document-summaries: output.path_pattern extension must match target.format" in report["errors"]
 
 
+def test_export_run_times_use_utc_metadata_and_local_filename_time() -> None:
+    generated_at, filename_dt = docs_export.export_run_times(
+        dt.datetime(2026, 5, 3, 15, 15, 7, tzinfo=dt.timezone.utc),
+        filename_timezone=dt.timezone(dt.timedelta(hours=1)),
+    )
+    assert generated_at == "2026-05-03T15:15:07Z"
+    assert filename_dt.strftime("%Y%m%d-%H%M%S") == "20260503-161507"
+
+
 def main() -> None:
     tests = [
         test_missing_summary_filter_reports_expected_skips,
@@ -204,6 +214,7 @@ def main() -> None:
         test_config_validation_blocks_duplicate_output_paths,
         test_unknown_config_returns_structured_validation_report,
         test_jsonl_config_requires_jsonl_output_extension,
+        test_export_run_times_use_utc_metadata_and_local_filename_time,
     ]
     for test in tests:
         test()

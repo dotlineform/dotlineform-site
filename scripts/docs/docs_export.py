@@ -947,6 +947,19 @@ def parse_doc_ids(values: list[str]) -> list[str]:
     return doc_ids
 
 
+def export_run_times(
+    generated_at_dt: dt.datetime | None = None,
+    *,
+    filename_timezone: dt.tzinfo | None = None,
+) -> tuple[str, dt.datetime]:
+    utc_dt = generated_at_dt or dt.datetime.now(dt.timezone.utc)
+    if utc_dt.tzinfo is None:
+        utc_dt = utc_dt.replace(tzinfo=dt.timezone.utc)
+    utc_dt = utc_dt.astimezone(dt.timezone.utc)
+    filename_dt = utc_dt.astimezone(filename_timezone) if filename_timezone else utc_dt.astimezone()
+    return utc_dt.strftime("%Y-%m-%dT%H:%M:%SZ"), filename_dt
+
+
 def build_export(
     *,
     repo_root: Path,
@@ -958,8 +971,7 @@ def build_export(
     write: bool,
     config_path: str | None = None,
 ) -> dict[str, Any]:
-    generated_at_dt = dt.datetime.now(dt.timezone.utc)
-    generated_at = generated_at_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    generated_at, filename_timestamp_dt = export_run_times()
     config_payload = load_config_file(repo_root, config_path)
     payload_errors, payload_warnings = validate_config_payload(config_payload)
     if payload_errors:
@@ -1012,7 +1024,7 @@ def build_export(
     output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
     target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
     timestamp_format = normalize_text(output_config.get("timestamp_format") or "%Y%m%d-%H%M%S")
-    timestamp = generated_at_dt.strftime(timestamp_format)
+    timestamp = filename_timestamp_dt.strftime(timestamp_format)
     output_path: Path | None = None
     relative_output = ""
     try:

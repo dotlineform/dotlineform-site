@@ -2,11 +2,38 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 17:52"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Switched Library export filename timestamps to local time
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Changed Library export filename timestamps to use the local runtime timezone while keeping export metadata timestamps in UTC.
+
+**Reason:**
+Studio-facing output filenames should match the operator's local clock. The previous UTC filename timestamp appeared one hour behind local time during British Summer Time.
+
+**Changes:**
+`./scripts/docs/docs_export.py` now separates UTC `generated_at` metadata from the local timestamp used in `{timestamp}` filename substitution.
+Docs now call out that `output.timestamp_format` formats the local filename timestamp, not the UTC metadata timestamp.
+
+**Files changed:**
+
+- `scripts/docs/docs_export.py`
+- `tests/python/test_docs_export.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+
+**Impact:**
+Export paths shown in Studio now align with the local machine clock, while export payload metadata remains timezone-stable.
 
 ## [2026-05-03] Documented Library export v1 runtime usage
 

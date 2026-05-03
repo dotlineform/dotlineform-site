@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 17:52"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -274,6 +274,9 @@ JSONL configs use the same flat scope directory and filename timestamp pattern:
 ```text
 var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl
 ```
+
+Filename timestamps use the local runtime timezone so Studio output paths match the operator's clock.
+Export metadata should keep `generated_at` in UTC for stable provenance.
 
 Each export file should include metadata:
 
