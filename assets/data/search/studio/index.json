@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a2febc9fc6c29fbc64c2fb6e69aaa9a6",
-    "generated_at_utc": "2026-05-03T16:10:45Z",
+    "version": "blake2b-1e405f0d70dc61b72aa5602b9b1b5733",
+    "generated_at_utc": "2026-05-03T16:19:13Z",
     "count": 166
   },
   "entries": [
@@ -1023,47 +1023,47 @@
       "kind": "doc",
       "title": "Docs Export",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-03 17:08",
+      "last_updated": "2026-05-03 17:18",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 17:08 • Scripts",
+      "display_meta": "2026-05-03 17:18 • Scripts",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
         "docs",
         "export",
         "docs export",
-        "2026-05-03 17:08",
+        "2026-05-03 17:18",
         "2026",
         "05",
         "03",
         "17",
-        "08"
+        "18"
       ],
-      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-03 17:08 2026 05 03 17 08"
+      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-03 17:18 2026 05 03 17 18"
     },
     {
       "id": "library-export",
       "kind": "doc",
       "title": "Library Export",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03 17:08",
+      "last_updated": "2026-05-03 17:18",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 17:08 • Library",
+      "display_meta": "2026-05-03 17:18 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export",
-        "2026-05-03 17:08",
+        "2026-05-03 17:18",
         "2026",
         "05",
         "03",
         "17",
-        "08"
+        "18"
       ],
-      "search_text": "library-export library export library export 2026-05-03 17:08 2026 05 03 17 08"
+      "search_text": "library-export library export library export 2026-05-03 17:18 2026 05 03 17 18"
     },
     {
       "id": "studio-smoke-testing",
@@ -2488,10 +2488,10 @@
       "kind": "doc",
       "title": "Library Export Configs",
       "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-05-03 17:08",
+      "last_updated": "2026-05-03 17:18",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 17:08 • Config",
+      "display_meta": "2026-05-03 17:18 • Config",
       "search_terms": [
         "config-library-export-configs",
         "config",
@@ -2499,14 +2499,14 @@
         "export",
         "configs",
         "library export configs",
-        "2026-05-03 17:08",
+        "2026-05-03 17:18",
         "2026",
         "05",
         "03",
         "17",
-        "08"
+        "18"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 17:08 2026 05 03 17 08"
+      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 17:18 2026 05 03 17 18"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -3877,22 +3877,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 17:08",
-      "display_meta": "2026-05-03 17:08",
+      "last_updated": "2026-05-03 17:18",
+      "display_meta": "2026-05-03 17:18",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 17:08",
+        "2026-05-03 17:18",
         "2026",
         "05",
         "03",
         "17",
-        "08"
+        "18"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 17:08 2026 05 03 17 08"
+      "search_text": "site-change-log site change log site change log 2026-05-03 17:18 2026 05 03 17 18"
     },
     {
       "id": "tiered-dimension-policy",

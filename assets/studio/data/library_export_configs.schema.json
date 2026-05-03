@@ -110,7 +110,7 @@
       "properties": {
         "path_pattern": {
           "type": "string",
-          "pattern": "^var/docs/exports/\\{scope\\}/\\{timestamp\\}/\\{export_id\\}\\.(json|jsonl)$"
+          "pattern": "^var/docs/exports/\\{scope\\}/\\{export_id\\}-\\{timestamp\\}\\.(json|jsonl)$"
         },
         "timestamp_format": {
           "type": "string",

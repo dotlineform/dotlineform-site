@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 17:08"
+last_updated: "2026-05-03 17:18"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -266,7 +266,13 @@ They should be safe to delete and reproducible from canonical Docs Viewer source
 Expected first output pattern:
 
 ```text
-var/docs/exports/<scope>/<timestamp>/<export_id>.json
+var/docs/exports/<scope>/<export_id>-<timestamp>.json
+```
+
+JSONL configs use the same flat scope directory and filename timestamp pattern:
+
+```text
+var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl
 ```
 
 Each export file should include metadata:

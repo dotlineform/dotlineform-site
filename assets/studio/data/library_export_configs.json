@@ -14,7 +14,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/docs/exports/{scope}/{timestamp}/{export_id}.json",
+        "path_pattern": "var/docs/exports/{scope}/{export_id}-{timestamp}.json",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -125,7 +125,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/docs/exports/{scope}/{timestamp}/{export_id}.jsonl",
+        "path_pattern": "var/docs/exports/{scope}/{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -211,7 +211,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/docs/exports/{scope}/{timestamp}/{export_id}.jsonl",
+        "path_pattern": "var/docs/exports/{scope}/{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {

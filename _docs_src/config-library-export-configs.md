@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 17:08"
+last_updated: "2026-05-03 17:18"
 parent_id: config
 sort_order: 70
 ---
@@ -95,8 +95,8 @@ When `target.record_shape` is `envelope`, `document_array_path` identifies where
 `output.path_pattern` must stay under:
 
 ```text
-var/docs/exports/{scope}/{timestamp}/{export_id}.json
-var/docs/exports/{scope}/{timestamp}/{export_id}.jsonl
+var/docs/exports/{scope}/{export_id}-{timestamp}.json
+var/docs/exports/{scope}/{export_id}-{timestamp}.jsonl
 ```
 
 The placeholders are resolved by the export engine.

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 17:08"
+last_updated: "2026-05-03 17:18"
 parent_id: scripts
 sort_order: 25
 ---
@@ -30,8 +30,8 @@ Current input paths:
 
 Current output pattern:
 
-- `var/docs/exports/<scope>/<timestamp>/<export_id>.json`
-- `var/docs/exports/<scope>/<timestamp>/<export_id>.jsonl`
+- `var/docs/exports/<scope>/<export_id>-<timestamp>.json`
+- `var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl`
 
 ## Current Capability
 

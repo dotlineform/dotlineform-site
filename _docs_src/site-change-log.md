@@ -2,11 +2,38 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:08"
+last_updated: "2026-05-03 17:18"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Flattened Library export file paths
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Changed Library export output paths to put the timestamp in the filename rather than in a per-run directory.
+
+**Reason:**
+A flat scope directory is easier to scan and copy for manual external use.
+
+**Changes:**
+Export configs now write files such as `var/docs/exports/library/library-document-summaries-20260503-161507.jsonl`.
+The export config schema and docs now require `var/docs/exports/{scope}/{export_id}-{timestamp}.json` or `.jsonl`.
+
+**Files changed:**
+
+- `assets/studio/data/library_export_configs.json`
+- `assets/studio/data/library_export_configs.schema.json`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+
+**Impact:**
+Export artifacts remain under the same allowlisted root, but repeated runs now collect directly under the scope folder.
 
 ## [2026-05-03] Split summary metadata exports from full-content exports
 
