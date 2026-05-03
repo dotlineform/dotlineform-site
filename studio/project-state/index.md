@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=project-state-page
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage catalogueWorkPage" id="projectStateRoot" hidden>
+<div
+  class="tagStudioPage catalogueWorkPage"
+  id="projectStateRoot"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudio__panel tagStudio__panel--editor">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="projectStatePageHeading">project state</h2>

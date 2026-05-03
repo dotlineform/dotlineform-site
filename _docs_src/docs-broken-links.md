@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: "Docs Broken Links"
 added_date: 2026-04-23
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 35
 ---
@@ -66,9 +66,20 @@ Current flow:
 
 The page is therefore a Studio maintenance surface for a read-only docs audit, not a public hosted feature.
 
+## Route Ready State
+
+The page root `#docsBrokenLinksRoot` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` during initial config and Docs Management Server checks, then `true` after the initial disabled or interactive state is rendered
+- `data-studio-busy` is `true` while an audit request is running
+- `data-studio-mode` is `idle` before results and `results` after issues are loaded
+- `data-studio-service` reports whether the Docs Management Server is available
+- `data-studio-record-loaded` is `true` when audit entries are loaded
+
 ## Related References
 
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

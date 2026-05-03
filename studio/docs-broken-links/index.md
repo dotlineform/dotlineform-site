@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=docs-broken-links
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage docsBrokenLinksPage" id="docsBrokenLinksRoot" hidden>
+<div
+  class="tagStudioPage docsBrokenLinksPage"
+  id="docsBrokenLinksRoot"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <div class="tagStudio__panel docsBrokenLinksPage__panel">
     <p class="docsBrokenLinksPage__intro" id="docsBrokenLinksIntro"></p>
     <div class="docsBrokenLinksPage__controls">

@@ -4,6 +4,11 @@ import {
   postJson,
   probeDocsManagementHealth
 } from "./studio-transport.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -36,6 +41,29 @@ function setStatus(node, state, message) {
   } else {
     node.removeAttribute("data-state");
   }
+}
+
+function routeModeForState(state) {
+  if (state.resultNode && !state.resultNode.hidden) return "result";
+  if (state.warningNode && !state.warningNode.hidden) return "confirm";
+  return "idle";
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "docs-import",
+    mode: routeModeForState(state),
+    service: state.serviceAvailable ? "available" : "unavailable",
+    recordLoaded: Boolean(state.files && state.files.length)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function selectedScopeFromUrl() {
@@ -242,6 +270,8 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
     state,
     getStudioText(state.config, "docs_html_import.running_status", "Converting and validating staged HTML…")
   );
+  state.isRunning = true;
+  syncRouteBusyState(state);
 
   try {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importHtml, {
@@ -274,9 +304,11 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
       normalizeText(error && error.message) || getStudioText(state.config, "docs_html_import.import_failed", "Import failed.")
     );
   } finally {
+    state.isRunning = false;
     state.runButton.disabled = false;
     state.confirmButton.disabled = false;
     state.cancelButton.disabled = false;
+    syncRouteBusyState(state);
   }
 }
 
@@ -284,6 +316,7 @@ async function init() {
   const bootStatus = document.getElementById("docsHtmlImportBootStatus");
   const root = document.getElementById("docsHtmlImportRoot");
   if (!bootStatus || !root) return;
+  initializeStudioRouteState(root, { route: "docs-import" });
 
   const state = {
     bootStatus,
@@ -323,6 +356,9 @@ async function init() {
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     pendingOverwriteDocId: "",
+    serviceAvailable: false,
+    isRunning: false,
+    files: [],
     config: null
   };
 
@@ -367,6 +403,7 @@ async function init() {
   try {
     state.config = await loadStudioConfig();
     const serviceAvailable = await probeDocsManagementHealth();
+    state.serviceAvailable = Boolean(serviceAvailable);
 
     setText(
       state.introNode,
@@ -429,10 +466,12 @@ async function init() {
           "Docs management service unavailable. Start bin/dev-studio to run imports."
         )
       );
+      markRouteReady(state, true);
       return;
     }
 
     const files = await fetchImportFiles();
+    state.files = files;
     if (!files.length) {
       state.runButton.disabled = true;
       state.fileSelect.disabled = true;
@@ -445,6 +484,7 @@ async function init() {
           "No staged HTML files found under var/docs/import-staging/."
         )
       );
+      markRouteReady(state, true);
       return;
     }
 
@@ -462,6 +502,7 @@ async function init() {
         "Select a staged HTML file and import it into Studio, Analysis, or Library docs."
       )
     );
+    markRouteReady(state, true);
 
     state.fileSelect.addEventListener("change", () => {
       resetImportView(
@@ -512,6 +553,9 @@ async function init() {
       "error",
       getStudioText(state.config || {}, "docs_html_import.load_files_failed", "Failed to load staged HTML files.")
     );
+    root.hidden = false;
+    state.serviceAvailable = false;
+    markRouteReady(state, true);
   }
 }
 

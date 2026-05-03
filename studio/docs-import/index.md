@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage docsHtmlImportPage" id="docsHtmlImportRoot" hidden>
+<div
+  class="tagStudioPage docsHtmlImportPage"
+  id="docsHtmlImportRoot"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <div class="tagStudio__panel docsHtmlImportPage__panel">
     <p class="docsHtmlImportPage__intro" id="docsHtmlImportIntro"></p>
 

@@ -9,6 +9,11 @@ import {
   probeCatalogueHealth,
   probeDocsManagementHealth
 } from "./studio-transport.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
 
 function normalizeText(value) {
@@ -33,6 +38,23 @@ function setTextWithState(node, text, state = "") {
   node.textContent = text || "";
   if (state) node.dataset.state = state;
   else delete node.dataset.state;
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "project-state",
+    mode: state.summary ? "summary" : "idle",
+    service: state.catalogueServerAvailable || state.docsServerAvailable ? "available" : "unavailable",
+    recordLoaded: Boolean(state.summary)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.root, Boolean(state.isBusy), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function summaryValue(summary, key) {
@@ -63,6 +85,7 @@ function updateState(state) {
   state.includeSubfoldersNode.disabled = state.isBusy;
   state.openButton.disabled = state.isBusy || !state.docsServerAvailable;
   renderSummary(state);
+  syncRouteBusyState(state);
 }
 
 async function runReport(state) {
@@ -143,6 +166,7 @@ async function init() {
   if (!root || !loadingNode || !emptyNode || !pageHeadingNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !runHeadingNode || !outputLabelNode || !sourceLabelNode || !outputPathNode || !sourceRootNode || !includeSubfoldersNode || !includeSubfoldersLabelNode || !summaryHeadingNode || !summaryNode || !runButton || !openButton) {
     return;
   }
+  initializeStudioRouteState(root, { route: "project-state" });
 
   try {
     const config = await loadStudioConfig();
@@ -150,6 +174,7 @@ async function init() {
     const docsServerAvailable = Boolean(await probeDocsManagementHealth());
     const state = {
       config,
+      root,
       catalogueServerAvailable,
       docsServerAvailable,
       isBusy: false,
@@ -196,9 +221,19 @@ async function init() {
     updateState(state);
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("project_state: init failed", error);
     loadingNode.textContent = "Failed to load project state.";
+    root.hidden = false;
+    const fallbackState = {
+      root,
+      catalogueServerAvailable: false,
+      docsServerAvailable: false,
+      isBusy: false,
+      summary: null
+    };
+    markRouteReady(fallbackState, true);
   }
 }
 

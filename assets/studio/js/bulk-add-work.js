@@ -7,6 +7,11 @@ import {
   postJson,
   probeCatalogueHealth
 } from "./studio-transport.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
 
 function normalizeText(value) {
@@ -31,6 +36,23 @@ function setTextWithState(node, text, state = "") {
 
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `bulk_add_work.${key}`, fallback, tokens);
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "bulk-add-work",
+    mode: state.preview ? "preview" : "idle",
+    service: state.serverAvailable ? "available" : "unavailable",
+    recordLoaded: Boolean(state.preview)
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.root, Boolean(state.isBusy), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function modeLabel(state, mode) {
@@ -143,6 +165,7 @@ function updateState(state) {
   state.applyButton.disabled = state.isBusy || !state.serverAvailable || !preview || preview.mode !== state.mode || !preview.ready_to_apply;
   state.summaryNode.innerHTML = buildSummaryHtml(state, preview);
   renderPreviewDetails(state);
+  syncRouteBusyState(state);
 }
 
 function clearPreview(state) {
@@ -257,6 +280,7 @@ async function init() {
 
   const state = {
     config: null,
+    root,
     mode: "works",
     preview: null,
     serverAvailable: false,
@@ -271,6 +295,7 @@ async function init() {
     applyButton,
     workbookPath: normalizeText(root.dataset.workbookPath) || "data/works_bulk_import.xlsx"
   };
+  initializeStudioRouteState(root, { route: "bulk-add-work" });
 
   try {
     const config = await loadStudioConfig();
@@ -314,9 +339,14 @@ async function init() {
     updateState(state);
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("bulk_add_work: init failed", error);
     loadingNode.textContent = "Failed to load bulk add work.";
+    root.hidden = false;
+    state.serverAvailable = false;
+    updateState(state);
+    markRouteReady(state, true);
   }
 }
 

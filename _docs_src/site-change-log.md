@@ -8,6 +8,40 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Extended Studio ready-state contract to bulk and docs tools
+
+**Status:** partially implemented
+
+**Area:** Studio runtime / smoke testing
+
+**Summary:**
+Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on Bulk Add Work, Docs Broken Links, Docs Import, and Project State.
+
+**Reason:**
+These routes perform async config, service, file-list, workbook, audit, import, or report work before they are stable for interaction. They should expose the same route-root readiness signal as the catalogue editors and operational catalogue reports.
+
+**Effect:**
+`#bulkAddWorkRoot`, `#docsBrokenLinksRoot`, `#docsHtmlImportRoot`, and `#projectStateRoot` now expose route, ready, busy, mode, service availability, and record-loaded attributes. Empty and unavailable states are marked ready once stable, and preview, audit, import, and report commands synchronize route busy state.
+
+**Affected files/docs:**
+
+- `assets/studio/js/bulk-add-work.js`
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/js/project-state.js`
+- `studio/bulk-add-work/index.md`
+- `studio/docs-broken-links/index.md`
+- `studio/docs-import/index.md`
+- `studio/project-state/index.md`
+- [Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)
+- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
+- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Project State Page](/docs/?scope=studio&doc=project-state-page)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Extended Studio ready-state contract to operational catalogue routes
 
 **Status:** partially implemented

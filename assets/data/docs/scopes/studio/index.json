@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T09:16:39Z",
+  "generated_at": "2026-05-03T09:25:24Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -392,7 +392,7 @@
       "doc_id": "user-guide-docs-html-import",
       "title": "Docs HTML Import",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03",
       "parent_id": "user-guide",
       "sort_order": 20,
       "published": true,
@@ -841,7 +841,7 @@
       "doc_id": "docs-broken-links",
       "title": "Docs Broken Links",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "sort_order": 35,
       "published": true,
@@ -884,7 +884,7 @@
       "doc_id": "bulk-add-work",
       "title": "Bulk Add Work",
       "added_date": "2026-04-19",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "sort_order": 40,
       "published": true,
@@ -1011,7 +1011,7 @@
       "doc_id": "project-state-page",
       "title": "Project State Page",
       "added_date": "2026-04-27",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "sort_order": 42,
       "published": true,

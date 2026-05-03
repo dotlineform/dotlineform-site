@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: "Docs HTML Import"
 added_date: 2026-04-24
-last_updated: 2026-04-26
+last_updated: 2026-05-03
 parent_id: user-guide
 sort_order: 20
 ---
@@ -94,6 +94,16 @@ After a successful import, the page reports:
 - the viewer link for the imported doc
 - any non-routine conversion warnings
 
+## Route Ready State
+
+The page root `#docsHtmlImportRoot` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` during initial config, service, and staged-file checks, then `true` after the initial disabled or interactive state is rendered
+- `data-studio-busy` is `true` while an import or confirmed overwrite is running
+- `data-studio-mode` is `idle` before import, `confirm` when an overwrite warning is shown, and `result` after a successful import
+- `data-studio-service` reports whether the Docs Management Server is available
+- `data-studio-record-loaded` is `true` when staged HTML files are available
+
 ## Current Practical Limits
 
 This importer is intentionally best-effort.
@@ -120,3 +130,4 @@ Expect simplified output for:
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

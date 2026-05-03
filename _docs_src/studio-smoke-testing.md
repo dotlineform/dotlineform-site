@@ -122,6 +122,7 @@ The shared route-ready contract is partially implemented.
 Adopted routes:
 
 - `/studio/build-activity/` with `#buildActivityRoot`
+- `/studio/bulk-add-work/` with `#bulkAddWorkRoot`
 - `/studio/catalogue-activity/` with `#catalogueActivityRoot`
 - `/studio/catalogue-field-registry/` with `#fieldRegistryReviewRoot`
 - `/studio/catalogue-status/` with `#catalogueStatusRoot`
@@ -129,6 +130,9 @@ Adopted routes:
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
 - `/studio/catalogue-series/` with `#catalogueSeriesRoot`
 - `/studio/catalogue-moment/` with `#catalogueMomentRoot`
+- `/studio/docs-broken-links/` with `#docsBrokenLinksRoot`
+- `/studio/docs-import/` with `#docsHtmlImportRoot`
+- `/studio/project-state/` with `#projectStateRoot`
 
 Remaining Studio routes still need route-specific root selectors and loaded status text until they adopt the shared attributes.
 

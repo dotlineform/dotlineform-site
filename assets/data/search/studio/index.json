@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5105b1d043d95cb170bdd8bd6133a3c5",
-    "generated_at_utc": "2026-05-03T09:16:41Z",
+    "version": "blake2b-648adabda091226b80938594f177b0f6",
+    "generated_at_utc": "2026-05-03T09:25:26Z",
     "count": 158
   },
   "entries": [
@@ -670,10 +670,10 @@
       "kind": "doc",
       "title": "Docs HTML Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-04-26 • User Guide",
+      "display_meta": "2026-05-03 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -683,12 +683,12 @@
         "import",
         "docs html import",
         "user guide",
-        "2026-04-26",
+        "2026-05-03",
         "2026",
-        "04",
-        "26"
+        "05",
+        "03"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs html import user guide 2026-04-26 2026 04 26"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs html import user guide 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-docs-builder",
@@ -1407,10 +1407,10 @@
       "kind": "doc",
       "title": "Docs Broken Links",
       "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-02 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "docs-broken-links",
         "docs",
@@ -1418,12 +1418,12 @@
         "links",
         "docs broken links",
         "studio",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-05-02 2026 05 02"
+      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-05-03 2026 05 03"
     },
     {
       "id": "docs-viewer-draft-publishing-spec",
@@ -1485,10 +1485,10 @@
       "kind": "doc",
       "title": "Bulk Add Work",
       "href": "/docs/?scope=studio&doc=bulk-add-work",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-19 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "bulk-add-work",
         "bulk",
@@ -1496,12 +1496,12 @@
         "work",
         "bulk add work",
         "studio",
-        "2026-04-19",
+        "2026-05-03",
         "2026",
-        "04",
-        "19"
+        "05",
+        "03"
       ],
-      "search_text": "bulk-add-work bulk add work bulk add work studio 2026-04-19 2026 04 19"
+      "search_text": "bulk-add-work bulk add work bulk add work studio 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-cloud-environments",
@@ -1692,10 +1692,10 @@
       "kind": "doc",
       "title": "Project State Page",
       "href": "/docs/?scope=studio&doc=project-state-page",
-      "last_updated": "2026-04-27",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-27 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "project-state-page",
         "project",
@@ -1703,12 +1703,12 @@
         "page",
         "project state page",
         "studio",
-        "2026-04-27",
+        "2026-05-03",
         "2026",
-        "04",
-        "27"
+        "05",
+        "03"
       ],
-      "search_text": "project-state-page project state page project state page studio 2026-04-27 2026 04 27"
+      "search_text": "project-state-page project state page project state page studio 2026-05-03 2026 05 03"
     },
     {
       "id": "catalogue-status",

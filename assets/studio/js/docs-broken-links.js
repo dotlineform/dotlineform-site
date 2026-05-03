@@ -4,6 +4,11 @@ import {
   postJson,
   probeDocsManagementHealth
 } from "./studio-transport.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteBusy,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 const FILTERS = Object.freeze([
   { key: "all", problem: "", labelKey: "filter_all", fallback: "all" },
@@ -42,6 +47,23 @@ function setStatus(node, state, message) {
   } else {
     node.removeAttribute("data-state");
   }
+}
+
+function routeStateDetail(state) {
+  return {
+    route: "docs-broken-links",
+    mode: state.entries.length ? "results" : "idle",
+    service: state.serviceAvailable ? "available" : "unavailable",
+    recordLoaded: state.entries.length > 0
+  };
+}
+
+function syncRouteBusyState(state) {
+  setStudioRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
+}
+
+function markRouteReady(state, ready) {
+  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function linkHtml(label, href) {
@@ -216,6 +238,8 @@ function persistSelectedScope(scope) {
 async function runAudit(state) {
   const scope = normalizeText(state.scopeSelect.value).toLowerCase() === "library" ? "library" : "studio";
   persistSelectedScope(scope);
+  state.isRunning = true;
+  syncRouteBusyState(state);
   state.runButton.disabled = true;
   state.emptyNode.hidden = true;
   state.filterNode.hidden = true;
@@ -272,7 +296,9 @@ async function runAudit(state) {
       getStudioText(state.config, "docs_broken_links.status_failed", "Failed to run docs broken-links audit.")
     );
   } finally {
+    state.isRunning = false;
     state.runButton.disabled = false;
+    syncRouteBusyState(state);
   }
 }
 
@@ -292,6 +318,7 @@ async function init() {
   ) {
     return;
   }
+  initializeStudioRouteState(root, { route: "docs-broken-links" });
 
   try {
     const config = await loadStudioConfig();
@@ -324,6 +351,9 @@ async function init() {
       filterNode,
       listWrap,
       emptyNode,
+      root,
+      serviceAvailable,
+      isRunning: false,
       entries: [],
       filterKey: DEFAULT_FILTER_KEY,
       sortKey: DEFAULT_SORT_KEY,
@@ -368,6 +398,7 @@ async function init() {
           "Docs management service unavailable. Start bin/dev-studio to run the audit."
         )
       );
+      markRouteReady(state, true);
       return;
     }
 
@@ -376,10 +407,19 @@ async function init() {
       "",
       getStudioText(config, "docs_broken_links.idle_status", "Select a scope and run the audit.")
     );
+    markRouteReady(state, true);
   } catch (error) {
     console.warn("docs_broken_links: init failed", error);
     bootStatus.textContent = "Failed to load docs broken links.";
     bootStatus.setAttribute("data-state", "error");
+    root.hidden = false;
+    const fallbackState = {
+      root,
+      serviceAvailable: false,
+      isRunning: false,
+      entries: []
+    };
+    markRouteReady(fallbackState, true);
   }
 }
 

@@ -9,7 +9,14 @@ studio_page_doc: /docs/?scope=studio&doc=bulk-add-work
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 {% assign bulk_import_workbook = site.data.pipeline.paths.workbooks.bulk_import | default: 'data/works_bulk_import.xlsx' %}
 
-<div class="tagStudioPage catalogueWorkPage" id="bulkAddWorkRoot" data-workbook-path="{{ bulk_import_workbook | escape }}" hidden>
+<div
+  class="tagStudioPage catalogueWorkPage"
+  id="bulkAddWorkRoot"
+  data-workbook-path="{{ bulk_import_workbook | escape }}"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudio__panel tagStudio__panel--editor">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="bulkAddWorkPageHeading">bulk add work</h2>

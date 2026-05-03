@@ -2,7 +2,7 @@
 doc_id: bulk-add-work
 title: "Bulk Add Work"
 added_date: 2026-04-19
-last_updated: 2026-04-19
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 40
 ---
@@ -59,8 +59,19 @@ Current flow:
 
 This page does not upload workbook files, edit workbook rows, or write anything back into Excel.
 
+## Route Ready State
+
+The page root `#bulkAddWorkRoot` exposes the shared Studio route-ready contract:
+
+- `data-studio-ready` is `false` during initial config and local service checks, then `true` after the initial disabled or interactive state is rendered
+- `data-studio-busy` is `true` while preview or import is running
+- `data-studio-mode` is `idle` before a preview and `preview` after a preview result is loaded
+- `data-studio-service` reports whether the Catalogue Write Server is available
+- `data-studio-record-loaded` is `true` when a preview result is loaded
+
 ## Related References
 
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
