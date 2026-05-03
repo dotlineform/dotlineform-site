@@ -13,6 +13,24 @@ MOMENT_METADATA_SCHEMA = "catalogue_source_moments_v1"
 MOMENT_METADATA_FILENAME = "moments.json"
 CATALOGUE_MOMENT_PROSE_REL_DIR = Path("_docs_src_catalogue/moments")
 
+MOMENT_METADATA_FIELDS = [
+    "moment_id",
+    "title",
+    "status",
+    "published_date",
+    "date",
+    "date_display",
+    "image_alt",
+    "source_image_file",
+]
+MOMENT_IDENTITY_FIELDS = ("moment_id",)
+MOMENT_DERIVED_FIELDS: tuple[str, ...] = ()
+MOMENT_METADATA_UPDATE_FIELDS = tuple(
+    field
+    for field in MOMENT_METADATA_FIELDS
+    if field not in MOMENT_IDENTITY_FIELDS and field not in MOMENT_DERIVED_FIELDS
+)
+
 
 def normalize_text(value: Any) -> str:
     if value is None:

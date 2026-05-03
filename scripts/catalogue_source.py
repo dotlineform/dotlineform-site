@@ -109,6 +109,34 @@ SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px"}
 OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "sort_order"}
 
+SOURCE_FIELDS_BY_RECORD_FAMILY = {
+    "work": tuple(WORK_FIELDS),
+    "work_detail": tuple(DETAIL_FIELDS),
+    "series": tuple(SERIES_FIELDS),
+}
+
+SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY = {
+    "work": ("work_id",),
+    "work_detail": ("detail_uid", "work_id", "detail_id"),
+    "series": ("series_id",),
+}
+
+SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY = {
+    "work": ("width_px", "height_px"),
+    "work_detail": ("width_px", "height_px"),
+    "series": (),
+}
+
+SOURCE_METADATA_FIELDS_BY_RECORD_FAMILY = {
+    family: tuple(
+        field
+        for field in fields
+        if field not in SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY[family]
+        and field not in SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY[family]
+    )
+    for family, fields in SOURCE_FIELDS_BY_RECORD_FAMILY.items()
+}
+
 
 def build_detail_section_id(work_id: str, section_number: int) -> str:
     if section_number < 1:

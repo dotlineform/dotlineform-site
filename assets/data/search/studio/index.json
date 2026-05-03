@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c060dbbcf83c883daaba077fce11ef77",
-    "generated_at_utc": "2026-05-03T10:24:07Z",
+    "version": "blake2b-e4cf56ebff460f521b41685932d3697d",
+    "generated_at_utc": "2026-05-03T10:40:25Z",
     "count": 162
   },
   "entries": [
@@ -619,10 +619,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-02 • Data Models",
+      "display_meta": "2026-05-03 • Data Models",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -631,12 +631,12 @@
         "catalogue scope",
         "scope",
         "data models",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-05-02 2026 05 02"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-05-03 2026 05 03"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -2124,10 +2124,10 @@
       "kind": "doc",
       "title": "Catalogue Source Utilities",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-source",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-02 • Scripts",
+      "display_meta": "2026-05-03 • Scripts",
       "search_terms": [
         "scripts-catalogue-source",
         "scripts",
@@ -2135,12 +2135,12 @@
         "source",
         "catalogue source utilities",
         "utilities",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-02 2026 05 02"
+      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-03 2026 05 03"
     },
     {
       "id": "css-refactor",
@@ -2439,10 +2439,10 @@
       "kind": "doc",
       "title": "Catalogue Field Registry Verification",
       "href": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-02 • Scripts",
+      "display_meta": "2026-05-03 • Scripts",
       "search_terms": [
         "scripts-verify-catalogue-field-registry",
         "scripts",
@@ -2452,12 +2452,12 @@
         "registry",
         "catalogue field registry verification",
         "verification",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-02 2026 05 02"
+      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-03 2026 05 03"
     },
     {
       "id": "search-studio-v1-index-shape",
@@ -2811,10 +2811,10 @@
       "kind": "doc",
       "title": "Catalogue Source And Registry Drift Verification Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
       "search_terms": [
         "site-request-catalogue-source-registry-drift-verification",
         "site",
@@ -2829,12 +2829,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "site-request-catalogue-source-registry-drift-verification site request catalogue source registry drift verification catalogue source and registry drift verification request and change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-source-registry-drift-verification site request catalogue source registry drift verification catalogue source and registry drift verification request and change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-catalogue-lookup",

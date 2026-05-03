@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify representative catalogue field-registry build plans."""
+"""Verify catalogue field-registry build plans and source-schema coverage."""
 
 from __future__ import annotations
 
@@ -12,7 +12,46 @@ REPO_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry  # noqa: E402
-from catalogue_source import CatalogueSourceRecords  # noqa: E402
+from catalogue_source import (  # noqa: E402
+    DETAIL_FIELDS,
+    DETAIL_TEXT_FIELDS,
+    OMIT_EMPTY_SOURCE_FIELDS,
+    SERIES_FIELDS,
+    SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY,
+    SOURCE_FIELDS_BY_RECORD_FAMILY,
+    SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY,
+    SOURCE_METADATA_FIELDS_BY_RECORD_FAMILY,
+    WORK_FIELDS,
+    WORK_TEXT_FIELDS,
+    CatalogueSourceRecords,
+    normalize_source_record,
+)
+from moment_sources import (  # noqa: E402
+    MOMENT_DERIVED_FIELDS,
+    MOMENT_IDENTITY_FIELDS,
+    MOMENT_METADATA_FIELDS,
+    MOMENT_METADATA_UPDATE_FIELDS,
+)
+
+
+MOMENT_SOURCE_FIELDS = {
+    "moment": tuple(MOMENT_METADATA_FIELDS),
+}
+
+MOMENT_SOURCE_IDENTITY_FIELDS = {
+    "moment": tuple(MOMENT_IDENTITY_FIELDS),
+}
+
+MOMENT_SOURCE_DERIVED_FIELDS = {
+    "moment": tuple(MOMENT_DERIVED_FIELDS),
+}
+
+MOMENT_SOURCE_METADATA_FIELDS = {
+    "moment": tuple(MOMENT_METADATA_UPDATE_FIELDS),
+}
+
+REGISTRY_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {}
+SOURCE_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {}
 
 
 def fail(message: str) -> None:
@@ -121,6 +160,191 @@ def work_sort_context() -> dict[str, Any]:
     return {"source_records": records, "current_record": record, "updated_record": record}
 
 
+def source_fields_by_family() -> dict[str, set[str]]:
+    return {
+        **{family: set(fields) for family, fields in SOURCE_FIELDS_BY_RECORD_FAMILY.items()},
+        **{family: set(fields) for family, fields in MOMENT_SOURCE_FIELDS.items()},
+    }
+
+
+def source_identity_fields_by_family() -> dict[str, set[str]]:
+    return {
+        **{family: set(fields) for family, fields in SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY.items()},
+        **{family: set(fields) for family, fields in MOMENT_SOURCE_IDENTITY_FIELDS.items()},
+    }
+
+
+def source_derived_fields_by_family() -> dict[str, set[str]]:
+    return {
+        **{family: set(fields) for family, fields in SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY.items()},
+        **{family: set(fields) for family, fields in MOMENT_SOURCE_DERIVED_FIELDS.items()},
+    }
+
+
+def source_metadata_fields_by_family() -> dict[str, set[str]]:
+    return {
+        **{family: set(fields) for family, fields in SOURCE_METADATA_FIELDS_BY_RECORD_FAMILY.items()},
+        **{family: set(fields) for family, fields in MOMENT_SOURCE_METADATA_FIELDS.items()},
+    }
+
+
+def iter_registry_field_rows(registry: Mapping[str, Any]) -> list[tuple[str, str, str, str]]:
+    rows: list[tuple[str, str, str, str]] = []
+    rules = registry.get("rules")
+    if not isinstance(rules, list):
+        fail("catalogue field registry missing rules[]")
+    for index, rule in enumerate(rules):
+        if not isinstance(rule, Mapping):
+            fail(f"registry rule {index} is not an object")
+        rule_id = str(rule.get("id") or "").strip()
+        family = str(rule.get("record_family") or "").strip()
+        operation = str(rule.get("operation") or "").strip()
+        if not rule_id:
+            fail(f"registry rule {index} is missing id")
+        if not family:
+            fail(f"registry rule {rule_id} is missing record_family")
+        if not operation:
+            fail(f"registry rule {rule_id} is missing operation")
+        fields = rule.get("fields")
+        if not isinstance(fields, list) or not fields:
+            fail(f"registry rule {rule_id} is missing fields[]")
+        for raw_field in fields:
+            field = str(raw_field or "").strip()
+            if not field:
+                fail(f"registry rule {rule_id} has a blank field")
+            rows.append((family, operation, field, rule_id))
+    return rows
+
+
+def verify_duplicate_rule_fields(registry: Mapping[str, Any]) -> int:
+    seen: dict[tuple[str, str, str], str] = {}
+    verified = 0
+    for family, operation, field, rule_id in iter_registry_field_rows(registry):
+        key = (family, operation, field)
+        previous = seen.get(key)
+        if previous is not None:
+            fail(f"duplicate registry ownership for {family}.{operation}.{field}: {previous} and {rule_id}")
+        seen[key] = rule_id
+        verified += 1
+    return verified
+
+
+def verify_registry_fields_known_to_source(registry: Mapping[str, Any]) -> int:
+    source_fields = source_fields_by_family()
+    identity_fields = source_identity_fields_by_family()
+    derived_fields = source_derived_fields_by_family()
+    verified = 0
+
+    for family, operation, field, _rule_id in iter_registry_field_rows(registry):
+        allowed = source_fields.get(family)
+        if allowed is None:
+            fail(f"registry field {family}.{operation}.{field}: unknown record family")
+        exemptions = REGISTRY_FIELD_EXEMPTIONS.get((family, operation), set())
+        if field not in allowed and field not in exemptions:
+            fail(f"registry field {family}.{operation}.{field}: field is not known to source schema")
+        if operation == "metadata_update" and field in identity_fields.get(family, set()):
+            fail(f"registry field {family}.{operation}.{field}: identity field cannot be metadata_update")
+        if operation == "metadata_update" and field in derived_fields.get(family, set()):
+            fail(f"registry field {family}.{operation}.{field}: derived field cannot be metadata_update")
+        verified += 1
+    return verified
+
+
+def registry_fields_for_operation(registry: Mapping[str, Any], family: str, operation: str) -> set[str]:
+    return {
+        field
+        for current_family, current_operation, field, _rule_id in iter_registry_field_rows(registry)
+        if current_family == family and current_operation == operation
+    }
+
+
+def verify_source_metadata_fields_covered(registry: Mapping[str, Any]) -> int:
+    verified = 0
+    for family, source_fields in sorted(source_metadata_fields_by_family().items()):
+        registry_fields = registry_fields_for_operation(registry, family, "metadata_update")
+        exemptions = SOURCE_FIELD_EXEMPTIONS.get((family, "metadata_update"), set())
+        missing = sorted(source_fields - registry_fields - exemptions)
+        if missing:
+            fail(f"{family}.metadata_update source fields missing registry coverage: {', '.join(missing)}")
+        verified += len(source_fields)
+    return verified
+
+
+def assert_field_present(label: str, record: Mapping[str, Any], field: str, expected: Any) -> None:
+    if field not in record:
+        fail(f"{label}: expected {field} to be present")
+    assert_equal(f"{label}.{field}", record.get(field), expected)
+
+
+def assert_field_omitted(label: str, record: Mapping[str, Any], field: str) -> None:
+    if field in record:
+        fail(f"{label}: expected {field} to be omitted, got {record.get(field)!r}")
+
+
+def verify_optional_source_serialization() -> int:
+    if OMIT_EMPTY_SOURCE_FIELDS != {"project_subfolder", "details_subfolder", "sort_order"}:
+        fail(f"unexpected omit-empty source fields: {sorted(OMIT_EMPTY_SOURCE_FIELDS)!r}")
+
+    work_with_subfolder = normalize_source_record(
+        {"work_id": "00001", "project_subfolder": "prints"},
+        WORK_FIELDS,
+        text_fields=WORK_TEXT_FIELDS,
+    )
+    assert_field_present("work project_subfolder non-empty", work_with_subfolder, "project_subfolder", "prints")
+    for raw in (None, "", "   "):
+        record = normalize_source_record(
+            {"work_id": "00001", "project_subfolder": raw},
+            WORK_FIELDS,
+            text_fields=WORK_TEXT_FIELDS,
+        )
+        assert_field_omitted(f"work project_subfolder empty {raw!r}", record, "project_subfolder")
+
+    detail_with_subfolder = normalize_source_record(
+        {"detail_uid": "00001-001", "details_subfolder": "details"},
+        DETAIL_FIELDS,
+        text_fields=DETAIL_TEXT_FIELDS,
+    )
+    assert_field_present("detail details_subfolder non-empty", detail_with_subfolder, "details_subfolder", "details")
+    for raw in (None, "", "   "):
+        record = normalize_source_record(
+            {"detail_uid": "00001-001", "details_subfolder": raw},
+            DETAIL_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_omitted(f"detail details_subfolder empty {raw!r}", record, "details_subfolder")
+
+    for raw, expected in ((0, 0), ("7", 7)):
+        record = normalize_source_record(
+            {"detail_uid": "00001-001", "sort_order": raw},
+            DETAIL_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_present(f"detail sort_order non-empty {raw!r}", record, "sort_order", expected)
+    for raw in (None, "", "   "):
+        record = normalize_source_record(
+            {"detail_uid": "00001-001", "sort_order": raw},
+            DETAIL_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_omitted(f"detail sort_order empty {raw!r}", record, "sort_order")
+
+    for field in ("section_id", "section_title"):
+        blank_record = normalize_source_record(
+            {"detail_uid": "00001-001", field: ""},
+            DETAIL_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_present(f"detail required {field} blank", blank_record, field, None)
+        non_blank_record = normalize_source_record(
+            {"detail_uid": "00001-001", field: "value"},
+            DETAIL_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_present(f"detail required {field} non-empty", non_blank_record, field, "value")
+
+    return 14
+
+
 def verify_registry_defaults(registry: Mapping[str, Any]) -> None:
     defaults = registry.get("defaults") if isinstance(registry.get("defaults"), Mapping) else {}
     for key in ("unknown_field", "mixed_dependency_classes"):
@@ -136,6 +360,10 @@ def main() -> None:
     registry = load_catalogue_field_registry(REPO_ROOT)
     verify_registry_defaults(registry)
     verified = 1
+    verified += verify_duplicate_rule_fields(registry)
+    verified += verify_registry_fields_known_to_source(registry)
+    verified += verify_source_metadata_fields_covered(registry)
+    verified += verify_optional_source_serialization()
 
     cases = [
         (

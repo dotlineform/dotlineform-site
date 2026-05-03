@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Added catalogue source/registry drift verification
+
+**Status:** implemented
+
+**Area:** catalogue pipeline / checks
+
+**Summary:**
+Extended the catalogue field-registry verifier so it also checks source-schema coverage and optional source serialization behavior.
+
+**Reason:**
+The canonical source serializers and field-aware build registry are intentionally separate contracts, but that separation made it easy to add a source field without registry coverage or add a registry field that the source schema did not know about.
+
+**Effect:**
+`./scripts/verify_catalogue_field_registry.py` now fails for unknown registry fields, uncovered editable source fields, duplicate field ownership, and identity/derived fields misclassified as normal metadata edits. It also checks omit-empty behavior for `project_subfolder`, `details_subfolder`, and `sort_order`. The catalogue check profile inherits the stronger guardrail through the existing verifier wrapper.
+
+**Affected files/docs:**
+
+- `scripts/catalogue_source.py`
+- `scripts/moment_sources.py`
+- `scripts/verify_catalogue_field_registry.py`
+- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+- [Catalogue Source And Registry Drift Verification Request](/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Added Studio Audits page and audit service
 
 **Status:** implemented

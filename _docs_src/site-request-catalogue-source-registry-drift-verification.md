@@ -2,7 +2,8 @@
 doc_id: site-request-catalogue-source-registry-drift-verification
 title: Catalogue Source And Registry Drift Verification Request
 added_date: 2026-05-02
-last_updated: 2026-05-02
+last_updated: 2026-05-03
+ui_status: implemented
 parent_id: change-requests
 sort_order: 106
 ---
@@ -10,7 +11,25 @@ sort_order: 106
 
 Status:
 
-- proposed
+- implemented
+
+## Current Implementation
+
+Implemented in `./scripts/verify_catalogue_field_registry.py`.
+
+The verifier now checks:
+
+- duplicate registry ownership by record family, operation, and field
+- registry fields against known source field sets or explicit verifier exemptions
+- editable source metadata fields against `metadata_update` registry coverage or explicit verifier exemptions
+- identity and derived fields are not misclassified as normal metadata edits
+- omit-empty serialization for work `project_subfolder`, detail `details_subfolder`, and detail `sort_order`
+- detail `section_id` and `section_title` remain required/present during normalization even when blank
+
+Source field ownership is exposed from:
+
+- `scripts/catalogue_source.py` for work, work-detail, and series source records
+- `scripts/moment_sources.py` for moment metadata source records
 
 ## Summary
 
@@ -75,7 +94,7 @@ The check should report field-family context clearly, such as `work_detail.metad
 
 Status:
 
-- not started
+- done
 
 Document which contract owns:
 
@@ -95,7 +114,7 @@ Acceptance checks:
 
 Status:
 
-- not started
+- done
 
 Extend `scripts/verify_catalogue_field_registry.py` so it catches source/registry drift.
 
@@ -116,7 +135,7 @@ Acceptance checks:
 
 Status:
 
-- not started
+- done
 
 Add focused checks for optional persisted source fields.
 
@@ -136,7 +155,7 @@ Acceptance checks:
 
 Status:
 
-- not started
+- done
 
 Update script and data-model docs after the verifier is implemented.
 

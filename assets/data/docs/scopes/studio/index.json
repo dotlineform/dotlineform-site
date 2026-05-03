@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T10:33:26Z",
+  "generated_at": "2026-05-03T10:40:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -363,7 +363,7 @@
       "doc_id": "data-models-catalogue",
       "title": "Catalogue Scope",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "data-models",
       "sort_order": 20,
       "published": true,
@@ -1266,7 +1266,7 @@
       "doc_id": "scripts-catalogue-source",
       "title": "Catalogue Source Utilities",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "sort_order": 60,
       "published": true,
@@ -1449,7 +1449,7 @@
       "doc_id": "scripts-verify-catalogue-field-registry",
       "title": "Catalogue Field Registry Verification",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "sort_order": 75,
       "published": true,
@@ -1664,14 +1664,15 @@
       "doc_id": "site-request-catalogue-source-registry-drift-verification",
       "title": "Catalogue Source And Registry Drift Verification Request",
       "added_date": "2026-05-02",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "change-requests",
       "sort_order": 106,
       "published": true,
       "viewable": true,
       "source_path": "site-request-catalogue-source-registry-drift-verification.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-source-registry-drift-verification.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-source-registry-drift-verification.json",
+      "ui_status": "implemented"
     },
     {
       "scope": "studio",

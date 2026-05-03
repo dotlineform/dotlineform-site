@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue
 title: "Catalogue Scope"
 added_date: 2026-04-01
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: data-models
 sort_order: 20
 ---
@@ -121,13 +121,14 @@ Planner output:
 
 Verification:
 
-- `./scripts/verify_catalogue_field_registry.py` checks representative target rules and fallback defaults against the live registry
+- `./scripts/verify_catalogue_field_registry.py` checks representative target rules, fallback defaults, duplicate field ownership, source/registry field coverage, and optional omit-empty source serialization against the live registry
 
 Notes:
 
 - the registry is JSON so Studio can display it directly
 - current and target rules stay separate so review surfaces can compare historical broad behavior with active narrowed behavior
 - the registry should be updated before adding a new active catalogue source field
+- the registry does not own source field order, normalization, or omit-empty behavior; those live in `scripts/catalogue_source.py` and `scripts/moment_sources.py`
 
 ## Work-Owned Files And Links
 
