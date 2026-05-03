@@ -2,11 +2,37 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: 2026-05-03
+last_updated: "2026-05-03 13:55"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added minute-precision Docs Viewer source timestamps
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Studio docs management
+
+**Summary:**
+Docs Viewer management writes now record new `added_date` values and changed `last_updated` values with hour/minute precision.
+
+**Reason:**
+Library export workflows need a more useful source-version marker than a date-only field, and minute precision is generally useful for same-day docs maintenance.
+
+**Effect:**
+Newly created or imported docs write `added_date` and `last_updated` as `YYYY-MM-DD HH:MM`. Metadata, viewability, move/restore, and archive writes preserve existing `added_date` and refresh `last_updated` to the current minute. Existing date-only docs remain valid and do not need migration.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_management_server.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Shared Patterns](/docs/?scope=studio&doc=data-models-shared)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## [2026-05-03] Added catalogue source/registry drift verification
 

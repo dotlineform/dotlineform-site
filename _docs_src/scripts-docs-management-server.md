@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: 2026-04-26
+last_updated: "2026-05-03 13:55"
 parent_id: scripts
 sort_order: 10
 ---
@@ -50,6 +50,7 @@ Current behavior:
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`
 - creates Library docs as `published: true`, `viewable: false`
+- writes new or changed docs with minute-precision `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form while preserving existing date-only values
 - rebuilds scope-owned docs payloads after successful writes
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
 - coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
@@ -83,9 +84,9 @@ Request behavior:
 
 - `scope` must be `studio`, `analysis`, or `library`
 - `title` defaults to `New Doc` when omitted or blank
-- new docs write `added_date` and `last_updated` to the current date
+- new docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio docs write `published: true`, `viewable: true`
-- new Analysis docs write `published: true`, `viewable: true`
+- new Analysis docs write `published: true`, `viewable: false`
 - new Library docs write `published: true`, `viewable: false`
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
@@ -121,7 +122,7 @@ Import behavior:
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec
 - creates a new Markdown source doc immediately when the generated import target does not collide
-- new imported docs write `added_date` and `last_updated` to the current date
+- new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio imports write `published: true`, `viewable: true`
 - new Analysis imports write `published: true`, `viewable: false`
 - new Library imports write `published: true`, `viewable: false`
@@ -129,6 +130,7 @@ Import behavior:
 - reports collision details when the generated import target already matches an existing `doc_id`
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
+- refreshes the overwritten doc's `last_updated` to the current minute
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild the same-scope docs payloads and run targeted docs-search updates for affected ids
@@ -203,7 +205,7 @@ Metadata-update behavior:
 - updates only front matter; body content and filename remain unchanged
 - currently supports `title`, `summary`, `ui_status`, `parent_id`, and `sort_order`
 - title changes do not mutate `doc_id` or filename
-- `added_date` is preserved; `last_updated` is refreshed after a successful metadata write
+- `added_date` is preserved; `last_updated` is refreshed to the current minute after a successful metadata write
 - blank `summary` removes the front matter field
 - blank `ui_status` removes the front matter field
 - non-blank `ui_status` is stored as the raw status key supplied by the client; the write server does not validate it against Docs Viewer config
@@ -239,8 +241,8 @@ Metadata-update behavior:
 
 Viewability-update behavior:
 
-- updates only the source doc's `viewable` front matter
-- preserves `doc_id`, title, parent, sort order, body content, `added_date`, and `last_updated`
+- updates only the source doc's `viewable`, `published`, and `last_updated` front matter
+- preserves `doc_id`, title, parent, sort order, body content, and `added_date`
 - writes `published: true` alongside `viewable` so the doc stays in generated docs payloads
 - the single-doc endpoint is preserved for callers that already use `doc_id`
 - the bulk endpoint accepts explicit `doc_ids`; `include_descendants: true` expands each requested doc to include its descendants from canonical docs source data
@@ -267,6 +269,7 @@ Move behavior:
 - moves rewrite front matter only and never move files on disk
 - moves update the dragged doc's `parent_id` and normalize the destination sibling set to sparse unique `sort_order` values
 - moves preserve `added_date`
+- moves refresh `last_updated` on each source doc whose placement front matter is rewritten
 - moves may rewrite multiple sibling docs when normalization changes their order values
 - successful move responses include `undo_records` for every doc whose placement changed
 - successful moves rebuild the current scope docs payloads and run a targeted docs-search update for the moved doc
@@ -293,6 +296,7 @@ Restore-move behavior:
 - validates each restored `parent_id` against the current scope and rejects self-parent or descendant-parent cycles
 - accepts integer or blank `sort_order`
 - writes only records whose current placement differs from the supplied restore record
+- refreshes `last_updated` on each restored source doc whose placement front matter is rewritten
 - rebuilds the current scope docs payloads and runs targeted docs-search updates for changed doc ids
 
 `POST /docs/archive` expects:
@@ -309,7 +313,7 @@ Request behavior:
 - moves the doc into the Archive section by setting `parent_id = _archive`
 - appends the archived doc as the last sibling under `_archive`
 - does not move the file on disk
-- preserves `added_date` and refreshes `last_updated`
+- preserves `added_date` and refreshes `last_updated` to the current minute
 - fails when `_archive` is not defined for the scope
 
 `POST /docs/delete-preview` expects:

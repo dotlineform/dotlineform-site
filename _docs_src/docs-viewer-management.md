@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: 2026-05-03
+last_updated: "2026-05-03 13:55"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -37,6 +37,7 @@ Implemented now:
 - drag/drop moves normalize the destination sibling set into sparse unique `sort_order` values so reorder actions have a visible effect even when previous sibling orders collided
 - create-after-selected uses sparse `sort_order` increments without renumbering siblings
 - create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
+- docs-management writes new `added_date` and changed `last_updated` values in `YYYY-MM-DD HH:MM` form; existing date-only docs remain valid and do not need migration
 - Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`
 - manage mode can show draft/non-viewable docs with a checkbox while keeping viewable docs visible for context
 - selected non-viewable docs can be made viewable through the manage toolbar

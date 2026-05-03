@@ -111,8 +111,8 @@ def backup_stamp_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
 
 
-def current_date() -> str:
-    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
+def current_doc_timestamp() -> str:
+    return dt.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M")
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -446,19 +446,23 @@ def metadata_search_doc_ids(docs: list[ScopeDoc], doc_id: str, *, title_changed:
 
 
 def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
+    timestamp = current_doc_timestamp()
     updated_front_matter = dict(doc.front_matter)
     updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
     updated_front_matter.update(front_matter_updates)
+    updated_front_matter["last_updated"] = timestamp
     return format_source(updated_front_matter, doc.body)
 
 
 def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str, sort_order: Optional[int]) -> str:
+    timestamp = current_doc_timestamp()
     updated_front_matter = dict(doc.front_matter)
     updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
+    updated_front_matter["last_updated"] = timestamp
     updated_front_matter["parent_id"] = parent_id
     if sort_order is None:
         updated_front_matter.pop("sort_order", None)
@@ -975,12 +979,12 @@ def imported_body_markdown(preview: Dict[str, Any]) -> str:
 
 def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc], scope: str) -> str:
     title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
-    today = current_date()
+    timestamp = current_doc_timestamp()
     front_matter = {
         "doc_id": preview["proposed_doc_id"],
         "title": title,
-        "added_date": today,
-        "last_updated": today,
+        "added_date": timestamp,
+        "last_updated": timestamp,
         "parent_id": "",
         "sort_order": next_sort_order(docs, ""),
         "published": True,
@@ -991,12 +995,12 @@ def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc
 
 def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc) -> str:
     title = str(preview.get("title") or target.title).strip() or target.title
-    today = current_date()
+    timestamp = current_doc_timestamp()
     front_matter = dict(target.front_matter)
     front_matter["doc_id"] = target.doc_id
     front_matter["title"] = title
-    front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or today).strip()
-    front_matter["last_updated"] = today
+    front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or timestamp).strip()
+    front_matter["last_updated"] = timestamp
     front_matter["parent_id"] = target.parent_id
     front_matter.setdefault("published", True)
     front_matter.setdefault("viewable", target.viewable)
@@ -1235,12 +1239,12 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
     doc_id = ensure_unique_stem(docs, title)
     target_root = scope_root(repo_root, scope)
     target_path = target_root / f"{doc_id}.md"
-    today = current_date()
+    timestamp = current_doc_timestamp()
     front_matter = {
         "doc_id": doc_id,
         "title": title,
-        "added_date": today,
-        "last_updated": today,
+        "added_date": timestamp,
+        "last_updated": timestamp,
         "parent_id": parent_id,
         "sort_order": sort_order,
         "published": True,
@@ -1380,12 +1384,13 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             "dry_run": dry_run,
         }
 
+    timestamp = current_doc_timestamp()
     updated_front_matter = dict(target.front_matter)
     updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
     updated_front_matter["title"] = title
-    updated_front_matter["last_updated"] = current_date()
+    updated_front_matter["last_updated"] = timestamp
     if summary_was_provided:
         if summary:
             updated_front_matter["summary"] = summary
@@ -1917,11 +1922,12 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
         }
 
     next_order = next_sort_order(docs, "_archive")
+    timestamp = current_doc_timestamp()
     updated_front_matter = dict(target.front_matter)
     updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or current_date()
+        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
-    updated_front_matter["last_updated"] = current_date()
+    updated_front_matter["last_updated"] = timestamp
     updated_front_matter["parent_id"] = "_archive"
     updated_front_matter["sort_order"] = next_order
 

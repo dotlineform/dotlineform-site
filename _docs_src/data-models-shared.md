@@ -2,7 +2,7 @@
 doc_id: data-models-shared
 title: "Shared Patterns"
 added_date: 2026-04-19
-last_updated: 2026-04-26
+last_updated: "2026-05-03 13:55"
 parent_id: data-models
 sort_order: 10
 ---
@@ -59,6 +59,8 @@ Docs-scope indexes also carry `viewer_options` for scope-level runtime behavior 
 
 Docs-scope index rows can also carry optional metadata from source front matter:
 
+- `added_date` and `last_updated`
+  date metadata used by the Docs Viewer and docs-domain search; legacy date-only values and new minute-precision values both flow through as strings
 - `summary`
   plain-text, single-paragraph summary used by the Docs Viewer metadata surface
 - `ui_status`

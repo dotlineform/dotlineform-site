@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: 2026-04-25
+last_updated: "2026-05-03 13:55"
 parent_id: data-models
 sort_order: 40
 ---
@@ -43,6 +43,7 @@ Current design:
 - same Markdown-or-raw-HTML authoring model
 - separate source root so Library can grow without being folded into Studio docs
 - Library import/create defaults new docs to `published: true`, `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
+- Docs Viewer management writes new `added_date` and changed `last_updated` values with minute precision, while existing date-only Library docs remain valid
 - optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
 - optional `ui_status` front matter stores a Docs Viewer status key that is carried into generated docs payloads and interpreted against scope-specific viewer config
 

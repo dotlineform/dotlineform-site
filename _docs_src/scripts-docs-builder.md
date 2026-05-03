@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
 added_date: 2026-04-23
-last_updated: 2026-04-26
+last_updated: "2026-05-03 13:55"
 parent_id: scripts
 sort_order: 20
 ---
@@ -71,9 +71,9 @@ Generated outputs:
 - `title`
   label used in the viewer index and page title
 - `added_date`
-  generated docs index metadata for recently-added lists; legacy source docs without this field fall back to `last_updated`
+  generated docs index metadata for recently-added lists; legacy source docs without this field fall back to `last_updated`; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
 - `last_updated`
-  display metadata for viewer scopes whose generated `viewer_options.show_updated_date` is not `false`, and search metadata for docs-domain search
+  display metadata for viewer scopes whose generated `viewer_options.show_updated_date` is not `false`, and search metadata for docs-domain search; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
 - `summary`
   optional plain-text summary carried into docs-viewer index and per-doc payloads
 - `ui_status`

@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: 2026-05-03
+last_updated: "2026-05-03 13:55"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -274,7 +274,7 @@ Each export file should include metadata:
 - counts for included, skipped, and truncated documents
 
 V1 should use source document `last_updated` as the source version marker.
-If export review shows same-day edits are hard to distinguish, the docs source metadata model should consider a more granular timestamp such as hour and minute.
+Existing date-only docs remain valid, and new Docs Viewer management writes use minute-precision `last_updated` values.
 
 ### Reporting
 
@@ -292,7 +292,6 @@ The Studio page should show this report after export and make the file path visi
 
 ## Open Questions
 
-- Should docs source metadata support a more granular `last_updated` timestamp before export workflows rely on it for review?
 - Which validation failures should block each export config, and which should be reported as warnings?
 - What real thresholds should later trigger batching or long-document chunking?
 
@@ -305,6 +304,7 @@ The Studio page should show this report after export and make the file path visi
 - JSONL is preferred when multiple complete document records are exported in one file for LLM upload.
 - Automatic batching and chunking are future enhancements.
 - V1 should use source document `last_updated` values as the source version marker.
+- Existing date-only `last_updated` values remain valid; newly managed docs use `YYYY-MM-DD HH:MM`.
 - `published: false` docs and `_archive` descendants should not be exportable through the v1 Studio UI.
 - Non-viewable generated docs should be exportable and visibly marked.
 - Raw source Markdown and Markdown target documents are later config extensions, not v1 defaults.

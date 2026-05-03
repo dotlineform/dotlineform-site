@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-15e871c3f9a10f2a6b049ca2d68ae973",
-    "generated_at_utc": "2026-05-03T12:09:10Z",
+    "version": "blake2b-7ee6f18365ff3ee598e5dc34e4c668ec",
+    "generated_at_utc": "2026-05-03T12:58:02Z",
     "count": 163
   },
   "entries": [
@@ -149,10 +149,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03 13:55",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-26 • Scripts",
+      "display_meta": "2026-05-03 13:55 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -160,12 +160,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-04-26",
+        "2026-05-03 13:55",
         "2026",
-        "04",
-        "26"
+        "05",
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-26 2026 04 26"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -364,10 +366,10 @@
       "kind": "doc",
       "title": "Shared Patterns",
       "href": "/docs/?scope=studio&doc=data-models-shared",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03 13:55",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-26 • Data Models",
+      "display_meta": "2026-05-03 13:55 • Data Models",
       "search_terms": [
         "data-models-shared",
         "data",
@@ -376,12 +378,14 @@
         "shared patterns",
         "patterns",
         "data models",
-        "2026-04-26",
+        "2026-05-03 13:55",
         "2026",
-        "04",
-        "26"
+        "05",
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-04-26 2026 04 26"
+      "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "site-docs",
@@ -695,10 +699,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-03 13:55",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-26 • Scripts",
+      "display_meta": "2026-05-03 13:55 • Scripts",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -706,12 +710,14 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-04-26",
+        "2026-05-03 13:55",
         "2026",
-        "04",
-        "26"
+        "05",
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-26 2026 04 26"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "library-semantic-enrichment-spec",
@@ -1012,21 +1018,23 @@
       "kind": "doc",
       "title": "Library Export",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 13:55",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 • Library",
+      "display_meta": "2026-05-03 13:55 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export",
-        "2026-05-03",
+        "2026-05-03 13:55",
         "2026",
         "05",
-        "03"
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "library-export library export library export 2026-05-03 2026 05 03"
+      "search_text": "library-export library export library export 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "studio-smoke-testing",
@@ -1709,10 +1717,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03 13:55",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-04-25 • Data Models",
+      "display_meta": "2026-05-03 13:55 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1721,12 +1729,14 @@
         "library scope",
         "scope",
         "data models",
-        "2026-04-25",
+        "2026-05-03 13:55",
         "2026",
-        "04",
-        "25"
+        "05",
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-04-25 2026 04 25"
+      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "search-ranking-model",
@@ -3235,10 +3245,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 13:55",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 • Change Requests",
+      "display_meta": "2026-05-03 13:55 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -3248,12 +3258,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03",
+        "2026-05-03 13:55",
         "2026",
         "05",
-        "03"
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-03 2026 05 03"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "llm",
@@ -3769,20 +3781,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03",
-      "display_meta": "2026-05-03",
+      "last_updated": "2026-05-03 13:55",
+      "display_meta": "2026-05-03 13:55",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03",
+        "2026-05-03 13:55",
         "2026",
         "05",
-        "03"
+        "03",
+        "13",
+        "55"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 2026 05 03"
+      "search_text": "site-change-log site change log site change log 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
       "id": "tiered-dimension-policy",
