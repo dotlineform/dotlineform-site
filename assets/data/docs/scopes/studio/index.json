@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T21:00:15Z",
+  "generated_at": "2026-05-03T21:05:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -639,7 +639,7 @@
       "source_path": "site-request-local-docs-data-server-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-local-docs-data-server-reads.json",
-      "ui_status": "proposed"
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
