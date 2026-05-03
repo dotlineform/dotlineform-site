@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-03 14:15"
+last_updated: "2026-05-03 14:25"
 parent_id: data-models
 sort_order: 40
 ---
@@ -46,7 +46,7 @@ Current design:
 - Docs Viewer management writes new `added_date` and changed `last_updated` values with minute precision, while existing date-only Library docs remain valid
 - optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
 - optional `ui_status` front matter stores a Docs Viewer status key that is carried into generated docs payloads and interpreted against scope-specific viewer config
-- Library export configs are defined separately from source docs by `assets/studio/data/library_export_configs.schema.json`; v1 export configs should read Library Docs Viewer source/generated fields without mutating them
+- Library export configs are defined separately from source docs by `assets/studio/data/library_export_configs.json` and `assets/studio/data/library_export_configs.schema.json`; v1 export configs should read Library Docs Viewer source/generated fields without mutating them
 
 Current implementation note:
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cf11286acc614973ebcb043161ea5de7",
-    "generated_at_utc": "2026-05-03T13:09:21Z",
+    "version": "blake2b-47f449db4a3e299b0e5d98669ed9fcff",
+    "generated_at_utc": "2026-05-03T13:21:15Z",
     "count": 164
   },
   "entries": [
@@ -1018,23 +1018,23 @@
       "kind": "doc",
       "title": "Library Export",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03 14:15",
+      "last_updated": "2026-05-03 14:25",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 14:15 • Library",
+      "display_meta": "2026-05-03 14:25 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export",
-        "2026-05-03 14:15",
+        "2026-05-03 14:25",
         "2026",
         "05",
         "03",
         "14",
-        "15"
+        "25"
       ],
-      "search_text": "library-export library export library export 2026-05-03 14:15 2026 05 03 14 15"
+      "search_text": "library-export library export library export 2026-05-03 14:25 2026 05 03 14 25"
     },
     {
       "id": "studio-smoke-testing",
@@ -1717,10 +1717,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-03 14:15",
+      "last_updated": "2026-05-03 14:25",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-03 14:15 • Data Models",
+      "display_meta": "2026-05-03 14:25 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1729,14 +1729,14 @@
         "library scope",
         "scope",
         "data models",
-        "2026-05-03 14:15",
+        "2026-05-03 14:25",
         "2026",
         "05",
         "03",
         "14",
-        "15"
+        "25"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 14:15 2026 05 03 14 15"
+      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 14:25 2026 05 03 14 25"
     },
     {
       "id": "search-ranking-model",
@@ -2424,10 +2424,10 @@
       "kind": "doc",
       "title": "Library Export Configs",
       "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-05-03 14:15",
+      "last_updated": "2026-05-03 14:25",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 14:15 • Config",
+      "display_meta": "2026-05-03 14:25 • Config",
       "search_terms": [
         "config-library-export-configs",
         "config",
@@ -2435,14 +2435,14 @@
         "export",
         "configs",
         "library export configs",
-        "2026-05-03 14:15",
+        "2026-05-03 14:25",
         "2026",
         "05",
         "03",
         "14",
-        "15"
+        "25"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 14:15 2026 05 03 14 15"
+      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 14:25 2026 05 03 14 25"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -2996,18 +2996,18 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-05-03 14:15",
-      "display_meta": "2026-05-03 14:15",
+      "last_updated": "2026-05-03 14:25",
+      "display_meta": "2026-05-03 14:25",
       "search_terms": [
         "config",
-        "2026-05-03 14:15",
+        "2026-05-03 14:25",
         "2026",
         "05",
         "03",
         "14",
-        "15"
+        "25"
       ],
-      "search_text": "config 2026-05-03 14:15 2026 05 03 14 15"
+      "search_text": "config 2026-05-03 14:25 2026 05 03 14 25"
     },
     {
       "id": "scripts-css-token-audit",
@@ -3808,22 +3808,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 14:15",
-      "display_meta": "2026-05-03 14:15",
+      "last_updated": "2026-05-03 14:25",
+      "display_meta": "2026-05-03 14:25",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 14:15",
+        "2026-05-03 14:25",
         "2026",
         "05",
         "03",
         "14",
-        "15"
+        "25"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 14:15 2026 05 03 14 15"
+      "search_text": "site-change-log site change log site change log 2026-05-03 14:25 2026 05 03 14 25"
     },
     {
       "id": "tiered-dimension-policy",

@@ -1,0 +1,312 @@
+{
+  "schema_version": "library_export_configs_v1",
+  "configs": [
+    {
+      "id": "library-parent-child-relationships",
+      "label": "Parent-child relationships",
+      "description": "Exports Library document hierarchy, relationship metadata, summaries, and headings for structure review.",
+      "enabled": true,
+      "scopes": ["library"],
+      "target": {
+        "format": "json",
+        "record_shape": "envelope",
+        "document_array_path": "documents",
+        "include_export_metadata": true
+      },
+      "output": {
+        "path_pattern": "var/docs/exports/{scope}/{timestamp}/{export_id}.json",
+        "timestamp_format": "%Y%m%d-%H%M%S"
+      },
+      "selection": {
+        "mode": "all_matching",
+        "include_descendants": true,
+        "include_non_viewable": true,
+        "exclude_archived": true,
+        "exclude_unpublished": true,
+        "supports_missing_summary_only": false,
+        "default_missing_summary_only": false
+      },
+      "limits": {
+        "max_documents": null,
+        "max_chars_per_document": null,
+        "max_total_chars": null,
+        "truncate": {
+          "enabled": false,
+          "strategy": "paragraph_boundary",
+          "marker": "[truncated]"
+        }
+      },
+      "metadata": {
+        "include": [
+          "export_id",
+          "config_id",
+          "config_checksum",
+          "scope",
+          "generated_at",
+          "selected_doc_ids",
+          "source_last_updated",
+          "counts"
+        ]
+      },
+      "document_fields": [
+        {
+          "source": "doc_id",
+          "output_path": "doc_id",
+          "required": true
+        },
+        {
+          "source": "title",
+          "output_path": "title",
+          "required": true
+        },
+        {
+          "source": "parent_id",
+          "output_path": "parent_id",
+          "include_if_empty": true
+        },
+        {
+          "source": "parent_title",
+          "output_path": "parent_title",
+          "include_if_empty": true
+        },
+        {
+          "source": "ancestor_ids",
+          "output_path": "ancestor_ids",
+          "default": []
+        },
+        {
+          "source": "ancestor_titles",
+          "output_path": "ancestor_titles",
+          "default": []
+        },
+        {
+          "source": "child_ids",
+          "output_path": "child_ids",
+          "default": []
+        },
+        {
+          "source": "child_titles",
+          "output_path": "child_titles",
+          "default": []
+        },
+        {
+          "source": "summary",
+          "output_path": "summary",
+          "default": ""
+        },
+        {
+          "source": "headings",
+          "output_path": "headings",
+          "default": [],
+          "transforms": ["headings_from_rendered_html"]
+        },
+        {
+          "source": "last_updated",
+          "output_path": "last_updated",
+          "required": true
+        },
+        {
+          "source": "viewable",
+          "output_path": "viewable",
+          "required": true
+        }
+      ],
+      "notes": "Intended to run across the generated, non-archived Library corpus so relationship review has whole-tree context."
+    },
+    {
+      "id": "library-document-summaries",
+      "label": "Document summaries",
+      "description": "Exports Library documents with current summaries, headings, and plain text for summary generation or audit.",
+      "enabled": true,
+      "scopes": ["library"],
+      "target": {
+        "format": "jsonl",
+        "record_shape": "document_rows",
+        "include_export_metadata": true
+      },
+      "output": {
+        "path_pattern": "var/docs/exports/{scope}/{timestamp}/{export_id}.jsonl",
+        "timestamp_format": "%Y%m%d-%H%M%S"
+      },
+      "selection": {
+        "mode": "explicit_doc_ids",
+        "include_descendants": true,
+        "include_non_viewable": true,
+        "exclude_archived": true,
+        "exclude_unpublished": true,
+        "supports_missing_summary_only": true,
+        "default_missing_summary_only": true
+      },
+      "limits": {
+        "max_documents": null,
+        "max_chars_per_document": 12000,
+        "max_total_chars": null,
+        "truncate": {
+          "enabled": true,
+          "strategy": "paragraph_boundary",
+          "marker": "[truncated]"
+        }
+      },
+      "metadata": {
+        "include": [
+          "export_id",
+          "config_id",
+          "config_checksum",
+          "scope",
+          "generated_at",
+          "selected_doc_ids",
+          "source_last_updated",
+          "counts"
+        ]
+      },
+      "document_fields": [
+        {
+          "source": "doc_id",
+          "output_path": "doc_id",
+          "required": true
+        },
+        {
+          "source": "title",
+          "output_path": "title",
+          "required": true
+        },
+        {
+          "source": "parent_id",
+          "output_path": "parent_id",
+          "include_if_empty": true
+        },
+        {
+          "source": "headings",
+          "output_path": "headings",
+          "default": [],
+          "transforms": ["headings_from_rendered_html"]
+        },
+        {
+          "source": "current_summary",
+          "output_path": "current_summary",
+          "default": ""
+        },
+        {
+          "source": "source_text",
+          "output_path": "source_text",
+          "required": true,
+          "transforms": [
+            "plain_text_from_rendered_html",
+            "omit_code_blocks",
+            "normalize_whitespace",
+            "truncate_chars"
+          ],
+          "limit_key": "max_chars_per_document"
+        },
+        {
+          "source": "last_updated",
+          "output_path": "last_updated",
+          "required": true
+        },
+        {
+          "source": "viewable",
+          "output_path": "viewable",
+          "required": true
+        }
+      ],
+      "notes": "Default missing-summary filtering supports the first semantic-enrichment pass while still allowing full summary audit runs."
+    },
+    {
+      "id": "library-full-document-content",
+      "label": "Full document content",
+      "description": "Exports multiple Library documents with summaries, headings, and fuller plain text content in one JSONL file.",
+      "enabled": true,
+      "scopes": ["library"],
+      "target": {
+        "format": "jsonl",
+        "record_shape": "document_rows",
+        "include_export_metadata": true
+      },
+      "output": {
+        "path_pattern": "var/docs/exports/{scope}/{timestamp}/{export_id}.jsonl",
+        "timestamp_format": "%Y%m%d-%H%M%S"
+      },
+      "selection": {
+        "mode": "explicit_doc_ids",
+        "include_descendants": true,
+        "include_non_viewable": true,
+        "exclude_archived": true,
+        "exclude_unpublished": true,
+        "supports_missing_summary_only": false,
+        "default_missing_summary_only": false
+      },
+      "limits": {
+        "max_documents": null,
+        "max_chars_per_document": 50000,
+        "max_total_chars": null,
+        "truncate": {
+          "enabled": true,
+          "strategy": "paragraph_boundary",
+          "marker": "[truncated]"
+        }
+      },
+      "metadata": {
+        "include": [
+          "export_id",
+          "config_id",
+          "config_checksum",
+          "scope",
+          "generated_at",
+          "selected_doc_ids",
+          "source_last_updated",
+          "counts"
+        ]
+      },
+      "document_fields": [
+        {
+          "source": "doc_id",
+          "output_path": "doc_id",
+          "required": true
+        },
+        {
+          "source": "title",
+          "output_path": "title",
+          "required": true
+        },
+        {
+          "source": "parent_id",
+          "output_path": "parent_id",
+          "include_if_empty": true
+        },
+        {
+          "source": "summary",
+          "output_path": "summary",
+          "default": ""
+        },
+        {
+          "source": "headings",
+          "output_path": "headings",
+          "default": [],
+          "transforms": ["headings_from_rendered_html"]
+        },
+        {
+          "source": "source_text",
+          "output_path": "source_text",
+          "required": true,
+          "transforms": [
+            "plain_text_from_rendered_html",
+            "normalize_whitespace",
+            "truncate_chars"
+          ],
+          "limit_key": "max_chars_per_document"
+        },
+        {
+          "source": "last_updated",
+          "output_path": "last_updated",
+          "required": true
+        },
+        {
+          "source": "viewable",
+          "output_path": "viewable",
+          "required": true
+        }
+      ],
+      "notes": "Designed for external review, bulk LLM upload, and internal reporting where several selected docs should travel in the same file."
+    }
+  ]
+}

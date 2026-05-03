@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 14:15"
+last_updated: "2026-05-03 14:25"
 parent_id: config
 sort_order: 70
 ---
@@ -19,17 +19,31 @@ Schema file:
 
 ## Scope
 
-`library_export_configs.json` will define saved export patterns for the Library export workflow.
+`library_export_configs.json` defines saved export patterns for the Library export workflow.
 
 The first implementation scope is Library, but the schema keeps the scope field as an array so the same export engine can later support other Docs Viewer scopes.
 
 The config is source-controlled project configuration.
 The Studio UI should list and run existing configs, but it should not create or edit config definitions in v1.
 
+## Initial Configs
+
+The first config file defines three enabled Library export patterns:
+
+- `library-parent-child-relationships`
+  envelope JSON for whole-corpus hierarchy and relationship review
+- `library-document-summaries`
+  JSONL document rows for summary generation and summary audit, defaulting to missing-summary filtering
+- `library-full-document-content`
+  JSONL document rows for exporting multiple selected document bodies in one file
+
+These configs are Library-only for v1.
+They include generated but non-viewable docs, exclude archived docs, and exclude unpublished docs.
+
 ## Top-Level Shape
 
 The config root contains `schema_version: "library_export_configs_v1"` plus a `configs` array.
-`configs` is an array of export pattern objects and must contain at least one enabled or disabled export pattern once the config file is added.
+`configs` is an array of export pattern objects and must contain at least one enabled or disabled export pattern.
 Each pattern must be independently runnable and must define its scope support, target format, output path, selection rules, limits, export metadata, and document field mappings.
 
 ## Export Config Fields

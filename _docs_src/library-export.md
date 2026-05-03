@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 14:15"
+last_updated: "2026-05-03 14:25"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -325,6 +325,8 @@ Add configs for:
 - parent-child relationships data
 - document summaries
 - full document content with multiple documents in one file
+
+Status: implemented in `assets/studio/data/library_export_configs.json`.
 
 ### Task 3. Build Read-Only Export Engine
 

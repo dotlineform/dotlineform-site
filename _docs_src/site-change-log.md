@@ -2,11 +2,41 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 14:15"
+last_updated: "2026-05-03 14:25"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added initial Library export configs
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Added the first three source-controlled Library export config patterns.
+
+**Reason:**
+The export workflow needs concrete configs before the read-only export engine and Studio UI can be built against the schema.
+
+**Effect:**
+The config file now defines enabled patterns for parent-child relationships, document summaries, and full document content. Relationship export uses envelope JSON for whole-corpus structure review. Summary and full-content exports use JSONL document rows for multi-document external review and LLM-upload-oriented workflows.
+
+**Affected files/docs:**
+
+- `assets/studio/data/library_export_configs.json`
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Config](/docs/?scope=studio&doc=config)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Benefits:**
+The next exporter task has real config fixtures for field mapping, selection behavior, output format, and limits.
+
+**Risks:**
+The configs are not runnable until the export engine implements the declared transforms, relationship fields, filtering rules, and output writer.
 
 ## [2026-05-03] Defined Library export config schema
 
