@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-03 20:25"
+last_updated: "2026-05-03 20:33"
 parent_id: scripts
 sort_order: 26
 ---
@@ -27,6 +27,11 @@ Current input path:
 - `var/docs/import-staging/library/<filename>.json`
 - `var/docs/import-staging/library/<filename>.jsonl`
 
+Current lookup paths:
+
+- `assets/data/docs/scopes/library/index.json`
+- `assets/data/docs/scopes/library/by-id/<doc_id>.json`
+
 Current outputs:
 
 - a structured JSON report on stdout
@@ -45,11 +50,13 @@ Implemented now:
 - falls back to structural detection for relationship, summary, full-content, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
+- loads the current generated Library docs index and generated payload filenames
+- annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
+- reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
 
 Not implemented yet:
 
-- current-Library lookup
 - Markdown preview rendering
 - Studio service endpoints
 - Studio Library import page integration
@@ -86,6 +93,7 @@ The script prints a JSON report with:
 - `records`
 - `source_metadata`
 - `unknown_file_metadata`
+- `current_library`
 
 `counts` includes:
 
@@ -113,7 +121,8 @@ It blocks only concerns that prevent useful parsing:
 - staged path outside `var/docs/import-staging/library/`
 
 Record-level problems are warnings when the file can still be inspected.
-Current-Library checks, preview path checks, Markdown rendering behavior, and apply-time freshness checks belong to later Library import tasks.
+Current-Library lookup warnings do not block parsing.
+Preview path checks, Markdown rendering behavior, and apply-time freshness checks belong to later Library import tasks.
 
 ## Verification
 
@@ -123,7 +132,7 @@ Focused parser checks live in:
 tests/python/test_docs_import.py
 ```
 
-They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, invalid JSONL blocking, and staged path allowlisting.
+They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, invalid JSONL blocking, and staged path allowlisting.
 The same check runs in the `docs` profile:
 
 ```bash

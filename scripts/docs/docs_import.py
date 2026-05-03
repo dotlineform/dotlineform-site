@@ -17,6 +17,7 @@ from typing import Any
 
 
 STAGING_ROOT = Path("var/docs/import-staging")
+DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
 SUPPORTED_SCOPES = {"library"}
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
@@ -55,6 +56,8 @@ KNOWN_RECORD_FIELDS = {
     "viewable",
     "published",
 }
+
+
 def detect_repo_root(explicit_root: str | None = None) -> Path:
     if explicit_root:
         repo_root = Path(explicit_root).expanduser().resolve()
@@ -222,6 +225,64 @@ def rows_from_payload(payload: Any) -> tuple[list[Any], dict[str, Any], dict[str
     return [], {}, {}, issues
 
 
+def read_json_object(path: Path, label: str) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Expected JSON object for {label}: {path}")
+    return payload
+
+
+def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    issues: list[dict[str, Any]] = []
+    index_path = repo_root / DOCS_SCOPES_ROOT / scope / "index.json"
+    context: dict[str, Any] = {
+        "index_loaded": False,
+        "index_path": relative_path(repo_root, index_path),
+        "doc_count": 0,
+        "payload_count": 0,
+        "docs_by_id": {},
+        "payload_ids": [],
+    }
+    try:
+        payload = read_json_object(index_path, f"{scope} docs index")
+    except FileNotFoundError:
+        issues.append(issue("warning", "current_index_missing", f"current {scope} docs index is missing"))
+        return context, issues
+    except (json.JSONDecodeError, ValueError, OSError) as exc:
+        issues.append(issue("warning", "current_index_unreadable", f"current {scope} docs index could not be read: {exc}"))
+        return context, issues
+
+    docs = payload.get("docs")
+    if not isinstance(docs, list):
+        issues.append(issue("warning", "current_index_invalid", f"current {scope} docs index has no docs array"))
+        return context, issues
+
+    docs_by_id: dict[str, dict[str, Any]] = {}
+    for item in docs:
+        if not isinstance(item, dict):
+            continue
+        doc_id = normalize_text(item.get("doc_id"))
+        if not doc_id:
+            continue
+        if doc_id in docs_by_id:
+            issues.append(issue("warning", "current_duplicate_doc_id", f"current Library index has duplicate doc_id: {doc_id}", doc_id=doc_id))
+            continue
+        docs_by_id[doc_id] = item
+
+    payload_root = repo_root / DOCS_SCOPES_ROOT / scope / "by-id"
+    payload_ids = sorted(path.stem for path in payload_root.glob("*.json")) if payload_root.exists() else []
+    context.update(
+        {
+            "index_loaded": True,
+            "doc_count": len(docs_by_id),
+            "payload_count": len(payload_ids),
+            "docs_by_id": docs_by_id,
+            "payload_ids": payload_ids,
+        }
+    )
+    return context, issues
+
+
 def row_export_metadata(row: dict[str, Any]) -> dict[str, Any]:
     metadata = row.get("_export")
     return copy.deepcopy(metadata) if isinstance(metadata, dict) else {}
@@ -302,6 +363,129 @@ def merge_source_metadata(file_metadata: dict[str, Any], row_metadata: list[dict
             elif metadata[key] != value:
                 issues.append(issue("warning", "inconsistent_export_metadata", f"inconsistent export metadata field: {key}"))
     return metadata, issues
+
+
+def current_report_context(current: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "index_loaded": bool(current.get("index_loaded")),
+        "index_path": normalize_text(current.get("index_path")),
+        "doc_count": int(current.get("doc_count") or 0),
+        "payload_count": int(current.get("payload_count") or 0),
+    }
+
+
+def add_current_library_report(
+    records: list[dict[str, Any]],
+    *,
+    current: dict[str, Any],
+) -> list[dict[str, Any]]:
+    if not current.get("index_loaded"):
+        return []
+
+    issues: list[dict[str, Any]] = []
+    docs_by_id = current.get("docs_by_id") if isinstance(current.get("docs_by_id"), dict) else {}
+    payload_ids = set(current.get("payload_ids") if isinstance(current.get("payload_ids"), list) else [])
+
+    staged_ids = {
+        normalize_text(record.get("doc_id"))
+        for record in records
+        if normalize_text(record.get("doc_id"))
+    }
+    for record in records:
+        record_index = record.get("record_index") if isinstance(record.get("record_index"), int) else None
+        line = record.get("line") if isinstance(record.get("line"), int) else None
+        doc_id = normalize_text(record.get("doc_id"))
+        parent_id = normalize_text(record.get("parent_id"))
+        current_doc = docs_by_id.get(doc_id)
+
+        current_state: dict[str, Any] = {
+            "exists": bool(current_doc),
+            "published": None,
+            "viewable": None,
+            "payload_exists": False,
+            "parent_exists": None,
+            "parent_payload_exists": None,
+        }
+        if current_doc:
+            current_state["published"] = current_doc.get("published")
+            current_state["viewable"] = current_doc.get("viewable")
+            current_state["payload_exists"] = doc_id in payload_ids
+        record["current_library"] = current_state
+
+        if not doc_id:
+            continue
+        if not current_doc:
+            issues.append(
+                issue(
+                    "warning",
+                    "unknown_doc_id",
+                    f"record doc_id is not in the current Library index: {doc_id}",
+                    record_index=record_index,
+                    line=line,
+                    doc_id=doc_id,
+                )
+            )
+        elif current_doc.get("published") is False:
+            issues.append(
+                issue(
+                    "warning",
+                    "current_doc_unpublished",
+                    f"record exists in the current Library index but is unpublished: {doc_id}",
+                    record_index=record_index,
+                    line=line,
+                    doc_id=doc_id,
+                )
+            )
+        if current_doc and doc_id not in payload_ids:
+            issues.append(
+                issue(
+                    "warning",
+                    "current_payload_missing",
+                    f"record exists in the current Library index but has no generated payload: {doc_id}",
+                    record_index=record_index,
+                    line=line,
+                    doc_id=doc_id,
+                )
+            )
+
+        if parent_id:
+            parent_doc = docs_by_id.get(parent_id)
+            current_state["parent_exists"] = bool(parent_doc)
+            current_state["parent_payload_exists"] = parent_id in payload_ids
+            if parent_id not in docs_by_id and parent_id not in staged_ids:
+                issues.append(
+                    issue(
+                        "warning",
+                        "missing_parent_id",
+                        f"parent_id is not in the current Library index or staged records: {parent_id}",
+                        record_index=record_index,
+                        line=line,
+                        doc_id=doc_id,
+                    )
+                )
+            elif parent_doc and parent_doc.get("published") is False:
+                issues.append(
+                    issue(
+                        "warning",
+                        "parent_unpublished",
+                        f"parent_id points to an unpublished current Library record: {parent_id}",
+                        record_index=record_index,
+                        line=line,
+                        doc_id=doc_id,
+                    )
+                )
+            elif parent_doc and parent_id not in payload_ids:
+                issues.append(
+                    issue(
+                        "warning",
+                        "parent_payload_missing",
+                        f"parent_id points to a current Library record with no generated payload: {parent_id}",
+                        record_index=record_index,
+                        line=line,
+                        doc_id=doc_id,
+                    )
+                )
+    return issues
 
 
 def parse_staged_import(*, repo_root: Path, scope: str, staged_file: str) -> dict[str, Any]:
@@ -388,6 +572,8 @@ def parse_staged_import(*, repo_root: Path, scope: str, staged_file: str) -> dic
 
     source_metadata, metadata_issues = merge_source_metadata(file_metadata, [item for item in row_metadata if item])
     report["issues"].extend(metadata_issues)
+    current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
+    report["issues"].extend(current_issues)
     source_export_id = normalize_text(source_metadata.get("export_id") or source_metadata.get("config_id"))
     report["source_export_id"] = source_export_id
     report["source_scope"] = normalize_text(source_metadata.get("scope"))
@@ -396,6 +582,8 @@ def parse_staged_import(*, repo_root: Path, scope: str, staged_file: str) -> dic
     report["unknown_file_metadata"] = unknown_file_metadata
     report["records"] = records
     report["detected_import_type"] = detect_import_type(source_export_id, records)
+    report["current_library"] = current_report_context(current_context)
+    report["issues"].extend(add_current_library_report(records, current=current_context))
 
     if report["detected_import_type"] == "unknown" and raw_rows:
         report["issues"].append(issue("warning", "unsupported_import_shape", "could not detect import type"))

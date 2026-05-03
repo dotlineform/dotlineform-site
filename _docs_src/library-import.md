@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 20:25"
+last_updated: "2026-05-03 20:33"
 ui_status: in-progress
 parent_id: library
 sort_order: 30
@@ -277,13 +277,18 @@ The parser should not write source docs.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
 The parser reads only from `var/docs/import-staging/library/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
-It does not load current Library generated docs data, render Markdown previews, or write any output files.
+It does not render Markdown previews or write any output files.
 
 ### Task 3. Add Report Issues And Current-Library Lookup
 
 Load the generated Library Docs Viewer index and report staged records against current Library `doc_id`, publication, parent, and generated payload state.
 
 This task should keep file-level blockers narrow and treat record-level problems as report warnings unless parsing cannot continue.
+
+Status: implemented in `./scripts/docs/docs_import.py`.
+The parser now loads `assets/data/docs/scopes/library/index.json` plus generated payload filenames under `assets/data/docs/scopes/library/by-id/`, adds current-Library summary data to the report, annotates normalized records with current existence, publication, viewability, payload, and parent state, and reports lookup problems as warnings.
+Current-Library lookup warnings include unknown `doc_id`, unpublished current records, missing generated payloads, missing parent ids, unpublished parents, and parents without generated payloads.
+If the current index is missing or unreadable, parsing still proceeds and the index problem is reported as a warning.
 
 ### Task 4. Render Markdown Previews
 
@@ -330,12 +335,13 @@ Add focused tests for:
 - unknown metadata preservation
 - unsupported shape reporting
 - duplicate and missing `doc_id` reporting
+- current-Library lookup reporting
 - relationship tree rendering
 - relationship whole-tree preview output
 - deterministic preview output
 - staged path allowlist behavior
 
-Parser coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, invalid JSONL blocking, and staged path allowlisting is implemented in `tests/python/test_docs_import.py`.
+Parser coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, invalid JSONL blocking, and staged path allowlisting is implemented in `tests/python/test_docs_import.py`.
 Renderer and Studio page coverage should be added when those tasks are implemented.
 
 Add a light Studio smoke test once the page exists.

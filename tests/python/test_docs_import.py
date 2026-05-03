@@ -32,7 +32,38 @@ def make_repo() -> tempfile.TemporaryDirectory:
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
     (root / "var/docs/import-staging/library").mkdir(parents=True, exist_ok=True)
+    write_current_index(
+        root,
+        [
+            {"doc_id": "library", "title": "Library", "parent_id": "", "published": True, "viewable": True},
+            {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "published": True, "viewable": True},
+            {"doc_id": "beta", "title": "Beta", "parent_id": "library", "published": True, "viewable": True},
+            {
+                "doc_id": "missing-title",
+                "title": "Missing Title",
+                "parent_id": "library",
+                "published": True,
+                "viewable": True,
+            },
+        ],
+    )
     return temp_dir
+
+
+def write_current_index(root: Path, docs: list[dict], *, payload_ids: list[str] | None = None) -> None:
+    index_path = root / "assets/data/docs/scopes/library/index.json"
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    index_path.write_text(json.dumps({"docs": docs}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    payload_root = root / "assets/data/docs/scopes/library/by-id"
+    payload_root.mkdir(parents=True, exist_ok=True)
+    for existing in payload_root.glob("*.json"):
+        existing.unlink()
+    ids = payload_ids if payload_ids is not None else [doc["doc_id"] for doc in docs if doc.get("doc_id")]
+    for doc_id in ids:
+        (payload_root / f"{doc_id}.json").write_text(
+            json.dumps({"doc_id": doc_id, "title": doc_id}, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
 
 
 def write_staged(root: Path, filename: str, text: str) -> None:
@@ -165,6 +196,58 @@ def test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_pa
     assert [item["code"] for item in report["issues"]] == ["missing_doc_id", "missing_title", "duplicate_doc_id"]
 
 
+def test_current_library_lookup_adds_record_level_warnings() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_current_index(
+            root,
+            [
+                {"doc_id": "library", "title": "Library", "parent_id": "", "published": True, "viewable": True},
+                {
+                    "doc_id": "unpublished-parent",
+                    "title": "Unpublished Parent",
+                    "parent_id": "library",
+                    "published": False,
+                    "viewable": False,
+                },
+                {
+                    "doc_id": "no-payload",
+                    "title": "No Payload",
+                    "parent_id": "library",
+                    "published": True,
+                    "viewable": True,
+                },
+            ],
+            payload_ids=["library", "unpublished-parent"],
+        )
+        payload = [
+            {"doc_id": "unknown-doc", "title": "Unknown Doc", "parent_id": "missing-parent"},
+            {"doc_id": "unpublished-parent", "title": "Unpublished Parent", "parent_id": "library"},
+            {"doc_id": "no-payload", "title": "No Payload", "parent_id": "unpublished-parent"},
+        ]
+        write_staged(root, "lookup.json", json.dumps(payload))
+        report = parse(root, "lookup.json")
+
+    assert report["ok"] is True
+    assert report["current_library"] == {
+        "index_loaded": True,
+        "index_path": "assets/data/docs/scopes/library/index.json",
+        "doc_count": 3,
+        "payload_count": 2,
+    }
+    assert report["counts"] == {"records": 3, "parsed_records": 3, "malformed_records": 0, "warnings": 5, "errors": 0}
+    assert [item["code"] for item in report["issues"]] == [
+        "unknown_doc_id",
+        "missing_parent_id",
+        "current_doc_unpublished",
+        "current_payload_missing",
+        "parent_unpublished",
+    ]
+    assert report["records"][0]["current_library"]["exists"] is False
+    assert report["records"][1]["current_library"]["published"] is False
+    assert report["records"][2]["current_library"]["payload_exists"] is False
+
+
 def test_invalid_jsonl_is_a_file_level_blocker() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -196,6 +279,7 @@ def main() -> None:
         test_json_envelope_relationship_export_preserves_tree_metadata,
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,
+        test_current_library_lookup_adds_record_level_warnings,
         test_invalid_jsonl_is_a_file_level_blocker,
         test_parser_rejects_paths_outside_staging_root,
     ]

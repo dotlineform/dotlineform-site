@@ -2,11 +2,39 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 20:25"
+last_updated: "2026-05-03 20:33"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added current-Library lookup to the import parser
+
+**Status:** implemented
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Completed Library import Task 3 by adding current Library generated-doc lookup to the staged import parser.
+
+**Reason:**
+Preview generation needs to distinguish staged data that maps cleanly to current Library docs from staged records that are unknown, unpublished, missing payloads, or attached to questionable parents.
+
+**Changes:**
+`./scripts/docs/docs_import.py` now loads `assets/data/docs/scopes/library/index.json` and generated payload filenames under `assets/data/docs/scopes/library/by-id/` after staged-file parsing succeeds.
+The parser adds a `current_library` summary to the report, annotates each normalized record with current existence, publication, viewability, payload, and parent state, and reports lookup problems as warnings rather than blockers.
+Focused import tests now cover unknown current ids, unpublished current records, missing current payloads, missing parents, and unpublished parents.
+
+**Files changed:**
+
+- `scripts/docs/docs_import.py`
+- `tests/python/test_docs_import.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+
+**Impact:**
+Library import reports are now useful enough to drive preview rendering decisions without implying that staged data is safe to apply.
+The next task can consume normalized records plus current-state warnings when writing Markdown previews.
 
 ## [2026-05-03] Added the read-only Library import parser
 
@@ -37,7 +65,7 @@ The `docs` check profile now runs both export and import parser checks.
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
 
 **Impact:**
-Library import now has a source-read-only parser boundary that can feed Task 3 current-Library lookup and Task 4 Markdown preview rendering.
+Library import now has a source-read-only parser boundary that can feed current-Library lookup and Task 4 Markdown preview rendering.
 It still does not write preview files, call the docs-management service, or mutate canonical Library source.
 
 ## [2026-05-03] Confirmed Library import v1 preview spec
