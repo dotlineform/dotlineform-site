@@ -3,7 +3,7 @@ doc_id: site-request-studio-audits-page
 title: Studio Audits Page Request
 added_date: 2026-05-03
 last_updated: 2026-05-03
-ui_status: implemented
+ui_status: done
 parent_id: change-requests
 sort_order: 38
 ---
@@ -12,6 +12,8 @@ sort_order: 38
 Status:
 
 - implemented
+
+The next natural improvement later would be adding a second audit only after its script has a structured JSON contract, so the page stays simple instead of turning into a terminal-output viewer.
 
 ## Current Implementation
 
