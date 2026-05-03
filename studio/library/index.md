@@ -39,6 +39,10 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
         <h4>Import</h4>
         <p>Import staged HTML into the published Library docs source for manage-mode review.</p>
       </a>
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/library-export/' | relative_url }}">
+        <h4>Export</h4>
+        <p>Select Library docs for configured JSON and JSONL export patterns.</p>
+      </a>
     </div>
   </section>
 </div>

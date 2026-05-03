@@ -2,11 +2,45 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 15:20"
+last_updated: "2026-05-03 16:03"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Library export selection page
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Added `/studio/library-export/` as the first Studio UI slice for Library exports.
+
+**Reason:**
+Library export now has configs and a read-only engine, but it also needs a clear document-selection surface before adding the service-backed run endpoint.
+
+**Changes:**
+The Library dashboard now links to Export.
+The new page loads enabled Library export configs, reads the generated Library docs index, renders a hierarchical checkbox list in Docs Viewer order, excludes `_archive` descendants, marks `viewable: true` docs with a small green dot, and supports select-all, clear, missing-summary filtering, descendant selection, and ancestor indeterminate states.
+The run button stays disabled until the Task 6 loopback endpoint is added.
+
+**Files changed:**
+
+- `studio/library-export/index.md`
+- `studio/library/index.md`
+- `assets/studio/js/library-export.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)
+- [Studio](/docs/?scope=studio&doc=studio)
+
+**Impact:**
+The export workflow now has a concrete Studio selection surface that matches the Library hierarchy and avoids adding row-level clutter before real export runs exist.
+Export execution is still intentionally unavailable from the page, so Task 6 must wire the selected config and explicit `doc_id` list into a local service endpoint before this becomes an end-to-end Studio workflow.
 
 ## [2026-05-03] Added Docs Viewer export source-text extraction
 

@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: "Studio Config JSON"
 added_date: 2026-04-24
-last_updated: 2026-05-03
+last_updated: "2026-05-03 16:03"
 parent_id: config
 sort_order: 30
 ---
@@ -25,6 +25,7 @@ Current responsibilities include:
 - scope-specific Docs Viewer UI status emoji definitions
 - the route and feed path for the current Studio build-activity page
 - route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
+- route and data paths for the Library export Studio page
 - the Studio Audits route path and UI text
 - catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
@@ -49,6 +50,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/studio-audits.js`
+- `assets/studio/js/library-export.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
@@ -76,6 +78,19 @@ What stays here:
 - shared Studio UI text
 - shared Studio analysis policy used by current tag metrics/RAG helpers
 - the lookup path for dedicated search policy and scope-owned search indexes
+- the lookup path for generated docs indexes used by Studio pages, such as the Library export selector
+
+## Library export page
+
+The Library export page reads:
+
+- `paths.routes.library_export`
+- `paths.data.studio.library_export_configs`
+- `paths.data.docs.scopes.library.index`
+- `ui_text.library_export`
+
+The export config file owns export pattern definitions.
+`studio_config.json` only owns browser-facing route, payload, and UI-copy lookup for the Studio page.
 
 Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs under `ui_text.catalogue_series_editor` because create mode now lives at `/studio/catalogue-series/?mode=new`.
 

@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 15:20"
+last_updated: "2026-05-03 16:03"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -79,23 +79,24 @@ The Studio UI can present and run existing configs, but creating or changing con
 The Studio Library export page should support selecting many documents from the Library hierarchy.
 The Library hierarchy may be deeper and more book-like than Studio docs, so branch selection matters.
 
-Recommended UI shape:
+V1 UI shape:
 
 - hierarchical checklist of Library docs
 - indentation to show depth
-- expand and collapse controls for branches
 - checkbox per doc
+- list order matching the Docs Viewer index panel
+- small read-only green dot when `viewable: true`
 - selecting a parent selects all descendants
 - deselecting a child puts ancestors into an indeterminate state
 - select all and clear controls
 - option to limit the view or export to docs missing summaries when the selected config supports it
-- visible marker for non-viewable docs
+- no other row metadata in the document list
 
 V1 should exclude `published: false` docs because they are outside generated Docs Viewer data.
 It should also exclude `_archive` and its descendants from the Studio export UI.
 Generated but non-viewable docs, where `published: true` and `viewable: false`, are in scope and should be selectable because they are likely to need analysis before they become ready for public/default viewing.
 
-The UI should show operational counts before export:
+The UI may show operational counts outside the document list before export:
 
 - selected docs
 - selected docs missing summaries when summary fields are relevant
@@ -346,7 +347,9 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 ### Task 5. Add Studio Library Export Page
 
-Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, runs the export, and displays the resulting report.
+Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
+
+Status: selection UI implemented at `/studio/library-export/`. The page loads enabled Library export configs, renders a hierarchical checkbox list in Docs Viewer order, excludes `_archive` descendants, marks viewable docs with a green dot, and keeps export execution disabled until Task 6 adds the loopback service endpoint.
 
 ### Task 6. Add Local Service Endpoint
 

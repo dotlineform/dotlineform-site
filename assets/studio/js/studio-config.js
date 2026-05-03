@@ -12,6 +12,7 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_field_registry_review: "/studio/catalogue-field-registry/",
       docs_broken_links: "/studio/docs-broken-links/",
       docs_html_import: "/studio/docs-import/",
+      library_export: "/studio/library-export/",
       catalogue_status: "/studio/catalogue-status/",
       catalogue_activity: "/studio/catalogue-activity/",
       bulk_add_work: "/studio/bulk-add-work/",
@@ -49,11 +50,22 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_lookup_work_base: "/assets/studio/data/catalogue_lookup/works/",
         catalogue_lookup_work_detail_base: "/assets/studio/data/catalogue_lookup/work_details/",
         catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/",
-        catalogue_field_registry: "/assets/studio/data/catalogue_field_registry.json"
+        catalogue_field_registry: "/assets/studio/data/catalogue_field_registry.json",
+        library_export_configs: "/assets/studio/data/library_export_configs.json"
       },
       site: {
         series_index: "/assets/data/series_index.json",
         works_index: "/assets/data/works_index.json"
+      },
+      docs: {
+        scopes: {
+          library: {
+            index: "/assets/data/docs/scopes/library/index.json"
+          },
+          studio: {
+            index: "/assets/data/docs/scopes/studio/index.json"
+          }
+        }
       },
       search: {
         policy: "/assets/data/search/policy.json",
@@ -240,6 +252,22 @@ const DEFAULT_STUDIO_CONFIG = {
       status_failed: "Audit failed.",
       status_request_failed: "Audit request failed.",
       output_label: "output"
+    },
+    library_export: {
+      intro: "Select a Library export pattern and the documents to include.",
+      config_label: "export pattern",
+      missing_summary_label: "missing summaries only",
+      select_all: "Select all",
+      clear: "Clear",
+      run_button: "Run export",
+      run_disabled_title: "Export service endpoint will be added in Task 6.",
+      loading: "loading Library export...",
+      idle_status: "Select documents for the export. Running the export is enabled in Task 6.",
+      no_config: "No enabled Library export configs found.",
+      load_failed: "Failed to load Library export data.",
+      empty_state: "No matching Library docs.",
+      selection_summary: "{count} documents selected; {missing} missing summaries.",
+      selection_summary_one: "1 document selected; {missing} missing summaries."
     },
     catalogue_status: {
       load_failed_error: "Failed to load catalogue drafts.",
@@ -829,6 +857,12 @@ export function getStudioDataPath(config, key) {
 
 export function getSiteDataPath(config, key) {
   const path = pathValue(config, ["paths", "data", "site", key]);
+  return resolveSiteAssetPath(typeof path === "string" ? path : "");
+}
+
+export function getDocsScopeDataPath(config, scope, key = "index") {
+  const normalizedScope = normalize(scope);
+  const path = pathValue(config, ["paths", "data", "docs", "scopes", normalizedScope, key]);
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 

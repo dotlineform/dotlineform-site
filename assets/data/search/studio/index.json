@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3a62b8b56a714c87798e30b1c0556672",
-    "generated_at_utc": "2026-05-03T14:36:53Z",
+    "version": "blake2b-8ff1663cd0fa49ae80db602f30ec287a",
+    "generated_at_utc": "2026-05-03T15:03:25Z",
     "count": 166
   },
   "entries": [
@@ -931,16 +931,17 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-03",
-      "display_meta": "2026-05-03",
+      "last_updated": "2026-05-03 16:03",
+      "display_meta": "2026-05-03 16:03",
       "search_terms": [
         "studio",
-        "2026-05-03",
+        "2026-05-03 16:03",
         "2026",
         "05",
-        "03"
+        "03",
+        "16"
       ],
-      "search_text": "studio 2026-05-03 2026 05 03"
+      "search_text": "studio 2026-05-03 16:03 2026 05 03 16"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -1042,23 +1043,22 @@
       "kind": "doc",
       "title": "Library Export",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03 15:20",
+      "last_updated": "2026-05-03 16:03",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 15:20 • Library",
+      "display_meta": "2026-05-03 16:03 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export",
-        "2026-05-03 15:20",
+        "2026-05-03 16:03",
         "2026",
         "05",
         "03",
-        "15",
-        "20"
+        "16"
       ],
-      "search_text": "library-export library export library export 2026-05-03 15:20 2026 05 03 15 20"
+      "search_text": "library-export library export library export 2026-05-03 16:03 2026 05 03 16"
     },
     {
       "id": "studio-smoke-testing",
@@ -1364,22 +1364,23 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 16:03",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 • Config",
+      "display_meta": "2026-05-03 16:03 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-03",
+        "2026-05-03 16:03",
         "2026",
         "05",
-        "03"
+        "03",
+        "16"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-03 2026 05 03"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-03 16:03 2026 05 03 16"
     },
     {
       "id": "data-models-studio",
@@ -1789,10 +1790,10 @@
       "kind": "doc",
       "title": "Studio Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-05-03 16:03",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-04-01 • Config",
+      "display_meta": "2026-05-03 16:03 • Config",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -1800,12 +1801,13 @@
         "js",
         "studio config loader js",
         "loader",
-        "2026-04-01",
+        "2026-05-03 16:03",
         "2026",
-        "04",
-        "01"
+        "05",
+        "03",
+        "16"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-04-01 2026 04 01"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-03 16:03 2026 05 03 16"
     },
     {
       "id": "site-request-work-series-prose-source-model",
@@ -2479,10 +2481,10 @@
       "kind": "doc",
       "title": "Library Export Configs",
       "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-05-03 15:20",
+      "last_updated": "2026-05-03 16:03",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 15:20 • Config",
+      "display_meta": "2026-05-03 16:03 • Config",
       "search_terms": [
         "config-library-export-configs",
         "config",
@@ -2490,14 +2492,13 @@
         "export",
         "configs",
         "library export configs",
-        "2026-05-03 15:20",
+        "2026-05-03 16:03",
         "2026",
         "05",
         "03",
-        "15",
-        "20"
+        "16"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 15:20 2026 05 03 15 20"
+      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 16:03 2026 05 03 16"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -3868,22 +3869,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 15:20",
-      "display_meta": "2026-05-03 15:20",
+      "last_updated": "2026-05-03 16:03",
+      "display_meta": "2026-05-03 16:03",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 15:20",
+        "2026-05-03 16:03",
         "2026",
         "05",
         "03",
-        "15",
-        "20"
+        "16"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 15:20 2026 05 03 15 20"
+      "search_text": "site-change-log site change log site change log 2026-05-03 16:03 2026 05 03 16"
     },
     {
       "id": "tiered-dimension-policy",

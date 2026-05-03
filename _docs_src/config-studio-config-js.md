@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: "Studio Config Loader JS"
 added_date: 2026-04-01
-last_updated: 2026-04-01
+last_updated: "2026-05-03 16:03"
 parent_id: config
 sort_order: 40
 ---
@@ -31,6 +31,7 @@ Current direct importers include:
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
 - `assets/studio/js/build-activity.js`
+- `assets/studio/js/library-export.js`
 - `assets/js/search/search-page.js`
 
 Its exported helpers are also used indirectly through:
@@ -53,6 +54,7 @@ Current responsibilities include:
 - exposing accessors for:
   - Studio data paths
   - shared site data paths
+  - generated docs-scope data paths
   - search scope index paths
   - search policy path
   - Studio route paths

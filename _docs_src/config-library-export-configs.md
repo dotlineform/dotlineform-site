@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 15:20"
+last_updated: "2026-05-03 16:03"
 parent_id: config
 sort_order: 70
 ---
@@ -24,7 +24,8 @@ Schema file:
 The first implementation scope is Library, but the schema keeps the scope field as an array so the same export engine can later support other Docs Viewer scopes.
 
 The config is source-controlled project configuration.
-The Studio UI should list and run existing configs, but it should not create or edit config definitions in v1.
+The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
+Running configs from Studio waits on the local export service endpoint.
 
 ## Initial Configs
 
