@@ -2,11 +2,36 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 18:28"
+last_updated: "2026-05-03 20:01"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Confirmed Library import v1 preview spec
+
+**Status:** planned
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Expanded and confirmed [Library Import v1](/docs/?scope=studio&doc=library-import) as a permissive preview-first spec for staged JSON and JSONL data files returned from Library export or external review workflows.
+
+**Reason:**
+The export workflow now produces local data artifacts, but the next step needs a safe review path before external edits, summaries, or structure recommendations can affect canonical Library source.
+
+**Changes:**
+The spec now defines the product boundary, confirmed staging and preview roots, supported input types, document-centric Markdown preview behavior, report issue categories, Studio workflow, v1 decisions, remaining open questions, and initial implementation tasks.
+The confirmed v1 imports from `var/docs/import-staging/library/`, writes one preview Markdown file per imported document under `var/docs/import-preview/library/`, keeps diagnostics in the Studio report, and does not perform apply-style flight checks.
+[Library](/docs/?scope=studio&doc=library) now links to the import-preview spec from its candidate phases.
+
+**Files changed:**
+
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Library](/docs/?scope=studio&doc=library)
+
+**Impact:**
+Library import work now has a conservative v1 direction: parse and preview staged data first, accept imperfect files for inspection, and defer canonical source writes until apply behavior is explicitly scoped and validated.
 
 ## [2026-05-03] Simplified the Library dashboard route links
 
