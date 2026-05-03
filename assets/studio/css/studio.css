@@ -1108,6 +1108,53 @@ span.tagStudio__input--readonlyDisplay {
   padding-top: 0.2rem;
 }
 
+.libraryExportPage__result {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border, var(--studio-border));
+  border-radius: 1rem;
+  background: var(--panel, var(--studio-panel));
+}
+
+.libraryExportPage__result[hidden],
+.libraryExportPage__warnings[hidden] {
+  display: none;
+}
+
+.libraryExportPage__result > h3,
+.libraryExportPage__warnings > h4 {
+  margin: 0;
+}
+
+.libraryExportPage__resultGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem 0.8rem;
+  margin: 0;
+}
+
+.libraryExportPage__resultGrid > div {
+  min-width: 0;
+}
+
+.libraryExportPage__resultGrid dt {
+  margin: 0 0 0.16rem;
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-caption);
+  text-transform: lowercase;
+}
+
+.libraryExportPage__resultGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.libraryExportPage__warnings ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
 .libraryExportList__row {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -2811,6 +2858,7 @@ button.tagStudioList__cellLink {
 
   .docsHtmlImportPage__controls,
   .libraryExportPage__controls,
+  .libraryExportPage__resultGrid,
   .docsHtmlImportPage__resultGrid {
     grid-template-columns: minmax(0, 1fr);
   }

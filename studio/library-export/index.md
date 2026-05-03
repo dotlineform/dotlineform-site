@@ -43,7 +43,29 @@ studio_page_doc: /docs/?scope=studio&doc=library-export
     <div class="tagStudioList libraryExportList" id="libraryExportList"></div>
 
     <div class="libraryExportPage__actions libraryExportPage__run">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryExportRun" disabled></button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryExportRun"></button>
+    </div>
+
+    <div class="libraryExportPage__result" id="libraryExportResult" hidden>
+      <h3 id="libraryExportResultTitle"></h3>
+      <dl class="libraryExportPage__resultGrid">
+        <div>
+          <dt id="libraryExportResultOutputLabel"></dt>
+          <dd id="libraryExportResultOutput"></dd>
+        </div>
+        <div>
+          <dt id="libraryExportResultFormatLabel"></dt>
+          <dd id="libraryExportResultFormat"></dd>
+        </div>
+        <div>
+          <dt id="libraryExportResultCountsLabel"></dt>
+          <dd id="libraryExportResultCounts"></dd>
+        </div>
+      </dl>
+      <div class="libraryExportPage__warnings" id="libraryExportWarnings" hidden>
+        <h4 id="libraryExportWarningsHeading"></h4>
+        <ul id="libraryExportWarningsList"></ul>
+      </div>
     </div>
   </div>
 </div>

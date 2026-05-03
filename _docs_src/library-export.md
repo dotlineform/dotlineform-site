@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 16:03"
+last_updated: "2026-05-03 16:42"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -294,6 +294,30 @@ The exporter should report:
 
 The Studio page should show this report after export and make the file path visible for the next manual step.
 
+### Local Service Endpoint
+
+Studio runs exports through the docs-management local service:
+
+```text
+POST /docs/export
+```
+
+Request shape:
+
+```json
+{
+  "scope": "library",
+  "config_id": "library-document-summaries",
+  "doc_ids": ["library"],
+  "select_all": false,
+  "missing_summary_only": true
+}
+```
+
+The endpoint calls the shared read-only export engine and writes only under `var/docs/exports/`.
+It logs ids, counts, format, and write state, but not document body content or full export payloads.
+When the docs-management server runs with `--dry-run`, the endpoint validates and reports the target file path without writing the export file.
+
 ## Open Questions
 
 - Which validation failures should block each export config, and which should be reported as warnings?
@@ -354,6 +378,8 @@ Status: selection UI implemented at `/studio/library-export/`. The page loads en
 ### Task 6. Add Local Service Endpoint
 
 Expose the export engine through a loopback-only Studio service endpoint with an allowlisted output directory and minimal logs.
+
+Status: implemented as `POST /docs/export` on `./scripts/docs/docs_management_server.py`; the Studio Library export page now runs exports through that endpoint and displays the output file, format, counts, and warnings.
 
 ### Task 7. Add Validation And Reporting
 

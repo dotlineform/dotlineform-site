@@ -2,11 +2,43 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 16:03"
+last_updated: "2026-05-03 16:42"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Library export service endpoint
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Added the local docs-management endpoint that lets Studio run configured Library exports.
+
+**Reason:**
+The Library export page could select configs and documents, but needed a loopback-only service path to create export files without giving the browser arbitrary filesystem write access.
+
+**Changes:**
+`POST /docs/export` now calls the shared export engine in-process, validates config id, scope, explicit `doc_ids`, `select_all`, and `missing_summary_only`, and writes only through the export engine's `var/docs/exports/` path allowlist.
+The Studio transport layer exposes the endpoint, and `/studio/library-export/` now probes the docs-management service, enables Run when available, posts selected docs/config options, and displays output path, format, counts, warnings, and errors.
+
+**Files changed:**
+
+- `scripts/docs/docs_management_server.py`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/js/library-export.js`
+- `studio/library-export/index.md`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+
+**Impact:**
+The Library export workflow is now end-to-end from Studio selection to generated file output.
+The main remaining risk is validation/reporting depth for unusual configs or missing required fields, which is tracked by the next Library export task.
 
 ## [2026-05-03] Added Library export selection page
 

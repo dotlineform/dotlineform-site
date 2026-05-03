@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-03 13:55"
+last_updated: "2026-05-03 16:42"
 parent_id: scripts
 sort_order: 10
 ---
@@ -28,6 +28,7 @@ Exposed endpoints:
 - `GET /capabilities`
 - `GET /docs/import-html-files`
 - `POST /docs/import-html`
+- `POST /docs/export`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -46,6 +47,7 @@ Current behavior:
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
+- also used by `/studio/library-export/` to write configured Library export artifacts
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`
@@ -67,6 +69,7 @@ Search update behavior:
 `GET /capabilities` reports:
 
 - whether docs management is available
+- whether docs export is available
 - which scopes are writable
 - whether the current scope has `_archive`
 
@@ -165,6 +168,31 @@ Broken-links behavior:
 - reports `not found` and strict `wrong title` issues
 - does not write source docs or generated outputs
 - is intended for the Studio audit page and terminal-backed local maintenance
+
+`POST /docs/export` expects:
+
+```json
+{
+  "scope": "library",
+  "config_id": "library-document-summaries",
+  "doc_ids": ["library"],
+  "select_all": false,
+  "missing_summary_only": true
+}
+```
+
+Export behavior:
+
+- `scope` must be `studio`, `analysis`, or `library`, though the current export configs are Library-only
+- `config_id` must resolve in `assets/studio/data/library_export_configs.json`
+- `doc_ids` is an explicit list used by configs that support explicit selection
+- `select_all: true` asks the export engine to select every doc matching the config filters
+- `missing_summary_only` may be `true`, `false`, or `null`; unsupported configs ignore `true`
+- the endpoint calls `./scripts/docs/docs_export.py`'s shared export engine in-process
+- output paths are validated by the export engine and must stay under `var/docs/exports/`
+- normal server mode writes the export file and returns `output_written: true`
+- server `--dry-run` mode validates and reports the target path without writing
+- logs include scope, config id, counts, target format, dry-run state, and whether output was written; logs do not include document body content or export payloads
 
 `POST /docs/open-source` expects:
 
@@ -354,6 +382,7 @@ Apply behavior:
   - `_docs_src/*.md`
   - `_docs_library_src/*.md`
   - `var/docs/backups/`
+  - `var/docs/exports/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch

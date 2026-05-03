@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: "Studio Config Loader JS"
 added_date: 2026-04-01
-last_updated: "2026-05-03 16:03"
+last_updated: "2026-05-03 16:42"
 parent_id: config
 sort_order: 40
 ---

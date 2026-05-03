@@ -1,4 +1,9 @@
 import {
+  DOCS_MANAGEMENT_ENDPOINTS,
+  postJson,
+  probeDocsManagementHealth
+} from "./studio-transport.js";
+import {
   getDocsScopeDataPath,
   getStudioDataPath,
   getStudioText,
@@ -44,6 +49,7 @@ function routeStateDetail(state) {
   return {
     route: "library-export",
     mode: "selection",
+    service: state.serviceAvailable ? "available" : "unavailable",
     recordLoaded: Boolean(state.docs.length)
   };
 }
@@ -235,13 +241,27 @@ function updateStatus(state) {
     );
     return;
   }
+  if (!state.serviceAvailable) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(
+        state.config,
+        "library_export.service_unavailable",
+        "Docs management service unavailable. Start bin/dev-studio to run exports."
+      )
+    );
+    state.runButton.disabled = true;
+    return;
+  }
+  state.runButton.disabled = false;
   setStatus(
     state.statusNode,
     "",
     getStudioText(
       state.config,
       "library_export.idle_status",
-      "Select documents for the export. Running the export is enabled in Task 6."
+      "Select documents for the export, then run the export."
     )
   );
 }
@@ -282,6 +302,65 @@ function renderDocList(state) {
   updateSelectionSummary(state);
 }
 
+function resetResult(state) {
+  state.resultNode.hidden = true;
+  state.warningsWrap.hidden = true;
+  state.warningsList.innerHTML = "";
+}
+
+function renderWarnings(state, warnings, errors) {
+  const items = [
+    ...(Array.isArray(errors) ? errors : []),
+    ...(Array.isArray(warnings) ? warnings : [])
+  ].map(normalizeText).filter(Boolean);
+  if (!items.length) {
+    state.warningsWrap.hidden = true;
+    state.warningsList.innerHTML = "";
+    return;
+  }
+  setText(state.warningsHeading, getStudioText(state.config, "library_export.warnings_heading", "Warnings"));
+  state.warningsList.innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  state.warningsWrap.hidden = false;
+}
+
+function countsText(state, counts) {
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  return getStudioText(
+    state.config,
+    "library_export.result_counts",
+    "{exported} exported; {skipped} skipped; {truncated} truncated.",
+    {
+      exported: Number(safeCounts.exported || 0),
+      skipped: Number(safeCounts.skipped || 0),
+      truncated: Number(safeCounts.truncated || 0)
+    }
+  );
+}
+
+function renderResult(state, payload) {
+  setText(state.resultTitleNode, getStudioText(state.config, "library_export.result_title", "Export result"));
+  setText(state.resultOutputLabelNode, getStudioText(state.config, "library_export.result_output", "output"));
+  setText(state.resultFormatLabelNode, getStudioText(state.config, "library_export.result_format", "format"));
+  setText(state.resultCountsLabelNode, getStudioText(state.config, "library_export.result_counts_label", "counts"));
+  setText(state.resultOutputNode, payload.output_file || "");
+  setText(state.resultFormatNode, payload.target_format || "");
+  setText(state.resultCountsNode, countsText(state, payload.counts));
+  renderWarnings(state, payload.warnings, payload.errors);
+  state.resultNode.hidden = false;
+}
+
+function renderFailure(state, payload) {
+  setText(state.resultTitleNode, getStudioText(state.config, "library_export.result_title_failed", "Export failed"));
+  setText(state.resultOutputLabelNode, "");
+  setText(state.resultOutputNode, "");
+  setText(state.resultFormatLabelNode, "");
+  setText(state.resultFormatNode, "");
+  setText(state.resultCountsLabelNode, "");
+  setText(state.resultCountsNode, "");
+  renderWarnings(state, payload.warnings, payload.errors);
+  state.resultNode.hidden = false;
+}
+
 function setDocAndDescendantSelection(state, docId, selected) {
   const ids = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesSelectionFilter(state, id));
   ids.forEach((id) => {
@@ -302,6 +381,66 @@ function handleListChange(state, event) {
   setDocAndDescendantSelection(state, docId, target.checked);
   syncCheckboxStates(state);
   updateSelectionSummary(state);
+}
+
+async function runExport(state) {
+  if (!state.serviceAvailable || state.isRunning) return;
+  const config = selectedConfig(state);
+  if (!config) {
+    updateStatus(state);
+    return;
+  }
+  const configId = normalizeText(config.id);
+  const selection = config && typeof config.selection === "object" ? config.selection : {};
+  const selectAll = normalizeText(selection.mode) === "all_matching";
+  const docIds = selectAll ? [] : Array.from(state.selectedIds);
+  if (!selectAll && !docIds.length) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(state.config, "library_export.selection_required", "Select at least one document.")
+    );
+    return;
+  }
+
+  resetResult(state);
+  state.isRunning = true;
+  state.runButton.disabled = true;
+  markBusy(state, true);
+  setStatus(
+    state.statusNode,
+    "",
+    getStudioText(state.config, "library_export.status_running", "Running Library export...")
+  );
+
+  try {
+    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.exportDocs, {
+      scope: SCOPE,
+      config_id: configId,
+      doc_ids: docIds,
+      select_all: selectAll,
+      missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked)
+    });
+    renderResult(state, payload);
+    setStatus(
+      state.statusNode,
+      "success",
+      payload.summary_text || getStudioText(state.config, "library_export.status_success", "Export completed.")
+    );
+  } catch (error) {
+    const payload = error && error.payload ? error.payload : {};
+    renderFailure(state, payload);
+    setStatus(
+      state.statusNode,
+      "error",
+      normalizeText(error && error.message)
+        || getStudioText(state.config, "library_export.status_failed", "Export failed.")
+    );
+  } finally {
+    state.isRunning = false;
+    state.runButton.disabled = !state.serviceAvailable;
+    markBusy(state, false);
+  }
 }
 
 async function init() {
@@ -325,13 +464,26 @@ async function init() {
     selectionSummary: document.getElementById("libraryExportSelectionSummary"),
     listNode: document.getElementById("libraryExportList"),
     runButton: document.getElementById("libraryExportRun"),
+    resultNode: document.getElementById("libraryExportResult"),
+    resultTitleNode: document.getElementById("libraryExportResultTitle"),
+    resultOutputLabelNode: document.getElementById("libraryExportResultOutputLabel"),
+    resultOutputNode: document.getElementById("libraryExportResultOutput"),
+    resultFormatLabelNode: document.getElementById("libraryExportResultFormatLabel"),
+    resultFormatNode: document.getElementById("libraryExportResultFormat"),
+    resultCountsLabelNode: document.getElementById("libraryExportResultCountsLabel"),
+    resultCountsNode: document.getElementById("libraryExportResultCounts"),
+    warningsWrap: document.getElementById("libraryExportWarnings"),
+    warningsHeading: document.getElementById("libraryExportWarningsHeading"),
+    warningsList: document.getElementById("libraryExportWarningsList"),
     config: null,
     exportConfigs: [],
     docs: [],
     docsById: new Map(),
     childrenByParent: new Map(),
     depthById: new Map(),
-    selectedIds: new Set()
+    selectedIds: new Set(),
+    serviceAvailable: false,
+    isRunning: false
   };
 
   const requiredNodes = [
@@ -346,13 +498,25 @@ async function init() {
     state.statusNode,
     state.selectionSummary,
     state.listNode,
-    state.runButton
+    state.runButton,
+    state.resultNode,
+    state.resultTitleNode,
+    state.resultOutputLabelNode,
+    state.resultOutputNode,
+    state.resultFormatLabelNode,
+    state.resultFormatNode,
+    state.resultCountsLabelNode,
+    state.resultCountsNode,
+    state.warningsWrap,
+    state.warningsHeading,
+    state.warningsList
   ];
   if (requiredNodes.some((node) => !node)) return;
 
   try {
     markBusy(state, true);
     state.config = await loadStudioConfig();
+    state.serviceAvailable = Boolean(await probeDocsManagementHealth());
     const exportConfigPath = getStudioDataPath(state.config, "library_export_configs")
       || "/assets/studio/data/library_export_configs.json";
     const docsIndexPath = getDocsScopeDataPath(state.config, SCOPE, "index")
@@ -388,7 +552,7 @@ async function init() {
     state.runButton.title = getStudioText(
       state.config,
       "library_export.run_disabled_title",
-      "Export service endpoint will be added in Task 6."
+      "Requires the local docs-management service."
     );
 
     renderConfigSelect(state);
@@ -411,6 +575,9 @@ async function init() {
       updateSelectionSummary(state);
     });
     state.listNode.addEventListener("change", (event) => handleListChange(state, event));
+    state.runButton.addEventListener("click", () => {
+      runExport(state).catch((error) => console.warn("library_export: unexpected run failure", error));
+    });
 
     root.hidden = false;
     bootStatus.hidden = true;

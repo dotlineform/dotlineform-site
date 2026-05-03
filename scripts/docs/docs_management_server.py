@@ -13,6 +13,7 @@ Endpoints:
   GET /capabilities
   GET /docs/import-html-files
   POST /docs/import-html
+  POST /docs/export
   POST /docs/rebuild
   POST /docs/broken-links
   POST /docs/open-source
@@ -30,6 +31,7 @@ Security constraints:
   - Binds to 127.0.0.1 only.
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
   - Writes only allowlisted Markdown docs under _docs_src/, _docs_library_src/, and _docs_src_analysis/.
+  - Writes export artifacts only under var/docs/exports/.
   - Creates timestamped backup bundles under var/docs/backups/.
   - Writes minimal local logs under var/docs/logs/.
 """
@@ -58,6 +60,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
+from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from docs_html_import import generate_import_preview, list_staged_html_files, resolve_staged_html  # noqa: E402
 from docs_watch_suppression import (  # noqa: E402
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -906,6 +909,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         "capabilities": {
             "docs_management": True,
             "html_import": True,
+            "docs_export": True,
             "scopes": scopes,
         },
     }
@@ -967,6 +971,57 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
         },
     )
     return payload
+
+
+def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    config_id = str(body.get("config_id") or "").strip()
+    if not config_id:
+        raise ValueError("config_id is required")
+
+    raw_doc_ids = body.get("doc_ids", [])
+    if raw_doc_ids is None:
+        raw_doc_ids = []
+    if not isinstance(raw_doc_ids, list):
+        raise ValueError("doc_ids must be a list")
+    doc_ids = parse_export_doc_ids([str(doc_id or "") for doc_id in raw_doc_ids])
+    select_all = bool(body.get("select_all"))
+    missing_summary_only = body.get("missing_summary_only")
+    if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
+        raise ValueError("missing_summary_only must be true, false, or null")
+
+    report = build_export(
+        repo_root=repo_root,
+        config_id=config_id,
+        scope=scope,
+        selected_doc_ids=doc_ids,
+        select_all=select_all,
+        missing_summary_only=missing_summary_only,
+        write=not dry_run,
+    )
+    log_event(
+        repo_root,
+        "docs-export",
+        {
+            "scope": scope,
+            "config_id": config_id,
+            "dry_run": dry_run,
+            "target_format": report.get("target_format", ""),
+            "output_written": bool(report.get("output_written")),
+            "selected": int(report.get("counts", {}).get("selected") or 0),
+            "exported": int(report.get("counts", {}).get("exported") or 0),
+            "skipped": int(report.get("counts", {}).get("skipped") or 0),
+            "truncated": int(report.get("counts", {}).get("truncated") or 0),
+        },
+    )
+    if report.get("ok"):
+        action = "Validated export" if dry_run else "Exported"
+        suffix = " without writing." if dry_run else "."
+        report["summary_text"] = (
+            f"{action} {report.get('counts', {}).get('exported', 0)} document(s) "
+            f"to {report.get('output_file', '')}{suffix}"
+        )
+    return report
 
 
 def imported_body_markdown(preview: Dict[str, Any]) -> str:
@@ -2140,6 +2195,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             if self.path == "/docs/broken-links":
                 payload = handle_broken_links(repo_root, body)
                 write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/export":
+                payload = handle_docs_export(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
                 return
             if self.path == "/docs/import-html":
                 payload = handle_import_html(repo_root, body, dry_run)
