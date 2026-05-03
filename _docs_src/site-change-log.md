@@ -2,11 +2,38 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 21:25"
+last_updated: "2026-05-03 22:01"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Excluded test artifacts from Jekyll
+
+**Status:** implemented
+
+**Area:** local development workflow / Jekyll watch
+
+**Summary:**
+Added `tests/` to the Jekyll exclusion set.
+
+**Reason:**
+Python test runs can create `tests/python/__pycache__/*.pyc`.
+Those files are not site input, but Jekyll serve was watching them and could run an unnecessary regeneration pass after local checks.
+
+**Changes:**
+`_config.yml` now excludes `tests/`.
+[Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads) Task 1 is marked implemented while the larger generated docs/search server-read work remains proposed.
+
+**Files changed:**
+
+- `_config.yml`
+- [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
+- [Jekyll Site Config](/docs/?scope=studio&doc=config-jekyll-site-config)
+
+**Impact:**
+Local Python checks should no longer wake Jekyll just by creating or updating test cache files.
+Generated docs/search JSON remains in the Jekyll watch surface until the local server-read path is implemented.
 
 ## [2026-05-03] Added Library import service endpoints
 

@@ -2,8 +2,8 @@
 doc_id: site-request-local-docs-data-server-reads
 title: Local Docs Data Server Reads Request
 added_date: "2026-05-03 21:56"
-last_updated: "2026-05-03 21:56"
-ui_status: proposed
+last_updated: "2026-05-03 22:01"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 25
 ---
@@ -11,7 +11,7 @@ sort_order: 25
 
 Status:
 
-- proposed
+- in-progress
 
 ## Summary
 
@@ -141,7 +141,7 @@ The server-read path is a local development optimization and local Studio runtim
 
 Status:
 
-- proposed
+- implemented
 
 Add `tests/` to the Jekyll exclusion set.
 
@@ -157,6 +157,11 @@ Benefit:
 Risk:
 
 - low; public site builds should not depend on `tests/`
+
+Status note:
+
+- implemented by adding `tests/` to `_config.yml` `exclude`
+- this covers Python test caches and fixtures only; generated docs/search exclusions remain deferred until local server reads are available
 
 ### Task 2. Add Read-Only Generated Docs Endpoints
 

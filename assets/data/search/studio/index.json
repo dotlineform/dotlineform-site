@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-79a4dac20e552a1c7455f57c59493316",
-    "generated_at_utc": "2026-05-03T20:57:38Z",
+    "version": "blake2b-8d5e3827d0fa058bed8606f57be0d564",
+    "generated_at_utc": "2026-05-03T21:00:30Z",
     "count": 169
   },
   "entries": [
@@ -252,22 +252,24 @@
       "kind": "doc",
       "title": "Jekyll Site Config",
       "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-05-03 22:01",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-03-31 • Config",
+      "display_meta": "2026-05-03 22:01 • Config",
       "search_terms": [
         "config-jekyll-site-config",
         "config",
         "jekyll",
         "site",
         "jekyll site config",
-        "2026-03-31",
+        "2026-05-03 22:01",
         "2026",
+        "05",
         "03",
-        "31"
+        "22",
+        "01"
       ],
-      "search_text": "config-jekyll-site-config config jekyll site jekyll site config 2026-03-31 2026 03 31"
+      "search_text": "config-jekyll-site-config config jekyll site jekyll site config 2026-05-03 22:01 2026 05 03 22 01"
     },
     {
       "id": "llm-dimension",
@@ -1072,10 +1074,10 @@
       "kind": "doc",
       "title": "Local Docs Data Server Reads Request",
       "href": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
-      "last_updated": "2026-05-03 21:56",
+      "last_updated": "2026-05-03 22:01",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 21:56 • Change Requests",
+      "display_meta": "2026-05-03 22:01 • Change Requests",
       "search_terms": [
         "site-request-local-docs-data-server-reads",
         "site",
@@ -1089,14 +1091,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03 21:56",
+        "2026-05-03 22:01",
         "2026",
         "05",
         "03",
-        "21",
-        "56"
+        "22",
+        "01"
       ],
-      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request change requests change requests 2026-05-03 21:56 2026 05 03 21 56"
+      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request change requests change requests 2026-05-03 22:01 2026 05 03 22 01"
     },
     {
       "id": "studio-smoke-testing",
@@ -3969,22 +3971,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 21:25",
-      "display_meta": "2026-05-03 21:25",
+      "last_updated": "2026-05-03 22:01",
+      "display_meta": "2026-05-03 22:01",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 21:25",
+        "2026-05-03 22:01",
         "2026",
         "05",
         "03",
-        "21",
-        "25"
+        "22",
+        "01"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 21:25 2026 05 03 21 25"
+      "search_text": "site-change-log site change log site change log 2026-05-03 22:01 2026 05 03 22 01"
     },
     {
       "id": "tiered-dimension-policy",

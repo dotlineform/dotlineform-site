@@ -91,6 +91,7 @@ exclude:
   - vendor
   - node_modules
   - .bundle
+  - tests
   - var
   - logs
   - assets/studio/data/build_activity.json

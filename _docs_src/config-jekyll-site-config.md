@@ -2,7 +2,7 @@
 doc_id: config-jekyll-site-config
 title: "Jekyll Site Config"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-03 22:01"
 parent_id: config
 sort_order: 10
 ---
@@ -25,6 +25,13 @@ Current responsibilities include:
 - public media and thumbnail origins used by Liquid templates
 - selected shell/runtime flags such as `enable_details_hash_scroll`
 - Jekyll build exclusions
+
+Current exclusions include local operational and non-site inputs such as:
+
+- `var`
+- `logs`
+- `tests`
+- mutable Studio activity and catalogue source/lookup data that local Studio reads through localhost services
 
 ## What calls it
 
