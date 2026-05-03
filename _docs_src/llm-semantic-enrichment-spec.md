@@ -2,7 +2,7 @@
 doc_id: llm-semantic-enrichment-spec
 title: "LLM Semantic Enrichment Spec"
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: "2026-05-03 17:08"
 parent_id: llm
 sort_order: 20
 ---
@@ -192,6 +192,9 @@ Likely inputs:
 - headings
 - current summary, if present
 - plain-text `source_text` derived from rendered content
+
+For generation runs, `source_text` should come from the full-content export rather than the document summaries export.
+The summaries export is for existing summary metadata and coverage/audit review only.
 
 Likely outputs:
 

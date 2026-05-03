@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 16:03"
+last_updated: "2026-05-03 17:08"
 parent_id: config
 sort_order: 70
 ---
@@ -34,7 +34,7 @@ The first config file defines three enabled Library export patterns:
 - `library-parent-child-relationships`
   envelope JSON for whole-corpus hierarchy and relationship review
 - `library-document-summaries`
-  JSONL document rows for summary generation and summary audit, defaulting to missing-summary filtering
+  JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
 - `library-full-document-content`
   JSONL document rows for exporting multiple selected document bodies in one file
 
@@ -218,7 +218,7 @@ The default v1 content export should use rendered Docs Viewer HTML as the source
 - `empty_image_mode`
   one of `omit` or `marker`
 
-The initial summary export uses `image_text_mode: "extract_text"` and `empty_image_mode: "omit"` so summary inputs stay focused.
+The initial document summaries export does not include `source_text`; body text belongs to the full-content export.
 The initial full-content export uses `image_text_mode: "extract_text"` and `empty_image_mode: "marker"` so external review can see where a visual object existed even without useful text.
 
 ## Validation Boundary

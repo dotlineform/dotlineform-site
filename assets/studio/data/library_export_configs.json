@@ -116,7 +116,7 @@
     {
       "id": "library-document-summaries",
       "label": "Document summaries",
-      "description": "Exports Library documents with current summaries, headings, and plain text for summary generation or audit.",
+      "description": "Exports Library document summary metadata for missing-summary review and summary audit.",
       "enabled": true,
       "scopes": ["library"],
       "target": {
@@ -139,10 +139,10 @@
       },
       "limits": {
         "max_documents": null,
-        "max_chars_per_document": 12000,
+        "max_chars_per_document": null,
         "max_total_chars": null,
         "truncate": {
-          "enabled": true,
+          "enabled": false,
           "strategy": "paragraph_boundary",
           "marker": "[truncated]"
         }
@@ -187,22 +187,6 @@
           "default": ""
         },
         {
-          "source": "source_text",
-          "output_path": "source_text",
-          "required": true,
-          "transforms": [
-            "plain_text_from_rendered_html",
-            "omit_code_blocks",
-            "normalize_whitespace",
-            "truncate_chars"
-          ],
-          "options": {
-            "image_text_mode": "extract_text",
-            "empty_image_mode": "omit"
-          },
-          "limit_key": "max_chars_per_document"
-        },
-        {
           "source": "last_updated",
           "output_path": "last_updated",
           "required": true
@@ -213,7 +197,7 @@
           "required": true
         }
       ],
-      "notes": "Default missing-summary filtering supports the first semantic-enrichment pass while still allowing full summary audit runs."
+      "notes": "Default missing-summary filtering supports summary coverage review. Full document body text belongs to the full-content export."
     },
     {
       "id": "library-full-document-content",

@@ -2,11 +2,39 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 16:42"
+last_updated: "2026-05-03 17:08"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Split summary metadata exports from full-content exports
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Changed the `library-document-summaries` export so it no longer includes full document body text.
+
+**Reason:**
+Document summaries should be a summary metadata export. Body text for generation or external analysis belongs to the full-content export.
+
+**Changes:**
+The summary export config now writes identity, parent, headings, current summary, `last_updated`, and `viewable` only.
+Its body-text field mapping, character limit, and truncation behavior were removed.
+Library export and semantic-enrichment docs now point body-text use cases to `library-full-document-content`.
+
+**Files changed:**
+
+- `assets/studio/data/library_export_configs.json`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Library Semantic Enrichment Spec](/docs/?scope=studio&doc=library-semantic-enrichment-spec)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+
+**Impact:**
+Summary audits can run without duplicating full content in the output, while full text remains available through the dedicated full-content config.
 
 ## [2026-05-03] Added Library export service endpoint
 
@@ -87,7 +115,7 @@ Extended the Docs Viewer export engine with deterministic plain-text extraction 
 Summary and full-content Library export configs need body text suitable for LLM upload and external review without exposing raw HTML.
 
 **Effect:**
-`source_text` field mappings now convert rendered HTML into text with paragraphs, headings, lists, quote text, optional code omission, and character truncation. Image handling is config-driven at the field-mapping level: summary exports extract available image/SVG text and omit empty images, while full-content exports extract available image/SVG text and emit `[image]` for otherwise empty visuals.
+`source_text` field mappings now convert rendered HTML into text with paragraphs, headings, lists, quote text, optional code omission, and character truncation. Image handling is config-driven at the field-mapping level, and full-content exports extract available image/SVG text while emitting `[image]` for otherwise empty visuals.
 
 **Affected files/docs:**
 

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 16:42"
+last_updated: "2026-05-03 17:08"
 parent_id: scripts
 sort_order: 25
 ---
@@ -50,7 +50,7 @@ Implemented now:
 - maps supported document fields into configured output paths
 - computes parent, ancestor, and child relationship fields from the generated index
 - extracts heading lists from rendered per-doc payload HTML
-- extracts deterministic plain-text `source_text` from rendered per-doc payload HTML
+- extracts deterministic plain-text `source_text` from rendered per-doc payload HTML when a content export config requests it
 - preserves paragraphs, headings, list items, and quoted text in `source_text`
 - omits code blocks when the selected field mapping includes `omit_code_blocks`
 - truncates `source_text` when the selected field mapping includes `truncate_chars`
@@ -62,7 +62,6 @@ Implemented now:
 Not implemented yet:
 
 - batching or chunking
-- Studio UI/service invocation
 
 Image handling:
 

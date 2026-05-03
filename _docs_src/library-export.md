@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 16:42"
+last_updated: "2026-05-03 17:08"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -191,7 +191,8 @@ Non-viewable docs should be included and marked so readiness review can focus on
 
 Purpose:
 
-- support summary generation, missing-summary review, and summary audit workflows
+- support missing-summary review and summary audit workflows
+- export summary metadata only, without full document body text
 
 Initial JSON shape should include:
 
@@ -205,8 +206,7 @@ Initial JSON shape should include:
       "title": "Example Doc",
       "parent_id": "example-parent",
       "headings": ["Purpose", "Details"],
-      "current_summary": "",
-      "source_text": "Plain text derived from the rendered document."
+      "current_summary": ""
     }
   ]
 }
@@ -216,8 +216,10 @@ Useful config defaults:
 
 - generated, non-archived docs only
 - option for missing summaries only
-- configurable maximum characters per document
 - JSONL output when each row should be one complete document input
+
+This export should not include `source_text` or full document body content.
+When source text is needed for generation or external analysis, use the full document content export instead.
 
 #### 3. Full Document Content
 

@@ -2,7 +2,7 @@
 doc_id: library-semantic-enrichment-spec
 title: "Library Semantic Enrichment Spec"
 added_date: 2026-04-24
-last_updated: 2026-05-03
+last_updated: "2026-05-03 17:08"
 parent_id: library
 sort_order: 20
 ---
@@ -305,7 +305,8 @@ This should probably reuse Docs Viewer management validation rules for:
 - Library viewer summary display should be supported as document metadata when `summary` is present.
 - Library search/recently-added summary display remains a potential UI option.
 - Summary export/import files are ephemeral working artifacts, not canonical state.
-- Summary export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML; see [Library Export](/docs/?scope=studio&doc=library-export).
+- Document summary export should include summary metadata only, without full document body text.
+- Full-content export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML; see [Library Export](/docs/?scope=studio&doc=library-export).
 - Bulk export selection should be hierarchical and checkbox-driven, with parent selection applying to descendants; see [Library Export](/docs/?scope=studio&doc=library-export).
 - Structure review should support recommendations that depend on new parent/category docs.
 - New parent/category docs can be created manually before document moves are applied.
