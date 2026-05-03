@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d668e6581633084201e830697e250d8c",
-    "generated_at_utc": "2026-05-03T17:31:47Z",
-    "count": 166
+    "version": "blake2b-5c4861112005acc2a6579babd4fb1b16",
+    "generated_at_utc": "2026-05-03T18:04:14Z",
+    "count": 167
   },
   "entries": [
     {
@@ -1281,6 +1281,30 @@
         "25"
       ],
       "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-04-25 2026 04 25"
+    },
+    {
+      "id": "library-import",
+      "kind": "doc",
+      "title": "Library Import v1",
+      "href": "/docs/?scope=studio&doc=library-import",
+      "last_updated": "2026-05-03 18:19",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-05-03 18:19 • Library",
+      "search_terms": [
+        "library-import",
+        "library",
+        "import",
+        "library import v1",
+        "v1",
+        "2026-05-03 18:19",
+        "2026",
+        "05",
+        "03",
+        "18",
+        "19"
+      ],
+      "search_text": "library-import library import library import v1 v1 2026-05-03 18:19 2026 05 03 18 19"
     },
     {
       "id": "local-setup",
