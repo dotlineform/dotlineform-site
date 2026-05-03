@@ -1063,6 +1063,97 @@ span.tagStudio__input--readonlyDisplay {
   padding-left: 1.1rem;
 }
 
+.libraryImportPage__panel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.libraryImportPage__intro,
+.libraryImportPage__summary,
+.libraryImportPage__issues ul,
+.libraryImportPage__previews ul {
+  margin: 0;
+}
+
+.libraryImportPage__intro {
+  color: var(--muted, var(--studio-muted-body));
+  font-size: var(--font-small);
+}
+
+.libraryImportPage__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.55rem 0.8rem;
+}
+
+.libraryImportPage__field {
+  min-inline-size: 0;
+}
+
+.libraryImportPage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.8rem;
+}
+
+.libraryImportPage__fileMeta,
+.libraryImportPage__resultGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem 0.8rem;
+  margin: 0;
+}
+
+.libraryImportPage__fileMeta[hidden],
+.libraryImportPage__result[hidden],
+.libraryImportPage__issues[hidden],
+.libraryImportPage__previews[hidden] {
+  display: none;
+}
+
+.libraryImportPage__fileMeta > div,
+.libraryImportPage__resultGrid > div {
+  min-width: 0;
+}
+
+.libraryImportPage__fileMeta dt,
+.libraryImportPage__resultGrid dt {
+  margin: 0 0 0.16rem;
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-caption);
+  text-transform: lowercase;
+}
+
+.libraryImportPage__fileMeta dd,
+.libraryImportPage__resultGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.libraryImportPage__result {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border, var(--studio-border));
+  border-radius: 1rem;
+  background: var(--panel, var(--studio-panel));
+}
+
+.libraryImportPage__result > h3,
+.libraryImportPage__issues > h4,
+.libraryImportPage__previews > h4 {
+  margin: 0;
+}
+
+.libraryImportPage__issues ul,
+.libraryImportPage__previews ul {
+  padding-left: 1.1rem;
+}
+
+.libraryImportPage__previews small {
+  color: var(--muted, var(--studio-muted));
+}
+
 .libraryExportPage__panel {
   display: grid;
   gap: 0.8rem;
@@ -2857,6 +2948,9 @@ button.tagStudioList__cellLink {
   }
 
   .docsHtmlImportPage__controls,
+  .libraryImportPage__controls,
+  .libraryImportPage__fileMeta,
+  .libraryImportPage__resultGrid,
   .libraryExportPage__controls,
   .libraryExportPage__resultGrid,
   .docsHtmlImportPage__resultGrid {

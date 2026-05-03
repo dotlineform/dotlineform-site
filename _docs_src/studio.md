@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: "2026-05-03 18:28"
+last_updated: "2026-05-03 22:38"
 parent_id: ""
 sort_order: 20
 ---
@@ -24,8 +24,8 @@ The current Studio shell is organized around domain dashboards:
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
 
-The Library dashboard includes `/studio/library-export/` for running configured exports from generated Library Docs Viewer data.
-That page depends on the docs-management local service for file writes; when the service is unavailable, selection can load but export execution stays unavailable.
+The Library dashboard includes `/studio/library-export/` for running configured exports from generated Library Docs Viewer data and `/studio/library-import/` for generating preview Markdown from staged Library import data.
+Those pages depend on the docs-management local service for file writes; when the service is unavailable, command execution stays unavailable.
 Export pattern definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
 ## Route Ready State
@@ -56,6 +56,7 @@ Read this section in this order:
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Library Export v1](/docs/?scope=studio&doc=library-export)**
+   - **[Library Import v1](/docs/?scope=studio&doc=library-import)**
    - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
@@ -88,6 +89,7 @@ Current workflow/detail routes:
 - `/studio/docs-broken-links/`
 - `/studio/docs-import/`
 - `/studio/library-export/`
+- `/studio/library-import/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
 - `/studio/project-state/`

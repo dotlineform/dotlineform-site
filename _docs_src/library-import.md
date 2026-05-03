@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 21:25"
+last_updated: "2026-05-03 22:38"
 ui_status: in-progress
 parent_id: library
 sort_order: 30
@@ -327,14 +327,30 @@ The endpoint returns the same structured report as the CLI and logs only scope, 
 
 ### Task 6. Add Studio Library Import Page
 
+Status:
+
+- implemented
+
 Add a Library-scope Studio page that lists staged files, displays detected metadata, runs preview generation when available, and shows the resulting report.
 
 The page should follow the same local-service availability pattern as Library export and docs HTML import.
 The page can ship first as a staged-file listing and then grow preview generation.
 
+Status note:
+
+- implemented at `/studio/library-import/`
+- listed from the `/studio/library/` dashboard under Data
+- loads staged `.json` and `.jsonl` files through `GET /docs/library-import/files?scope=library`
+- runs preview generation through `POST /docs/library-import/preview`
+- shows selected file metadata, detected import type, source export metadata, counts, issues, and generated preview paths
+- keeps the route disabled when the docs-management local service is unavailable
+- does not apply summaries, full content, or relationship changes to canonical Library source
+
 ### Task 7. Link From Library Dashboard
 
 Add the Library Import route under the Library dashboard `Data` column below `export` once the page route exists.
+
+Status: implemented.
 
 ### Task 8. Add Verification
 
@@ -353,12 +369,11 @@ Add focused tests for:
 - staged path allowlist behavior
 - local service staged-file listing
 - local service preview generation and dry-run behavior
+- Studio route ready state and unavailable-service behavior
 
 Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output, deterministic preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection is implemented in `tests/python/test_docs_import_service.py`.
-Studio page coverage should be added when that task is implemented.
-
-Add a light Studio smoke test once the page exists.
+A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/library_import.py`.
 
 ### Task 9. Decide Summary Apply Scope
 

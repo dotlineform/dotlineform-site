@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8d5e3827d0fa058bed8606f57be0d564",
-    "generated_at_utc": "2026-05-03T21:00:30Z",
+    "version": "blake2b-59909a8d2ce764c0ca1ee0449ed8a573",
+    "generated_at_utc": "2026-05-03T21:12:21Z",
     "count": 169
   },
   "entries": [
@@ -149,10 +149,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-03 21:25",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 21:25 • Scripts",
+      "display_meta": "2026-05-03 22:38 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -160,14 +160,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-03 21:25",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "21",
-        "25"
+        "22",
+        "38"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-03 21:25 2026 05 03 21 25"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -937,18 +937,18 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-03 18:28",
-      "display_meta": "2026-05-03 18:28",
+      "last_updated": "2026-05-03 22:38",
+      "display_meta": "2026-05-03 22:38",
       "search_terms": [
         "studio",
-        "2026-05-03 18:28",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "18",
-        "28"
+        "22",
+        "38"
       ],
-      "search_text": "studio 2026-05-03 18:28 2026 05 03 18 28"
+      "search_text": "studio 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -1105,24 +1105,24 @@
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-03 18:06",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-03 18:06 • Studio",
+      "display_meta": "2026-05-03 22:38 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-03 18:06",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "18",
-        "06"
+        "22",
+        "38"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 18:06 2026 05 03 18 06"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "ui-catalogue",
@@ -1153,24 +1153,24 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-03 21:25",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 21:25 • Scripts",
+      "display_meta": "2026-05-03 22:38 • Scripts",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
         "docs",
         "import",
         "docs import",
-        "2026-05-03 21:25",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "21",
-        "25"
+        "22",
+        "38"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 21:25 2026 05 03 21 25"
+      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "studio-audits",
@@ -1346,24 +1346,24 @@
       "kind": "doc",
       "title": "Library Import v1",
       "href": "/docs/?scope=studio&doc=library-import",
-      "last_updated": "2026-05-03 21:25",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 21:25 • Library",
+      "display_meta": "2026-05-03 22:38 • Library",
       "search_terms": [
         "library-import",
         "library",
         "import",
         "library import v1",
         "v1",
-        "2026-05-03 21:25",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "21",
-        "25"
+        "22",
+        "38"
       ],
-      "search_text": "library-import library import library import v1 v1 2026-05-03 21:25 2026 05 03 21 25"
+      "search_text": "library-import library import library import v1 v1 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "local-setup",
@@ -1458,24 +1458,24 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-03 17:45",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 17:45 • Config",
+      "display_meta": "2026-05-03 22:38 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-03 17:45",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "17",
-        "45"
+        "22",
+        "38"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-03 17:45 2026 05 03 17 45"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "data-models-studio",
@@ -1676,10 +1676,10 @@
       "kind": "doc",
       "title": "Studio Ready State Contract Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 • Change Requests",
+      "display_meta": "2026-05-03 22:38 • Change Requests",
       "search_terms": [
         "site-request-studio-ready-state-contract",
         "site",
@@ -1692,12 +1692,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03",
+        "2026-05-03 22:38",
         "2026",
         "05",
-        "03"
+        "03",
+        "22",
+        "38"
       ],
-      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-03 2026 05 03"
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -1839,10 +1841,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-03 21:25",
+      "last_updated": "2026-05-03 22:38",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-03 21:25 • Data Models",
+      "display_meta": "2026-05-03 22:38 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1851,14 +1853,14 @@
         "library scope",
         "scope",
         "data models",
-        "2026-05-03 21:25",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
-        "21",
-        "25"
+        "22",
+        "38"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 21:25 2026 05 03 21 25"
+      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "search-ranking-model",
@@ -3971,22 +3973,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 22:01",
-      "display_meta": "2026-05-03 22:01",
+      "last_updated": "2026-05-03 22:38",
+      "display_meta": "2026-05-03 22:38",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 22:01",
+        "2026-05-03 22:38",
         "2026",
         "05",
         "03",
         "22",
-        "01"
+        "38"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 22:01 2026 05 03 22 01"
+      "search_text": "site-change-log site change log site change log 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
       "id": "tiered-dimension-policy",

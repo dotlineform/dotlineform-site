@@ -2,11 +2,46 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 22:01"
+last_updated: "2026-05-03 22:38"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added the Studio Library import page
+
+**Status:** implemented
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Completed Library import Task 6 by adding `/studio/library-import/`.
+
+**Reason:**
+The Library import parser, preview renderer, and local service endpoints existed, but there was not yet a Studio route for selecting staged Library data files and generating preview Markdown from the browser.
+
+**Changes:**
+The new Studio page lists staged Library `.json` and `.jsonl` import files from `var/docs/import-staging/library/`, shows selected file metadata, calls the docs-management preview endpoint, and renders detected import type, source export metadata, counts, issues, and preview paths.
+The Library dashboard now links to the import page under Data.
+Visible runtime copy is stored in `assets/studio/data/studio_config.json`.
+
+**Files changed:**
+
+- `studio/library-import/index.md`
+- `assets/studio/js/library-import.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `studio/library/index.md`
+- `tests/smoke/library_import.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio](/docs/?scope=studio&doc=studio)
+
+**Impact:**
+Library import v1 now has a browser workflow for generating review previews.
+It remains preview-only and does not apply summaries, full content, or relationship changes to canonical Library source.
 
 ## [2026-05-03] Excluded test artifacts from Jekyll
 

@@ -32,6 +32,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
       <h3>Data</h3>
       <ul class="catalogueDashboardPills">
         <li><a href="{{ '/studio/library-export/' | relative_url }}">export</a></li>
+        <li><a href="{{ '/studio/library-import/' | relative_url }}">import</a></li>
       </ul>
     </section>
   </section>

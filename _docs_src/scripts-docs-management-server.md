@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-03 21:25"
+last_updated: "2026-05-03 22:38"
 parent_id: scripts
 sort_order: 10
 ---
@@ -50,7 +50,7 @@ Current behavior:
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
 - also used by `/studio/library-export/` to write configured Library export artifacts
-- also used by the Library import workflow to list staged JSON/JSONL data files and write Markdown previews
+- also used by `/studio/library-import/` to list staged JSON/JSONL data files and write Markdown previews
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`

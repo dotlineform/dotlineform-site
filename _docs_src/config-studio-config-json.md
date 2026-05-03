@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: "Studio Config JSON"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 22:38"
 parent_id: config
 sort_order: 30
 ---
@@ -51,6 +51,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/studio-audits.js`
 - `assets/studio/js/library-export.js`
+- `assets/studio/js/library-import.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
