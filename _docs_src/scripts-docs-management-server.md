@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-03 16:42"
+last_updated: "2026-05-03 17:37"
 parent_id: scripts
 sort_order: 10
 ---
@@ -192,7 +192,8 @@ Export behavior:
 - output paths are validated by the export engine and must stay under `var/docs/exports/`
 - normal server mode writes the export file and returns `output_written: true`
 - server `--dry-run` mode validates and reports the target path without writing
-- logs include scope, config id, counts, target format, dry-run state, and whether output was written; logs do not include document body content or export payloads
+- failed validation returns the same report shape with `ok: false`, `errors`, `warnings`, `issue_counts`, and `output_written: false`
+- logs include scope, config id, counts, target format, dry-run state, issue counts, and whether output was written; logs do not include document body content or export payloads
 
 `POST /docs/open-source` expects:
 

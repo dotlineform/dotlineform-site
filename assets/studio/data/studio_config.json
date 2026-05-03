@@ -589,8 +589,9 @@
       "result_output": "output",
       "result_format": "format",
       "result_counts_label": "counts",
-      "result_counts": "{exported} exported; {skipped} skipped; {truncated} truncated.",
-      "warnings_heading": "Warnings"
+      "result_counts": "{exported} exported; {skipped} skipped; {failed} failed; {truncated} truncated.",
+      "warnings_heading": "Warnings",
+      "issues_heading": "Issues"
     },
     "docs_html_import": {
       "intro": "Import a staged self-contained HTML file into the Studio, Analysis, or Library docs source as a best-attempt Markdown doc.",

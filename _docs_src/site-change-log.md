@@ -2,11 +2,45 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:18"
+last_updated: "2026-05-03 17:37"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Library export validation and reporting
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Completed Library export Task 7 by adding explicit v1 validation decisions and clearer export issue reporting.
+
+**Reason:**
+The export infrastructure was working, but needed a concrete blocker-versus-warning contract before treating v1 as stable enough to verify and document end to end.
+
+**Changes:**
+The export engine now validates config shape, target format and record-shape combinations, field mappings, output paths, source-text transforms, truncation limits, selected document ids, required fields, and empty selections before writing.
+Reports now include `failed` counts, `skipped_summary`, and `issue_counts`.
+The Studio Library export result UI now distinguishes warnings from blocking issues and shows failed counts.
+
+**Files changed:**
+
+- `scripts/docs/docs_export.py`
+- `scripts/docs/docs_management_server.py`
+- `assets/studio/js/library-export.js`
+- `assets/studio/data/studio_config.json`
+- `tests/python/test_docs_export.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
+**Impact:**
+Bad configs, bad selections, and unsafe output paths now fail before export writes, while expected skipped documents and truncation remain visible as warnings.
+Batching and total character limits remain deferred until real usage requires them.
 
 ## [2026-05-03] Flattened Library export file paths
 

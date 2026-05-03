@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 17:18"
+last_updated: "2026-05-03 17:37"
 parent_id: config
 sort_order: 70
 ---
@@ -225,6 +225,11 @@ The initial full-content export uses `image_text_mode: "extract_text"` and `empt
 
 The schema validates config shape and allowed keys.
 Runtime validation still needs to check source-dependent concerns such as unknown `doc_id` values, archived descendants, missing required fields, output path resolution, and whether a selected config is enabled for the requested scope.
+
+The export engine also applies v1 semantic validation before writing.
+Blocking config errors include duplicate config ids, unsupported target formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `source_text` mappings that would emit raw rendered HTML, and truncating mappings without configured integer limits.
+
+Warnings are reserved for non-blocking runtime context such as expected skipped filters, ignored `doc_ids` when `select_all` is true, ignored `missing_summary_only` on unsupported configs, truncation, and deferred `max_total_chars` enforcement.
 
 Benefits:
 

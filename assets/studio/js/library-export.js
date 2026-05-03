@@ -309,16 +309,25 @@ function resetResult(state) {
 }
 
 function renderWarnings(state, warnings, errors) {
+  const errorItems = Array.isArray(errors) ? errors.map(normalizeText).filter(Boolean) : [];
+  const warningItems = Array.isArray(warnings) ? warnings.map(normalizeText).filter(Boolean) : [];
   const items = [
-    ...(Array.isArray(errors) ? errors : []),
-    ...(Array.isArray(warnings) ? warnings : [])
-  ].map(normalizeText).filter(Boolean);
+    ...errorItems,
+    ...warningItems
+  ];
   if (!items.length) {
     state.warningsWrap.hidden = true;
     state.warningsList.innerHTML = "";
     return;
   }
-  setText(state.warningsHeading, getStudioText(state.config, "library_export.warnings_heading", "Warnings"));
+  setText(
+    state.warningsHeading,
+    getStudioText(
+      state.config,
+      errorItems.length ? "library_export.issues_heading" : "library_export.warnings_heading",
+      errorItems.length ? "Issues" : "Warnings"
+    )
+  );
   state.warningsList.innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
   state.warningsWrap.hidden = false;
 }
@@ -328,10 +337,11 @@ function countsText(state, counts) {
   return getStudioText(
     state.config,
     "library_export.result_counts",
-    "{exported} exported; {skipped} skipped; {truncated} truncated.",
+    "{exported} exported; {skipped} skipped; {failed} failed; {truncated} truncated.",
     {
       exported: Number(safeCounts.exported || 0),
       skipped: Number(safeCounts.skipped || 0),
+      failed: Number(safeCounts.failed || 0),
       truncated: Number(safeCounts.truncated || 0)
     }
   );

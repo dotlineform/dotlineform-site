@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 17:18"
+last_updated: "2026-05-03 17:37"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -328,7 +328,6 @@ When the docs-management server runs with `--dry-run`, the endpoint validates an
 
 ## Open Questions
 
-- Which validation failures should block each export config, and which should be reported as warnings?
 - What real thresholds should later trigger batching or long-document chunking?
 
 ## Current Decisions
@@ -345,6 +344,40 @@ When the docs-management server runs with `--dry-run`, the endpoint validates an
 - Non-viewable generated docs should be exportable and visibly marked.
 - Raw source Markdown and Markdown target documents are later config extensions, not v1 defaults.
 - Export runs should not be added to a Studio activity feed in v1.
+
+## Validation And Reporting
+
+V1 validation should prefer blocking failures when an export would be ambiguous, unsafe, structurally invalid, or likely to mislead a consumer.
+It should prefer warnings when the export can still produce a coherent file and the issue is useful context for the user.
+
+Blocking validation errors:
+
+- config file shape is invalid, including wrong `schema_version`, duplicate config ids, unsupported target format, unsupported record shape, unsupported field source, unsupported transform, duplicate or conflicting output paths, or mismatched output extension
+- selected config is disabled or does not support the requested scope
+- output path is missing, unsafe, or outside `var/docs/exports/`
+- explicit selected `doc_id` values are unknown
+- selection resolves to zero exportable documents after filters
+- required mapped fields are missing or empty
+- a required generated payload cannot be loaded for mapped fields such as headings or source text
+- `source_text` mappings would write raw rendered HTML instead of using `plain_text_from_rendered_html`
+- truncating field mappings are configured without a supported integer limit
+
+Warnings:
+
+- selected docs are skipped by expected filters such as archive exclusion, publication exclusion, missing-summary filtering, non-viewable filtering, or `max_documents`
+- `select_all` causes explicit `doc_ids` to be ignored
+- `missing_summary_only` is requested for a config that does not support it
+- selected docs are truncated by configured limits
+- `max_total_chars` is declared, because total-length enforcement and batching are deferred beyond v1
+
+Export reports should include:
+
+- selected, exported, skipped, failed, and truncated counts
+- explicit exported `doc_id` values
+- structured skipped rows with reason codes
+- skipped reason totals
+- warning and error lists
+- issue counts for warnings and errors
 
 ## Implementation Tasks
 
@@ -381,7 +414,7 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: selection UI implemented at `/studio/library-export/`. The page loads enabled Library export configs, renders a hierarchical checkbox list in Docs Viewer order, excludes `_archive` descendants, marks viewable docs with a green dot, and keeps export execution disabled until Task 6 adds the loopback service endpoint.
+Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, renders a hierarchical checkbox list in Docs Viewer order, excludes `_archive` descendants, marks viewable docs with a green dot, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
 
 ### Task 6. Add Local Service Endpoint
 
@@ -393,6 +426,8 @@ Status: implemented as `POST /docs/export` on `./scripts/docs/docs_management_se
 
 Validate export config shape, selected documents, output paths, and required fields.
 Return counts and warnings to the Studio UI.
+
+Status: implemented in `./scripts/docs/docs_export.py`, `POST /docs/export`, and the Studio Library export result UI.
 
 ### Task 8. Document Runtime And Config Usage
 

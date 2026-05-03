@@ -1011,7 +1011,10 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             "selected": int(report.get("counts", {}).get("selected") or 0),
             "exported": int(report.get("counts", {}).get("exported") or 0),
             "skipped": int(report.get("counts", {}).get("skipped") or 0),
+            "failed": int(report.get("counts", {}).get("failed") or 0),
             "truncated": int(report.get("counts", {}).get("truncated") or 0),
+            "errors": int(report.get("issue_counts", {}).get("errors") or 0),
+            "warnings": int(report.get("issue_counts", {}).get("warnings") or 0),
         },
     )
     if report.get("ok"):

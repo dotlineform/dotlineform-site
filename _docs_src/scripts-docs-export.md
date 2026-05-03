@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 17:18"
+last_updated: "2026-05-03 17:37"
 parent_id: scripts
 sort_order: 25
 ---
@@ -118,9 +118,19 @@ The script prints a JSON report with:
 - `selected_doc_ids`
 - `exported_doc_ids`
 - `skipped`
+- `skipped_summary`
 - `warnings`
 - `errors`
+- `issue_counts`
 - `output_written`
+
+`counts` includes:
+
+- `selected`
+- `exported`
+- `skipped`
+- `failed`
+- `truncated`
 
 The command exits with:
 
@@ -137,8 +147,18 @@ The engine validates runtime concerns that the static config schema cannot know:
 - selected docs exist
 - archive and publication filters are applied
 - required mapped fields are present
+- source-text mappings use plain-text conversion rather than raw rendered HTML
+- truncating mappings have configured integer limits
 - output paths stay under `var/docs/exports/`
-- unsupported transforms are reported before writing
+- unsupported sources, transforms, target formats, and record shapes are reported before writing
+
+Warnings report non-blocking context:
+
+- expected skipped-doc filters
+- ignored `doc_ids` when `select_all` is true
+- ignored `missing_summary_only` on unsupported configs
+- truncation
+- deferred `max_total_chars` enforcement
 
 The static config schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 

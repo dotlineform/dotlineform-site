@@ -27,6 +27,8 @@ OUTPUT_ROOT = Path("var/docs/exports")
 SCHEMA_VERSION = "library_export_configs_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 PUNCTUATION_SPACING_RE = re.compile(r"\s+([,.;:!?])")
+ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
+OUTPUT_PATH_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")
 SUPPORTED_TRANSFORMS = {
     "identity",
     "headings_from_rendered_html",
@@ -34,6 +36,34 @@ SUPPORTED_TRANSFORMS = {
     "omit_code_blocks",
     "normalize_whitespace",
     "truncate_chars",
+}
+SUPPORTED_FIELD_SOURCES = {
+    "doc_id",
+    "title",
+    "parent_id",
+    "parent_title",
+    "ancestor_ids",
+    "ancestor_titles",
+    "child_ids",
+    "child_titles",
+    "summary",
+    "current_summary",
+    "headings",
+    "source_text",
+    "last_updated",
+    "viewable",
+    "published",
+}
+SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
+SUPPORTED_RECORD_SHAPES = {"envelope", "document_rows"}
+SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
+SKIPPED_REASON_LABELS = {
+    "archived": "are archived",
+    "has_summary": "already have summaries",
+    "max_documents": "exceeded the configured maximum document count",
+    "non_viewable": "are not viewable",
+    "unknown_doc_id": "were not found",
+    "unpublished": "are unpublished",
 }
 
 
@@ -316,13 +346,7 @@ def load_config_file(repo_root: Path, config_path: str | None = None) -> dict[st
     path = Path(config_path) if config_path else DEFAULT_CONFIG_PATH
     if not path.is_absolute():
         path = repo_root / path
-    payload = read_json(path, "export config")
-    if payload.get("schema_version") != SCHEMA_VERSION:
-        raise ValueError(f"Expected schema_version {SCHEMA_VERSION!r} in {path}")
-    configs = payload.get("configs")
-    if not isinstance(configs, list) or not configs:
-        raise ValueError(f"Expected non-empty configs array in {path}")
-    return payload
+    return read_json(path, "export config")
 
 
 def find_export_config(config_payload: dict[str, Any], config_id: str) -> dict[str, Any]:
@@ -336,6 +360,126 @@ def find_export_config(config_payload: dict[str, Any], config_id: str) -> dict[s
     if len(matches) > 1:
         raise ValueError(f"Duplicate export config id: {config_id}")
     return matches[0]
+
+
+def validate_config_payload(config_payload: dict[str, Any]) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    if config_payload.get("schema_version") != SCHEMA_VERSION:
+        errors.append(f"config: schema_version must be {SCHEMA_VERSION!r}")
+    configs = config_payload.get("configs")
+    if not isinstance(configs, list) or not configs:
+        errors.append("config: configs must be a non-empty array")
+        return errors, warnings
+
+    seen_ids: set[str] = set()
+    for index, config in enumerate(configs):
+        if not isinstance(config, dict):
+            errors.append(f"config[{index}]: export config must be an object")
+            continue
+        config_id = normalize_text(config.get("id")) or f"index {index}"
+        if config_id in seen_ids:
+            errors.append(f"config {config_id}: duplicate export config id")
+        seen_ids.add(config_id)
+        if config_id and not ID_RE.match(config_id):
+            errors.append(f"config {config_id}: id must use lowercase letters, numbers, and hyphens")
+    return errors, warnings
+
+
+def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]]:
+    config_id = normalize_text(config.get("id")) or "<unknown>"
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    scopes = config.get("scopes")
+    if not isinstance(scopes, list) or not scopes or not all(normalize_text(scope) for scope in scopes):
+        errors.append(f"config {config_id}: scopes must be a non-empty array")
+
+    target = config.get("target") if isinstance(config.get("target"), dict) else {}
+    target_format = normalize_text(target.get("format"))
+    record_shape = normalize_text(target.get("record_shape"))
+    if target_format not in SUPPORTED_TARGET_FORMATS:
+        errors.append(f"config {config_id}: unsupported target.format {target_format!r}")
+    if record_shape not in SUPPORTED_RECORD_SHAPES:
+        errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
+    if target_format == "jsonl" and record_shape != "document_rows":
+        errors.append(f"config {config_id}: jsonl exports must use document_rows")
+    if target_format == "json" and record_shape != "envelope":
+        errors.append(f"config {config_id}: json exports must use envelope")
+    if record_shape == "envelope":
+        document_array_path = normalize_text(target.get("document_array_path") or "documents")
+        if not OUTPUT_PATH_RE.match(document_array_path):
+            errors.append(f"config {config_id}: target.document_array_path is not a supported output path")
+
+    output = config.get("output") if isinstance(config.get("output"), dict) else {}
+    path_pattern = normalize_text(output.get("path_pattern"))
+    if not path_pattern:
+        errors.append(f"config {config_id}: output.path_pattern is required")
+    elif "{scope}" not in path_pattern or "{export_id}" not in path_pattern or "{timestamp}" not in path_pattern:
+        errors.append(f"config {config_id}: output.path_pattern must include scope, export_id, and timestamp placeholders")
+    elif target_format and not path_pattern.endswith(f".{target_format}"):
+        errors.append(f"config {config_id}: output.path_pattern extension must match target.format")
+    timestamp_format = normalize_text(output.get("timestamp_format") or "%Y%m%d-%H%M%S")
+    try:
+        dt.datetime.now(dt.timezone.utc).strftime(timestamp_format)
+    except Exception:
+        errors.append(f"config {config_id}: output.timestamp_format is invalid")
+
+    selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
+    selection_mode = normalize_text(selection.get("mode"))
+    if selection_mode not in SUPPORTED_SELECTION_MODES:
+        errors.append(f"config {config_id}: unsupported selection.mode {selection_mode!r}")
+    for key in ["include_descendants", "include_non_viewable", "exclude_archived", "exclude_unpublished"]:
+        if not isinstance(selection.get(key), bool):
+            errors.append(f"config {config_id}: selection.{key} must be true or false")
+
+    limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
+    for key in ["max_documents", "max_chars_per_document", "max_total_chars"]:
+        value = limits.get(key)
+        if value is not None and (not isinstance(value, int) or value < 1):
+            errors.append(f"config {config_id}: limits.{key} must be null or a positive integer")
+    if limits.get("max_total_chars") is not None:
+        warnings.append(f"config {config_id}: limits.max_total_chars is documented but not enforced in v1")
+    truncate = limits.get("truncate") if isinstance(limits.get("truncate"), dict) else {}
+    if truncate and normalize_text(truncate.get("strategy")) not in {"hard", "paragraph_boundary"}:
+        errors.append(f"config {config_id}: limits.truncate.strategy is unsupported")
+
+    mappings = config.get("document_fields")
+    if not isinstance(mappings, list) or not mappings:
+        errors.append(f"config {config_id}: document_fields must be a non-empty array")
+        return errors, warnings
+
+    seen_output_paths: set[str] = set()
+    for index, mapping in enumerate(mappings):
+        if not isinstance(mapping, dict):
+            errors.append(f"config {config_id}: document_fields[{index}] must be an object")
+            continue
+        source = normalize_text(mapping.get("source"))
+        output_path = normalize_text(mapping.get("output_path"))
+        transforms = [normalize_text(item) for item in mapping.get("transforms", [])]
+        if source not in SUPPORTED_FIELD_SOURCES:
+            errors.append(f"config {config_id}: document_fields[{index}] has unsupported source {source!r}")
+        if not output_path or not OUTPUT_PATH_RE.match(output_path):
+            errors.append(f"config {config_id}: document_fields[{index}] has invalid output_path")
+        if output_path in seen_output_paths:
+            errors.append(f"config {config_id}: duplicate document output_path {output_path}")
+        for seen_path in seen_output_paths:
+            if output_path.startswith(f"{seen_path}.") or seen_path.startswith(f"{output_path}."):
+                errors.append(f"config {config_id}: conflicting nested output paths {seen_path} and {output_path}")
+        if output_path:
+            seen_output_paths.add(output_path)
+        unsupported = [item for item in transforms if item and item not in SUPPORTED_TRANSFORMS]
+        if unsupported:
+            errors.append(f"config {config_id}: field {source} uses unsupported transform(s): {', '.join(unsupported)}")
+        if source == "source_text" and "plain_text_from_rendered_html" not in transforms:
+            errors.append(f"config {config_id}: source_text fields must use plain_text_from_rendered_html")
+        if "truncate_chars" in transforms:
+            limit_key = normalize_text(mapping.get("limit_key"))
+            if limit_key not in {"max_chars_per_document", "max_total_chars"}:
+                errors.append(f"config {config_id}: field {source} uses truncate_chars without a supported limit_key")
+            elif not isinstance(limits.get(limit_key), int):
+                errors.append(f"config {config_id}: field {source} uses truncate_chars but limits.{limit_key} is not set")
+    return errors, warnings
 
 
 def config_checksum(config: dict[str, Any]) -> str:
@@ -426,12 +570,18 @@ def selected_docs(
     selected_doc_ids: list[str],
     select_all: bool,
     missing_summary_only: bool | None,
-) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[str]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[str], list[str]]:
     selection = context.config.get("selection", {})
     mode = normalize_text(selection.get("mode"))
     skipped: list[dict[str, str]] = []
     errors: list[str] = []
+    warnings: list[str] = []
     archive_ids = archived_doc_ids(context.children_by_parent) if selection.get("exclude_archived") else set()
+
+    if select_all and selected_doc_ids:
+        warnings.append("selection: explicit doc_ids were ignored because select_all is true")
+    if missing_summary_only and not selection.get("supports_missing_summary_only"):
+        warnings.append("selection: missing_summary_only was ignored because the selected config does not support it")
 
     if mode == "all_matching" or select_all:
         requested_ids = [normalize_text(doc.get("doc_id")) for doc in context.docs]
@@ -466,7 +616,13 @@ def selected_docs(
             skipped.append({"doc_id": normalize_text(doc.get("doc_id")), "reason": "max_documents"})
         selected = selected[:max_documents]
 
-    return selected, skipped, errors
+    unknown_ids = [item["doc_id"] for item in skipped if item.get("reason") == "unknown_doc_id"]
+    if unknown_ids:
+        errors.append(f"selection: unknown doc_id value(s): {', '.join(unknown_ids)}")
+    if requested_ids and not selected:
+        errors.append("selection: no exportable documents remain after applying filters")
+
+    return selected, skipped, errors, warnings
 
 
 def effective_missing_summary_only(config: dict[str, Any], override: bool | None) -> bool:
@@ -648,11 +804,11 @@ def build_document_record(context: ExportContext, doc: dict[str, Any]) -> tuple[
         transforms = [normalize_text(item) for item in mapping.get("transforms", [])]
         unsupported = [item for item in transforms if item and item not in SUPPORTED_TRANSFORMS]
         if unsupported:
-            errors.append(f"{doc_id}: unsupported transform(s) before Task 4: {', '.join(unsupported)}")
+            errors.append(f"{doc_id}: unsupported transform(s): {', '.join(unsupported)}")
             continue
         try:
             value = source_value(context, doc, source)
-        except NotImplementedError as exc:
+        except (FileNotFoundError, ValueError, NotImplementedError) as exc:
             errors.append(f"{doc_id}: {exc}")
             continue
 
@@ -684,6 +840,25 @@ def build_document_record(context: ExportContext, doc: dict[str, Any]) -> tuple[
     return record, warnings, errors, truncated
 
 
+def skipped_reason_counts(skipped: list[dict[str, str]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for item in skipped:
+        reason = normalize_text(item.get("reason"))
+        if reason:
+            counts[reason] = counts.get(reason, 0) + 1
+    return counts
+
+
+def skipped_summary_warnings(skipped: list[dict[str, str]]) -> list[str]:
+    warnings: list[str] = []
+    for reason, count in sorted(skipped_reason_counts(skipped).items()):
+        if reason == "unknown_doc_id":
+            continue
+        label = SKIPPED_REASON_LABELS.get(reason, reason.replace("_", " "))
+        warnings.append(f"selection: {count} document(s) skipped because they {label}")
+    return warnings
+
+
 def export_metadata(
     context: ExportContext,
     *,
@@ -713,7 +888,8 @@ def export_metadata(
 
 def resolve_output_path(repo_root: Path, config: dict[str, Any], scope: str, timestamp: str) -> Path:
     config_id = normalize_text(config.get("id"))
-    pattern = normalize_text(config.get("output", {}).get("path_pattern"))
+    output = config.get("output") if isinstance(config.get("output"), dict) else {}
+    pattern = normalize_text(output.get("path_pattern"))
     if not pattern:
         raise ValueError(f"Export config {config_id} is missing output.path_pattern")
     relative = Path(
@@ -785,11 +961,85 @@ def build_export(
     generated_at_dt = dt.datetime.now(dt.timezone.utc)
     generated_at = generated_at_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
     config_payload = load_config_file(repo_root, config_path)
-    config = find_export_config(config_payload, config_id)
+    payload_errors, payload_warnings = validate_config_payload(config_payload)
+    if payload_errors:
+        return {
+            "ok": False,
+            "dry_run": not write,
+            "config_id": config_id,
+            "scope": scope,
+            "target_format": "",
+            "output_file": "",
+            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
+            "selected_doc_ids": [],
+            "exported_doc_ids": [],
+            "skipped": [],
+            "skipped_summary": {},
+            "warnings": payload_warnings,
+            "errors": payload_errors,
+            "issue_counts": {"errors": len(payload_errors), "warnings": len(payload_warnings)},
+            "output_written": False,
+        }
+    try:
+        config = find_export_config(config_payload, config_id)
+    except ValueError as exc:
+        errors = [str(exc)]
+        return {
+            "ok": False,
+            "dry_run": not write,
+            "config_id": config_id,
+            "scope": scope,
+            "target_format": "",
+            "output_file": "",
+            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
+            "selected_doc_ids": [],
+            "exported_doc_ids": [],
+            "skipped": [],
+            "skipped_summary": {},
+            "warnings": payload_warnings,
+            "errors": errors,
+            "issue_counts": {"errors": len(errors), "warnings": len(payload_warnings)},
+            "output_written": False,
+        }
+    config_errors, config_warnings = validate_export_config(config)
+    warnings: list[str] = [*payload_warnings, *config_warnings]
+    errors: list[str] = [*config_errors]
     if scope not in config.get("scopes", []):
-        raise ValueError(f"Export config {config_id} does not support scope {scope}")
+        errors.append(f"config {config_id}: scope {scope} is not supported")
     if not config.get("enabled", False):
-        raise ValueError(f"Export config {config_id} is disabled")
+        errors.append(f"config {config_id}: export config is disabled")
+
+    output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
+    target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
+    timestamp_format = normalize_text(output_config.get("timestamp_format") or "%Y%m%d-%H%M%S")
+    timestamp = generated_at_dt.strftime(timestamp_format)
+    output_path: Path | None = None
+    relative_output = ""
+    try:
+        output_path = resolve_output_path(repo_root, config, scope, timestamp)
+        relative_output = str(output_path.relative_to(repo_root))
+    except ValueError as exc:
+        errors.append(f"config {config_id}: {exc}")
+    target_format = normalize_text(target_config.get("format"))
+
+    if errors:
+        return {
+            "ok": False,
+            "dry_run": not write,
+            "config_id": config_id,
+            "scope": scope,
+            "target_format": target_format,
+            "output_file": relative_output,
+            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
+            "selected_doc_ids": [],
+            "exported_doc_ids": [],
+            "skipped": [],
+            "skipped_summary": {},
+            "warnings": warnings,
+            "errors": errors,
+            "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
+            "output_written": False,
+        }
 
     docs = load_scope_index(repo_root, scope)
     docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
@@ -802,7 +1052,7 @@ def build_export(
         children_by_parent=build_children_by_parent(docs),
         payload_cache={},
     )
-    selected, skipped, selection_errors = selected_docs(
+    selected, skipped, selection_errors, selection_warnings = selected_docs(
         context,
         selected_doc_ids=selected_doc_ids,
         select_all=select_all,
@@ -810,8 +1060,10 @@ def build_export(
     )
 
     records: list[dict[str, Any]] = []
-    warnings: list[str] = []
-    errors: list[str] = list(selection_errors)
+    warnings.extend(selection_warnings)
+    warnings.extend(skipped_summary_warnings(skipped))
+    errors = list(selection_errors)
+    failed_count = 0
     truncated_count = 0
     for doc in selected:
         record, doc_warnings, doc_errors, was_truncated = build_document_record(context, doc)
@@ -821,18 +1073,18 @@ def build_export(
             records.append(record)
             if was_truncated:
                 truncated_count += 1
+        else:
+            failed_count += 1
+    if truncated_count:
+        warnings.append(f"output: {truncated_count} document(s) were truncated by configured limits")
 
     counts = {
         "selected": len(selected),
         "exported": len(records),
         "skipped": len(skipped),
+        "failed": failed_count,
         "truncated": truncated_count,
     }
-    timestamp_format = normalize_text(config.get("output", {}).get("timestamp_format") or "%Y%m%d-%H%M%S")
-    timestamp = generated_at_dt.strftime(timestamp_format)
-    output_path = resolve_output_path(repo_root, config, scope, timestamp)
-    relative_output = str(output_path.relative_to(repo_root))
-    target_format = normalize_text(config.get("target", {}).get("format"))
     report: dict[str, Any] = {
         "ok": not errors,
         "dry_run": not write,
@@ -844,8 +1096,10 @@ def build_export(
         "selected_doc_ids": [normalize_text(doc.get("doc_id")) for doc in selected],
         "exported_doc_ids": [normalize_text(record.get("doc_id")) for record in records if isinstance(record, dict)],
         "skipped": skipped,
+        "skipped_summary": skipped_reason_counts(skipped),
         "warnings": warnings,
         "errors": errors,
+        "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
     }
 
     if errors:
@@ -860,6 +1114,8 @@ def build_export(
         counts=counts,
     )
     if write:
+        if output_path is None:
+            raise ValueError("Export output path was not resolved")
         if target_format == "json":
             if not isinstance(payload, dict):
                 raise ValueError("JSON envelope payload must be an object")
