@@ -2,7 +2,7 @@
 doc_id: library
 title: "Library"
 added_date: 2026-04-18
-last_updated: 2026-05-03
+last_updated: "2026-05-03 18:28"
 parent_id: ""
 sort_order: 165
 ---
@@ -33,7 +33,7 @@ This document should be developed in parallel with **[Studio Implementation Plan
 - identify current manual or file-based workflows that need clearer operational support
 - confirm the source-of-truth boundary and generated-runtime boundary
 - define semantic enrichment workflows for summaries and structure review; see [Library Semantic Enrichment Spec](/docs/?scope=studio&doc=library-semantic-enrichment-spec)
-- define export workflows for Library Docs Viewer source data; see [Library Export](/docs/?scope=studio&doc=library-export)
+- define export workflows for Library Docs Viewer source data; see [Library Export v1](/docs/?scope=studio&doc=library-export)
 
 ### Phase 2. Library Entry Surfaces
 

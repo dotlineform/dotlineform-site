@@ -6,8 +6,6 @@ studio_domain: library
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
 ---
 
-<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
-
 <div
   class="studioDashboard"
   id="studioLibraryDashboardRoot"
@@ -15,35 +13,27 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
   data-studio-ready="false"
   data-studio-busy="false"
 >
-  <p class="studioDashboard__intro">Use the Library dashboard as the admin-facing entry surface for the published library, its guidance docs, and future maintenance workflows.</p>
-
   <section class="studioDashboard__metrics" aria-label="Library metrics">
     <article class="studioMetricCard">
-      <p class="studioMetricCard__label">Library docs</p>
       <p class="studioMetricCard__value" data-studio-metric="library-doc-count">--</p>
-      <p class="studioMetricCard__meta">Documents currently exposed through the public library viewer.</p>
+      <p class="studioMetricCard__label">library docs</p>
     </article>
   </section>
 
-  <section class="studioDashboard__section">
-    <div class="studioDashboard__sectionHeader">
-      <h3>Current entry points</h3>
-      <p>The public library remains user-facing; this dashboard is the admin-facing route into that domain.</p>
-    </div>
-    <div class="studioCardGrid">
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/library/?mode=manage' | relative_url }}">
-        <h4>Manage library</h4>
-        <p>Open the Library viewer with local management controls enabled.</p>
-      </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/docs-import/?scope=library' | relative_url }}">
-        <h4>Import</h4>
-        <p>Import staged HTML into the published Library docs source for manage-mode review.</p>
-      </a>
-      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/library-export/' | relative_url }}">
-        <h4>Export</h4>
-        <p>Select Library docs for configured JSON and JSONL export patterns.</p>
-      </a>
-    </div>
+  <section class="catalogueDashboardRoutes" aria-label="Library links">
+    <section class="catalogueDashboardColumn">
+      <h3>Manage</h3>
+      <ul class="catalogueDashboardPills">
+        <li><a href="{{ '/library/?mode=manage&doc=library' | relative_url }}">Library</a></li>
+        <li><a href="{{ '/studio/docs-import/?scope=library' | relative_url }}">HTML Import</a></li>
+      </ul>
+    </section>
+    <section class="catalogueDashboardColumn">
+      <h3>Data</h3>
+      <ul class="catalogueDashboardPills">
+        <li><a href="{{ '/studio/library-export/' | relative_url }}">export</a></li>
+      </ul>
+    </section>
   </section>
 </div>
 

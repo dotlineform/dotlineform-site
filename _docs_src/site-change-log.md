@@ -2,11 +2,36 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 18:06"
+last_updated: "2026-05-03 18:28"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Simplified the Library dashboard route links
+
+**Status:** implemented
+
+**Area:** Studio / Library dashboard
+
+**Summary:**
+Aligned `/studio/library/` with the compact `/studio/catalogue/` dashboard pattern.
+
+**Reason:**
+The Library dashboard had become a routine navigation surface. Descriptive panel cards added extra reading where the page now needs direct route access.
+
+**Changes:**
+Removed the Library dashboard intro, card descriptions, and panel links.
+The dashboard now keeps the Library doc count and shows two route columns: `Manage` for Library manage mode and HTML Import, and `Data` for export.
+
+**Files changed:**
+
+- `studio/library/index.md`
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Library admin routes are now faster to scan and visually consistent with the Catalogue dashboard.
+The Library link now lands directly on `/library/?mode=manage&doc=library`.
 
 ## [2026-05-03] Added Library export v1 verification checks
 
@@ -30,7 +55,7 @@ The `docs` profile in `./scripts/run_checks.py` now runs the export checks befor
 - `tests/python/test_docs_export.py`
 - `tests/smoke/library_export.py`
 - `scripts/run_checks.py`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
@@ -59,7 +84,7 @@ Docs now call out that `output.timestamp_format` formats the local filename time
 
 - `scripts/docs/docs_export.py`
 - `tests/python/test_docs_export.py`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 
@@ -85,7 +110,7 @@ Library data-model docs now distinguish source-controlled export configs from ig
 
 **Files changed:**
 
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
@@ -122,7 +147,7 @@ The Studio Library export result UI now distinguishes warnings from blocking iss
 - `assets/studio/js/library-export.js`
 - `assets/studio/data/studio_config.json`
 - `tests/python/test_docs_export.py`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
@@ -152,7 +177,7 @@ The export config schema and docs now require `var/docs/exports/{scope}/{export_
 
 - `assets/studio/data/library_export_configs.json`
 - `assets/studio/data/library_export_configs.schema.json`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 
@@ -179,7 +204,7 @@ Library export and semantic-enrichment docs now point body-text use cases to `li
 **Files changed:**
 
 - `assets/studio/data/library_export_configs.json`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 - [Library Semantic Enrichment Spec](/docs/?scope=studio&doc=library-semantic-enrichment-spec)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
@@ -211,7 +236,7 @@ The Studio transport layer exposes the endpoint, and `/studio/library-export/` n
 - `studio/library-export/index.md`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 
@@ -244,7 +269,7 @@ The run button stays disabled until the Task 6 loopback endpoint is added.
 - `assets/studio/js/studio-config.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
 - [Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)
 - [Studio](/docs/?scope=studio&doc=studio)
@@ -274,7 +299,7 @@ Summary and full-content Library export configs need body text suitable for LLM 
 - `assets/studio/data/library_export_configs.json`
 - `assets/studio/data/library_export_configs.schema.json`
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
@@ -303,7 +328,7 @@ Library export needs a reusable engine before adding the Studio page and local s
 
 - `scripts/docs/docs_export.py`
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -363,7 +388,7 @@ The config file now defines enabled patterns for parent-child relationships, doc
 
 - `assets/studio/data/library_export_configs.json`
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
 - [Config](/docs/?scope=studio&doc=config)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -393,7 +418,7 @@ Export patterns now have a defined shape for scope support, target format, outpu
 
 - `assets/studio/data/library_export_configs.schema.json`
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
 - [Config](/docs/?scope=studio&doc=config)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -427,7 +452,7 @@ Newly created or imported docs write `added_date` and `last_updated` as `YYYY-MM
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
 - [Shared Patterns](/docs/?scope=studio&doc=data-models-shared)
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
-- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## [2026-05-03] Added catalogue source/registry drift verification

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T17:19:20Z",
+  "generated_at": "2026-05-03T17:35:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -420,7 +420,7 @@
       "doc_id": "library-semantic-enrichment-spec",
       "title": "Library Semantic Enrichment Spec",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 17:08",
+      "last_updated": "2026-05-03 18:28",
       "parent_id": "library",
       "sort_order": 20,
       "published": true,
@@ -546,7 +546,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-03 17:45",
+      "last_updated": "2026-05-03 18:28",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -645,14 +645,15 @@
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 18:35",
       "parent_id": "design",
       "sort_order": 25,
       "published": true,
       "viewable": true,
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json"
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -842,7 +843,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03 18:28",
       "parent_id": "design",
       "sort_order": 30,
       "published": true,
@@ -2026,7 +2027,7 @@
       "doc_id": "library",
       "title": "Library",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 18:28",
       "parent_id": "",
       "sort_order": 165,
       "published": true,
@@ -2323,7 +2324,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 18:06",
+      "last_updated": "2026-05-03 18:28",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

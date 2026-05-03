@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 18:28"
 parent_id: ""
 sort_order: 20
 ---
@@ -55,7 +55,7 @@ Read this section in this order:
    - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
-   - **[Library Export](/docs/?scope=studio&doc=library-export)**
+   - **[Library Export v1](/docs/?scope=studio&doc=library-export)**
    - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**

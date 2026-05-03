@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: 2026-05-02
+last_updated: "2026-05-03 18:28"
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,23 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-05-03 / UI-075
+
+- status: adopted
+- route: `/studio/library/`
+- issue: the Library dashboard still used descriptive panel cards after the Catalogue dashboard had moved to compact route columns for routine navigation.
+- triage: local dashboard alignment
+- reasoning: Library now has a small set of stable admin routes. Matching the Catalogue dashboard's compact route-column pattern makes the domain dashboard faster to scan and keeps descriptive prose out of routine navigation.
+- outcome: the Library dashboard now keeps the Library doc count, removes descriptive intro/card copy, and presents `Manage` and `Data` columns with pill links for Library manage mode, HTML Import, and export.
+- files changed:
+  - `studio/library/index.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/library/` on desktop and mobile and confirm the layout shows two route columns
+  - confirm `Library` opens `/library/?mode=manage&doc=library`, `HTML Import` opens `/studio/docs-import/?scope=library`, and `export` opens `/studio/library-export/`
+- follow-up:
+  - consider a shared dashboard-route-column name if non-Catalogue dashboards continue to reuse this compact pattern
 
 ## UI Rule Log 2026-05-02 / UI-074
 

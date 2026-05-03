@@ -2,7 +2,7 @@
 doc_id: library-semantic-enrichment-spec
 title: "Library Semantic Enrichment Spec"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:08"
+last_updated: "2026-05-03 18:28"
 parent_id: library
 sort_order: 20
 ---
@@ -132,7 +132,7 @@ Initial display direction:
 
 ## Library Export Boundary
 
-Detailed export requirements now live in [Library Export](/docs/?scope=studio&doc=library-export).
+Detailed export requirements now live in [Library Export v1](/docs/?scope=studio&doc=library-export).
 
 That change request defines export as the creation of a specific file derived from the canonical Docs Viewer source, selected and run from a new Studio Library page.
 It covers the initial export patterns for parent-child relationship data, document summaries, and multi-document full-content files.
@@ -306,8 +306,8 @@ This should probably reuse Docs Viewer management validation rules for:
 - Library search/recently-added summary display remains a potential UI option.
 - Summary export/import files are ephemeral working artifacts, not canonical state.
 - Document summary export should include summary metadata only, without full document body text.
-- Full-content export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML; see [Library Export](/docs/?scope=studio&doc=library-export).
-- Bulk export selection should be hierarchical and checkbox-driven, with parent selection applying to descendants; see [Library Export](/docs/?scope=studio&doc=library-export).
+- Full-content export `source_text` should be plain text derived from rendered content, not raw Markdown or raw HTML; see [Library Export v1](/docs/?scope=studio&doc=library-export).
+- Bulk export selection should be hierarchical and checkbox-driven, with parent selection applying to descendants; see [Library Export v1](/docs/?scope=studio&doc=library-export).
 - Structure review should support recommendations that depend on new parent/category docs.
 - New parent/category docs can be created manually before document moves are applied.
 - A Studio Library page should become the user-facing entry point for running export/import/review scripts and seeing basic reports.
