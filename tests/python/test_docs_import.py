@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for the read-only Docs Viewer import parser."""
+"""Focused checks for the Docs Viewer import parser and preview renderer."""
 
 from __future__ import annotations
 
@@ -74,6 +74,16 @@ def write_staged(root: Path, filename: str, text: str) -> None:
 
 def parse(root: Path, filename: str):
     return docs_import.parse_staged_import(repo_root=root, scope="library", staged_file=filename)
+
+
+def render(root: Path, report: dict, *, write: bool = True, generated_at: str = "2026-05-03T20:40:00Z"):
+    return docs_import.render_markdown_previews(
+        repo_root=root,
+        scope="library",
+        report=report,
+        write=write,
+        generated_at=generated_at,
+    )
 
 
 def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
@@ -248,6 +258,118 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
     assert report["records"][2]["current_library"]["payload_exists"] is False
 
 
+def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        payload = [
+            {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "New alpha summary."},
+            {"doc_id": "alpha", "title": "Alpha Duplicate", "parent_id": "library", "summary": "Duplicate summary."},
+            {"doc_id": "", "title": "Missing Id", "parent_id": "library", "summary": "Missing id summary."},
+        ]
+        write_staged(root, "summaries.json", json.dumps(payload))
+        report = render(root, parse(root, "summaries.json"))
+        first_preview = (root / "var/docs/import-preview/library/alpha.md").read_text(encoding="utf-8")
+        missing_preview = (root / "var/docs/import-preview/library/record-3.md").read_text(encoding="utf-8")
+
+    assert report["preview_written"] is True
+    assert [item["path"] for item in report["preview_files"]] == [
+        "var/docs/import-preview/library/alpha.md",
+        "var/docs/import-preview/library/alpha-record-2.md",
+        "var/docs/import-preview/library/record-3.md",
+    ]
+    assert 'doc_id: "alpha"' in first_preview
+    assert 'import_type: "document_summaries"' in first_preview
+    assert "## Proposed Summary\n\nNew alpha summary." in first_preview
+    assert 'doc_id: ""' in missing_preview
+    assert "`missing_doc_id`: record is missing doc_id" in missing_preview
+
+
+def test_full_content_preview_preserves_headings_and_source_text() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged(
+            root,
+            "content.jsonl",
+            json.dumps(
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                    "parent_id": "library",
+                    "headings": ["One", "Two"],
+                    "source_text": "# One\n\n- A point\n\n> A quote",
+                }
+            )
+            + "\n",
+        )
+        report = render(root, parse(root, "content.jsonl"))
+        preview = (root / "var/docs/import-preview/library/alpha.md").read_text(encoding="utf-8")
+
+    assert report["preview_files"] == [
+        {
+            "path": "var/docs/import-preview/library/alpha.md",
+            "record_index": 0,
+            "doc_id": "alpha",
+            "kind": "document",
+        }
+    ]
+    assert "## Imported Headings\n\n- One\n- Two" in preview
+    assert "## Imported Source Text\n\n# One\n\n- A point\n\n> A quote" in preview
+
+
+def test_relationship_preview_writes_one_whole_tree_file() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        payload = {
+            "export_id": "library-parent-child-relationships",
+            "scope": "library",
+            "documents": [
+                {"doc_id": "library", "title": "Library", "parent_id": ""},
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Alpha summary."},
+                {"doc_id": "beta", "title": "Beta", "parent_id": "library", "headings": ["Beta Heading"]},
+            ],
+        }
+        write_staged(root, "relationships.json", json.dumps(payload))
+        report = render(root, parse(root, "relationships.json"))
+        preview = (root / "var/docs/import-preview/library/relationships-tree.md").read_text(encoding="utf-8")
+
+    assert report["preview_files"] == [
+        {
+            "path": "var/docs/import-preview/library/relationships-tree.md",
+            "record_count": 3,
+            "kind": "relationship_tree",
+        }
+    ]
+    assert 'import_type: "parent_child_relationships"' in preview
+    assert "- Library (`library`)\n  - Alpha (`alpha`)" in preview
+    assert "  - summary: Alpha summary." in preview
+    assert "  - Beta (`beta`)\n    - headings: Beta Heading" in preview
+
+
+def test_preview_renderer_can_dry_run_without_writing_files() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged(root, "summaries.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
+        report = render(root, parse(root, "summaries.json"), write=False)
+        preview_exists = (root / "var/docs/import-preview/library/alpha.md").exists()
+
+    assert report["preview_written"] is False
+    assert report["preview_files"][0]["path"] == "var/docs/import-preview/library/alpha.md"
+    assert preview_exists is False
+
+
+def test_preview_path_rejects_unsafe_filename() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        try:
+            docs_import.resolve_preview_path(root, "library", "../escape.md")
+        except ValueError as exc:
+            message = str(exc)
+        else:
+            raise AssertionError("unsafe preview path should fail")
+
+    assert "unsafe preview filename" in message
+
+
 def test_invalid_jsonl_is_a_file_level_blocker() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -280,6 +402,11 @@ def main() -> None:
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,
         test_current_library_lookup_adds_record_level_warnings,
+        test_summary_preview_writes_one_file_per_document_with_fallback_names,
+        test_full_content_preview_preserves_headings_and_source_text,
+        test_relationship_preview_writes_one_whole_tree_file,
+        test_preview_renderer_can_dry_run_without_writing_files,
+        test_preview_path_rejects_unsafe_filename,
         test_invalid_jsonl_is_a_file_level_blocker,
         test_parser_rejects_paths_outside_staging_root,
     ]

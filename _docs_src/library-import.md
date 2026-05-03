@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 20:33"
+last_updated: "2026-05-03 21:07"
 ui_status: in-progress
 parent_id: library
 sort_order: 30
@@ -303,6 +303,12 @@ Summary and full-content imports should generate one Markdown file per imported 
 Relationship imports should generate one Markdown file containing the whole candidate tree and include tree-level front matter.
 Source-file provenance and diagnostics should remain in the Studio report.
 
+Status: implemented in `./scripts/docs/docs_import.py`.
+The parser can now render Markdown preview files with `--write-previews`.
+Summary and full-content imports write one file per parsed document under `var/docs/import-preview/library/`, using `<doc_id>.md`, `<doc_id>-record-<n>.md` for duplicate ids, and `record-<n>.md` for missing ids.
+Relationship imports write one whole-tree Markdown file based on the staged filename, such as `relationships-tree.md`.
+Preview files include front matter and readable Markdown sections for import metadata, relevant warnings, summaries, headings, source text, or candidate relationship trees.
+
 ### Task 5. Add Local Service Endpoints
 
 Expose staged-file listing and preview generation through the docs-management local service.
@@ -341,8 +347,8 @@ Add focused tests for:
 - deterministic preview output
 - staged path allowlist behavior
 
-Parser coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, invalid JSONL blocking, and staged path allowlisting is implemented in `tests/python/test_docs_import.py`.
-Renderer and Studio page coverage should be added when those tasks are implemented.
+Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output, deterministic preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
+Studio page coverage should be added when that task is implemented.
 
 Add a light Studio smoke test once the page exists.
 

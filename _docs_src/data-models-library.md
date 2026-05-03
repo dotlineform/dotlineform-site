@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-03 20:33"
+last_updated: "2026-05-03 21:07"
 parent_id: data-models
 sort_order: 40
 ---
@@ -177,7 +177,9 @@ Current model:
 - the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
 - unknown file-level and record-level metadata is preserved in parser reports
 - parser reports compare staged records with the current generated Library docs index and generated payload filenames
-- Markdown preview files are a later task and remain local working artifacts
+- Markdown preview files are generated only when `./scripts/docs/docs_import.py --write-previews` is used
+- summary and full-content imports write one preview file per parsed document
+- relationship imports write one whole-tree preview file per staged relationships file
 
 Current consumers:
 
@@ -186,7 +188,6 @@ Current consumers:
 Current limits:
 
 - Library is the only supported v1 import scope
-- parser reports do not render Markdown previews yet
 - source apply workflows are out of scope until explicitly specified
 
 ## Why The Library Model Is Valuable Even While Small

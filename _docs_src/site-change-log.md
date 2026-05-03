@@ -2,11 +2,41 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 20:33"
+last_updated: "2026-05-03 21:07"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Library import Markdown preview rendering
+
+**Status:** implemented
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Completed Library import Task 4 by adding Markdown preview rendering for staged Library import files.
+
+**Reason:**
+The import workflow needs human-readable files before the Studio service and UI can provide useful review of staged summaries, full content, or relationship-tree recommendations.
+
+**Changes:**
+`./scripts/docs/docs_import.py --write-previews` now writes previews under `var/docs/import-preview/library/`.
+Summary and full-content imports write one Markdown file per parsed document with document-specific front matter, import metadata, relevant warnings, and proposed summary or source-text sections.
+Relationship imports write one whole-tree Markdown file with tree-level front matter and a simple candidate tree.
+Focused import tests now cover per-document preview output, duplicate/missing `doc_id` filename fallback, full-content text preservation, relationship whole-tree output, dry-run preview reporting, and preview path allowlisting.
+
+**Files changed:**
+
+- `scripts/docs/docs_import.py`
+- `tests/python/test_docs_import.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+
+**Impact:**
+Library import can now produce reviewable Markdown previews without touching canonical Library source.
+The next task can expose staged-file parsing and preview generation through the local docs-management service.
 
 ## [2026-05-03] Added current-Library lookup to the import parser
 

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-03 20:33"
+last_updated: "2026-05-03 21:07"
 parent_id: scripts
 sort_order: 26
 ---
@@ -17,10 +17,11 @@ Script:
 
 ## Scope
 
-`docs_import.py` is the read-only staged data parser for [Library Import v1](/docs/?scope=studio&doc=library-import).
+`docs_import.py` is the staged data parser and Markdown preview renderer for [Library Import v1](/docs/?scope=studio&doc=library-import).
 
 It reads local JSON or JSONL files manually copied under the Library import staging root and returns a structured JSON report.
-It does not mutate source Markdown, generated docs payloads, preview files, exports, or config files.
+It does not mutate source Markdown, generated docs payloads, exports, or config files.
+When `--write-previews` is passed, it writes Markdown previews under the Library import preview root.
 
 Current input path:
 
@@ -35,7 +36,7 @@ Current lookup paths:
 Current outputs:
 
 - a structured JSON report on stdout
-- no files
+- optional Markdown previews under `var/docs/import-preview/library/`
 
 ## Current Capability
 
@@ -52,12 +53,15 @@ Implemented now:
 - preserves unknown file-level metadata and unknown record-level metadata in the report
 - loads the current generated Library docs index and generated payload filenames
 - annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
+- renders summary and full-content imports as one Markdown preview per parsed document
+- renders relationship imports as one whole-tree Markdown preview file
+- writes previews only under `var/docs/import-preview/library/`
+- supports deterministic preview filenames based on `doc_id`, duplicate record index fallback, or staged relationship filename
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
 
 Not implemented yet:
 
-- Markdown preview rendering
 - Studio service endpoints
 - Studio Library import page integration
 - source apply workflows
@@ -68,6 +72,12 @@ Parse a staged Library summary export:
 
 ```bash
 ./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl
+```
+
+Write Markdown previews for a staged Library summary export:
+
+```bash
+./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
 ```
 
 Parse a staged Library relationships export and omit normalized records from the printed report:
@@ -94,6 +104,8 @@ The script prints a JSON report with:
 - `source_metadata`
 - `unknown_file_metadata`
 - `current_library`
+- `preview_files`
+- `preview_written`
 
 `counts` includes:
 
@@ -122,7 +134,8 @@ It blocks only concerns that prevent useful parsing:
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.
-Preview path checks, Markdown rendering behavior, and apply-time freshness checks belong to later Library import tasks.
+Preview writes are limited to `var/docs/import-preview/library/`.
+Apply-time freshness checks belong to later Library import tasks.
 
 ## Verification
 
@@ -132,7 +145,7 @@ Focused parser checks live in:
 tests/python/test_docs_import.py
 ```
 
-They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, invalid JSONL blocking, and staged path allowlisting.
+They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary preview output, full-content preview output, relationship whole-tree preview output, dry-run preview reporting, invalid JSONL blocking, and staged/preview path allowlisting.
 The same check runs in the `docs` profile:
 
 ```bash
