@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: "2026-05-03 14:35"
+last_updated: "2026-05-03 21:56"
 parent_id: ""
 sort_order: 220
 ---
@@ -35,6 +35,7 @@ Those still belong in the owning reference docs and change logs.
 
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
+- [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
 - [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
 - [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)

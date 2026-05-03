@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T20:26:42Z",
+  "generated_at": "2026-05-03T20:57:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -625,6 +625,21 @@
       "viewer_url": "/docs/?scope=studio&doc=library-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-local-docs-data-server-reads",
+      "title": "Local Docs Data Server Reads Request",
+      "added_date": "2026-05-03 21:56",
+      "last_updated": "2026-05-03 21:56",
+      "parent_id": "change-requests",
+      "sort_order": 25,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-local-docs-data-server-reads.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-local-docs-data-server-reads.json",
+      "ui_status": "proposed"
     },
     {
       "scope": "studio",
@@ -2241,7 +2256,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-03 14:35",
+      "last_updated": "2026-05-03 21:56",
       "parent_id": "",
       "sort_order": 220,
       "published": true,

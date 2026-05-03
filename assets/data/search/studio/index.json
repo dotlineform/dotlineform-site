@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-35fa119261527db81a019b920acf7eb9",
-    "generated_at_utc": "2026-05-03T20:26:44Z",
-    "count": 168
+    "version": "blake2b-79a4dac20e552a1c7455f57c59493316",
+    "generated_at_utc": "2026-05-03T20:57:38Z",
+    "count": 169
   },
   "entries": [
     {
@@ -1066,6 +1066,37 @@
         "19"
       ],
       "search_text": "library-export library export library export v1 v1 2026-05-03 18:19 2026 05 03 18 19"
+    },
+    {
+      "id": "site-request-local-docs-data-server-reads",
+      "kind": "doc",
+      "title": "Local Docs Data Server Reads Request",
+      "href": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
+      "last_updated": "2026-05-03 21:56",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-03 21:56 • Change Requests",
+      "search_terms": [
+        "site-request-local-docs-data-server-reads",
+        "site",
+        "request",
+        "local",
+        "docs",
+        "data",
+        "server",
+        "reads",
+        "local docs data server reads request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-03 21:56",
+        "2026",
+        "05",
+        "03",
+        "21",
+        "56"
+      ],
+      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request change requests change requests 2026-05-03 21:56 2026 05 03 21 56"
     },
     {
       "id": "studio-smoke-testing",
@@ -3756,21 +3787,21 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-03 14:35",
-      "display_meta": "2026-05-03 14:35",
+      "last_updated": "2026-05-03 21:56",
+      "display_meta": "2026-05-03 21:56",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-03 14:35",
+        "2026-05-03 21:56",
         "2026",
         "05",
         "03",
-        "14",
-        "35"
+        "21",
+        "56"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
+      "search_text": "change-requests change requests change requests 2026-05-03 21:56 2026 05 03 21 56"
     },
     {
       "id": "tag-editor",
