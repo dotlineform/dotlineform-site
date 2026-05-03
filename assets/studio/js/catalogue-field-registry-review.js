@@ -4,6 +4,10 @@ import {
   loadStudioConfig
 } from "./studio-config.js";
 import { fetchJson } from "./studio-data.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -79,6 +83,15 @@ function renderRegistry(state) {
   setTextWithState(state.metaNode, extract.meta, extract.json && Array.isArray(extract.json.rules) && extract.json.rules.length === 0 ? "warn" : "");
 }
 
+function markRouteReady(root, ready, detail = {}) {
+  setStudioRouteReady(root, ready, {
+    route: "catalogue-field-registry",
+    mode: detail.mode || "registry",
+    service: detail.service || "available",
+    recordLoaded: Boolean(detail.recordLoaded)
+  });
+}
+
 async function init() {
   const root = document.getElementById("fieldRegistryReviewRoot");
   const loadingNode = document.getElementById("fieldRegistryReviewLoading");
@@ -93,6 +106,7 @@ async function init() {
   if (!root || !loadingNode || !emptyNode || !headingNode || !contextNode || !statusNode || !searchNode || !metaNode || !outputLabelNode || !outputNode) {
     return;
   }
+  initializeStudioRouteState(root, { route: "catalogue-field-registry" });
 
   try {
     const config = await loadStudioConfig();
@@ -118,9 +132,12 @@ async function init() {
     setTextWithState(statusNode, t(state, "status_loaded", "Registry loaded."), "success");
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(root, true, { mode: "registry", recordLoaded: true });
   } catch (error) {
     console.warn("catalogue_field_registry_review: init failed", error);
     loadingNode.textContent = "Failed to load catalogue field registry.";
+    root.hidden = false;
+    markRouteReady(root, true, { mode: "registry", service: "unavailable", recordLoaded: false });
   }
 }
 

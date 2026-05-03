@@ -2,7 +2,7 @@
 doc_id: catalogue-field-registry-review
 title: "Catalogue Field Registry Review"
 added_date: 2026-05-01
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 235
 ---
@@ -13,6 +13,17 @@ Route:
 - `/studio/catalogue-field-registry/`
 
 This Studio page is a read-only review surface for `assets/studio/data/catalogue_field_registry.json`.
+
+## Route Ready State
+
+The page root `#fieldRegistryReviewRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial registry loading
+- `data-studio-ready="true"` after the registry has loaded or reached a stable unavailable state
+- `data-studio-busy="false"` because this route has no route-level commands
+- `data-studio-mode="registry"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 ## Purpose
 

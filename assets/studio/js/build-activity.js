@@ -4,6 +4,10 @@ import {
   loadStudioConfig
 } from "./studio-config.js";
 import { loadStudioServerReadJson } from "./studio-data.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 const SORT_KEYS = ["time", "run", "status", "scope", "result"];
 
@@ -178,6 +182,15 @@ function applySort(state) {
   renderList(state.config, state.listNode, state, entries);
 }
 
+function markRouteReady(root, ready, detail = {}) {
+  setStudioRouteReady(root, ready, {
+    route: "build-activity",
+    mode: detail.mode || "empty",
+    service: detail.service || "available",
+    recordLoaded: Boolean(detail.recordLoaded)
+  });
+}
+
 async function init() {
   const root = document.getElementById("buildActivityRoot");
   const statusNode = document.getElementById("buildActivityStatus");
@@ -185,6 +198,7 @@ async function init() {
   const listNode = document.getElementById("buildActivityList");
   const emptyNode = document.getElementById("buildActivityEmpty");
   if (!root || !statusNode || !metaNode || !listNode || !emptyNode) return;
+  initializeStudioRouteState(root, { route: "build-activity" });
 
   try {
     const config = await loadStudioConfig();
@@ -199,6 +213,7 @@ async function init() {
       emptyNode.hidden = false;
       root.hidden = false;
       statusNode.hidden = true;
+      markRouteReady(root, true, { mode: "empty", recordLoaded: false });
       return;
     }
 
@@ -225,6 +240,7 @@ async function init() {
     applySort(state);
     root.hidden = false;
     statusNode.hidden = true;
+    markRouteReady(root, true, { mode: "list", recordLoaded: true });
   } catch (error) {
     console.warn("build_activity: load failed", error);
     try {
@@ -233,6 +249,8 @@ async function init() {
     } catch (_configError) {
       statusNode.textContent = "Failed to load build activity.";
     }
+    root.hidden = false;
+    markRouteReady(root, true, { mode: "empty", service: "unavailable", recordLoaded: false });
   }
 }
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8ef1079bc36298f842b011fc293c3aec",
-    "generated_at_utc": "2026-05-03T09:07:50Z",
+    "version": "blake2b-5105b1d043d95cb170bdd8bd6133a3c5",
+    "generated_at_utc": "2026-05-03T09:16:41Z",
     "count": 158
   },
   "entries": [
@@ -1715,10 +1715,10 @@
       "kind": "doc",
       "title": "Catalogue Drafts",
       "href": "/docs/?scope=studio&doc=catalogue-status",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-30 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "catalogue-status",
         "catalogue",
@@ -1726,12 +1726,12 @@
         "catalogue drafts",
         "drafts",
         "studio",
-        "2026-04-30",
+        "2026-05-03",
         "2026",
-        "04",
-        "30"
+        "05",
+        "03"
       ],
-      "search_text": "catalogue-status catalogue status catalogue drafts drafts studio 2026-04-30 2026 04 30"
+      "search_text": "catalogue-status catalogue status catalogue drafts drafts studio 2026-05-03 2026 05 03"
     },
     {
       "id": "catalogue-work-detail-editor",
@@ -2007,22 +2007,22 @@
       "kind": "doc",
       "title": "Catalogue Activity",
       "href": "/docs/?scope=studio&doc=catalogue-activity",
-      "last_updated": "2026-04-30",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-30 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "catalogue-activity",
         "catalogue",
         "activity",
         "catalogue activity",
         "studio",
-        "2026-04-30",
+        "2026-05-03",
         "2026",
-        "04",
-        "30"
+        "05",
+        "03"
       ],
-      "search_text": "catalogue-activity catalogue activity catalogue activity studio 2026-04-30 2026 04 30"
+      "search_text": "catalogue-activity catalogue activity catalogue activity studio 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-catalogue-source",
@@ -2460,22 +2460,22 @@
       "kind": "doc",
       "title": "Build Activity",
       "href": "/docs/?scope=studio&doc=build-activity",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-01 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "build-activity",
         "build",
         "activity",
         "build activity",
         "studio",
-        "2026-05-01",
+        "2026-05-03",
         "2026",
         "05",
-        "01"
+        "03"
       ],
-      "search_text": "build-activity build activity build activity studio 2026-05-01 2026 05 01"
+      "search_text": "build-activity build activity build activity studio 2026-05-03 2026 05 03"
     },
     {
       "id": "search-incremental-orchestration-plan",
@@ -3558,10 +3558,10 @@
       "kind": "doc",
       "title": "Catalogue Field Registry Review",
       "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-02 • Studio",
+      "display_meta": "2026-05-03 • Studio",
       "search_terms": [
         "catalogue-field-registry-review",
         "catalogue",
@@ -3570,12 +3570,12 @@
         "review",
         "catalogue field registry review",
         "studio",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review studio 2026-05-02 2026 05 02"
+      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review studio 2026-05-03 2026 05 03"
     },
     {
       "id": "registry-driven-scoring-architecture",

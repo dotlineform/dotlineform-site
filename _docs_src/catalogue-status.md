@@ -2,7 +2,7 @@
 doc_id: catalogue-status
 title: "Catalogue Drafts"
 added_date: 2026-04-18
-last_updated: 2026-04-30
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 50
 ---
@@ -22,6 +22,17 @@ Family views:
 The page lists canonical catalogue source records whose normalized `status` is `draft`.
 
 It is the recovery surface for draft catalogue records created without publishing in the same session.
+
+## Route Ready State
+
+The page root `#catalogueStatusRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial draft-family loading
+- `data-studio-ready="true"` after all draft families have loaded or the local service has reached a stable unavailable state
+- `data-studio-busy="false"` because this route has no route-level commands
+- `data-studio-mode="empty|list"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 ## Current Inputs
 

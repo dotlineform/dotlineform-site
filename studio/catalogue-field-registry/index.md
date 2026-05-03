@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-field-registry-review
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage fieldRegistryReviewPage" id="fieldRegistryReviewRoot" hidden>
+<div
+  class="tagStudioPage fieldRegistryReviewPage"
+  id="fieldRegistryReviewRoot"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudio__panel tagStudio__panel--editor">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="fieldRegistryReviewHeading">catalogue field registry</h2>

@@ -7,6 +7,10 @@ import {
   loadStudioLookupJson
 } from "./studio-data.js";
 import { probeCatalogueHealth } from "./studio-transport.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 const FAMILIES = [
   { key: "series", label: "series", singular: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" },
@@ -199,6 +203,15 @@ function syncStatusUrl(state) {
   window.history.replaceState({}, "", url.toString());
 }
 
+function markRouteReady(root, ready, detail = {}) {
+  setStudioRouteReady(root, ready, {
+    route: "catalogue-status",
+    mode: detail.mode || "empty",
+    service: detail.service || "available",
+    recordLoaded: Boolean(detail.recordLoaded)
+  });
+}
+
 async function init() {
   const root = document.getElementById("catalogueStatusRoot");
   const loadingNode = document.getElementById("catalogueStatusLoading");
@@ -208,6 +221,7 @@ async function init() {
   const metaNode = document.getElementById("catalogueStatusMeta");
   const listNode = document.getElementById("catalogueStatusList");
   if (!root || !loadingNode || !emptyNode || !keyNode || !searchNode || !metaNode || !listNode) return;
+  initializeStudioRouteState(root, { route: "catalogue-status" });
 
   try {
     const config = await loadStudioConfig();
@@ -215,6 +229,7 @@ async function init() {
     if (!serverAvailable) {
       loadingNode.textContent = getStudioText(config, "catalogue_status.server_unavailable_hint", "Local catalogue server unavailable. Catalogue drafts are disabled.");
       root.hidden = false;
+      markRouteReady(root, true, { mode: "empty", service: "unavailable", recordLoaded: false });
       return;
     }
     const groups = await Promise.all(FAMILIES.map((family) => loadFamily(config, family, serverAvailable)));
@@ -268,6 +283,7 @@ async function init() {
     applyFilters(state);
     root.hidden = false;
     loadingNode.hidden = true;
+    markRouteReady(root, true, { mode: entries.length ? "list" : "empty", recordLoaded: entries.length > 0 });
   } catch (error) {
     console.warn("catalogue_status: load failed", error);
     try {
@@ -276,6 +292,8 @@ async function init() {
     } catch (_configError) {
       loadingNode.textContent = "Failed to load catalogue drafts.";
     }
+    root.hidden = false;
+    markRouteReady(root, true, { mode: "empty", service: "unavailable", recordLoaded: false });
   }
 }
 

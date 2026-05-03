@@ -8,6 +8,40 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Extended Studio ready-state contract to operational catalogue routes
+
+**Status:** partially implemented
+
+**Area:** Studio runtime / smoke testing
+
+**Summary:**
+Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on Build Activity, Catalogue Activity, Catalogue Drafts, and Catalogue Field Registry.
+
+**Reason:**
+These read/reporting routes load service-backed feeds, source-family data, or registry JSON before they are stable for smoke-test interaction. They should expose the same route-root readiness signal as the catalogue editors.
+
+**Effect:**
+`#buildActivityRoot`, `#catalogueActivityRoot`, `#catalogueStatusRoot`, and `#fieldRegistryReviewRoot` now expose route, ready, busy, mode, service availability, and record-loaded attributes. Empty and unavailable states are marked ready once stable, and list/registry routes can be smoke-tested without waiting on route-specific visible status text.
+
+**Affected files/docs:**
+
+- `assets/studio/js/build-activity.js`
+- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/js/catalogue-field-registry-review.js`
+- `studio/build-activity/index.md`
+- `studio/catalogue-activity/index.md`
+- `studio/catalogue-status/index.md`
+- `studio/catalogue-field-registry/index.md`
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)
+- [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Extended Studio ready-state contract to catalogue editors
 
 **Status:** partially implemented

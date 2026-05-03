@@ -8,7 +8,13 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-status
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage catalogueStatusPage" id="catalogueStatusRoot" hidden>
+<div
+  class="tagStudioPage catalogueStatusPage"
+  id="catalogueStatusRoot"
+  hidden
+  data-studio-ready="false"
+  data-studio-busy="false"
+>
   <section class="tagStudio__panel">
     <div class="tagStudioFilters catalogueStatusPage__filters">
       <div class="tagStudio__key tagStudioFilters__key" id="catalogueStatusKey"></div>

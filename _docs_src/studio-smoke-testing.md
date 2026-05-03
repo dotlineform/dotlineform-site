@@ -121,6 +121,10 @@ The shared route-ready contract is partially implemented.
 
 Adopted routes:
 
+- `/studio/build-activity/` with `#buildActivityRoot`
+- `/studio/catalogue-activity/` with `#catalogueActivityRoot`
+- `/studio/catalogue-field-registry/` with `#fieldRegistryReviewRoot`
+- `/studio/catalogue-status/` with `#catalogueStatusRoot`
 - `/studio/catalogue-work/` with `#catalogueWorkRoot`
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
 - `/studio/catalogue-series/` with `#catalogueSeriesRoot`

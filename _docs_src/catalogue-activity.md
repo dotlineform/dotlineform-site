@@ -2,7 +2,7 @@
 doc_id: catalogue-activity
 title: "Catalogue Activity"
 added_date: 2026-04-18
-last_updated: 2026-04-30
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 60
 ---
@@ -15,6 +15,17 @@ This document describes the Studio page at `/studio/catalogue-activity/`.
 The page is a curator-facing activity surface for the JSON-led catalogue source pipeline.
 
 It gives quick access to recent source saves, creates, deletes, imports, and validation failures without requiring the curator to inspect CLI output or raw JSONL logs.
+
+## Route Ready State
+
+The page root `#catalogueActivityRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial feed loading
+- `data-studio-ready="true"` after the activity feed has loaded or reached a stable unavailable state
+- `data-studio-busy="false"` because this route has no route-level commands
+- `data-studio-mode="empty|list"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 ## Current Inputs
 

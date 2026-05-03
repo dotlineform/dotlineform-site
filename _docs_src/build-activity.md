@@ -2,7 +2,7 @@
 doc_id: build-activity
 title: "Build Activity"
 added_date: 2026-04-18
-last_updated: 2026-05-01
+last_updated: 2026-05-03
 parent_id: studio
 sort_order: 90
 ---
@@ -21,6 +21,17 @@ It is intended to answer three practical questions:
 - what concrete scope did each rebuild target
 
 It is not the canonical engineering log for scripts and it is not yet a public-facing site history surface.
+
+## Route Ready State
+
+The page root `#buildActivityRoot` implements the shared Studio ready-state contract:
+
+- `data-studio-ready="false"` during initial feed loading
+- `data-studio-ready="true"` after the activity feed has loaded or reached a stable unavailable state
+- `data-studio-busy="false"` because this route has no route-level commands
+- `data-studio-mode="empty|list"`
+- `data-studio-service="available|unavailable"`
+- `data-studio-record-loaded="true|false"`
 
 ## Current Inputs
 

@@ -4,6 +4,10 @@ import {
   loadStudioConfig
 } from "./studio-config.js";
 import { loadStudioServerReadJson } from "./studio-data.js";
+import {
+  initializeStudioRouteState,
+  setStudioRouteReady
+} from "./studio-route-state.js";
 
 const SORT_KEYS = ["time", "event", "status", "scope", "attention"];
 
@@ -191,6 +195,15 @@ function applySort(state) {
   renderList(state.config, state.listNode, state, entries);
 }
 
+function markRouteReady(root, ready, detail = {}) {
+  setStudioRouteReady(root, ready, {
+    route: "catalogue-activity",
+    mode: detail.mode || "empty",
+    service: detail.service || "available",
+    recordLoaded: Boolean(detail.recordLoaded)
+  });
+}
+
 async function init() {
   const root = document.getElementById("catalogueActivityRoot");
   const statusNode = document.getElementById("catalogueActivityStatus");
@@ -198,6 +211,7 @@ async function init() {
   const listNode = document.getElementById("catalogueActivityList");
   const emptyNode = document.getElementById("catalogueActivityEmpty");
   if (!root || !statusNode || !metaNode || !listNode || !emptyNode) return;
+  initializeStudioRouteState(root, { route: "catalogue-activity" });
 
   try {
     const config = await loadStudioConfig();
@@ -212,6 +226,7 @@ async function init() {
       emptyNode.hidden = false;
       root.hidden = false;
       statusNode.hidden = true;
+      markRouteReady(root, true, { mode: "empty", recordLoaded: false });
       return;
     }
 
@@ -238,6 +253,7 @@ async function init() {
     applySort(state);
     root.hidden = false;
     statusNode.hidden = true;
+    markRouteReady(root, true, { mode: "list", recordLoaded: true });
   } catch (error) {
     console.warn("catalogue_activity: load failed", error);
     try {
@@ -246,6 +262,8 @@ async function init() {
     } catch (_configError) {
       statusNode.textContent = "Failed to load catalogue activity.";
     }
+    root.hidden = false;
+    markRouteReady(root, true, { mode: "empty", service: "unavailable", recordLoaded: false });
   }
 }
 
