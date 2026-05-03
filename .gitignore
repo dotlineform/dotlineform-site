@@ -40,6 +40,9 @@ var/docs/import-staging/
 var/docs/catalogue/import-staging/
 var/catalogue/media/
 
+# import preview
+var/docs/import-preview/
+
 # Catalogue planner state
 var/build_catalogue_state.json
 
