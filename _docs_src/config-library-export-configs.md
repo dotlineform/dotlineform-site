@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 17:37"
+last_updated: "2026-05-03 17:45"
 parent_id: config
 sort_order: 70
 ---
@@ -25,7 +25,27 @@ The first implementation scope is Library, but the schema keeps the scope field 
 
 The config is source-controlled project configuration.
 The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
-Running configs from Studio waits on the local export service endpoint.
+Running configs from Studio uses the local docs-management export endpoint.
+
+## Usage Model
+
+To add or change an export pattern, edit `assets/studio/data/library_export_configs.json` and keep it aligned with `assets/studio/data/library_export_configs.schema.json`.
+The Studio UI reads enabled configs for the Library scope and presents them as runnable export patterns; it does not persist config edits.
+
+Each config controls:
+
+- whether Studio presents it for Library
+- whether the user selects explicit docs or the exporter uses all matching docs
+- whether selected parent docs include descendants
+- whether generated but non-viewable docs are included
+- whether `_archive` and unpublished docs are excluded
+- whether summary configs default to missing-summary-only filtering
+- which source/generated fields are written to each output record
+- whether body content is converted to plain text and how images/SVGs are represented
+- which JSON or JSONL file pattern the run writes
+
+The config is the contract between Studio selection, the local service, and the CLI.
+Any new field source, transform, output format, or record shape needs both config/schema documentation and export-engine validation before use.
 
 ## Initial Configs
 

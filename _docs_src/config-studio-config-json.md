@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: "Studio Config JSON"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:37"
+last_updated: "2026-05-03 17:45"
 parent_id: config
 sort_order: 30
 ---
@@ -93,6 +93,9 @@ The export config file owns export pattern definitions.
 `studio_config.json` only owns browser-facing route, payload, and UI-copy lookup for the Studio page.
 The page runs exports through the fixed docs-management transport endpoint `POST /docs/export`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
 `ui_text.library_export.result_counts`, `warnings_heading`, and `issues_heading` control the result and validation report labels shown after an export run.
+
+Do not add export field mappings, output formats, or selection defaults to `studio_config.json`.
+Those belong in `assets/studio/data/library_export_configs.json` so the CLI, service endpoint, and Studio UI all run the same pattern.
 
 Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs under `ui_text.catalogue_series_editor` because create mode now lives at `/studio/catalogue-series/?mode=new`.
 

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:37"
+last_updated: "2026-05-03 17:45"
 parent_id: scripts
 sort_order: 10
 ---
@@ -194,6 +194,13 @@ Export behavior:
 - server `--dry-run` mode validates and reports the target path without writing
 - failed validation returns the same report shape with `ok: false`, `errors`, `warnings`, `issue_counts`, and `output_written: false`
 - logs include scope, config id, counts, target format, dry-run state, issue counts, and whether output was written; logs do not include document body content or export payloads
+
+Runtime role:
+
+- Studio uses this endpoint as the only browser-to-filesystem boundary for Library exports
+- the endpoint does not accept arbitrary output paths from the browser
+- config-defined paths are resolved and allowlisted by the shared export engine
+- generated export files are local working artifacts for Studio reporting or manual external use
 
 `POST /docs/open-source` expects:
 

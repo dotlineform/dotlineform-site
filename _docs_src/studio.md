@@ -2,7 +2,7 @@
 doc_id: studio
 title: "Studio"
 added_date: 2026-04-23
-last_updated: "2026-05-03 16:03"
+last_updated: "2026-05-03 17:45"
 parent_id: ""
 sort_order: 20
 ---
@@ -23,6 +23,10 @@ The current Studio shell is organized around domain dashboards:
 - `Docs`
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
+
+The Library dashboard includes `/studio/library-export/` for running configured exports from generated Library Docs Viewer data.
+That page depends on the docs-management local service for file writes; when the service is unavailable, selection can load but export execution stays unavailable.
+Export pattern definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
 ## Route Ready State
 

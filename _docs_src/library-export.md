@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 17:37"
+last_updated: "2026-05-03 17:45"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -379,6 +379,42 @@ Export reports should include:
 - warning and error lists
 - issue counts for warnings and errors
 
+## V1 Runtime Usage
+
+The Library export v1 runtime has three entry points around one shared export engine:
+
+- Studio page: `/studio/library-export/`
+- local service endpoint: `POST /docs/export` on `./scripts/docs/docs_management_server.py`
+- CLI: `./scripts/docs/docs_export.py`
+
+The Studio page is the normal interactive path.
+It loads enabled Library export configs, loads the generated Library docs index, applies the config's selection behavior, and posts the selected config plus explicit document ids to the docs-management service.
+The browser does not write files directly.
+
+The local service endpoint is the Studio write boundary.
+It validates request shape, calls the same export engine used by the CLI, writes only under `var/docs/exports/`, logs only ids/counts/status, and returns the structured report used by the Studio result panel.
+
+The CLI is the operational and testable path.
+It can dry-run by default, write with `--write`, run the same config validation, and report the same selected/exported/skipped/failed/truncated counts.
+
+V1 export files are working artifacts.
+They are not canonical source, are ignored by git, and should be reproducible from:
+
+- generated Docs Viewer scope data
+- the selected source-controlled export config
+- the selected document ids and run options
+
+The first supported output layouts are:
+
+```text
+var/docs/exports/library/library-parent-child-relationships-<timestamp>.json
+var/docs/exports/library/library-document-summaries-<timestamp>.jsonl
+var/docs/exports/library/library-full-document-content-<timestamp>.jsonl
+```
+
+Manual external use is expected in v1.
+Direct LLM API calls, automatic batching, markdown target files, raw Markdown exports, and Studio activity-feed entries are deferred.
+
 ## Implementation Tasks
 
 ### Task 1. Define Export Config Schema
@@ -432,6 +468,8 @@ Status: implemented in `./scripts/docs/docs_export.py`, `POST /docs/export`, and
 ### Task 8. Document Runtime And Config Usage
 
 Update Library, Studio, config, scripts, and data-model docs as needed once implementation begins.
+
+Status: implemented across this doc, [Docs Export](/docs/?scope=studio&doc=scripts-docs-export), [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server), [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs), [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json), [Library Scope](/docs/?scope=studio&doc=data-models-library), [Studio](/docs/?scope=studio&doc=studio), and [Scripts](/docs/?scope=studio&doc=scripts).
 
 ### Task 9. Verify Export Workflows
 

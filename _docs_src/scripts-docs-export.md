@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 17:37"
+last_updated: "2026-05-03 17:45"
 parent_id: scripts
 sort_order: 25
 ---
@@ -32,6 +32,27 @@ Current output pattern:
 
 - `var/docs/exports/<scope>/<export_id>-<timestamp>.json`
 - `var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl`
+
+## Runtime Contract
+
+The script is the shared export engine for both CLI runs and the Studio docs-management endpoint.
+It is intentionally source-read-only: the only write it performs is the generated export artifact when `--write` is passed or when the local service calls it in write mode.
+
+Inputs:
+
+- a config id from `assets/studio/data/library_export_configs.json`
+- a Docs Viewer scope, currently Library in v1
+- explicit document ids or `--all`
+- an optional missing-summary override for configs that support it
+
+Outputs:
+
+- a structured JSON report on stdout
+- no file in dry-run mode
+- one JSON or JSONL export file in write mode
+
+Export artifacts are local working files.
+They are ignored by git, may be deleted, and should be reproduced from generated Docs Viewer data plus the selected config and document selection.
 
 ## Current Capability
 

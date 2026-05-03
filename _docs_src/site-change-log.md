@@ -2,11 +2,43 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:37"
+last_updated: "2026-05-03 17:45"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Documented Library export v1 runtime usage
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Completed Library export Task 8 by consolidating runtime and config usage documentation for the v1 export path.
+
+**Reason:**
+The export workflow now has config, CLI, service, and Studio UI pieces. The docs needed one coherent explanation of how those pieces fit together before the final verification task.
+
+**Changes:**
+Library export docs now describe the three v1 entry points: Studio page, docs-management endpoint, and CLI.
+Config docs clarify that export patterns live in `library_export_configs.json`, while `studio_config.json` only owns route/data/copy lookup.
+Library data-model docs now distinguish source-controlled export configs from ignored local export artifacts.
+
+**Files changed:**
+
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+
+**Impact:**
+The v1 operational contract is now documented without changing export behavior.
+The remaining Library export task is verification of the completed workflow.
 
 ## [2026-05-03] Added Library export validation and reporting
 

@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-03 14:25"
+last_updated: "2026-05-03 17:45"
 parent_id: data-models
 sort_order: 40
 ---
@@ -15,7 +15,7 @@ This document covers the current checked-in data model for the Library scope.
 
 The Library scope is currently docs-only.
 
-Current checked-in artifacts:
+Current source and generated artifacts:
 
 - source docs:
   - `_docs_library_src/*.md`
@@ -24,6 +24,12 @@ Current checked-in artifacts:
   - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 - Library docs search:
   - `assets/data/search/library/index.json`
+- Library export configs:
+  - `assets/studio/data/library_export_configs.json`
+  - `assets/studio/data/library_export_configs.schema.json`
+- local generated export artifacts:
+  - `var/docs/exports/library/<export_id>-<timestamp>.json`
+  - `var/docs/exports/library/<export_id>-<timestamp>.jsonl`
 
 Current public route:
 
@@ -110,6 +116,41 @@ Library search does not currently consume `summary`.
 Current site mapping:
 
 - inline Library docs search on `/library/`
+
+## Library Export Data
+
+Library export configs are source-controlled Studio data, but export files themselves are local generated artifacts.
+
+Config files:
+
+- `assets/studio/data/library_export_configs.json`
+- `assets/studio/data/library_export_configs.schema.json`
+
+Generated output:
+
+- `var/docs/exports/library/<export_id>-<timestamp>.json`
+- `var/docs/exports/library/<export_id>-<timestamp>.jsonl`
+
+Current model:
+
+- configs read generated Library Docs Viewer index and per-doc payload data
+- configs do not mutate `_docs_library_src/*.md`
+- export files are ignored by git and are safe to delete
+- export files are reproducible from generated Library docs data, the selected config, and the selected document ids
+- document body export uses plain text derived from rendered `content_html`; default exports should not expose raw rendered HTML
+
+Current consumers:
+
+- `/studio/library-export/`
+- `POST /docs/export` on the docs-management server
+- `./scripts/docs/docs_export.py`
+
+Current limits:
+
+- Library is the only configured v1 export scope
+- batching and long-document chunking are deferred
+- direct LLM API calls are out of scope
+- markdown target files and raw Markdown exports are future config extensions
 
 ## Why The Library Model Is Valuable Even While Small
 
