@@ -173,6 +173,30 @@ def resolve_staged_path(repo_root: Path, scope: str, staged_file: str) -> Path:
     return resolved
 
 
+def list_staged_import_files(repo_root: Path, scope: str) -> list[dict[str, Any]]:
+    normalized_scope = normalize_text(scope).lower()
+    if normalized_scope not in SUPPORTED_SCOPES:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
+    staging_root = (repo_root / STAGING_ROOT / normalized_scope).resolve()
+    if not staging_root.exists():
+        return []
+    files: list[dict[str, Any]] = []
+    for path in sorted(staging_root.iterdir()):
+        if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
+            continue
+        stat = path.stat()
+        files.append(
+            {
+                "filename": path.name,
+                "path": relative_path(repo_root, path),
+                "format": path.suffix.lower().lstrip("."),
+                "size_bytes": stat.st_size,
+                "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            }
+        )
+    return files
+
+
 def resolve_preview_path(repo_root: Path, scope: str, filename: str) -> Path:
     normalized_scope = normalize_text(scope).lower()
     if normalized_scope not in SUPPORTED_SCOPES:

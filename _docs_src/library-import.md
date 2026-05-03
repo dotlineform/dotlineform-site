@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 21:07"
+last_updated: "2026-05-03 21:25"
 ui_status: in-progress
 parent_id: library
 sort_order: 30
@@ -320,6 +320,11 @@ Likely endpoints:
 
 Endpoint logs should include filenames, counts, status, and preview paths, not full document content.
 
+Status: implemented in `./scripts/docs/docs_management_server.py`.
+`GET /docs/library-import/files?scope=library` lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`.
+`POST /docs/library-import/preview` parses the selected staged file, runs current-Library lookup, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
+The endpoint returns the same structured report as the CLI and logs only scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths.
+
 ### Task 6. Add Studio Library Import Page
 
 Add a Library-scope Studio page that lists staged files, displays detected metadata, runs preview generation when available, and shows the resulting report.
@@ -346,8 +351,11 @@ Add focused tests for:
 - relationship whole-tree preview output
 - deterministic preview output
 - staged path allowlist behavior
+- local service staged-file listing
+- local service preview generation and dry-run behavior
 
 Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output, deterministic preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
+Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection is implemented in `tests/python/test_docs_import_service.py`.
 Studio page coverage should be added when that task is implemented.
 
 Add a light Studio smoke test once the page exists.

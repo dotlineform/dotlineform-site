@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fe45273922a3873e1ddd31818da959ff",
-    "generated_at_utc": "2026-05-03T20:08:36Z",
+    "version": "blake2b-35fa119261527db81a019b920acf7eb9",
+    "generated_at_utc": "2026-05-03T20:26:44Z",
     "count": 168
   },
   "entries": [
@@ -149,10 +149,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-03 17:45",
+      "last_updated": "2026-05-03 21:25",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 17:45 • Scripts",
+      "display_meta": "2026-05-03 21:25 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -160,14 +160,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-03 17:45",
+        "2026-05-03 21:25",
         "2026",
         "05",
         "03",
-        "17",
-        "45"
+        "21",
+        "25"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-03 17:45 2026 05 03 17 45"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-03 21:25 2026 05 03 21 25"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -1120,24 +1120,24 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-03 21:07",
+      "last_updated": "2026-05-03 21:25",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 21:07 • Scripts",
+      "display_meta": "2026-05-03 21:25 • Scripts",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
         "docs",
         "import",
         "docs import",
-        "2026-05-03 21:07",
+        "2026-05-03 21:25",
         "2026",
         "05",
         "03",
         "21",
-        "07"
+        "25"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 21:07 2026 05 03 21 07"
+      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 21:25 2026 05 03 21 25"
     },
     {
       "id": "studio-audits",
@@ -1165,24 +1165,24 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-03 20:25",
+      "last_updated": "2026-05-03 21:25",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 20:25 • Scripts",
+      "display_meta": "2026-05-03 21:25 • Scripts",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
         "run",
         "checks",
         "run checks",
-        "2026-05-03 20:25",
+        "2026-05-03 21:25",
         "2026",
         "05",
         "03",
-        "20",
+        "21",
         "25"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 20:25 2026 05 03 20 25"
+      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 21:25 2026 05 03 21 25"
     },
     {
       "id": "scripts-audit-studio-ready-state",
@@ -1313,24 +1313,24 @@
       "kind": "doc",
       "title": "Library Import v1",
       "href": "/docs/?scope=studio&doc=library-import",
-      "last_updated": "2026-05-03 21:07",
+      "last_updated": "2026-05-03 21:25",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 21:07 • Library",
+      "display_meta": "2026-05-03 21:25 • Library",
       "search_terms": [
         "library-import",
         "library",
         "import",
         "library import v1",
         "v1",
-        "2026-05-03 21:07",
+        "2026-05-03 21:25",
         "2026",
         "05",
         "03",
         "21",
-        "07"
+        "25"
       ],
-      "search_text": "library-import library import library import v1 v1 2026-05-03 21:07 2026 05 03 21 07"
+      "search_text": "library-import library import library import v1 v1 2026-05-03 21:25 2026 05 03 21 25"
     },
     {
       "id": "local-setup",
@@ -1806,10 +1806,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-03 21:07",
+      "last_updated": "2026-05-03 21:25",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-03 21:07 • Data Models",
+      "display_meta": "2026-05-03 21:25 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1818,14 +1818,14 @@
         "library scope",
         "scope",
         "data models",
-        "2026-05-03 21:07",
+        "2026-05-03 21:25",
         "2026",
         "05",
         "03",
         "21",
-        "07"
+        "25"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 21:07 2026 05 03 21 07"
+      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 21:25 2026 05 03 21 25"
     },
     {
       "id": "search-ranking-model",
@@ -3938,22 +3938,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 21:07",
-      "display_meta": "2026-05-03 21:07",
+      "last_updated": "2026-05-03 21:25",
+      "display_meta": "2026-05-03 21:25",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 21:07",
+        "2026-05-03 21:25",
         "2026",
         "05",
         "03",
         "21",
-        "07"
+        "25"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 21:07 2026 05 03 21 07"
+      "search_text": "site-change-log site change log site change log 2026-05-03 21:25 2026 05 03 21 25"
     },
     {
       "id": "tiered-dimension-policy",

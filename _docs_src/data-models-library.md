@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-03 21:07"
+last_updated: "2026-05-03 21:25"
 parent_id: data-models
 sort_order: 40
 ---
@@ -184,6 +184,8 @@ Current model:
 Current consumers:
 
 - `./scripts/docs/docs_import.py`
+- `GET /docs/library-import/files` on the docs-management server
+- `POST /docs/library-import/preview` on the docs-management server
 
 Current limits:
 

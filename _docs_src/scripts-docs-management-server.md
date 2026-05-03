@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:45"
+last_updated: "2026-05-03 21:25"
 parent_id: scripts
 sort_order: 10
 ---
@@ -27,8 +27,10 @@ Exposed endpoints:
 - `GET /health`
 - `GET /capabilities`
 - `GET /docs/import-html-files`
+- `GET /docs/library-import/files`
 - `POST /docs/import-html`
 - `POST /docs/export`
+- `POST /docs/library-import/preview`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -48,6 +50,7 @@ Current behavior:
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
 - also used by `/studio/library-export/` to write configured Library export artifacts
+- also used by the Library import workflow to list staged JSON/JSONL data files and write Markdown previews
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`
@@ -70,6 +73,7 @@ Search update behavior:
 
 - whether docs management is available
 - whether docs export is available
+- whether Library import is available
 - which scopes are writable
 - whether the current scope has `_archive`
 
@@ -201,6 +205,46 @@ Runtime role:
 - the endpoint does not accept arbitrary output paths from the browser
 - config-defined paths are resolved and allowlisted by the shared export engine
 - generated export files are local working artifacts for Studio reporting or manual external use
+
+`GET /docs/library-import/files` accepts:
+
+```text
+?scope=library
+```
+
+Library import file listing behavior:
+
+- `scope` must be `library` in v1
+- lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`
+- returns filename, repo-relative path, format, size, and modified time
+- does not parse or log file content
+
+`POST /docs/library-import/preview` expects:
+
+```json
+{
+  "scope": "library",
+  "staged_filename": "library-document-summaries.jsonl"
+}
+```
+
+Library import preview behavior:
+
+- `scope` must be `library` in v1
+- `staged_filename` must resolve inside `var/docs/import-staging/library/`
+- parses the staged data file through `./scripts/docs/docs_import.py`
+- loads current generated Library docs index and payload state through the shared import engine
+- writes Markdown previews under `var/docs/import-preview/library/` in normal server mode
+- reports planned preview paths without writing when the server runs with `--dry-run`
+- returns the same structured report shape as the import CLI, including `counts`, `issues`, `records`, `current_library`, `preview_files`, and `preview_written`
+- logs include scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths; logs do not include document body content or staged payload content
+
+Runtime role:
+
+- this endpoint is the browser-to-filesystem boundary for Library import preview files
+- it does not mutate `_docs_library_src/*.md`
+- it does not apply summaries, relationship recommendations, or full-content changes to canonical source
+- generated preview files are local working artifacts for Studio review
 
 `POST /docs/open-source` expects:
 
@@ -391,6 +435,7 @@ Apply behavior:
   - `_docs_library_src/*.md`
   - `var/docs/backups/`
   - `var/docs/exports/`
+  - `var/docs/import-preview/library/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch

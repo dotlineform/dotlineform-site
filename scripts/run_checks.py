@@ -82,7 +82,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         CheckCommand(
             "docs-import-tests",
             (sys.executable, "tests/python/test_docs_import.py"),
-            "Verify read-only staged Library import parsing.",
+            "Verify staged Library import parsing and preview rendering.",
+        ),
+        CheckCommand(
+            "docs-import-service-tests",
+            (sys.executable, "tests/python/test_docs_import_service.py"),
+            "Verify Docs Management Library import service handlers.",
         ),
         CheckCommand(
             "studio-docs-build",

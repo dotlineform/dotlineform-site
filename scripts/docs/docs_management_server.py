@@ -12,8 +12,10 @@ Endpoints:
   GET /health
   GET /capabilities
   GET /docs/import-html-files
+  GET /docs/library-import/files
   POST /docs/import-html
   POST /docs/export
+  POST /docs/library-import/preview
   POST /docs/rebuild
   POST /docs/broken-links
   POST /docs/open-source
@@ -32,6 +34,7 @@ Security constraints:
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
   - Writes only allowlisted Markdown docs under _docs_src/, _docs_library_src/, and _docs_src_analysis/.
   - Writes export artifacts only under var/docs/exports/.
+  - Writes Library import preview artifacts only under var/docs/import-preview/library/.
   - Creates timestamped backup bundles under var/docs/backups/.
   - Writes minimal local logs under var/docs/logs/.
 """
@@ -62,6 +65,7 @@ from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from docs_html_import import generate_import_preview, list_staged_html_files, resolve_staged_html  # noqa: E402
+from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
 from docs_watch_suppression import (  # noqa: E402
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -910,6 +914,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "docs_management": True,
             "html_import": True,
             "docs_export": True,
+            "library_import": True,
             "scopes": scopes,
         },
     }
@@ -1023,6 +1028,78 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         report["summary_text"] = (
             f"{action} {report.get('counts', {}).get('exported', 0)} document(s) "
             f"to {report.get('output_file', '')}{suffix}"
+        )
+    return report
+
+
+def normalize_library_import_scope(raw_scope: Any) -> str:
+    scope = normalize_scope(raw_scope or "library")
+    if scope != "library":
+        raise ValueError("Library import v1 only supports scope library")
+    return scope
+
+
+def handle_library_import_files(repo_root: Path, scope: str) -> Dict[str, Any]:
+    files = list_staged_import_files(repo_root, scope)
+    log_event(
+        repo_root,
+        "docs-library-import-files",
+        {
+            "scope": scope,
+            "count": len(files),
+        },
+    )
+    return {
+        "ok": True,
+        "scope": scope,
+        "staging_root": "var/docs/import-staging/library",
+        "files": files,
+    }
+
+
+def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_library_import_scope(body.get("scope"))
+    staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
+    if not staged_filename:
+        raise ValueError("staged_filename is required")
+
+    report = parse_staged_import(
+        repo_root=repo_root,
+        scope=scope,
+        staged_file=staged_filename,
+    )
+    report = render_markdown_previews(
+        repo_root=repo_root,
+        scope=scope,
+        report=report,
+        write=not dry_run,
+    )
+    log_event(
+        repo_root,
+        "docs-library-import-preview",
+        {
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "dry_run": dry_run,
+            "preview_written": bool(report.get("preview_written")),
+            "detected_import_type": str(report.get("detected_import_type") or ""),
+            "records": int(report.get("counts", {}).get("records") or 0),
+            "parsed_records": int(report.get("counts", {}).get("parsed_records") or 0),
+            "malformed_records": int(report.get("counts", {}).get("malformed_records") or 0),
+            "errors": int(report.get("counts", {}).get("errors") or 0),
+            "warnings": int(report.get("counts", {}).get("warnings") or 0),
+            "preview_files": [
+                str(item.get("path") or "")
+                for item in report.get("preview_files", [])
+                if isinstance(item, dict) and item.get("path")
+            ],
+        },
+    )
+    if report.get("ok"):
+        action = "Validated" if dry_run else "Generated"
+        suffix = " without writing" if dry_run else ""
+        report["summary_text"] = (
+            f"{action} {len(report.get('preview_files', []))} Library import preview file(s){suffix}."
         )
     return report
 
@@ -2173,6 +2250,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                     },
                 )
                 return
+            if parsed.path == "/docs/library-import/files":
+                scope = normalize_library_import_scope(query_param(self, "scope") or "library")
+                write_response(self, HTTPStatus.OK, handle_library_import_files(self.app["repo_root"], scope))
+                return
             error_response(self, HTTPStatus.NOT_FOUND, "Not found")
         except FileNotFoundError as error:
             error_response(self, HTTPStatus.NOT_FOUND, str(error))
@@ -2206,6 +2287,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             if self.path == "/docs/import-html":
                 payload = handle_import_html(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/library-import/preview":
+                payload = handle_library_import_preview(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
                 return
             if self.path == "/docs/update-metadata":
                 payload = handle_update_metadata(repo_root, body, dry_run)

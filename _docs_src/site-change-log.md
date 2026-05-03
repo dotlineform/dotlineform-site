@@ -2,11 +2,44 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 21:07"
+last_updated: "2026-05-03 21:25"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added Library import service endpoints
+
+**Status:** implemented
+
+**Area:** Library / Studio data import
+
+**Summary:**
+Completed Library import Task 5 by adding docs-management endpoints for staged Library import files and Markdown preview generation.
+
+**Reason:**
+The import engine can parse staged files and write review previews, but Studio needs a localhost service boundary before a UI can list files or trigger preview creation.
+
+**Changes:**
+`GET /docs/library-import/files?scope=library` now lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`.
+`POST /docs/library-import/preview` now parses the selected staged file, runs current-Library lookup, renders previews through the shared import engine, and writes them under `var/docs/import-preview/library/` unless the server is running with `--dry-run`.
+Service logs include scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths, but not staged payload content or document body text.
+Focused service tests cover file listing, preview writing, dry-run preview reporting, and non-Library scope rejection.
+
+**Files changed:**
+
+- `scripts/docs/docs_management_server.py`
+- `tests/python/test_docs_import_service.py`
+- `scripts/run_checks.py`
+- [Library Import v1](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+
+**Impact:**
+Library import now has a safe browser-to-filesystem boundary for local preview files.
+It still does not apply summaries, relationships, or content changes to canonical Library source.
 
 ## [2026-05-03] Added Library import Markdown preview rendering
 

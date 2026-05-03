@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-03 21:07"
+last_updated: "2026-05-03 21:25"
 parent_id: scripts
 sort_order: 26
 ---
@@ -22,6 +22,7 @@ Script:
 It reads local JSON or JSONL files manually copied under the Library import staging root and returns a structured JSON report.
 It does not mutate source Markdown, generated docs payloads, exports, or config files.
 When `--write-previews` is passed, it writes Markdown previews under the Library import preview root.
+The same engine is used by the docs-management local service for Studio integration.
 
 Current input path:
 
@@ -57,12 +58,12 @@ Implemented now:
 - renders relationship imports as one whole-tree Markdown preview file
 - writes previews only under `var/docs/import-preview/library/`
 - supports deterministic preview filenames based on `doc_id`, duplicate record index fallback, or staged relationship filename
+- is callable through docs-management endpoints for staged-file listing and preview generation
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
 
 Not implemented yet:
 
-- Studio service endpoints
 - Studio Library import page integration
 - source apply workflows
 
@@ -107,6 +108,8 @@ The script prints a JSON report with:
 - `preview_files`
 - `preview_written`
 
+The docs-management endpoint returns this same report shape from `POST /docs/library-import/preview`.
+
 `counts` includes:
 
 - `records`
@@ -146,6 +149,13 @@ tests/python/test_docs_import.py
 ```
 
 They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary preview output, full-content preview output, relationship whole-tree preview output, dry-run preview reporting, invalid JSONL blocking, and staged/preview path allowlisting.
+Service handler checks live in:
+
+```bash
+tests/python/test_docs_import_service.py
+```
+
+They cover staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection.
 The same check runs in the `docs` profile:
 
 ```bash
