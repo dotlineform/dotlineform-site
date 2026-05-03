@@ -3,7 +3,7 @@ doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
 last_updated: 2026-05-03
-ui_status: implemented
+ui_status: done
 parent_id: change-requests
 sort_order: 37
 ---
