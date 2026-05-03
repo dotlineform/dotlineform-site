@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T17:06:52Z",
+  "generated_at": "2026-05-03T17:19:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -614,9 +614,9 @@
     {
       "scope": "studio",
       "doc_id": "library-export",
-      "title": "Library Export",
+      "title": "Library Export v1",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-03 18:06",
+      "last_updated": "2026-05-03 18:19",
       "parent_id": "library",
       "sort_order": 25,
       "published": true,
@@ -624,7 +624,7 @@
       "source_path": "library-export.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",

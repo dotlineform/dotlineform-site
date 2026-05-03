@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a8a48a60870eba85754a23e3d19dfe46",
-    "generated_at_utc": "2026-05-03T17:06:54Z",
+    "version": "blake2b-48e08869e888d64859ab18f8c91e719e",
+    "generated_at_utc": "2026-05-03T17:19:22Z",
     "count": 166
   },
   "entries": [
@@ -1046,25 +1046,26 @@
     {
       "id": "library-export",
       "kind": "doc",
-      "title": "Library Export",
+      "title": "Library Export v1",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03 18:06",
+      "last_updated": "2026-05-03 18:19",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 18:06 • Library",
+      "display_meta": "2026-05-03 18:19 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
-        "library export",
-        "2026-05-03 18:06",
+        "library export v1",
+        "v1",
+        "2026-05-03 18:19",
         "2026",
         "05",
         "03",
         "18",
-        "06"
+        "19"
       ],
-      "search_text": "library-export library export library export 2026-05-03 18:06 2026 05 03 18 06"
+      "search_text": "library-export library export library export v1 v1 2026-05-03 18:19 2026 05 03 18 19"
     },
     {
       "id": "studio-smoke-testing",

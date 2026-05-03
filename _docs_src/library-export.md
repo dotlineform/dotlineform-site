@@ -1,17 +1,17 @@
 ---
 doc_id: library-export
-title: Library Export
+title: Library Export v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 18:06"
-ui_status: in-progress
+last_updated: "2026-05-03 18:19"
+ui_status: done
 parent_id: library
 sort_order: 25
 ---
-# Library Export
+# Library Export v1
 
 Status:
 
-- in-progress
+- completed
 
 ## Summary
 
