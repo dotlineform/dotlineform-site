@@ -11,7 +11,7 @@ sort_order: 25
 
 Status:
 
-- proposed
+- in-progress
 
 ## Summary
 
@@ -23,6 +23,9 @@ It is a generated document produced from selected Docs Viewer source documents, 
 The first use case is Library semantic enrichment, especially document summaries and structure review.
 The export framework should still be extensible across all Docs Viewer scopes.
 Library is the primary scope and should drive the first implementation.
+
+The implementation should ship a narrow v1 and then iterate from real export runs.
+The first version should prioritize predictable files, explicit selection, and simple config-driven shapes over automatic batching, direct LLM calls, or broad reporting infrastructure.
 
 ## Spec
 
@@ -49,6 +52,13 @@ A saved export pattern defines the fields, transforms, structure, target format,
 The Studio UI should not hardcode field sets.
 It should read the available export configs, present them to the user, and then combine the selected config with an explicit document selection.
 
+V1 export configs should live in a dedicated Library export config file, not in the general Studio config.
+The expected first path is:
+
+```text
+assets/studio/data/library_export_configs.json
+```
+
 Config should define at least:
 
 - export id and label
@@ -59,7 +69,7 @@ Config should define at least:
 - field aliases or nested output paths
 - body extraction mode, when content is included
 - optional limits such as maximum characters per document
-- default inclusion filters such as published-only or missing-summary-only
+- default inclusion filters such as viewable state and missing-summary-only
 
 The config file should be edited as source-controlled project configuration.
 The Studio UI can present and run existing configs, but creating or changing config definitions is not part of the first UI requirement.
@@ -79,7 +89,11 @@ Recommended UI shape:
 - deselecting a child puts ancestors into an indeterminate state
 - select all and clear controls
 - option to limit the view or export to docs missing summaries when the selected config supports it
-- optional include or exclude archived docs control
+- visible marker for non-viewable docs
+
+V1 should exclude `published: false` docs because they are outside generated Docs Viewer data.
+It should also exclude `_archive` and its descendants from the Studio export UI.
+Generated but non-viewable docs, where `published: true` and `viewable: false`, are in scope and should be selectable because they are likely to need analysis before they become ready for public/default viewing.
 
 The UI should show operational counts before export:
 
@@ -91,16 +105,27 @@ The UI should show operational counts before export:
 The exporter should write explicit selected `doc_id` values into the export metadata.
 The exported file should not depend on parent-selection state after it is created.
 
-### Target Formats
+### V1 Target Formats
 
-The primary target format is JSON.
+The primary target family is structured JSON data.
+V1 should support config-selected `json` and `jsonl` output.
+
+Array-based JSON is useful when the export needs one metadata object with a `documents` array.
+JSONL is useful when multiple complete documents are included in one file, because each row can represent one complete document record and common LLM upload workflows handle that shape well.
+
 JSON exports should be structured and populated for LLM upload workflows, but the shape should not be locked to LLM usage only.
 Other consumers may need the same source data later.
 
 The export structure should therefore be template or config driven rather than hardcoded around one prompt.
 
+Automatic batching and chunking should wait until a later enhancement.
+The first implementation should write one file per run unless a selected config explicitly defines a simple fixed split.
+Criteria such as batch size, model input budget, and long-document chunking need real export evidence before they become product rules.
+
 Markdown export may be added later for cases where a human-readable document is the better target.
 Markdown is out of scope for the first implementation except for reserving the config boundary so it can be added cleanly.
+Raw source Markdown should also wait for later configs rather than being a first implementation option.
+Some future export configs may allow Markdown or raw source fields while others forbid them.
 
 ### Source Text Extraction
 
@@ -112,9 +137,10 @@ Rules:
 - omit HTML tags
 - omit the document title when it is already present in the structured title field
 - preserve paragraph breaks with blank lines
-- preserve list items as separate lines
-- preserve headings as text while also exposing headings as structured data
-- preserve blockquotes as separate lines, optionally prefixed with `> `
+- put headings on their own lines while also exposing headings as structured data
+- preserve bullet items as separate lines starting with `- `
+- preserve numbered list items as separate lines starting with `1.`, `2.`, `3.`, and so on
+- preserve quoted material only when it is an actual quotation, using either `> ` or `quote: ` consistently
 - omit code blocks or replace them with a short marker unless the export config explicitly includes code
 - normalize whitespace enough for model input without destroying paragraph structure
 
@@ -153,8 +179,9 @@ Initial JSON shape should include:
 }
 ```
 
-This export should normally include the full published Library corpus because relationship review depends on corpus-wide context.
+This export should normally include the full generated, non-archived Library corpus because relationship review depends on corpus-wide context.
 It should not require full document body text once summaries exist.
+Non-viewable docs should be included and marked so readiness review can focus on them.
 
 #### 2. Document Summaries
 
@@ -183,10 +210,10 @@ Initial JSON shape should include:
 
 Useful config defaults:
 
-- published docs only
+- generated, non-archived docs only
 - option for missing summaries only
 - configurable maximum characters per document
-- optional batching when file size or character count crosses a configured threshold
+- JSONL output when each row should be one complete document input
 
 #### 3. Full Document Content
 
@@ -223,6 +250,7 @@ Initial JSON shape should include:
 
 This export must support multiple documents in the same export file.
 Character limits should be configurable, but the core purpose is to preserve enough content for meaningful external analysis.
+JSONL should be the preferred v1 shape for this export when each line can carry one complete document.
 
 ### Output Files
 
@@ -240,10 +268,13 @@ Each export file should include metadata:
 - export id
 - scope
 - generated timestamp
-- source docs index version or checksum when available
+- source document `last_updated` values
 - selected `doc_id` values
 - config id or config checksum
 - counts for included, skipped, and truncated documents
+
+V1 should use source document `last_updated` as the source version marker.
+If export review shows same-day edits are hard to distinguish, the docs source metadata model should consider a more granular timestamp such as hour and minute.
 
 ### Reporting
 
@@ -261,14 +292,23 @@ The Studio page should show this report after export and make the file path visi
 
 ## Open Questions
 
-- Where should export configs live: `assets/studio/data/studio_config.json`, a dedicated `assets/studio/data/library_export_configs.json`, or another config file?
-- Should exports write one JSON file by default, or should large exports automatically create batches plus a manifest?
-- Should all export files use array-based JSON, or should some configs support JSONL for easier streaming and recombination?
-- Which checksum or generated-docs metadata is stable enough to record as the source version?
-- Should archived or unpublished docs ever be exportable through the Studio UI?
-- Should source Markdown be allowed as a first implementation option, or only after plain-text extraction is stable?
-- What validation should block an export config from running?
-- Should export runs be added to a Studio activity feed?
+- Should docs source metadata support a more granular `last_updated` timestamp before export workflows rely on it for review?
+- Which validation failures should block each export config, and which should be reported as warnings?
+- What real thresholds should later trigger batching or long-document chunking?
+
+## Current Decisions
+
+- V1 should be small and iterative rather than attempting a complete export platform.
+- Library is the first implementation scope, but configs should not prevent future Docs Viewer scopes.
+- Export configs should live in a dedicated Library export config file.
+- V1 should support config-selected `json` and `jsonl`.
+- JSONL is preferred when multiple complete document records are exported in one file for LLM upload.
+- Automatic batching and chunking are future enhancements.
+- V1 should use source document `last_updated` values as the source version marker.
+- `published: false` docs and `_archive` descendants should not be exportable through the v1 Studio UI.
+- Non-viewable generated docs should be exportable and visibly marked.
+- Raw source Markdown and Markdown target documents are later config extensions, not v1 defaults.
+- Export runs should not be added to a Studio activity feed in v1.
 
 ## Implementation Tasks
 
