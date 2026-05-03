@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T10:11:39Z",
+  "generated_at": "2026-05-03T10:24:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -293,7 +293,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "sort_order": 15,
       "published": true,
@@ -627,6 +627,20 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio-audits",
+      "title": "Studio Audits",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-03",
+      "parent_id": "studio",
+      "sort_order": 26,
+      "published": true,
+      "viewable": true,
+      "source_path": "studio-audits.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-audits",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-audits.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-run-checks",
       "title": "Run Checks",
       "added_date": "2026-05-01",
@@ -754,10 +768,24 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-studio-audit-service",
+      "title": "Studio Audit Service",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-03",
+      "parent_id": "scripts",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-studio-audit-service.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-studio-audit-service",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-studio-audit-service.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-03",
       "parent_id": "config",
       "sort_order": 30,
       "published": true,
@@ -906,7 +934,7 @@
       "source_path": "site-request-studio-audits-page.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-audits-page",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-audits-page.json",
-      "ui_status": "proposed"
+      "ui_status": "implemented"
     },
     {
       "scope": "studio",

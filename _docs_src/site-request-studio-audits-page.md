@@ -3,7 +3,7 @@ doc_id: site-request-studio-audits-page
 title: Studio Audits Page Request
 added_date: 2026-05-03
 last_updated: 2026-05-03
-ui_status: proposed
+ui_status: implemented
 parent_id: change-requests
 sort_order: 38
 ---
@@ -11,7 +11,20 @@ sort_order: 38
 
 Status:
 
-- proposed
+- implemented
+
+## Current Implementation
+
+The first slice is implemented.
+
+- `/studio/audits/` renders a compact Studio audit page.
+- `/studio/` links to Audits from Resources.
+- `assets/studio/js/studio-audits.js` loads the audit registry, probes service availability, runs an allowlisted audit, renders results, and maintains route-ready attributes.
+- `scripts/studio/audit_service.py` exposes the local read-only audit service.
+- `scripts/audit_studio_ready_state.py --strict --json` provides structured output for the service.
+- `bin/dev-studio` starts the audit service on `AUDIT_SERVICE_PORT`, default `8790`.
+
+Only `studio-ready-state` is wired in this slice.
 
 ## Summary
 
@@ -143,7 +156,7 @@ Suggested response:
     "warnings": 0
   },
   "findings": [],
-  "stdout": "Studio ready-state audit: 29 templates, 28 ready roots, 6 static routes, 4 dashboard routes\nresult: passed (0 errors, 0 warnings)\n"
+  "stdout": "{...}"
 }
 ```
 
@@ -201,12 +214,12 @@ Finding shape:
 
 1. Add JSON output to `scripts/audit_studio_ready_state.py`.
 2. Add a loopback-only audit service under `scripts/studio/` with `health`, `audits`, and `audits/run` endpoints.
-3. Add `studio_config.json` entries for the Audits route, labels, status text, and service URL.
+3. Add `studio_config.json` entries for the Audits route, labels, and status text. Endpoint URLs remain in `assets/studio/js/studio-transport.js`, matching the existing local-service boundary.
 4. Add `/studio/audits/index.md` with the Studio route root and Resources navigation target.
 5. Add `assets/studio/js/studio-audits.js` for service health, audit registry rendering, run command state, result rendering, and route-ready attributes.
 6. Add the `/studio/audits/` link to the `/studio/` Resources section.
 7. Document the new service and route in Studio/runtime/script docs.
-8. Add the audit service to the local Studio runner only if it matches the existing service startup pattern cleanly.
+8. Add the audit service to the local Studio runner.
 9. Add targeted smoke coverage for service unavailable, passing audit, and failing audit states.
 10. Update the site change log when the feature is implemented.
 

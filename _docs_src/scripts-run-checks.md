@@ -41,7 +41,7 @@ Run the broad profile:
 ## Profiles
 
 - `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, the Studio ready-state audit, and Studio config JSON parsing.
+  Runs diff whitespace checks, lightweight Python syntax checks, the Studio ready-state audit, and Studio config JSON parsing. The syntax check includes the Studio audit service script.
 - `catalogue`
   Runs catalogue field-registry verification and a representative field-aware build preview.
 - `docs`

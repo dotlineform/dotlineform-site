@@ -45,6 +45,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "py_compile",
                 "scripts/run_checks.py",
                 "scripts/audit_studio_ready_state.py",
+                "scripts/studio/audit_service.py",
                 "tests/python/test_catalogue_field_registry.py",
             ),
             "Compile lightweight Python check scripts.",

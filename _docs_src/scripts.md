@@ -103,6 +103,8 @@ Catalogue/runtime maintenance:
   Run optional check profiles and capture local run logs for larger-risk changes.
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
   Audit Studio route-ready template contracts and static-route drift.
+- [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
+  Run the localhost allowlisted audit service used by `/studio/audits/`.
 - [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
   Run the integrated local Studio development stack, including Jekyll, localhost write services, optional startup docs refreshes, and live docs watching.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)

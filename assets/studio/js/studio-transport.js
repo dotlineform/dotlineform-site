@@ -50,7 +50,14 @@ const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
   openSource: "http://127.0.0.1:8789/docs/open-source"
 });
 
+const AUDIT_SERVICE_ENDPOINTS = Object.freeze({
+  health: "http://127.0.0.1:8790/health",
+  audits: "http://127.0.0.1:8790/audits",
+  run: "http://127.0.0.1:8790/audits/run"
+});
+
 export {
+  AUDIT_SERVICE_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
   STUDIO_WRITE_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS
@@ -66,6 +73,10 @@ export async function probeCatalogueHealth(timeoutMs = 500) {
 
 export async function probeDocsManagementHealth(timeoutMs = 500) {
   return probeHealth(DOCS_MANAGEMENT_ENDPOINTS.health, timeoutMs);
+}
+
+export async function probeAuditServiceHealth(timeoutMs = 500) {
+  return probeHealth(AUDIT_SERVICE_ENDPOINTS.health, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {
@@ -91,6 +102,30 @@ export async function postJson(url, payload, options = {}) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
+    signal: options.signal
+  });
+
+  let responsePayload = null;
+  try {
+    responsePayload = await response.json();
+  } catch (error) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  if (!response.ok || !responsePayload || !responsePayload.ok) {
+    const message = responsePayload && responsePayload.error ? responsePayload.error : `HTTP ${response.status}`;
+    const error = new Error(message);
+    error.status = response.status;
+    error.payload = responsePayload;
+    throw error;
+  }
+
+  return responsePayload;
+}
+
+export async function getJson(url, options = {}) {
+  const response = await fetch(url, {
+    cache: "no-store",
     signal: options.signal
   });
 

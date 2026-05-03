@@ -79,6 +79,7 @@ Current page-level doc links:
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
 - Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
+- Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
 - Docs HTML Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
@@ -108,6 +109,8 @@ Shared Studio runtime and wiring currently live in:
   provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
 - `assets/studio/js/studio-dashboard.js`
   hydrates lightweight dashboard metrics for the new domain landing pages
+- `assets/studio/js/studio-audits.js`
+  powers `/studio/audits/` by probing the local audit service, listing allowlisted audits, running selected audits, and rendering structured findings
 - `assets/studio/js/docs-rebuild-button.js`
   wires the docs rebuild action beside the Studio docs search input
 - `assets/studio/js/catalogue-work-fields.js`
@@ -117,6 +120,7 @@ Current page controllers:
 
 - `assets/studio/js/build-activity.js`
 - `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/studio-audits.js`
 - `assets/studio/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-editor.js`
@@ -207,6 +211,7 @@ What it starts:
 - `scripts/studio/tag_write_server.py`
 - `scripts/studio/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
+- `scripts/studio/audit_service.py`
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 What it does not start:
@@ -228,6 +233,11 @@ Current mutable catalogue data surfaced through this runtime:
 Current localhost docs-maintenance integration surfaced through this runtime:
 
 - `POST /docs/broken-links`
+
+Current localhost audit integration surfaced through this runtime:
+
+- `GET /audits`
+- `POST /audits/run`
 - `POST /docs/rebuild`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.

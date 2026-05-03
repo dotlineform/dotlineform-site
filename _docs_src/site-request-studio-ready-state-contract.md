@@ -70,6 +70,7 @@ Adopted routes:
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
 - `/studio/docs-import/`
+- `/studio/audits/`
 - `/studio/project-state/`
 - `/studio/series-tag-editor/`
 - `/studio/series-tags/`
@@ -94,7 +95,7 @@ Enforcement helper:
 
 The page also exposes:
 
-- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
+- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|studio-audits|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
 - `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary|session|edit|dashboard|landing|reference"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
@@ -116,6 +117,7 @@ Primary async or service-backed Studio routes:
 - [x] `/studio/catalogue-work/` root `#catalogueWorkRoot`
 - [x] `/studio/docs-broken-links/` root `#docsBrokenLinksRoot`
 - [x] `/studio/docs-import/` root `#docsHtmlImportRoot`
+- [x] `/studio/audits/` root `#studioAuditsRoot`
 - [x] `/studio/project-state/` root `#projectStateRoot`
 - [x] `/studio/series-tag-editor/` root `#seriesTagEditorRoot`
 - [x] `/studio/series-tags/` root from `data-role="series-tags"`

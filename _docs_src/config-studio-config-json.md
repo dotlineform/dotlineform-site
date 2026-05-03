@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: "Studio Config JSON"
 added_date: 2026-04-24
-last_updated: 2026-04-29
+last_updated: 2026-05-03
 parent_id: config
 sort_order: 30
 ---
@@ -25,6 +25,7 @@ Current responsibilities include:
 - scope-specific Docs Viewer UI status emoji definitions
 - the route and feed path for the current Studio build-activity page
 - route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
+- the Studio Audits route path and UI text
 - catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
 - Studio-owned UI text, including search-shell text that is shared through the same loader
@@ -47,6 +48,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-activity.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
+- `assets/studio/js/studio-audits.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`

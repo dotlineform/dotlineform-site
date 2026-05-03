@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -29,6 +30,13 @@ class Finding:
 
     def format(self) -> str:
         return f"{self.severity}: {self.path.relative_to(REPO_ROOT)}: {self.message}"
+
+    def to_json(self) -> dict[str, str]:
+        return {
+            "severity": self.severity,
+            "path": str(self.path.relative_to(REPO_ROOT)),
+            "message": self.message,
+        }
 
 
 def attr_values(text: str, name: str) -> list[str]:
@@ -123,6 +131,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Exit non-zero for warnings as well as errors.",
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit structured JSON instead of human-readable output.",
+    )
     return parser.parse_args()
 
 
@@ -145,23 +158,38 @@ def main() -> int:
 
     errors = [finding for finding in findings if finding.severity == "error"]
     warnings = [finding for finding in findings if finding.severity == "warning"]
+    failed = bool(errors or (args.strict and warnings))
+    payload = {
+        "status": "failed" if failed else "passed",
+        "strict": args.strict,
+        "totals": {
+            "templates": totals["pages"],
+            "ready_roots": totals["ready"],
+            "static_routes": totals["static"],
+            "dashboard_routes": totals["dashboard"],
+        },
+        "summary": {
+            "errors": len(errors),
+            "warnings": len(warnings),
+        },
+        "findings": [finding.to_json() for finding in findings],
+    }
 
-    print(
-        "Studio ready-state audit: "
-        f"{totals['pages']} templates, "
-        f"{totals['ready']} ready roots, "
-        f"{totals['static']} static routes, "
-        f"{totals['dashboard']} dashboard routes"
-    )
-    for finding in findings:
-        print(finding.format())
+    if args.json:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        print(
+            "Studio ready-state audit: "
+            f"{totals['pages']} templates, "
+            f"{totals['ready']} ready roots, "
+            f"{totals['static']} static routes, "
+            f"{totals['dashboard']} dashboard routes"
+        )
+        for finding in findings:
+            print(finding.format())
+        print(f"result: {payload['status']} ({len(errors)} errors, {len(warnings)} warnings)")
 
-    if errors or (args.strict and warnings):
-        print(f"result: failed ({len(errors)} errors, {len(warnings)} warnings)")
-        return 1
-
-    print(f"result: passed ({len(errors)} errors, {len(warnings)} warnings)")
-    return 0
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":

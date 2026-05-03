@@ -4,6 +4,7 @@ const DEFAULT_STUDIO_CONFIG = {
   paths: {
     routes: {
       studio_home: "/studio/",
+      studio_audits: "/studio/audits/",
       search: "/search/",
       series_tags: "/studio/series-tags/",
       series_tag_editor: "/studio/series-tag-editor/",
@@ -227,6 +228,18 @@ const DEFAULT_STUDIO_CONFIG = {
       column_linked_page: "linked page",
       column_link: "link",
       column_from_page: "from page"
+    },
+    studio_audits: {
+      intro: "Run local Studio maintenance audits.",
+      run_button: "Run audit",
+      running_button: "Running...",
+      idle_status: "Select an audit to run.",
+      service_unavailable: "Audit service unavailable. Start bin/dev-studio to run audits.",
+      status_running: "Running audit...",
+      status_passed: "Audit passed.",
+      status_failed: "Audit failed.",
+      status_request_failed: "Audit request failed.",
+      output_label: "output"
     },
     catalogue_status: {
       load_failed_error: "Failed to load catalogue drafts.",

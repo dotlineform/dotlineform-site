@@ -48,6 +48,7 @@ Read this section in this order:
 4. **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 5. Technical route and workflow docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
+   - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
@@ -77,6 +78,7 @@ Current Studio landing routes:
 Current workflow/detail routes:
 
 - `/studio/build-activity/`
+- `/studio/audits/`
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
 - `/studio/docs-import/`
@@ -109,8 +111,10 @@ Current runner behavior:
 - starts Jekyll on `127.0.0.1:4000`
 - starts `scripts/studio/tag_write_server.py`
 - starts `scripts/studio/catalogue_write_server.py`
-- keeps all three processes attached to the current terminal
-- stops all three processes on `Ctrl+C`
+- starts `scripts/docs/docs_management_server.py`
+- starts `scripts/studio/audit_service.py`
+- keeps all long-running processes attached to the current terminal
+- stops all long-running processes on `Ctrl+C`
 - serves mutable catalogue source and lookup reads through the local catalogue server rather than through Jekyll-served static JSON
 
 Current limits:

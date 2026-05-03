@@ -8,6 +8,38 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Added Studio Audits page and audit service
+
+**Status:** implemented
+
+**Area:** Studio runtime / checks
+
+**Summary:**
+Added `/studio/audits/`, a loopback-only audit service, and structured JSON output for the Studio ready-state audit.
+
+**Reason:**
+Important maintenance audits were still easy to forget even after the ready-state audit was added to `./scripts/run_checks.py --profile quick`. Studio needed a visible place to run and inspect key audit results from the normal local workflow.
+
+**Effect:**
+The Studio home Resources section now links to Audits. The Audits page probes the local service, lists the allowlisted `studio-ready-state` audit, runs it with a command button, renders counts/findings, and maintains the shared `data-studio-ready` / `data-studio-busy` contract. `bin/dev-studio` now starts `scripts/studio/audit_service.py` on port `8790` by default.
+
+**Affected files/docs:**
+
+- `bin/dev-studio`
+- `scripts/audit_studio_ready_state.py`
+- `scripts/studio/audit_service.py`
+- `assets/studio/js/studio-audits.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `studio/index.md`
+- `studio/audits/index.md`
+- [Studio Audits](/docs/?scope=studio&doc=studio-audits)
+- [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
+- [Studio Audits Page Request](/docs/?scope=studio&doc=site-request-studio-audits-page)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Added Studio ready-state audit hardening
 
 **Status:** implemented

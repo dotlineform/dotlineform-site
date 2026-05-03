@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: "Dev Studio Runner"
 added_date: 2026-04-22
-last_updated: 2026-04-25
+last_updated: 2026-05-03
 parent_id: scripts
 sort_order: 15
 ---
@@ -57,6 +57,8 @@ The runner does not currently take CLI flags. It is configured through environme
   default: `8788`
 - `DOCS_MANAGEMENT_PORT`
   default: `8789`
+- `AUDIT_SERVICE_PORT`
+  default: `8790`
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
   accepted values: `studio`, `library`, or `studio,library`
@@ -73,7 +75,7 @@ The runner does not currently take CLI flags. It is configured through environme
 Example:
 
 ```bash
-DOCS_STARTUP_REBUILD_SCOPES=studio JEKYLL_PORT=4001 TAG_WRITE_PORT=8797 CATALOGUE_WRITE_PORT=8798 DOCS_MANAGEMENT_PORT=8799 DOCS_WATCH_DEBOUNCE_SECONDS=1.5 DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8 bin/dev-studio
+DOCS_STARTUP_REBUILD_SCOPES=studio JEKYLL_PORT=4001 TAG_WRITE_PORT=8797 CATALOGUE_WRITE_PORT=8798 DOCS_MANAGEMENT_PORT=8799 AUDIT_SERVICE_PORT=8800 DOCS_WATCH_DEBOUNCE_SECONDS=1.5 DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8 bin/dev-studio
 ```
 
 That form applies the environment overrides to that one `bin/dev-studio` run only.
@@ -97,6 +99,7 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 2. Tag Write Server on `127.0.0.1:TAG_WRITE_PORT`
 3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
 4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT`
+5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -168,6 +171,17 @@ bundle exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT"
 - default URL: `http://127.0.0.1:8789`
 - related doc: [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 
+### Audit Service
+
+- command:
+
+```bash
+./scripts/studio/audit_service.py --port "$AUDIT_SERVICE_PORT"
+```
+
+- default URL: `http://127.0.0.1:8790`
+- related doc: [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
+
 ### Docs Live Rebuild Watcher
 
 - command:
@@ -191,6 +205,7 @@ At startup the runner prints quick links for:
 - Tag Write Server
 - Catalogue Write Server
 - Docs Management Server
+- Audit Service
 - startup docs rebuild scopes
 - Docs Live Watcher status
 - Series Tag Editor:
@@ -206,6 +221,7 @@ When you press `Ctrl+C`, it:
 - stops the Tag Write Server
 - stops the Catalogue Write Server
 - stops the Docs Management Server
+- stops the Audit Service
 - stops the Docs Live Rebuild Watcher when enabled
 - waits for those child processes before exiting
 

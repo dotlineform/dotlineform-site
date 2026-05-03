@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-884ec275ecc1b88a0d54ac790687365b",
-    "generated_at_utc": "2026-05-03T10:09:37Z",
-    "count": 160
+    "version": "blake2b-c060dbbcf83c883daaba077fce11ef77",
+    "generated_at_utc": "2026-05-03T10:24:07Z",
+    "count": 162
   },
   "entries": [
     {
@@ -500,10 +500,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-25 • Scripts",
+      "display_meta": "2026-05-03 • Scripts",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -511,12 +511,12 @@
         "studio",
         "dev studio runner",
         "runner",
-        "2026-04-25",
+        "2026-05-03",
         "2026",
-        "04",
-        "25"
+        "05",
+        "03"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-25 2026 04 25"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-docs-broken-links",
@@ -1052,6 +1052,27 @@
       "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-03 2026 05 03"
     },
     {
+      "id": "studio-audits",
+      "kind": "doc",
+      "title": "Studio Audits",
+      "href": "/docs/?scope=studio&doc=studio-audits",
+      "last_updated": "2026-05-03",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-03 • Studio",
+      "search_terms": [
+        "studio-audits",
+        "studio",
+        "audits",
+        "studio audits",
+        "2026-05-03",
+        "2026",
+        "05",
+        "03"
+      ],
+      "search_text": "studio-audits studio audits studio audits 2026-05-03 2026 05 03"
+    },
+    {
       "id": "scripts-run-checks",
       "kind": "doc",
       "title": "Run Checks",
@@ -1263,26 +1284,49 @@
       "search_text": "sorting-architecture sorting architecture sorting architecture 2026-03-31 2026 03 31"
     },
     {
+      "id": "scripts-studio-audit-service",
+      "kind": "doc",
+      "title": "Studio Audit Service",
+      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
+      "last_updated": "2026-05-03",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-03 • Scripts",
+      "search_terms": [
+        "scripts-studio-audit-service",
+        "scripts",
+        "studio",
+        "audit",
+        "service",
+        "studio audit service",
+        "2026-05-03",
+        "2026",
+        "05",
+        "03"
+      ],
+      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-03 2026 05 03"
+    },
+    {
       "id": "config-studio-config-json",
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-04-29",
+      "last_updated": "2026-05-03",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-04-29 • Config",
+      "display_meta": "2026-05-03 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-04-29",
+        "2026-05-03",
         "2026",
-        "04",
-        "29"
+        "05",
+        "03"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-04-29 2026 04 29"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-03 2026 05 03"
     },
     {
       "id": "data-models-studio",

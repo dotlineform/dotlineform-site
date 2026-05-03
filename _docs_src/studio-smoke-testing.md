@@ -140,6 +140,7 @@ Adopted routes:
 - `/studio/tag-groups/` with `#tag-groups`
 - `/studio/tag-registry/` with `#tag-registry`
 - `/studio/` with `#studioHomeRoot`
+- `/studio/audits/` with `#studioAuditsRoot`
 - `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
 - `/studio/library/` with `#studioLibraryDashboardRoot`
 - `/studio/analytics/` with `#studioAnalyticsDashboardRoot`

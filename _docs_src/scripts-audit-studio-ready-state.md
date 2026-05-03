@@ -16,6 +16,12 @@ Script:
 
 Run this after changing Studio route shells, dashboard shells, static/reference pages, or route-ready helper scripts.
 
+Structured output for the Studio audit service:
+
+```bash
+./scripts/audit_studio_ready_state.py --strict --json
+```
+
 ## Purpose
 
 The audit keeps the shared Studio ready-state contract from drifting as pages evolve. It is especially aimed at static/reference pages: those pages can expose a basic ready signal today, but if they later gain async data, service checks, commands, or additional route scripts, they should move to a route-specific ready/busy implementation.
@@ -41,8 +47,11 @@ Strict mode exits non-zero for warnings as well as errors. Without `--strict`, w
 
 The `quick` profile in `./scripts/run_checks.py` includes this audit in strict mode.
 
+`--json` emits the same pass/fail status, counts, totals, and findings as structured JSON for `/studio/audits/`.
+
 ## Related References
 
 - [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Studio Audits](/docs/?scope=studio&doc=studio-audits)
