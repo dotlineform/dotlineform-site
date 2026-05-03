@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T09:59:38Z",
+  "generated_at": "2026-05-03T10:09:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -892,6 +892,21 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
       "ui_status": "implemented"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-audits-page",
+      "title": "Studio Audits Page Request",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-03",
+      "parent_id": "change-requests",
+      "sort_order": 38,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-studio-audits-page.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-audits-page",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-audits-page.json",
+      "ui_status": "proposed"
     },
     {
       "scope": "studio",

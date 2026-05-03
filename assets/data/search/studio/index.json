@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1a83d2260eaa2bda55d9d5af636c9493",
-    "generated_at_utc": "2026-05-03T09:59:40Z",
-    "count": 159
+    "version": "blake2b-884ec275ecc1b88a0d54ac790687365b",
+    "generated_at_utc": "2026-05-03T10:09:37Z",
+    "count": 160
   },
   "entries": [
     {
@@ -1503,6 +1503,33 @@
         "03"
       ],
       "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "site-request-studio-audits-page",
+      "kind": "doc",
+      "title": "Studio Audits Page Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-audits-page",
+      "last_updated": "2026-05-03",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-03 • Change Requests",
+      "search_terms": [
+        "site-request-studio-audits-page",
+        "site",
+        "request",
+        "studio",
+        "audits",
+        "page",
+        "studio audits page request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-03",
+        "2026",
+        "05",
+        "03"
+      ],
+      "search_text": "site-request-studio-audits-page site request studio audits page studio audits page request change requests change requests 2026-05-03 2026 05 03"
     },
     {
       "id": "bulk-add-work",
