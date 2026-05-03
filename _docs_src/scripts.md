@@ -2,7 +2,7 @@
 doc_id: scripts
 title: "Scripts"
 added_date: 2026-04-23
-last_updated: 2026-05-02
+last_updated: 2026-05-03
 parent_id: ""
 sort_order: 130
 ---
@@ -82,6 +82,8 @@ Catalogue/runtime maintenance:
 
 - `./scripts/run_checks.py`
   - runs optional repo check profiles and writes local logs under `var/test-runs/`
+- `./scripts/audit_studio_ready_state.py`
+  - audits Studio route-ready template contracts and flags static routes that need a route-specific ready/busy implementation
 - `./scripts/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
 - `./scripts/verify_catalogue_field_registry.py`
@@ -99,6 +101,8 @@ Catalogue/runtime maintenance:
 
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
   Run optional check profiles and capture local run logs for larger-risk changes.
+- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+  Audit Studio route-ready template contracts and static-route drift.
 - [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
   Run the integrated local Studio development stack, including Jekyll, localhost write services, optional startup docs refreshes, and live docs watching.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)

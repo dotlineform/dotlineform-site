@@ -88,6 +88,10 @@ Static/reference route helper:
 
 - `assets/studio/js/studio-static-route.js`
 
+Enforcement helper:
+
+- `scripts/audit_studio_ready_state.py`
+
 The page also exposes:
 
 - `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
@@ -134,6 +138,8 @@ Lower-priority dashboard, landing, and reference routes:
 - [x] `/studio/ui-catalogue/panel/` root `#studioUiCataloguePanelRoot`
 
 These lower-priority routes expose a deliberately small contract. Dashboard pages use the shared dashboard metric loader to mark ready after metric hydration settles. Static landing and reference pages use a generic static-route initializer that immediately marks the route ready after DOM load.
+
+Future async features should extend the contract at the route level. Static-route readiness is only valid while the page is a static or reference shell; if the route adds async data, service checks, route commands, or additional route scripts, replace the static initializer with a route-specific ready/busy implementation and run the ready-state audit in strict mode.
 
 ## Event Option
 
@@ -184,6 +190,7 @@ For each adopted route:
 - load the route with a required local service unavailable and confirm the page still reaches a stable ready or unavailable state
 - run one command and confirm `data-studio-busy` is true during the command and false afterward
 - update one smoke test to wait on the shared ready contract instead of status text
+- run `./scripts/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 
 ## Benefits
 

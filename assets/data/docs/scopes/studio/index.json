@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T09:49:05Z",
+  "generated_at": "2026-05-03T09:59:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -321,7 +321,7 @@
       "doc_id": "studio-ui-start",
       "title": "Studio UI Start",
       "added_date": "2026-04-21",
-      "last_updated": "2026-04-21",
+      "last_updated": "2026-05-03",
       "parent_id": "design",
       "sort_order": 15,
       "published": true,
@@ -630,7 +630,7 @@
       "doc_id": "scripts-run-checks",
       "title": "Run Checks",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "sort_order": 28,
       "published": true,
@@ -638,6 +638,20 @@
       "source_path": "scripts-run-checks.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-audit-studio-ready-state",
+      "title": "Studio Ready-State Audit",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-03",
+      "parent_id": "scripts",
+      "sort_order": 29,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-audit-studio-ready-state.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-studio-ready-state.json"
     },
     {
       "scope": "studio",
@@ -1737,7 +1751,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-03",
       "parent_id": "",
       "sort_order": 130,
       "published": true,

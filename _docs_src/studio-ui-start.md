@@ -2,7 +2,7 @@
 doc_id: studio-ui-start
 title: "Studio UI Start"
 added_date: 2026-04-21
-last_updated: 2026-04-21
+last_updated: 2026-05-03
 parent_id: design
 sort_order: 15
 ---
@@ -88,6 +88,7 @@ Use these default checks on every Studio UI task:
 - capped-list search should appear only when the list is actually truncated
 - if a row already has a clear link to the target record, do not duplicate that same navigation as a button
 - do not use a panel as a generic wrapper just to get a border around unrelated controls
+- if a static Studio route gains async data, service checks, or route commands, replace the static ready initializer with a route-specific ready/busy contract before treating it as smoke-test ready
 
 ## Local Or Systemic
 
@@ -118,6 +119,7 @@ Before finishing Studio UI work:
 - update [Site Change Log](/docs/?scope=studio&doc=site-change-log) for meaningful Studio/site changes
 - save any formal page-level conformance review in [UI Audits](/docs/?scope=studio&doc=ui-audits)
 - verify desktop and mobile behavior
+- run `./scripts/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 - run the sanitization scan on changed files
 
 ## Then Go Deeper

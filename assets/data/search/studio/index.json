@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-52662bbc4e8c1fdc3ccc40aac85f3ac6",
-    "generated_at_utc": "2026-05-03T09:48:41Z",
-    "count": 158
+    "version": "blake2b-1a83d2260eaa2bda55d9d5af636c9493",
+    "generated_at_utc": "2026-05-03T09:59:40Z",
+    "count": 159
   },
   "entries": [
     {
@@ -547,10 +547,10 @@
       "kind": "doc",
       "title": "Studio UI Start",
       "href": "/docs/?scope=studio&doc=studio-ui-start",
-      "last_updated": "2026-04-21",
+      "last_updated": "2026-05-03",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-21 • Design",
+      "display_meta": "2026-05-03 • Design",
       "search_terms": [
         "studio-ui-start",
         "studio",
@@ -558,12 +558,12 @@
         "start",
         "studio ui start",
         "design",
-        "2026-04-21",
+        "2026-05-03",
         "2026",
-        "04",
-        "21"
+        "05",
+        "03"
       ],
-      "search_text": "studio-ui-start studio ui start studio ui start design 2026-04-21 2026 04 21"
+      "search_text": "studio-ui-start studio ui start studio ui start design 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -1056,22 +1056,46 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-03",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-01 • Scripts",
+      "display_meta": "2026-05-03 • Scripts",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
         "run",
         "checks",
         "run checks",
-        "2026-05-01",
+        "2026-05-03",
         "2026",
         "05",
-        "01"
+        "03"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-01 2026 05 01"
+      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "scripts-audit-studio-ready-state",
+      "kind": "doc",
+      "title": "Studio Ready-State Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
+      "last_updated": "2026-05-03",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-03 • Scripts",
+      "search_terms": [
+        "scripts-audit-studio-ready-state",
+        "scripts",
+        "audit",
+        "studio",
+        "ready",
+        "state",
+        "studio ready-state audit",
+        "2026-05-03",
+        "2026",
+        "05",
+        "03"
+      ],
+      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-03 2026 05 03"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",
@@ -2940,16 +2964,16 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-02",
-      "display_meta": "2026-05-02",
+      "last_updated": "2026-05-03",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "scripts",
-        "2026-05-02",
+        "2026-05-03",
         "2026",
         "05",
-        "02"
+        "03"
       ],
-      "search_text": "scripts 2026-05-02 2026 05 02"
+      "search_text": "scripts 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-audit-site-consistency",

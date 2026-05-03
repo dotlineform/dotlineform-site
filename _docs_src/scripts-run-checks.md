@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: "Run Checks"
 added_date: 2026-05-01
-last_updated: 2026-05-01
+last_updated: 2026-05-03
 parent_id: scripts
 sort_order: 28
 ---
@@ -41,7 +41,7 @@ Run the broad profile:
 ## Profiles
 
 - `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, and Studio config JSON parsing.
+  Runs diff whitespace checks, lightweight Python syntax checks, the Studio ready-state audit, and Studio config JSON parsing.
 - `catalogue`
   Runs catalogue field-registry verification and a representative field-aware build preview.
 - `docs`
@@ -65,4 +65,5 @@ The summary file is the path Codex should report in close-out.
 
 - [Testing](/docs/?scope=studio&doc=testing)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)

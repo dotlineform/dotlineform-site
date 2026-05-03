@@ -154,6 +154,18 @@ The dashboard and reference-page routes use a minimal ready contract. For those 
 
 The rollout is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
 
+## Ready-State Audit
+
+Run the ready-state audit after changing Studio route shells, route scripts, or route-ready helpers:
+
+```bash
+./scripts/audit_studio_ready_state.py --strict
+```
+
+The audit is intentionally conservative. It fails when static and dashboard route markers are mixed, when a static route starts to expose dashboard metrics, when required ready/busy baseline attributes are missing, or when dashboard routes are not wired to the dashboard loader. In strict mode it also fails if a static route starts loading another module script, because that usually means the route needs a specific readiness contract before browser tests trust it.
+
+The `quick` profile in `./scripts/run_checks.py` includes this audit so ready-state drift is caught during normal lightweight checks.
+
 ## Manual Check Pairing
 
 Every Codex-run smoke test should still name the manual follow-up when behavior depends on tactile interaction, visual layout, or mobile scrolling.

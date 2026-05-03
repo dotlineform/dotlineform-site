@@ -44,9 +44,15 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "-m",
                 "py_compile",
                 "scripts/run_checks.py",
+                "scripts/audit_studio_ready_state.py",
                 "tests/python/test_catalogue_field_registry.py",
             ),
             "Compile lightweight Python check scripts.",
+        ),
+        CheckCommand(
+            "studio-ready-state-audit",
+            (sys.executable, "scripts/audit_studio_ready_state.py", "--strict"),
+            "Audit Studio route-ready template contracts.",
         ),
         CheckCommand(
             "studio-config-json",

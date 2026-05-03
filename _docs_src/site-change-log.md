@@ -8,6 +8,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-03] Added Studio ready-state audit hardening
+
+**Status:** implemented
+
+**Area:** Studio runtime / checks
+
+**Summary:**
+Added a read-only Studio ready-state audit and included it in the lightweight `quick` check profile.
+
+**Reason:**
+The static ready-state framework gives low-behavior Studio pages a useful baseline, but future async features should not accidentally keep using static readiness after adding data loads, service checks, route commands, or extra route scripts.
+
+**Effect:**
+`./scripts/audit_studio_ready_state.py --strict` now checks Studio route templates for ready/busy baseline attributes, static/dashboard marker mixups, dashboard loader wiring, and static-route drift. `./scripts/run_checks.py --profile quick` runs the audit in strict mode so this contract is enforced during normal lightweight verification.
+
+**Affected files/docs:**
+
+- `scripts/audit_studio_ready_state.py`
+- `scripts/run_checks.py`
+- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
+- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
+- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
 ## [2026-05-03] Added static ready-state framework to Studio dashboards and references
 
 **Status:** implemented
