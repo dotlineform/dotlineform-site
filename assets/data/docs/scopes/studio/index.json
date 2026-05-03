@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T13:36:45Z",
+  "generated_at": "2026-05-03T14:19:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -599,10 +599,24 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-docs-export",
+      "title": "Docs Export",
+      "added_date": "2026-05-03 15:05",
+      "last_updated": "2026-05-03 15:05",
+      "parent_id": "scripts",
+      "sort_order": 25,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-docs-export.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-export.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "library-export",
       "title": "Library Export",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-03 14:25",
+      "last_updated": "2026-05-03 15:05",
       "parent_id": "library",
       "sort_order": 25,
       "published": true,
@@ -1451,7 +1465,7 @@
       "doc_id": "config-library-export-configs",
       "title": "Library Export Configs",
       "added_date": "2026-05-03 14:15",
-      "last_updated": "2026-05-03 14:25",
+      "last_updated": "2026-05-03 15:05",
       "parent_id": "config",
       "sort_order": 70,
       "published": true,
@@ -1839,7 +1853,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-03 15:05",
       "parent_id": "",
       "sort_order": 130,
       "published": true,
@@ -2309,7 +2323,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 14:35",
+      "last_updated": "2026-05-03 15:05",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-eb73391d0ae3f6683a91e670e978eefc",
-    "generated_at_utc": "2026-05-03T13:36:47Z",
-    "count": 165
+    "version": "blake2b-5e9e985440b27862521ef7176887dd73",
+    "generated_at_utc": "2026-05-03T14:20:06Z",
+    "count": 166
   },
   "entries": [
     {
@@ -1014,27 +1014,49 @@
       "search_text": "studio-ui-conformance studio ui conformance studio ui conformance spec spec design 2026-04-21 2026 04 21"
     },
     {
+      "id": "scripts-docs-export",
+      "kind": "doc",
+      "title": "Docs Export",
+      "href": "/docs/?scope=studio&doc=scripts-docs-export",
+      "last_updated": "2026-05-03 15:05",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-03 15:05 • Scripts",
+      "search_terms": [
+        "scripts-docs-export",
+        "scripts",
+        "docs",
+        "export",
+        "docs export",
+        "2026-05-03 15:05",
+        "2026",
+        "05",
+        "03",
+        "15"
+      ],
+      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-03 15:05 2026 05 03 15"
+    },
+    {
       "id": "library-export",
       "kind": "doc",
       "title": "Library Export",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-03 14:25",
+      "last_updated": "2026-05-03 15:05",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-03 14:25 • Library",
+      "display_meta": "2026-05-03 15:05 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export",
-        "2026-05-03 14:25",
+        "2026-05-03 15:05",
         "2026",
         "05",
         "03",
-        "14",
-        "25"
+        "15"
       ],
-      "search_text": "library-export library export library export 2026-05-03 14:25 2026 05 03 14 25"
+      "search_text": "library-export library export library export 2026-05-03 15:05 2026 05 03 15"
     },
     {
       "id": "studio-smoke-testing",
@@ -2455,10 +2477,10 @@
       "kind": "doc",
       "title": "Library Export Configs",
       "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-05-03 14:25",
+      "last_updated": "2026-05-03 15:05",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 14:25 • Config",
+      "display_meta": "2026-05-03 15:05 • Config",
       "search_terms": [
         "config-library-export-configs",
         "config",
@@ -2466,14 +2488,13 @@
         "export",
         "configs",
         "library export configs",
-        "2026-05-03 14:25",
+        "2026-05-03 15:05",
         "2026",
         "05",
         "03",
-        "14",
-        "25"
+        "15"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 14:25 2026 05 03 14 25"
+      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-03 15:05 2026 05 03 15"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -3124,16 +3145,17 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-03",
-      "display_meta": "2026-05-03",
+      "last_updated": "2026-05-03 15:05",
+      "display_meta": "2026-05-03 15:05",
       "search_terms": [
         "scripts",
-        "2026-05-03",
+        "2026-05-03 15:05",
         "2026",
         "05",
-        "03"
+        "03",
+        "15"
       ],
-      "search_text": "scripts 2026-05-03 2026 05 03"
+      "search_text": "scripts 2026-05-03 15:05 2026 05 03 15"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -3843,22 +3865,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-03 14:35",
-      "display_meta": "2026-05-03 14:35",
+      "last_updated": "2026-05-03 15:05",
+      "display_meta": "2026-05-03 15:05",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-03 14:35",
+        "2026-05-03 15:05",
         "2026",
         "05",
         "03",
-        "14",
-        "35"
+        "15"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-03 14:35 2026 05 03 14 35"
+      "search_text": "site-change-log site change log site change log 2026-05-03 15:05 2026 05 03 15"
     },
     {
       "id": "tiered-dimension-policy",

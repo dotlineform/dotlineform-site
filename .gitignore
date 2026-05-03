@@ -33,6 +33,7 @@ var/studio/backups/
 var/studio/catalogue/backups/
 var/docs/backups/
 var/docs/logs/
+var/docs/exports/
 
 # staging
 var/docs/import-staging/

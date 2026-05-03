@@ -2,11 +2,41 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 14:35"
+last_updated: "2026-05-03 15:05"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-03] Added read-only Docs Viewer export engine
+
+**Status:** implemented
+
+**Area:** Library / Studio docs export
+
+**Summary:**
+Added a read-only Docs Viewer export CLI that runs configured export patterns against generated docs payloads.
+
+**Reason:**
+Library export needs a reusable engine before adding the Studio page and local service endpoint.
+
+**Effect:**
+`./scripts/docs/docs_export.py` loads `library_export_configs.json`, resolves selected Library docs, applies supported field mappings, writes exports under `var/docs/exports/` when `--write` is passed, and prints a structured report. The parent-child relationships config is runnable now. Configs that require `source_text` return a clear validation error until the source-text extraction task is implemented.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_export.py`
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Benefits:**
+The export flow now has a reusable, config-driven execution path that can be called by later Studio UI and service work.
+
+**Risks:**
+The first engine intentionally stops before plain-text extraction, batching, and Studio service integration, so summary/full-content configs are not fully runnable until the next task.
 
 ## [2026-05-03] Added JSON Schema adoption change request
 

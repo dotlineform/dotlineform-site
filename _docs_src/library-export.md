@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export
 added_date: 2026-05-03
-last_updated: "2026-05-03 14:25"
+last_updated: "2026-05-03 15:05"
 ui_status: in-progress
 parent_id: library
 sort_order: 25
@@ -331,6 +331,8 @@ Status: implemented in `assets/studio/data/library_export_configs.json`.
 ### Task 3. Build Read-Only Export Engine
 
 Implement a read-only exporter that loads the selected Docs Viewer scope, applies the selected config, resolves selected `doc_id` values, writes the export file, and returns a structured report.
+
+Status: implemented by `./scripts/docs/docs_export.py`; see [Docs Export](/docs/?scope=studio&doc=scripts-docs-export).
 
 ### Task 4. Add Source Text Extraction
 
