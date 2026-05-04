@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e4833f13516e5d5b54ce8177fc2e83de",
-    "generated_at_utc": "2026-05-04T20:31:24Z",
-    "count": 172
+    "version": "blake2b-9d110cef5a096d0b6c4a96adc86c0837",
+    "generated_at_utc": "2026-05-04T22:22:42Z",
+    "count": 173
   },
   "entries": [
     {
@@ -3495,6 +3495,35 @@
         "55"
       ],
       "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-03 13:55 2026 05 03 13 55"
+    },
+    {
+      "id": "site-request-library-import-generated-parent-nodes",
+      "kind": "doc",
+      "title": "Library Import Generated Parent Nodes Request",
+      "href": "/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes",
+      "last_updated": "2026-05-04",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-04 • Change Requests",
+      "search_terms": [
+        "site-request-library-import-generated-parent-nodes",
+        "site",
+        "request",
+        "library",
+        "import",
+        "generated",
+        "parent",
+        "nodes",
+        "library import generated parent nodes request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-04",
+        "2026",
+        "05",
+        "04"
+      ],
+      "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 2026 05 04"
     },
     {
       "id": "llm",
