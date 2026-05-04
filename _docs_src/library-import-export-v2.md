@@ -195,10 +195,19 @@ for now, preserve current values. it may be possible to infer the correct sort o
 
 - Should source-write actions create timestamped backups under `var/backups/` before editing `_docs_library_src/*.md`?
 
+yes, as long as they are targetted by the recently introduced retention script
 
 - Should output format checkboxes allow both JSON and JSONL for all configs, or should unsupported combinations be disabled by config with explanatory UI text?
+
+yes allow both with unsupported combinations disabled
+
 - Should the export filter pill `no content` mean missing source text in generated payloads, no body content after plain-text extraction, or missing summary/content fields in the selected export config?
+
+no body content after plain-text extraction
+
 - Should `not viewable` include unpublished docs, generated non-viewable docs, or only published docs that are present in generated data but hidden from the public docs viewer?
+
+only published docs that are present in generated data but hidden from the public docs viewer
 
 ## Draft Implementation Tasks
 
