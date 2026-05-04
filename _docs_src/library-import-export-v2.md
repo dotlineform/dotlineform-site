@@ -78,8 +78,8 @@ for all config patterns:
 - the staged file is split into separate documents (as current)
 - an additional tree hierarchy file is created if there is parent-child data available in the staged JSON
 - the tree file displays the parent-child metadata from the staged JSON as a hierarchical tree in the {content}.
-- each document is formatted as plain text with front-matter and saved as .txt
-- front-matter is split into two sections:
+- each document is formatted as readable Markdown-style preview text with front-matter-like metadata sections and saved as `.md`
+- the front-matter-like metadata area is split into two sections:
     - first section contains any fields that match the fields from the export config
     - second section contains any new fields in the staged JSON that do not appear in the config.
 - no validation or further processing is applied to the preview files.
@@ -101,7 +101,7 @@ etc...
 
 ### file naming for preview files
 
-```[doc_id]-[timestamp].json | jsonl```
+`[doc_id]-[timestamp].md`
 
 where:
 
@@ -156,58 +156,27 @@ example:
 - The v2 work should start with the Import UI because the existing v1 import route, parser, preview renderer, and local service already provide enough data to reshape the page without changing source-write behavior.
 - The first import milestone should remain preview-only. Summary and hierarchy apply actions write canonical Library source and need a narrower confirmation, backup, and validation contract before they are enabled.
 - The source-write target for Library documents should be `_docs_library_src/*.md`, not `_docs_src/*.md`.
-- The preview file extension requirement needs one explicit decision. This request says preview files are plain text saved as `.txt`, while v1 currently writes Markdown preview files under `var/docs/import-preview/library/`.
+- Preview files should continue to use Markdown-style preview files under `var/docs/import-preview/library/`; they are review artifacts, not source Markdown documents.
 - Export changes are lower risk if treated as small additions to the existing Library export page: list-filter pills first, then output-format options after the export config/runtime format contract is checked.
 
-## Open Questions
+## Resolved Decisions
 
-- Should v2 preview files use `.txt` exactly, or should they continue using Markdown-style preview files because they contain front matter and readable content sections?
-
-continue using markdown. I only chose txt to differentiate the preview files from the source files which we often refer to as 'the markdown files' but it is just a question of being clear about what we are referring to.
-
-- Should preview files include two YAML front-matter blocks as shown, or should the matched-config fields and unknown fields be represented inside one valid front-matter block with separate keys or sections?
-
-it doesn't need to be valid YAML front matter, because we are not 'reading' the files as source documents. they only need to be human readable. data will be read from the staged JSON.
-
-- When a staged file has parent-child data, should the hierarchy tree file be generated in addition to per-document previews for every import type, or only for relationship-shaped exports?
-
-yes for all import types where possible. I am thinking that it might be best if relationship data is included in all config patterns. but that is a config choice, the import should cleanly handle files without the necessary partent-child data.
-
-- Should the Import UI list represent preview files that were just generated in the current run only, or should it also show older preview files already present in `var/docs/import-preview/library/`?
-
-only show preview files generated from the selected staged file.
-
-- Should selected import actions operate from the staged JSON records, the generated preview files, or the in-memory preview report returned by the local service?
-
-it depends on whether the in-memory contains the data needed. if not then operate from the JSON, not the preview files.
-
-- What validation is required before enabling `Update summary`? For example: existing `doc_id`, changed summary only, non-empty summary, and source file found.
-
-only validation needed is that doc_id exists as a target.
-
-- What validation is required before enabling `Apply hierarchy`? For example: existing `doc_id`, existing parent id, no cycles, no self-parenting, and no orphaned parent references.
-
-only validation needed is that doc_id exists as a target. if parent_id doesn't exist, the viewer should handle that by acting like parent_id = "".
-
-- Should `Apply hierarchy` preserve current `sort_order` values exactly, or should parent changes trigger any sibling ordering review?
-
-for now, preserve current values. it may be possible to infer the correct sort order from the order in which the tree is created, or the external service defining the relationships might also be able to specify sort order for each document.
-
-- Should source-write actions create timestamped backups under `var/backups/` before editing `_docs_library_src/*.md`?
-
-yes, as long as they are targetted by the recently introduced retention script
-
-- Should output format checkboxes allow both JSON and JSONL for all configs, or should unsupported combinations be disabled by config with explanatory UI text?
-
-yes allow both with unsupported combinations disabled
-
-- Should the export filter pill `no content` mean missing source text in generated payloads, no body content after plain-text extraction, or missing summary/content fields in the selected export config?
-
-no body content after plain-text extraction
-
-- Should `not viewable` include unpublished docs, generated non-viewable docs, or only published docs that are present in generated data but hidden from the public docs viewer?
-
-only published docs that are present in generated data but hidden from the public docs viewer
+- Preview files should continue using Markdown-style files so they can use readable front-matter-like sections and body content without being confused with canonical Library source docs.
+- Preview file front matter does not need to be valid YAML. Preview files are human-readable review artifacts; apply actions read from the staged JSON or the service report, not from preview files.
+- When staged parent-child data is available, import preview should generate a hierarchy tree file in addition to per-document previews for all import types. Files without parent-child data should still preview cleanly.
+- The Import UI should show only preview files generated from the selected staged file, not all older files already present in `var/docs/import-preview/library/`.
+- Import actions should use the in-memory service report when it contains the needed data; otherwise they should read from the staged JSON. They should not read from generated preview files.
+- `Update summary` validation should only require that each selected `doc_id` exists as a target Library source document.
+- `Apply hierarchy` validation should only require that each selected `doc_id` exists as a target Library source document. Missing or unknown `parent_id` values are allowed, and the viewer should behave as if `parent_id` were blank.
+- `Apply hierarchy` should preserve current `sort_order` values for now.
+- Source-write actions should create timestamped backups before editing `_docs_library_src/*.md`, and those backups should be covered by a retention policy before write actions are enabled.
+- Export format options should expose both JSON and JSONL, with unsupported config/format combinations disabled.
+- The `no content` export filter means no body content after plain-text extraction.
+- The `not viewable` export filter means published docs that are present in generated data but hidden from the public docs viewer.
+- Relationship data should be explicit in export config rather than exposed as a UI option.
+- Relationship data should be added to the current `full document content` export config pattern.
+- The backup root for Library import source-write actions should use the easiest implementation path that keeps backups retention-managed.
+- External hierarchy imports should be expected to include `sort_order` in a future version. Export configs and import apply behavior should be extended for `sort_order` when that field is introduced.
 
 ## Draft Implementation Tasks
 
@@ -228,6 +197,7 @@ Expected outputs:
 
 Use the preview-generation report to populate a selectable list of previewed documents.
 Indent rows by parent-child relationship when staged relationship data is available.
+The list should represent the selected staged file's latest preview output only.
 
 Expected outputs:
 
@@ -235,33 +205,49 @@ Expected outputs:
 - document titles shown before file paths
 - parent-child indentation derived from staged metadata
 - clear handling for missing titles, missing ids, duplicate ids, and records that cannot map to current Library docs
-- a visible hierarchy/tree preview file row when the import engine generated one
+- a visible hierarchy/tree preview file row when parent-child metadata is available
+- no mixed display of unrelated older preview files already present in the preview folder
 
-### Task 3. Decide And Normalize Preview File Output
+### Task 3. Normalize Preview File Output
 
-Confirm the v2 preview file extension and front-matter structure, then update the import renderer and docs to match.
+Update preview rendering so generated files are clearly review-only Markdown-style artifacts.
+They do not need valid YAML front matter because source writes read from staged JSON or the service report.
 
 Expected outputs:
 
 - deterministic preview filenames based on `doc_id` plus the staged-file timestamp, with a current-local-time fallback
-- one chosen preview extension and content format
-- matched export-config fields separated from staged-only fields in a way that remains parseable or intentionally plain text
+- Markdown-style preview files, not `.txt` files
+- matched export-config fields separated from staged-only fields in a human-readable format
 - tree hierarchy preview output when parent-child metadata is available
+- importer remains tolerant of missing relationship metadata
 - tests updated for the chosen filename and preview content contract
 
-### Task 4. Add Export Page Filter Pills
+### Task 4. Add Relationship Data To Full Document Content Export
+
+Update the existing full-document-content Library export config so relationship metadata is explicitly present in that config pattern.
+This is a config/runtime contract, not a UI toggle.
+
+Expected outputs:
+
+- current `parent_id` relationship data included in full-document-content exports
+- relationship data remains config-declared rather than controlled by a separate UI checkbox
+- import preview can generate the hierarchy tree from full-document-content staged files when relationship data is present
+- tests cover full-document-content export relationship fields
+- note future `sort_order` support as a later config extension
+
+### Task 5. Add Export Page Filter Pills
 
 Add the requested Library export list filters without changing the export write path.
 
 Expected outputs:
 
 - `show all` filter
-- `no content` filter
-- `not viewable` filter
+- `no content` filter for docs with no body content after plain-text extraction
+- `not viewable` filter for published generated docs hidden from the public Docs Viewer
 - filter counts if they can be derived cheaply from the existing index/config data
 - focused UI smoke coverage for filter state and selection behavior
 
-### Task 5. Add Export Format Options
+### Task 6. Add Export Format Options
 
 Expose JSON and JSONL format options in the Library export UI after confirming the config/runtime format contract.
 
@@ -269,37 +255,41 @@ Expected outputs:
 
 - JSON available where the selected config supports JSON output
 - JSONL defaulted for document-content exports if the config supports it
-- unsupported format/config combinations disabled or blocked before service submission
+- unsupported format/config combinations disabled before service submission
 - export request payload and result modal show the selected format
 - CLI/service tests cover both JSON and JSONL where supported
 
-### Task 6. Define Summary Apply Contract
+### Task 7. Define Summary Apply Contract
 
 Specify and implement the narrow source-write path for applying imported summaries.
 
 Expected outputs:
 
 - selected preview records map back to staged JSON records and current Library source files
-- preflight report with update count, skipped rows, warnings, and blocking errors
+- preflight report with update count and skipped rows
+- validation limited to selected `doc_id` values that do not exist as target Library source documents
 - confirmation modal with OK and Cancel
-- timestamped backup before writing source files
+- timestamped backup before writing source files, using the easiest compatible retention-managed backup root
 - write service endpoint constrained to `_docs_library_src/`
-- tests for unchanged summaries, missing docs, missing source files, malformed staged rows, backup creation, and write output
+- tests for missing target docs, backup creation, and write output
 
-### Task 7. Define Hierarchy Apply Contract
+### Task 8. Define Hierarchy Apply Contract
 
 Specify and implement parent_id writes separately from summary updates.
 
 Expected outputs:
 
-- parent-id preflight checks for existing docs, existing parents, no cycles, no self-parenting, and no missing source files
+- preflight checks limited to selected `doc_id` values that do not exist as target Library source documents
+- unknown or missing parent ids are allowed and treated by the viewer as root-level relationships
 - confirmation modal with OK and Cancel
-- timestamped backup before writing source files
+- timestamped backup before writing source files, using the easiest compatible retention-managed backup root
 - source writes limited to selected documents
+- current `sort_order` values are preserved
 - report includes changed, unchanged, skipped, warning, and error counts
-- tests cover valid hierarchy changes, invalid parents, cycles, duplicate ids, partial selections, and cancellation/no-write paths
+- tests cover valid hierarchy changes, missing target docs, unknown parent ids, partial selections, and cancellation/no-write paths
+- future `sort_order` import remains out of scope until staged import files include that field
 
-### Task 8. Update Documentation And Verification
+### Task 9. Update Documentation And Verification
 
 Keep the v2 request, stable Library import/export docs, script docs, and generated docs-viewer payloads aligned as tasks move from proposed to implemented.
 
@@ -322,7 +312,7 @@ Benefits:
 
 Risks:
 
-- two-block front matter may be useful for human review but invalid for normal front-matter parsers
-- import preview lists can become confusing if old preview files and current-run preview files are mixed without clear provenance
-- applying hierarchy changes can create broad docs-navigation side effects from a small selected set
+- front-matter-like preview sections may look parseable even though they are intentionally review-only text
+- import preview folders can still accumulate older files even if the UI only shows the selected staged file's current previews
+- applying hierarchy changes can create broad docs-navigation side effects from a small selected set, especially because unknown parent ids are allowed
 - broad JSON/JSONL format options can produce misleading exports unless each config declares supported formats precisely
