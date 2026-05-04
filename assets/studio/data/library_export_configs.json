@@ -18,7 +18,7 @@
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
-        "mode": "all_matching",
+        "mode": "explicit_doc_ids",
         "include_descendants": true,
         "include_non_viewable": true,
         "exclude_archived": true,
@@ -111,7 +111,7 @@
           "required": true
         }
       ],
-      "notes": "Intended to run across the generated, non-archived Library corpus so relationship review has whole-tree context."
+      "notes": "Intended for selected Library branches or the full generated, non-archived corpus when the operator explicitly selects all."
     },
     {
       "id": "library-document-summaries",

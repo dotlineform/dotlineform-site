@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-03 18:06"
+last_updated: "2026-05-04"
 parent_id: scripts
 sort_order: 25
 ---
@@ -101,13 +101,19 @@ Image handling:
 Dry-run the parent-child relationships export:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships
+./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library
 ```
 
 Write the parent-child relationships export:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --write
+./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library --write
+```
+
+Use all matching docs for whole-corpus relationship review:
+
+```bash
+./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --all
 ```
 
 Export explicit documents for configs that require selected ids:

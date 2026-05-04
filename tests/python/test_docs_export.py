@@ -274,11 +274,27 @@ def test_repo_library_export_configs_load_and_validate() -> None:
     assert "source_text" in full_fields
 
 
+def test_repo_parent_child_relationships_respects_selected_docs() -> None:
+    report = docs_export.build_export(
+        repo_root=REPO_ROOT,
+        config_id="library-parent-child-relationships",
+        scope="library",
+        selected_doc_ids=["can-the-brain-comprehend-how-it-works"],
+        select_all=False,
+        missing_summary_only=None,
+        write=False,
+    )
+    assert report["ok"] is True, report
+    assert report["selected_doc_ids"] == ["can-the-brain-comprehend-how-it-works"]
+    assert report["exported_doc_ids"] == ["can-the-brain-comprehend-how-it-works"]
+    assert report["counts"]["exported"] == 1
+
+
 def test_repo_representative_library_exports_dry_run_successfully() -> None:
     cases = [
         {
             "config_id": "library-parent-child-relationships",
-            "selected_doc_ids": [],
+            "selected_doc_ids": ["library"],
             "select_all": False,
             "missing_summary_only": None,
             "target_format": "json",
@@ -329,6 +345,7 @@ def main() -> None:
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_library_export_configs_load_and_validate,
+        test_repo_parent_child_relationships_respects_selected_docs,
         test_repo_representative_library_exports_dry_run_successfully,
     ]
     for test in tests:

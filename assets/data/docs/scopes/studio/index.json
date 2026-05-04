@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T22:40:25Z",
+  "generated_at": "2026-05-04T13:27:16Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -602,7 +602,7 @@
       "doc_id": "scripts-docs-export",
       "title": "Docs Export",
       "added_date": "2026-05-03 15:05",
-      "last_updated": "2026-05-03 18:06",
+      "last_updated": "2026-05-04",
       "parent_id": "scripts",
       "sort_order": 25,
       "published": true,
@@ -616,7 +616,7 @@
       "doc_id": "library-export",
       "title": "Library Export v1",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-03 18:19",
+      "last_updated": "2026-05-04",
       "parent_id": "library",
       "sort_order": 25,
       "published": true,
@@ -887,7 +887,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 18:28",
+      "last_updated": "2026-05-04",
       "parent_id": "design",
       "sort_order": 30,
       "published": true,
@@ -1079,6 +1079,21 @@
       "source_path": "implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-implementation-plan.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-export-ui",
+      "title": "Library Export - UI refinements",
+      "added_date": "2026-05-04",
+      "last_updated": "2026-05-04",
+      "parent_id": "library",
+      "sort_order": 40,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-export-ui.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-ui.json",
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -1510,7 +1525,7 @@
       "doc_id": "config-library-export-configs",
       "title": "Library Export Configs",
       "added_date": "2026-05-03 14:15",
-      "last_updated": "2026-05-03 17:52",
+      "last_updated": "2026-05-04",
       "parent_id": "config",
       "sort_order": 70,
       "published": true,
@@ -2368,7 +2383,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 22:40",
+      "last_updated": "2026-05-04",
       "parent_id": "",
       "sort_order": 270,
       "published": true,

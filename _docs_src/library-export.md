@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 18:19"
+last_updated: "2026-05-04"
 ui_status: done
 parent_id: library
 sort_order: 25
@@ -183,7 +183,8 @@ Initial JSON shape should include:
 }
 ```
 
-This export should normally include the full generated, non-archived Library corpus because relationship review depends on corpus-wide context.
+This export respects the Studio document checklist.
+Select a parent to include that branch, or use Select all when relationship review needs the full generated, non-archived Library corpus.
 It should not require full document body text once summaries exist.
 Non-viewable docs should be included and marked so readiness review can focus on them.
 

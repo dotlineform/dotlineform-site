@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 18:28"
+last_updated: "2026-05-04"
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,25 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-05-04 / UI-076
+
+- status: adopted
+- route: `/studio/library-export/`
+- issue: the Parent-child relationships export pattern showed the normal document checklist, but the config used `all_matching`, causing the route to ignore checklist selection and export every matching Library document.
+- triage: route-local config contract
+- reasoning: when a Studio route presents explicit checklist selection, each listed export pattern should respect those selected ids unless the user invokes Select all. Whole-corpus relationship review remains useful, but it should be an explicit operator choice.
+- outcome: the parent-child relationship config now uses `explicit_doc_ids`; selected parent docs still include descendants through the existing selection expansion.
+- files changed:
+  - `assets/studio/data/library_export_configs.json`
+  - `tests/python/test_docs_export.py`
+  - `_docs_src/library-export.md`
+  - `_docs_src/config-library-export-configs.md`
+  - `_docs_src/scripts-docs-export.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - run the focused Docs export test and confirm the parent-child config exports only `can-the-brain-comprehend-how-it-works` when that is the selected doc id
+  - open `/studio/library-export/`, choose Parent-child relationships, select a branch, run export, and confirm the exported file contains only that branch
 
 ## UI Rule Log 2026-05-03 / UI-075
 

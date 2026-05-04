@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-03 17:52"
+last_updated: "2026-05-04"
 parent_id: config
 sort_order: 70
 ---
@@ -52,7 +52,7 @@ Any new field source, transform, output format, or record shape needs both confi
 The first config file defines three enabled Library export patterns:
 
 - `library-parent-child-relationships`
-  envelope JSON for whole-corpus hierarchy and relationship review
+  envelope JSON for selected-branch or explicitly selected whole-corpus hierarchy and relationship review
 - `library-document-summaries`
   JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
 - `library-full-document-content`
@@ -138,6 +138,7 @@ The first export engine is documented in [Docs Export](/docs/?scope=studio&doc=s
   the exporter includes every document matching the config filters
 
 Selection also defines whether the run includes descendants, non-viewable docs, archived docs, and unpublished docs.
+The initial Library export patterns use explicit document selection; Select all in Studio or `--all` in the CLI remains available when a whole-corpus export is intentional.
 
 V1 Library exports should normally use:
 

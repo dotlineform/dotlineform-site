@@ -1,0 +1,15 @@
+{
+  "scope": "studio",
+  "doc_id": "library-export-ui",
+  "title": "Library Export - UI refinements",
+  "added_date": "2026-05-04",
+  "last_updated": "2026-05-04",
+  "parent_id": "library",
+  "sort_order": 40,
+  "published": true,
+  "viewable": true,
+  "source_path": "library-export-ui.md",
+  "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
+  "content_html": "<h1 id=\"library-export---ui-refinements\">Library Export - UI Refinements</h1>\n\n<p>Status:</p>\n\n<ul>\n  <li>In progress</li>\n</ul>\n\n<p>Text and messages</p>\n\n<ul>\n  <li>remove text ‘Select a Library export pattern and the documents to include.’</li>\n  <li>remove message ‘Select documents for the export, then run the export.’</li>\n  <li>don’t report on number of missing summaries</li>\n  <li>change message ‘Exported 5 document(s)…’ to ‘Exported 5 documents…’ - i.e. context aware ‘s’</li>\n</ul>\n\n<p>Buttons and options</p>\n\n<ul>\n  <li>change ‘Select all’ and ‘Clear’ to a pills immediately above the list.</li>\n  <li>move ‘Run export’ button to after the ‘export pattern’ dropdown (on the same row)</li>\n  <li>move the ‘missing summaries only’ checkbox to under the ‘export pattern’ dropdown label (left aligned)</li>\n</ul>\n",
+  "ui_status": "in-progress"
+}

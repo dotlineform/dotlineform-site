@@ -2,11 +2,42 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-03 22:40"
+last_updated: "2026-05-04"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-04] Library relationship exports now respect checklist selection
+
+**Status:** implemented
+
+**Area:** Library / Studio data export
+
+**Summary:**
+Changed the Parent-child relationships export pattern from implicit all-matching selection to explicit selected-document selection.
+
+**Reason:**
+The `/studio/library-export/` page displayed the same hierarchical checklist for this pattern as for the other export patterns, but the config asked the export engine to include all matching docs.
+That made selected branches irrelevant and produced whole-corpus exports.
+
+**Changes:**
+`library-parent-child-relationships` now uses `explicit_doc_ids`, while keeping descendant expansion so selecting a parent still exports its branch.
+Whole-corpus relationship review remains available by selecting all in Studio or passing `--all` to the CLI.
+Focused export coverage now asserts that the parent-child pattern respects a single selected doc.
+
+**Files changed:**
+
+- `assets/studio/data/library_export_configs.json`
+- `tests/python/test_docs_export.py`
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Branch-level relationship exports now match the operator's checklist selection.
+Large whole-corpus exports require an explicit Select all or `--all` action.
 
 ## [2026-05-03] Timestamped Library import document previews
 
