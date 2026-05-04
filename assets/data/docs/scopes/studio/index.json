@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T13:27:16Z",
+  "generated_at": "2026-05-04T13:53:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -859,7 +859,7 @@
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-04",
       "parent_id": "config",
       "sort_order": 30,
       "published": true,
@@ -1093,7 +1093,7 @@
       "source_path": "library-export-ui.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-ui.json",
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",

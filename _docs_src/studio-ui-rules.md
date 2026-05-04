@@ -23,6 +23,30 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-05-04 / UI-077
+
+- status: adopted
+- route: `/studio/library-export/`
+- issue: the Library export route still used passive helper text, a persistent result panel, and command placement that made the export controls less compact than the rest of the Library Studio surface.
+- triage: route-local refinement
+- reasoning: Library export is a command page with one primary setup row and one checklist. The useful persistent state is selection, while completed export details are better treated as an interruptible result that can be dismissed after the file path has been noted.
+- outcome: removed the intro and idle helper messages, changed selection copy to selected-document count only, moved Run export beside the export-pattern dropdown, moved the missing-summary option under that dropdown, converted Select all and Clear to pills directly above the list, and replaced the result panel with a shared Studio modal.
+- files changed:
+  - `studio/library-export/index.md`
+  - `assets/studio/js/library-export.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `scripts/docs/docs_management_server.py`
+  - `tests/python/test_docs_import_service.py`
+  - `_docs_src/library-export-ui.md`
+  - `_docs_src/library-export.md`
+  - `_docs_src/config-studio-config-json.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/library-export/` and confirm the control row, checklist pills, and empty idle status render correctly on desktop and mobile
+  - run an export with the docs-management service available and confirm the result opens in a modal with a filename-only read-only text box
+
 ## UI Rule Log 2026-05-04 / UI-076
 
 - status: adopted

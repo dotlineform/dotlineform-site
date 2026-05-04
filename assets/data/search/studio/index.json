@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c1e8a66e1a3d303465484b7e13754806",
-    "generated_at_utc": "2026-05-04T13:28:06Z",
+    "version": "blake2b-93c58cd755677f03c29ef3201ef307fe",
+    "generated_at_utc": "2026-05-04T13:53:43Z",
     "count": 170
   },
   "entries": [
@@ -1454,24 +1454,22 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-04",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 22:38 • Config",
+      "display_meta": "2026-05-04 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-03 22:38",
+        "2026-05-04",
         "2026",
         "05",
-        "03",
-        "22",
-        "38"
+        "04"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-04 2026 05 04"
     },
     {
       "id": "data-models-studio",

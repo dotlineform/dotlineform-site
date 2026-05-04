@@ -308,7 +308,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         },
         {
             "config_id": "library-full-document-content",
-            "selected_doc_ids": ["library"],
+            "selected_doc_ids": ["can-the-brain-comprehend-how-it-works"],
             "select_all": False,
             "missing_summary_only": None,
             "target_format": "jsonl",

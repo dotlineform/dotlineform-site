@@ -396,7 +396,7 @@ It loads enabled Library export configs, loads the generated Library docs index,
 The browser does not write files directly.
 
 The local service endpoint is the Studio write boundary.
-It validates request shape, calls the same export engine used by the CLI, writes only under `var/docs/exports/`, logs only ids/counts/status, and returns the structured report used by the Studio result panel.
+It validates request shape, calls the same export engine used by the CLI, writes only under `var/docs/exports/`, logs only ids/counts/status, and returns the structured report shown in the Studio result modal.
 
 The CLI is the operational and testable path.
 It can dry-run by default, write with `--write`, run the same config validation, and report the same selected/exported/skipped/failed/truncated counts.

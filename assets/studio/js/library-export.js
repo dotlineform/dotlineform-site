@@ -14,6 +14,10 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import {
+  createStudioModalHost,
+  renderStudioModalFrame
+} from "./studio-modal.js";
 
 const SCOPE = "library";
 
@@ -43,6 +47,11 @@ function setStatus(node, state, message) {
   } else {
     node.removeAttribute("data-state");
   }
+}
+
+function documentLabel(count) {
+  const safeCount = Number(count || 0);
+  return safeCount === 1 ? "1 document" : `${safeCount} documents`;
 }
 
 function routeStateDetail(state) {
@@ -190,18 +199,8 @@ function applySelectionFilter(state) {
   });
 }
 
-function selectedSummaryCount(state) {
-  let missing = 0;
-  state.selectedIds.forEach((docId) => {
-    const doc = state.docsById.get(docId);
-    if (doc && !normalizeText(doc.summary)) missing += 1;
-  });
-  return missing;
-}
-
 function updateSelectionSummary(state) {
   const count = state.selectedIds.size;
-  const missing = selectedSummaryCount(state);
   setText(
     state.selectionSummary,
     getStudioText(
@@ -209,8 +208,8 @@ function updateSelectionSummary(state) {
       count === 1
         ? "library_export.selection_summary_one"
         : "library_export.selection_summary",
-      count === 1 ? "1 document selected; {missing} missing summaries." : "{count} documents selected; {missing} missing summaries.",
-      { count, missing }
+      count === 1 ? "1 document selected." : "{count} documents selected.",
+      { count }
     )
   );
 }
@@ -261,7 +260,7 @@ function updateStatus(state) {
     getStudioText(
       state.config,
       "library_export.idle_status",
-      "Select documents for the export, then run the export."
+      ""
     )
   );
 }
@@ -303,72 +302,97 @@ function renderDocList(state) {
 }
 
 function resetResult(state) {
-  state.resultNode.hidden = true;
-  state.warningsWrap.hidden = true;
-  state.warningsList.innerHTML = "";
+  if (state.modalHost) state.modalHost.innerHTML = "";
 }
 
-function renderWarnings(state, warnings, errors) {
+function basename(path) {
+  const value = normalizeText(path);
+  if (!value) return "";
+  const parts = value.split(/[\\/]+/).filter(Boolean);
+  return parts[parts.length - 1] || value;
+}
+
+function outputFiles(payload) {
+  const files = [];
+  const outputFiles = Array.isArray(payload?.output_files) ? payload.output_files : [];
+  outputFiles.forEach((file) => {
+    const filename = basename(file);
+    if (filename) files.push(filename);
+  });
+  const outputFile = basename(payload?.output_file);
+  if (outputFile && !files.includes(outputFile)) files.push(outputFile);
+  return files;
+}
+
+function countRows(state, counts) {
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  const rows = [
+    ["selected", "library_export.count_selected", "selected", Number(safeCounts.selected || 0)],
+    ["exported", "library_export.count_exported", "exported", Number(safeCounts.exported || 0)],
+    ["skipped", "library_export.count_skipped", "skipped", Number(safeCounts.skipped || 0)],
+    ["failed", "library_export.count_failed", "failed", Number(safeCounts.failed || 0)],
+    ["truncated", "library_export.count_truncated", "truncated", Number(safeCounts.truncated || 0)]
+  ];
+  return rows.map(([key, textKey, fallback, count]) => `
+    <div class="libraryExportModal__countRow" data-count-key="${escapeHtml(key)}">
+      <dt>${escapeHtml(getStudioText(state.config, textKey, fallback))}</dt>
+      <dd>${escapeHtml(documentLabel(count))}</dd>
+    </div>
+  `).join("");
+}
+
+function issueList(state, warnings, errors) {
   const errorItems = Array.isArray(errors) ? errors.map(normalizeText).filter(Boolean) : [];
   const warningItems = Array.isArray(warnings) ? warnings.map(normalizeText).filter(Boolean) : [];
-  const items = [
-    ...errorItems,
-    ...warningItems
-  ];
-  if (!items.length) {
-    state.warningsWrap.hidden = true;
-    state.warningsList.innerHTML = "";
-    return;
-  }
-  setText(
-    state.warningsHeading,
-    getStudioText(
-      state.config,
-      errorItems.length ? "library_export.issues_heading" : "library_export.warnings_heading",
-      errorItems.length ? "Issues" : "Warnings"
-    )
-  );
-  state.warningsList.innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-  state.warningsWrap.hidden = false;
-}
-
-function countsText(state, counts) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  return getStudioText(
+  const items = [...errorItems, ...warningItems];
+  if (!items.length) return "";
+  const heading = getStudioText(
     state.config,
-    "library_export.result_counts",
-    "{exported} exported; {skipped} skipped; {failed} failed; {truncated} truncated.",
-    {
-      exported: Number(safeCounts.exported || 0),
-      skipped: Number(safeCounts.skipped || 0),
-      failed: Number(safeCounts.failed || 0),
-      truncated: Number(safeCounts.truncated || 0)
-    }
+    errorItems.length ? "library_export.issues_heading" : "library_export.warnings_heading",
+    errorItems.length ? "Issues" : "Warnings"
   );
+  return `
+    <div class="libraryExportModal__issues">
+      <h4>${escapeHtml(heading)}</h4>
+      <ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+    </div>
+  `;
 }
 
-function renderResult(state, payload) {
-  setText(state.resultTitleNode, getStudioText(state.config, "library_export.result_title", "Export result"));
-  setText(state.resultOutputLabelNode, getStudioText(state.config, "library_export.result_output", "output"));
-  setText(state.resultFormatLabelNode, getStudioText(state.config, "library_export.result_format", "format"));
-  setText(state.resultCountsLabelNode, getStudioText(state.config, "library_export.result_counts_label", "counts"));
-  setText(state.resultOutputNode, payload.output_file || "");
-  setText(state.resultFormatNode, payload.target_format || "");
-  setText(state.resultCountsNode, countsText(state, payload.counts));
-  renderWarnings(state, payload.warnings, payload.errors);
-  state.resultNode.hidden = false;
-}
-
-function renderFailure(state, payload) {
-  setText(state.resultTitleNode, getStudioText(state.config, "library_export.result_title_failed", "Export failed"));
-  setText(state.resultOutputLabelNode, "");
-  setText(state.resultOutputNode, "");
-  setText(state.resultFormatLabelNode, "");
-  setText(state.resultFormatNode, "");
-  setText(state.resultCountsLabelNode, "");
-  setText(state.resultCountsNode, "");
-  renderWarnings(state, payload.warnings, payload.errors);
-  state.resultNode.hidden = false;
+function showResultModal(state, payload, failed = false) {
+  const files = outputFiles(payload);
+  const fileText = files.join("\n");
+  const fileLabel = getStudioText(state.config, "library_export.result_files_label", "files created");
+  const emptyFiles = getStudioText(state.config, "library_export.result_files_empty", "No files created.");
+  const bodyHtml = `
+    <dl class="libraryExportModal__counts">
+      ${countRows(state, payload?.counts)}
+    </dl>
+    <label class="libraryExportModal__files">
+      <span>${escapeHtml(fileLabel)}</span>
+      <textarea class="tagStudio__input libraryExportModal__fileList" readonly rows="${Math.max(1, files.length)}">${escapeHtml(fileText || emptyFiles)}</textarea>
+    </label>
+    ${issueList(state, payload?.warnings, payload?.errors)}
+  `;
+  const closeRole = "library-export-modal-close";
+  state.modalHost.innerHTML = renderStudioModalFrame({
+    hidden: false,
+    modalRole: "library-export-result-modal",
+    backdropRole: closeRole,
+    titleId: "libraryExportResultModalTitle",
+    title: failed
+      ? getStudioText(state.config, "library_export.result_title_failed", "Export failed")
+      : getStudioText(state.config, "library_export.result_title", "Export result"),
+    bodyHtml,
+    actions: [
+      { role: closeRole, label: getStudioText(state.config, "library_export.result_close", "Close") }
+    ]
+  });
+  state.modalHost.querySelectorAll(`[data-role="${closeRole}"]`).forEach((node) => {
+    node.addEventListener("click", () => {
+      state.modalHost.innerHTML = "";
+    });
+  });
 }
 
 function setDocAndDescendantSelection(state, docId, selected) {
@@ -431,7 +455,7 @@ async function runExport(state) {
       select_all: selectAll,
       missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked)
     });
-    renderResult(state, payload);
+    showResultModal(state, payload);
     setStatus(
       state.statusNode,
       "success",
@@ -439,7 +463,7 @@ async function runExport(state) {
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
-    renderFailure(state, payload);
+    showResultModal(state, payload, true);
     setStatus(
       state.statusNode,
       "error",
@@ -462,7 +486,6 @@ async function init() {
   const state = {
     bootStatus,
     root,
-    introNode: document.getElementById("libraryExportIntro"),
     configLabelNode: document.getElementById("libraryExportConfigLabel"),
     configSelect: document.getElementById("libraryExportConfigSelect"),
     missingSummaryOnlyWrap: document.getElementById("libraryExportMissingSummaryWrap"),
@@ -474,17 +497,7 @@ async function init() {
     selectionSummary: document.getElementById("libraryExportSelectionSummary"),
     listNode: document.getElementById("libraryExportList"),
     runButton: document.getElementById("libraryExportRun"),
-    resultNode: document.getElementById("libraryExportResult"),
-    resultTitleNode: document.getElementById("libraryExportResultTitle"),
-    resultOutputLabelNode: document.getElementById("libraryExportResultOutputLabel"),
-    resultOutputNode: document.getElementById("libraryExportResultOutput"),
-    resultFormatLabelNode: document.getElementById("libraryExportResultFormatLabel"),
-    resultFormatNode: document.getElementById("libraryExportResultFormat"),
-    resultCountsLabelNode: document.getElementById("libraryExportResultCountsLabel"),
-    resultCountsNode: document.getElementById("libraryExportResultCounts"),
-    warningsWrap: document.getElementById("libraryExportWarnings"),
-    warningsHeading: document.getElementById("libraryExportWarningsHeading"),
-    warningsList: document.getElementById("libraryExportWarningsList"),
+    modalHost: null,
     config: null,
     exportConfigs: [],
     docs: [],
@@ -497,7 +510,6 @@ async function init() {
   };
 
   const requiredNodes = [
-    state.introNode,
     state.configLabelNode,
     state.configSelect,
     state.missingSummaryOnlyWrap,
@@ -508,20 +520,10 @@ async function init() {
     state.statusNode,
     state.selectionSummary,
     state.listNode,
-    state.runButton,
-    state.resultNode,
-    state.resultTitleNode,
-    state.resultOutputLabelNode,
-    state.resultOutputNode,
-    state.resultFormatLabelNode,
-    state.resultFormatNode,
-    state.resultCountsLabelNode,
-    state.resultCountsNode,
-    state.warningsWrap,
-    state.warningsHeading,
-    state.warningsList
+    state.runButton
   ];
   if (requiredNodes.some((node) => !node)) return;
+  state.modalHost = createStudioModalHost({ root });
 
   try {
     markBusy(state, true);
@@ -543,14 +545,6 @@ async function init() {
     state.depthById = docsTree.depthById;
     state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
-    setText(
-      state.introNode,
-      getStudioText(
-        state.config,
-        "library_export.intro",
-        "Select a Library export pattern and the documents to include."
-      )
-    );
     setText(state.configLabelNode, getStudioText(state.config, "library_export.config_label", "export pattern"));
     setText(
       state.missingSummaryLabelNode,

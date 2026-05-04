@@ -1025,8 +1025,10 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
     if report.get("ok"):
         action = "Validated export" if dry_run else "Exported"
         suffix = " without writing." if dry_run else "."
+        exported_count = int(report.get("counts", {}).get("exported") or 0)
+        document_word = "document" if exported_count == 1 else "documents"
         report["summary_text"] = (
-            f"{action} {report.get('counts', {}).get('exported', 0)} document(s) "
+            f"{action} {exported_count} {document_word} "
             f"to {report.get('output_file', '')}{suffix}"
         )
     return report

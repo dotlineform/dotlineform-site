@@ -49,6 +49,63 @@ def make_repo() -> tempfile.TemporaryDirectory:
             json.dumps({"doc_id": doc["doc_id"], "title": doc["title"]}, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
+    config_path = root / "assets/studio/data/library_export_configs.json"
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "library_export_configs_v1",
+                "configs": [
+                    {
+                        "id": "library-document-summaries",
+                        "label": "Document summaries",
+                        "description": "Exports summary metadata.",
+                        "enabled": True,
+                        "scopes": ["library"],
+                        "target": {
+                            "format": "jsonl",
+                            "record_shape": "document_rows",
+                            "include_export_metadata": True,
+                        },
+                        "output": {
+                            "path_pattern": "var/docs/exports/{scope}/{export_id}-{timestamp}.jsonl",
+                            "timestamp_format": "%Y%m%d-%H%M%S",
+                        },
+                        "selection": {
+                            "mode": "explicit_doc_ids",
+                            "include_descendants": False,
+                            "include_non_viewable": True,
+                            "exclude_archived": True,
+                            "exclude_unpublished": True,
+                            "supports_missing_summary_only": False,
+                            "default_missing_summary_only": False,
+                        },
+                        "limits": {
+                            "max_documents": None,
+                            "max_chars_per_document": None,
+                            "max_total_chars": None,
+                            "truncate": {
+                                "enabled": False,
+                                "strategy": "paragraph_boundary",
+                                "marker": "[truncated]",
+                            },
+                        },
+                        "metadata": {
+                            "include": ["export_id", "config_id", "scope", "generated_at", "selected_doc_ids", "counts"],
+                        },
+                        "document_fields": [
+                            {"source": "doc_id", "output_path": "doc_id", "required": True},
+                            {"source": "title", "output_path": "title", "required": True},
+                        ],
+                    }
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return temp_dir
 
 
@@ -138,12 +195,43 @@ def test_library_import_preview_rejects_non_library_scope() -> None:
     assert "only supports scope library" in message
 
 
+def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        singular = docs_management.handle_docs_export(
+            root,
+            {
+                "scope": "library",
+                "config_id": "library-document-summaries",
+                "doc_ids": ["alpha"],
+                "select_all": False,
+                "missing_summary_only": None,
+            },
+            dry_run=True,
+        )
+        plural = docs_management.handle_docs_export(
+            root,
+            {
+                "scope": "library",
+                "config_id": "library-document-summaries",
+                "doc_ids": ["library", "alpha"],
+                "select_all": False,
+                "missing_summary_only": None,
+            },
+            dry_run=True,
+        )
+
+    assert singular["summary_text"].startswith("Validated export 1 document to ")
+    assert plural["summary_text"].startswith("Validated export 2 documents to ")
+
+
 def main() -> None:
     tests = [
         test_library_import_files_lists_json_and_jsonl_only,
         test_library_import_preview_writes_when_not_dry_run,
         test_library_import_preview_dry_run_reports_without_writing,
         test_library_import_preview_rejects_non_library_scope,
+        test_docs_export_summary_text_uses_context_aware_document_plural,
     ]
     for test in tests:
         test()

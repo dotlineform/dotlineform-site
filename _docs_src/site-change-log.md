@@ -8,6 +8,42 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Refined the Library export Studio UI
+
+**Status:** implemented
+
+**Area:** Library / Studio data export
+
+**Summary:**
+Applied the Library export UI refinements from [Library Export - UI refinements](/docs/?scope=studio&doc=library-export-ui).
+
+**Reason:**
+The export page needed less passive helper text, tighter command placement, and a dismissible result surface that focuses on counts and created files.
+
+**Changes:**
+The route now places `Run export` beside the export-pattern dropdown, keeps the missing-summaries checkbox under that dropdown, and shows Select all / Clear as checklist pills.
+The selected-doc summary no longer reports missing-summary counts.
+Completed export reports now open in a shared Studio modal with vertical counts, a filename-only read-only text box, optional warnings/issues, and one Close button.
+The docs-management export summary now uses `document` or `documents` according to the exported count.
+
+**Files changed:**
+
+- `studio/library-export/index.md`
+- `assets/studio/js/library-export.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `scripts/docs/docs_management_server.py`
+- `tests/python/test_docs_import_service.py`
+- [Library Export - UI refinements](/docs/?scope=studio&doc=library-export-ui)
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+The page is denser and more command-oriented, with export completion details no longer occupying permanent page space.
+The modal adds a small interaction step after successful exports, but keeps the main checklist workflow cleaner.
+
 ## [2026-05-04] Library relationship exports now respect checklist selection
 
 **Status:** implemented
