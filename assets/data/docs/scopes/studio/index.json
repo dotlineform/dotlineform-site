@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T21:40:41Z",
+  "generated_at": "2026-05-03T22:40:25Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -788,7 +788,7 @@
       "doc_id": "library-import",
       "title": "Library Import v1",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-03 22:40",
+      "last_updated": "2026-05-03 23:40",
       "parent_id": "library",
       "sort_order": 30,
       "published": true,
@@ -796,7 +796,7 @@
       "source_path": "library-import.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",

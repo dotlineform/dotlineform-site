@@ -2,8 +2,8 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 22:40"
-ui_status: in-progress
+last_updated: "2026-05-03 23:40"
+ui_status: done
 parent_id: library
 sort_order: 30
 ---
@@ -11,7 +11,7 @@ sort_order: 30
 
 Status:
 
-- in-progress
+- implemented
 
 ## Summary
 
