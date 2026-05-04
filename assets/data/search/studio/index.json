@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-65d1351d825e4e829f3d8448c7293a08",
-    "generated_at_utc": "2026-05-04T16:59:17Z",
-    "count": 170
+    "version": "blake2b-6e632cad5094337f3f65bb9417a93748",
+    "generated_at_utc": "2026-05-04T18:13:32Z",
+    "count": 171
   },
   "entries": [
     {
@@ -2088,6 +2088,29 @@
         "02"
       ],
       "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "library-export-import-v2",
+      "kind": "doc",
+      "title": "Library Export/Import v2",
+      "href": "/docs/?scope=studio&doc=library-export-import-v2",
+      "last_updated": "2026-05-04",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-05-04 • Library",
+      "search_terms": [
+        "library-export-import-v2",
+        "library",
+        "export",
+        "import",
+        "v2",
+        "library export/import v2",
+        "2026-05-04",
+        "2026",
+        "05",
+        "04"
+      ],
+      "search_text": "library-export-import-v2 library export import v2 library export/import v2 2026-05-04 2026 05 04"
     },
     {
       "id": "site-request-moments-prose-source-model",

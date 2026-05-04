@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T16:59:15Z",
+  "generated_at": "2026-05-04T18:13:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1234,6 +1234,21 @@
       "source_path": "scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-export-import-v2",
+      "title": "Library Export/Import v2",
+      "added_date": "2026-05-04",
+      "last_updated": "2026-05-04",
+      "parent_id": "library",
+      "sort_order": 50,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-import-export-v2.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-export-import-v2",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-import-v2.json",
+      "ui_status": "proposed"
     },
     {
       "scope": "studio",
