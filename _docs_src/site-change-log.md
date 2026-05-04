@@ -8,6 +8,42 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Added selectable Library export formats
+
+**Status:** implemented
+
+**Area:** Studio / Library export
+
+**Summary:**
+Library export configs now declare selectable output formats with `target.supported_formats`, while `target.format` remains the default.
+The Studio Library export page shows JSON and JSONL options, disables unsupported combinations, sends `target_format` to `POST /docs/export`, and shows the selected format in the result modal.
+Document-row exports can now write JSON arrays as well as JSONL rows when the config supports both.
+
+**Reason:**
+Task 6 needed user-visible format choice without making broad format assumptions across every export pattern.
+Keeping supported formats config-declared lets the CLI, service endpoint, and Studio UI share the same validation boundary.
+
+**Files changed:**
+
+- `assets/studio/data/library_export_configs.json`
+- `assets/studio/data/library_export_configs.schema.json`
+- `scripts/docs/docs_export.py`
+- `scripts/docs/docs_management_server.py`
+- `studio/library-export/index.md`
+- `assets/studio/js/library-export.js`
+- `assets/studio/css/studio.css`
+- `tests/python/test_docs_export.py`
+- `tests/python/test_docs_management_server.py`
+- `tests/smoke/library_export.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
+**Impact:**
+Summary and full-content exports default to JSONL but can be written as JSON arrays.
+Parent-child relationship exports remain JSON-only.
+
 ## [2026-05-04] Added Library export list filters
 
 **Status:** implemented

@@ -1037,6 +1037,7 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
     missing_summary_only = body.get("missing_summary_only")
     if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
         raise ValueError("missing_summary_only must be true, false, or null")
+    target_format = str(body.get("target_format") or "").strip()
 
     report = build_export(
         repo_root=repo_root,
@@ -1046,6 +1047,7 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         select_all=select_all,
         missing_summary_only=missing_summary_only,
         write=not dry_run,
+        target_format=target_format or None,
     )
     log_event(
         repo_root,

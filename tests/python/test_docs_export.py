@@ -40,6 +40,7 @@ BASE_CONFIG = {
             "scopes": ["library"],
             "target": {
                 "format": "jsonl",
+                "supported_formats": ["jsonl", "json"],
                 "record_shape": "document_rows",
                 "include_export_metadata": True,
             },
@@ -235,6 +236,42 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert rows[0]["_export"]["selected_doc_ids"] == ["library", "child-with-summary"]
 
 
+def test_document_rows_json_format_override_writes_json_array() -> None:
+    fixed_generated_at = "2026-05-03T15:15:07Z"
+    fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
+    original_export_run_times = docs_export.export_run_times
+    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
+    try:
+        with make_repo() as temp:
+            root = Path(temp)
+            report = run_export(root, missing_summary_only=False, write=True, target_format="json")
+            payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
+    finally:
+        docs_export.export_run_times = original_export_run_times
+
+    assert report["ok"] is True, report
+    assert report["target_format"] == "json"
+    assert report["output_file"] == (
+        "var/docs/exports/library/library-document-summaries-20260503-161507.json"
+    )
+    assert isinstance(payload, list)
+    assert [row["doc_id"] for row in payload] == ["library", "child-with-summary"]
+    assert payload[0]["_export"]["generated_at"] == fixed_generated_at
+
+
+def test_unsupported_format_override_blocks_export() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0]["target"]["supported_formats"] = ["jsonl"]
+    with make_repo(config) as temp:
+        report = run_export(Path(temp), target_format="json")
+
+    assert report["ok"] is False
+    assert "config library-document-summaries: target_format 'json' is not supported; supported formats: jsonl" in report["errors"]
+    assert report["target_format"] == "json"
+    assert report["output_file"].endswith(".json")
+    assert report["output_written"] is False
+
+
 def test_export_run_times_use_utc_metadata_and_local_filename_time() -> None:
     generated_at, filename_dt = docs_export.export_run_times(
         dt.datetime(2026, 5, 3, 15, 15, 7, tzinfo=dt.timezone.utc),
@@ -282,6 +319,13 @@ def test_repo_library_export_configs_load_and_validate() -> None:
     }
     assert relationship_fields <= full_fields
     assert "sort_order" not in full_fields
+
+    relationship_config = docs_export.find_export_config(payload, "library-parent-child-relationships")
+    summary_config = docs_export.find_export_config(payload, "library-document-summaries")
+    full_config = docs_export.find_export_config(payload, "library-full-document-content")
+    assert docs_export.supported_target_formats(relationship_config) == ["json"]
+    assert docs_export.supported_target_formats(summary_config) == ["jsonl", "json"]
+    assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
 
 
 def test_repo_full_document_content_exports_relationship_fields() -> None:
@@ -397,6 +441,8 @@ def main() -> None:
         test_unknown_config_returns_structured_validation_report,
         test_jsonl_config_requires_jsonl_output_extension,
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
+        test_document_rows_json_format_override_writes_json_array,
+        test_unsupported_format_override_blocks_export,
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_library_export_configs_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,

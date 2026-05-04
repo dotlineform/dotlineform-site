@@ -275,7 +275,15 @@ Expected outputs:
 
 ### Task 6. Add Export Format Options
 
+Status:
+
+- implemented
+
 Expose JSON and JSONL format options in the Library export UI after confirming the config/runtime format contract.
+The config contract now uses `target.format` as the default and optional `target.supported_formats` as the selectable set.
+Envelope exports remain JSON-only.
+Document-row exports can support JSONL and JSON; JSONL remains the default for current summary and full-content document-row configs.
+Studio sends `target_format` to the docs-management endpoint and displays the selected format in the result modal.
 
 Expected outputs:
 

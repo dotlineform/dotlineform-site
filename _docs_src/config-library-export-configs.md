@@ -101,14 +101,20 @@ Each config requires:
 - `json`
 - `jsonl`
 
+`target.format` is the default format for the config.
+`target.supported_formats` optionally declares every format the runtime and Studio UI may choose for that config.
+When omitted, the default `target.format` is the only supported format.
+
 `target.record_shape` supports:
 
 - `envelope`
   one JSON object containing run metadata plus a document array
 - `document_rows`
-  one complete document record per JSONL row
+  one complete document record per JSONL row, or one JSON array when `json` is selected
 
 When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `documents`.
+Envelope configs support JSON only.
+Document-row configs may support JSONL and JSON when both are declared in `target.supported_formats`.
 
 ## Output
 
@@ -121,6 +127,7 @@ var/docs/exports/{scope}/{export_id}-{timestamp}.jsonl
 
 The placeholders are resolved by the export engine.
 The path is intentionally constrained to keep generated export files out of source docs and public assets.
+When an operator chooses a non-default supported format, the export engine keeps the configured directory, export id, and timestamp, then switches the output file extension to the selected format.
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
 It formats the filename timestamp in the local runtime timezone.

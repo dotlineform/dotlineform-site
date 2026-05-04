@@ -327,12 +327,16 @@ Request shape:
 {
   "scope": "library",
   "config_id": "library-document-summaries",
+  "target_format": "jsonl",
   "doc_ids": ["library"],
   "select_all": false,
   "missing_summary_only": true
 }
 ```
 
+`target_format` is optional.
+When omitted, the selected config's default `target.format` is used.
+The Studio page shows JSON and JSONL format options, disables unsupported config/format combinations before submission, and includes the selected format in the result modal.
 The endpoint calls the shared read-only export engine and writes only under `var/docs/exports/`.
 It logs ids, counts, format, and write state, but not document body content or full export payloads.
 When the docs-management server runs with `--dry-run`, the endpoint validates and reports the target file path without writing the export file.
@@ -422,6 +426,8 @@ var/docs/exports/library/library-parent-child-relationships-<timestamp>.json
 var/docs/exports/library/library-document-summaries-<timestamp>.jsonl
 var/docs/exports/library/library-full-document-content-<timestamp>.jsonl
 ```
+
+Document-row configs that declare both formats can also write `.json` files containing one JSON array of row objects.
 
 Manual external use is expected in v1.
 Direct LLM API calls, automatic batching, markdown target files, raw Markdown exports, and Studio activity-feed entries are deferred.

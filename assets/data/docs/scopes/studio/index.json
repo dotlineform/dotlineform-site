@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T21:15:07Z",
+  "generated_at": "2026-05-04T21:45:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -94,7 +94,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 18776
+      "content_text_length": 19011
     },
     {
       "scope": "studio",
@@ -650,7 +650,7 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 6354
+      "content_text_length": 6847
     },
     {
       "scope": "studio",
@@ -665,7 +665,7 @@
       "source_path": "library-export.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
-      "content_text_length": 20511,
+      "content_text_length": 20923,
       "ui_status": "done"
     },
     {
@@ -925,7 +925,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 5988
+      "content_text_length": 6151
     },
     {
       "scope": "studio",
@@ -1335,7 +1335,7 @@
       "source_path": "library-import-export-v2.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
-      "content_text_length": 14301,
+      "content_text_length": 14722,
       "ui_status": "proposed"
     },
     {
@@ -1669,7 +1669,7 @@
       "source_path": "config-library-export-configs.md",
       "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-library-export-configs.json",
-      "content_text_length": 8758
+      "content_text_length": 9367
     },
     {
       "scope": "studio",
@@ -2587,7 +2587,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 292071
+      "content_text_length": 293452
     },
     {
       "scope": "studio",

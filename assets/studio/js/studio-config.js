@@ -256,6 +256,10 @@ const DEFAULT_STUDIO_CONFIG = {
     library_export: {
       config_label: "export pattern",
       missing_summary_label: "missing summaries only",
+      format_label: "format",
+      format_json: "JSON",
+      format_jsonl: "JSONL",
+      format_required: "Select a supported export format.",
       filter_show_all: "show all [{count}]",
       filter_no_content: "no content [{count}]",
       filter_not_viewable: "not viewable [{count}]",
@@ -278,6 +282,7 @@ const DEFAULT_STUDIO_CONFIG = {
       result_title: "Export result",
       result_title_failed: "Export failed",
       result_close: "Close",
+      result_format_label: "format",
       result_files_label: "files created",
       result_files_empty: "No files created.",
       count_selected: "selected",

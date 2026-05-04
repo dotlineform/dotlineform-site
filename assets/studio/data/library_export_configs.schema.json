@@ -91,6 +91,14 @@
         "format": {
           "enum": ["json", "jsonl"]
         },
+        "supported_formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["json", "jsonl"]
+          }
+        },
         "record_shape": {
           "enum": ["envelope", "document_rows"]
         },

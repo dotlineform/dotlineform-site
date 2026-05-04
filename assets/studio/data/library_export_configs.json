@@ -9,6 +9,7 @@
       "scopes": ["library"],
       "target": {
         "format": "json",
+        "supported_formats": ["json"],
         "record_shape": "envelope",
         "document_array_path": "documents",
         "include_export_metadata": true
@@ -121,6 +122,7 @@
       "scopes": ["library"],
       "target": {
         "format": "jsonl",
+        "supported_formats": ["jsonl", "json"],
         "record_shape": "document_rows",
         "include_export_metadata": true
       },
@@ -207,6 +209,7 @@
       "scopes": ["library"],
       "target": {
         "format": "jsonl",
+        "supported_formats": ["jsonl", "json"],
         "record_shape": "document_rows",
         "include_export_metadata": true
       },

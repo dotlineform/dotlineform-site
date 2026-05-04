@@ -25,6 +25,10 @@ const LIST_FILTERS = [
   { key: "no_content", labelKey: "filter_no_content", fallback: "no content [{count}]" },
   { key: "not_viewable", labelKey: "filter_not_viewable", fallback: "not viewable [{count}]" }
 ];
+const FORMAT_OPTIONS = [
+  { key: "json", labelKey: "format_json", fallback: "JSON" },
+  { key: "jsonl", labelKey: "format_jsonl", fallback: "JSONL" }
+];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -260,12 +264,50 @@ function selectedConfig(state) {
   return state.exportConfigs.find((config) => normalizeText(config.id) === configId) || null;
 }
 
+function supportedFormatsForConfig(config) {
+  const target = config && typeof config.target === "object" ? config.target : {};
+  const configured = Array.isArray(target.supported_formats)
+    ? target.supported_formats.map(normalizeText).filter(Boolean)
+    : [];
+  const fallback = normalizeText(target.format);
+  const formats = configured.length ? configured : [fallback].filter(Boolean);
+  return formats.filter((format, index) => FORMAT_OPTIONS.some((item) => item.key === format) && formats.indexOf(format) === index);
+}
+
+function defaultFormatForConfig(config) {
+  const formats = supportedFormatsForConfig(config);
+  const target = config && typeof config.target === "object" ? config.target : {};
+  const preferred = normalizeText(target.format);
+  return formats.includes(preferred) ? preferred : formats[0] || "";
+}
+
+function renderFormatOptions(state) {
+  const config = selectedConfig(state);
+  const supportedFormats = supportedFormatsForConfig(config);
+  if (!supportedFormats.includes(state.targetFormat)) {
+    state.targetFormat = defaultFormatForConfig(config);
+  }
+  state.formatOptionsNode.innerHTML = FORMAT_OPTIONS.map((format) => {
+    const supported = supportedFormats.includes(format.key);
+    const checked = state.targetFormat === format.key;
+    const label = getStudioText(state.config, `library_export.${format.labelKey}`, format.fallback);
+    return `
+      <label class="libraryExportPage__formatOption">
+        <input type="radio" name="libraryExportFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
+        <span class="tagStudio__keyPill tagStudioFilters__groupBtn" data-state="${checked ? "active" : ""}" aria-disabled="${supported ? "false" : "true"}">${escapeHtml(label)}</span>
+      </label>
+    `;
+  }).join("");
+}
+
 function syncConfigOptions(state) {
   const config = selectedConfig(state);
   const selection = config && typeof config.selection === "object" ? config.selection : {};
   const supportsMissing = Boolean(selection.supports_missing_summary_only);
   state.missingSummaryOnlyWrap.hidden = !supportsMissing;
   state.missingSummaryOnly.checked = supportsMissing && Boolean(selection.default_missing_summary_only);
+  state.targetFormat = defaultFormatForConfig(config);
+  renderFormatOptions(state);
   applySelectionFilter(state);
   renderListFilters(state);
   renderDocList(state);
@@ -407,7 +449,15 @@ function showResultModal(state, payload, failed = false) {
   const fileText = files.join("\n");
   const fileLabel = getStudioText(state.config, "library_export.result_files_label", "files created");
   const emptyFiles = getStudioText(state.config, "library_export.result_files_empty", "No files created.");
+  const formatLabel = getStudioText(state.config, "library_export.result_format_label", "format");
+  const targetFormat = normalizeText(payload?.target_format).toUpperCase();
   const bodyHtml = `
+    <dl class="libraryExportModal__details">
+      <div class="libraryExportModal__countRow" data-detail-key="format">
+        <dt>${escapeHtml(formatLabel)}</dt>
+        <dd>${escapeHtml(targetFormat || "n/a")}</dd>
+      </div>
+    </dl>
     <dl class="libraryExportModal__counts">
       ${countRows(state, payload?.counts)}
     </dl>
@@ -468,6 +518,15 @@ async function runExport(state) {
     return;
   }
   const configId = normalizeText(config.id);
+  const targetFormat = normalizeText(state.targetFormat);
+  if (!supportedFormatsForConfig(config).includes(targetFormat)) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(state.config, "library_export.format_required", "Select a supported export format.")
+    );
+    return;
+  }
   const selection = config && typeof config.selection === "object" ? config.selection : {};
   const selectAll = normalizeText(selection.mode) === "all_matching";
   const docIds = selectAll ? [] : Array.from(state.selectedIds);
@@ -494,6 +553,7 @@ async function runExport(state) {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.exportDocs, {
       scope: SCOPE,
       config_id: configId,
+      target_format: targetFormat,
       doc_ids: docIds,
       select_all: selectAll,
       missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked)
@@ -534,6 +594,8 @@ async function init() {
     missingSummaryOnlyWrap: document.getElementById("libraryExportMissingSummaryWrap"),
     missingSummaryOnly: document.getElementById("libraryExportMissingSummaryOnly"),
     missingSummaryLabelNode: document.getElementById("libraryExportMissingSummaryLabel"),
+    formatLabelNode: document.getElementById("libraryExportFormatLabel"),
+    formatOptionsNode: document.getElementById("libraryExportFormatOptions"),
     filterNode: document.getElementById("libraryExportListFilters"),
     selectAllButton: document.getElementById("libraryExportSelectAll"),
     clearButton: document.getElementById("libraryExportClear"),
@@ -550,6 +612,7 @@ async function init() {
     depthById: new Map(),
     selectedIds: new Set(),
     listFilter: "all",
+    targetFormat: "",
     serviceAvailable: false,
     isRunning: false
   };
@@ -560,6 +623,8 @@ async function init() {
     state.missingSummaryOnlyWrap,
     state.missingSummaryOnly,
     state.missingSummaryLabelNode,
+    state.formatLabelNode,
+    state.formatOptionsNode,
     state.filterNode,
     state.selectAllButton,
     state.clearButton,
@@ -597,6 +662,7 @@ async function init() {
       state.missingSummaryLabelNode,
       getStudioText(state.config, "library_export.missing_summary_label", "missing summaries only")
     );
+    setText(state.formatLabelNode, getStudioText(state.config, "library_export.format_label", "format"));
     setText(state.selectAllButton, getStudioText(state.config, "library_export.select_all", "Select all"));
     setText(state.clearButton, getStudioText(state.config, "library_export.clear", "Clear"));
     setText(state.runButton, getStudioText(state.config, "library_export.run_button", "Run export"));
@@ -610,6 +676,13 @@ async function init() {
     syncConfigOptions(state);
 
     state.configSelect.addEventListener("change", () => syncConfigOptions(state));
+    state.formatOptionsNode.addEventListener("change", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement) || target.name !== "libraryExportFormat") return;
+      state.targetFormat = normalizeText(target.value);
+      renderFormatOptions(state);
+      updateStatus(state);
+    });
     state.missingSummaryOnly.addEventListener("change", () => {
       applySelectionFilter(state);
       renderListFilters(state);

@@ -1208,6 +1208,39 @@ span.tagStudio__input--readonlyDisplay {
   min-inline-size: 0;
 }
 
+.libraryExportPage__format {
+  display: inline-grid;
+  grid-template-columns: max-content max-content;
+  gap: 0.4rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.libraryExportPage__format legend {
+  padding: 0;
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-small);
+}
+
+.libraryExportPage__formatOptions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.libraryExportPage__formatOption input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.libraryExportPage__formatOption input:disabled + span {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .libraryExportPage__toggle {
   display: inline-flex;
   align-items: center;
@@ -1232,10 +1265,15 @@ span.tagStudio__input--readonlyDisplay {
   display: contents;
 }
 
+.libraryExportModal__details,
 .libraryExportModal__counts {
   display: grid;
   gap: 0.35rem;
   margin: 0;
+}
+
+.libraryExportModal__counts {
+  margin-top: 0.7rem;
 }
 
 .libraryExportModal__countRow {

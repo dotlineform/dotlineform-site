@@ -75,13 +75,68 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if expect_unavailable_service and not run_disabled:
         raise AssertionError("run button should be disabled when docs-management service is unavailable")
 
+    format_result = assert_format_controls(page)
     filter_result = assert_filter_flow(page, len(doc_ids))
 
     return {
         "config_ids": sorted(config_ids),
         "doc_count": len(doc_ids),
+        "formats": format_result,
         "filters": filter_result,
         "run_disabled": bool(run_disabled),
+    }
+
+
+def format_controls(page) -> list[dict[str, object]]:
+    return page.locator("input[name='libraryExportFormat']").evaluate_all(
+        """inputs => inputs.map(input => ({
+            value: input.value,
+            checked: input.checked,
+            disabled: input.disabled
+        }))"""
+    )
+
+
+def assert_format_controls(page) -> dict[str, str]:
+    def by_value() -> dict[str, dict[str, object]]:
+        return {str(item["value"]): item for item in format_controls(page)}
+
+    initial = by_value()
+    if not initial["json"]["checked"] or initial["json"]["disabled"]:
+        raise AssertionError(f"parent-child config should default to JSON: {initial!r}")
+    if not initial["jsonl"]["disabled"]:
+        raise AssertionError(f"parent-child config should disable JSONL: {initial!r}")
+
+    page.locator("#libraryExportConfigSelect").select_option("library-full-document-content")
+    page.wait_for_function(
+        """() => {
+            const jsonl = document.querySelector("input[name='libraryExportFormat'][value='jsonl']");
+            const json = document.querySelector("input[name='libraryExportFormat'][value='json']");
+            return jsonl && json && jsonl.checked && !jsonl.disabled && !json.disabled;
+        }"""
+    )
+    full_content = by_value()
+
+    page.locator("#libraryExportConfigSelect").select_option("library-document-summaries")
+    page.wait_for_function(
+        """() => {
+            const jsonl = document.querySelector("input[name='libraryExportFormat'][value='jsonl']");
+            const json = document.querySelector("input[name='libraryExportFormat'][value='json']");
+            return jsonl && json && jsonl.checked && !jsonl.disabled && !json.disabled;
+        }"""
+    )
+
+    page.locator("#libraryExportConfigSelect").select_option("library-parent-child-relationships")
+    page.wait_for_function(
+        """() => {
+            const jsonl = document.querySelector("input[name='libraryExportFormat'][value='jsonl']");
+            const json = document.querySelector("input[name='libraryExportFormat'][value='json']");
+            return jsonl && json && json.checked && !json.disabled && jsonl.disabled;
+        }"""
+    )
+    return {
+        "parent_default": "json",
+        "content_default": "jsonl" if full_content["jsonl"]["checked"] else "",
     }
 
 

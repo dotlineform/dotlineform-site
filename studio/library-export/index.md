@@ -25,6 +25,10 @@ studio_page_doc: /docs/?scope=studio&doc=library-export
         </span>
       </label>
       <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryExportRun"></button>
+      <fieldset class="libraryExportPage__format" id="libraryExportFormatWrap">
+        <legend id="libraryExportFormatLabel"></legend>
+        <span class="libraryExportPage__formatOptions" id="libraryExportFormatOptions"></span>
+      </fieldset>
       <label class="libraryExportPage__toggle" id="libraryExportMissingSummaryWrap" hidden>
         <input type="checkbox" id="libraryExportMissingSummaryOnly">
         <span id="libraryExportMissingSummaryLabel"></span>

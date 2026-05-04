@@ -46,6 +46,7 @@ Inputs:
 - a config id from `assets/studio/data/library_export_configs.json`
 - a Docs Viewer scope, currently Library in v1
 - explicit document ids or `--all`
+- an optional `--format json|jsonl` override when the selected config declares that format in `target.supported_formats`
 - an optional missing-summary override for configs that support it
 
 Outputs:
@@ -81,6 +82,7 @@ Implemented now:
 - handles image/SVG text according to field-level extraction options
 - writes JSON envelope exports
 - writes JSONL document-row exports
+- writes JSON arrays for document-row configs when `json` is selected
 - returns a structured JSON report
 
 The `library-full-document-content` config explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
@@ -137,6 +139,12 @@ Disable a summary config's default missing-summary-only filter:
 ./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
 ```
 
+Write a document-row export as JSON instead of its JSONL default when the config supports both:
+
+```bash
+./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --all --format json --write
+```
+
 ## Verification
 
 Focused export checks live in:
@@ -145,7 +153,7 @@ Focused export checks live in:
 tests/python/test_docs_export.py
 ```
 
-They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, and representative dry-runs for the three v1 Library export configs.
+They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, JSON format overrides for document-row exports, unsupported format overrides, and representative dry-runs for the three v1 Library export configs.
 The same check runs in the `docs` profile:
 
 ```bash
@@ -161,6 +169,7 @@ The script prints a JSON report with:
 - `config_id`
 - `scope`
 - `target_format`
+- `supported_target_formats`
 - `output_file`
 - `counts`
 - `selected_doc_ids`

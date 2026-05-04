@@ -211,6 +211,7 @@ Broken-links behavior:
 {
   "scope": "library",
   "config_id": "library-document-summaries",
+  "target_format": "jsonl",
   "doc_ids": ["library"],
   "select_all": false,
   "missing_summary_only": true
@@ -221,9 +222,11 @@ Export behavior:
 
 - `scope` must be `studio`, `analysis`, or `library`, though the current export configs are Library-only
 - `config_id` must resolve in `assets/studio/data/library_export_configs.json`
+- `target_format` may be `json`, `jsonl`, or omitted; omitted uses the config's default `target.format`
 - `doc_ids` is an explicit list used by configs that support explicit selection
 - `select_all: true` asks the export engine to select every doc matching the config filters
 - `missing_summary_only` may be `true`, `false`, or `null`; unsupported configs ignore `true`
+- unsupported config/format combinations return the export engine's structured validation report without writing
 - the endpoint calls `./scripts/docs/docs_export.py`'s shared export engine in-process
 - output paths are validated by the export engine and must stay under `var/docs/exports/`
 - normal server mode writes the export file and returns `output_written: true`

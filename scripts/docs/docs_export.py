@@ -343,7 +343,7 @@ def doc_payload_path(repo_root: Path, scope: str, doc: dict[str, Any]) -> Path:
     return repo_root / DOCS_SCOPES_ROOT / scope / "by-id" / f"{doc_id}.json"
 
 
-def write_json(path: Path, payload: dict[str, Any]) -> None:
+def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -372,6 +372,21 @@ def find_export_config(config_payload: dict[str, Any], config_id: str) -> dict[s
     if len(matches) > 1:
         raise ValueError(f"Duplicate export config id: {config_id}")
     return matches[0]
+
+
+def supported_target_formats(config: dict[str, Any]) -> list[str]:
+    target = config.get("target") if isinstance(config.get("target"), dict) else {}
+    raw_formats = target.get("supported_formats")
+    formats: list[str] = []
+    if isinstance(raw_formats, list):
+        for item in raw_formats:
+            item_format = normalize_text(item)
+            if item_format and item_format not in formats:
+                formats.append(item_format)
+    default_format = normalize_text(target.get("format"))
+    if not formats and default_format:
+        formats.append(default_format)
+    return formats
 
 
 def validate_config_payload(config_payload: dict[str, Any]) -> tuple[list[str], list[str]]:
@@ -409,15 +424,21 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
 
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     target_format = normalize_text(target.get("format"))
+    target_formats = supported_target_formats(config)
     record_shape = normalize_text(target.get("record_shape"))
     if target_format not in SUPPORTED_TARGET_FORMATS:
         errors.append(f"config {config_id}: unsupported target.format {target_format!r}")
+    if not target_formats:
+        errors.append(f"config {config_id}: target.supported_formats must include at least one format")
+    for item_format in target_formats:
+        if item_format not in SUPPORTED_TARGET_FORMATS:
+            errors.append(f"config {config_id}: unsupported target.supported_formats value {item_format!r}")
+        if item_format == "jsonl" and record_shape != "document_rows":
+            errors.append(f"config {config_id}: jsonl exports must use document_rows")
+    if target_format and target_formats and target_format not in target_formats:
+        errors.append(f"config {config_id}: target.format must be included in target.supported_formats")
     if record_shape not in SUPPORTED_RECORD_SHAPES:
         errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
-    if target_format == "jsonl" and record_shape != "document_rows":
-        errors.append(f"config {config_id}: jsonl exports must use document_rows")
-    if target_format == "json" and record_shape != "envelope":
-        errors.append(f"config {config_id}: json exports must use envelope")
     if record_shape == "envelope":
         document_array_path = normalize_text(target.get("document_array_path") or "documents")
         if not OUTPUT_PATH_RE.match(document_array_path):
@@ -898,7 +919,7 @@ def export_metadata(
     return {key: value for key, value in values.items() if key in include}
 
 
-def resolve_output_path(repo_root: Path, config: dict[str, Any], scope: str, timestamp: str) -> Path:
+def resolve_output_path(repo_root: Path, config: dict[str, Any], scope: str, timestamp: str, target_format: str) -> Path:
     config_id = normalize_text(config.get("id"))
     output = config.get("output") if isinstance(config.get("output"), dict) else {}
     pattern = normalize_text(output.get("path_pattern"))
@@ -913,6 +934,8 @@ def resolve_output_path(repo_root: Path, config: dict[str, Any], scope: str, tim
     )
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"Unsafe export output path: {relative}")
+    if target_format:
+        relative = relative.with_suffix(f".{target_format}")
     if relative.parts[:3] != OUTPUT_ROOT.parts:
         raise ValueError(f"Export output path must stay under {OUTPUT_ROOT}: {relative}")
     return repo_root / relative
@@ -982,6 +1005,7 @@ def build_export(
     missing_summary_only: bool | None,
     write: bool,
     config_path: str | None = None,
+    target_format: str | None = None,
 ) -> dict[str, Any]:
     generated_at, filename_timestamp_dt = export_run_times()
     config_payload = load_config_file(repo_root, config_path)
@@ -1035,16 +1059,23 @@ def build_export(
 
     output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
     target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
+    supported_formats = supported_target_formats(config)
+    requested_target_format = normalize_text(target_format)
+    resolved_target_format = requested_target_format or normalize_text(target_config.get("format"))
+    if requested_target_format and requested_target_format not in supported_formats:
+        errors.append(
+            f"config {config_id}: target_format {requested_target_format!r} is not supported; "
+            f"supported formats: {', '.join(supported_formats)}"
+        )
     timestamp_format = normalize_text(output_config.get("timestamp_format") or "%Y%m%d-%H%M%S")
     timestamp = filename_timestamp_dt.strftime(timestamp_format)
     output_path: Path | None = None
     relative_output = ""
     try:
-        output_path = resolve_output_path(repo_root, config, scope, timestamp)
+        output_path = resolve_output_path(repo_root, config, scope, timestamp, resolved_target_format)
         relative_output = str(output_path.relative_to(repo_root))
     except ValueError as exc:
         errors.append(f"config {config_id}: {exc}")
-    target_format = normalize_text(target_config.get("format"))
 
     if errors:
         return {
@@ -1052,7 +1083,7 @@ def build_export(
             "dry_run": not write,
             "config_id": config_id,
             "scope": scope,
-            "target_format": target_format,
+            "target_format": resolved_target_format,
             "output_file": relative_output,
             "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
             "selected_doc_ids": [],
@@ -1114,7 +1145,8 @@ def build_export(
         "dry_run": not write,
         "config_id": config_id,
         "scope": scope,
-        "target_format": target_format,
+        "target_format": resolved_target_format,
+        "supported_target_formats": supported_formats,
         "output_file": relative_output,
         "counts": counts,
         "selected_doc_ids": [normalize_text(doc.get("doc_id")) for doc in selected],
@@ -1140,16 +1172,14 @@ def build_export(
     if write:
         if output_path is None:
             raise ValueError("Export output path was not resolved")
-        if target_format == "json":
-            if not isinstance(payload, dict):
-                raise ValueError("JSON envelope payload must be an object")
+        if resolved_target_format == "json":
             write_json(output_path, payload)
-        elif target_format == "jsonl":
+        elif resolved_target_format == "jsonl":
             if not isinstance(payload, list):
                 raise ValueError("JSONL document_rows payload must be an array")
             write_jsonl(output_path, payload)
         else:
-            raise ValueError(f"Unsupported target.format: {target_format}")
+            raise ValueError(f"Unsupported target.format: {resolved_target_format}")
         report["output_written"] = True
     else:
         report["output_written"] = False
@@ -1177,6 +1207,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--config-path", default="", help="Override export config path")
     parser.add_argument("--repo-root", default="", help="Override repo root")
+    parser.add_argument("--format", choices=sorted(SUPPORTED_TARGET_FORMATS), default="", help="Override output format when supported by the selected config")
     parser.add_argument("--write", action="store_true", help="Write the export file; default is dry-run")
     return parser.parse_args()
 
@@ -1195,6 +1226,7 @@ def main() -> int:
             missing_summary_only=args.missing_summary_only,
             write=bool(args.write),
             config_path=args.config_path or None,
+            target_format=args.format or None,
         )
     except Exception as exc:
         print(f"docs_export: {exc}", file=sys.stderr)

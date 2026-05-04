@@ -256,6 +256,46 @@ def test_json_responses_are_not_cached() -> None:
     assert handler.sent_headers["Cache-Control"] == "no-store"
 
 
+def test_docs_export_request_passes_target_format() -> None:
+    calls: list[dict[str, object]] = []
+    original_build_export = docs_management_server.build_export
+
+    def fake_build_export(**kwargs):
+        calls.append(kwargs)
+        return {
+            "ok": True,
+            "target_format": kwargs["target_format"],
+            "output_file": "var/docs/exports/library/test.json",
+            "output_written": False,
+            "counts": {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0},
+            "issue_counts": {"errors": 0, "warnings": 0},
+        }
+
+    docs_management_server.build_export = fake_build_export
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            result = docs_management_server.handle_docs_export(
+                repo_root,
+                {
+                    "scope": "library",
+                    "config_id": "library-document-summaries",
+                    "doc_ids": ["library"],
+                    "select_all": False,
+                    "missing_summary_only": False,
+                    "target_format": "json",
+                },
+                dry_run=True,
+            )
+    finally:
+        docs_management_server.build_export = original_build_export
+
+    assert result["ok"] is True
+    assert result["target_format"] == "json"
+    assert calls[0]["target_format"] == "json"
+    assert calls[0]["write"] is False
+
+
 def main() -> None:
     tests = [
         test_archive_doc_is_editable_in_dry_run,
@@ -267,6 +307,7 @@ def main() -> None:
         test_generated_doc_payload_requires_index_record,
         test_generated_doc_payload_rejects_unexpected_content_url,
         test_json_responses_are_not_cached,
+        test_docs_export_request_passes_target_format,
     ]
     for test in tests:
         test()
