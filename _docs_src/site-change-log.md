@@ -8,6 +8,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Closed Library import/export v2 task list
+
+**Status:** implemented
+
+**Area:** Studio / Library import-export
+
+**Summary:**
+Marked the Library import/export v2 request as implemented and closed its documentation and verification task.
+The request now points at the separate generated-parent-nodes follow-up for future hierarchy imports that need to create new Library grouping docs.
+
+**Reason:**
+The v2 task list now has implemented export filters, export formats, import previews, summary apply, hierarchy apply, docs updates, generated docs payloads, and verification coverage.
+New parent-node creation is a distinct future source-creation contract rather than a loose extension of unknown `parent_id` handling.
+
+**Files changed:**
+
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+- [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
+
+**Impact:**
+The current v2 implementation can be treated as closed.
+Future generated parent-node work has its own request and should not be folded into the existing hierarchy apply contract without a new task pass.
+
 ## [2026-05-04] Added hierarchy apply for Library imports
 
 **Status:** implemented

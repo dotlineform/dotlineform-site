@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T22:22:42Z",
+  "generated_at": "2026-05-04T22:27:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1335,8 +1335,8 @@
       "source_path": "library-import-export-v2.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
-      "content_text_length": 17103,
-      "ui_status": "proposed"
+      "content_text_length": 17684,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2215,7 +2215,7 @@
       "doc_id": "site-request-library-import-generated-parent-nodes",
       "title": "Library Import Generated Parent Nodes Request",
       "added_date": "2026-05-04",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-04 23:26",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -2224,7 +2224,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-library-import-generated-parent-nodes.json",
       "content_text_length": 6087,
-      "ui_status": "proposed"
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -2603,7 +2603,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 296533
+      "content_text_length": 297534
     },
     {
       "scope": "studio",

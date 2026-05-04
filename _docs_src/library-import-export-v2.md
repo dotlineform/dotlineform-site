@@ -3,7 +3,7 @@ doc_id: library-import-export-v2
 title: Library Export/Import v2
 added_date: 2026-05-04
 last_updated: "2026-05-04"
-ui_status: proposed
+ui_status: done
 parent_id: library
 sort_order: 50
 ---
@@ -12,7 +12,7 @@ sort_order: 50
 
 Status:
 
-- proposed
+- implemented
 
 ## Purpose
 
@@ -352,6 +352,10 @@ Implementation notes:
 
 ### Task 9. Update Documentation And Verification
 
+Status:
+
+- implemented
+
 Keep the v2 request, stable Library import/export docs, script docs, and generated docs-viewer payloads aligned as tasks move from proposed to implemented.
 
 Expected outputs:
@@ -361,6 +365,13 @@ Expected outputs:
 - update script docs if CLI or service contracts change
 - run `./scripts/build_docs.rb --scope studio --write` after docs-source changes
 - run focused parser/service/UI checks for any runtime changes
+
+Implementation notes:
+
+- stable Library import, Library export, docs-management, docs-import, docs-builder, Studio config, Library data-model, and change-log docs were updated as the runtime contracts changed
+- generated Studio docs-viewer payloads and Studio docs-search payloads were rebuilt after docs-source changes
+- focused parser/service and Studio smoke checks were added or extended for each implemented runtime surface
+- Library import/export v2 now has a separate follow-up request for generated parent nodes: [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
 
 ## Benefits And Risks
 

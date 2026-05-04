@@ -2,8 +2,8 @@
 doc_id: site-request-library-import-generated-parent-nodes
 title: Library Import Generated Parent Nodes Request
 added_date: 2026-05-04
-last_updated: "2026-05-04"
-ui_status: proposed
+last_updated: "2026-05-04 23:26"
+ui_status: urgent
 parent_id: change-requests
 sort_order: 150
 ---
