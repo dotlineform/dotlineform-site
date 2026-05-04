@@ -134,42 +134,151 @@ function previewRowId(item, index) {
     || `preview-${index + 1}`;
 }
 
-function recordByDocId(records) {
-  const map = new Map();
-  (Array.isArray(records) ? records : []).forEach((record) => {
-    const docId = normalizeText(record && record.doc_id);
-    if (docId && !map.has(docId)) map.set(docId, record);
-  });
-  return map;
+function recordRowId(record, index) {
+  const recordIndex = Number.isInteger(record && record.record_index) ? record.record_index : index;
+  const docId = normalizeText(record && record.doc_id) || "missing-doc-id";
+  return `${docId}-record-${recordIndex + 1}`;
 }
 
-function buildPreviewRows(payload) {
-  const recordsByDocId = recordByDocId(payload && payload.records);
-  return (Array.isArray(payload && payload.preview_files) ? payload.preview_files : []).map((item, index) => {
-    const docId = normalizeText(item && item.doc_id);
-    const record = recordsByDocId.get(docId) || {};
-    const kind = normalizeText(item && item.kind);
-    const path = normalizeText(item && item.path);
-    const title = normalizeText(record.title)
-      || docId
-      || (kind === "relationship_tree" ? "Relationship tree" : "")
-      || path
-      || `Preview ${index + 1}`;
-    const meta = [docId, kind, path].filter(Boolean).join(" · ");
+function previewFilesByRecord(previewFiles) {
+  const byRecordIndex = new Map();
+  const byDocId = new Map();
+  const treeFiles = [];
+  (Array.isArray(previewFiles) ? previewFiles : []).forEach((item, index) => {
+    if (!item || typeof item !== "object") return;
+    const kind = normalizeText(item.kind);
+    if (kind === "relationship_tree") {
+      treeFiles.push({ item, index });
+      return;
+    }
+    const recordIndex = Number.isInteger(item.record_index) ? item.record_index : null;
+    if (recordIndex !== null && !byRecordIndex.has(recordIndex)) byRecordIndex.set(recordIndex, item);
+    const docId = normalizeText(item.doc_id);
+    if (docId && !byDocId.has(docId)) byDocId.set(docId, item);
+  });
+  return { byRecordIndex, byDocId, treeFiles };
+}
+
+function duplicateDocIds(records) {
+  const counts = new Map();
+  records.forEach((record) => {
+    const docId = normalizeText(record && record.doc_id);
+    if (!docId) return;
+    counts.set(docId, Number(counts.get(docId) || 0) + 1);
+  });
+  return new Set(Array.from(counts.entries()).filter(([, count]) => count > 1).map(([docId]) => docId));
+}
+
+function rowMetaParts(state, { docId, duplicate, path, currentLibrary }) {
+  const parts = [];
+  parts.push(
+    docId
+      || getStudioText(state.config, "library_import.missing_doc_id", "missing doc_id")
+  );
+  if (duplicate) {
+    parts.push(getStudioText(state.config, "library_import.duplicate_doc_id", "duplicate doc_id"));
+  }
+  if (currentLibrary && currentLibrary.exists === false) {
+    parts.push(getStudioText(state.config, "library_import.not_current_library", "not in current Library"));
+  }
+  parts.push(path || getStudioText(state.config, "library_import.no_preview_file", "no preview file"));
+  return parts.filter(Boolean);
+}
+
+function buildDocumentRows(state, payload, previewLookup) {
+  const records = Array.isArray(payload && payload.records) ? payload.records : [];
+  const duplicates = duplicateDocIds(records);
+  return records.map((record, index) => {
+    const recordIndex = Number.isInteger(record && record.record_index) ? record.record_index : index;
+    const docId = normalizeText(record && record.doc_id);
+    const previewFile = previewLookup.byRecordIndex.get(recordIndex) || previewLookup.byDocId.get(docId) || null;
+    const path = normalizeText(previewFile && previewFile.path);
+    const currentLibrary = record && typeof record.current_library === "object" ? record.current_library : null;
+    const duplicate = docId ? duplicates.has(docId) : false;
     return {
-      id: previewRowId(item, index),
+      id: recordRowId(record, index),
+      type: "document",
       docId,
-      kind,
+      parentId: normalizeText(record && record.parent_id),
+      recordIndex,
+      duplicate,
+      kind: normalizeText(previewFile && previewFile.kind) || "document",
       path,
-      title,
-      meta
+      title: normalizeText(record && record.title)
+        || getStudioText(state.config, "library_import.missing_title", "missing title"),
+      meta: rowMetaParts(state, { docId, duplicate, path, currentLibrary }).join(" · "),
+      depth: 0
     };
   });
 }
 
+function orderDocumentRows(rows) {
+  const ids = new Set(rows.map((row) => row.docId).filter(Boolean));
+  const childrenByParent = new Map();
+  rows.forEach((row) => {
+    const parentId = row.parentId && row.parentId !== row.docId ? row.parentId : "";
+    if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
+    childrenByParent.get(parentId).push(row);
+  });
+
+  const roots = rows.filter((row) => !row.parentId || !ids.has(row.parentId) || row.parentId === row.docId);
+  const ordered = [];
+  const rendered = new Set();
+
+  const visit = (row, depth, activeDocIds) => {
+    if (!row || rendered.has(row.id)) return;
+    row.depth = depth;
+    ordered.push(row);
+    rendered.add(row.id);
+    if (!row.docId || activeDocIds.has(row.docId)) return;
+    const nextActive = new Set(activeDocIds);
+    nextActive.add(row.docId);
+    (childrenByParent.get(row.docId) || []).forEach((child) => visit(child, depth + 1, nextActive));
+  };
+
+  roots.forEach((row) => visit(row, 0, new Set()));
+  rows.forEach((row) => visit(row, 0, new Set()));
+  return ordered;
+}
+
+function buildTreeRows(state, previewLookup) {
+  return previewLookup.treeFiles.map(({ item, index }) => {
+    const path = normalizeText(item.path);
+    const count = Number(item.record_count || 0);
+    const countText = getStudioText(
+      state.config,
+      "library_import.relationship_tree_count",
+      "{count} records",
+      { count }
+    );
+    return {
+      id: previewRowId(item, index),
+      type: "relationship_tree",
+      docId: "",
+      parentId: "",
+      recordIndex: null,
+      duplicate: false,
+      kind: "relationship_tree",
+      path,
+      title: getStudioText(state.config, "library_import.relationship_tree_title", "Relationship tree"),
+      meta: [countText, path].filter(Boolean).join(" · "),
+      depth: 0
+    };
+  });
+}
+
+function buildPreviewRows(state, payload) {
+  const previewLookup = previewFilesByRecord(payload && payload.preview_files);
+  const treeRows = buildTreeRows(state, previewLookup);
+  const documentRows = orderDocumentRows(buildDocumentRows(state, payload, previewLookup));
+  return [...treeRows, ...documentRows];
+}
+
 function renderPreviewRow(row) {
+  const depth = Math.max(0, Number(row.depth || 0));
+  const treeClass = row.type === "relationship_tree" ? " libraryImportList__row--tree" : "";
   return `
-    <li class="tagStudioList__row tagStudioList__row--center libraryImportList__row" data-library-import-preview="${escapeHtml(row.id)}">
+    <li class="tagStudioList__row tagStudioList__row--center libraryImportList__row${treeClass}" data-library-import-preview="${escapeHtml(row.id)}" data-library-import-depth="${depth}" style="--library-import-depth: ${depth};">
       <label class="libraryImportList__label">
         <input class="libraryImportList__checkbox" type="checkbox" value="${escapeHtml(row.id)}">
         <span class="libraryImportList__title">${escapeHtml(row.title)}</span>
@@ -283,7 +392,7 @@ function renderResult(state, payload, failed = false) {
   setText(state.resultGeneratedNode, payload.generated_at || sourceMetadata.generated_at || "");
   setText(state.resultCountsNode, countsText(state, payload.counts));
   renderIssues(state, payload.issues);
-  state.previewRows = failed ? [] : buildPreviewRows(payload);
+  state.previewRows = failed ? [] : buildPreviewRows(state, payload);
   state.selectedPreviewIds.clear();
   renderPreviewList(state);
   updateSelectionSummary(state);

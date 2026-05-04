@@ -199,6 +199,10 @@ Expected outputs:
 
 ### Task 2. Render Preview Results As A Selectable Hierarchy
 
+Status:
+
+- implemented
+
 Use the preview-generation report to populate a selectable list of previewed documents.
 Indent rows by parent-child relationship when staged relationship data is available.
 The list should represent the selected staged file's latest preview output only.

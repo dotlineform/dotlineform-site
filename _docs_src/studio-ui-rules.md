@@ -30,7 +30,7 @@ Use this as the single capture surface for Studio UI work:
 - issue: Library import still used an intro-led form and separate result panel after Library export had moved to a compact command/list shell.
 - triage: route-local alignment
 - reasoning: Library import v2 starts with preview review, so its first milestone should share the export page's staged control row, selection summary, list actions, and main list area before source-write actions are wired.
-- outcome: moved Preview beside the staged-file selector, removed the intro, added Select all and Clear pills, moved preview output into a selectable Studio list, and surfaced disabled `Update summary` and `Apply hierarchy` commands until their service contracts exist.
+- outcome: moved Preview beside the staged-file selector, removed the intro, added Select all and Clear pills, moved preview output into a selectable Studio list, ordered and indented preview rows from staged `parent_id` metadata, surfaced relationship-tree preview rows, and kept disabled `Update summary` and `Apply hierarchy` commands visible until their service contracts exist.
 - files changed:
   - `studio/library-import/index.md`
   - `assets/studio/js/library-import.js`
@@ -42,7 +42,7 @@ Use this as the single capture surface for Studio UI work:
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - open `/studio/library-import/` and confirm the command row, selection pills, disabled apply actions, and empty preview list render correctly on desktop and mobile
-  - run the Library import smoke check with docs-management unavailable and confirm Preview plus the future apply actions are disabled
+  - run the Library import smoke checks with docs-management unavailable and with a mocked relationship preview response; confirm hierarchy depth, tree row visibility, and disabled future apply actions
 
 ## UI Rule Log 2026-05-04 / UI-077
 

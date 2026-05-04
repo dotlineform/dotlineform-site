@@ -345,7 +345,9 @@ Status note:
 - runs preview generation through `POST /docs/library-import/preview`
 - uses the same compact command/list shell as the Library export page
 - shows selected file metadata, detected import type, source export metadata, counts, issues, and generated preview counts
-- renders generated preview records in the main selectable list area
+- renders generated preview records in the main selectable list area, ordered and indented by staged `parent_id` when relationship data is present
+- shows a relationship-tree preview row when the service report includes a generated tree preview file
+- labels missing titles, missing `doc_id`, duplicate `doc_id`, missing preview files, and records that do not map to current Library docs
 - exposes `select all` and `clear` selection pills for preview rows
 - displays disabled `Update summary` and `Apply hierarchy` actions until their source-write service contracts exist
 - keeps the route disabled when the docs-management local service is unavailable

@@ -123,24 +123,65 @@ def install_mock_docs_service(page) -> None:
             payload = {
                 "ok": True,
                 "scope": "library",
-                "summary_text": "Generated 1 Library import preview file(s).",
-                "detected_import_type": "document_summaries",
-                "source_export_id": "library-document-summaries",
+                "summary_text": "Generated 3 Library import preview file(s).",
+                "detected_import_type": "parent_child_relationships",
+                "source_export_id": "library-parent-child-relationships",
                 "generated_at": "2026-05-04T12:05:00Z",
                 "counts": {
-                    "records": 1,
-                    "parsed_records": 1,
+                    "records": 3,
+                    "parsed_records": 3,
                     "malformed_records": 0,
-                    "warnings": 0,
+                    "warnings": 1,
                     "errors": 0,
                 },
-                "issues": [],
-                "records": [{"doc_id": "alpha", "title": "Alpha", "metadata": {"summary": "Preview summary."}}],
+                "issues": [
+                    {
+                        "level": "warning",
+                        "code": "unknown_doc_id",
+                        "message": "record doc_id is not in the current Library index: beta",
+                        "record_index": 2,
+                        "doc_id": "beta",
+                    }
+                ],
+                "records": [
+                    {
+                        "record_index": 0,
+                        "doc_id": "library",
+                        "title": "Library",
+                        "parent_id": "",
+                        "current_library": {"exists": True},
+                    },
+                    {
+                        "record_index": 1,
+                        "doc_id": "alpha",
+                        "title": "Alpha",
+                        "parent_id": "library",
+                        "current_library": {"exists": True},
+                    },
+                    {
+                        "record_index": 2,
+                        "doc_id": "beta",
+                        "title": "Beta",
+                        "parent_id": "alpha",
+                        "current_library": {"exists": False},
+                    },
+                ],
                 "preview_files": [
                     {
+                        "path": "var/docs/import-preview/library/relationships-tree.md",
+                        "record_count": 3,
+                        "kind": "relationship_tree",
+                    },
+                    {
                         "path": "var/docs/import-preview/library/alpha-20260504-120500.md",
-                        "record_index": 0,
+                        "record_index": 1,
                         "doc_id": "alpha",
+                        "kind": "document",
+                    },
+                    {
+                        "path": "var/docs/import-preview/library/beta-20260504-120500.md",
+                        "record_index": 2,
+                        "doc_id": "beta",
                         "kind": "document",
                     }
                 ],
@@ -156,20 +197,28 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     page.locator("#libraryImportPreview").click()
     page.wait_for_selector("[data-library-import-preview]", timeout=5000)
     rows = page.locator("[data-library-import-preview]").count()
-    title = page.locator(".libraryImportList__title").first.text_content()
-    if rows != 1:
-        raise AssertionError(f"expected one preview row, found {rows}")
-    if title != "Alpha":
-        raise AssertionError(f"unexpected preview row title: {title!r}")
+    titles = page.locator(".libraryImportList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    depths = page.locator("[data-library-import-preview]").evaluate_all(
+        "nodes => nodes.map(node => Number(node.dataset.libraryImportDepth || 0))"
+    )
+    meta = page.locator(".libraryImportList__meta").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    if rows != 4:
+        raise AssertionError(f"expected four preview rows, found {rows}")
+    if titles != ["Relationship tree", "Library", "Alpha", "Beta"]:
+        raise AssertionError(f"unexpected preview row titles: {titles!r}")
+    if depths != [0, 0, 1, 2]:
+        raise AssertionError(f"unexpected hierarchy depths: {depths!r}")
+    if "not in current Library" not in meta[-1]:
+        raise AssertionError(f"unknown current-Library state was not surfaced: {meta!r}")
     page.locator("#libraryImportSelectAll").click()
     selection = page.locator("#libraryImportSelectionSummary").text_content()
-    if selection != "1 preview selected.":
+    if selection != "4 previews selected.":
         raise AssertionError(f"unexpected selection summary: {selection!r}")
     update_summary_disabled = page.locator("#libraryImportUpdateSummary").evaluate("button => button.disabled")
     apply_hierarchy_disabled = page.locator("#libraryImportApplyHierarchy").evaluate("button => button.disabled")
     if not update_summary_disabled or not apply_hierarchy_disabled:
         raise AssertionError("future source-write actions should stay disabled after preview generation")
-    return {"preview_rows": rows, "selected_summary": selection}
+    return {"preview_rows": rows, "selected_summary": selection, "depths": depths}
 
 
 def main() -> int:

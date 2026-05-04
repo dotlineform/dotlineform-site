@@ -1166,6 +1166,7 @@ span.tagStudio__input--readonlyDisplay {
   gap: 0.5rem;
   align-items: center;
   min-width: 0;
+  padding-left: calc(var(--library-import-depth, 0) * 1.15rem);
 }
 
 .libraryImportList__checkbox {
@@ -1178,6 +1179,10 @@ span.tagStudio__input--readonlyDisplay {
 .libraryImportList__meta {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.libraryImportList__row--tree .libraryImportList__title {
+  font-weight: 600;
 }
 
 .libraryExportPage__panel {
