@@ -56,7 +56,7 @@ The first config file defines three enabled Library export patterns:
 - `library-document-summaries`
   JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
 - `library-full-document-content`
-  JSONL document rows for exporting multiple selected document bodies in one file
+  JSONL document rows for exporting multiple selected document bodies in one file, including explicitly declared parent, ancestor, and child relationship metadata
 
 These configs are Library-only for v1.
 They include generated but non-viewable docs and exclude unpublished docs. `archive` is treated like any other generated Library doc.
@@ -242,7 +242,9 @@ The default v1 content export should use rendered Docs Viewer HTML as the source
   one of `omit` or `marker`
 
 The initial document summaries export does not include `source_text`; body text belongs to the full-content export.
-The initial full-content export uses `image_text_mode: "extract_text"` and `empty_image_mode: "marker"` so external review can see where a visual object existed even without useful text.
+The initial full-content export declares `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` in the config so relationship metadata travels with source text without a separate UI option.
+It uses `image_text_mode: "extract_text"` and `empty_image_mode: "marker"` so external review can see where a visual object existed even without useful text.
+`sort_order` is a future field-source/config extension for external hierarchy imports and is not part of the current full-content config.
 
 ## Validation Boundary
 

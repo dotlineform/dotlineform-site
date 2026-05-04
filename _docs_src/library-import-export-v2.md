@@ -236,8 +236,15 @@ Expected outputs:
 
 ### Task 4. Add Relationship Data To Full Document Content Export
 
+Status:
+
+- implemented
+
 Update the existing full-document-content Library export config so relationship metadata is explicitly present in that config pattern.
 This is a config/runtime contract, not a UI toggle.
+The current full-content config now declares `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles`.
+Preview hierarchy rendering was added in Task 3, so staged full-content files can produce a tree preview when those relationship fields are present.
+Future `sort_order` handling remains a later config and import-apply extension.
 
 Expected outputs:
 

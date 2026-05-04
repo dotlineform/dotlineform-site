@@ -262,6 +262,31 @@
           "include_if_empty": true
         },
         {
+          "source": "parent_title",
+          "output_path": "parent_title",
+          "include_if_empty": true
+        },
+        {
+          "source": "ancestor_ids",
+          "output_path": "ancestor_ids",
+          "default": []
+        },
+        {
+          "source": "ancestor_titles",
+          "output_path": "ancestor_titles",
+          "default": []
+        },
+        {
+          "source": "child_ids",
+          "output_path": "child_ids",
+          "default": []
+        },
+        {
+          "source": "child_titles",
+          "output_path": "child_titles",
+          "default": []
+        },
+        {
           "source": "summary",
           "output_path": "summary",
           "default": ""

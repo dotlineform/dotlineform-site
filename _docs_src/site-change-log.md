@@ -8,6 +8,34 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Added relationship metadata to full Library content exports
+
+**Status:** implemented
+
+**Area:** Studio / Library export
+
+**Summary:**
+The `library-full-document-content` export config now declares parent, ancestor, and child relationship fields alongside `source_text`.
+Full-content JSONL rows include `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` without adding a separate UI option.
+`sort_order` remains deferred until external hierarchy files and import apply behavior support it.
+
+**Reason:**
+Library import previews can now build a staged hierarchy tree from full-content export files when relationship metadata is present.
+Keeping the fields in the export config preserves the config/runtime contract and avoids adding another export-page control.
+
+**Files changed:**
+
+- `assets/studio/data/library_export_configs.json`
+- `tests/python/test_docs_export.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+
+**Impact:**
+Full-content exports are more useful as import-preview staging files and external review bundles.
+Consumers should expect relationship fields in the full-content rows, but not `sort_order` yet.
+
 ## [2026-05-04] Aligned Library import with the export page shell
 
 **Status:** implemented

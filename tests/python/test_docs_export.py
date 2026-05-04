@@ -272,6 +272,60 @@ def test_repo_library_export_configs_load_and_validate() -> None:
     }
     assert "source_text" not in summary_fields
     assert "source_text" in full_fields
+    relationship_fields = {
+        "parent_id",
+        "parent_title",
+        "ancestor_ids",
+        "ancestor_titles",
+        "child_ids",
+        "child_titles",
+    }
+    assert relationship_fields <= full_fields
+    assert "sort_order" not in full_fields
+
+
+def test_repo_full_document_content_exports_relationship_fields() -> None:
+    config = docs_export.load_config_file(REPO_ROOT)
+    fixed_generated_at = "2026-05-04T12:00:00Z"
+    fixed_filename_dt = dt.datetime(2026, 5, 4, 13, 0, 0, tzinfo=dt.timezone(dt.timedelta(hours=1)))
+    original_export_run_times = docs_export.export_run_times
+    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
+    try:
+        with make_repo(copy.deepcopy(config)) as temp:
+            root = Path(temp)
+            report = docs_export.build_export(
+                repo_root=root,
+                config_id="library-full-document-content",
+                scope="library",
+                selected_doc_ids=["library"],
+                select_all=False,
+                missing_summary_only=None,
+                write=True,
+            )
+            output = root / report["output_file"]
+            rows = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+    finally:
+        docs_export.export_run_times = original_export_run_times
+
+    assert report["ok"] is True, report
+    assert report["output_written"] is True
+    assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
+    library_row = rows[0]
+    child_row = rows[1]
+    assert library_row["parent_id"] == ""
+    assert library_row["parent_title"] == ""
+    assert library_row["ancestor_ids"] == []
+    assert library_row["ancestor_titles"] == []
+    assert library_row["child_ids"] == ["child-with-summary"]
+    assert library_row["child_titles"] == ["Child With Summary"]
+    assert child_row["parent_id"] == "library"
+    assert child_row["parent_title"] == "Library"
+    assert child_row["ancestor_ids"] == ["library"]
+    assert child_row["ancestor_titles"] == ["Library"]
+    assert child_row["child_ids"] == []
+    assert child_row["child_titles"] == []
+    assert "sort_order" not in library_row
+    assert "sort_order" not in child_row
 
 
 def test_repo_parent_child_relationships_respects_selected_docs() -> None:
@@ -345,6 +399,7 @@ def main() -> None:
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_library_export_configs_load_and_validate,
+        test_repo_full_document_content_exports_relationship_fields,
         test_repo_parent_child_relationships_respects_selected_docs,
         test_repo_representative_library_exports_dry_run_successfully,
     ]

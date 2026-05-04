@@ -227,32 +227,37 @@ Purpose:
 
 - create one file containing multiple full document bodies for external review, bulk LLM upload, or internal Studio reporting
 
-Initial JSON shape should include:
+Initial JSONL row shape should include:
 
 ```json
 {
-  "export_id": "library-full-document-content",
-  "scope": "library",
-  "documents": [
-    {
-      "doc_id": "example-doc",
-      "title": "Example Doc",
-      "parent_id": "example-parent",
-      "summary": "Existing summary when available.",
-      "headings": ["Purpose", "Details"],
-      "source_text": "Full plain text body for this document."
-    },
-    {
-      "doc_id": "second-doc",
-      "title": "Second Doc",
-      "parent_id": "example-parent",
-      "summary": "Existing summary when available.",
-      "headings": ["Purpose", "Details"],
-      "source_text": "Full plain text body for another document."
-    }
-  ]
+  "_export": {
+    "export_id": "library-full-document-content",
+    "scope": "library",
+    "generated_at": "2026-05-04T12:00:00Z",
+    "selected_doc_ids": ["example-doc"],
+    "counts": {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0}
+  },
+  "doc_id": "example-doc",
+  "title": "Example Doc",
+  "parent_id": "example-parent",
+  "parent_title": "Example Parent",
+  "ancestor_ids": ["library", "example-parent"],
+  "ancestor_titles": ["Library", "Example Parent"],
+  "child_ids": ["example-child"],
+  "child_titles": ["Example Child"],
+  "summary": "Existing summary when available.",
+  "headings": ["Purpose", "Details"],
+  "source_text": "Full plain text body for this document.",
+  "last_updated": "2026-05-04 12:00",
+  "viewable": true,
+  "published": true
 }
 ```
+
+The full-content config declares relationship metadata directly.
+This remains a config contract, not a separate UI checkbox, so staged full-content exports can feed the import preview tree whenever relationship fields are present.
+`sort_order` is intentionally absent until external hierarchy exports include that field and the importer has matching apply behavior.
 
 This export must support multiple documents in the same export file.
 Character limits should be configurable, but the core purpose is to preserve enough content for meaningful external analysis.

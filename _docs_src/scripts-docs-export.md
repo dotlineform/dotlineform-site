@@ -83,6 +83,9 @@ Implemented now:
 - writes JSONL document-row exports
 - returns a structured JSON report
 
+The `library-full-document-content` config explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
+Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
+
 Not implemented yet:
 
 - batching or chunking
