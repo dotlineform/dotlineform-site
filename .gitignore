@@ -31,17 +31,10 @@ var/test-runs/
 # Studio local backup output
 var/studio/backups/
 var/studio/catalogue/backups/
-var/docs/backups/
-var/docs/logs/
-var/docs/exports/
+var/docs/
 
 # staging
-var/docs/import-staging/
-var/docs/catalogue/import-staging/
 var/catalogue/media/
-
-# import preview
-var/docs/import-preview/
 
 # Catalogue planner state
 var/build_catalogue_state.json
