@@ -107,7 +107,7 @@ The Library import page reads:
 - `paths.routes.library_import`
 - `ui_text.library_import`
 
-`ui_text.library_import` owns browser-facing labels, status messages, selection copy, preview result labels, and summary-apply confirmation modal copy.
+`ui_text.library_import` owns browser-facing labels, status messages, selection copy, preview result labels, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
 The fixed docs-management transport endpoints for staged-file listing, preview generation, and summary apply live in `assets/studio/js/studio-transport.js`.
 Import parsing rules, export-pattern matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the docs import/export scripts and docs-management service.
 

@@ -22,6 +22,7 @@ ScopeConfig = Struct.new(
   :non_loadable_doc_ids,
   :manage_only_tree_root_ids,
   :show_updated_date,
+  :allow_unresolved_parent_ids,
   keyword_init: true
 )
 
@@ -63,7 +64,8 @@ class DocsDataBuilder
     allow_nested_source: false,
     non_loadable_doc_ids: [],
     manage_only_tree_root_ids: [],
-    show_updated_date: true
+    show_updated_date: true,
+    allow_unresolved_parent_ids: false
   )
     @scope_id = scope_id.to_s
     @source_dir = Pathname(source_dir).expand_path
@@ -75,6 +77,7 @@ class DocsDataBuilder
     @non_loadable_doc_ids = normalize_doc_ids(non_loadable_doc_ids)
     @manage_only_tree_root_ids = normalize_doc_ids(manage_only_tree_root_ids)
     @show_updated_date = show_updated_date != false
+    @allow_unresolved_parent_ids = allow_unresolved_parent_ids == true
     @repo_root = Pathname(__dir__).parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
@@ -85,7 +88,7 @@ class DocsDataBuilder
     validate_docs!(docs)
 
     item_payloads = docs.to_h { |doc| [doc.doc_id, item_entry(doc, docs)] }
-    docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc, item_payloads[doc.doc_id]) }
+    docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc, docs, item_payloads[doc.doc_id]) }
     viewer_options = viewer_options_payload
     index_payload = {
       "generated_at" => effective_generated_at(docs_index, viewer_options),
@@ -248,19 +251,28 @@ class DocsDataBuilder
     docs.each do |doc|
       next if doc.parent_id.empty?
       next if docs.any? { |candidate| candidate.doc_id == doc.parent_id }
+      next if @allow_unresolved_parent_ids
 
       raise "Unknown parent_id #{doc.parent_id.inspect} for doc #{doc.doc_id.inspect}"
     end
   end
 
-  def index_entry(doc, item_payload)
+  def effective_parent_id(doc, docs)
+    parent_id = doc.parent_id.to_s
+    return parent_id if parent_id.empty?
+    return parent_id if docs.any? { |candidate| candidate.doc_id == parent_id }
+
+    @allow_unresolved_parent_ids ? "" : parent_id
+  end
+
+  def index_entry(doc, docs, item_payload)
     entry = {
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
       "title" => doc.title,
       "added_date" => doc.added_date,
       "last_updated" => doc.last_updated,
-      "parent_id" => doc.parent_id,
+      "parent_id" => effective_parent_id(doc, docs),
       "sort_order" => doc.sort_order,
       "published" => doc.published,
       "viewable" => doc.viewable,
@@ -284,7 +296,7 @@ class DocsDataBuilder
       "title" => doc.title,
       "added_date" => doc.added_date,
       "last_updated" => doc.last_updated,
-      "parent_id" => doc.parent_id,
+      "parent_id" => effective_parent_id(doc, docs),
       "sort_order" => doc.sort_order,
       "published" => doc.published,
       "viewable" => doc.viewable,
@@ -590,7 +602,8 @@ scope_configs = [
     allow_nested_source: false,
     non_loadable_doc_ids: [],
     manage_only_tree_root_ids: [],
-    show_updated_date: false
+    show_updated_date: false,
+    allow_unresolved_parent_ids: true
   ),
   ScopeConfig.new(
     scope_id: "analysis",
@@ -625,7 +638,8 @@ selected_scopes.each do |config|
     allow_nested_source: config.allow_nested_source,
     non_loadable_doc_ids: config.non_loadable_doc_ids,
     manage_only_tree_root_ids: config.manage_only_tree_root_ids,
-    show_updated_date: config.show_updated_date
+    show_updated_date: config.show_updated_date,
+    allow_unresolved_parent_ids: config.allow_unresolved_parent_ids
   )
   builder.run(write: options[:write])
 end

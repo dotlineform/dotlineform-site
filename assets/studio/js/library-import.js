@@ -414,13 +414,13 @@ function setControlsDisabled(state, disabled) {
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
   state.clearButton.disabled = disabled || !state.previewRows.length;
   state.updateSummaryButton.disabled = disabled || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
-  state.applyHierarchyButton.disabled = true;
+  state.applyHierarchyButton.disabled = disabled || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
 }
 
 function syncApplyActionState(state) {
   if (!state.updateSummaryButton || !state.applyHierarchyButton) return;
   state.updateSummaryButton.disabled = state.isRunning || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
-  state.applyHierarchyButton.disabled = true;
+  state.applyHierarchyButton.disabled = state.isRunning || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
 }
 
 async function loadImportFiles() {
@@ -491,7 +491,23 @@ function applyCountsText(state, counts) {
   );
 }
 
-function summaryApplyIssues(payload) {
+function hierarchyCountsText(state, counts) {
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  return getStudioText(
+    state.config,
+    "library_import.hierarchy_apply_counts",
+    "{changed} changed; {unchanged} unchanged; {skipped} skipped; {warnings} warnings; {errors} errors.",
+    {
+      changed: Number(safeCounts.changed || safeCounts.updates || 0),
+      unchanged: Number(safeCounts.unchanged || 0),
+      skipped: Number(safeCounts.skipped || 0),
+      warnings: Number(safeCounts.warnings || 0),
+      errors: Number(safeCounts.errors || 0)
+    }
+  );
+}
+
+function applyIssues(payload, fallbackPrefix) {
   const errors = Array.isArray(payload && payload.errors) ? payload.errors : [];
   const warnings = Array.isArray(payload && payload.warnings) ? payload.warnings : [];
   const skipped = Array.isArray(payload && payload.skipped) ? payload.skipped : [];
@@ -500,13 +516,13 @@ function summaryApplyIssues(payload) {
       level: "error",
       code: item.reason || item.code || "error",
       doc_id: item.doc_id,
-      message: item.message || item.reason || "summary apply error"
+      message: item.message || item.reason || `${fallbackPrefix} error`
     })),
     ...warnings.map((item) => ({
       level: item.level || "warning",
       code: item.reason || item.code || "warning",
       doc_id: item.doc_id,
-      message: item.message || item.reason || "summary apply warning"
+      message: item.message || item.reason || `${fallbackPrefix} warning`
     })),
     ...skipped.map((item) => ({
       level: "warning",
@@ -541,7 +557,35 @@ function renderSummaryApplyResult(state, payload) {
   setText(state.resultExportNode, payload && payload.staged_filename || selectedFileName(state));
   setText(state.resultGeneratedNode, payload && payload.backup_dir || "");
   setText(state.resultCountsNode, countsValue);
-  renderIssues(state, summaryApplyIssues(payload || {}));
+  renderIssues(state, applyIssues(payload || {}, "summary apply"));
+  state.resultNode.hidden = false;
+}
+
+function renderHierarchyApplyResult(state, payload) {
+  const countsValue = hierarchyCountsText(state, payload && payload.counts);
+  const summary = normalizeText(payload && payload.summary_text);
+  setText(state.summaryNode, `${summary} ${countsValue}`.trim());
+  setText(
+    state.resultTypeLabel,
+    getStudioText(state.config, "library_import.summary_apply_result_type_label", "operation")
+  );
+  setText(
+    state.resultExportLabel,
+    getStudioText(state.config, "library_import.summary_apply_result_file_label", "staged file")
+  );
+  setText(
+    state.resultGeneratedLabel,
+    getStudioText(state.config, "library_import.summary_apply_result_backup_label", "backup")
+  );
+  setText(state.resultCountsLabel, getStudioText(state.config, "library_import.result_counts_label", "counts"));
+  setText(
+    state.resultTypeNode,
+    getStudioText(state.config, "library_import.hierarchy_apply_operation", "hierarchy apply")
+  );
+  setText(state.resultExportNode, payload && payload.staged_filename || selectedFileName(state));
+  setText(state.resultGeneratedNode, payload && payload.backup_dir || "");
+  setText(state.resultCountsNode, countsValue);
+  renderIssues(state, applyIssues(payload || {}, "hierarchy apply"));
   state.resultNode.hidden = false;
 }
 
@@ -632,6 +676,96 @@ async function runSummaryApply(state) {
     const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
       || getStudioText(state.config, "library_import.summary_apply_failed", "Summary update failed.");
     renderSummaryApplyResult(state, { ...payload, summary_text: message });
+    setStatus(state.statusNode, "error", message);
+  } finally {
+    state.isRunning = false;
+    setControlsDisabled(state, false);
+    syncRouteBusyState(state);
+  }
+}
+
+async function runHierarchyApply(state) {
+  if (!state.serviceAvailable || state.isRunning) return;
+  const stagedFilename = selectedFileName(state);
+  const recordIndices = selectedDocumentRecordIndices(state);
+  if (!stagedFilename || !recordIndices.length) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(state.config, "library_import.summary_apply_selection_required", "Select at least one document preview.")
+    );
+    return;
+  }
+
+  state.isRunning = true;
+  setControlsDisabled(state, true);
+  syncRouteBusyState(state);
+  setStatus(
+    state.statusNode,
+    "",
+    getStudioText(state.config, "library_import.hierarchy_apply_preflight_status", "Checking selected hierarchy changes...")
+  );
+
+  try {
+    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportHierarchyApply, {
+      scope: SCOPE,
+      staged_filename: stagedFilename,
+      record_indices: recordIndices,
+      confirm: false
+    });
+    const countsTextValue = hierarchyCountsText(state, preflight.counts);
+    if (!preflight.ok || Number(preflight.counts && (preflight.counts.changed || preflight.counts.updates) || 0) < 1) {
+      setStatus(state.statusNode, preflight.ok ? "warn" : "error", preflight.summary_text || countsTextValue);
+      renderHierarchyApplyResult(state, preflight);
+      return;
+    }
+
+    const confirm = await openConfirmDetailModal({
+      root: state.root,
+      title: getStudioText(state.config, "library_import.hierarchy_apply_confirm_title", "Update hierarchy?"),
+      body: [
+        preflight.summary_text || countsTextValue,
+        countsTextValue,
+        getStudioText(
+          state.config,
+          "library_import.hierarchy_apply_confirm_body",
+          "This will back up and update selected Library source parent ids."
+        )
+      ],
+      primaryLabel: getStudioText(state.config, "library_import.hierarchy_apply_confirm_ok", "OK"),
+      cancelLabel: getStudioText(state.config, "library_import.hierarchy_apply_confirm_cancel", "Cancel")
+    });
+    if (!confirm.confirmed) {
+      setStatus(
+        state.statusNode,
+        "",
+        getStudioText(state.config, "library_import.hierarchy_apply_cancelled", "Hierarchy update cancelled.")
+      );
+      return;
+    }
+
+    setStatus(
+      state.statusNode,
+      "",
+      getStudioText(state.config, "library_import.hierarchy_apply_running_status", "Updating selected hierarchy...")
+    );
+    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportHierarchyApply, {
+      scope: SCOPE,
+      staged_filename: stagedFilename,
+      record_indices: recordIndices,
+      confirm: true
+    });
+    renderHierarchyApplyResult(state, applied);
+    setStatus(
+      state.statusNode,
+      "success",
+      applied.summary_text || getStudioText(state.config, "library_import.hierarchy_apply_success", "Hierarchy updated.")
+    );
+  } catch (error) {
+    const payload = error && error.payload ? error.payload : {};
+    const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
+      || getStudioText(state.config, "library_import.hierarchy_apply_failed", "Hierarchy update failed.");
+    renderHierarchyApplyResult(state, { ...payload, summary_text: message });
     setStatus(state.statusNode, "error", message);
   } finally {
     state.isRunning = false;
@@ -751,17 +885,16 @@ async function init() {
       state.applyHierarchyButton,
       getStudioText(state.config, "library_import.apply_hierarchy_button", "Apply hierarchy")
     );
-    const disabledActionTitle = getStudioText(
-      state.config,
-      "library_import.apply_actions_disabled_title",
-      "This action is not available until the source-write service contract is implemented."
-    );
     state.updateSummaryButton.title = getStudioText(
       state.config,
       "library_import.update_summary_title",
       "Update selected document summaries from the staged file."
     );
-    state.applyHierarchyButton.title = disabledActionTitle;
+    state.applyHierarchyButton.title = getStudioText(
+      state.config,
+      "library_import.apply_hierarchy_title",
+      "Update selected document parent ids from the staged file."
+    );
     renderPreviewList(state);
     updateSelectionSummary(state);
     setControlsDisabled(state, true);
@@ -848,6 +981,9 @@ async function init() {
     state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
     state.updateSummaryButton.addEventListener("click", () => {
       runSummaryApply(state).catch((error) => console.warn("library_import: unexpected summary apply failure", error));
+    });
+    state.applyHierarchyButton.addEventListener("click", () => {
+      runHierarchyApply(state).catch((error) => console.warn("library_import: unexpected hierarchy apply failure", error));
     });
   } catch (error) {
     console.warn("library_import: init failed", error);

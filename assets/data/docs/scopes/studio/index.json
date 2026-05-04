@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T21:57:42Z",
+  "generated_at": "2026-05-04T22:17:39Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -94,7 +94,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 20871
+      "content_text_length": 22971
     },
     {
       "scope": "studio",
@@ -440,7 +440,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 8251
+      "content_text_length": 8495
     },
     {
       "scope": "studio",
@@ -728,7 +728,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 5819
+      "content_text_length": 6023
     },
     {
       "scope": "studio",
@@ -849,7 +849,7 @@
       "source_path": "library-import.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "content_text_length": 21032,
+      "content_text_length": 21527,
       "ui_status": "done"
     },
     {
@@ -925,7 +925,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 6763
+      "content_text_length": 6804
     },
     {
       "scope": "studio",
@@ -1183,7 +1183,7 @@
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json",
-      "content_text_length": 8480
+      "content_text_length": 9066
     },
     {
       "scope": "studio",
@@ -1335,7 +1335,7 @@
       "source_path": "library-import-export-v2.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
-      "content_text_length": 15821,
+      "content_text_length": 17103,
       "ui_status": "proposed"
     },
     {
@@ -2587,7 +2587,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 294877
+      "content_text_length": 296533
     },
     {
       "scope": "studio",

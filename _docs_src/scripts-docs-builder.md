@@ -61,6 +61,7 @@ Generated outputs:
 - `archive` is treated as an ordinary doc id and parent folder; visibility comes from `viewable`, not from a structural system-folder rule
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
 - generated index rows include `content_text_length`, derived from rendered HTML after plain-text extraction and title stripping, so Studio tooling can cheaply find docs with no body content
+- Library source docs may temporarily contain imported `parent_id` values that do not resolve to current Library docs; the builder preserves those values in source but emits them as root-level generated relationships so `/library/` remains navigable
 - if front matter is omitted, the builder falls back to:
   - `doc_id`: filename stem
   - `title`: first Markdown `#` heading, or a humanized filename

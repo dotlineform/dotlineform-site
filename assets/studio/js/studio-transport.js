@@ -53,6 +53,7 @@ const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
   libraryImportFiles: "http://127.0.0.1:8789/docs/library-import/files",
   libraryImportPreview: "http://127.0.0.1:8789/docs/library-import/preview",
   libraryImportSummaryApply: "http://127.0.0.1:8789/docs/library-import/summary-apply",
+  libraryImportHierarchyApply: "http://127.0.0.1:8789/docs/library-import/hierarchy-apply",
   openSource: "http://127.0.0.1:8789/docs/open-source"
 });
 

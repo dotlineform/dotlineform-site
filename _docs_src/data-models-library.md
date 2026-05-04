@@ -181,6 +181,9 @@ Current model:
 - Markdown preview files are generated only when `./scripts/docs/docs_import.py --write-previews` is used
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
+- summary apply can update selected source `summary` values through the docs-management service after preflight and confirmation
+- hierarchy apply can update selected source `parent_id` values through the docs-management service after preflight and confirmation; current `sort_order` values are preserved
+- hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships
 
 Current consumers:
 
@@ -192,7 +195,7 @@ Current consumers:
 Current limits:
 
 - Library is the only supported v1 import scope
-- source apply workflows are out of scope until explicitly specified
+- full-content apply and imported `sort_order` apply are out of scope until explicitly specified
 
 ## Why The Library Model Is Valuable Even While Small
 
@@ -213,7 +216,8 @@ Current dependencies:
 
 Current enforcement:
 
-- duplicate `doc_id` values and invalid `parent_id` references are rejected by the docs builder before Library docs data is written
+- duplicate `doc_id` values are rejected by the docs builder before Library docs data is written
+- unresolved Library `parent_id` references are allowed for imported hierarchy staging and are emitted as root-level generated relationships
 - `published: false` docs are excluded before Library docs data is generated
 - `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from Library search and public/default viewer discovery
 - `archive` and its descendants remain generated; public/default Library tree discovery and Library search include only docs whose own `viewable` value permits it

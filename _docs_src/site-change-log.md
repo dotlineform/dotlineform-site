@@ -8,6 +8,43 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Added hierarchy apply for Library imports
+
+**Status:** implemented
+
+**Area:** Studio / Library import
+
+**Summary:**
+The Library import page can now apply selected staged `parent_id` values to canonical Library source documents.
+`Apply hierarchy` enables only for selected document preview rows, runs a preflight against staged record indexes and current `_docs_library_src/` files, shows a shared OK/Cancel confirmation modal, then writes only selected parent-id changes.
+The docs-management endpoint creates a timestamped `library-import-hierarchy-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.
+Generated Library docs data now treats unresolved imported source parents as root-level relationships so unknown external parents do not break `/library/`.
+
+**Reason:**
+Task 8 needed hierarchy writes separate from summary writes.
+Keeping this parent-id-only preserves current `sort_order` and leaves future sort-order imports for the later file format that actually includes that field.
+
+**Files changed:**
+
+- `assets/studio/js/library-import.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_management_server.py`
+- `scripts/build_docs.rb`
+- `tests/python/test_docs_import_service.py`
+- `tests/smoke/library_import.py`
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
+**Impact:**
+Selected staged hierarchy rows can update Library source safely with preflight reporting, backups, and skipped/warning rows.
+Full-content applies and imported `sort_order` writes remain separate future contracts.
+
 ## [2026-05-04] Added summary apply for Library imports
 
 **Status:** implemented

@@ -347,6 +347,127 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
     assert {item["reason"] for item in payload["skipped"]} == {"unchanged", "missing_summary"}
 
 
+def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
+        write_staged(
+            root,
+            "hierarchy.jsonl",
+            [
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": ""},
+                {"doc_id": "missing", "title": "Missing", "parent_id": "library"},
+            ],
+        )
+        payload = docs_management.handle_library_import_hierarchy_apply(
+            root,
+            {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
+            dry_run=True,
+        )
+
+    assert payload["ok"] is False
+    assert payload["counts"]["changed"] == 1
+    assert payload["counts"]["errors"] == 1
+    assert payload["errors"][0]["reason"] == "missing_target_doc"
+    assert payload["hierarchy_apply_written"] is False
+
+
+def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order() -> None:
+    original_rebuild = stub_rebuild()
+    try:
+        with make_repo() as temp:
+            root = Path(temp)
+            write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+            write_library_doc(
+                root,
+                "alpha.md",
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                    "added_date": "2026-05-01",
+                    "last_updated": "2026-05-01",
+                    "parent_id": "library",
+                    "sort_order": 30,
+                },
+            )
+            write_staged(
+                root,
+                "hierarchy.jsonl",
+                [
+                    {"doc_id": "library", "title": "Library", "parent_id": "external-root"},
+                    {"doc_id": "alpha", "title": "Alpha", "parent_id": ""},
+                ],
+            )
+            payload = docs_management.handle_library_import_hierarchy_apply(
+                root,
+                {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
+                dry_run=False,
+            )
+            alpha_text = (root / "_docs_library_src/alpha.md").read_text(encoding="utf-8")
+            library_text = (root / "_docs_library_src/library.md").read_text(encoding="utf-8")
+            backup_dir = root / payload["backup_dir"]
+            manifest = json.loads((backup_dir / "manifest.json").read_text(encoding="utf-8"))
+    finally:
+        docs_management.perform_source_write_and_rebuild = original_rebuild
+
+    assert payload["ok"] is True
+    assert payload["hierarchy_apply_written"] is True
+    assert payload["counts"]["changed"] == 1
+    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert manifest["operation"] == "library-import-hierarchy-apply"
+    assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
+    assert 'parent_id: ""' in alpha_text
+    assert "sort_order: 30" in alpha_text
+    assert "parent_id: external-root" not in library_text
+
+
+def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
+        write_staged(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
+        payload = docs_management.handle_library_import_hierarchy_apply(
+            root,
+            {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
+            dry_run=True,
+        )
+        source_text = (root / "_docs_library_src/alpha.md").read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["hierarchy_apply_written"] is False
+    assert payload["counts"]["changed"] == 1
+    assert payload["counts"]["warnings"] == 1
+    assert payload["warnings"][0]["reason"] == "unknown_parent_id"
+    assert "parent_id: library" in source_text
+
+
+def test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
+        write_staged(
+            root,
+            "hierarchy.jsonl",
+            [
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"},
+                {"doc_id": "library", "title": "Library", "parent_id": "library"},
+            ],
+        )
+        payload = docs_management.handle_library_import_hierarchy_apply(
+            root,
+            {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
+            dry_run=True,
+        )
+
+    assert payload["ok"] is True
+    assert payload["counts"]["changed"] == 0
+    assert payload["counts"]["unchanged"] == 1
+    assert payload["counts"]["skipped"] == 1
+    assert payload["skipped"][0]["reason"] == "self_parent_id"
+
+
 def main() -> None:
     tests = [
         test_library_import_files_lists_json_and_jsonl_only,
@@ -357,6 +478,10 @@ def main() -> None:
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,
+        test_library_import_hierarchy_apply_preflight_reports_missing_target_doc,
+        test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order,
+        test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write,
+        test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows,
     ]
     for test in tests:
         test()
