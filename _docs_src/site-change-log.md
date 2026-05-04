@@ -8,6 +8,39 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Added summary apply for Library imports
+
+**Status:** implemented
+
+**Area:** Studio / Library import
+
+**Summary:**
+The Library import page can now apply selected staged summaries to canonical Library source documents.
+`Update summary` enables only for selected document preview rows, runs a preflight against the staged record indexes and current `_docs_library_src/` files, shows a shared OK/Cancel confirmation modal, then writes only the selected summary changes.
+The docs-management endpoint creates a timestamped `library-import-summary-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.
+
+**Reason:**
+Task 7 needed the first narrow source-write path before hierarchy writes.
+Keeping the apply action summary-only makes the import flow useful for missing-summary cleanup without mixing it with full-content or relationship changes.
+
+**Files changed:**
+
+- `assets/studio/js/library-import.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_management_server.py`
+- `tests/python/test_docs_import_service.py`
+- `tests/smoke/library_import.py`
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
+**Impact:**
+Selected staged summary rows can update Library source safely with preflight reporting and backups.
+Hierarchy, `sort_order`, and full-content applies remain separate future contracts.
+
 ## [2026-05-04] Added selectable Library export formats
 
 **Status:** implemented

@@ -119,6 +119,31 @@ def write_staged(root: Path, filename: str, payload: object) -> None:
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_library_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
+    lines = ["---"]
+    for key, value in front_matter.items():
+        lines.append(f"{key}: {docs_management.format_front_matter_value(value)}")
+    lines.extend(["---", "", body])
+    path = root / "_docs_library_src" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def stub_rebuild():
+    original = docs_management.perform_source_write_and_rebuild
+
+    def fake_rebuild(repo_root, scope, changed_paths, write_operation, **kwargs):
+        write_operation()
+        return {
+            "ok": True,
+            "steps": [],
+            "search": {"mode": "targeted", "doc_ids": kwargs.get("search_doc_ids") or []},
+        }
+
+    docs_management.perform_source_write_and_rebuild = fake_rebuild
+    return original
+
+
 def test_library_import_files_lists_json_and_jsonl_only() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -229,6 +254,99 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
     assert plural["summary_text"].startswith("Validated export 2 documents to ")
 
 
+def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "summary": "Old summary."})
+        write_staged(
+            root,
+            "summaries.jsonl",
+            [
+                {"doc_id": "alpha", "title": "Alpha", "summary": "New summary."},
+                {"doc_id": "missing", "title": "Missing", "summary": "Missing summary."},
+            ],
+        )
+        payload = docs_management.handle_library_import_summary_apply(
+            root,
+            {"scope": "library", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            dry_run=True,
+        )
+
+    assert payload["ok"] is False
+    assert payload["counts"]["updates"] == 1
+    assert payload["counts"]["errors"] == 1
+    assert payload["errors"][0]["reason"] == "missing_target_doc"
+    assert payload["summary_apply_written"] is False
+
+
+def test_library_import_summary_apply_creates_backup_and_writes_source() -> None:
+    original_rebuild = stub_rebuild()
+    try:
+        with make_repo() as temp:
+            root = Path(temp)
+            write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library"})
+            write_library_doc(
+                root,
+                "alpha.md",
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                    "added_date": "2026-05-01",
+                    "last_updated": "2026-05-01",
+                    "summary": "Old summary.",
+                    "parent_id": "library",
+                },
+            )
+            write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
+            payload = docs_management.handle_library_import_summary_apply(
+                root,
+                {"scope": "library", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
+                dry_run=False,
+            )
+            source_text = (root / "_docs_library_src/alpha.md").read_text(encoding="utf-8")
+            backup_dir = root / payload["backup_dir"]
+            manifest = json.loads((backup_dir / "manifest.json").read_text(encoding="utf-8"))
+            backup_exists = backup_dir.exists()
+            backup_source_exists = (backup_dir / "alpha.md").exists()
+    finally:
+        docs_management.perform_source_write_and_rebuild = original_rebuild
+
+    assert payload["ok"] is True
+    assert payload["summary_apply_written"] is True
+    assert payload["counts"]["updates"] == 1
+    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert backup_exists
+    assert backup_source_exists
+    assert manifest["operation"] == "library-import-summary-apply"
+    assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
+    assert "summary: New summary." in source_text
+
+
+def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "summary": "Same summary."})
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library"})
+        write_staged(
+            root,
+            "summaries.jsonl",
+            [
+                {"doc_id": "alpha", "title": "Alpha", "summary": "Same summary."},
+                {"doc_id": "library", "title": "Library"},
+            ],
+        )
+        payload = docs_management.handle_library_import_summary_apply(
+            root,
+            {"scope": "library", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            dry_run=True,
+        )
+
+    assert payload["ok"] is True
+    assert payload["counts"]["updates"] == 0
+    assert payload["counts"]["skipped"] == 2
+    assert {item["reason"] for item in payload["skipped"]} == {"unchanged", "missing_summary"}
+
+
 def main() -> None:
     tests = [
         test_library_import_files_lists_json_and_jsonl_only,
@@ -236,6 +354,9 @@ def main() -> None:
         test_library_import_preview_dry_run_reports_without_writing,
         test_library_import_preview_rejects_non_library_scope,
         test_docs_export_summary_text_uses_context_aware_document_plural,
+        test_library_import_summary_apply_preflight_reports_missing_target_doc,
+        test_library_import_summary_apply_creates_backup_and_writes_source,
+        test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,
     ]
     for test in tests:
         test()

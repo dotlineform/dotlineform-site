@@ -10,6 +10,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { openConfirmDetailModal } from "./studio-modal.js";
 
 const SCOPE = "library";
 
@@ -306,6 +307,12 @@ function selectablePreviewIds(state) {
   return state.previewRows.map((row) => row.id).filter(Boolean);
 }
 
+function selectedDocumentRecordIndices(state) {
+  return state.previewRows
+    .filter((row) => state.selectedPreviewIds.has(row.id) && row.type === "document" && Number.isInteger(row.recordIndex))
+    .map((row) => row.recordIndex);
+}
+
 function syncPreviewCheckboxes(state) {
   state.listNode.querySelectorAll("[data-library-import-preview]").forEach((row) => {
     const rowId = normalizeText(row.getAttribute("data-library-import-preview"));
@@ -328,6 +335,7 @@ function updateSelectionSummary(state) {
       { count }
     )
   );
+  syncApplyActionState(state);
 }
 
 function handlePreviewListChange(state, event) {
@@ -405,7 +413,13 @@ function setControlsDisabled(state, disabled) {
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
   state.clearButton.disabled = disabled || !state.previewRows.length;
-  state.updateSummaryButton.disabled = true;
+  state.updateSummaryButton.disabled = disabled || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  state.applyHierarchyButton.disabled = true;
+}
+
+function syncApplyActionState(state) {
+  if (!state.updateSummaryButton || !state.applyHierarchyButton) return;
+  state.updateSummaryButton.disabled = state.isRunning || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
   state.applyHierarchyButton.disabled = true;
 }
 
@@ -456,6 +470,169 @@ async function runPreview(state) {
       "error",
       normalizeText(error && error.message) || getStudioText(state.config, "library_import.status_failed", "Import preview failed.")
     );
+  } finally {
+    state.isRunning = false;
+    setControlsDisabled(state, false);
+    syncRouteBusyState(state);
+  }
+}
+
+function applyCountsText(state, counts) {
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  return getStudioText(
+    state.config,
+    "library_import.summary_apply_counts",
+    "{updates} updates; {skipped} skipped; {errors} errors.",
+    {
+      updates: Number(safeCounts.updates || 0),
+      skipped: Number(safeCounts.skipped || 0),
+      errors: Number(safeCounts.errors || 0)
+    }
+  );
+}
+
+function summaryApplyIssues(payload) {
+  const errors = Array.isArray(payload && payload.errors) ? payload.errors : [];
+  const warnings = Array.isArray(payload && payload.warnings) ? payload.warnings : [];
+  const skipped = Array.isArray(payload && payload.skipped) ? payload.skipped : [];
+  return [
+    ...errors.map((item) => ({
+      level: "error",
+      code: item.reason || item.code || "error",
+      doc_id: item.doc_id,
+      message: item.message || item.reason || "summary apply error"
+    })),
+    ...warnings.map((item) => ({
+      level: item.level || "warning",
+      code: item.reason || item.code || "warning",
+      doc_id: item.doc_id,
+      message: item.message || item.reason || "summary apply warning"
+    })),
+    ...skipped.map((item) => ({
+      level: "warning",
+      code: item.reason || "skipped",
+      doc_id: item.doc_id,
+      message: item.message || "selected row skipped"
+    }))
+  ];
+}
+
+function renderSummaryApplyResult(state, payload) {
+  const countsValue = applyCountsText(state, payload && payload.counts);
+  const summary = normalizeText(payload && payload.summary_text);
+  setText(state.summaryNode, `${summary} ${countsValue}`.trim());
+  setText(
+    state.resultTypeLabel,
+    getStudioText(state.config, "library_import.summary_apply_result_type_label", "operation")
+  );
+  setText(
+    state.resultExportLabel,
+    getStudioText(state.config, "library_import.summary_apply_result_file_label", "staged file")
+  );
+  setText(
+    state.resultGeneratedLabel,
+    getStudioText(state.config, "library_import.summary_apply_result_backup_label", "backup")
+  );
+  setText(state.resultCountsLabel, getStudioText(state.config, "library_import.result_counts_label", "counts"));
+  setText(
+    state.resultTypeNode,
+    getStudioText(state.config, "library_import.summary_apply_operation", "summary apply")
+  );
+  setText(state.resultExportNode, payload && payload.staged_filename || selectedFileName(state));
+  setText(state.resultGeneratedNode, payload && payload.backup_dir || "");
+  setText(state.resultCountsNode, countsValue);
+  renderIssues(state, summaryApplyIssues(payload || {}));
+  state.resultNode.hidden = false;
+}
+
+function selectedFileName(state) {
+  const file = selectedFile(state);
+  return normalizeText(file && file.filename);
+}
+
+async function runSummaryApply(state) {
+  if (!state.serviceAvailable || state.isRunning) return;
+  const stagedFilename = selectedFileName(state);
+  const recordIndices = selectedDocumentRecordIndices(state);
+  if (!stagedFilename || !recordIndices.length) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(state.config, "library_import.summary_apply_selection_required", "Select at least one document preview.")
+    );
+    return;
+  }
+
+  state.isRunning = true;
+  setControlsDisabled(state, true);
+  syncRouteBusyState(state);
+  setStatus(
+    state.statusNode,
+    "",
+    getStudioText(state.config, "library_import.summary_apply_preflight_status", "Checking selected summaries...")
+  );
+
+  try {
+    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportSummaryApply, {
+      scope: SCOPE,
+      staged_filename: stagedFilename,
+      record_indices: recordIndices,
+      confirm: false
+    });
+    const countsTextValue = applyCountsText(state, preflight.counts);
+    if (!preflight.ok || Number(preflight.counts && preflight.counts.updates || 0) < 1) {
+      setStatus(state.statusNode, preflight.ok ? "warn" : "error", preflight.summary_text || countsTextValue);
+      renderSummaryApplyResult(state, preflight);
+      return;
+    }
+
+    const confirm = await openConfirmDetailModal({
+      root: state.root,
+      title: getStudioText(state.config, "library_import.summary_apply_confirm_title", "Update summaries?"),
+      body: [
+        preflight.summary_text || countsTextValue,
+        countsTextValue,
+        getStudioText(
+          state.config,
+          "library_import.summary_apply_confirm_body",
+          "This will back up and update selected Library source files."
+        )
+      ],
+      primaryLabel: getStudioText(state.config, "library_import.summary_apply_confirm_ok", "OK"),
+      cancelLabel: getStudioText(state.config, "library_import.summary_apply_confirm_cancel", "Cancel")
+    });
+    if (!confirm.confirmed) {
+      setStatus(
+        state.statusNode,
+        "",
+        getStudioText(state.config, "library_import.summary_apply_cancelled", "Summary update cancelled.")
+      );
+      return;
+    }
+
+    setStatus(
+      state.statusNode,
+      "",
+      getStudioText(state.config, "library_import.summary_apply_running_status", "Updating selected summaries...")
+    );
+    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportSummaryApply, {
+      scope: SCOPE,
+      staged_filename: stagedFilename,
+      record_indices: recordIndices,
+      confirm: true
+    });
+    renderSummaryApplyResult(state, applied);
+    setStatus(
+      state.statusNode,
+      "success",
+      applied.summary_text || getStudioText(state.config, "library_import.summary_apply_success", "Summaries updated.")
+    );
+  } catch (error) {
+    const payload = error && error.payload ? error.payload : {};
+    const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
+      || getStudioText(state.config, "library_import.summary_apply_failed", "Summary update failed.");
+    renderSummaryApplyResult(state, { ...payload, summary_text: message });
+    setStatus(state.statusNode, "error", message);
   } finally {
     state.isRunning = false;
     setControlsDisabled(state, false);
@@ -579,7 +756,11 @@ async function init() {
       "library_import.apply_actions_disabled_title",
       "This action is not available until the source-write service contract is implemented."
     );
-    state.updateSummaryButton.title = disabledActionTitle;
+    state.updateSummaryButton.title = getStudioText(
+      state.config,
+      "library_import.update_summary_title",
+      "Update selected document summaries from the staged file."
+    );
     state.applyHierarchyButton.title = disabledActionTitle;
     renderPreviewList(state);
     updateSelectionSummary(state);
@@ -665,6 +846,9 @@ async function init() {
       updateSelectionSummary(state);
     });
     state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
+    state.updateSummaryButton.addEventListener("click", () => {
+      runSummaryApply(state).catch((error) => console.warn("library_import: unexpected summary apply failure", error));
+    });
   } catch (error) {
     console.warn("library_import: init failed", error);
     root.hidden = false;

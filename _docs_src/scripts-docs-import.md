@@ -158,14 +158,14 @@ Service handler checks live in:
 tests/python/test_docs_import_service.py
 ```
 
-They cover staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection.
+They cover staged-file listing, preview writing, dry-run preview reporting, non-Library scope rejection, and the docs-management summary-apply contract for missing target docs, backup creation, skipped rows, and source write output.
 The parser and service checks run in the `docs` profile:
 
 ```bash
 ./scripts/run_checks.py --profile docs
 ```
 
-The Studio page shell and unavailable-service route behavior are covered by `tests/smoke/library_import.py`.
+The Studio page shell, unavailable-service route behavior, mocked preview flow, and mocked summary-apply confirmation flow are covered by `tests/smoke/library_import.py`.
 That smoke check runs in the `studio-smoke` profile after a temporary Jekyll build:
 
 ```bash

@@ -37,6 +37,7 @@ Exposed endpoints:
 - `POST /docs/import-html`
 - `POST /docs/export`
 - `POST /docs/library-import/preview`
+- `POST /docs/library-import/summary-apply`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -56,7 +57,7 @@ Current behavior:
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
 - also used by `/studio/library-export/` to read the generated Library docs index locally and write configured Library export artifacts
-- also used by `/studio/library-import/` to list staged JSON/JSONL data files and write Markdown previews
+- also used by `/studio/library-import/` to list staged JSON/JSONL data files, write Markdown previews, and apply selected Library summary updates
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
@@ -280,6 +281,39 @@ Runtime role:
 - it does not mutate `_docs_library_src/*.md`
 - it does not apply summaries, relationship recommendations, or full-content changes to canonical source
 - generated preview files are local working artifacts for Studio review
+
+`POST /docs/library-import/summary-apply` expects:
+
+```json
+{
+  "scope": "library",
+  "staged_filename": "library-document-summaries.jsonl",
+  "record_indices": [0, 3, 4],
+  "confirm": false
+}
+```
+
+Library import summary-apply behavior:
+
+- `scope` must be `library`
+- `staged_filename` must resolve inside `var/docs/import-staging/library/`
+- `record_indices` must be a non-empty list of selected staged record indexes
+- `confirm: false` runs a non-writing preflight and reports selected rows, updates, skipped rows, warnings, errors, and counts
+- `confirm: true` applies the selected summary updates when the preflight has no blocking errors
+- selected rows map back to parsed staged records by `record_index`, then to current source docs loaded from `_docs_library_src/`
+- only selected missing target source docs are blocking errors
+- selected rows with missing staged records, missing `doc_id`, duplicate `doc_id`, missing summary text, or unchanged summary text are skipped
+- source writes update only `summary`, preserve or initialize `added_date`, and refresh `last_updated`
+- successful writes create a timestamped `library-import-summary-apply` backup bundle under `var/docs/backups/` before writing source files
+- successful writes rebuild Library docs payloads and run targeted docs-search updates for changed ids
+- server `--dry-run` mode validates and reports without writing even when `confirm: true`
+
+Runtime role:
+
+- this endpoint is the browser-to-filesystem boundary for summary-only Library import writes
+- it does not accept browser-supplied source paths and does not write outside the Library source-doc scope
+- it does not apply full content, `parent_id`, `sort_order`, or other relationship changes
+- backups use the existing docs-management backup root so Studio backup retention can manage them with the other docs source-write backups
 
 `POST /docs/open-source` expects:
 

@@ -85,7 +85,7 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if expect_unavailable_service and not preview_disabled:
         raise AssertionError("preview button should be disabled when docs-management service is unavailable")
     if not update_summary_disabled:
-        raise AssertionError("update summary should stay disabled until its service contract exists")
+        raise AssertionError("update summary should stay disabled until document previews are selected")
     if not apply_hierarchy_disabled:
         raise AssertionError("apply hierarchy should stay disabled until its service contract exists")
     return {
@@ -186,6 +186,44 @@ def install_mock_docs_service(page) -> None:
                     }
                 ],
             }
+        elif parsed.path == "/docs/library-import/summary-apply":
+            request_body = {}
+            try:
+                post_data_json = route.request.post_data_json
+                request_body = post_data_json() if callable(post_data_json) else post_data_json
+            except (AttributeError, json.JSONDecodeError):
+                post_data = getattr(route.request, "post_data", "") or "{}"
+                if callable(post_data):
+                    post_data = post_data()
+                request_body = json.loads(post_data or "{}")
+            payload = {
+                "ok": True,
+                "scope": "library",
+                "staged_filename": "summaries.jsonl",
+                "operation": "summary_apply",
+                "confirmed": bool(request_body.get("confirm")),
+                "dry_run": False,
+                "selected_records": [
+                    {"record_index": 0, "doc_id": "library"},
+                    {"record_index": 1, "doc_id": "alpha"},
+                    {"record_index": 2, "doc_id": "beta"},
+                ],
+                "updates": [
+                    {"record_index": 0, "doc_id": "library"},
+                    {"record_index": 1, "doc_id": "alpha"},
+                ],
+                "skipped": [
+                    {"record_index": 2, "doc_id": "beta", "reason": "missing_summary"}
+                ],
+                "errors": [],
+                "warnings": [],
+                "counts": {"selected": 3, "updates": 2, "skipped": 1, "errors": 0, "warnings": 1},
+                "backup_dir": "var/docs/backups/library/20260504-120600-library-import-summary-apply",
+                "rebuild": {"ok": True},
+                "summary_apply_written": bool(request_body.get("confirm")),
+                "requires_confirmation": not bool(request_body.get("confirm")),
+                "summary_text": "Updated 2 Library summary update(s)." if request_body.get("confirm") else "Validated 2 Library summary update(s) without writing.",
+            }
         else:
             payload = {"ok": False, "error": f"Unhandled mock route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
@@ -216,9 +254,37 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"unexpected selection summary: {selection!r}")
     update_summary_disabled = page.locator("#libraryImportUpdateSummary").evaluate("button => button.disabled")
     apply_hierarchy_disabled = page.locator("#libraryImportApplyHierarchy").evaluate("button => button.disabled")
-    if not update_summary_disabled or not apply_hierarchy_disabled:
-        raise AssertionError("future source-write actions should stay disabled after preview generation")
-    return {"preview_rows": rows, "selected_summary": selection, "depths": depths}
+    if update_summary_disabled or not apply_hierarchy_disabled:
+        raise AssertionError("summary apply should enable for selected document previews while hierarchy apply remains disabled")
+    page.locator("#libraryImportUpdateSummary").click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    modal_title = page.locator("#studioModalTitle").text_content()
+    if modal_title != "Update summaries?":
+        raise AssertionError(f"unexpected summary apply modal title: {modal_title!r}")
+    page.locator('[data-role="modal-cancel"]').last.click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+    cancelled_status = page.locator("#libraryImportStatus").text_content()
+    if cancelled_status != "Summary update cancelled.":
+        raise AssertionError(f"unexpected cancelled status: {cancelled_status!r}")
+    page.locator("#libraryImportUpdateSummary").click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+    page.wait_for_function(
+        "selector => document.querySelector(selector)?.textContent === 'Updated 2 Library summary update(s).'",
+        arg="#libraryImportStatus",
+        timeout=5000,
+    )
+    applied_status = page.locator("#libraryImportStatus").text_content()
+    summary = page.locator("#libraryImportSummary").text_content()
+    issue_text = " ".join(page.locator("#libraryImportIssuesList li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    if applied_status != "Updated 2 Library summary update(s).":
+        raise AssertionError(f"unexpected applied status: {applied_status!r}")
+    if "2 updates; 1 skipped; 0 errors." not in summary:
+        raise AssertionError(f"summary apply counts missing from summary: {summary!r}")
+    if "missing_summary" not in issue_text:
+        raise AssertionError(f"summary apply skipped row missing from issues: {issue_text!r}")
+    return {"preview_rows": rows, "selected_summary": selection, "depths": depths, "summary_apply": applied_status}
 
 
 def main() -> int:

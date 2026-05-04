@@ -295,6 +295,10 @@ Expected outputs:
 
 ### Task 7. Define Summary Apply Contract
 
+Status:
+
+- implemented
+
 Specify and implement the narrow source-write path for applying imported summaries.
 
 Expected outputs:
@@ -306,6 +310,15 @@ Expected outputs:
 - timestamped backup before writing source files, using the easiest compatible retention-managed backup root
 - write service endpoint constrained to `_docs_library_src/`
 - tests for missing target docs, backup creation, and write output
+
+Implementation notes:
+
+- Studio enables `Update summary` only after at least one document preview row is selected.
+- The browser sends selected staged `record_index` values to `POST /docs/library-import/summary-apply`; relationship-tree preview rows are not apply targets.
+- The endpoint performs a preflight when `confirm: false`, reports update, skipped, warning, and error counts, and opens a shared OK/Cancel confirmation modal only when writes are available.
+- Apply mode requires `confirm: true`, creates a timestamped `library-import-summary-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library_src/*.md` source documents.
+- Validation errors are limited to selected `doc_id` values that do not resolve to current Library source docs. Missing summaries, duplicate selected ids, missing staged rows, and unchanged summaries are reported as skipped rows.
+- The write path updates only `summary`, preserves `added_date`, refreshes `last_updated`, rebuilds Library docs payloads, and runs targeted docs-search updates for changed ids.
 
 ### Task 8. Define Hierarchy Apply Contract
 

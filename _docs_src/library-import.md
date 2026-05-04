@@ -363,9 +363,10 @@ Status note:
 - shows a relationship-tree preview row when the service report includes a generated tree preview file
 - labels missing titles, missing `doc_id`, duplicate `doc_id`, missing preview files, and records that do not map to current Library docs
 - exposes `select all` and `clear` selection pills for preview rows
-- displays disabled `Update summary` and `Apply hierarchy` actions until their source-write service contracts exist
+- enables `Update summary` for selected document preview rows and keeps `Apply hierarchy` disabled until its source-write service contract exists
+- runs a preflight through `POST /docs/library-import/summary-apply`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library_src/*.md`
 - keeps the route disabled when the docs-management local service is unavailable
-- does not apply summaries, full content, or relationship changes to canonical Library source
+- does not apply full content or relationship changes to canonical Library source
 
 ### Task 7. Link From Library Dashboard
 
@@ -393,10 +394,10 @@ Add focused tests for:
 - Studio route ready state and unavailable-service behavior
 
 Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output for relationship and non-relationship imports, deterministic staged-timestamp preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
-Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection is implemented in `tests/python/test_docs_import_service.py`.
+Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, non-Library scope rejection, summary-apply missing target docs, backup creation, skipped rows, and source write output is implemented in `tests/python/test_docs_import_service.py`.
 A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/library_import.py`.
 The `docs` profile in `./scripts/run_checks.py` runs the parser and local service checks.
-The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs Library import route smokes with the docs-management service blocked and with a mocked preview response.
+The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs Library import route smokes with the docs-management service blocked and with mocked preview plus summary-apply responses.
 
 ### Task 9. Decide Summary Apply Scope
 

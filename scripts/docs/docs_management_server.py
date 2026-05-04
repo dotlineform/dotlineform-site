@@ -16,6 +16,7 @@ Endpoints:
   POST /docs/import-html
   POST /docs/export
   POST /docs/library-import/preview
+  POST /docs/library-import/summary-apply
   POST /docs/rebuild
   POST /docs/broken-links
   POST /docs/open-source
@@ -1149,6 +1150,178 @@ def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run
             f"{action} {len(report.get('preview_files', []))} Library import preview file(s){suffix}."
         )
     return report
+
+
+def selected_import_record_indices(value: Any) -> list[int]:
+    if not isinstance(value, list):
+        raise ValueError("record_indices must be a list")
+    selected: list[int] = []
+    seen: set[int] = set()
+    for item in value:
+        if isinstance(item, bool):
+            raise ValueError("record_indices must contain integers")
+        try:
+            index = int(item)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("record_indices must contain integers") from exc
+        if index < 0:
+            raise ValueError("record_indices must contain zero or positive integers")
+        if index not in seen:
+            selected.append(index)
+            seen.add(index)
+    return selected
+
+
+def summary_from_import_record(record: Dict[str, Any]) -> tuple[str, bool]:
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
+    if "summary" not in metadata:
+        return "", False
+    return normalize_summary(metadata.get("summary")), True
+
+
+def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_library_import_scope(body.get("scope"))
+    staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
+    if not staged_filename:
+        raise ValueError("staged_filename is required")
+    selected_indices = selected_import_record_indices(body.get("record_indices", []))
+    if not selected_indices:
+        raise ValueError("record_indices must include at least one selected record")
+    confirmed = bool(body.get("confirm"))
+
+    report = parse_staged_import(repo_root=repo_root, scope=scope, staged_file=staged_filename)
+    records_by_index = {
+        int(record.get("record_index")): record
+        for record in report.get("records", [])
+        if isinstance(record, dict) and isinstance(record.get("record_index"), int)
+    }
+    docs = load_scope_docs(repo_root, scope)
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    selected_rows: list[Dict[str, Any]] = []
+    skipped: list[Dict[str, Any]] = []
+    errors: list[Dict[str, Any]] = []
+    warnings: list[Dict[str, Any]] = []
+    updates: list[Dict[str, Any]] = []
+    rewrite_docs: list[ScopeDoc] = []
+    rewritten_sources: dict[str, str] = {}
+    seen_doc_ids: set[str] = set()
+
+    for record_index in selected_indices:
+        record = records_by_index.get(record_index)
+        if not record:
+            skipped.append({"record_index": record_index, "reason": "missing_record", "message": "selected record is not present in staged file"})
+            continue
+        doc_id = str(record.get("doc_id") or "").strip()
+        selected_rows.append({"record_index": record_index, "doc_id": doc_id})
+        if not doc_id:
+            skipped.append({"record_index": record_index, "reason": "missing_doc_id", "message": "selected record has no doc_id"})
+            continue
+        if doc_id in seen_doc_ids:
+            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "duplicate_doc_id", "message": "selected doc_id was already planned"})
+            continue
+        seen_doc_ids.add(doc_id)
+        target = docs_by_id.get(doc_id)
+        if target is None:
+            errors.append({"record_index": record_index, "doc_id": doc_id, "reason": "missing_target_doc", "message": f"target Library source doc does not exist: {doc_id}"})
+            continue
+        summary, has_summary = summary_from_import_record(record)
+        if not has_summary or not summary:
+            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "missing_summary", "message": "selected record has no proposed summary"})
+            continue
+        current_summary = normalize_summary(target.front_matter.get("summary"))
+        if summary == current_summary:
+            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "unchanged", "message": "proposed summary matches current source summary"})
+            continue
+
+        timestamp = current_doc_timestamp()
+        updated_front_matter = dict(target.front_matter)
+        updated_front_matter["added_date"] = str(
+            updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
+        ).strip()
+        updated_front_matter["last_updated"] = timestamp
+        updated_front_matter["summary"] = summary
+        rewritten_sources[doc_id] = format_source(updated_front_matter, target.body)
+        rewrite_docs.append(target)
+        updates.append(
+            {
+                "record_index": record_index,
+                "doc_id": doc_id,
+                "path": relative_path(repo_root, target.path),
+                "from_summary": current_summary,
+                "to_summary": summary,
+            }
+        )
+
+    warning_count = len(warnings) + len(skipped)
+    error_count = len(errors)
+    ok = bool(report.get("ok")) and error_count == 0
+    backup_dir = None
+    rebuild = None
+    if ok and confirmed and updates and not dry_run:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "library-import-summary-apply",
+            rewrite_docs,
+            {
+                "staged_filename": staged_filename,
+                "record_indices": selected_indices,
+                "updated_doc_ids": [item["doc_id"] for item in updates],
+            },
+        )
+        rebuild = perform_source_write_and_rebuild(
+            repo_root,
+            scope,
+            [doc.path for doc in rewrite_docs],
+            lambda: [write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
+            suppression_reason="docs-library-import-summary-apply",
+            search_doc_ids=[item["doc_id"] for item in updates],
+        )
+
+    payload: Dict[str, Any] = {
+        "ok": ok,
+        "scope": scope,
+        "staged_filename": staged_filename,
+        "operation": "summary_apply",
+        "confirmed": confirmed,
+        "dry_run": dry_run,
+        "input_ok": bool(report.get("ok")),
+        "detected_import_type": report.get("detected_import_type", ""),
+        "selected_records": selected_rows,
+        "updates": updates,
+        "skipped": skipped,
+        "errors": errors,
+        "warnings": warnings,
+        "counts": {
+            "selected": len(selected_indices),
+            "updates": len(updates),
+            "skipped": len(skipped),
+            "errors": error_count,
+            "warnings": warning_count,
+        },
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "summary_apply_written": bool(ok and confirmed and updates and not dry_run),
+        "requires_confirmation": bool(ok and updates and not confirmed),
+    }
+    action = "Validated" if not confirmed or dry_run else "Updated"
+    suffix = " without writing" if not confirmed or dry_run else ""
+    payload["summary_text"] = f"{action} {len(updates)} Library summary update(s){suffix}."
+    log_event(
+        repo_root,
+        "docs-library-import-summary-apply",
+        {
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "dry_run": dry_run,
+            "confirmed": confirmed,
+            "updates": len(updates),
+            "skipped": len(skipped),
+            "errors": error_count,
+            "written": bool(payload["summary_apply_written"]),
+        },
+    )
+    return payload
 
 
 def imported_body_markdown(preview: Dict[str, Any]) -> str:
@@ -2327,6 +2500,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 return
             if self.path == "/docs/library-import/preview":
                 payload = handle_library_import_preview(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
+                return
+            if self.path == "/docs/library-import/summary-apply":
+                payload = handle_library_import_summary_apply(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
                 return
             if self.path == "/docs/update-metadata":

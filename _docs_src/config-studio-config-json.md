@@ -100,6 +100,17 @@ The page runs exports through the fixed docs-management transport endpoint `POST
 Do not add export field mappings, output formats, or selection defaults to `studio_config.json`.
 Those belong in `assets/studio/data/library_export_configs.json` so the CLI, service endpoint, and Studio UI all run the same pattern.
 
+## Library import page
+
+The Library import page reads:
+
+- `paths.routes.library_import`
+- `ui_text.library_import`
+
+`ui_text.library_import` owns browser-facing labels, status messages, selection copy, preview result labels, and summary-apply confirmation modal copy.
+The fixed docs-management transport endpoints for staged-file listing, preview generation, and summary apply live in `assets/studio/js/studio-transport.js`.
+Import parsing rules, export-pattern matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the docs import/export scripts and docs-management service.
+
 Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs under `ui_text.catalogue_series_editor` because create mode now lives at `/studio/catalogue-series/?mode=new`.
 
 ## Docs Viewer status emoji
