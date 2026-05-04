@@ -108,7 +108,7 @@ Declined for now:
 
 - recent-ops or restore view backed by backup bundles
 - additional drag/drop hints or manage-mode helper copy
-- guided `_archive` setup flow
+- guided `archive` setup flow
 - richer move/archive/delete preview UI
 - `Reveal In Finder`
 - inline markdown body editing
@@ -232,9 +232,9 @@ Current Phase 1 answers are captured in the contract above and in the decision l
 ### Archive
 
 - What does `archive` mean?
-- Move the file into `_docs_src/_archive/`?
+- Move the file into `_docs_src/archive/`?
 - Set `published: false`?
-- Change `parent_id` to `_archive`?
+- Change `parent_id` to `archive`?
 - Some combination of the above?
 
 ### Delete
@@ -385,11 +385,8 @@ Validation rules for all write commands:
 - title does not need to be unique
 - `sort_order`, when present, must be an integer
 - `parent_id`, when present, must resolve to an existing doc in the same scope
-- reserved system docs cannot be renamed, archived, moved, or deleted through the viewer
-
-Reserved system docs:
-
-- `_archive`
+- docs with children cannot be deleted until their children are moved or deleted
+- `archive` is an ordinary doc id; the Archive command uses it as the conventional destination parent
 
 Title-change rule:
 
@@ -439,12 +436,12 @@ Recommended request shape:
 
 Behavior:
 
-- `parent_id` becomes `_archive`
-- `sort_order` becomes the last sibling order under `_archive`
+- `parent_id` becomes `archive`
+- `sort_order` becomes the last sibling order under `archive`
 - file does not move on disk
 - `published` stays unchanged
-- archiving a doc that is already under `_archive` is a no-op success
-- `_archive` itself cannot be archived
+- archiving a doc that is already under `archive` is a no-op success
+- archiving `archive` itself is a no-op because the command cannot move the Archive parent into itself
 
 ### `delete-preview` And `delete-apply`
 
@@ -460,7 +457,6 @@ Recommended preview request shape:
 Preview must report:
 
 - whether the target exists
-- whether the target is a reserved system doc
 - child docs whose `parent_id` points at the target
 - inbound markdown links from other docs when they can be detected
 - file path that would be deleted
@@ -469,7 +465,6 @@ Preview must report:
 Delete blockers:
 
 - target doc does not exist
-- target doc is reserved
 - one or more child docs still depend on the target as `parent_id`
 
 Warnings but not blockers:
@@ -519,12 +514,10 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 
 - file does not move
 - `published` does not change automatically
-- tree position changes through `parent_id = _archive`
+- tree position changes through `parent_id = archive`
 - archived Studio docs remain discoverable in the normal docs tree under the Archive doc
-- archived Library docs remain generated but are hidden outside manage mode by Library scope viewer options
-- `_archive` is a protected reserved system doc
-- the Archive doc is structural and non-loadable in the viewer; opening it routes to its first archived child doc
-- if there is no archived child doc yet, opening Archive falls back to the scope's default doc
+- archived Library docs remain generated; public visibility depends on each doc's own `viewable` value
+- `archive` is an ordinary doc id and can be hidden from public views with `viewable: false`
 
 ### `delete`
 
@@ -532,7 +525,6 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 - preview is required before apply
 - child-doc dependencies block delete
 - inbound markdown references are previewed as warnings
-- reserved docs cannot be deleted
 
 ### `move` / drag and drop
 
@@ -550,14 +542,14 @@ Phase 1 answers:
 - the docs builder does not need nested source folders for tree meaning, but it currently uses `source_path` for relative markdown-link resolution
 - flattening `_docs_src` is a prerequisite for Studio management mode
 - `_docs_library_src` is already flat and does not need the same migration
-- special names such as `_archive` remain meaningful as `doc_id` values, not as required source folders
-- the reserved `_archive` `doc_id` remains unchanged even though the viewer does not load `_archive.json` directly
+- special names such as `archive` remain meaningful as `doc_id` values, not as required source folders
+- the `archive` `doc_id` remains a conventional Archive command target, but it is not protected or non-loadable by name
 
 Implementation consequence:
 
 - write-enabled viewer management can now rely on a flat Studio source root
 - any future layout change still requires relative-link review because nested-path assumptions can affect markdown source links
-- the viewer runtime, not the docs-management server, owns the redirect from `_archive` to the first archived child doc
+- viewer visibility comes from generated doc fields such as `viewable`, not from hard-coded source-folder names
 
 ## Related Work
 
@@ -589,7 +581,7 @@ Flattening is no longer optional work here: it is a prerequisite for Studio docs
 - define semantics for `new`, `archive`, and `delete`
 - define uniqueness and validation rules
 - keep title edits independent from `doc_id` and filename
-- define reserved/protected system docs such as `_archive`
+- define the conventional Archive command target id, `archive`
 - define the localhost API contract for create/archive/delete
 
 ### Phase 2
@@ -649,7 +641,7 @@ If sort_order changes by drag/drop, should the system renumber sibling items aut
 A: drag/drop now normalizes the destination sibling set to sparse unique values after each move. This may rewrite multiple sibling docs, but it makes reorders visible and prevents duplicate `sort_order` values from making a requested placement appear impossible. Undo restores every touched doc's prior placement in one client-side history step.
 
 What does archive mean?  
-A: parent_id becomes doc_id: _archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs_src. published remains true, so that it is still viewable.
+A: parent_id becomes doc_id: archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs_src. published remains true, so that it is still viewable.
 
 Is delete a real file deletion or a soft-delete workflow?  
 A: real file deletion. warning prompt.
@@ -699,11 +691,11 @@ A: not in a flat structure.
 does flattening _docs_src become a prerequisite, or is it a separate cleanup project?  
 A: it becomes a pre-requisite.
 
-are there any sections that depend on special folder names such as _archive, _draft, or _dev?  
-A: yes, but only in terms of doc_id. I have already mentioned _archive, that needs to exist for the Archive command. if system finds that it doesn't exist, it fails with error. In terms of file structure, _archive, _draft etc will disappear in flat structure.
+are there any sections that depend on special folder names such as archive, _draft, or _dev?  
+A: yes, but only in terms of doc_id. I have already mentioned archive, that needs to exist for the Archive command. if system finds that it doesn't exist, it fails with error. In terms of file structure, archive, _draft etc will disappear in flat structure.
 
-Should `_archive` be treated as a protected reserved system doc?  
-A: yes. `_archive` is required for the Archive command and should not be renameable or deletable through the viewer management surface.
+Should `archive` be treated as a protected system doc?  
+A: no. `archive` is required only as the conventional Archive command target. It should be editable like a normal doc, and public/search visibility should be controlled with `viewable: false`.
 
 If a title changes later, should that mutate `doc_id` and filename?  
 A: no. title changes do not mutate `doc_id` or filename.

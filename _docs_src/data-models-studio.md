@@ -293,12 +293,12 @@ Current content families:
 
 - one row per generated Studio doc
 - identity, title, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
-- `viewer_options` declaring `_archive` as non-loadable while leaving it visible in the normal Studio tree and keeping document-view updated dates visible
+- `viewer_options` for scope-level display behavior such as keeping document-view updated dates visible
 
 Current site mapping:
 
 - left-hand tree and lookup layer for `/docs/`
-- Studio Archive remains public/default tree reference material for completed planning docs, deprecated guidance, and decision history
+- Studio Archive is an ordinary docs folder; setting `viewable: false` hides it from public/default tree, search, and recently-added views
 
 Why it exists separately from the per-doc payload:
 

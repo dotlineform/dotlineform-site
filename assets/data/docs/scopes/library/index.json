@@ -1,12 +1,8 @@
 {
-  "generated_at": "2026-05-04T13:37:26Z",
+  "generated_at": "2026-05-04T15:50:55Z",
   "viewer_options": {
-    "non_loadable_doc_ids": [
-      "_archive"
-    ],
-    "manage_only_tree_root_ids": [
-      "_archive"
-    ],
+    "non_loadable_doc_ids": [],
+    "manage_only_tree_root_ids": [],
     "show_updated_date": false
   },
   "docs": [
@@ -41,17 +37,17 @@
     },
     {
       "scope": "library",
-      "doc_id": "_archive",
+      "doc_id": "archive",
       "title": "Archive",
       "added_date": "2026-04-19",
       "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 30,
       "published": true,
-      "viewable": true,
+      "viewable": false,
       "source_path": "archive.md",
-      "viewer_url": "/library/?doc=_archive",
-      "content_url": "/assets/data/docs/scopes/library/by-id/_archive.json"
+      "viewer_url": "/library/?doc=archive",
+      "content_url": "/assets/data/docs/scopes/library/by-id/archive.json"
     },
     {
       "scope": "library",

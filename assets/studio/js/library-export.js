@@ -88,29 +88,11 @@ function enabledConfigsForScope(payload, scope) {
   });
 }
 
-function archivedRootIds(indexPayload) {
-  const roots = indexPayload?.viewer_options?.manage_only_tree_root_ids;
-  return new Set(Array.isArray(roots) ? roots.map(normalizeText).filter(Boolean) : ["_archive"]);
-}
-
 function buildVisibleDocs(indexPayload) {
   const sourceDocs = Array.isArray(indexPayload?.docs) ? indexPayload.docs : [];
-  const archivedRoots = archivedRootIds(indexPayload);
-  const archiveDescendants = new Set();
-  const collectArchive = (docId) => {
-    if (!docId || archiveDescendants.has(docId)) return;
-    archiveDescendants.add(docId);
-    sourceDocs.forEach((doc) => {
-      if (normalizeText(doc?.parent_id) === docId) {
-        collectArchive(normalizeText(doc.doc_id));
-      }
-    });
-  };
-  archivedRoots.forEach(collectArchive);
-
   const docs = sourceDocs.filter((doc) => {
     const docId = normalizeText(doc?.doc_id);
-    if (!docId || archiveDescendants.has(docId)) return false;
+    if (!docId) return false;
     return doc.published !== false;
   });
 

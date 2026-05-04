@@ -87,7 +87,7 @@ Examples:
 - `design-backlog.md`
 - `search-config-architecture.md`
 
-Archive remains a normal viewer-tree concept through the reserved `_archive` doc, not through a special storage folder.
+Archive remains a normal viewer-tree concept through the `archive` doc id, not through a special storage folder or protected system folder.
 
 ## Guidance Split
 
@@ -114,20 +114,14 @@ Current effect:
 
 - Studio file storage no longer carries section meaning
 - tree structure comes only from `doc_id`, `parent_id`, and `sort_order`
-- `_archive` remains meaningful as a reserved system doc in the viewer tree
-- `_archive` is structural in the viewer runtime and redirects to its first child doc instead of loading its own payload
-- if `_archive` has no children, viewer links and direct routes fall back to the scope's normal default doc
+- `archive` remains meaningful as a conventional parent id in the viewer tree
+- `archive` is treated as an ordinary doc node; hide it from public views with `viewable: false`
+- if `archive` is not viewable, public viewer links and search omit it through the same viewability rules as other docs
 
 Important builder consequence:
 
 - the docs builder still resolves relative markdown links from each file's `source_path`
 - any future source-layout change must review or rewrite source-relative `.md` links if nested paths are reintroduced
-
-Current runtime reason:
-
-- the generated per-doc payload path for `_archive` would be `_archive.json`
-- Jekyll does not publish that leading-underscore asset path reliably under `_site`
-- the viewer therefore treats `_archive` as a non-loadable section node rather than changing the reserved `doc_id` contract
 
 ## Current Generated Output Boundary
 

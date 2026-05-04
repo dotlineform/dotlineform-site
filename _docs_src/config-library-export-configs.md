@@ -38,7 +38,7 @@ Each config controls:
 - whether the user selects explicit docs or the exporter uses all matching docs
 - whether selected parent docs include descendants
 - whether generated but non-viewable docs are included
-- whether `_archive` and unpublished docs are excluded
+- whether unpublished docs are excluded
 - whether summary configs default to missing-summary-only filtering
 - which source/generated fields are written to each output record
 - whether body content is converted to plain text and how images/SVGs are represented
@@ -59,7 +59,7 @@ The first config file defines three enabled Library export patterns:
   JSONL document rows for exporting multiple selected document bodies in one file
 
 These configs are Library-only for v1.
-They include generated but non-viewable docs, exclude archived docs, and exclude unpublished docs.
+They include generated but non-viewable docs and exclude unpublished docs. `archive` is treated like any other generated Library doc.
 
 ## Top-Level Shape
 
@@ -143,7 +143,7 @@ The initial Library export patterns use explicit document selection; Select all 
 V1 Library exports should normally use:
 
 - `include_non_viewable: true`
-- `exclude_archived: true`
+- `exclude_archived: false`
 - `exclude_unpublished: true`
 
 `supports_missing_summary_only` and `default_missing_summary_only` are config-level flags for summary-focused exports.

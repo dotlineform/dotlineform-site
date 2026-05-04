@@ -3,7 +3,7 @@ doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
 last_updated: 2026-05-02
-parent_id: _archive
+parent_id: archive
 sort_order: 50
 ---
 

@@ -71,9 +71,6 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     )
     if not doc_ids:
         raise AssertionError("Library export document list is empty")
-    if "_archive" in doc_ids:
-        raise AssertionError("_archive should not appear in the Studio Library export list")
-
     run_disabled = page.locator("#libraryExportRun").evaluate("button => button.disabled")
     if expect_unavailable_service and not run_disabled:
         raise AssertionError("run button should be disabled when docs-management service is unavailable")

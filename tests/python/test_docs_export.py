@@ -51,7 +51,7 @@ BASE_CONFIG = {
                 "mode": "explicit_doc_ids",
                 "include_descendants": True,
                 "include_non_viewable": True,
-                "exclude_archived": True,
+                "exclude_archived": False,
                 "exclude_unpublished": True,
                 "supports_missing_summary_only": True,
                 "default_missing_summary_only": True,
@@ -101,7 +101,7 @@ INDEX_PAYLOAD = {
             "viewable": True,
         },
         {
-            "doc_id": "_archive",
+            "doc_id": "archive",
             "title": "Archive",
             "parent_id": "",
             "summary": "",

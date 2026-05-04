@@ -66,7 +66,7 @@ Search update behavior:
 - import overwrite and metadata title edits target the changed doc id plus direct children because child search entries include `parent_title`
 - metadata parent/order edits, move, archive, and delete target the changed doc id
 - bulk viewability targets changed doc ids only
-- internal targeted calls pass `--remove-missing` so missing, non-viewable, and `_archive` ids can be reconciled safely
+- internal targeted calls pass `--remove-missing` so missing and non-viewable ids can be reconciled safely
 - `POST /docs/rebuild` remains a full same-scope docs-search rebuild
 
 `GET /capabilities` reports:
@@ -75,7 +75,7 @@ Search update behavior:
 - whether docs export is available
 - whether Library import is available
 - which scopes are writable
-- whether the current scope has `_archive`
+- whether the current scope has `archive` for the Archive command
 
 `POST /docs/create` expects:
 
@@ -390,11 +390,11 @@ Restore-move behavior:
 
 Request behavior:
 
-- moves the doc into the Archive section by setting `parent_id = _archive`
-- appends the archived doc as the last sibling under `_archive`
+- moves the doc into the Archive section by setting `parent_id = archive`
+- appends the archived doc as the last sibling under `archive`
 - does not move the file on disk
 - preserves `added_date` and refreshes `last_updated` to the current minute
-- fails when `_archive` is not defined for the scope
+- fails when `archive` is not defined for the scope
 
 `POST /docs/delete-preview` expects:
 
@@ -407,7 +407,7 @@ Request behavior:
 
 Preview behavior:
 
-- reports blockers such as reserved docs or child docs
+- reports blockers such as child docs that still depend on the target
 - reports inbound markdown references as warnings
 - returns the file path that would be removed
 

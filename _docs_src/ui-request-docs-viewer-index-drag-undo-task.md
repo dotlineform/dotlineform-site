@@ -67,7 +67,7 @@ Required behavior:
 - no `folder` front matter field should be added
 - no generated docs schema field should be added for folder state
 - "folder" remains a viewer UI concept derived from tree behavior, not a source-data concept
-- nodes remain loadable unless they are already special non-loadable nodes such as `_archive`
+- node loadability and public visibility should come from generated doc metadata such as `viewable`, not from special doc ids
 
 This replaces the current practical limitation where only a collapsed node with existing children behaves like an inside drop target.
 

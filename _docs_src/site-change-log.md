@@ -8,6 +8,43 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Treated Archive as a normal Docs Viewer folder
+
+**Status:** implemented
+
+**Area:** Docs Viewer / docs search
+
+**Summary:**
+Renamed the Archive docs parent from `_archive` to `archive` and removed structural Archive behavior from the docs viewer, docs builder, docs search builder, Library export list, and docs-management server.
+
+**Reason:**
+The `viewable` flag now provides the visibility contract directly. Keeping `_archive` preserved a hidden-file naming problem and made Archive behave differently from other folders.
+
+**Changes:**
+Studio and Library Archive docs now use `doc_id: archive` and set `viewable: false`.
+Generated viewer options no longer mark `archive` as non-loadable or manage-only.
+Docs search excludes non-viewable docs rather than excluding `archive` by id.
+The docs-management server lets `archive` be edited, moved, deleted when it has no children, and made viewable; the Archive command uses `archive` as its conventional destination parent and no-ops if invoked on `archive` itself.
+Library export now includes generated Archive docs according to the same selection rules as other docs.
+
+**Files changed:**
+
+- `_docs_src/archive.md`
+- `_docs_library_src/archive.md`
+- `scripts/build_docs.rb`
+- `scripts/build_search.rb`
+- `scripts/docs/docs_management_server.py`
+- `assets/js/docs-viewer.js`
+- `assets/studio/js/library-export.js`
+- `assets/studio/data/library_export_configs.json`
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
+**Impact:**
+Archive behavior is simpler and more consistent with the rest of the docs tree.
+The main risk is accidental public exposure if `archive` or archived child docs are manually changed to `viewable: true`; that is now an explicit metadata decision rather than hidden structural behavior.
+
 ## [2026-05-04] Refined the Library export Studio UI
 
 **Status:** implemented
@@ -592,7 +629,7 @@ Library export now has configs and a read-only engine, but it also needs a clear
 
 **Changes:**
 The Library dashboard now links to Export.
-The new page loads enabled Library export configs, reads the generated Library docs index, renders a hierarchical checkbox list in Docs Viewer order, excludes `_archive` descendants, marks `viewable: true` docs with a small green dot, and supports select-all, clear, missing-summary filtering, descendant selection, and ancestor indeterminate states.
+The new page loads enabled Library export configs, reads the generated Library docs index, renders a hierarchical checkbox list in Docs Viewer order, excludes `archive` descendants, marks `viewable: true` docs with a small green dot, and supports select-all, clear, missing-summary filtering, descendant selection, and ancestor indeterminate states.
 The run button stays disabled until the Task 6 loopback endpoint is added.
 
 **Files changed:**
@@ -3723,7 +3760,7 @@ Added generated docs-viewer scope options so structural docs branches can be non
 Studio Archive and Library Archive have different product intent. Studio Archive is useful public reference material for completed planning docs, deprecated guidance, and decision history. Library Archive has minimal public-facing use and should be available mainly for local management.
 
 **Effect:**
-`scripts/build_docs.rb` now emits `viewer_options` in each docs index. Studio marks `_archive` as non-loadable but keeps it visible. Library marks `_archive` as both non-loadable and manage-only, so `/library/` hides Archive and descendants unless `mode=manage` is active. The shared viewer consumes the generated options generically, and docs search applies the same manage-only tree filtering.
+`scripts/build_docs.rb` now emits `viewer_options` in each docs index. Studio marks `archive` as non-loadable but keeps it visible. Library marks `archive` as both non-loadable and manage-only, so `/library/` hides Archive and descendants unless `mode=manage` is active. The shared viewer consumes the generated options generically, and docs search applies the same manage-only tree filtering.
 
 **Affected files/docs:**
 
@@ -4412,24 +4449,24 @@ The docs watcher is now the normal live-sync path while the runner is active, so
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 
-## [2026-04-22] Made the reserved `_archive` docs node structural and non-loadable
+## [2026-04-22] Made the reserved `archive` docs node structural and non-loadable
 
 **Status:** implemented
 
 **Area:** docs viewer / docs build pipeline
 
 **Summary:**
-Updated the docs viewer so the reserved `_archive` node now behaves as a structural section only. Direct navigation to `_archive` now opens the first archived child doc instead of trying to load `_archive.json`.
+Updated the docs viewer so the reserved `archive` node now behaves as a structural section only. Direct navigation to `archive` now opens the first archived child doc instead of trying to load `archive.json`.
 
 **Reason:**
-The docs-management contract already treats `_archive` as a protected reserved `doc_id`, but the generated payload path for that id becomes `_archive.json`. Jekyll does not reliably publish that leading-underscore asset under `_site`, which caused a viewer 404 when the Archive node itself was opened.
+The docs-management contract already treats `archive` as a protected reserved `doc_id`, but the generated payload path for that id becomes `archive.json`. Jekyll does not reliably publish that leading-underscore asset under `_site`, which caused a viewer 404 when the Archive node itself was opened.
 
 **Effect:**
-The Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `_archive` as a result because it is a structural node rather than a viewable content page. Empty Archive buckets now fall back to the scope's default doc instead of trying to load `_archive.json` through rendered viewer links.
+The Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `archive` as a result because it is a structural node rather than a viewable content page. Empty Archive buckets now fall back to the scope's default doc instead of trying to load `archive.json` through rendered viewer links.
 
 **Rejected options:**
-- renaming `_archive` to `archive`, because that would widen the change into the docs-management contract, archive API semantics, and existing source docs
-- escaping the generated payload filename for `_archive`, because that would spread a one-off storage rule into the builder output contract instead of fixing the runtime meaning directly
+- at the time, renaming `_archive` to `archive`, because that would have widened the change into the docs-management contract, archive API semantics, and existing source docs
+- escaping the generated payload filename for `_archive`, because that would have spread a one-off storage rule into the builder output contract instead of fixing the runtime meaning directly
 
 **Affected files/docs:**
 - `assets/js/docs-viewer.js`

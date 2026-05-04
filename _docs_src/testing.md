@@ -53,7 +53,7 @@ Examples:
 ```
 
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
-The `docs` profile includes Library import parser and service checks.
+The `docs` profile includes Library import parser, Library import service, and Docs Management Server checks.
 The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the Library import route check.
 
 ## Expected Close-Out

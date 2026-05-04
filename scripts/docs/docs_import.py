@@ -86,6 +86,18 @@ def normalize_text(value: Any) -> str:
     return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()
 
 
+def doc_payload_path(repo_root: Path, scope: str, doc: dict[str, Any]) -> Path:
+    content_url = normalize_text(doc.get("content_url"))
+    expected_prefix = f"/{DOCS_SCOPES_ROOT.as_posix()}/{scope}/by-id/"
+    if content_url.startswith(expected_prefix) and content_url.endswith(".json"):
+        relative_path = content_url.removeprefix("/")
+        path = repo_root / relative_path
+        if ".." not in Path(relative_path).parts:
+            return path
+    doc_id = normalize_text(doc.get("doc_id"))
+    return repo_root / DOCS_SCOPES_ROOT / scope / "by-id" / f"{doc_id}.json"
+
+
 def preview_generated_at(generated_at_dt: dt.datetime | None = None) -> str:
     value = generated_at_dt or dt.datetime.now(dt.timezone.utc)
     if value.tzinfo is None:
@@ -331,8 +343,11 @@ def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, An
             continue
         docs_by_id[doc_id] = item
 
-    payload_root = repo_root / DOCS_SCOPES_ROOT / scope / "by-id"
-    payload_ids = sorted(path.stem for path in payload_root.glob("*.json")) if payload_root.exists() else []
+    payload_ids = sorted(
+        doc_id
+        for doc_id, doc in docs_by_id.items()
+        if doc_payload_path(repo_root, scope, doc).exists()
+    )
     context.update(
         {
             "index_loaded": True,

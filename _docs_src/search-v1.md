@@ -3,7 +3,7 @@ doc_id: studio-search-v1
 title: "Studio Search V1"
 added_date: 2026-03-29
 last_updated: 2026-03-29
-parent_id: _archive
+parent_id: archive
 sort_order: 10
 published: false
 ---

@@ -51,9 +51,9 @@ Purpose:
 Docs-scope indexes also carry `viewer_options` for scope-level runtime behavior that should remain data-driven. Current options include:
 
 - `non_loadable_doc_ids`
-  structural docs that can appear in the tree but route to a loadable descendant or the scope default doc
+  reserved compatibility field for structural docs that can appear in the tree but route to a loadable descendant or the scope default doc; current scopes should normally leave this empty
 - `manage_only_tree_root_ids`
-  tree roots hidden from public/default viewer and docs-search discovery but visible in manage mode
+  reserved compatibility field for tree roots hidden from public/default viewer and docs-search discovery but visible in manage mode; current scopes should normally use per-doc `viewable: false` instead
 - `show_updated_date`
   controls whether document view metadata displays the generated row's `last_updated` date
 

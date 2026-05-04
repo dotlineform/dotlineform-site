@@ -90,6 +90,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Management Library import service handlers.",
         ),
         CheckCommand(
+            "docs-management-server-tests",
+            (sys.executable, "tests/python/test_docs_management_server.py"),
+            "Verify Docs Management Server archive-parent handling.",
+        ),
+        CheckCommand(
             "studio-docs-build",
             ("./scripts/build_docs.rb", "--scope", "studio", "--write"),
             "Regenerate Studio docs-viewer payloads.",

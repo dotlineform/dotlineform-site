@@ -108,7 +108,7 @@
     managementMessage: "",
     managementMessageIsError: false,
     managementText: {
-      archiveUnavailableNote: "Archive is unavailable for this scope until `_archive` exists.",
+      archiveUnavailableNote: "Archive is unavailable for this scope until `archive` exists.",
       checkingNote: "Checking manage mode...",
       clearSearchNote: "Clear search to manage the current doc.",
       manageModeNote: "Manage mode is local-only and writes through the docs-management server.",
@@ -138,7 +138,7 @@
     contextMenuDocId: "",
     metadataEditingDocId: "",
     metadataRestoreFocusId: "",
-    nonLoadableDocIds: new Set(["_archive"]),
+    nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
     showUpdatedDate: true,
     sidebarCollapsed: readSidebarCollapsedState()
@@ -509,8 +509,7 @@
       state.managementMode &&
       state.managementAvailable &&
       !state.managementBusy &&
-      !state.searchRouteActive &&
-      doc.doc_id !== "_archive"
+      !state.searchRouteActive
     );
   }
 
@@ -1123,7 +1122,6 @@
 
   function canDragDoc(doc) {
     if (!managementDragEnabled() || !doc) return false;
-    if (doc.doc_id === "_archive") return false;
     return !docHasChildren(doc.doc_id);
   }
 
@@ -1379,8 +1377,6 @@
   function openMetadataModal() {
     var doc = currentSelectedDoc();
     if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataParentInput || !metadataSortOrderInput) return;
-    if (doc.doc_id === "_archive") return;
-
     hideContextMenu();
     state.metadataEditingDocId = doc.doc_id;
     state.metadataRestoreFocusId = doc.doc_id;
@@ -1488,33 +1484,28 @@
     if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
 
     var doc = currentSelectedDoc();
-    var reserved = Boolean(doc && doc.doc_id === "_archive");
     var draftDoc = Boolean(doc && !isDocViewable(doc));
     var editDisabled = (
       state.managementBusy ||
       !doc ||
-      state.searchRouteActive ||
-      reserved
+      state.searchRouteActive
     );
     var archiveDisabled = (
       state.managementBusy ||
       !doc ||
       state.searchRouteActive ||
       !managementArchiveAvailable() ||
-      reserved ||
-      doc.parent_id === "_archive"
+      doc.parent_id === "archive"
     );
     var deleteDisabled = (
       state.managementBusy ||
       !doc ||
-      state.searchRouteActive ||
-      reserved
+      state.searchRouteActive
     );
     var viewableDisabled = (
       state.managementBusy ||
       !doc ||
       state.searchRouteActive ||
-      reserved ||
       !draftDoc
     );
 
@@ -2652,7 +2643,7 @@
     var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
       ? payload.viewer_options
       : {};
-    state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, ["_archive"]);
+    state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.showUpdatedDate = viewerOptions.show_updated_date !== false;
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
@@ -2852,7 +2843,7 @@
   function collectRecentDocs() {
     return state.docs
       .filter(function (doc) {
-        return doc && doc.doc_id && doc.doc_id !== "_archive" && isDocViewable(doc);
+        return doc && doc.doc_id && isDocViewable(doc);
       })
       .slice()
       .sort(compareRecentDocs)

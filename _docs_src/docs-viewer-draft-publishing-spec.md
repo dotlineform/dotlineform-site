@@ -48,8 +48,7 @@ It is not suitable as the public visibility flag for generated-but-hidden Librar
 There is no docs `status` field.
 The docs builder and management flow now support `viewable`.
 
-The docs-management flow already has an `_archive` structural section, but `_archive` is not a publication state.
-It is a tree/navigation location for archived docs.
+The docs-management flow can still use `archive` as a conventional tree location for archived docs, but `archive` is not a publication state or a special visibility mechanism.
 
 ## Decision: Keep `published`, Add `viewable`
 
@@ -63,7 +62,7 @@ Direction:
 - `viewable: false` means generated and reviewable in manage mode, but hidden from public/default discovery
 - absence of `published` should continue to default to `true` for existing docs
 - absence of `viewable` should default to `true` for existing docs
-- `_archive` remains a structural parent, not a status value
+- `archive` can be used as an ordinary parent folder, not as a status value
 - no `status` field should be added yet
 
 Reasons:
@@ -79,7 +78,7 @@ Avoided ambiguity:
 - `published: false` but expected to open in manage mode
 - `published: true` but expected to be hidden from public navigation
 - `status: draft` plus `viewable: true`
-- `status: archived` versus parent `_archive`
+- `status: archived` versus parent `archive`
 - `deprecated` but still visible in search
 - warning banners or lifecycle badges before the product behavior is clear
 
@@ -307,12 +306,12 @@ Non-viewable:
 
 Archive:
 
-- structural location under `_archive`
+- optional tree location under `archive`
 - may still be viewable if the archive section is visible in the current scope
-- may be hidden outside manage mode by scope-level viewer options without becoming a draft
+- may be hidden by setting `viewable: false` like any other doc
 - used for docs that should remain available but are no longer active
 
-The system should not treat `_archive` as equivalent to `viewable: false`.
+The system should not treat `archive` as equivalent to `viewable: false`.
 
 ## Suggested Phases
 

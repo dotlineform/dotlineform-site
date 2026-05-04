@@ -540,7 +540,7 @@ scope_configs = [
     viewer_base_url: "/docs/",
     include_scope_param: true,
     allow_nested_source: false,
-    non_loadable_doc_ids: ["_archive"],
+    non_loadable_doc_ids: [],
     manage_only_tree_root_ids: [],
     show_updated_date: true
   ),
@@ -551,8 +551,8 @@ scope_configs = [
     viewer_base_url: "/library/",
     include_scope_param: false,
     allow_nested_source: false,
-    non_loadable_doc_ids: ["_archive"],
-    manage_only_tree_root_ids: ["_archive"],
+    non_loadable_doc_ids: [],
+    manage_only_tree_root_ids: [],
     show_updated_date: false
   ),
   ScopeConfig.new(
@@ -562,7 +562,7 @@ scope_configs = [
     viewer_base_url: "/analysis/",
     include_scope_param: false,
     allow_nested_source: true,
-    non_loadable_doc_ids: ["_archive"],
+    non_loadable_doc_ids: [],
     manage_only_tree_root_ids: [],
     show_updated_date: true
   )

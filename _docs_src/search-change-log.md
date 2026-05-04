@@ -2,12 +2,33 @@
 doc_id: search-change-log
 title: "Search Change Log"
 added_date: 2026-04-24
-last_updated: 2026-04-26
+last_updated: 2026-05-04
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-05-04] Moved Archive search exclusion to viewability
+
+**Status:** implemented
+
+**Area:** docs search build flow
+
+**Summary:**
+Renamed the Archive docs parent from `_archive` to `archive` and stopped treating Archive as a hard-coded docs-search exclusion.
+
+**Reason:**
+Docs Viewer now has an explicit `viewable` flag, so search visibility should follow the same metadata rule for `archive` as for every other doc.
+
+**Effect:**
+`scripts/build_search.rb` now excludes docs-domain entries when `viewable: false` or when a targeted update removes a missing doc. `archive` is absent from Library and Studio docs search only when its generated docs-index row is non-viewable.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 
 ## [2026-04-26] Added Analysis docs search
 
@@ -268,7 +289,7 @@ Added a targeted `doc_id` update mode to `scripts/build_search.rb` for `studio` 
 Docs-management and later watcher orchestration need a search-owned way to update affected docs-domain entries without always rebuilding the full same-scope search artifact.
 
 **Effect:**
-`scripts/build_search.rb` now accepts `--only-doc-ids` plus `--remove-missing` for `studio` and `library`. Targeted mode loads the existing docs-domain search artifact, rebuilds only the affected `doc_id` entries from the generated docs index, removes affected ids that are missing, non-viewable, or `_archive`, recomputes header metadata, and reports diagnostic counts. `catalogue` targeted mode is explicitly refused and remains full-rebuild-only.
+`scripts/build_search.rb` now accepts `--only-doc-ids` plus `--remove-missing` for `studio` and `library`. Targeted mode loads the existing docs-domain search artifact, rebuilds only the affected `doc_id` entries from the generated docs index, removes affected ids that are missing, non-viewable, or `archive`, recomputes header metadata, and reports diagnostic counts. `catalogue` targeted mode is explicitly refused and remains full-rebuild-only.
 
 **Affected files/docs:**
 
@@ -361,17 +382,17 @@ The Docs Live Rebuild Watcher is now the normal same-scope live-sync path while 
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 
-## [2026-04-22] Removed the reserved `_archive` docs node from docs-viewer search results
+## [2026-04-22] Removed the reserved `archive` docs node from docs-viewer search results
 
 **Status:** implemented
 
 **Area:** docs-domain search payload
 
 **Summary:**  
-Updated the docs search builder so it no longer emits a docs-search entry for the reserved `_archive` node.
+Updated the docs search builder so it no longer emits a docs-search entry for the reserved `archive` node.
 
 **Reason:**  
-`_archive` remains a meaningful reserved `doc_id` in the viewer tree, but it now behaves as a structural section node rather than a loadable document. Leaving it in docs search would keep exposing a target that is not meant to resolve as standalone content.
+`archive` remains a meaningful reserved `doc_id` in the viewer tree, but it now behaves as a structural section node rather than a loadable document. Leaving it in docs search would keep exposing a target that is not meant to resolve as standalone content.
 
 **Effect:**  
 Archived real docs remain searchable, but the Archive bucket itself no longer appears as a docs search result.

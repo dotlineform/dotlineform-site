@@ -1,9 +1,7 @@
 {
-  "generated_at": "2026-04-26T15:33:40Z",
+  "generated_at": "2026-05-04T15:39:00Z",
   "viewer_options": {
-    "non_loadable_doc_ids": [
-      "_archive"
-    ],
+    "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
     "show_updated_date": true
   },

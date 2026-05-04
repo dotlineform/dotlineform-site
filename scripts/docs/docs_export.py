@@ -331,6 +331,18 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
+def doc_payload_path(repo_root: Path, scope: str, doc: dict[str, Any]) -> Path:
+    content_url = normalize_text(doc.get("content_url"))
+    expected_prefix = f"/{DOCS_SCOPES_ROOT.as_posix()}/{scope}/by-id/"
+    if content_url.startswith(expected_prefix) and content_url.endswith(".json"):
+        relative_path = content_url.removeprefix("/")
+        path = repo_root / relative_path
+        if DOCS_SCOPES_ROOT.as_posix() in relative_path and ".." not in Path(relative_path).parts:
+            return path
+    doc_id = normalize_text(doc.get("doc_id"))
+    return repo_root / DOCS_SCOPES_ROOT / scope / "by-id" / f"{doc_id}.json"
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -512,7 +524,7 @@ def load_scope_index(repo_root: Path, scope: str) -> list[dict[str, Any]]:
 
 def load_doc_payload(context: ExportContext, doc_id: str) -> dict[str, Any]:
     if doc_id not in context.payload_cache:
-        payload_path = context.repo_root / DOCS_SCOPES_ROOT / context.scope / "by-id" / f"{doc_id}.json"
+        payload_path = doc_payload_path(context.repo_root, context.scope, context.docs_by_id.get(doc_id, {"doc_id": doc_id}))
         context.payload_cache[doc_id] = read_json(payload_path, f"{context.scope} doc payload for {doc_id}")
     return context.payload_cache[doc_id]
 
@@ -539,7 +551,7 @@ def descendant_ids(children_by_parent: dict[str, list[dict[str, Any]]], root_id:
 
 
 def archived_doc_ids(children_by_parent: dict[str, list[dict[str, Any]]]) -> set[str]:
-    return {"_archive", *descendant_ids(children_by_parent, "_archive")}
+    return {"archive", *descendant_ids(children_by_parent, "archive")}
 
 
 def expand_selected_doc_ids(context: ExportContext, selected_doc_ids: list[str]) -> list[str]:

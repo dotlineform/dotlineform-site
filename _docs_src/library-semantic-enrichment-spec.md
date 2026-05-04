@@ -283,7 +283,7 @@ This should probably reuse Docs Viewer management validation rules for:
 
 - valid `parent_id`
 - duplicate `doc_id` protection
-- `_archive` handling
+- `archive` handling
 - source backups
 - same-scope docs rebuilds
 

@@ -48,7 +48,7 @@ Docs-management writes currently run:
 
 The live docs watcher uses the same broad pairing for manual source edits. This is correct and simple, but it becomes inefficient when many docs change in one operation.
 
-The docs search builder reads the generated docs index, filters out rows where `viewable: false`, excludes `_archive`, and emits one search entry per viewable doc. This keeps search downstream of generated docs data rather than raw source files.
+The docs search builder reads the generated docs index, filters out rows where `viewable: false`, and emits one search entry per viewable doc. This keeps search downstream of generated docs data rather than raw source files.
 
 ## Boundary Decision
 
@@ -135,7 +135,7 @@ Implementation shape:
 - load the existing generated search artifact
 - load the generated docs index for the scope
 - rebuild search entries for affected viewable docs
-- remove affected ids that are missing, non-viewable, or `_archive`
+- remove affected ids that are missing or non-viewable
 - recompute header `version`, `generated_at_utc`, and `count`
 - write only when the artifact content changes
 - do not add a debug full-equivalence mode unless a real operational need appears
@@ -144,7 +144,7 @@ Implementation shape:
 Search-owned responsibilities:
 
 - field normalization
-- `_archive` exclusion
+- `viewable: false` exclusion
 - `viewable` filtering
 - parent title lookup
 - stable entry ordering
@@ -207,8 +207,8 @@ Affected-record rules for current docs search:
 - `doc_id` or filename changed:
   - treat as remove old id plus add new id
   - full fallback is acceptable until rename flows exist
-- `_archive` changed:
-  - remove or skip `_archive`
+- `archive` changed:
+  - apply the same `viewable` rule as any other doc
   - child docs are affected only if their `parent_title` changes
 
 Server behavior:
@@ -397,7 +397,7 @@ For later targeted search phases:
 - test title changes that affect child `parent_title`
 - test viewable false-to-true and true-to-false
 - test deleted docs
-- test changed docs with `_archive` as parent
+- test changed docs with `archive` as parent
 
 ## Close-Out Criteria Before Implementation
 

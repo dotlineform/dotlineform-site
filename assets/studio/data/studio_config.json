@@ -158,7 +158,7 @@
       "status_pill_saved": "Status saved.",
       "status_pill_failed": "Status update failed.",
       "make_viewable_button": "Make viewable",
-      "manage_archive_unavailable_note": "Archive is unavailable for this scope until `_archive` exists.",
+      "manage_archive_unavailable_note": "Archive is unavailable for this scope until `archive` exists.",
       "manage_checking_note": "Checking manage mode...",
       "manage_clear_search_note": "Clear search to manage the current doc.",
       "manage_mode_note": "Manage mode is local-only.",

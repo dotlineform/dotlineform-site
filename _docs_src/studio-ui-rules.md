@@ -1014,7 +1014,7 @@ Use this as the single capture surface for Studio UI work:
 - route: `/docs/?mode=manage`, `/library/?mode=manage`
 - issue: docs-viewer drag/drop could not populate an empty node because "drop inside" was inferred from existing children, so empty intended sections such as Archive behaved only as sibling targets.
 - triage: shared docs-viewer interaction refinement
-- reasoning: tree editability should not depend on a separate source schema flag or on whether a node already has children. Any doc node can become a parent through the viewer, while nodes remain loadable unless they are already special non-loadable docs such as `_archive`.
+- reasoning: tree editability should not depend on a separate source schema flag or on whether a node already has children. Any doc node can become a parent through the viewer, and loadability/visibility should come from generated doc metadata such as `viewable`.
 - outcome: drag/drop now uses row position: the upper/main row area moves inside the target node, while the lower edge moves after it. The index toolbar adds an icon-only one-step Undo for the most recent successful move in the current viewer session.
 - files changed:
   - `_includes/docs_viewer_shell.html`

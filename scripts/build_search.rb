@@ -386,9 +386,6 @@ class SearchDataBuilder
     unless docs.is_a?(Array)
       raise SystemExit, "Invalid docs index payload: expected top-level docs array"
     end
-    viewer_options = payload.is_a?(Hash) && payload["viewer_options"].is_a?(Hash) ? payload["viewer_options"] : {}
-    manage_only_tree_root_ids = normalize_id_array(viewer_options["manage_only_tree_root_ids"])
-
     records = docs.map do |row|
       next unless row.is_a?(Hash)
 
@@ -407,27 +404,6 @@ class SearchDataBuilder
         viewable: true
       )
     end.compact
-
-    return records if manage_only_tree_root_ids.empty?
-
-    records_by_id = records.to_h { |doc| [doc.doc_id, doc] }
-    records.reject { |doc| manage_only_tree_doc?(doc, records_by_id, manage_only_tree_root_ids) }
-  end
-
-  def normalize_id_array(values)
-    Array(values).map { |value| normalize_text(value) }.reject(&:empty?).uniq
-  end
-
-  def manage_only_tree_doc?(doc, docs_by_id, root_ids)
-    visited = {}
-    current = doc
-    while current && !visited[current.doc_id]
-      return true if root_ids.include?(current.doc_id)
-
-      visited[current.doc_id] = true
-      current = current.parent_id.empty? ? nil : docs_by_id[current.parent_id]
-    end
-    false
   end
 
   def boolean_field(row, key, default)
@@ -487,8 +463,6 @@ class SearchDataBuilder
     title_by_id = docs.to_h { |doc| [doc.doc_id, doc.title] }
 
     docs.filter_map do |doc|
-      next if doc.doc_id == "_archive"
-
       parent_title = doc.parent_id.empty? ? "" : normalize_text(title_by_id[doc.parent_id])
       display_meta = compact_join(doc.last_updated, parent_title)
       search_terms = build_search_tokens(doc.doc_id, doc.title, parent_title, doc.last_updated)
@@ -555,7 +529,7 @@ class SearchDataBuilder
 
       if next_entry.nil?
         unless remove_missing
-          abort "Targeted docs search update for #{@scope} requires --remove-missing when affected ids may be missing, non-viewable, or _archive"
+          abort "Targeted docs search update for #{@scope} requires --remove-missing when affected ids may be missing or non-viewable"
         end
 
         if current_entry
@@ -1047,7 +1021,7 @@ OptionParser.new do |parser|
     options[:only_records] << value
   end
 
-  parser.on("--remove-missing", "Allow targeted docs-domain updates to remove missing, non-viewable, or _archive ids") do
+  parser.on("--remove-missing", "Allow targeted docs-domain updates to remove missing or non-viewable ids") do
     options[:remove_missing] = true
   end
 

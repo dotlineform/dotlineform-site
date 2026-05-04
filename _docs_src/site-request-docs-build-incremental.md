@@ -312,9 +312,7 @@ Verification completed:
 - docs viewer routing and click behavior were rechecked for both `studio` and `library`
 - same-scope docs-search follow-through was verified for live docs-management actions and watcher-driven rebuilds
 - `dev-studio` live rebuild behavior was verified with source-root watching and no generated-output watch loops
-- reserved `_archive` handling was verified in both scopes:
-  - `studio` routes to the first archived child doc
-  - `library` currently has no archived children, so direct routes and viewer links fall back to the scope default doc
+- `archive` handling was verified in both scopes as a conventional archive parent id
 
 Close-out should also record:
 
@@ -329,8 +327,8 @@ Close-out summary:
 - same-scope docs-search follow-through is in place for live docs-management actions
 - `bin/dev-studio` now supports same-scope live docs/docs-search rebuilds while running
 - legacy live rebuild ambiguity was reduced by deprecating the older Studio tag-server `POST /build-docs` path
-- `_archive` remains a reserved structural doc id rather than becoming a normal loadable page or a renamed id
-- no dedicated empty Archive placeholder is needed; empty Archive buckets should continue to fall back to the scope default doc
+- `archive` remains the conventional Archive command parent id and is no longer a reserved structural doc id
+- Archive visibility should be controlled with `viewable`, like any other doc
 
 ### Task 10. Make `dev-studio` Startup Rebuilds Opt-In
 

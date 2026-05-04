@@ -119,7 +119,7 @@ Current search behavior:
 
 - docs search is inline within the viewer rather than a separate docs search page
 - docs search includes only viewable docs
-- docs search excludes docs hidden by the current scope's manage-only tree-root options
+- docs search excludes docs where `viewable: false`
 - the viewer lazily loads the scope search index when `q` is present
 - result links route back into the same viewer URL model
 - search and recently-added list entries use title plus muted metadata rather than showing `doc_id`
@@ -131,14 +131,12 @@ Current recently-added behavior:
 - the runtime sorts current-scope viewable docs by `added_date` descending, then title ascending
 - the list is capped by `docs_viewer.recently_added_limit` in `assets/studio/data/studio_config.json`
 - list metadata uses `added_date` and, when available, parent title in the form `date • parent`
-- `_archive` is excluded from the list
 
-Current structural visibility behavior:
+Current visibility behavior:
 
-- generated docs indexes can declare non-loadable structural doc ids and manage-only tree root ids in `viewer_options`
-- `_archive` remains a non-loadable structural doc, so opening it routes to the first loadable child or the scope default doc
-- Studio keeps `_archive` visible in the normal tree so completed planning docs and deprecated guidance remain public reference material
-- Library treats `_archive` and its descendants as manage-only, so they are hidden outside `?mode=manage`
+- generated docs indexes can carry `viewable: false` rows that remain generated and manageable
+- public/default viewer navigation, inline search, and recently-added lists include only docs where `viewable !== false`
+- `archive` is a normal doc id and parent folder; if it should be hidden, set `viewable: false` in front matter
 
 Current manage-mode draft behavior:
 

@@ -88,7 +88,6 @@ SCOPE_ROOTS = {
     "analysis": Path("_docs_src_analysis"),
 }
 NESTED_SOURCE_SCOPES = {"analysis"}
-RESERVED_DOC_IDS = {"_archive"}
 BACKUPS_REL_DIR = Path("var/docs/backups")
 LOGS_REL_DIR = Path("var/docs/logs")
 DEFAULT_MARKDOWN_APP_ENV = "DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP"
@@ -855,8 +854,6 @@ def preview_delete(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
     inbound_refs = find_inbound_refs(repo_root, target, docs)
     blockers = []
     warnings = []
-    if target.doc_id in RESERVED_DOC_IDS:
-        blockers.append(f"{target.doc_id} is a reserved system doc")
     if children:
         blockers.append(f"{len(children)} child docs still depend on this parent")
     if inbound_refs:
@@ -905,7 +902,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
-            "archive_available": any(doc.doc_id == "_archive" for doc in scope_docs),
+            "archive_available": any(doc.doc_id == "archive" for doc in scope_docs),
             "count": len(scope_docs),
         }
     return {
@@ -1455,9 +1452,6 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
     target = docs_by_id.get(doc_id)
     if target is None:
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if target.doc_id in RESERVED_DOC_IDS:
-        raise ValueError(f"{target.doc_id} is a reserved system doc and cannot be edited")
-
     title = str(body.get("title") or "").strip()
     if not title:
         raise ValueError("title is required")
@@ -1653,9 +1647,6 @@ def expand_viewability_targets(docs: list[ScopeDoc], doc_ids: list[str], include
                 add_doc_id(descendant_id)
 
     targets = [docs_by_id[doc_id] for doc_id in target_ids]
-    reserved = [doc.doc_id for doc in targets if doc.doc_id in RESERVED_DOC_IDS]
-    if reserved:
-        raise ValueError(f"{', '.join(reserved)} cannot be edited")
     return targets
 
 
@@ -1837,8 +1828,6 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
     if target_doc is None:
         raise FileNotFoundError(f"target_doc_id {target_doc_id!r} not found in scope {scope}")
-    if moving_doc.doc_id in RESERVED_DOC_IDS:
-        raise ValueError(f"{moving_doc.doc_id} is a reserved system doc and cannot be moved")
     if moving_doc.doc_id == target_doc.doc_id:
         raise ValueError("doc cannot be moved onto itself")
     if any(doc.parent_id == moving_doc.doc_id for doc in docs):
@@ -2044,11 +2033,18 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
     target = docs_by_id.get(doc_id)
     if target is None:
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if target.doc_id in RESERVED_DOC_IDS:
-        raise ValueError(f"{target.doc_id} is a reserved system doc and cannot be archived")
-    if "_archive" not in docs_by_id:
-        raise ValueError(f"scope {scope} does not define reserved _archive doc")
-    if target.parent_id == "_archive":
+    if "archive" not in docs_by_id:
+        raise ValueError(f"scope {scope} does not define archive doc")
+    if target.doc_id == "archive":
+        return {
+            "ok": True,
+            "scope": scope,
+            "doc_id": target.doc_id,
+            "path": relative_path(repo_root, target.path),
+            "summary_text": "archive is the archive parent and was not changed.",
+            "dry_run": dry_run,
+        }
+    if target.parent_id == "archive":
         return {
             "ok": True,
             "scope": scope,
@@ -2058,14 +2054,14 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
             "dry_run": dry_run,
         }
 
-    next_order = next_sort_order(docs, "_archive")
+    next_order = next_sort_order(docs, "archive")
     timestamp = current_doc_timestamp()
     updated_front_matter = dict(target.front_matter)
     updated_front_matter["added_date"] = str(
         updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
     updated_front_matter["last_updated"] = timestamp
-    updated_front_matter["parent_id"] = "_archive"
+    updated_front_matter["parent_id"] = "archive"
     updated_front_matter["sort_order"] = next_order
 
     backup_dir = None
@@ -2079,7 +2075,7 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
             {
                 "doc_id": target.doc_id,
                 "from_parent_id": target.parent_id,
-                "to_parent_id": "_archive",
+                "to_parent_id": "archive",
                 "from_sort_order": target.sort_order,
                 "to_sort_order": next_order,
             },
@@ -2108,7 +2104,7 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
         "doc_id": target.doc_id,
         "path": relative_path(repo_root, target.path),
         "record": {
-            "parent_id": "_archive",
+            "parent_id": "archive",
             "sort_order": next_order,
         },
         "summary_text": f"Archived {target.doc_id}.",

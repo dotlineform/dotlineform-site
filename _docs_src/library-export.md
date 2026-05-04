@@ -93,7 +93,6 @@ V1 UI shape:
 - no other row metadata in the document list
 
 V1 should exclude `published: false` docs because they are outside generated Docs Viewer data.
-It should also exclude `_archive` and its descendants from the Studio export UI.
 Generated but non-viewable docs, where `published: true` and `viewable: false`, are in scope and should be selectable because they are likely to need analysis before they become ready for public/default viewing.
 
 The UI may show operational counts outside the document list before export:
@@ -344,7 +343,7 @@ When the docs-management server runs with `--dry-run`, the endpoint validates an
 - Automatic batching and chunking are future enhancements.
 - V1 should use source document `last_updated` values as the source version marker.
 - Existing date-only `last_updated` values remain valid; newly managed docs use `YYYY-MM-DD HH:MM`.
-- `published: false` docs and `_archive` descendants should not be exportable through the v1 Studio UI.
+- `published: false` docs should not be exportable through the v1 Studio UI.
 - Non-viewable generated docs should be exportable and visibly marked.
 - Raw source Markdown and Markdown target documents are later config extensions, not v1 defaults.
 - Export runs should not be added to a Studio activity feed in v1.
@@ -454,7 +453,7 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, renders a hierarchical checkbox list in Docs Viewer order, excludes `_archive` descendants, marks viewable docs with a green dot, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
+Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
 
 ### Task 6. Add Local Service Endpoint
 

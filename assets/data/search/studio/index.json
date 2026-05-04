@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-93c58cd755677f03c29ef3201ef307fe",
-    "generated_at_utc": "2026-05-04T13:53:43Z",
+    "version": "blake2b-59a31c44eb271f795b2c4656d2b31910",
+    "generated_at_utc": "2026-05-04T15:53:21Z",
     "count": 170
   },
   "entries": [
@@ -346,22 +346,20 @@
       "title": "Pipeline Use Cases",
       "href": "/docs/?scope=studio&doc=pipeline-use-cases",
       "last_updated": "2026-05-01",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "parent_id": "archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "pipeline-use-cases",
         "pipeline",
         "use",
         "cases",
         "pipeline use cases",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases archive 2026-05-01 2026 05 01"
+      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases 2026-05-01 2026 05 01"
     },
     {
       "id": "data-models-shared",
@@ -601,9 +599,8 @@
       "title": "Build Catalogue",
       "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
       "last_updated": "2026-05-01",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "parent_id": "archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "scripts-main-pipeline",
         "scripts",
@@ -612,13 +609,12 @@
         "build catalogue",
         "build",
         "catalogue",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-05-01 2026 05 01"
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-05-01 2026 05 01"
     },
     {
       "id": "data-models-catalogue",
@@ -1194,24 +1190,22 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-03 22:40",
+      "last_updated": "2026-05-04",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 22:40 • Scripts",
+      "display_meta": "2026-05-04 • Scripts",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
         "run",
         "checks",
         "run checks",
-        "2026-05-03 22:40",
+        "2026-05-04",
         "2026",
         "05",
-        "03",
-        "22",
-        "40"
+        "04"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-03 22:40 2026 05 03 22 40"
+      "search_text": "scripts-run-checks scripts run checks run checks 2026-05-04 2026 05 04"
     },
     {
       "id": "scripts-audit-studio-ready-state",
@@ -1295,9 +1289,8 @@
       "title": "Copy Draft Media",
       "href": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "last_updated": "2026-05-01",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "parent_id": "archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "scripts-copy-draft-media",
         "scripts",
@@ -1305,13 +1298,12 @@
         "draft",
         "media",
         "copy draft media",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-05-01 2026 05 01"
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-05-01 2026 05 01"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -2085,9 +2077,8 @@
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "last_updated": "2026-05-02",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "parent_id": "archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -2095,13 +2086,12 @@
         "work",
         "pages",
         "generate work pages",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-02 2026 05 02"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -2373,22 +2363,20 @@
       "title": "Delete Work",
       "href": "/docs/?scope=studio&doc=scripts-delete-work",
       "last_updated": "2026-05-01",
-      "parent_id": "_archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "parent_id": "archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "scripts-delete-work",
         "scripts",
         "delete",
         "work",
         "delete work",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-delete-work scripts delete work delete work archive 2026-05-01 2026 05 01"
+      "search_text": "scripts-delete-work scripts delete work delete work 2026-05-01 2026 05 01"
     },
     {
       "id": "search-ui-behaviour",
@@ -4054,22 +4042,22 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-04",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-26 • Search",
+      "display_meta": "2026-05-04 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-04-26",
+        "2026-05-04",
         "2026",
-        "04",
-        "26"
+        "05",
+        "04"
       ],
-      "search_text": "search-change-log search change log search change log 2026-04-26 2026 04 26"
+      "search_text": "search-change-log search change log search change log 2026-05-04 2026 05 04"
     }
   ]
 }
