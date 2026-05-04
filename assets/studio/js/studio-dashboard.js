@@ -1,11 +1,19 @@
-import { loadStudioConfig } from "./studio-config.js";
+import {
+  getDocsScopeDataPath,
+  getSearchScopeDataPath,
+  loadStudioConfig
+} from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { probeCatalogueHealth } from "./studio-transport.js";
+import {
+  DOCS_MANAGEMENT_ENDPOINTS,
+  probeCatalogueHealth,
+  probeDocsManagementHealth
+} from "./studio-transport.js";
 
 function dashboardRouteDetail(root) {
   return {
@@ -21,6 +29,28 @@ async function loadJson(url) {
     throw new Error(`HTTP ${response.status}`);
   }
   return response.json();
+}
+
+function docsGeneratedIndexUrl(scope) {
+  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedIndex);
+  url.searchParams.set("scope", scope);
+  return url.href;
+}
+
+function docsGeneratedSearchUrl(scope) {
+  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedSearch);
+  url.searchParams.set("scope", scope);
+  return url.href;
+}
+
+function docsIndexReadUrl(config, scope, docsServerAvailable) {
+  if (docsServerAvailable) return docsGeneratedIndexUrl(scope);
+  return getDocsScopeDataPath(config, scope, "index") || `/assets/data/docs/scopes/${scope}/index.json`;
+}
+
+function docsSearchReadUrl(config, scope, docsServerAvailable) {
+  if (docsServerAvailable) return docsGeneratedSearchUrl(scope);
+  return getSearchScopeDataPath(config, scope, "index") || `/assets/data/search/${scope}/index.json`;
 }
 
 function setMetric(name, value) {
@@ -48,9 +78,10 @@ async function initStudioDashboard() {
     }
     return;
   }
-  const [config, catalogueServerAvailable] = await Promise.all([
+  const [config, catalogueServerAvailable, docsServerAvailable] = await Promise.all([
     loadStudioConfig().catch(() => null),
-    probeCatalogueHealth().catch(() => false)
+    probeCatalogueHealth().catch(() => false),
+    probeDocsManagementHealth().catch(() => false)
   ]);
   const catalogueReadOptions = { cache: "no-store", catalogueServerAvailable };
 
@@ -69,7 +100,7 @@ async function initStudioDashboard() {
       const count = Number(payload?.header?.count || 0) || Object.keys(payload?.moments || {}).length;
       if (payload) setMetric("moments-count", formatNumber(count));
     }),
-    loadJson("/assets/data/docs/scopes/library/index.json").then((payload) => {
+    loadJson(docsIndexReadUrl(config, "library", docsServerAvailable)).then((payload) => {
       const count = Array.isArray(payload?.docs) ? payload.docs.length : 0;
       setMetric("library-doc-count", formatNumber(count));
     }),
@@ -82,10 +113,10 @@ async function initStudioDashboard() {
     loadJson("/assets/data/search/catalogue/index.json").then((payload) => {
       setMetric("catalogue-search-count", formatNumber(Number(payload?.header?.count || 0)));
     }),
-    loadJson("/assets/data/search/library/index.json").then((payload) => {
+    loadJson(docsSearchReadUrl(config, "library", docsServerAvailable)).then((payload) => {
       setMetric("library-search-count", formatNumber(Number(payload?.header?.count || 0)));
     }),
-    loadJson("/assets/data/search/studio/index.json").then((payload) => {
+    loadJson(docsSearchReadUrl(config, "studio", docsServerAvailable)).then((payload) => {
       setMetric("studio-search-count", formatNumber(Number(payload?.header?.count || 0)));
     })
   ];

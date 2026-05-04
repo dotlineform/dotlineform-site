@@ -39,6 +39,26 @@ The Docs Viewer now probes generated-read capability and uses server reads for i
 **Impact:**
 Local docs source edits can still rebuild generated docs/search data immediately, but Jekyll no longer needs to regenerate because those generated files changed during `bin/dev-studio`.
 
+## [2026-05-04] Fixed Studio static docs/search reads under the dev overlay
+
+**Status:** implemented
+
+**Area:** Studio / local data reads
+
+**Summary:**
+`/studio/library-export/` now reads the generated Library docs index through the docs-management server when that service is available. The Studio dashboard also uses docs-management generated-data reads for Library docs count and docs-search metrics when running locally.
+
+**Reason:**
+The dev-only Jekyll overlay removes generated docs/search JSON from Jekyll output, so Studio pages must not fetch those static paths while `bin/dev-studio` is running.
+
+**Files changed:**
+
+- `assets/studio/js/library-export.js`
+- `assets/studio/js/studio-dashboard.js`
+- `assets/studio/js/studio-transport.js`
+- [Library Export v1](/docs/?scope=studio&doc=library-export)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
 ## [2026-05-04] Treated Archive as a normal Docs Viewer folder
 
 **Status:** implemented

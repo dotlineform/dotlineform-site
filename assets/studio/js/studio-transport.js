@@ -46,6 +46,8 @@ const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
   health: "http://127.0.0.1:8789/health",
   brokenLinks: "http://127.0.0.1:8789/docs/broken-links",
   exportDocs: "http://127.0.0.1:8789/docs/export",
+  generatedIndex: "http://127.0.0.1:8789/docs/generated/index",
+  generatedSearch: "http://127.0.0.1:8789/docs/generated/search",
   importHtml: "http://127.0.0.1:8789/docs/import-html",
   importHtmlFiles: "http://127.0.0.1:8789/docs/import-html-files",
   libraryImportFiles: "http://127.0.0.1:8789/docs/library-import/files",

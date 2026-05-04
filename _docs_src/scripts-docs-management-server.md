@@ -55,7 +55,7 @@ Current behavior:
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
-- also used by `/studio/library-export/` to write configured Library export artifacts
+- also used by `/studio/library-export/` to read the generated Library docs index locally and write configured Library export artifacts
 - also used by `/studio/library-import/` to list staged JSON/JSONL data files and write Markdown previews
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root

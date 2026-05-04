@@ -453,7 +453,7 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
+Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, reads the Library docs index through the docs-management generated-data endpoint when the local service is available, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
 
 ### Task 6. Add Local Service Endpoint
 

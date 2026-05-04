@@ -79,6 +79,12 @@ async function loadJson(path) {
   return response.json();
 }
 
+function docsGeneratedIndexUrl(scope) {
+  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedIndex);
+  url.searchParams.set("scope", scope);
+  return url.href;
+}
+
 function enabledConfigsForScope(payload, scope) {
   const configs = Array.isArray(payload?.configs) ? payload.configs : [];
   return configs.filter((config) => {
@@ -515,9 +521,10 @@ async function init() {
       || "/assets/studio/data/library_export_configs.json";
     const docsIndexPath = getDocsScopeDataPath(state.config, SCOPE, "index")
       || "/assets/data/docs/scopes/library/index.json";
+    const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(SCOPE) : docsIndexPath;
     const [exportConfigPayload, docsIndexPayload] = await Promise.all([
       loadJson(exportConfigPath),
-      loadJson(docsIndexPath)
+      loadJson(docsIndexReadPath)
     ]);
 
     state.exportConfigs = enabledConfigsForScope(exportConfigPayload, SCOPE);
