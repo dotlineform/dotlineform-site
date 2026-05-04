@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T22:22:19Z",
+  "generated_at": "2026-05-04T13:37:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [
       "_archive"
@@ -12,24 +12,10 @@
   "docs": [
     {
       "scope": "library",
-      "doc_id": "can-the-brain-comprehend-how-it-works",
-      "title": "Can the Brain Comprehend How It Works?",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-04-25",
-      "parent_id": "library",
-      "sort_order": 10,
-      "published": true,
-      "viewable": true,
-      "source_path": "can-the-brain-comprehend-how-it-works.md",
-      "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
-      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
-    },
-    {
-      "scope": "library",
       "doc_id": "library",
       "title": "Library",
       "added_date": "2026-03-30",
-      "last_updated": "2026-03-30",
+      "last_updated": "2026-05-04",
       "parent_id": "",
       "sort_order": 10,
       "published": true,
@@ -44,7 +30,7 @@
       "title": "Dreaming is Active",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
-      "parent_id": "library",
+      "parent_id": "",
       "sort_order": 20,
       "published": true,
       "viewable": true,
@@ -73,7 +59,7 @@
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "added_date": "2026-04-24",
       "last_updated": "2026-04-25",
-      "parent_id": "library",
+      "parent_id": "",
       "sort_order": 30,
       "published": true,
       "viewable": true,
@@ -88,7 +74,7 @@
       "title": "Evolutionary Psychology — Overview",
       "added_date": "2026-04-23",
       "last_updated": "2026-04-23",
-      "parent_id": "library",
+      "parent_id": "",
       "sort_order": 40,
       "published": true,
       "viewable": true,
@@ -96,6 +82,20 @@
       "viewer_url": "/library/?doc=evolutionary-psychology-overview",
       "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json",
       "summary": "This overview frames evolutionary psychology for a Processing application."
+    },
+    {
+      "scope": "library",
+      "doc_id": "can-the-brain-comprehend-how-it-works",
+      "title": "Can the Brain Comprehend How It Works?",
+      "added_date": "2026-04-23",
+      "last_updated": "2026-04-25",
+      "parent_id": "",
+      "sort_order": 50,
+      "published": true,
+      "viewable": true,
+      "source_path": "can-the-brain-comprehend-how-it-works.md",
+      "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
+      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
     }
   ]
 }
