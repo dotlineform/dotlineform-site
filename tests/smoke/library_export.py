@@ -75,11 +75,69 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if expect_unavailable_service and not run_disabled:
         raise AssertionError("run button should be disabled when docs-management service is unavailable")
 
+    filter_result = assert_filter_flow(page, len(doc_ids))
+
     return {
         "config_ids": sorted(config_ids),
         "doc_count": len(doc_ids),
+        "filters": filter_result,
         "run_disabled": bool(run_disabled),
     }
+
+
+def assert_filter_flow(page, total_docs: int) -> dict[str, int]:
+    filter_keys = page.locator("[data-library-export-filter]").evaluate_all(
+        "buttons => buttons.map(button => button.getAttribute('data-library-export-filter'))"
+    )
+    expected_keys = ["all", "no_content", "not_viewable"]
+    if filter_keys != expected_keys:
+        raise AssertionError(f"unexpected Library export filters: {filter_keys!r}")
+
+    counts = page.locator("[data-library-export-doc]").evaluate_all(
+        """rows => ({
+            all: rows.length,
+            no_content: rows.filter(row => row.dataset.libraryExportNoContent === "true").length,
+            not_viewable: rows.filter(row => row.dataset.libraryExportViewable === "false").length
+        })"""
+    )
+    if counts["all"] != total_docs:
+        raise AssertionError(f"show all count mismatch: {counts!r}; total={total_docs!r}")
+
+    filter_labels = page.locator("[data-library-export-filter]").evaluate_all(
+        "buttons => buttons.map(button => button.textContent.trim())"
+    )
+    for key, label in zip(expected_keys, filter_labels):
+        if f"[{counts[key]}]" not in label:
+            raise AssertionError(f"filter {key!r} label lacks count {counts[key]!r}: {label!r}")
+
+    def assert_filter(key: str, row_attribute: str, row_value: str, expected_count: int) -> None:
+        page.locator(f"[data-library-export-filter='{key}']").click()
+        page.wait_for_function(
+            """([attr, expected]) => {
+                const expectedValue = attr[1];
+                const attrName = attr[0];
+                const rows = Array.from(document.querySelectorAll("[data-library-export-doc]"));
+                return rows.length === expected && rows.every(row => row.getAttribute(attrName) === expectedValue);
+            }""",
+            arg=[[row_attribute, row_value], expected_count],
+        )
+        page.locator("#libraryExportSelectAll").click()
+        checked_count = page.locator("[data-library-export-doc] input[type='checkbox']:checked").count()
+        if checked_count != expected_count:
+            raise AssertionError(f"select all selected {checked_count} rows for {key}, expected {expected_count}")
+        page.locator("#libraryExportClear").click()
+        checked_after_clear = page.locator("[data-library-export-doc] input[type='checkbox']:checked").count()
+        if checked_after_clear != 0:
+            raise AssertionError(f"clear left {checked_after_clear} selected rows for {key}")
+
+    assert_filter("no_content", "data-library-export-no-content", "true", counts["no_content"])
+    assert_filter("not_viewable", "data-library-export-viewable", "false", counts["not_viewable"])
+    page.locator("[data-library-export-filter='all']").click()
+    page.wait_for_function(
+        "expected => document.querySelectorAll('[data-library-export-doc]').length === expected",
+        arg=total_docs,
+    )
+    return counts
 
 
 def main() -> int:

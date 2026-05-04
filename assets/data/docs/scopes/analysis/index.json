@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T15:39:00Z",
+  "generated_at": "2026-05-04T21:16:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -18,7 +18,8 @@
       "viewable": true,
       "source_path": "analysis.md",
       "viewer_url": "/analysis/?doc=analysis",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json"
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json",
+      "content_text_length": 308
     }
   ]
 }

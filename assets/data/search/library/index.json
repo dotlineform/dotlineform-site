@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-5caeb1d25221fc728cfb59604f4a862b",
-    "generated_at_utc": "2026-05-04T13:37:26Z",
+    "version": "blake2b-715264912103087e4a05f819b332c7cf",
+    "generated_at_utc": "2026-05-04T21:15:32Z",
     "count": 5
   },
   "entries": [
@@ -24,25 +24,24 @@
       "search_text": "library 2026-05-04 2026 05 04"
     },
     {
-      "id": "dreaming-is-actve",
+      "id": "dreaming-is-active",
       "kind": "doc",
       "title": "Dreaming is Active",
-      "href": "/library/?doc=dreaming-is-actve",
+      "href": "/library/?doc=dreaming-is-active",
       "last_updated": "2026-04-25",
       "display_meta": "2026-04-25",
       "search_terms": [
-        "dreaming-is-actve",
+        "dreaming-is-active",
         "dreaming",
         "is",
-        "actve",
-        "dreaming is active",
         "active",
+        "dreaming is active",
         "2026-04-25",
         "2026",
         "04",
         "25"
       ],
-      "search_text": "dreaming-is-actve dreaming is actve dreaming is active active 2026-04-25 2026 04 25"
+      "search_text": "dreaming-is-active dreaming is active dreaming is active 2026-04-25 2026 04 25"
     },
     {
       "id": "defining-information-for-cross-boundary-comparisons",

@@ -60,6 +60,7 @@ Generated outputs:
 - add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
 - `archive` is treated as an ordinary doc id and parent folder; visibility comes from `viewable`, not from a structural system-folder rule
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
+- generated index rows include `content_text_length`, derived from rendered HTML after plain-text extraction and title stripping, so Studio tooling can cheaply find docs with no body content
 - if front matter is omitted, the builder falls back to:
   - `doc_id`: filename stem
   - `title`: first Markdown `#` heading, or a humanized filename

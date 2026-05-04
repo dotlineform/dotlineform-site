@@ -47,6 +47,12 @@ DocRecord = Struct.new(
 class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
+  SCRIPT_STYLE_PATTERN = %r{<\s*(script|style)\b[^>]*>.*?<\s*/\s*\1\s*>}im.freeze
+  SVG_PATTERN = %r{<svg\b.*?</svg>}im.freeze
+  SVG_TEXT_PATTERN = %r{<(title|desc|text)\b[^>]*>(.*?)</\s*\1\s*>}im.freeze
+  IMG_PATTERN = %r{<img\b([^>]*)>}i.freeze
+  BLOCK_BOUNDARY_PATTERN = %r{</?(article|aside|blockquote|div|figcaption|figure|footer|h[1-6]|header|li|main|ol|p|section|table|tr|ul)\b[^>]*>}i.freeze
+  TAG_PATTERN = /<[^>]+>/m.freeze
 
   def initialize(
     scope_id:,
@@ -78,14 +84,14 @@ class DocsDataBuilder
     docs = load_docs
     validate_docs!(docs)
 
-    docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc) }
+    item_payloads = docs.to_h { |doc| [doc.doc_id, item_entry(doc, docs)] }
+    docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc, item_payloads[doc.doc_id]) }
     viewer_options = viewer_options_payload
     index_payload = {
       "generated_at" => effective_generated_at(docs_index, viewer_options),
       "viewer_options" => viewer_options,
       "docs" => docs_index
     }
-    item_payloads = docs.to_h { |doc| [doc.doc_id, item_entry(doc, docs)] }
     write_plan = build_write_plan(index_payload, item_payloads)
 
     unless write
@@ -247,7 +253,7 @@ class DocsDataBuilder
     end
   end
 
-  def index_entry(doc)
+  def index_entry(doc, item_payload)
     entry = {
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
@@ -260,7 +266,11 @@ class DocsDataBuilder
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,
-      "content_url" => doc.content_url
+      "content_url" => doc.content_url,
+      "content_text_length" => plain_text_from_rendered_html(
+        item_payload ? item_payload["content_html"] : "",
+        title: doc.title
+      ).length
     }
     entry["summary"] = doc.summary unless doc.summary.empty?
     entry["ui_status"] = doc.ui_status unless doc.ui_status.empty?
@@ -289,6 +299,33 @@ class DocsDataBuilder
     entry["summary"] = doc.summary unless doc.summary.empty?
     entry["ui_status"] = doc.ui_status unless doc.ui_status.empty?
     entry
+  end
+
+  def plain_text_from_rendered_html(content_html, title:)
+    text = content_html.to_s
+      .gsub(SCRIPT_STYLE_PATTERN, " ")
+      .gsub(SVG_PATTERN) { |svg| image_marker(svg.scan(SVG_TEXT_PATTERN).map { |match| match[1] }.join(" ")) }
+      .gsub(IMG_PATTERN) { image_marker(html_attribute(Regexp.last_match(1), "alt")) }
+      .gsub(/<br\b[^>]*>/i, "\n")
+      .gsub(BLOCK_BOUNDARY_PATTERN, "\n")
+      .gsub(TAG_PATTERN, " ")
+
+    lines = CGI.unescapeHTML(text)
+      .lines
+      .map { |line| line.gsub(/\s+/, " ").strip }
+      .reject(&:empty?)
+    lines.shift if !lines.empty? && lines.first == title.to_s.strip
+    lines.join("\n").strip
+  end
+
+  def image_marker(text)
+    normalized = text.to_s.gsub(/\s+/, " ").strip
+    normalized.empty? ? "[image]" : "[image: #{CGI.unescapeHTML(normalized)}]"
+  end
+
+  def html_attribute(raw_attrs, name)
+    match = raw_attrs.to_s.match(/\b#{Regexp.escape(name)}\s*=\s*(["'])(.*?)\1/im)
+    match ? match[2] : ""
   end
 
   def rewrite_doc_links(html, current_doc:, docs:)

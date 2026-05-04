@@ -20,6 +20,11 @@ import {
 } from "./studio-modal.js";
 
 const SCOPE = "library";
+const LIST_FILTERS = [
+  { key: "all", labelKey: "filter_show_all", fallback: "show all [{count}]" },
+  { key: "no_content", labelKey: "filter_no_content", fallback: "no content [{count}]" },
+  { key: "not_viewable", labelKey: "filter_not_viewable", fallback: "not viewable [{count}]" }
+];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -151,33 +156,58 @@ function descendantIds(state, docId) {
   return ids;
 }
 
-function selectableDocIds(state) {
+function contentTextLength(doc) {
+  const value = Number(doc && doc.content_text_length);
+  return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function docHasNoContent(doc) {
+  return contentTextLength(doc) === 0;
+}
+
+function docMatchesListFilter(state, doc) {
+  if (!doc) return false;
+  if (state.listFilter === "no_content") return docHasNoContent(doc);
+  if (state.listFilter === "not_viewable") return doc.published !== false && doc.viewable === false;
+  return true;
+}
+
+function docMatchesConfigFilter(state, docId) {
   const missingOnly = state.missingSummaryOnly.checked && state.missingSummaryOnlyWrap.hidden === false;
+  const doc = state.docsById.get(docId);
+  if (!doc) return false;
+  return !missingOnly || !normalizeText(doc.summary);
+}
+
+function rowMatchesCurrentFilters(state, docId) {
+  const doc = state.docsById.get(docId);
+  return Boolean(doc && docMatchesConfigFilter(state, docId) && docMatchesListFilter(state, doc));
+}
+
+function selectableDocIds(state, { visibleOnly = false } = {}) {
   return state.docs
-    .filter((doc) => !missingOnly || !normalizeText(doc.summary))
+    .filter((doc) => {
+      const docId = normalizeText(doc.doc_id);
+      if (!docMatchesConfigFilter(state, docId)) return false;
+      return !visibleOnly || docMatchesListFilter(state, doc);
+    })
     .map((doc) => normalizeText(doc.doc_id))
     .filter(Boolean);
 }
 
 function syncCheckboxStates(state) {
-  const visibleSelected = new Set(selectableDocIds(state).filter((docId) => state.selectedIds.has(docId)));
+  const visibleSelected = new Set(
+    selectableDocIds(state, { visibleOnly: true }).filter((docId) => state.selectedIds.has(docId))
+  );
   state.listNode.querySelectorAll("[data-library-export-doc]").forEach((row) => {
     const docId = normalizeText(row.getAttribute("data-library-export-doc"));
     const checkbox = row.querySelector("input[type='checkbox']");
     if (!(checkbox instanceof HTMLInputElement)) return;
-    const subtreeIds = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesSelectionFilter(state, id));
+    const subtreeIds = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
     const selectedCount = subtreeIds.filter((id) => visibleSelected.has(id)).length;
     checkbox.checked = subtreeIds.length > 0 && selectedCount === subtreeIds.length;
     checkbox.indeterminate = selectedCount > 0 && selectedCount < subtreeIds.length;
   });
-}
-
-function rowMatchesSelectionFilter(state, docId) {
-  if (state.missingSummaryOnly.checked && state.missingSummaryOnlyWrap.hidden === false) {
-    const doc = state.docsById.get(docId);
-    return doc ? !normalizeText(doc.summary) : false;
-  }
-  return state.docsById.has(docId);
 }
 
 function applySelectionFilter(state) {
@@ -202,6 +232,29 @@ function updateSelectionSummary(state) {
   );
 }
 
+function listFilterCounts(state) {
+  const docs = state.docs.filter((doc) => docMatchesConfigFilter(state, normalizeText(doc.doc_id)));
+  return {
+    all: docs.length,
+    no_content: docs.filter((doc) => docHasNoContent(doc)).length,
+    not_viewable: docs.filter((doc) => doc.published !== false && doc.viewable === false).length
+  };
+}
+
+function renderListFilters(state) {
+  const counts = listFilterCounts(state);
+  state.filterNode.innerHTML = LIST_FILTERS.map((filter) => {
+    const count = Number(counts[filter.key] || 0);
+    const active = state.listFilter === filter.key;
+    const label = getStudioText(state.config, `library_export.${filter.labelKey}`, filter.fallback, { count });
+    return `
+      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-library-export-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
+        ${escapeHtml(label)}
+      </button>
+    `;
+  }).join("");
+}
+
 function selectedConfig(state) {
   const configId = normalizeText(state.configSelect.value);
   return state.exportConfigs.find((config) => normalizeText(config.id) === configId) || null;
@@ -214,6 +267,7 @@ function syncConfigOptions(state) {
   state.missingSummaryOnlyWrap.hidden = !supportsMissing;
   state.missingSummaryOnly.checked = supportsMissing && Boolean(selection.default_missing_summary_only);
   applySelectionFilter(state);
+  renderListFilters(state);
   renderDocList(state);
   updateStatus(state);
 }
@@ -266,8 +320,9 @@ function renderDocRow(state, doc) {
   const title = normalizeText(doc.title) || docId;
   const depth = Math.max(0, Number(state.depthById.get(docId) || 0));
   const viewable = doc.viewable === true;
+  const noContent = docHasNoContent(doc);
   return `
-    <li class="tagStudioList__row tagStudioList__row--center libraryExportList__row" data-library-export-doc="${escapeHtml(docId)}" style="--library-export-depth: ${depth};">
+    <li class="tagStudioList__row tagStudioList__row--center libraryExportList__row" data-library-export-doc="${escapeHtml(docId)}" data-library-export-viewable="${viewable ? "true" : "false"}" data-library-export-no-content="${noContent ? "true" : "false"}" style="--library-export-depth: ${depth};">
       <label class="libraryExportList__label">
         <input class="libraryExportList__checkbox" type="checkbox" value="${escapeHtml(docId)}">
         <span class="libraryExportList__viewable${viewable ? " is-viewable" : ""}" aria-label="${viewable ? "viewable" : ""}"></span>
@@ -278,7 +333,7 @@ function renderDocRow(state, doc) {
 }
 
 function renderDocList(state) {
-  const visibleDocIds = new Set(selectableDocIds(state));
+  const visibleDocIds = new Set(selectableDocIds(state, { visibleOnly: true }));
   const rows = state.docs
     .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
     .map((doc) => renderDocRow(state, doc));
@@ -384,7 +439,7 @@ function showResultModal(state, payload, failed = false) {
 }
 
 function setDocAndDescendantSelection(state, docId, selected) {
-  const ids = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesSelectionFilter(state, id));
+  const ids = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
   ids.forEach((id) => {
     if (selected) {
       state.selectedIds.add(id);
@@ -479,6 +534,7 @@ async function init() {
     missingSummaryOnlyWrap: document.getElementById("libraryExportMissingSummaryWrap"),
     missingSummaryOnly: document.getElementById("libraryExportMissingSummaryOnly"),
     missingSummaryLabelNode: document.getElementById("libraryExportMissingSummaryLabel"),
+    filterNode: document.getElementById("libraryExportListFilters"),
     selectAllButton: document.getElementById("libraryExportSelectAll"),
     clearButton: document.getElementById("libraryExportClear"),
     statusNode: document.getElementById("libraryExportStatus"),
@@ -493,6 +549,7 @@ async function init() {
     childrenByParent: new Map(),
     depthById: new Map(),
     selectedIds: new Set(),
+    listFilter: "all",
     serviceAvailable: false,
     isRunning: false
   };
@@ -503,6 +560,7 @@ async function init() {
     state.missingSummaryOnlyWrap,
     state.missingSummaryOnly,
     state.missingSummaryLabelNode,
+    state.filterNode,
     state.selectAllButton,
     state.clearButton,
     state.statusNode,
@@ -554,11 +612,24 @@ async function init() {
     state.configSelect.addEventListener("change", () => syncConfigOptions(state));
     state.missingSummaryOnly.addEventListener("change", () => {
       applySelectionFilter(state);
+      renderListFilters(state);
+      renderDocList(state);
+      updateStatus(state);
+    });
+    state.filterNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest
+        ? event.target.closest("[data-library-export-filter]")
+        : null;
+      if (!button) return;
+      const filter = normalizeText(button.getAttribute("data-library-export-filter"));
+      if (!LIST_FILTERS.some((item) => item.key === filter)) return;
+      state.listFilter = filter;
+      renderListFilters(state);
       renderDocList(state);
       updateStatus(state);
     });
     state.selectAllButton.addEventListener("click", () => {
-      selectableDocIds(state).forEach((docId) => state.selectedIds.add(docId));
+      selectableDocIds(state, { visibleOnly: true }).forEach((docId) => state.selectedIds.add(docId));
       syncCheckboxStates(state);
       updateSelectionSummary(state);
     });

@@ -1228,6 +1228,10 @@ span.tagStudio__input--readonlyDisplay {
   align-items: center;
 }
 
+.libraryExportPage__filterPills {
+  display: contents;
+}
+
 .libraryExportModal__counts {
   display: grid;
   gap: 0.35rem;

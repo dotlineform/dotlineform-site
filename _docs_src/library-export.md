@@ -89,11 +89,14 @@ V1 UI shape:
 - selecting a parent selects all descendants
 - deselecting a child puts ancestors into an indeterminate state
 - select all and clear controls
+- list filter pills for `show all`, `no content`, and `not viewable`
 - option to limit the view or export to docs missing summaries when the selected config supports it
 - no other row metadata in the document list
 
 V1 should exclude `published: false` docs because they are outside generated Docs Viewer data.
 Generated but non-viewable docs, where `published: true` and `viewable: false`, are in scope and should be selectable because they are likely to need analysis before they become ready for public/default viewing.
+The `no content` filter means generated Library docs with `content_text_length: 0` in the docs index after rendered-HTML plain-text extraction and title stripping.
+List filter pills change the visible checklist and Select all target set; they do not add fields to the export request or change the export write path.
 
 The UI may show operational counts outside the document list before export:
 
@@ -458,7 +461,7 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, reads the Library docs index through the docs-management generated-data endpoint when the local service is available, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
+Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, reads the Library docs index through the docs-management generated-data endpoint when the local service is available, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
 
 ### Task 6. Add Local Service Endpoint
 

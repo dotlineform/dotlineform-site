@@ -256,6 +256,9 @@ const DEFAULT_STUDIO_CONFIG = {
     library_export: {
       config_label: "export pattern",
       missing_summary_label: "missing summaries only",
+      filter_show_all: "show all [{count}]",
+      filter_no_content: "no content [{count}]",
+      filter_not_viewable: "not viewable [{count}]",
       select_all: "select all",
       clear: "clear",
       run_button: "Run export",

@@ -77,7 +77,7 @@ Purpose:
 Current content families:
 
 - one row per generated Library doc
-- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
+- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, viewer URL, per-doc content URL, and `content_text_length`
 - `viewer_options` for scope-level display behavior such as hiding document-view updated dates
 
 Current site mapping:
@@ -85,6 +85,7 @@ Current site mapping:
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides docs with `viewable: false`; `/library/?mode=manage` can show those generated docs for local management
 - Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
+- `/studio/library-export/` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 

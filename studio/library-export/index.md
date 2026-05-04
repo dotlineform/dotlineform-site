@@ -35,6 +35,7 @@ studio_page_doc: /docs/?scope=studio&doc=library-export
     <p class="tagStudioForm__meta libraryExportPage__selectionSummary" id="libraryExportSelectionSummary"></p>
 
     <div class="libraryExportPage__listActions" aria-label="Library export document selection actions">
+      <span class="libraryExportPage__filterPills" id="libraryExportListFilters" aria-label="Library export list filters"></span>
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryExportSelectAll"></button>
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryExportClear"></button>
     </div>

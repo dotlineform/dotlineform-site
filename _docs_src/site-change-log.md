@@ -8,6 +8,38 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Added Library export list filters
+
+**Status:** implemented
+
+**Area:** Studio / Library export
+
+**Summary:**
+The Library export page now has `show all`, `no content`, and `not viewable` filter pills with counts.
+The generated docs index now includes `content_text_length`, derived from rendered document HTML after plain-text extraction and title stripping, so the page can identify no-content docs without fetching every per-doc payload.
+Select all now targets the currently visible filtered list; the export request still sends explicit selected doc ids and the export write path is unchanged.
+
+**Reason:**
+Library export review needs quick slices for empty generated docs and generated-but-hidden docs before output-format work starts.
+
+**Files changed:**
+
+- `scripts/build_docs.rb`
+- `studio/library-export/index.md`
+- `assets/studio/js/library-export.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `tests/smoke/library_export.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+- [Library Scope](/docs/?scope=studio&doc=data-models-library)
+- [Docs Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
+**Impact:**
+The UI can narrow selection without changing config definitions or service payload shape.
+Generated docs index rows have one additional numeric metadata field.
+
 ## [2026-05-04] Added relationship metadata to full Library content exports
 
 **Status:** implemented

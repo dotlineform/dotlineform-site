@@ -256,7 +256,14 @@ Expected outputs:
 
 ### Task 5. Add Export Page Filter Pills
 
+Status:
+
+- implemented
+
 Add the requested Library export list filters without changing the export write path.
+The Library export page now shows `show all`, `no content`, and `not viewable` filter pills with counts from the generated Library docs index.
+`no content` uses generated `content_text_length`, which is derived from rendered document HTML after plain-text extraction and title stripping.
+The active list filter limits the displayed rows and Select all behavior, while existing selected ids remain the export request contract.
 
 Expected outputs:
 
