@@ -17,15 +17,14 @@ studio_page_doc: /docs/?scope=studio&doc=library-import
   data-studio-busy="false"
 >
   <div class="tagStudio__panel libraryImportPage__panel">
-    <p class="libraryImportPage__intro" id="libraryImportIntro"></p>
-
     <div class="libraryImportPage__controls">
-      <label class="tagStudioField tagStudioField--inline libraryImportPage__field">
+      <label class="tagStudioField libraryImportPage__field" for="libraryImportFileSelect">
         <span class="tagStudioField__label" id="libraryImportFileLabel"></span>
         <span class="tagStudioField__control">
           <select class="tagStudio__input" id="libraryImportFileSelect"></select>
         </span>
       </label>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryImportPreview"></button>
     </div>
 
     <dl class="libraryImportPage__fileMeta" id="libraryImportFileMeta" hidden>
@@ -47,14 +46,22 @@ studio_page_doc: /docs/?scope=studio&doc=library-import
       </div>
     </dl>
 
-    <div class="libraryImportPage__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryImportPreview"></button>
+    <p class="tagStudio__status" id="libraryImportStatus"></p>
+    <p class="tagStudioForm__meta libraryImportPage__selectionSummary" id="libraryImportSelectionSummary"></p>
+
+    <div class="libraryImportPage__listActions" aria-label="Library import preview selection actions">
+      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryImportSelectAll"></button>
+      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryImportClear"></button>
     </div>
 
-    <p class="tagStudio__status" id="libraryImportStatus"></p>
+    <div class="tagStudioList libraryImportList" id="libraryImportList"></div>
 
-    <div class="libraryImportPage__result" id="libraryImportResult" hidden>
-      <h3 id="libraryImportResultTitle"></h3>
+    <div class="libraryImportPage__applyActions" aria-label="Library import apply actions">
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryImportUpdateSummary" disabled></button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="libraryImportApplyHierarchy" disabled></button>
+    </div>
+
+    <div class="libraryImportPage__resultMeta" id="libraryImportResult" hidden>
       <p class="tagStudioForm__meta libraryImportPage__summary" id="libraryImportSummary"></p>
       <dl class="libraryImportPage__resultGrid">
         <div>
@@ -82,7 +89,7 @@ studio_page_doc: /docs/?scope=studio&doc=library-import
 
       <div class="libraryImportPage__previews" id="libraryImportPreviews" hidden>
         <h4 id="libraryImportPreviewsHeading"></h4>
-        <ul id="libraryImportPreviewList"></ul>
+        <p class="tagStudioForm__meta" id="libraryImportPreviewList"></p>
       </div>
     </div>
   </div>

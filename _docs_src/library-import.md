@@ -343,7 +343,11 @@ Status note:
 - listed from the `/studio/library/` dashboard under Data
 - loads staged `.json` and `.jsonl` files through `GET /docs/library-import/files?scope=library`
 - runs preview generation through `POST /docs/library-import/preview`
-- shows selected file metadata, detected import type, source export metadata, counts, issues, and generated preview paths
+- uses the same compact command/list shell as the Library export page
+- shows selected file metadata, detected import type, source export metadata, counts, issues, and generated preview counts
+- renders generated preview records in the main selectable list area
+- exposes `select all` and `clear` selection pills for preview rows
+- displays disabled `Update summary` and `Apply hierarchy` actions until their source-write service contracts exist
 - keeps the route disabled when the docs-management local service is unavailable
 - does not apply summaries, full content, or relationship changes to canonical Library source
 
@@ -376,7 +380,7 @@ Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal J
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection is implemented in `tests/python/test_docs_import_service.py`.
 A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/library_import.py`.
 The `docs` profile in `./scripts/run_checks.py` runs the parser and local service checks.
-The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs the Library import route smoke with the docs-management service blocked.
+The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs Library import route smokes with the docs-management service blocked and with a mocked preview response.
 
 ### Task 9. Decide Summary Apply Scope
 

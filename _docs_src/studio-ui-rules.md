@@ -23,6 +23,27 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-05-04 / UI-078
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: Library import still used an intro-led form and separate result panel after Library export had moved to a compact command/list shell.
+- triage: route-local alignment
+- reasoning: Library import v2 starts with preview review, so its first milestone should share the export page's staged control row, selection summary, list actions, and main list area before source-write actions are wired.
+- outcome: moved Preview beside the staged-file selector, removed the intro, added Select all and Clear pills, moved preview output into a selectable Studio list, and surfaced disabled `Update summary` and `Apply hierarchy` commands until their service contracts exist.
+- files changed:
+  - `studio/library-import/index.md`
+  - `assets/studio/js/library-import.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `tests/smoke/library_import.py`
+  - `_docs_src/library-import.md`
+  - `_docs_src/library-import-export-v2.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/library-import/` and confirm the command row, selection pills, disabled apply actions, and empty preview list render correctly on desktop and mobile
+  - run the Library import smoke check with docs-management unavailable and confirm Preview plus the future apply actions are disabled
+
 ## UI Rule Log 2026-05-04 / UI-077
 
 - status: adopted

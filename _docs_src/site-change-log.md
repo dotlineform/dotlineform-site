@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Aligned Library import with the export page shell
+
+**Status:** implemented
+
+**Area:** Studio / Library import
+
+**Summary:**
+Updated `/studio/library-import/` so its first v2 milestone uses the same compact command/list shell as `/studio/library-export/`.
+The page now places Preview beside the staged-file selector, shows Select all and Clear pills, renders generated previews in the main selectable list area, and keeps future `Update summary` and `Apply hierarchy` actions visible but disabled.
+
+**Reason:**
+Library import v2 should begin with review-oriented UI changes before source-write wiring.
+Sharing the export page structure keeps the Library data workflows predictable while the apply contracts remain intentionally unavailable.
+
+**Files changed:**
+
+- `studio/library-import/index.md`
+- `assets/studio/js/library-import.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `tests/smoke/library_import.py`
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+The import route is now ready for Task 2's hierarchy-aware preview list work.
+The main risk is that preview-row selection is currently review-only because source-write endpoints do not exist yet; the disabled action buttons make that boundary explicit.
+
 ## [2026-05-04] Added Studio backup retention on dev startup
 
 **Status:** implemented

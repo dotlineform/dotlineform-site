@@ -598,20 +598,27 @@
       "issues_heading": "Issues"
     },
     "library_import": {
-      "intro": "Select a staged Library data file and generate Markdown previews for review.",
       "file_label": "staged file",
       "file_path": "path",
       "file_format": "format",
       "file_size": "size",
       "file_modified": "modified",
       "preview_button": "Generate preview",
+      "select_all": "select all",
+      "clear": "clear",
+      "update_summary_button": "Update summary",
+      "apply_hierarchy_button": "Apply hierarchy",
+      "apply_actions_disabled_title": "This action is not available until the source-write service contract is implemented.",
       "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run Library imports.",
       "loading": "loading Library import...",
       "idle_status": "Select a staged data file and generate Markdown previews.",
       "running_status": "Generating import previews...",
       "load_failed": "Failed to load Library import data.",
       "no_files": "No staged Library data files found under var/docs/import-staging/library/.",
+      "empty_state": "Generate a preview to list staged documents.",
       "file_required": "Select a staged data file first.",
+      "selection_summary": "{count} previews selected.",
+      "selection_summary_one": "1 preview selected.",
       "status_success": "Import previews generated.",
       "status_failed": "Import preview failed.",
       "result_title": "Import preview",
@@ -622,7 +629,8 @@
       "result_counts_label": "counts",
       "result_counts": "{records} records; {parsed} parsed; {malformed} malformed; {warnings} warnings; {errors} errors.",
       "issues_heading": "Issues",
-      "previews_heading": "Preview files"
+      "previews_heading": "Preview files",
+      "preview_file_summary": "{count} preview files generated."
     },
     "docs_html_import": {
       "intro": "Import a staged self-contained HTML file into the Studio, Analysis, or Library docs source as a best-attempt Markdown doc.",

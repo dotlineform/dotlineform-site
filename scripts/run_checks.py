@@ -134,6 +134,17 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             ),
             "Smoke-check the Studio Library import route ready state with docs-management unavailable.",
         ),
+        CheckCommand(
+            "library-import-preview-smoke",
+            (
+                sys.executable,
+                "tests/smoke/library_import.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+                "--mock-docs-service",
+            ),
+            "Smoke-check the Studio Library import preview list flow with a mocked docs-management service.",
+        ),
     ),
 }
 

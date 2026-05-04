@@ -42,7 +42,12 @@ function setStatus(node, state, message) {
 }
 
 function routeModeForState(state) {
-  if (state.resultNode && !state.resultNode.hidden) return "result";
+  if (
+    (state.previewRows && state.previewRows.length)
+    || (state.resultNode && !state.resultNode.hidden)
+  ) {
+    return "result";
+  }
   return "selection";
 }
 
@@ -77,11 +82,15 @@ function formatBytes(value) {
 }
 
 function resetResult(state) {
+  state.selectedPreviewIds.clear();
+  state.previewRows = [];
+  renderPreviewList(state);
+  updateSelectionSummary(state);
   state.resultNode.hidden = true;
   state.issuesWrap.hidden = true;
   state.issuesList.innerHTML = "";
   state.previewsWrap.hidden = true;
-  state.previewList.innerHTML = "";
+  setText(state.previewList, "");
 }
 
 function renderFileMeta(state) {
@@ -119,21 +128,130 @@ function renderIssues(state, issues) {
   state.issuesWrap.hidden = false;
 }
 
-function renderPreviewFiles(state, previewFiles) {
+function previewRowId(item, index) {
+  return normalizeText(item && item.path)
+    || normalizeText(item && item.doc_id)
+    || `preview-${index + 1}`;
+}
+
+function recordByDocId(records) {
+  const map = new Map();
+  (Array.isArray(records) ? records : []).forEach((record) => {
+    const docId = normalizeText(record && record.doc_id);
+    if (docId && !map.has(docId)) map.set(docId, record);
+  });
+  return map;
+}
+
+function buildPreviewRows(payload) {
+  const recordsByDocId = recordByDocId(payload && payload.records);
+  return (Array.isArray(payload && payload.preview_files) ? payload.preview_files : []).map((item, index) => {
+    const docId = normalizeText(item && item.doc_id);
+    const record = recordsByDocId.get(docId) || {};
+    const kind = normalizeText(item && item.kind);
+    const path = normalizeText(item && item.path);
+    const title = normalizeText(record.title)
+      || docId
+      || (kind === "relationship_tree" ? "Relationship tree" : "")
+      || path
+      || `Preview ${index + 1}`;
+    const meta = [docId, kind, path].filter(Boolean).join(" · ");
+    return {
+      id: previewRowId(item, index),
+      docId,
+      kind,
+      path,
+      title,
+      meta
+    };
+  });
+}
+
+function renderPreviewRow(row) {
+  return `
+    <li class="tagStudioList__row tagStudioList__row--center libraryImportList__row" data-library-import-preview="${escapeHtml(row.id)}">
+      <label class="libraryImportList__label">
+        <input class="libraryImportList__checkbox" type="checkbox" value="${escapeHtml(row.id)}">
+        <span class="libraryImportList__title">${escapeHtml(row.title)}</span>
+        ${row.meta ? `<span class="libraryImportList__meta">${escapeHtml(row.meta)}</span>` : ""}
+      </label>
+    </li>
+  `;
+}
+
+function renderPreviewList(state) {
+  if (!state.previewRows.length) {
+    const emptyState = getStudioText(
+      state.config,
+      "library_import.empty_state",
+      "Generate a preview to list staged documents."
+    );
+    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(emptyState)}</p>`;
+    return;
+  }
+  state.listNode.innerHTML = `<ul class="tagStudioList__rows libraryImportList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
+  syncPreviewCheckboxes(state);
+}
+
+function selectablePreviewIds(state) {
+  return state.previewRows.map((row) => row.id).filter(Boolean);
+}
+
+function syncPreviewCheckboxes(state) {
+  state.listNode.querySelectorAll("[data-library-import-preview]").forEach((row) => {
+    const rowId = normalizeText(row.getAttribute("data-library-import-preview"));
+    const checkbox = row.querySelector("input[type='checkbox']");
+    if (!(checkbox instanceof HTMLInputElement)) return;
+    checkbox.checked = state.selectedPreviewIds.has(rowId);
+  });
+}
+
+function updateSelectionSummary(state) {
+  const count = state.selectedPreviewIds.size;
+  setText(
+    state.selectionSummary,
+    getStudioText(
+      state.config,
+      count === 1
+        ? "library_import.selection_summary_one"
+        : "library_import.selection_summary",
+      count === 1 ? "1 preview selected." : "{count} previews selected.",
+      { count }
+    )
+  );
+}
+
+function handlePreviewListChange(state, event) {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return;
+  const row = target.closest("[data-library-import-preview]");
+  const rowId = normalizeText(row ? row.getAttribute("data-library-import-preview") : "");
+  if (!rowId) return;
+  if (target.checked) {
+    state.selectedPreviewIds.add(rowId);
+  } else {
+    state.selectedPreviewIds.delete(rowId);
+  }
+  updateSelectionSummary(state);
+}
+
+function renderPreviewFilesMeta(state, previewFiles) {
   const items = Array.isArray(previewFiles) ? previewFiles : [];
   if (!items.length) {
     state.previewsWrap.hidden = true;
-    state.previewList.innerHTML = "";
+    setText(state.previewList, "");
     return;
   }
   setText(state.previewsHeading, getStudioText(state.config, "library_import.previews_heading", "Preview files"));
-  state.previewList.innerHTML = items.map((item) => {
-    const path = normalizeText(item && item.path);
-    const kind = normalizeText(item && item.kind);
-    const docId = normalizeText(item && item.doc_id);
-    const meta = [docId, kind].filter(Boolean).join(" · ");
-    return `<li><span>${escapeHtml(path)}</span>${meta ? ` <small>${escapeHtml(meta)}</small>` : ""}</li>`;
-  }).join("");
+  setText(
+    state.previewList,
+    getStudioText(
+      state.config,
+      "library_import.preview_file_summary",
+      "{count} preview files generated.",
+      { count: items.length }
+    )
+  );
   state.previewsWrap.hidden = false;
 }
 
@@ -155,12 +273,6 @@ function countsText(state, counts) {
 
 function renderResult(state, payload, failed = false) {
   const sourceMetadata = payload && typeof payload.source_metadata === "object" ? payload.source_metadata : {};
-  setText(
-    state.resultTitle,
-    failed
-      ? getStudioText(state.config, "library_import.result_title_failed", "Import preview failed")
-      : getStudioText(state.config, "library_import.result_title", "Import preview")
-  );
   setText(state.summaryNode, payload.summary_text || "");
   setText(state.resultTypeLabel, getStudioText(state.config, "library_import.result_type", "type"));
   setText(state.resultExportLabel, getStudioText(state.config, "library_import.result_export", "source export"));
@@ -171,13 +283,21 @@ function renderResult(state, payload, failed = false) {
   setText(state.resultGeneratedNode, payload.generated_at || sourceMetadata.generated_at || "");
   setText(state.resultCountsNode, countsText(state, payload.counts));
   renderIssues(state, payload.issues);
-  renderPreviewFiles(state, payload.preview_files);
+  state.previewRows = failed ? [] : buildPreviewRows(payload);
+  state.selectedPreviewIds.clear();
+  renderPreviewList(state);
+  updateSelectionSummary(state);
+  renderPreviewFilesMeta(state, payload.preview_files);
   state.resultNode.hidden = false;
 }
 
 function setControlsDisabled(state, disabled) {
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
+  state.selectAllButton.disabled = disabled || !state.previewRows.length;
+  state.clearButton.disabled = disabled || !state.previewRows.length;
+  state.updateSummaryButton.disabled = true;
+  state.applyHierarchyButton.disabled = true;
 }
 
 async function loadImportFiles() {
@@ -243,7 +363,6 @@ async function init() {
   const state = {
     bootStatus,
     root,
-    introNode: document.getElementById("libraryImportIntro"),
     fileLabelNode: document.getElementById("libraryImportFileLabel"),
     fileSelect: document.getElementById("libraryImportFileSelect"),
     fileMeta: document.getElementById("libraryImportFileMeta"),
@@ -257,8 +376,13 @@ async function init() {
     fileModifiedNode: document.getElementById("libraryImportFileModified"),
     previewButton: document.getElementById("libraryImportPreview"),
     statusNode: document.getElementById("libraryImportStatus"),
+    selectionSummary: document.getElementById("libraryImportSelectionSummary"),
+    selectAllButton: document.getElementById("libraryImportSelectAll"),
+    clearButton: document.getElementById("libraryImportClear"),
+    listNode: document.getElementById("libraryImportList"),
+    updateSummaryButton: document.getElementById("libraryImportUpdateSummary"),
+    applyHierarchyButton: document.getElementById("libraryImportApplyHierarchy"),
     resultNode: document.getElementById("libraryImportResult"),
-    resultTitle: document.getElementById("libraryImportResultTitle"),
     summaryNode: document.getElementById("libraryImportSummary"),
     resultTypeLabel: document.getElementById("libraryImportResultTypeLabel"),
     resultTypeNode: document.getElementById("libraryImportResultType"),
@@ -276,12 +400,13 @@ async function init() {
     previewList: document.getElementById("libraryImportPreviewList"),
     config: null,
     files: [],
+    previewRows: [],
+    selectedPreviewIds: new Set(),
     serviceAvailable: false,
     isRunning: false
   };
 
   const requiredNodes = [
-    state.introNode,
     state.fileLabelNode,
     state.fileSelect,
     state.fileMeta,
@@ -295,8 +420,13 @@ async function init() {
     state.fileModifiedNode,
     state.previewButton,
     state.statusNode,
+    state.selectionSummary,
+    state.selectAllButton,
+    state.clearButton,
+    state.listNode,
+    state.updateSummaryButton,
+    state.applyHierarchyButton,
     state.resultNode,
-    state.resultTitle,
     state.summaryNode,
     state.resultTypeLabel,
     state.resultTypeNode,
@@ -319,20 +449,32 @@ async function init() {
     state.config = await loadStudioConfig();
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());
 
-    setText(
-      state.introNode,
-      getStudioText(
-        state.config,
-        "library_import.intro",
-        "Select a staged Library data file and generate Markdown previews for review."
-      )
-    );
     setText(state.fileLabelNode, getStudioText(state.config, "library_import.file_label", "staged file"));
     setText(state.filePathLabel, getStudioText(state.config, "library_import.file_path", "path"));
     setText(state.fileFormatLabel, getStudioText(state.config, "library_import.file_format", "format"));
     setText(state.fileSizeLabel, getStudioText(state.config, "library_import.file_size", "size"));
     setText(state.fileModifiedLabel, getStudioText(state.config, "library_import.file_modified", "modified"));
     setText(state.previewButton, getStudioText(state.config, "library_import.preview_button", "Generate preview"));
+    setText(state.selectAllButton, getStudioText(state.config, "library_import.select_all", "select all"));
+    setText(state.clearButton, getStudioText(state.config, "library_import.clear", "clear"));
+    setText(
+      state.updateSummaryButton,
+      getStudioText(state.config, "library_import.update_summary_button", "Update summary")
+    );
+    setText(
+      state.applyHierarchyButton,
+      getStudioText(state.config, "library_import.apply_hierarchy_button", "Apply hierarchy")
+    );
+    const disabledActionTitle = getStudioText(
+      state.config,
+      "library_import.apply_actions_disabled_title",
+      "This action is not available until the source-write service contract is implemented."
+    );
+    state.updateSummaryButton.title = disabledActionTitle;
+    state.applyHierarchyButton.title = disabledActionTitle;
+    renderPreviewList(state);
+    updateSelectionSummary(state);
+    setControlsDisabled(state, true);
 
     root.hidden = false;
     bootStatus.hidden = true;
@@ -388,6 +530,7 @@ async function init() {
     state.fileSelect.addEventListener("change", () => {
       resetResult(state);
       renderFileMeta(state);
+      setControlsDisabled(state, false);
       setStatus(
         state.statusNode,
         "",
@@ -402,6 +545,17 @@ async function init() {
     state.previewButton.addEventListener("click", () => {
       runPreview(state).catch((error) => console.warn("library_import: unexpected preview failure", error));
     });
+    state.selectAllButton.addEventListener("click", () => {
+      selectablePreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));
+      syncPreviewCheckboxes(state);
+      updateSelectionSummary(state);
+    });
+    state.clearButton.addEventListener("click", () => {
+      state.selectedPreviewIds.clear();
+      syncPreviewCheckboxes(state);
+      updateSelectionSummary(state);
+    });
+    state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
   } catch (error) {
     console.warn("library_import: init failed", error);
     root.hidden = false;

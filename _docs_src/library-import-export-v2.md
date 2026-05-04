@@ -182,7 +182,11 @@ example:
 
 ### Task 1. Align The Import UI With The Export Page
 
-Reshape `/studio/library-import/` to mirror the Library export page's layout, status handling, selection controls, and result presentation.
+Status:
+
+- implemented
+
+Reshape `/studio/library-import/` to mirror the Library export page’s layout, status handling, selection controls, and result presentation.
 
 Expected outputs:
 
