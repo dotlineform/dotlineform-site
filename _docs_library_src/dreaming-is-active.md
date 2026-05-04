@@ -1,5 +1,5 @@
 ---
-doc_id: dreaming-is-actve
+doc_id: dreaming-is-active
 title: Dreaming is Active
 added_date: 2026-04-24
 last_updated: 2026-04-25
