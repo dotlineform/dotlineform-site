@@ -148,13 +148,17 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             dry_run=False,
         )
         preview_paths = sorted((root / "var/docs/import-preview/library").glob("alpha-*.md"))
+        tree_paths = sorted((root / "var/docs/import-preview/library").glob("summaries-tree-*.md"))
         preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["preview_written"] is True
     assert len(preview_paths) == 1
-    assert payload["preview_files"][0]["path"] == f"var/docs/import-preview/library/{preview_paths[0].name}"
-    assert payload["summary_text"] == "Generated 1 Library import preview file(s)."
+    assert len(tree_paths) == 1
+    assert f"var/docs/import-preview/library/{preview_paths[0].name}" in [
+        item["path"] for item in payload["preview_files"]
+    ]
+    assert payload["summary_text"] == "Generated 2 Library import preview file(s)."
     assert "Preview summary." in preview_text
 
 

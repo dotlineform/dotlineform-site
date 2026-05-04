@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3884c73bb0c5c10422d3d687f0b395de",
-    "generated_at_utc": "2026-05-04T19:19:56Z",
+    "version": "blake2b-e4833f13516e5d5b54ce8177fc2e83de",
+    "generated_at_utc": "2026-05-04T20:31:24Z",
     "count": 172
   },
   "entries": [
@@ -1141,24 +1141,22 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-03 22:40",
+      "last_updated": "2026-05-04",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-03 22:40 • Scripts",
+      "display_meta": "2026-05-04 • Scripts",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
         "docs",
         "import",
         "docs import",
-        "2026-05-03 22:40",
+        "2026-05-04",
         "2026",
         "05",
-        "03",
-        "22",
-        "40"
+        "04"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-03 22:40 2026 05 03 22 40"
+      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-04 2026 05 04"
     },
     {
       "id": "studio-audits",

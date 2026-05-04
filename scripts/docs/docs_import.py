@@ -25,11 +25,52 @@ SUPPORTED_SCOPES = {"library"}
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 FILENAME_RE = re.compile(r"[^a-z0-9-]+")
+STAGED_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
 
 EXPORT_ID_TO_IMPORT_TYPE = {
     "library-parent-child-relationships": "parent_child_relationships",
     "library-document-summaries": "document_summaries",
     "library-full-document-content": "full_document_content",
+}
+IMPORT_TYPE_CONFIG_FIELDS = {
+    "parent_child_relationships": [
+        "doc_id",
+        "title",
+        "parent_id",
+        "parent_title",
+        "ancestor_ids",
+        "ancestor_titles",
+        "child_ids",
+        "child_titles",
+        "summary",
+        "headings",
+        "last_updated",
+        "viewable",
+    ],
+    "document_summaries": [
+        "doc_id",
+        "title",
+        "parent_id",
+        "headings",
+        "current_summary",
+        "last_updated",
+        "viewable",
+    ],
+    "full_document_content": [
+        "doc_id",
+        "title",
+        "parent_id",
+        "summary",
+        "headings",
+        "source_text",
+        "last_updated",
+        "viewable",
+    ],
+    "minimal_document_records": [
+        "doc_id",
+        "title",
+        "parent_id",
+    ],
 }
 EXPORT_METADATA_FIELDS = {
     "_export",
@@ -111,6 +152,29 @@ def preview_filename_timestamp(generated_at: str) -> str:
         year, month, day, hour, minute, second = match.groups()
         return f"{year}{month}{day}-{hour}{minute}{second}"
     return slugify_filename(generated_at, "preview")
+
+
+def local_filename_timestamp(value: dt.datetime | None = None) -> str:
+    timestamp = value or dt.datetime.now().astimezone()
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.astimezone()
+    return timestamp.strftime("%Y%m%d-%H%M%S")
+
+
+def staged_timestamp_suffix(report: dict[str, Any], fallback_timestamp: str) -> str:
+    stem = Path(normalize_text(report.get("input_file"))).stem
+    match = STAGED_TIMESTAMP_RE.fullmatch(stem)
+    if match:
+        return match.group("timestamp")
+    return fallback_timestamp
+
+
+def staged_stem_without_timestamp(report: dict[str, Any], fallback: str) -> str:
+    stem = Path(normalize_text(report.get("input_file")) or fallback).stem
+    match = STAGED_TIMESTAMP_RE.fullmatch(stem)
+    if match:
+        stem = match.group("base")
+    return slugify_filename(stem, fallback)
 
 
 def slugify_filename(value: Any, fallback: str) -> str:
@@ -622,34 +686,95 @@ def render_issue_list(items: list[dict[str, Any]]) -> list[str]:
     return lines
 
 
-def record_preview_filename(record: dict[str, Any], seen: dict[str, int], timestamp: str) -> str:
+def record_preview_filename(record: dict[str, Any], seen: dict[str, int], timestamp_suffix: str) -> str:
     record_index = int(record.get("record_index") or 0)
     doc_id = normalize_text(record.get("doc_id"))
     base = slugify_filename(doc_id, f"record-{record_index + 1}")
     count = seen.get(base, 0)
     seen[base] = count + 1
-    suffix = preview_filename_timestamp(timestamp)
     if count:
-        return f"{base}-record-{record_index + 1}-{suffix}.md"
-    return f"{base}-{suffix}.md"
+        return f"{base}-record-{record_index + 1}-{timestamp_suffix}.md"
+    return f"{base}-{timestamp_suffix}.md"
 
 
-def relationship_preview_filename(report: dict[str, Any]) -> str:
-    stem = Path(normalize_text(report.get("input_file")) or "relationships").stem
-    base = slugify_filename(stem, "relationships")
-    return f"{base}-tree.md"
+def relationship_preview_filename(report: dict[str, Any], timestamp_suffix: str) -> str:
+    base = staged_stem_without_timestamp(report, "relationships")
+    return f"{base}-tree-{timestamp_suffix}.md"
 
 
-def render_doc_front_matter(record: dict[str, Any], import_type: str, generated_at: str) -> str:
-    return front_matter(
-        {
-            "doc_id": normalize_text(record.get("doc_id")),
-            "title": normalize_text(record.get("title")),
-            "parent_id": normalize_text(record.get("parent_id")),
-            "import_type": import_type,
-            "preview_generated_at": generated_at,
-        }
+def render_doc_front_matter(record: dict[str, Any], report: dict[str, Any], generated_at: str) -> str:
+    import_type = normalize_text(report.get("detected_import_type"))
+    return render_preview_metadata_sections(
+        record=record,
+        import_type=import_type,
+        generated_at=generated_at,
+        source_file=normalize_text(report.get("input_file")),
     )
+
+
+def record_field_value(record: dict[str, Any], field: str) -> Any:
+    if field in {"doc_id", "title", "parent_id"}:
+        return normalize_text(record.get(field))
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
+    relationships = record.get("relationships") if isinstance(record.get("relationships"), dict) else {}
+    if field in metadata:
+        return metadata.get(field)
+    if field in relationships:
+        return relationships.get(field)
+    return ""
+
+
+def preview_scalar(value: Any, *, field: str = "") -> str:
+    if field == "source_text" and normalize_text(value):
+        return '"[see Imported Source Text section]"'
+    if isinstance(value, (list, dict)):
+        return json.dumps(value, ensure_ascii=False)
+    text = str(value or "")
+    if "\n" in text or len(text) > 160:
+        text = normalize_text(text)
+        if len(text) > 160:
+            text = text[:157].rstrip() + "..."
+    return yaml_scalar(text)
+
+
+def metadata_section(title: str, rows: list[tuple[str, Any]]) -> list[str]:
+    lines = ["---", title]
+    if rows:
+        for key, value in rows:
+            lines.append(f"{key}: {preview_scalar(value, field=key)}")
+    else:
+        lines.append("none")
+    lines.append("---")
+    return lines
+
+
+def matched_config_fields(import_type: str, record: dict[str, Any]) -> list[tuple[str, Any]]:
+    fields = IMPORT_TYPE_CONFIG_FIELDS.get(import_type) or IMPORT_TYPE_CONFIG_FIELDS["minimal_document_records"]
+    return [(field, record_field_value(record, field)) for field in fields]
+
+
+def render_preview_metadata_sections(
+    *,
+    record: dict[str, Any],
+    import_type: str,
+    generated_at: str,
+    source_file: str,
+) -> str:
+    lines: list[str] = []
+    lines.extend(metadata_section("matched_config_fields", matched_config_fields(import_type, record)))
+    unknown = record.get("unknown_metadata") if isinstance(record.get("unknown_metadata"), dict) else {}
+    lines.extend(metadata_section("staged_only_fields", sorted(unknown.items())))
+    lines.extend(
+        metadata_section(
+            "preview_metadata",
+            [
+                ("import_type", import_type),
+                ("preview_generated_at", generated_at),
+                ("source_file", source_file),
+            ],
+        )
+    )
+    return "\n".join(lines)
 
 
 def render_metadata_lines(record: dict[str, Any]) -> list[str]:
@@ -675,7 +800,7 @@ def render_summary_preview(report: dict[str, Any], record: dict[str, Any], gener
     metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
     summary = str(metadata.get("summary") if "summary" in metadata else metadata.get("current_summary", ""))
     lines = [
-        render_doc_front_matter(record, normalize_text(report.get("detected_import_type")), generated_at),
+        render_doc_front_matter(record, report, generated_at),
         "",
         f"# {title}",
         "",
@@ -698,7 +823,7 @@ def render_full_content_preview(report: dict[str, Any], record: dict[str, Any], 
     headings = metadata.get("headings") if isinstance(metadata.get("headings"), list) else []
     source_text = normalize_markdown_body(metadata.get("source_text", ""))
     lines = [
-        render_doc_front_matter(record, normalize_text(report.get("detected_import_type")), generated_at),
+        render_doc_front_matter(record, report, generated_at),
         "",
         f"# {title}",
         "",
@@ -803,6 +928,16 @@ def render_relationship_preview(report: dict[str, Any], generated_at: str) -> st
     return "\n".join(lines).rstrip() + "\n"
 
 
+def has_relationship_metadata(records: list[dict[str, Any]]) -> bool:
+    for record in records:
+        if normalize_text(record.get("parent_id")):
+            return True
+        relationships = record.get("relationships") if isinstance(record.get("relationships"), dict) else {}
+        if any(relationships.get(key) for key in ["ancestor_ids", "ancestor_titles", "child_ids", "child_titles"]):
+            return True
+    return False
+
+
 def render_markdown_previews(
     *,
     repo_root: Path,
@@ -816,38 +951,40 @@ def render_markdown_previews(
         report["preview_written"] = False
         return report
     generated = generated_at or preview_generated_at()
+    fallback_timestamp = preview_filename_timestamp(generated_at) if generated_at else local_filename_timestamp()
+    timestamp_suffix = staged_timestamp_suffix(report, fallback_timestamp)
     import_type = normalize_text(report.get("detected_import_type"))
     records = [record for record in report.get("records", []) if isinstance(record, dict)]
     preview_files: list[dict[str, Any]] = []
 
-    if import_type == "parent_child_relationships":
-        filename = relationship_preview_filename(report)
+    if has_relationship_metadata(records):
+        filename = relationship_preview_filename(report, timestamp_suffix)
         path = resolve_preview_path(repo_root, scope, filename)
         content = render_relationship_preview(report, generated)
         preview_files.append({"path": relative_path(repo_root, path), "record_count": len(records), "kind": "relationship_tree"})
         if write:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding="utf-8")
-    else:
-        seen: dict[str, int] = {}
-        for record in records:
-            filename = record_preview_filename(record, seen, generated)
-            path = resolve_preview_path(repo_root, scope, filename)
-            if import_type == "full_document_content":
-                content = render_full_content_preview(report, record, generated)
-            else:
-                content = render_summary_preview(report, record, generated)
-            preview_files.append(
-                {
-                    "path": relative_path(repo_root, path),
-                    "record_index": record.get("record_index"),
-                    "doc_id": normalize_text(record.get("doc_id")),
-                    "kind": "document",
-                }
-            )
-            if write:
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(content, encoding="utf-8")
+
+    seen: dict[str, int] = {}
+    for record in records:
+        filename = record_preview_filename(record, seen, timestamp_suffix)
+        path = resolve_preview_path(repo_root, scope, filename)
+        if import_type == "full_document_content":
+            content = render_full_content_preview(report, record, generated)
+        else:
+            content = render_summary_preview(report, record, generated)
+        preview_files.append(
+            {
+                "path": relative_path(repo_root, path),
+                "record_index": record.get("record_index"),
+                "doc_id": normalize_text(record.get("doc_id")),
+                "kind": "document",
+            }
+        )
+        if write:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
 
     report["preview_files"] = preview_files
     report["preview_written"] = bool(write)

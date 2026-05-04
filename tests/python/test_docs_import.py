@@ -262,7 +262,13 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
     with make_repo() as temp:
         root = Path(temp)
         payload = [
-            {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "New alpha summary."},
+            {
+                "doc_id": "alpha",
+                "title": "Alpha",
+                "parent_id": "library",
+                "summary": "New alpha summary.",
+                "review_note": "Keep this staged-only note.",
+            },
             {"doc_id": "alpha", "title": "Alpha Duplicate", "parent_id": "library", "summary": "Duplicate summary."},
             {"doc_id": "", "title": "Missing Id", "parent_id": "library", "summary": "Missing id summary."},
         ]
@@ -273,12 +279,16 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
 
     assert report["preview_written"] is True
     assert [item["path"] for item in report["preview_files"]] == [
+        "var/docs/import-preview/library/summaries-tree-20260503-204000.md",
         "var/docs/import-preview/library/alpha-20260503-204000.md",
         "var/docs/import-preview/library/alpha-record-2-20260503-204000.md",
         "var/docs/import-preview/library/record-3-20260503-204000.md",
     ]
+    assert "matched_config_fields" in first_preview
+    assert "staged_only_fields" in first_preview
     assert 'doc_id: "alpha"' in first_preview
     assert 'import_type: "document_summaries"' in first_preview
+    assert 'review_note: "Keep this staged-only note."' in first_preview
     assert "## Proposed Summary\n\nNew alpha summary." in first_preview
     assert 'doc_id: ""' in missing_preview
     assert "`missing_doc_id`: record is missing doc_id" in missing_preview
@@ -289,7 +299,7 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
         root = Path(temp)
         write_staged(
             root,
-            "content.jsonl",
+            "content-20260102-030405.jsonl",
             json.dumps(
                 {
                     "doc_id": "alpha",
@@ -301,12 +311,17 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
             )
             + "\n",
         )
-        report = render(root, parse(root, "content.jsonl"))
-        preview = (root / "var/docs/import-preview/library/alpha-20260503-204000.md").read_text(encoding="utf-8")
+        report = render(root, parse(root, "content-20260102-030405.jsonl"))
+        preview = (root / "var/docs/import-preview/library/alpha-20260102-030405.md").read_text(encoding="utf-8")
 
     assert report["preview_files"] == [
         {
-            "path": "var/docs/import-preview/library/alpha-20260503-204000.md",
+            "path": "var/docs/import-preview/library/content-tree-20260102-030405.md",
+            "record_count": 1,
+            "kind": "relationship_tree",
+        },
+        {
+            "path": "var/docs/import-preview/library/alpha-20260102-030405.md",
             "record_index": 0,
             "doc_id": "alpha",
             "kind": "document",
@@ -330,15 +345,16 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
         }
         write_staged(root, "relationships.json", json.dumps(payload))
         report = render(root, parse(root, "relationships.json"))
-        preview = (root / "var/docs/import-preview/library/relationships-tree.md").read_text(encoding="utf-8")
+        preview = (root / "var/docs/import-preview/library/relationships-tree-20260503-204000.md").read_text(encoding="utf-8")
 
-    assert report["preview_files"] == [
+    assert report["preview_files"][:1] == [
         {
-            "path": "var/docs/import-preview/library/relationships-tree.md",
+            "path": "var/docs/import-preview/library/relationships-tree-20260503-204000.md",
             "record_count": 3,
             "kind": "relationship_tree",
         }
     ]
+    assert [item["kind"] for item in report["preview_files"]] == ["relationship_tree", "document", "document", "document"]
     assert 'import_type: "parent_child_relationships"' in preview
     assert "- Library (`library`)\n  - Alpha (`alpha`)" in preview
     assert "  - summary: Alpha summary." in preview

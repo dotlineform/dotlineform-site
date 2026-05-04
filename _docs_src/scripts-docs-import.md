@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-03 22:40"
+last_updated: "2026-05-04"
 parent_id: scripts
 sort_order: 26
 ---
@@ -54,11 +54,13 @@ Implemented now:
 - preserves unknown file-level metadata and unknown record-level metadata in the report
 - loads the current generated Library docs index and generated payload filenames
 - annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
-- renders summary and full-content imports as one Markdown preview per parsed document
-- renders relationship imports as one whole-tree Markdown preview file
+- renders one Markdown-style preview per parsed document
+- renders one additional whole-tree Markdown preview file whenever staged relationship metadata is available
 - writes previews only under `var/docs/import-preview/library/`
-- supports timestamped summary and full-content preview filenames based on `doc_id` and duplicate record index fallback
-- supports deterministic relationship-tree preview filenames based on the staged relationship filename
+- supports timestamped document preview filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
+- uses the staged-file timestamp suffix for preview filenames when present, otherwise the current preview-generation time
+- supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
+- writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through docs-management endpoints for staged-file listing and preview generation
 - is exposed through the `/studio/library-import/` page for local preview generation
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
@@ -149,7 +151,7 @@ Focused parser checks live in:
 tests/python/test_docs_import.py
 ```
 
-They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary preview output, full-content preview output, relationship whole-tree preview output, dry-run preview reporting, invalid JSONL blocking, and staged/preview path allowlisting.
+They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary preview output, full-content preview output, relationship whole-tree preview output for relationship and non-relationship imports, staged-timestamp preview filenames, dry-run preview reporting, invalid JSONL blocking, and staged/preview path allowlisting.
 Service handler checks live in:
 
 ```bash

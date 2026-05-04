@@ -218,6 +218,10 @@ Expected outputs:
 
 ### Task 3. Normalize Preview File Output
 
+Status:
+
+- implemented
+
 Update preview rendering so generated files are clearly review-only Markdown-style artifacts.
 They do not need valid YAML front matter because source writes read from staged JSON or the service report.
 

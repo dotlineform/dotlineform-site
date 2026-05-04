@@ -81,27 +81,40 @@ var/docs/import-preview/library/
 These artifacts are local working files.
 They should be ignored by git, safe to delete, and reproducible from the staged data file plus the current import renderer.
 
-Preview output is document-centric for summary and full-content imports.
-Each imported summary or full-content document should produce one Markdown preview file.
-A staged summary or full-content JSON/JSONL file containing four documents should therefore generate four Markdown preview files.
-Summary and full-content preview filenames should include the preview-generation timestamp so repeated runs do not overwrite each other.
-Relationship imports are the v1 exception: a staged parent-child relationships file should produce one Markdown preview file showing the whole candidate tree contained in that input file.
+Preview output is document-centric.
+Each parsed document should produce one Markdown-style preview file.
+A staged JSON/JSONL file containing four documents should therefore generate four per-document preview files.
+When staged relationship metadata is available, the renderer also writes one whole-tree Markdown preview showing the candidate hierarchy.
 No generated Markdown index file is required in v1.
 
-Each generated preview should include document-specific front matter only:
+Preview filenames use the staged-file timestamp suffix when the staged filename ends with a timestamp such as `library-document-summaries-20260503-204000.jsonl`.
+If the staged filename has no timestamp suffix, the renderer uses the current preview-generation time.
+Per-document filenames are based on `doc_id`, with duplicate and missing-id fallbacks.
 
-```yaml
+Each generated per-document preview should start with readable front-matter-like sections.
+These sections are for human review, not YAML parsing.
+The first section lists matched export/config fields, the second lists staged-only fields, and the third records preview metadata:
+
+```text
 ---
+matched_config_fields
 doc_id: defining-information-for-cross-boundary-comparisons
 title: Defining Information For Cross Boundary Comparisons
 parent_id: library
+current_summary: Existing summary text.
+---
+staged_only_fields
+review_note: Keep this staged-only value visible.
+---
+preview_metadata
 import_type: document_summary
 preview_generated_at: 2026-05-03T20:01:00Z
+source_file: var/docs/import-staging/library/library-document-summaries-20260503-200000.jsonl
 ---
 ```
 
-Preview files do not need to contain the staged filename or import-file provenance.
-That provenance, plus parsing diagnostics and unknown metadata, belongs in the Studio report.
+Source writes do not read these preview files.
+Apply actions use the staged JSON or the service report.
 
 ### Supported Input Types
 
@@ -154,7 +167,7 @@ For full document content:
 
 For parent-child relationships:
 
-- render one Markdown file containing a simple tree for the whole candidate tree in the imported relationships file
+- render one Markdown file containing a simple tree whenever staged relationship metadata is available
 - include orphaned records, missing parents, duplicate ids, or cycles as report issues
 - preserve any summary or heading context below each tree item when present
 - keep relationship import preview-only; later workflows may turn candidate trees into actionable edits
@@ -231,10 +244,10 @@ Potential later apply flows:
 
 - staging root: `var/docs/import-staging/library/`
 - preview root: `var/docs/import-preview/library/`
-- output shape: one Markdown preview file per imported document for summary and full-content imports
-- relationship output shape: one Markdown preview file showing the whole imported candidate tree
+- output shape: one Markdown preview file per imported document
+- relationship output shape: one additional Markdown preview file showing the whole imported candidate tree whenever relationship metadata is available
 - index files: none in v1
-- preview front matter: document-specific metadata only
+- preview front matter: front-matter-like matched-config, staged-only, and preview-metadata sections
 - staged-file provenance: shown in the Studio report, not copied into every preview file
 - diagnostics: shown in the Studio report, not embedded as compact JSON in preview files
 - machine-readable report JSON: not written in v1
@@ -264,10 +277,10 @@ Expected outputs:
 
 - staging root `var/docs/import-staging/library/`
 - preview root under `var/docs/import-preview/`
-- one preview file per imported document under `var/docs/import-preview/library/` for summary and full-content imports
-- one whole-tree preview file under `var/docs/import-preview/library/` for relationship imports
-- preview filename convention based primarily on `doc_id`, with a fallback for malformed records
-- document-specific front matter only
+- one preview file per imported document under `var/docs/import-preview/library/`
+- one whole-tree preview file under `var/docs/import-preview/library/` whenever relationship metadata is available
+- preview filename convention based primarily on `doc_id` plus the staged-file timestamp suffix, with a current preview-generation time fallback
+- front-matter-like matched-config, staged-only, and preview-metadata sections
 - docs-management allowlist rules for read/write paths
 
 ### Task 2. Build Read-Only Import Parser
@@ -300,15 +313,16 @@ Create deterministic Markdown preview rendering for:
 - parent-child relationship trees
 
 The renderer should write only under the preview root.
-Summary and full-content imports should generate one Markdown file per imported document and include document-specific front matter.
-Relationship imports should generate one Markdown file containing the whole candidate tree and include tree-level front matter.
+All import types should generate one Markdown file per parsed document.
+When relationship metadata is present, the renderer should also generate one whole-tree preview file containing the candidate hierarchy.
 Source-file provenance and diagnostics should remain in the Studio report.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
 The parser can now render Markdown preview files with `--write-previews`.
-Summary and full-content imports write one file per parsed document under `var/docs/import-preview/library/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
-Relationship imports write one whole-tree Markdown file based on the staged filename, such as `relationships-tree.md`.
-Preview files include front matter and readable Markdown sections for import metadata, relevant warnings, summaries, headings, source text, or candidate relationship trees.
+Imports write one file per parsed document under `var/docs/import-preview/library/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
+The timestamp comes from the staged filename suffix when present, otherwise from the current preview-generation time.
+When relationship metadata is available, imports also write one whole-tree Markdown file based on the staged filename, such as `relationships-tree-20260503-204000.md`.
+Preview files include front-matter-like matched-config, staged-only, and preview-metadata sections plus readable Markdown sections for relevant warnings, summaries, headings, source text, or candidate relationship trees.
 
 ### Task 5. Add Local Service Endpoints
 
@@ -378,7 +392,7 @@ Add focused tests for:
 - local service preview generation and dry-run behavior
 - Studio route ready state and unavailable-service behavior
 
-Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output, deterministic preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
+Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output for relationship and non-relationship imports, deterministic staged-timestamp preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, and non-Library scope rejection is implemented in `tests/python/test_docs_import_service.py`.
 A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/library_import.py`.
 The `docs` profile in `./scripts/run_checks.py` runs the parser and local service checks.

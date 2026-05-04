@@ -18,6 +18,7 @@ sort_order: 270
 Updated `/studio/library-import/` so its first v2 milestone uses the same compact command/list shell as `/studio/library-export/`.
 The page now places Preview beside the staged-file selector, shows Select all and Clear pills, renders generated previews in the main selectable list area, and keeps future `Update summary` and `Apply hierarchy` actions visible but disabled.
 Preview rows are ordered and indented from staged `parent_id` metadata when relationship data is available, and generated relationship-tree preview files appear as their own visible list row.
+Preview files now use staged-file timestamp suffixes when present, include front-matter-like matched-config and staged-only sections, and generate a whole-tree preview whenever staged relationship metadata is available.
 
 **Reason:**
 Library import v2 should begin with review-oriented UI changes before source-write wiring.
