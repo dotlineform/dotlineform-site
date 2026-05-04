@@ -395,7 +395,7 @@ def build_local_media_task(
     staged_thumb_paths = staged_thumb_output_paths(repo_root, kind, item_id)
     staged_primary_paths = staged_primary_output_paths(repo_root, kind, item_id)
     asset_thumb_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
-    output_paths = [*staged_thumb_paths, *staged_primary_paths, *asset_thumb_paths]
+    output_paths = [*staged_primary_paths, *asset_thumb_paths]
     state = local_media_state(source_path, output_paths, staged_source_path)
     force_refresh = bool(force and source_path is not None and source_path.exists())
     if force_refresh and state == "current":
@@ -427,8 +427,8 @@ def build_local_media_task(
         pending_thumb_outputs: list[Dict[str, Any]] = []
         pending_primary_outputs: list[Dict[str, Any]] = []
         pending_asset_thumbs: list[Dict[str, Any]] = []
-        for size, path in zip(THUMB_SIZES, staged_thumb_paths):
-            if force_refresh or path_needs_refresh(path, source_mtime):
+        for size, path, asset_path in zip(THUMB_SIZES, staged_thumb_paths, asset_thumb_paths):
+            if force_refresh or path_needs_refresh(asset_path, source_mtime):
                 pending_thumb_outputs.append(
                     {
                         "variant": "thumb",
@@ -634,6 +634,7 @@ def execute_local_media_plan(
     planned: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
     current: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
     blocked: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    cleaned_staged_thumbs: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
     messages: list[str] = []
 
     for task in tasks:
@@ -722,6 +723,12 @@ def execute_local_media_plan(
                 }
             output_path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(staged_thumb, output_path)
+            try:
+                staged_thumb.unlink()
+                cleaned_staged_thumbs[kind].append(repo_relative_path(staged_thumb, repo_root))
+            except OSError as exc:
+                staged_thumb_display = repo_relative_path(staged_thumb, repo_root)
+                messages.append(f"{kind} {item_id}: could not remove staged thumbnail {staged_thumb_display}: {exc}")
         generated[kind].append(item_id)
 
     summary_parts: list[str] = []
@@ -748,6 +755,7 @@ def execute_local_media_plan(
         "planned": planned,
         "current": current,
         "blocked": blocked,
+        "cleaned_staged_thumbs": cleaned_staged_thumbs,
         "exit_code": 0,
         "stdout_tail": summary,
     }

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6e632cad5094337f3f65bb9417a93748",
-    "generated_at_utc": "2026-05-04T18:13:32Z",
+    "version": "blake2b-dfbe5db20a34fd18b5d28074f673cbe2",
+    "generated_at_utc": "2026-05-04T18:18:29Z",
     "count": 171
   },
   "entries": [
@@ -2090,19 +2090,19 @@
       "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-02 2026 05 02"
     },
     {
-      "id": "library-export-import-v2",
+      "id": "library-import-export-v2",
       "kind": "doc",
       "title": "Library Export/Import v2",
-      "href": "/docs/?scope=studio&doc=library-export-import-v2",
+      "href": "/docs/?scope=studio&doc=library-import-export-v2",
       "last_updated": "2026-05-04",
       "parent_id": "library",
       "parent_title": "Library",
       "display_meta": "2026-05-04 • Library",
       "search_terms": [
-        "library-export-import-v2",
+        "library-import-export-v2",
         "library",
-        "export",
         "import",
+        "export",
         "v2",
         "library export/import v2",
         "2026-05-04",
@@ -2110,7 +2110,7 @@
         "05",
         "04"
       ],
-      "search_text": "library-export-import-v2 library export import v2 library export/import v2 2026-05-04 2026 05 04"
+      "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-04 2026 05 04"
     },
     {
       "id": "site-request-moments-prose-source-model",

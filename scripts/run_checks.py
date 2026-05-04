@@ -68,6 +68,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify representative catalogue field-registry build plans.",
         ),
         CheckCommand(
+            "catalogue-media-cleanup",
+            (sys.executable, "tests/python/test_catalogue_media_cleanup.py"),
+            "Verify staged catalogue thumbnails are removed after asset copy.",
+        ),
+        CheckCommand(
             "catalogue-build-preview-downloads",
             ("./scripts/catalogue_json_build.py", "--work-id", "00001", "--changed-fields", "downloads"),
             "Preview a narrow field-aware catalogue build plan.",

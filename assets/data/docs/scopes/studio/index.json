@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T18:13:30Z",
+  "generated_at": "2026-05-04T18:18:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1237,7 +1237,7 @@
     },
     {
       "scope": "studio",
-      "doc_id": "library-export-import-v2",
+      "doc_id": "library-import-export-v2",
       "title": "Library Export/Import v2",
       "added_date": "2026-05-04",
       "last_updated": "2026-05-04",
@@ -1246,8 +1246,8 @@
       "published": true,
       "viewable": true,
       "source_path": "library-import-export-v2.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-export-import-v2",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-import-v2.json",
+      "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
       "ui_status": "proposed"
     },
     {

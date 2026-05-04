@@ -297,6 +297,7 @@ For work, work-detail, and moment scopes, the build helper:
 - copies the source image into `var/catalogue/media/<kind>/make_srcset_images/` using the public catalogue id as the filename stem
 - generates primary and thumbnail srcset derivatives into `var/catalogue/media/<kind>/srcset_images/`
 - copies generated thumbnail derivatives into `assets/works/img/`, `assets/work_details/img/`, or `assets/moments/img/`
+- removes staged thumbnail derivatives after the asset-folder copy succeeds
 - leaves generated primary derivatives staged under `var/catalogue/media/` for remote media publishing
 
 The write server reports generated/current/blocked media ids in the nested build response. It does not upload primary images to R2.

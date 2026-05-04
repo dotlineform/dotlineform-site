@@ -157,13 +157,14 @@ Work, work-detail, and moment image generation uses the source-image metadata in
 - moments resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/moments/images/<source_image_file>`
 - renamed source images are copied to `var/catalogue/media/works/make_srcset_images/<work_id>.<ext>`, `var/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`, or `var/catalogue/media/moments/make_srcset_images/<moment_id>.<ext>`
 - primary derivatives are staged under `var/catalogue/media/<kind>/srcset_images/primary/`
-- thumbnail derivatives are staged under `var/catalogue/media/<kind>/srcset_images/thumb/`
-- thumbnail derivatives are also copied into the repo-owned public asset folders:
+- thumbnail derivatives are generated temporarily under `var/catalogue/media/<kind>/srcset_images/thumb/`
+- thumbnail derivatives are copied into the repo-owned public asset folders and then removed from staging:
   - `assets/works/img/`
   - `assets/work_details/img/`
   - `assets/moments/img/`
 
 The staged primary derivatives are the local handoff point for the remote media publishing step. The scoped helper does not upload or mutate remote R2 media.
+Staged thumbnail derivatives are not retained after they have been copied into the public asset folders.
 
 ## Purpose
 

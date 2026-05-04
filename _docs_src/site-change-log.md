@@ -8,6 +8,37 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Cleaned staged catalogue thumbnails after asset copy
+
+**Status:** implemented
+
+**Area:** Catalogue / local media generation
+
+**Summary:**
+Scoped catalogue media builds now treat staged thumbnail derivatives as temporary files.
+After a generated thumbnail is copied into `assets/works/img/`, `assets/work_details/img/`, or `assets/moments/img/`, the matching file under `var/catalogue/media/<kind>/srcset_images/thumb/` is removed.
+
+**Reason:**
+Primary derivatives under `var/catalogue/media/` remain the manual handoff point for remote media publishing until R2 upload is automated.
+Staged thumbnails do not have the same handoff responsibility once the public asset-folder copy succeeds, so retaining them only grows local cache size.
+
+**Changes:**
+The local media planner no longer treats staged thumbnail paths as persistent currentness outputs.
+It generates staged thumbnails only when public asset thumbnails need refresh, copies them to the asset folders, and then deletes the staged thumbnail intermediates.
+The media build response records cleaned staged thumbnail paths for diagnostics.
+
+**Files changed:**
+
+- `scripts/catalogue_json_build.py`
+- `tests/python/test_catalogue_media_cleanup.py`
+- `scripts/run_checks.py`
+- [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
+**Impact:**
+Future media refreshes keep staged source images and staged primary derivatives, but no longer retain thumbnail intermediates after successful asset copy.
+Existing staged thumbnail files can be removed manually or by a later retention cleanup.
+
 ## [2026-05-04] Routed local Docs Viewer data reads through the docs server
 
 **Status:** implemented
