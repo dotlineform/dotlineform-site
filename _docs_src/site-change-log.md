@@ -8,6 +8,37 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Routed local Docs Viewer data reads through the docs server
+
+**Status:** implemented
+
+**Area:** Docs Viewer / local Studio runtime
+
+**Summary:**
+The docs-management server now serves allowlisted generated docs index, payload, and docs-search JSON for Studio, Library, and Analysis scopes. The shared Docs Viewer prefers those server reads when the localhost capability is available, while public/static routes continue to use generated JSON assets directly.
+
+**Reason:**
+Generated docs/search rewrites are local runtime data changes, not Jekyll source changes. Moving local reads through the server lets `bin/dev-studio` stop making Jekyll watch those generated JSON trees.
+
+**Changes:**
+Added `GET /docs/generated/index`, `GET /docs/generated/payload`, and `GET /docs/generated/search` with raw JSON responses, strict scope/doc validation, and `Cache-Control: no-store`.
+The Docs Viewer now probes generated-read capability and uses server reads for index, payload, and search data when available.
+`bin/dev-studio` now starts Jekyll with `_config.yml,_config.dev-studio.yml`; the overlay excludes generated docs/search JSON and keeps public builds unchanged.
+
+**Files changed:**
+
+- `scripts/docs/docs_management_server.py`
+- `assets/js/docs-viewer.js`
+- `bin/dev-studio`
+- `_config.dev-studio.yml`
+- [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+
+**Impact:**
+Local docs source edits can still rebuild generated docs/search data immediately, but Jekyll no longer needs to regenerate because those generated files changed during `bin/dev-studio`.
+
 ## [2026-05-04] Treated Archive as a normal Docs Viewer folder
 
 **Status:** implemented

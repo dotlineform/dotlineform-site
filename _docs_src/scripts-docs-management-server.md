@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-04"
 parent_id: scripts
 sort_order: 10
 ---
@@ -26,6 +26,12 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /capabilities`
+- `GET /docs/generated/index`
+- `GET /docs/generated/payload`
+- `GET /docs/generated/search`
+- `GET /docs/index`
+- `GET /docs/doc`
+- `GET /docs/search`
 - `GET /docs/import-html-files`
 - `GET /docs/library-import/files`
 - `POST /docs/import-html`
@@ -51,6 +57,7 @@ Current behavior:
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
 - also used by `/studio/library-export/` to write configured Library export artifacts
 - also used by `/studio/library-import/` to list staged JSON/JSONL data files and write Markdown previews
+- serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`
@@ -76,6 +83,31 @@ Search update behavior:
 - whether Library import is available
 - which scopes are writable
 - whether the current scope has `archive` for the Archive command
+- whether generated docs/search reads are available for each scope
+
+Read-only generated-data endpoints:
+
+- `GET /docs/generated/index?scope=<scope>`
+- `GET /docs/generated/payload?scope=<scope>&doc_id=<doc_id>`; `doc=<doc_id>` is also accepted
+- `GET /docs/generated/search?scope=<scope>`
+
+Compatibility aliases:
+
+- `GET /docs/index?scope=<scope>`
+- `GET /docs/doc?scope=<scope>&doc_id=<doc_id>`
+- `GET /docs/search?scope=<scope>`
+
+Generated-read behavior:
+
+- `scope` must be `studio`, `analysis`, or `library`
+- responses return the raw generated JSON unchanged
+- all JSON responses include `Cache-Control: no-store`
+- index reads resolve only `assets/data/docs/scopes/<scope>/index.json`
+- payload reads require a safe `doc_id`, require that `doc_id` to be present in the generated scope index, and then resolve only `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+- payload reads allow non-viewable docs when those docs are present in the generated index, because local manage mode needs to inspect and update non-viewable docs
+- search reads resolve only `assets/data/search/<scope>/index.json`
+- missing scope, unsupported scope, missing generated files, and non-indexed payload ids return validation or 404 errors rather than filesystem paths chosen by the browser
+- these endpoints are read-only and do not write source or generated files
 
 `POST /docs/create` expects:
 
@@ -447,10 +479,11 @@ Apply behavior:
 ## Operational Notes
 
 - `bin/dev-studio` starts this service on `http://127.0.0.1:8789`
-- the shared Docs Viewer probes `GET /capabilities` only when `?mode=manage` is present
-- if the local service is unavailable, the viewer stays read-only and shows a manage-mode unavailable message
+- the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
+- if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
 - successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server
 - `var/` is excluded from Jekyll because docs-management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
+- `bin/dev-studio` also uses a local-only Jekyll overlay so generated docs/search JSON can be read from this server without making Jekyll watch those generated files
 
 ## Related References
 

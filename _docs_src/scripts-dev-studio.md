@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: "Dev Studio Runner"
 added_date: 2026-04-22
-last_updated: 2026-05-03
+last_updated: "2026-05-04"
 parent_id: scripts
 sort_order: 15
 ---
@@ -51,6 +51,8 @@ The runner does not currently take CLI flags. It is configured through environme
   default: `127.0.0.1`
 - `JEKYLL_PORT`
   default: `4000`
+- `JEKYLL_CONFIG`
+  default: `_config.yml,_config.dev-studio.yml`
 - `TAG_WRITE_PORT`
   default: `8787`
 - `CATALOGUE_WRITE_PORT`
@@ -129,11 +131,13 @@ After those startup writes succeed, it starts the long-running local processes b
 - command:
 
 ```bash
-bundle exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT"
+bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port "$JEKYLL_PORT"
 ```
 
 - default URL: `http://127.0.0.1:4000`
 - serves the local site and Studio routes
+- uses `_config.dev-studio.yml` by default as a local-only overlay to exclude generated docs/search JSON from Jekyll's watch surface
+- normal public builds that use `_config.yml` alone still include generated docs/search JSON
 - when launched through `bin/dev-studio`, the Jekyll process loads `scripts/jekyll_webrick_client_reset_filter.rb` through `RUBYOPT`
 - that filter suppresses only WEBrick `Errno::ECONNRESET` server-log entries, which are expected when the browser closes a local connection during refreshes, rebuilds, or cancelled asset loads
 - other WEBrick errors, Jekyll build warnings, and docs watcher messages remain visible

@@ -2,8 +2,8 @@
 doc_id: site-request-local-docs-data-server-reads
 title: Local Docs Data Server Reads Request
 added_date: "2026-05-03 21:56"
-last_updated: "2026-05-03 22:01"
-ui_status: "in-progress"
+last_updated: "2026-05-04"
+ui_status: "done"
 parent_id: change-requests
 sort_order: 25
 ---
@@ -11,7 +11,7 @@ sort_order: 25
 
 Status:
 
-- in-progress
+- implemented
 
 ## Summary
 
@@ -66,6 +66,7 @@ Likely endpoints:
 
 - `GET /docs/generated/index?scope=<scope>`
 - `GET /docs/generated/payload?scope=<scope>&doc=<doc_id>`
+  - implemented endpoint also accepts `doc_id=<doc_id>`
 - `GET /docs/generated/search?scope=<scope>`
 
 Supported scopes should match the docs-viewer scopes already supported by the generated payloads:
@@ -80,7 +81,8 @@ Endpoint behavior:
 - return JSON with `cache-control: no-store`
 - never expose arbitrary filesystem paths
 - never write source files or generated files
-- return clear 404 or validation errors for missing scope, missing doc, non-viewable payloads, or unsupported scope
+- return clear 404 or validation errors for missing scope, missing doc, or unsupported scope
+- serve indexed non-viewable payloads for local manage-mode workflows; public visibility remains enforced by the generated index and search data
 
 ### Docs Viewer Runtime Behavior
 
@@ -135,6 +137,14 @@ The server-read path is a local development optimization and local Studio runtim
 - Should generated docs/search exclusions live in `_config.yml`, or should `bin/dev-studio` pass a separate local-only Jekyll config overlay?
 - Should the docs viewer display a small local-data warning if a server read fails and it falls back to static assets during local development?
 
+Resolved:
+
+- Server reads are enabled for all docs-viewer reads when the configured localhost docs-management server advertises generated-data read capability, not only in `mode=manage`.
+- `studio`, `library`, and `analysis` use the same generated-data endpoints.
+- Generated-data endpoints return the raw generated JSON unchanged.
+- `bin/dev-studio` uses `_config.dev-studio.yml` as a local-only Jekyll overlay; normal builds keep `_config.yml`.
+- The viewer falls back to static assets only when the local server capability probe is unavailable. Once generated-data reads are advertised for the scope, failed server reads surface as load errors rather than silently using stale static data.
+
 ## Task List
 
 ### Task 1. Exclude Test Artifacts From Jekyll
@@ -167,9 +177,21 @@ Status note:
 
 Status:
 
-- proposed
+- implemented
 
 Add allowlisted docs-management endpoints for generated docs index, generated per-doc payloads, and generated docs-search indexes.
+
+Implemented endpoints:
+
+- `GET /docs/generated/index?scope=<scope>`
+- `GET /docs/generated/payload?scope=<scope>&doc_id=<doc_id>`; `doc=<doc_id>` is also accepted
+- `GET /docs/generated/search?scope=<scope>`
+
+Compatibility aliases remain for the earlier management reload paths:
+
+- `GET /docs/index?scope=<scope>`
+- `GET /docs/doc?scope=<scope>&doc_id=<doc_id>`
+- `GET /docs/search?scope=<scope>`
 
 Reason:
 
@@ -187,9 +209,16 @@ Risk:
 
 Status:
 
-- proposed
+- implemented
 
 Update the docs viewer runtime so localhost/server-capable sessions can read generated docs data through the docs-management server.
+
+Implementation note:
+
+- the viewer probes `GET /capabilities`
+- server reads are used when `capabilities.generated_data_reads` and the current scope's generated read flag are true
+- index, payload, and search fetches use the generated endpoints with `cache: "no-store"`
+- static generated JSON remains the fallback when no local server capability is available
 
 Reason:
 
@@ -207,9 +236,15 @@ Risk:
 
 Status:
 
-- proposed
+- implemented
 
 Update `bin/dev-studio` to start Jekyll with a local-only config overlay that excludes generated docs/search data once server reads are verified.
+
+Implementation note:
+
+- `bin/dev-studio` defaults `JEKYLL_CONFIG` to `_config.yml,_config.dev-studio.yml`
+- `_config.dev-studio.yml` carries the base exclusions plus generated docs/search exclusions
+- public builds that use `_config.yml` alone still include generated docs/search JSON
 
 Reason:
 
@@ -227,7 +262,7 @@ Risk:
 
 Status:
 
-- proposed
+- implemented
 
 Verify the full local loop:
 
@@ -236,6 +271,12 @@ Verify the full local loop:
 - confirm the docs viewer reads the updated index/payload/search data through the local server
 - confirm Jekyll does not regenerate because generated docs/search JSON changed
 - run Python import/export tests and confirm `tests/python/__pycache__` changes do not trigger Jekyll regeneration
+
+Verification performed:
+
+- focused docs-management tests cover generated-read capabilities, indexed payload reads, non-indexed payload rejection, payload path validation, and `Cache-Control: no-store`
+- `assets/js/docs-viewer.js` passes `node --check`
+- docs profile checks and browser smoke were run after implementation; see the current task close-out for exact commands
 
 Reason:
 

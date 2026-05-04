@@ -770,6 +770,48 @@ def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
         raise RuntimeError(f"{label} is not valid JSON: {path.name}") from exc
 
 
+def generated_scope_data_available(repo_root: Path, scope: str) -> bool:
+    return generated_docs_index_path(repo_root, scope).exists()
+
+
+def read_generated_docs_index(repo_root: Path, scope: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_docs_index_path(repo_root, scope),
+        f"generated docs index for {scope}",
+    )
+
+
+def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_search_index_path(repo_root, scope),
+        f"generated search index for {scope}",
+    )
+
+
+def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
+    if not SAFE_DOC_ID_PATTERN.match(doc_id):
+        raise ValueError("doc_id contains unsupported characters")
+
+    index_payload = read_generated_docs_index(repo_root, scope)
+    docs = index_payload.get("docs")
+    if not isinstance(docs, list):
+        raise RuntimeError(f"generated docs index for {scope} is missing docs")
+
+    record = next((doc for doc in docs if isinstance(doc, dict) and doc.get("doc_id") == doc_id), None)
+    if record is None:
+        raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
+
+    expected_url = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
+    content_url = str(record.get("content_url") or "").strip()
+    if content_url and urlparse(content_url).path != expected_url:
+        raise RuntimeError(f"generated docs index for {scope} has an unexpected payload path for {doc_id}")
+
+    return read_generated_json(
+        generated_doc_payload_path(repo_root, scope, doc_id),
+        f"generated doc payload for {doc_id}",
+    )
+
+
 def query_param(handler: BaseHTTPRequestHandler, name: str) -> str:
     parsed = urlparse(handler.path)
     values = parse_qs(parsed.query).get(name, [])
@@ -898,17 +940,20 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     scopes: Dict[str, Any] = {}
     for scope in sorted(SCOPE_ROOTS.keys()):
         root = scope_root(repo_root, scope)
-        scope_docs = load_scope_docs(repo_root, scope)
+        scope_docs = load_scope_docs(repo_root, scope) if root.exists() else []
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
             "archive_available": any(doc.doc_id == "archive" for doc in scope_docs),
+            "generated_data_reads": generated_scope_data_available(repo_root, scope),
+            "generated_search_reads": generated_search_index_path(repo_root, scope).exists(),
             "count": len(scope_docs),
         }
     return {
         "ok": True,
         "capabilities": {
             "docs_management": True,
+            "generated_data_reads": True,
             "html_import": True,
             "docs_export": True,
             "library_import": True,
@@ -943,8 +988,9 @@ def write_response(handler: BaseHTTPRequestHandler, status: HTTPStatus, payload:
         handler.send_header("Access-Control-Allow-Origin", origin)
         handler.send_header("Vary", "Origin")
         handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        handler.send_header("Access-Control-Allow-Headers", "Content-Type")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
     handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Cache-Control", "no-store")
     handler.send_header("Content-Length", str(len(encoded)))
     handler.end_headers()
     handler.wfile.write(encoded)
@@ -2211,31 +2257,22 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 write_response(self, HTTPStatus.OK, capabilities_payload(self.app["repo_root"]))
                 return
             parsed = urlparse(self.path)
-            if parsed.path == "/docs/index":
+            if parsed.path in {"/docs/index", "/docs/generated/index"}:
                 scope = normalize_scope(query_param(self, "scope"))
-                payload = read_generated_json(
-                    generated_docs_index_path(self.app["repo_root"], scope),
-                    f"generated docs index for {scope}",
-                )
+                payload = read_generated_docs_index(self.app["repo_root"], scope)
                 write_response(self, HTTPStatus.OK, payload)
                 return
-            if parsed.path == "/docs/doc":
+            if parsed.path in {"/docs/doc", "/docs/generated/payload"}:
                 scope = normalize_scope(query_param(self, "scope"))
-                doc_id = query_param(self, "doc_id")
+                doc_id = query_param(self, "doc_id") or query_param(self, "doc")
                 if not doc_id:
                     raise ValueError("doc_id is required")
-                payload = read_generated_json(
-                    generated_doc_payload_path(self.app["repo_root"], scope, doc_id),
-                    f"generated doc payload for {doc_id}",
-                )
+                payload = read_generated_doc_payload(self.app["repo_root"], scope, doc_id)
                 write_response(self, HTTPStatus.OK, payload)
                 return
-            if parsed.path == "/docs/search":
+            if parsed.path in {"/docs/search", "/docs/generated/search"}:
                 scope = normalize_scope(query_param(self, "scope"))
-                payload = read_generated_json(
-                    generated_search_index_path(self.app["repo_root"], scope),
-                    f"generated search index for {scope}",
-                )
+                payload = read_generated_search_index(self.app["repo_root"], scope)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if parsed.path == "/docs/import-html-files":

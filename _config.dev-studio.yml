@@ -1,0 +1,19 @@
+# Local-only overlay used by bin/dev-studio.
+# Keep public builds on _config.yml so generated docs/search JSON is still published.
+exclude:
+  - scripts
+  - _site
+  - vendor
+  - node_modules
+  - .bundle
+  - tests
+  - var
+  - logs
+  - assets/studio/data/build_activity.json
+  - assets/studio/data/catalogue_activity.json
+  - assets/studio/data/catalogue/
+  - assets/studio/data/catalogue_lookup/
+  - assets/data/docs/scopes/
+  - assets/data/search/studio/
+  - assets/data/search/library/
+  - assets/data/search/analysis/

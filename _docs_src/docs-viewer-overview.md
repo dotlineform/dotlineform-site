@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: "2026-05-04"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -23,6 +23,7 @@ Current live scopes:
 
 - Studio docs at `/docs/`
 - Library docs at `/library/`
+- Analysis docs at `/analysis/`
 
 Catalogue pages do not use the Docs Viewer.
 
@@ -69,6 +70,8 @@ The viewer behavior is implemented in:
 
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, builds the tree navigation, loads document payloads, and switches between document and search modes.
+
+When the configured localhost docs-management server advertises generated-data read capability, the runtime reads the active scope index, document payloads, and docs-search index through that server. Public/static routes still use the generated JSON asset URLs directly when the local server is unavailable.
 
 ## Current URL And State Contract
 

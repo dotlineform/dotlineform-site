@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import importlib.util
+import io
+import json
 import sys
 import tempfile
 from pathlib import Path
@@ -77,6 +79,36 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     return temp_dir
 
 
+def write_json(path: Path, payload: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def write_generated_docs(root: Path) -> None:
+    docs = [
+        {
+            "scope": "studio",
+            "doc_id": "archive",
+            "title": "Archive",
+            "published": True,
+            "viewable": False,
+            "content_url": "/assets/data/docs/scopes/studio/by-id/archive.json",
+        },
+        {
+            "scope": "studio",
+            "doc_id": "child",
+            "title": "Child",
+            "published": True,
+            "viewable": True,
+            "content_url": "/assets/data/docs/scopes/studio/by-id/child.json",
+        },
+    ]
+    write_json(root / "assets/data/docs/scopes/studio/index.json", {"docs": docs})
+    write_json(root / "assets/data/docs/scopes/studio/by-id/archive.json", {"doc_id": "archive"})
+    write_json(root / "assets/data/docs/scopes/studio/by-id/child.json", {"doc_id": "child"})
+    write_json(root / "assets/data/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
+
+
 def test_archive_doc_is_editable_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -141,12 +173,100 @@ def test_archive_command_noops_on_archive_parent() -> None:
     assert "not changed" in result["summary_text"]
 
 
+def test_capabilities_advertise_generated_data_reads() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+        payload = docs_management_server.capabilities_payload(repo_root)
+
+    assert payload["capabilities"]["generated_data_reads"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
+
+
+def test_generated_doc_payload_allows_non_viewable_indexed_doc() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+        payload = docs_management_server.read_generated_doc_payload(repo_root, "studio", "archive")
+
+    assert payload["doc_id"] == "archive"
+
+
+def test_generated_doc_payload_requires_index_record() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+        write_json(
+            repo_root / "assets/data/docs/scopes/studio/by-id/unlisted.json",
+            {"doc_id": "unlisted"},
+        )
+        try:
+            docs_management_server.read_generated_doc_payload(repo_root, "studio", "unlisted")
+        except FileNotFoundError as exc:
+            assert "not found" in str(exc)
+        else:
+            raise AssertionError("Expected unlisted generated payload to be rejected")
+
+
+def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+        write_json(
+            repo_root / "assets/data/docs/scopes/studio/index.json",
+            {
+                "docs": [
+                    {
+                        "doc_id": "child",
+                        "content_url": "/assets/data/docs/scopes/library/by-id/child.json",
+                    }
+                ]
+            },
+        )
+        try:
+            docs_management_server.read_generated_doc_payload(repo_root, "studio", "child")
+        except RuntimeError as exc:
+            assert "unexpected payload path" in str(exc)
+        else:
+            raise AssertionError("Expected mismatched generated payload path to be rejected")
+
+
+class FakeHandler:
+    def __init__(self) -> None:
+        self.headers: dict[str, str] = {}
+        self.response_status: int | None = None
+        self.sent_headers: dict[str, str] = {}
+        self.wfile = io.BytesIO()
+
+    def send_response(self, status: int) -> None:
+        self.response_status = status
+
+    def send_header(self, key: str, value: str) -> None:
+        self.sent_headers[key] = value
+
+    def end_headers(self) -> None:
+        pass
+
+
+def test_json_responses_are_not_cached() -> None:
+    handler = FakeHandler()
+    docs_management_server.write_response(handler, docs_management_server.HTTPStatus.OK, {"ok": True})
+
+    assert handler.sent_headers["Cache-Control"] == "no-store"
+
+
 def main() -> None:
     tests = [
         test_archive_doc_is_editable_in_dry_run,
         test_archive_doc_viewability_can_be_changed_in_dry_run,
         test_archive_parent_delete_is_blocked_only_by_children,
         test_archive_command_noops_on_archive_parent,
+        test_capabilities_advertise_generated_data_reads,
+        test_generated_doc_payload_allows_non_viewable_indexed_doc,
+        test_generated_doc_payload_requires_index_record,
+        test_generated_doc_payload_rejects_unexpected_content_url,
+        test_json_responses_are_not_cached,
     ]
     for test in tests:
         test()

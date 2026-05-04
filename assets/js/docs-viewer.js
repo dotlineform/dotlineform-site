@@ -107,6 +107,9 @@
     managementCapabilityCheckId: 0,
     managementMessage: "",
     managementMessageIsError: false,
+    generatedDataReadChecked: false,
+    generatedDataReadAvailable: false,
+    generatedDataReadRequestPromise: null,
     managementText: {
       archiveUnavailableNote: "Archive is unavailable for this scope until `archive` exists.",
       checkingNote: "Checking manage mode...",
@@ -1100,6 +1103,28 @@
     return state.managementCapabilities.scopes[viewerScope] || null;
   }
 
+  function scopeSupportsGeneratedDataReads(capabilities) {
+    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[viewerScope] : null;
+    return Boolean(
+      capabilities &&
+      capabilities.generated_data_reads &&
+      scopeCaps &&
+      scopeCaps.available &&
+      scopeCaps.generated_data_reads
+    );
+  }
+
+  function scopeSupportsGeneratedSearchReads(capabilities) {
+    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[viewerScope] : null;
+    return Boolean(
+      capabilities &&
+      capabilities.generated_data_reads &&
+      scopeCaps &&
+      scopeCaps.available &&
+      scopeCaps.generated_search_reads
+    );
+  }
+
   function currentSelectedDoc() {
     return state.docsById.get(state.selectedDocId) || null;
   }
@@ -1553,6 +1578,38 @@
     });
   }
 
+  function checkGeneratedDataReadCapability() {
+    if (!managementBaseUrl) {
+      state.generatedDataReadChecked = true;
+      state.generatedDataReadAvailable = false;
+      return Promise.resolve(false);
+    }
+    if (state.generatedDataReadChecked) {
+      return Promise.resolve(state.generatedDataReadAvailable);
+    }
+    if (state.generatedDataReadRequestPromise) {
+      return state.generatedDataReadRequestPromise;
+    }
+
+    state.generatedDataReadRequestPromise = fetchManagementJson("/capabilities", "GET")
+      .then(function (payload) {
+        state.managementCapabilities = payload.capabilities || null;
+        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities);
+        state.generatedDataReadChecked = true;
+        return state.generatedDataReadAvailable;
+      })
+      .catch(function () {
+        state.generatedDataReadAvailable = false;
+        state.generatedDataReadChecked = true;
+        return false;
+      })
+      .finally(function () {
+        state.generatedDataReadRequestPromise = null;
+      });
+
+    return state.generatedDataReadRequestPromise;
+  }
+
   function initializeManagement() {
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     renderManagementUi();
@@ -1577,6 +1634,8 @@
           ? payload.capabilities.scopes[viewerScope]
           : null;
         state.managementCapabilities = payload.capabilities || null;
+        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities);
+        state.generatedDataReadChecked = true;
         state.managementChecked = true;
         state.managementAvailable = Boolean(scopeCaps && scopeCaps.available);
         renderManagementUi();
@@ -2210,10 +2269,11 @@
     var requestId = state.requestId + 1;
     state.requestId = requestId;
 
-    fetchJsonWithRetry(
+    fetchPreferredGeneratedJson(
       doc.content_url,
       "Failed to load " + doc.content_url,
-      managementReloadPath("/docs/doc", { scope: viewerScope, doc_id: docId })
+      managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
+      false
     )
       .then(function (payload) {
         if (state.requestId !== requestId) return;
@@ -2727,10 +2787,11 @@
       return state.searchRequestPromise;
     }
 
-    state.searchRequestPromise = fetchJsonWithRetry(
+    state.searchRequestPromise = fetchPreferredGeneratedJson(
       searchIndexUrl,
       "Failed to load search data",
-      managementReloadPath("/docs/search", { scope: viewerScope })
+      managementReloadPath("/docs/generated/search", { scope: viewerScope }),
+      true
     )
       .then(function (payload) {
         state.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
@@ -3014,6 +3075,13 @@
     };
   }
 
+  function generatedRequestOptions() {
+    return {
+      headers: { Accept: "application/json" },
+      cache: "no-store"
+    };
+  }
+
   function waitForReloadRetry() {
     return new Promise(function (resolve) {
       window.setTimeout(resolve, RELOAD_RETRY_DELAY_MS);
@@ -3049,6 +3117,18 @@
       });
   }
 
+  function fetchGeneratedJsonOnce(path, failureLabel) {
+    return window.fetch(managementBaseUrl + path, generatedRequestOptions())
+      .then(function (response) {
+        if (!response.ok) {
+          var httpError = new Error(failureLabel + " (" + response.status + ")");
+          httpError.status = response.status;
+          throw httpError;
+        }
+        return response.json();
+      });
+  }
+
   function fetchJsonWithRetry(url, failureLabel, reloadPath, attempt) {
     var currentAttempt = typeof attempt === "number" ? attempt : 0;
     return fetchJsonOnce(url, failureLabel, reloadPath).catch(function (error) {
@@ -3058,6 +3138,31 @@
       return waitForReloadRetry().then(function () {
         return fetchJsonWithRetry(url, failureLabel, reloadPath, currentAttempt + 1);
       });
+    });
+  }
+
+  function fetchGeneratedJsonWithRetry(path, failureLabel, attempt) {
+    var currentAttempt = typeof attempt === "number" ? attempt : 0;
+    return fetchGeneratedJsonOnce(path, failureLabel).catch(function (error) {
+      if (!shouldRetryReload(error, currentAttempt)) {
+        throw error;
+      }
+      return waitForReloadRetry().then(function () {
+        return fetchGeneratedJsonWithRetry(path, failureLabel, currentAttempt + 1);
+      });
+    });
+  }
+
+  function fetchPreferredGeneratedJson(staticUrl, failureLabel, generatedPath, useSearchCapability, attempt) {
+    return checkGeneratedDataReadCapability().then(function (available) {
+      var capabilities = state.managementCapabilities || {};
+      var generatedAvailable = useSearchCapability
+        ? scopeSupportsGeneratedSearchReads(capabilities)
+        : available;
+      if (generatedAvailable) {
+        return fetchGeneratedJsonWithRetry(generatedPath, failureLabel, attempt);
+      }
+      return fetchJsonWithRetry(staticUrl, failureLabel, "", attempt);
     });
   }
 
@@ -3071,10 +3176,11 @@
 
   function fetchIndexWithRetry(attempt) {
     var currentAttempt = typeof attempt === "number" ? attempt : 0;
-    return fetchJsonWithRetry(
+    return fetchPreferredGeneratedJson(
       indexUrl,
       "Failed to load docs index",
-      managementReloadPath("/docs/index", { scope: viewerScope }),
+      managementReloadPath("/docs/generated/index", { scope: viewerScope }),
+      false,
       currentAttempt
     )
       .then(function (payload) {
