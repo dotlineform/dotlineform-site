@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T18:18:27Z",
+  "generated_at": "2026-05-04T19:18:07Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1320,6 +1320,20 @@
       "source_path": "studio-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-studio-backup-retention",
+      "title": "Studio Backup Retention",
+      "added_date": "2026-05-04",
+      "last_updated": "2026-05-04",
+      "parent_id": "scripts",
+      "sort_order": 52,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-studio-backup-retention.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-studio-backup-retention.json"
     },
     {
       "scope": "studio",

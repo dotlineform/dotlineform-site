@@ -73,6 +73,9 @@ The runner does not currently take CLI flags. It is configured through environme
 - `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD`
   default: `5`
   controls the maximum changed file count for watcher-targeted docs-search updates; use `-1` to target whenever affected ids are safe
+- `DOTLINEFORM_BACKUP_RETENTION`
+  default: `on`
+  set to `off` or `0` to skip the startup Studio backup retention cleanup
 
 Example:
 
@@ -107,15 +110,20 @@ If any port is unavailable, the runner exits immediately with a message naming t
 
 After that preflight, `bin/dev-studio` runs the startup write steps below:
 
-1. if `DOCS_STARTUP_REBUILD_SCOPES` is set, it runs:
+1. if `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
+   - `./scripts/studio_backup_retention.py --write --quiet`
+2. if `DOCS_STARTUP_REBUILD_SCOPES` is set, it runs:
    - `./scripts/build_docs.rb --scope <scope> --write`
    - `./scripts/build_search.rb --scope <scope> --write`
    for each listed docs scope
-2. `./scripts/export_catalogue_lookup.py --write`
+3. `./scripts/export_catalogue_lookup.py --write`
 
 That means a fresh `bin/dev-studio` run always updates:
 
 - derived catalogue lookup JSON under `assets/studio/data/catalogue_lookup/`
+
+By default it also prunes local Studio backup files under `var/studio/backups/` and `var/studio/catalogue/backups/`.
+Backup retention keeps the newest backups per target file; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention).
 
 If `DOCS_STARTUP_REBUILD_SCOPES` is set, it also updates:
 
@@ -212,6 +220,7 @@ At startup the runner prints quick links for:
 - Audit Service
 - startup docs rebuild scopes
 - Docs Live Watcher status
+- Backup retention status
 - Series Tag Editor:
   - `http://127.0.0.1:4000/studio/series-tag-editor/?series=<series_id>`
 

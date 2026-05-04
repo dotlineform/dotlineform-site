@@ -8,6 +8,38 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-04] Added Studio backup retention on dev startup
+
+**Status:** implemented
+
+**Area:** Studio / local operations
+
+**Summary:**
+Added `scripts/studio_backup_retention.py` and wired it into `bin/dev-studio` startup.
+The script prunes local Studio backup files by keeping the newest backups per target file: `20` for `var/studio/backups/` and `30` for `var/studio/catalogue/backups/`.
+
+**Reason:**
+This repo has no separate admin role, so local operational backups need a default retention policy that runs through the normal development entry point rather than relying on manual cleanup habits.
+
+**Changes:**
+`bin/dev-studio` now runs backup retention once at startup before long-running services start.
+The cleanup skips unparseable backups, keeps whole catalogue transaction bundles when any contained target is still retained, and continues startup with a warning if cleanup fails.
+Startup cleanup can be disabled with `DOTLINEFORM_BACKUP_RETENTION=off` or `DOTLINEFORM_BACKUP_RETENTION=0`.
+
+**Files changed:**
+
+- `bin/dev-studio`
+- `scripts/studio_backup_retention.py`
+- `tests/python/test_studio_backup_retention.py`
+- `scripts/run_checks.py`
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
+- [Studio Config And Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+
+**Impact:**
+Local backup folders should stop growing indefinitely during normal Studio use.
+The main risk is accidental pruning of a backup that would have been useful for unusually old local recovery; the newest-N-per-target policy and skipped unparseable files keep that risk narrow.
+
 ## [2026-05-04] Cleaned staged catalogue thumbnails after asset copy
 
 **Status:** implemented

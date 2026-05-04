@@ -139,6 +139,8 @@ Catalogue/runtime maintenance:
   Run the local Studio tag-save/import service with explicit write allowlists.
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
   Run the local Studio catalogue source save service with explicit write allowlists.
+- [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
+  Prune local Studio backup files by newest-N-per-target retention.
 - [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
   Audit typography and color literals across CSS files.
 - [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)

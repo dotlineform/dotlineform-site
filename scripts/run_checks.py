@@ -44,11 +44,18 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "-m",
                 "py_compile",
                 "scripts/run_checks.py",
+                "scripts/studio_backup_retention.py",
                 "scripts/audit_studio_ready_state.py",
                 "scripts/studio/audit_service.py",
                 "tests/python/test_catalogue_field_registry.py",
+                "tests/python/test_studio_backup_retention.py",
             ),
             "Compile lightweight Python check scripts.",
+        ),
+        CheckCommand(
+            "studio-backup-retention-tests",
+            (sys.executable, "tests/python/test_studio_backup_retention.py"),
+            "Verify local Studio backup retention planning.",
         ),
         CheckCommand(
             "studio-ready-state-audit",

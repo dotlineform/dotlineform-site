@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dfbe5db20a34fd18b5d28074f673cbe2",
-    "generated_at_utc": "2026-05-04T18:18:29Z",
-    "count": 171
+    "version": "blake2b-3884c73bb0c5c10422d3d687f0b395de",
+    "generated_at_utc": "2026-05-04T19:19:56Z",
+    "count": 172
   },
   "entries": [
     {
@@ -2234,6 +2234,29 @@
         "01"
       ],
       "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan new cat pipeline cat 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "scripts-studio-backup-retention",
+      "kind": "doc",
+      "title": "Studio Backup Retention",
+      "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
+      "last_updated": "2026-05-04",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-04 • Scripts",
+      "search_terms": [
+        "scripts-studio-backup-retention",
+        "scripts",
+        "studio",
+        "backup",
+        "retention",
+        "studio backup retention",
+        "2026-05-04",
+        "2026",
+        "05",
+        "04"
+      ],
+      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-04 2026 05 04"
     },
     {
       "id": "config-search-build-json",
