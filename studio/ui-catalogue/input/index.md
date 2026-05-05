@@ -2,7 +2,7 @@
 layout: studio
 title: "UI Primitive: Input"
 permalink: /studio/ui-catalogue/input/
-studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
+studio_page_doc: /docs/?scope=studio&doc=ui-primitive-input
 ui_catalogue_primitive: input
 ---
 
@@ -87,7 +87,7 @@ ui_catalogue_primitive: input
 >
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
     <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/studio/ui-catalogue/' | relative_url }}">&larr; ui catalogue</a></p>
-    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-catalogue' | relative_url }}">Docs viewer: UI Catalogue</a></p>
+    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-input' | relative_url }}">Docs viewer: Input Primitive</a></p>
     <p class="studioUiPrimitivePage__eyebrow">Live Primitive</p>
     <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for shared field-entry controls. It keeps text entry, dropdowns, stepped numeric assignment, and readonly field display in one primitive family because the user intent is assigning one field value.</p>
   </section>

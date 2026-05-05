@@ -2,12 +2,15 @@
 doc_id: ui-framework
 title: "UI Framework"
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: "2026-05-05"
 parent_id: design
 sort_order: 10
 ---
 
 # UI Framework
+
+This is a legacy source doc.
+Its stable material is being consolidated into [UI](/docs/?scope=studio&doc=ui), so new framework guidance should go there.
 
 This document defines the current site-wide UI framework.
 
@@ -17,12 +20,15 @@ It covers:
 - shared UI standards for the docs viewer
 - shared UI standards for the dedicated public search page
 
-It does not define Studio-specific shared primitives or modal patterns. Those now live in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework).
+It previously excluded Studio-specific shared primitives and modal patterns.
+That split is now being retired; use [UI](/docs/?scope=studio&doc=ui) as the unified framework target and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for named primitive and composition-pattern docs.
 
 The goal is consistency without introducing a heavy component system. Pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and reuse stable hooks and shared primitives instead of borrowing unrelated page-specific class names.
 
 Related references:
 
+- [UI](/docs/?scope=studio&doc=ui)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)

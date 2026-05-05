@@ -23,6 +23,20 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## Retirement Direction
+
+This document is now treated as a decision log, not the permanent home for stable UI guidance.
+
+Use these targets when promoting content out of this log:
+
+- [UI](/docs/?scope=studio&doc=ui) for site-wide framework rules and interaction defaults
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for the primitive and composition-pattern index
+- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button), [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input), [List Primitive](/docs/?scope=studio&doc=ui-primitive-list), and [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) for primitive-specific contracts
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) for command-result modal lifecycle guidance
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log) for historical site changes
+
+When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
+
 ## UI Rule Log 2026-05-05 / UI-079
 
 - status: adopted

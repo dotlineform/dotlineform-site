@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T15:35:27Z",
+  "generated_at": "2026-05-05T17:03:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -35,6 +35,36 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-record-hash-simplification",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-record-hash-simplification.json",
       "content_text_length": 7052
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui",
+      "title": "UI",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "design",
+      "sort_order": 9,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
+      "content_text_length": 2102
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-primitive-button",
+      "title": "Button Primitive",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-primitive-button.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
+      "content_text_length": 1504
     },
     {
       "scope": "studio",
@@ -281,7 +311,7 @@
       "doc_id": "ui-framework",
       "title": "UI Framework",
       "added_date": "2026-04-24",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-05",
       "parent_id": "design",
       "sort_order": 10,
       "published": true,
@@ -289,7 +319,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
-      "content_text_length": 10175
+      "content_text_length": 10419
     },
     {
       "scope": "studio",
@@ -441,6 +471,21 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
       "content_text_length": 8495
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-primitive-input",
+      "title": "Input Primitive",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "sort_order": 20,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-primitive-input.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-input.json",
+      "content_text_length": 1735
     },
     {
       "scope": "studio",
@@ -612,7 +657,7 @@
       "doc_id": "studio-ui-framework",
       "title": "Studio UI Framework",
       "added_date": "2026-04-21",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-05",
       "parent_id": "design",
       "sort_order": 20,
       "published": true,
@@ -620,7 +665,7 @@
       "source_path": "studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
-      "content_text_length": 18939
+      "content_text_length": 19167
     },
     {
       "scope": "studio",
@@ -704,7 +749,7 @@
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-03 18:35",
+      "last_updated": "2026-05-05",
       "parent_id": "design",
       "sort_order": 25,
       "published": true,
@@ -712,7 +757,7 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6845,
+      "content_text_length": 6186,
       "ui_status": "urgent"
     },
     {
@@ -854,6 +899,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-primitive-list",
+      "title": "List Primitive",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-primitive-list.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-list.json",
+      "content_text_length": 2513
+    },
+    {
+      "scope": "studio",
       "doc_id": "local-setup",
       "title": "Local Setup",
       "added_date": "2026-04-13",
@@ -955,7 +1015,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 142350
+      "content_text_length": 143045
     },
     {
       "scope": "studio",
@@ -1129,7 +1189,7 @@
       "doc_id": "design",
       "title": "Design",
       "added_date": "2026-04-21",
-      "last_updated": "2026-04-21",
+      "last_updated": "2026-05-05",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1137,7 +1197,7 @@
       "source_path": "design.md",
       "viewer_url": "/docs/?scope=studio&doc=design",
       "content_url": "/assets/data/docs/scopes/studio/by-id/design.json",
-      "content_text_length": 1398
+      "content_text_length": 1535
     },
     {
       "scope": "studio",
@@ -1184,6 +1244,21 @@
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json",
       "content_text_length": 9066
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-primitive-panel",
+      "title": "Panel Primitive",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "sort_order": 40,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-primitive-panel.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-panel.json",
+      "content_text_length": 1657
     },
     {
       "scope": "studio",
@@ -2011,6 +2086,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-pattern-reopenable-command-result",
+      "title": "Reopenable Command Result Pattern",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "sort_order": 110,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-pattern-reopenable-command-result.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
+      "content_text_length": 2737
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-catalogue-work-detail-unified-editor",
       "title": "Catalogue Work Detail Unified Editor Request",
       "added_date": "2026-04-28",
@@ -2619,7 +2709,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 299139
+      "content_text_length": 300276
     },
     {
       "scope": "studio",

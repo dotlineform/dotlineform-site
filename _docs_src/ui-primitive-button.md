@@ -1,0 +1,71 @@
+---
+doc_id: ui-primitive-button
+title: "Button Primitive"
+added_date: 2026-05-05
+last_updated: "2026-05-05"
+parent_id: ui-catalogue
+sort_order: 10
+---
+# Button Primitive
+
+This doc is the durable implementation contract for shared command buttons.
+
+Live reference:
+
+- [Button primitive page](/studio/ui-catalogue/button/)
+
+## Scope
+
+Buttons are command controls.
+They perform an action in the current context.
+
+Use the button primitive for commands such as:
+
+- save
+- import
+- create
+- generate
+- close
+- confirm
+- cancel
+
+Do not use the button primitive for ordinary navigation.
+Navigation should use links or a documented link-style composition.
+
+## Contract
+
+The shared command-button contract currently includes:
+
+- stable box sizing and height
+- small and medium sizes
+- optional default-width behavior
+- disabled state for temporarily unavailable commands
+- modal action-row compatibility
+- adjacent feedback when the command produces local status text
+
+## Implementation Notes
+
+Current implementation lives in:
+
+- `assets/studio/css/studio.css`
+
+Primary classes:
+
+- `tagStudio__button`
+- `tagStudio__button--md`
+- `tagStudio__button--defaultWidth`
+- `tagStudio__button--defaultAction`
+
+Button-related visible copy belongs in the relevant route or feature `ui_text` config when the page is config-backed.
+
+## Lifecycle Notes
+
+Button state should follow the command lifecycle:
+
+- enabled only when the command can run
+- disabled while a conflicting async operation is active
+- status or validation feedback remains adjacent to the command area
+- destructive or write actions use confirmation only when the workflow requires explicit review
+
+Historical notes and open migrations are currently in [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules).
+Stable button guidance should move here as that log is retired.

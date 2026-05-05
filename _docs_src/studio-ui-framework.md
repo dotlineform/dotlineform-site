@@ -2,12 +2,15 @@
 doc_id: studio-ui-framework
 title: "Studio UI Framework"
 added_date: 2026-04-21
-last_updated: 2026-04-26
+last_updated: "2026-05-05"
 parent_id: design
 sort_order: 20
 ---
 
 # Studio UI Framework
+
+This is a legacy source doc.
+Its stable material is being consolidated into [UI](/docs/?scope=studio&doc=ui) and the matching child docs under [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue).
 
 This document defines the shared Studio UI layer.
 
@@ -20,10 +23,13 @@ It covers:
 - shared Studio toolbar, filter, list, and modal patterns
 - the current Studio modal contract and implementation boundary
 
-Site-wide interaction defaults, docs-viewer UI standards, and public-search UI standards live in [UI Framework](/docs/?scope=studio&doc=ui-framework).
+The earlier separation between site UI and Studio UI is being retired.
+Use [UI](/docs/?scope=studio&doc=ui) for framework-level rules and UI Catalogue child docs for primitive or composition-specific implementation contracts.
 
 Related references:
 
+- [UI](/docs/?scope=studio&doc=ui)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)

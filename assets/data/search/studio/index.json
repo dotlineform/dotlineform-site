@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9a8d64e616b4603d663b8896d2734ef7",
-    "generated_at_utc": "2026-05-05T14:58:55Z",
-    "count": 174
+    "version": "blake2b-5232282ca6f3dfe1c0e05c8e91432df3",
+    "generated_at_utc": "2026-05-05T17:00:28Z",
+    "count": 180
   },
   "entries": [
     {
@@ -70,6 +70,47 @@
         "30"
       ],
       "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
+    },
+    {
+      "id": "ui",
+      "kind": "doc",
+      "title": "UI",
+      "href": "/docs/?scope=studio&doc=ui",
+      "last_updated": "2026-05-05",
+      "parent_id": "design",
+      "parent_title": "Design",
+      "display_meta": "2026-05-05 • Design",
+      "search_terms": [
+        "ui",
+        "design",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui design 2026-05-05 2026 05"
+    },
+    {
+      "id": "ui-primitive-button",
+      "kind": "doc",
+      "title": "Button Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-button",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-05 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-button",
+        "ui",
+        "primitive",
+        "button",
+        "button primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
       "id": "new-pipeline-current-pipeline-map",
@@ -457,22 +498,21 @@
       "kind": "doc",
       "title": "UI Framework",
       "href": "/docs/?scope=studio&doc=ui-framework",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-05",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-25 • Design",
+      "display_meta": "2026-05-05 • Design",
       "search_terms": [
         "ui-framework",
         "ui",
         "framework",
         "ui framework",
         "design",
-        "2026-04-25",
+        "2026-05-05",
         "2026",
-        "04",
-        "25"
+        "05"
       ],
-      "search_text": "ui-framework ui framework ui framework design 2026-04-25 2026 04 25"
+      "search_text": "ui-framework ui framework ui framework design 2026-05-05 2026 05"
     },
     {
       "id": "generic-llm-helper-pattern",
@@ -714,6 +754,29 @@
         "55"
       ],
       "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-03 13:55 2026 05 03 13 55"
+    },
+    {
+      "id": "ui-primitive-input",
+      "kind": "doc",
+      "title": "Input Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-input",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-05 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-input",
+        "ui",
+        "primitive",
+        "input",
+        "input primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
       "id": "library-semantic-enrichment-spec",
@@ -973,10 +1036,10 @@
       "kind": "doc",
       "title": "Studio UI Framework",
       "href": "/docs/?scope=studio&doc=studio-ui-framework",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-05",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-26 • Design",
+      "display_meta": "2026-05-05 • Design",
       "search_terms": [
         "studio-ui-framework",
         "studio",
@@ -984,12 +1047,11 @@
         "framework",
         "studio ui framework",
         "design",
-        "2026-04-26",
+        "2026-05-05",
         "2026",
-        "04",
-        "26"
+        "05"
       ],
-      "search_text": "studio-ui-framework studio ui framework studio ui framework design 2026-04-26 2026 04 26"
+      "search_text": "studio-ui-framework studio ui framework studio ui framework design 2026-05-05 2026 05"
     },
     {
       "id": "studio-ui-conformance",
@@ -1117,24 +1179,21 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-05-03 18:35",
+      "last_updated": "2026-05-05",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-05-03 18:35 • Design",
+      "display_meta": "2026-05-05 • Design",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
         "design",
-        "2026-05-03 18:35",
+        "2026-05-05",
         "2026",
-        "05",
-        "03",
-        "18",
-        "35"
+        "05"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-03 18:35 2026 05 03 18 35"
+      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-05 2026 05"
     },
     {
       "id": "scripts-docs-import",
@@ -1343,6 +1402,29 @@
         "05"
       ],
       "search_text": "library-import library import library import v1 v1 2026-05-05 2026 05"
+    },
+    {
+      "id": "ui-primitive-list",
+      "kind": "doc",
+      "title": "List Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-list",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-05 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-list",
+        "ui",
+        "primitive",
+        "list",
+        "list primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui-primitive-list ui primitive list list primitive ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
       "id": "local-setup",
@@ -1774,16 +1856,15 @@
       "kind": "doc",
       "title": "Design",
       "href": "/docs/?scope=studio&doc=design",
-      "last_updated": "2026-04-21",
-      "display_meta": "2026-04-21",
+      "last_updated": "2026-05-05",
+      "display_meta": "2026-05-05",
       "search_terms": [
         "design",
-        "2026-04-21",
+        "2026-05-05",
         "2026",
-        "04",
-        "21"
+        "05"
       ],
-      "search_text": "design 2026-04-21 2026 04 21"
+      "search_text": "design 2026-05-05 2026 05"
     },
     {
       "id": "new-pipeline-implementation-plan",
@@ -1858,6 +1939,29 @@
         "38"
       ],
       "search_text": "data-models-library data models library library scope scope data models 2026-05-03 22:38 2026 05 03 22 38"
+    },
+    {
+      "id": "ui-primitive-panel",
+      "kind": "doc",
+      "title": "Panel Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-panel",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-05 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-panel",
+        "ui",
+        "primitive",
+        "panel",
+        "panel primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui-primitive-panel ui primitive panel panel primitive ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
       "id": "search-ranking-model",
@@ -3177,6 +3281,31 @@
         "26"
       ],
       "search_text": "data-models data models data models 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "ui-pattern-reopenable-command-result",
+      "kind": "doc",
+      "title": "Reopenable Command Result Pattern",
+      "href": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-05 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-reopenable-command-result",
+        "ui",
+        "pattern",
+        "reopenable",
+        "command",
+        "result",
+        "reopenable command result pattern",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
       "id": "site-request-catalogue-work-detail-unified-editor",

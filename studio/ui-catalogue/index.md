@@ -16,7 +16,7 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
   data-studio-busy="false"
 >
   <section class="tagStudioPage__context tagStudioPage__context--meta">
-    <p class="studioUiCataloguePage__intro">Use the UI catalogue as the live reference surface for shared primitives. Each primitive page should show the real implementation first, then short editable notes and canonical copyable markup.</p>
+    <p class="studioUiCataloguePage__intro">Use the UI catalogue as the live reference surface for shared primitives. Each primitive page should show the real implementation first, link to its matching docs-viewer contract, then provide short editable notes and canonical copyable markup.</p>
   </section>
 
   <section class="tagStudio__panel studioUiCatalogueIndex" aria-labelledby="studioUiCatalogueListHeading">

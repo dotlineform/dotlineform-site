@@ -8,6 +8,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Added UI framework and catalogue target docs
+
+**Status:** implemented
+
+**Area:** Docs / Design
+
+**Summary:**
+Added `UI` as the unified site-wide UI framework target under Design.
+Added matching UI Catalogue child docs for button, input, list, and panel primitives, plus a composition-pattern doc for reopenable command results.
+Updated the catalogue model so live primitive pages are visual references while matching docs hold implementation and lifecycle contracts.
+
+**Reason:**
+The old split between `UI Framework`, `Studio UI Framework`, `UI Catalogue`, and `Studio UI Rules` mixed framework guidance, primitive contracts, implementation notes, and historical decisions in one layer.
+The new targets give stable destinations for moving durable content out of the rules log and retiring the artificial site-vs-Studio split.
+
+**Files changed:**
+
+- [Design](/docs/?scope=studio&doc=design)
+- [UI](/docs/?scope=studio&doc=ui)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button)
+- [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input)
+- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list)
+- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Future UI work can file durable rules into framework, primitive, or composition-pattern docs instead of burying them in the Studio UI decision log.
+
 ## [2026-05-05] Refined Library import review UI
 
 **Status:** implemented

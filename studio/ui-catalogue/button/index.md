@@ -2,7 +2,7 @@
 layout: studio
 title: "UI Primitive: Button"
 permalink: /studio/ui-catalogue/button/
-studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
+studio_page_doc: /docs/?scope=studio&doc=ui-primitive-button
 ui_catalogue_primitive: button
 ---
 
@@ -46,7 +46,7 @@ ui_catalogue_primitive: button
 >
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
     <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/studio/ui-catalogue/' | relative_url }}">&larr; ui catalogue</a></p>
-    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-catalogue' | relative_url }}">Docs viewer: UI Catalogue</a></p>
+    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-button' | relative_url }}">Docs viewer: Button Primitive</a></p>
     <p class="studioUiPrimitivePage__eyebrow">Live Primitive</p>
     <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for shared command buttons. It excludes clickable pills and navigation links, and captures the minimal size/width contract before a broader page sweep.</p>
   </section>

@@ -2,16 +2,16 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: "2026-05-03 18:35"
+last_updated: "2026-05-05"
 ui_status: urgent
 parent_id: design
 sort_order: 25
 ---
 # UI Catalogue
 
-This section is the working catalogue of shared UI elements.
+This section is the top-level index for shared UI primitives, composition patterns, and their live reference pages.
 
-Use it to keep recurring elements visible as named, documented primitives rather than redesigning them inside page work.
+Use it to keep recurring elements visible as named, documented primitives and patterns rather than redesigning them inside page work.
 
 ## Route Ready State
 
@@ -25,7 +25,9 @@ The UI catalogue pages expose static/reference route-ready state:
 
 These roots use `data-studio-mode="reference"` and mark ready after DOM load. The purpose is to give future primitive pages an obvious route-state contract to extend if a reference page later adds async demos or route-level controls.
 
-The docs-viewer role of this page is to explain the catalogue method and link out to the published primitive pages. Implementation details, code samples, and variant-specific notes should live on those published primitive pages rather than being duplicated here.
+The docs-viewer role of this page is to explain the catalogue method and link to child docs.
+Each primitive or composition pattern should have a matching docs-viewer page for implementation, lifecycle, and ownership notes.
+Published Studio catalogue pages remain the live visual references for primitives.
 
 ## Purpose
 
@@ -37,16 +39,24 @@ The catalogue exists to separate:
 
 When a page uses a shared element such as a `panel` or `toolbar`, the expectation should come from this catalogue first.
 
-## Published Primitive Pages
+## Primitive Docs And Pages
 
-Current published primitive pages:
+Current primitives have both a docs-viewer contract and a live reference page:
 
-- [Button primitive page](/studio/ui-catalogue/button/)
-- [Input primitive page](/studio/ui-catalogue/input/)
-- [List primitive page](/studio/ui-catalogue/list/)
-- [Panel primitive page](/studio/ui-catalogue/panel/)
+- [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [live page](/studio/ui-catalogue/button/)
+- [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input) / [live page](/studio/ui-catalogue/input/)
+- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [live page](/studio/ui-catalogue/list/)
+- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [live page](/studio/ui-catalogue/panel/)
 
-Add new links here when a primitive gets its own published reference page.
+Add new links here when a primitive gets either a matching implementation doc or a live reference page.
+
+## Composition Pattern Docs
+
+Composition patterns cover UI behavior that depends on route state, server payloads, or several primitives working together.
+
+Current pattern docs:
+
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result)
 
 ## Primitive Scope
 
@@ -79,9 +89,10 @@ Do not use the catalogue for:
 Those still belong in:
 
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [UI](/docs/?scope=studio&doc=ui)
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
+- [Change Requests](/docs/?scope=studio&doc=change-requests) for UI request specs and task docs
 
 ## Working Method
 
@@ -98,20 +109,28 @@ Reason:
 - surfacing those hidden fixes here is the point of the catalogue
 - for this project, future design clarity and shared-system reliability matter more than preserving accidental legacy behavior
 
-## Primitive Page Structure
+## Primitive Doc And Page Structure
 
-Each published primitive page should stay simple but complete enough to guide implementation.
+Each primitive should have:
 
-The default structure is:
+- a docs-viewer child doc for purpose, contract, implementation notes, lifecycle notes, and migration ownership
+- a published live page for visual references, canonical markup, variants, states, and inspectable examples
+
+The default child-doc structure is:
 
 - purpose
 - contract
+- implementation notes
+- lifecycle notes
+- migration notes when stable content still lives in older docs
+
+The default live-page structure is:
+
 - anatomy
 - variants and states
-- usage rules
-- implementation notes
-- design guidance
+- canonical markup
 - visual references
+- short editable notes that complement the child doc
 
 When a primitive can compose with itself, for example nested panels or stacked list shells, include that use case explicitly rather than treating it as an out-of-scope environment issue.
 
@@ -121,29 +140,16 @@ Include common design-led overrides in the sample markup when those overrides ar
 
 ## List Primitive Direction
 
-The list primitive currently defines three baseline versions:
+Detailed list rules now live in [List Primitive](/docs/?scope=studio&doc=ui-primitive-list).
 
-- simple list: minimal row treatment, no column headers, suitable for short lists where the surrounding page already explains the row context
-- sortable list: column headers become clickable buttons on sortable columns and show the active sort direction beside the label
-- thumbnail list: the first column is a fixed media thumbnail; sorting may still exist, but it can be controlled by buttons or other controls outside the list
-
-The shared `tagStudioList` / `tagStudioList__*` layer should own the optional width wrapper, row rhythm, header treatment, row-alignment modifiers, common cell text, cell links, sort indicator, and thumbnail frame. Page-specific classes should still own column templates, row actions, chips, and responsive data labels.
-
-By default, a list fills the available width. Constrain it by setting `--studio-list-width` on the `tagStudioList` wrapper. Column widths belong to page/demo-specific paired header and row classes so the list can display its actual content sensibly.
-
-Rows with one-line cells should center-align their contents. Rows that may contain multiline cells should top-align so secondary lines sit consistently beneath the first line.
-
-Studio UI primitives use the small type scale by default. Normal page prose outside primitives should remain at the body type scale.
-
-Current list-like Studio pages should be mapped to these versions before broad refactors. Existing pages may keep page-local row classes where the behavior is data-specific.
-
-If a primitive grows more complex, expand its published primitive page rather than rebuilding a second parallel doc in the docs viewer.
+If a primitive grows more complex, expand its matching primitive doc and keep the published page focused on live visual references and canonical examples.
 
 ## Broader Design Direction
 
-- use the docs viewer catalogue to explain the method, scope, and design direction of the primitive system
-- use the published primitive pages to hold implementation notes, canonical markup, common overrides, and code-facing warnings
-- prefer one implementation source of truth even when the docs viewer carries a higher-level summary
+- use this docs-viewer catalogue as the parent index
+- use matching primitive and pattern docs for implementation contracts, lifecycle notes, and ownership rules
+- use published primitive pages for live visual references, canonical markup, and inspectable examples
+- prefer one implementation source of truth for each primitive or pattern, with live pages linking back to the matching doc
 
 ## Visual Reference Assets
 
@@ -174,6 +180,6 @@ If larger source captures need to exist separately, keep only optimized document
 
 ## Expansion Rule
 
-When a new shared element appears repeatedly, add a published primitive page for it and link that page here rather than creating another parallel docs-viewer child doc.
+When a new shared element appears repeatedly, add a matching primitive doc under this page and link any published live reference page here.
 
 That keeps the viewer tree visible and scalable as the UI system grows.

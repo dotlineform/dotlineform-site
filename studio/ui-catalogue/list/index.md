@@ -2,7 +2,7 @@
 layout: studio
 title: "UI Primitive: List"
 permalink: /studio/ui-catalogue/list/
-studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
+studio_page_doc: /docs/?scope=studio&doc=ui-primitive-list
 ui_catalogue_primitive: list
 ---
 
@@ -73,7 +73,7 @@ ui_catalogue_primitive: list
 >
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
     <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/studio/ui-catalogue/' | relative_url }}">&larr; ui catalogue</a></p>
-    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-catalogue' | relative_url }}">Docs viewer: UI Catalogue</a></p>
+    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-primitive-list' | relative_url }}">Docs viewer: List Primitive</a></p>
     <p class="studioUiPrimitivePage__eyebrow">Live Primitive</p>
     <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for shared Studio list primitives. It defines the row/header contract, width wrapper, row alignment, sortable-header treatment, and thumbnail-row baseline while leaving page-specific columns and actions in page namespaces.</p>
   </section>
