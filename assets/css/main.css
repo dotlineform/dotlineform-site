@@ -538,6 +538,11 @@ th{ background: var(--panel-2); }
   max-width: 100%;
 }
 
+.catalogueDashboardRoutes--three{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 75%;
+}
+
 .catalogueDashboardColumn{
   display: grid;
   gap: 0.7rem;

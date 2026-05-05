@@ -8,7 +8,7 @@ sort_order: 120
 ---
 # Column Links Pattern
 
-This composition pattern covers compact two-column route link groups used on Studio dashboard and catalogue entry pages.
+This composition pattern covers compact route-link column groups used on Studio dashboard and catalogue entry pages.
 
 Live reference:
 
@@ -26,7 +26,7 @@ Current live examples:
 Use this pattern when:
 
 - a page is primarily routing the user into a small set of related work areas
-- links naturally group into two short categories
+- links naturally group into two or three short categories
 - category headings add useful scan structure
 - individual links do not need descriptions, counts, or cards
 
@@ -42,9 +42,11 @@ Do not use this pattern for:
 
 The pattern has three layers:
 
-- `catalogueDashboardRoutes` for the two-column wrapper
+- `catalogueDashboardRoutes` for the column wrapper
 - `catalogueDashboardColumn` for each labeled group
 - `catalogueDashboardPills` for the compact route links
+
+Use `catalogueDashboardRoutes--three` when a dashboard needs three peer route groups.
 
 The links are ordinary anchors styled as pills.
 They should navigate, not run local commands.

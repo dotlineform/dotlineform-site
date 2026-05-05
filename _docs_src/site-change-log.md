@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Added scoped data links to domain dashboards
+
+**Status:** implemented
+
+**Area:** Studio / Dashboards
+
+**Summary:**
+`/studio/catalogue/` now includes a `Data` column with export and import pills linked to the shared workflow routes with `?scope=catalogue`.
+`/studio/library/` now makes its existing export and import pills explicit with `?scope=library`.
+The Column Links pattern supports a three-column modifier for Catalogue while keeping two-column dashboards unchanged.
+
+**Reason:**
+After import/export became scope-aware, domain dashboards should route users directly to the relevant scoped data workflow instead of relying on defaults or leaving Catalogue without data entry points.
+
+**Files changed:**
+
+- `studio/catalogue/index.md`
+- `studio/library/index.md`
+- `assets/css/main.css`
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Catalogue, Library, and Analytics now all expose scoped data workflow links from their dashboards.
+
 ## [2026-05-05] Refined Analytics dashboard to column links
 
 **Status:** implemented

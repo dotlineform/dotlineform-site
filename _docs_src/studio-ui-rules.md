@@ -38,6 +38,25 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-05 / UI-083
+
+- status: adopted
+- route: `/studio/catalogue/`, `/studio/library/`
+- issue: Catalogue had no direct scoped data workflow links after import/export became scope-aware, and Library still linked to the default import/export routes without making its `library` scope explicit.
+- triage: route-local alignment
+- reasoning: domain dashboards should expose their data workflow entry points directly and make the selected scope visible in the URL. Catalogue needs a third peer route group for Data while Library keeps its existing two-column shape.
+- outcome: added a `Data` column to the Catalogue dashboard with scoped export/import pills, updated Library export/import pills to include `?scope=library`, and added a three-column modifier to the column-links pattern for Catalogue.
+- files changed:
+  - `studio/catalogue/index.md`
+  - `studio/library/index.md`
+  - `assets/css/main.css`
+  - `_docs_src/ui-pattern-column-links.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the site
+  - open `/studio/catalogue/` and confirm the `Data` column appears beside `Edit` and `Review`
+  - confirm Catalogue and Library export/import pills include their explicit `scope` query strings
+
 ## UI Rule Log 2026-05-05 / UI-082
 
 - status: adopted
