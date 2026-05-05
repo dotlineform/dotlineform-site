@@ -8,6 +8,52 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Stabilized image-panel text across themes
+
+**Status:** implemented
+
+**Area:** Studio / UI
+
+**Summary:**
+Base Studio image panel links now keep their dark text treatment in both light and dark mode.
+The existing `tagStudio__panelLink--imageContrast` modifier remains the explicit white-text variant for darker or busier images.
+
+**Reason:**
+Image panels are design-time compositions.
+Keeping one text treatment avoids per-theme image swaps and makes image/overlay choice the design responsibility.
+
+**Files changed:**
+
+- `assets/studio/css/studio.css`
+- `_includes/ui_catalogue_notes/panel.md`
+- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+`/studio/` image panels and the Panel primitive image examples stay legible in dark mode without changing source images.
+
+## [2026-05-05] Fixed dark-mode Studio panel contrast
+
+**Status:** implemented
+
+**Area:** Studio / UI
+
+**Summary:**
+Studio panels now switch their surface, border, muted text, default-value, and control tokens together in dark mode.
+This prevents light panels from combining with dark-mode muted text on routes such as `/studio/library-import/`.
+
+**Reason:**
+The previous token mix left field labels and disabled controls nearly invisible in dark mode because the panel stayed white while muted text became pale grey.
+
+**Files changed:**
+
+- `assets/studio/css/studio.css`
+- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Shared Studio panels and controls have coherent dark-mode contrast instead of relying on route-local overrides.
+
 ## [2026-05-05] Added aggregate public search
 
 **Status:** implemented

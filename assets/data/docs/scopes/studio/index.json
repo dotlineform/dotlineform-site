@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T19:34:05Z",
+  "generated_at": "2026-05-05T19:53:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1015,7 +1015,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 149713
+      "content_text_length": 152009
     },
     {
       "scope": "studio",
@@ -1258,7 +1258,7 @@
       "source_path": "ui-primitive-panel.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-panel.json",
-      "content_text_length": 1657
+      "content_text_length": 2425
     },
     {
       "scope": "studio",
@@ -2724,7 +2724,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 306708
+      "content_text_length": 308161
     },
     {
       "scope": "studio",

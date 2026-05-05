@@ -24,7 +24,7 @@
 6. On Jekyll-rendered routes, keep the selected image width in shared page data such as `_data/studio_panel_images.json` rather than burying `800` or `1200` directly in the page markup.
 7. Use a page-level default width plus optional per-panel `width` overrides in that data so each route can share a baseline without forcing every panel to use the same source size.
 8. The filename convention for those assets is `{asset_id}-{variant}-{width}.{format}`, for example `01007-primary-800.webp`.
-9. The base image variant keeps the site-default dark text. Add `tagStudio__panelLink--imageContrast` when a darker image needs white text and a stronger overlay.
+9. The base image variant keeps theme-stable dark text in light and dark mode. Add `tagStudio__panelLink--imageContrast` when a darker image needs white text and a stronger overlay.
 10. The image fill uses centered `cover` behavior, so small images are scaled up to fit and mismatched aspect ratios are cropped rather than stretched.
 
 ### Design Guidance

@@ -38,6 +38,40 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-05 / UI-086
+
+- status: adopted
+- route: `/studio/`, `/studio/ui-catalogue/panel/`
+- issue: the dark-mode Studio surface fix correctly moved normal panels to dark surfaces, but image-panel links should not inherit theme text color because their background image and overlay are design-time choices.
+- triage: shared primitive contrast contract
+- reasoning: image panels are selected compositions, not ordinary theme surfaces. Swapping images per theme would add asset complexity; keeping the base image-panel text treatment stable makes the design requirement explicit and leaves `tagStudio__panelLink--imageContrast` as the deliberate white-text variant.
+- outcome: made the base `tagStudio__panelLink--image` text and muted text theme-stable across light and dark mode, leaving the existing contrast modifier as the explicit white-text override; updated panel primitive docs and notes.
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `_docs_src/ui-primitive-panel.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the site
+  - open `/studio/` in dark theme and confirm image panel headings and body copy remain dark over the light overlay
+  - open `/studio/ui-catalogue/panel/` and confirm the base image variant remains dark-text while the contrast override remains white-text
+
+## UI Rule Log 2026-05-05 / UI-085
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: in dark mode, Studio panels still used fixed light surfaces while field labels and disabled control text resolved through dark-mode muted text tokens, leaving pale grey text on white panels.
+- triage: shared primitive token defect
+- reasoning: panel surface, border, body text, muted text, and control tokens need to switch theme together. Fixing one route locally would leave the same low-contrast combination available on every Studio panel.
+- outcome: added dark-mode overrides for the shared Studio surface token set and made Studio inputs inherit the page text color explicitly; documented the panel primitive contrast rule.
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `_docs_src/ui-primitive-panel.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the site
+  - open `/studio/library-import/` in dark theme and confirm the panel, controls, labels, and disabled text render on one coherent dark surface
+
 ## UI Rule Log 2026-05-05 / UI-084
 
 - status: adopted

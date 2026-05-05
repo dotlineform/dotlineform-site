@@ -33,15 +33,24 @@ The panel primitive should:
 
 - create a clear contained surface
 - keep nested panels visually subordinate
+- keep surface, border, body text, and muted text tokens on the same theme layer
 - use fixed design-time height for whole-panel navigation targets
 - keep panel-link copy edited to fit the panel rather than stretching the panel to fit copy
 - keep image panel text contrast explicit rather than accidental
+- keep the base image-panel text treatment stable across light and dark themes unless an explicit contrast modifier is used
 
 ## Implementation Notes
 
 Current implementation lives in:
 
 - `assets/studio/css/studio.css`
+
+Dark-mode panel surfaces must override the Studio surface token set together.
+Do not combine a light `--studio-surface` with global dark-mode text tokens such as `--muted`; that makes labels and disabled text low contrast on white panels.
+
+Image panel links are the exception to normal theme inheritance.
+The base `tagStudio__panelLink--image` variant keeps a dark text treatment over a light image overlay in both light and dark mode.
+Choose images and overlays that support that treatment, or use `tagStudio__panelLink--imageContrast` for the explicit white-text override.
 
 Primary classes:
 
