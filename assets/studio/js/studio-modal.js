@@ -55,6 +55,15 @@ function renderActions(options = {}) {
   `;
 }
 
+function renderCloseAction(options = {}) {
+  const closeLabel = String(options.closeLabel || options.cancelLabel || "Close");
+  return `
+    <div class="tagStudioModal__actions">
+      <button type="button" class="tagStudio__button" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
+    </div>
+  `;
+}
+
 function renderActionList(actions = []) {
   if (!Array.isArray(actions) || !actions.length) return "";
   return actions.map((action, index) => {
@@ -94,12 +103,13 @@ export function renderStudioModalFrame(options = {}) {
 
 function renderModal(type, options = {}) {
   const title = String(options.title || "");
-  const bodyHtml = renderBodyText(options.body);
+  const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   const statusHtml = type === "confirm-detail" ? renderStatus(options.status) : "";
   const impactHtml = type === "confirm-detail" && options.impact
     ? `<p class="tagStudioForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
     : "";
   const snippetHtml = type === "patch-preview" ? renderSnippet(options.snippet) : "";
+  const actionsHtml = type === "notice" ? renderCloseAction(options) : renderActions(options);
 
   return `
     <div class="tagStudioModal" data-role="studio-modal">
@@ -110,7 +120,7 @@ function renderModal(type, options = {}) {
         ${impactHtml}
         ${snippetHtml}
         ${statusHtml}
-        ${renderActions(options)}
+        ${actionsHtml}
       </div>
     </div>
   `;
@@ -199,6 +209,8 @@ function openModal(type, options = {}) {
 
     if (primary) {
       primary.focus();
+    } else if (cancelButtons.length) {
+      cancelButtons[cancelButtons.length - 1].focus();
     }
   });
 }
@@ -217,4 +229,8 @@ export function openConfirmDetailModal(options = {}) {
 
 export function openPatchPreviewModal(options = {}) {
   return openModal("patch-preview", options);
+}
+
+export function openNoticeModal(options = {}) {
+  return openModal("notice", options);
 }

@@ -183,7 +183,7 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
     assert f"var/docs/import-preview/library/{preview_paths[0].name}" in [
         item["path"] for item in payload["preview_files"]
     ]
-    assert payload["summary_text"] == "Generated 2 Library import preview file(s)."
+    assert payload["summary_text"] == "Generated 2 Library import preview files."
     assert "Preview summary." in preview_text
 
 
@@ -202,7 +202,7 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
     assert payload["preview_written"] is False
     assert payload["preview_files"][0]["path"].startswith("var/docs/import-preview/library/alpha-")
     assert payload["preview_files"][0]["path"].endswith(".md")
-    assert payload["summary_text"] == "Validated 1 Library import preview file(s) without writing."
+    assert payload["summary_text"] == "Validated 1 Library import preview file without writing."
     assert preview_exists == []
 
 

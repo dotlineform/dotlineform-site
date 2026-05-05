@@ -1149,8 +1149,10 @@ def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run
     if report.get("ok"):
         action = "Validated" if dry_run else "Generated"
         suffix = " without writing" if dry_run else ""
+        preview_count = len(report.get("preview_files", []))
+        preview_file_label = "preview file" if preview_count == 1 else "preview files"
         report["summary_text"] = (
-            f"{action} {len(report.get('preview_files', []))} Library import preview file(s){suffix}."
+            f"{action} {preview_count} Library import {preview_file_label}{suffix}."
         )
     return report
 

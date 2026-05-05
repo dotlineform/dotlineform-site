@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-03 23:40"
+last_updated: "2026-05-05"
 ui_status: done
 parent_id: library
 sort_order: 30
@@ -40,7 +40,7 @@ It should:
 - parse supported Library export-shaped JSON or JSONL files
 - parse minimal hand-authored JSON or JSONL files when they contain document-like records
 - generate Markdown preview files under a repo-local `var/` preview folder
-- show the staged files, detected import type, key metadata, report issues, and generated preview paths in Studio
+- show staged-file choices, document preview rows, operation counts, and report issues in Studio
 - keep canonical `_docs_library_src/` files unchanged
 
 It should not:
@@ -216,17 +216,24 @@ The intended v1 Studio page is likely:
 The page should:
 
 - list staged Library data files
-- show detected import type, source export id when available, generated-at timestamp when available, document count, and report status
 - let the user select one staged file
 - generate or refresh a Markdown preview
-- show generated preview paths
-- provide a clear report of warnings and errors
+- show document preview rows without preview-file path details
+- provide a completion modal with record/update counts and warnings or errors
 
 The page should not offer an Apply button in the first implementation unless the apply behavior is explicitly narrowed to summary-only front-matter updates and has its own validation contract.
 
+Current Studio UI behavior:
+
+- the staged-file dropdown, `Generate preview`, `Update summary`, and `Apply hierarchy` commands share one command row
+- the staged-file path/format/size/modified metadata row is intentionally hidden
+- preview generation, summary apply, and hierarchy apply results open in a modal with only a `Close` button
+- result modal counts use a vertical label/value stack, with issue messages below the counts
+- document rows show the document title and document-oriented metadata only; generated preview file paths stay out of the list
+
 The Library dashboard should link to the Library import page under the existing `Data` column, beneath the export link.
 The page can be created early as a staged-file listing before preview generation exists.
-Once previews are available, the list can include preview paths.
+Once previews are available, the list should focus on document rows rather than generated file paths.
 
 ### Future Apply Direction
 
@@ -358,10 +365,10 @@ Status note:
 - loads staged `.json` and `.jsonl` files through `GET /docs/library-import/files?scope=library`
 - runs preview generation through `POST /docs/library-import/preview`
 - uses the same compact command/list shell as the Library export page
-- shows selected file metadata, detected import type, source export metadata, counts, issues, and generated preview counts
+- shows preview/apply counts and issues in a single-close result modal
 - renders generated preview records in the main selectable list area, ordered and indented by staged `parent_id` when relationship data is present
 - shows a relationship-tree preview row when the service report includes a generated tree preview file
-- labels missing titles, missing `doc_id`, duplicate `doc_id`, missing preview files, and records that do not map to current Library docs
+- labels missing titles, missing `doc_id`, duplicate `doc_id`, and records that do not map to current Library docs
 - exposes `select all` and `clear` selection pills for preview rows
 - enables `Update summary` and `Apply hierarchy` for selected document preview rows
 - runs a preflight through `POST /docs/library-import/summary-apply`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library_src/*.md`

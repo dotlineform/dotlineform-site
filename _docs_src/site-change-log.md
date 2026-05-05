@@ -2,11 +2,45 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-04"
+last_updated: "2026-05-05"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-05] Refined Library import review UI
+
+**Status:** implemented
+
+**Area:** Studio / Library import
+
+**Summary:**
+The Library import route now keeps staged-file selection and preview/apply commands in one compact row.
+It removes staged-file path/format/size/modified metadata from the page, removes generated preview-file paths from document row metadata, and shows preview/apply completion details in a shared modal with a single `Close` button.
+The modal presents counts as a compact vertical label/value stack with right-aligned values and issues below the counts.
+Preview completion messages now use context-aware singular/plural wording for generated preview files.
+A small `results` button appears beside the preview success message while that message remains current, allowing the last preview result modal to be reopened.
+
+**Reason:**
+The route is now a repeated review/apply workflow.
+Persistent file and result details made the page harder to scan after the document list became the main working surface.
+
+**Files changed:**
+
+- `studio/library-import/index.md`
+- `assets/studio/js/library-import.js`
+- `assets/studio/js/studio-modal.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `tests/smoke/library_import.py`
+- [Library Import UI Refinements](/docs/?scope=studio&doc=library-import-ui)
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Library import is more compact and consistent with the Library export result-modal pattern.
+The result modal no longer exposes source export id, generated timestamp, or preview-file paths in the main UI; those remain available through staged/generated files and service payloads when needed.
 
 ## [2026-05-04] Closed Library import/export v2 task list
 

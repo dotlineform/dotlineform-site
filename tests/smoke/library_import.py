@@ -123,7 +123,7 @@ def install_mock_docs_service(page) -> None:
             payload = {
                 "ok": True,
                 "scope": "library",
-                "summary_text": "Generated 3 Library import preview file(s).",
+                "summary_text": "Generated 3 Library import preview files.",
                 "detected_import_type": "parent_child_relationships",
                 "source_export_id": "library-parent-child-relationships",
                 "generated_at": "2026-05-04T12:05:00Z",
@@ -280,6 +280,36 @@ def install_mock_docs_service(page) -> None:
 def assert_mock_preview_flow(page) -> dict[str, object]:
     page.locator("#libraryImportPreview").click()
     page.wait_for_selector("[data-library-import-preview]", timeout=5000)
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    preview_modal_title = page.locator("#studioModalTitle").text_content()
+    preview_count_labels = page.locator(".libraryImportResultModal__counts dt").evaluate_all(
+        "nodes => nodes.map(node => node.textContent)"
+    )
+    preview_count_values = page.locator(".libraryImportResultModal__counts dd").evaluate_all(
+        "nodes => nodes.map(node => node.textContent)"
+    )
+    preview_issue_text = " ".join(page.locator(".libraryImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    if preview_modal_title != "Import preview":
+        raise AssertionError(f"unexpected preview result modal title: {preview_modal_title!r}")
+    if preview_count_labels != ["records", "parsed", "malformed", "warnings", "errors"]:
+        raise AssertionError(f"unexpected preview count labels: {preview_count_labels!r}")
+    if preview_count_values != ["3", "3", "0", "1", "0"]:
+        raise AssertionError(f"unexpected preview count values: {preview_count_values!r}")
+    if "unknown_doc_id" not in preview_issue_text:
+        raise AssertionError(f"preview warning missing from modal issues: {preview_issue_text!r}")
+    page.locator('[data-role="modal-cancel"]').last.click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+    result_button = page.locator("#libraryImportResults")
+    if result_button.is_hidden() or result_button.text_content() != "results":
+        raise AssertionError("preview results button should be visible after successful preview status")
+    result_button.click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    reopened_title = page.locator("#studioModalTitle").text_content()
+    reopened_summary = page.locator(".libraryImportResultModal__summary").text_content()
+    if reopened_title != "Import preview" or reopened_summary != "Generated 3 Library import preview files.":
+        raise AssertionError(f"unexpected reopened results modal: {reopened_title!r}, {reopened_summary!r}")
+    page.locator('[data-role="modal-cancel"]').last.click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     rows = page.locator("[data-library-import-preview]").count()
     titles = page.locator(".libraryImportList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
     depths = page.locator("[data-library-import-preview]").evaluate_all(
@@ -315,21 +345,36 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     page.locator("#libraryImportUpdateSummary").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
-    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 2 Library summary update(s).'",
         arg="#libraryImportStatus",
         timeout=5000,
     )
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    summary_modal_title = page.locator("#studioModalTitle").text_content()
+    summary_count_labels = page.locator(".libraryImportResultModal__counts dt").evaluate_all(
+        "nodes => nodes.map(node => node.textContent)"
+    )
+    summary_count_values = page.locator(".libraryImportResultModal__counts dd").evaluate_all(
+        "nodes => nodes.map(node => node.textContent)"
+    )
     applied_status = page.locator("#libraryImportStatus").text_content()
-    summary = page.locator("#libraryImportSummary").text_content()
-    issue_text = " ".join(page.locator("#libraryImportIssuesList li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    summary = page.locator(".libraryImportResultModal__summary").text_content()
+    issue_text = " ".join(page.locator(".libraryImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
     if applied_status != "Updated 2 Library summary update(s).":
         raise AssertionError(f"unexpected applied status: {applied_status!r}")
+    if summary_modal_title != "Summary update complete":
+        raise AssertionError(f"unexpected summary result modal title: {summary_modal_title!r}")
+    if summary_count_labels != ["updates", "skipped", "errors"]:
+        raise AssertionError(f"unexpected summary count labels: {summary_count_labels!r}")
+    if summary_count_values != ["2", "1", "0"]:
+        raise AssertionError(f"unexpected summary count values: {summary_count_values!r}")
     if "2 updates; 1 skipped; 0 errors." not in summary:
         raise AssertionError(f"summary apply counts missing from summary: {summary!r}")
     if "missing_summary" not in issue_text:
         raise AssertionError(f"summary apply skipped row missing from issues: {issue_text!r}")
+    page.locator('[data-role="modal-cancel"]').last.click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     page.locator("#libraryImportApplyHierarchy").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     hierarchy_modal_title = page.locator("#studioModalTitle").text_content()
@@ -343,19 +388,34 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     page.locator("#libraryImportApplyHierarchy").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
-    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 1 Library hierarchy change(s).'",
         arg="#libraryImportStatus",
         timeout=5000,
     )
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    hierarchy_result_title = page.locator("#studioModalTitle").text_content()
+    hierarchy_count_labels = page.locator(".libraryImportResultModal__counts dt").evaluate_all(
+        "nodes => nodes.map(node => node.textContent)"
+    )
+    hierarchy_count_values = page.locator(".libraryImportResultModal__counts dd").evaluate_all(
+        "nodes => nodes.map(node => node.textContent)"
+    )
     hierarchy_status = page.locator("#libraryImportStatus").text_content()
-    hierarchy_summary = page.locator("#libraryImportSummary").text_content()
-    hierarchy_issue_text = " ".join(page.locator("#libraryImportIssuesList li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    hierarchy_summary = page.locator(".libraryImportResultModal__summary").text_content()
+    hierarchy_issue_text = " ".join(page.locator(".libraryImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    if hierarchy_result_title != "Hierarchy update complete":
+        raise AssertionError(f"unexpected hierarchy result modal title: {hierarchy_result_title!r}")
+    if hierarchy_count_labels != ["changed", "unchanged", "skipped", "warnings", "errors"]:
+        raise AssertionError(f"unexpected hierarchy count labels: {hierarchy_count_labels!r}")
+    if hierarchy_count_values != ["1", "1", "0", "1", "0"]:
+        raise AssertionError(f"unexpected hierarchy count values: {hierarchy_count_values!r}")
     if "1 changed; 1 unchanged; 0 skipped; 1 warnings; 0 errors." not in hierarchy_summary:
         raise AssertionError(f"hierarchy apply counts missing from summary: {hierarchy_summary!r}")
     if "unknown_parent_id" not in hierarchy_issue_text:
         raise AssertionError(f"hierarchy apply warning missing from issues: {hierarchy_issue_text!r}")
+    page.locator('[data-role="modal-cancel"]').last.click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     return {
         "preview_rows": rows,
         "selected_summary": selection,

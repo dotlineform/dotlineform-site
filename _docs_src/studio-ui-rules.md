@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: "2026-05-04"
+last_updated: "2026-05-05"
 parent_id: design
 sort_order: 30
 ---
@@ -22,6 +22,29 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-05-05 / UI-079
+
+- status: adopted
+- route: `/studio/library-import/`
+- issue: Library import still showed staged-file technical metadata, preview-file paths in the document list, bottom-row apply commands, and a persistent result panel after the route had become a compact review/apply surface.
+- triage: route-local refinement
+- reasoning: the useful persistent state is the staged-file choice, document preview selection, and enabled apply commands. File/path/report details are transient operation output and fit the shared Studio modal pattern better than a permanent panel below the list.
+- outcome: removed the staged-file metadata row, moved `Generate preview`, `Update summary`, and `Apply hierarchy` into one command row after the dropdown, made the dropdown use half the desktop command row and full mobile width, removed preview-file paths from document row metadata, replaced preview/apply result panels with single-close modals showing compact vertical counts and issues, and added a transient `results` button beside the preview success message for reopening the last preview result.
+- files changed:
+  - `studio/library-import/index.md`
+  - `assets/studio/js/library-import.js`
+  - `assets/studio/js/studio-modal.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `tests/smoke/library_import.py`
+  - `_docs_src/library-import-ui.md`
+  - `_docs_src/library-import.md`
+  - `_docs_src/config-studio-config-json.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - open `/studio/library-import/` on desktop and mobile and confirm the single command row, wider dropdown, document-only list metadata, and result modals render correctly
+  - run the Library import smoke check with a mocked docs-management response and confirm preview, summary apply, and hierarchy apply result modals expose the expected counts and issues
 
 ## UI Rule Log 2026-05-04 / UI-078
 
