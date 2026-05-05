@@ -2,7 +2,7 @@
 doc_id: new-pipeline-refine-search
 title: "Search Plan"
 added_date: 2026-04-18
-last_updated: 2026-04-18
+last_updated: "2026-05-05"
 parent_id: new-pipeline
 sort_order: 62
 ---
@@ -13,6 +13,9 @@ This is a planning stub for the Search domain so search configuration, validatio
 
 This document should be developed in parallel with **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)**.
 
+The current `/studio/search/` dashboard is a lightweight Studio domain entry page.
+It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) to group the public search interface link and Search planning documents without route-card descriptions.
+
 ## Purpose
 
 - define the Studio Search domain
@@ -22,6 +25,7 @@ This document should be developed in parallel with **[Studio Implementation Plan
 ## Current Boundary
 
 - Search already has its own documentation set and implementation boundaries
+- `/studio/search/` surfaces public search and the core Search planning/change-log docs as dashboard route links
 - this stub is for Studio planning and operational surfaces, not for rewriting the whole search architecture
 - shared shell, nav, and common Studio patterns belong to the Studio implementation plan
 

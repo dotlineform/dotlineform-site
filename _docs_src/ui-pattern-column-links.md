@@ -19,6 +19,7 @@ Current live examples:
 - `/studio/catalogue/`
 - `/studio/library/`
 - `/studio/analytics/`
+- `/studio/search/`
 - `/studio/ui-catalogue/`
 
 ## Scope
@@ -76,5 +77,5 @@ If labels need supporting copy, move to a different pattern rather than stretchi
 
 ## Migration Notes
 
-This pattern was first reused by Catalogue and Library dashboards, then adopted by the Analytics dashboard and UI Catalogue index.
+This pattern was first reused by Catalogue and Library dashboards, then adopted by the Analytics dashboard, Search dashboard, and UI Catalogue index.
 Future dashboard-like Studio entry pages should use this documented pattern instead of creating page-local route-card variants.

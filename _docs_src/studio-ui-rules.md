@@ -38,6 +38,24 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-05 / UI-084
+
+- status: adopted
+- route: `/studio/search/`
+- issue: the Search dashboard still used intro copy, descriptive panel cards, and metric meta text after the other domain dashboards had moved to compact column-link entry pages.
+- triage: shared composition pattern
+- reasoning: Search is a Studio domain entry point like Catalogue, Library, and Analytics. It should expose the current interface and document routes through the same compact dashboard language.
+- outcome: removed the Search intro, section heading copy, panel grid, and metric meta text; replaced the entry cards with `interface` and `documents` columns using the shared `catalogueDashboardRoutes` / `catalogueDashboardColumn` / `catalogueDashboardPills` classes; and added Search to the Column Links pattern live examples.
+- files changed:
+  - `studio/search/index.md`
+  - `_docs_src/refine-search.md`
+  - `_docs_src/ui-pattern-column-links.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the Studio docs data and site
+  - open `/studio/search/` and confirm it no longer uses card panels or descriptive dashboard copy
+  - confirm the route uses the shared column-links classes and exposes the public search, Search plan, and Search change log links
+
 ## UI Rule Log 2026-05-05 / UI-083
 
 - status: adopted

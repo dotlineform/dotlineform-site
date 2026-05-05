@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Refined Search dashboard to column links
+
+**Status:** implemented
+
+**Area:** Studio / Search
+
+**Summary:**
+`/studio/search/` now matches the compact dashboard structure used by the other Studio domain dashboards.
+The page keeps its metrics, removes intro and panel-card descriptive copy, and groups routes into `interface` and `documents` columns using the shared Column Links pattern.
+The documents column links to the Search plan and Search change log.
+
+**Reason:**
+Search is a Studio domain entry page.
+The shared column-link pattern is a better fit for routine navigation than bespoke descriptive panels.
+
+**Files changed:**
+
+- `studio/search/index.md`
+- [Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Catalogue, Library, Analytics, and Search dashboards now share the same compact route-entry language.
+
 ## [2026-05-05] Added scoped data links to domain dashboards
 
 **Status:** implemented

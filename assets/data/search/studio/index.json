@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-eed8f06d233d6ca47d77e5dd54a66877",
-    "generated_at_utc": "2026-05-05T18:12:12Z",
+    "version": "blake2b-b68c6425d7a32c5c5179a37e70394652",
+    "generated_at_utc": "2026-05-05T19:09:09Z",
     "count": 181
   },
   "entries": [
@@ -2646,10 +2646,10 @@
       "kind": "doc",
       "title": "Search Plan",
       "href": "/docs/?scope=studio&doc=new-pipeline-refine-search",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-05-05",
       "parent_id": "new-pipeline",
       "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-18 • New Cat Pipeline",
+      "display_meta": "2026-05-05 • New Cat Pipeline",
       "search_terms": [
         "new-pipeline-refine-search",
         "new",
@@ -2660,12 +2660,11 @@
         "plan",
         "new cat pipeline",
         "cat",
-        "2026-04-18",
+        "2026-05-05",
         "2026",
-        "04",
-        "18"
+        "05"
       ],
-      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan new cat pipeline cat 2026-04-18 2026 04 18"
+      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan new cat pipeline cat 2026-05-05 2026 05"
     },
     {
       "id": "scripts-project-state-report",

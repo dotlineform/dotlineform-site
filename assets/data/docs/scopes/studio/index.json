@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T18:22:02Z",
+  "generated_at": "2026-05-05T19:09:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1015,7 +1015,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 148513
+      "content_text_length": 149713
     },
     {
       "scope": "studio",
@@ -1691,7 +1691,7 @@
       "doc_id": "new-pipeline-refine-search",
       "title": "Search Plan",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-05-05",
       "parent_id": "new-pipeline",
       "sort_order": 62,
       "published": true,
@@ -1699,7 +1699,7 @@
       "source_path": "refine-search.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-search.json",
-      "content_text_length": 1707
+      "content_text_length": 2042
     },
     {
       "scope": "studio",
@@ -2128,7 +2128,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 1977
+      "content_text_length": 2012
     },
     {
       "scope": "studio",
@@ -2724,7 +2724,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 304760
+      "content_text_length": 305570
     },
     {
       "scope": "studio",
