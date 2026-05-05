@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T17:57:33Z",
+  "generated_at": "2026-05-05T18:12:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1015,7 +1015,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 146166
+      "content_text_length": 147362
     },
     {
       "scope": "studio",
@@ -1661,7 +1661,7 @@
       "doc_id": "new-pipeline-refine-analytics",
       "title": "Analytics Plan",
       "added_date": "2026-04-18",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-05-05",
       "parent_id": "new-pipeline",
       "sort_order": 61,
       "published": true,
@@ -1669,7 +1669,7 @@
       "source_path": "refine-analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-analytics",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-analytics.json",
-      "content_text_length": 1624
+      "content_text_length": 2028
     },
     {
       "scope": "studio",
@@ -2128,7 +2128,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 1849
+      "content_text_length": 1892
     },
     {
       "scope": "studio",
@@ -2724,7 +2724,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 302963
+      "content_text_length": 303841
     },
     {
       "scope": "studio",

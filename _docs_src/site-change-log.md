@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Refined Analytics dashboard to column links
+
+**Status:** implemented
+
+**Area:** Studio / Analytics
+
+**Summary:**
+`/studio/analytics/` now matches the compact dashboard structure used by Catalogue and Library.
+The page keeps its metrics, removes intro and panel-card descriptive copy, and groups routes into `Data` and `Tags` columns using the shared Column Links pattern.
+Analytics import/export links point at the shared scope-aware data workflow shell.
+
+**Reason:**
+Analytics is a Studio domain entry page like Catalogue and Library.
+The shared column-link pattern is a better fit for routine navigation than bespoke descriptive panels.
+
+**Files changed:**
+
+- `studio/analytics/index.md`
+- [Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+The three main Studio domain dashboards now share the same compact route-entry language while preserving their domain-specific links.
+
 ## [2026-05-05] Made Library import/export routes scope-aware
 
 **Status:** implemented

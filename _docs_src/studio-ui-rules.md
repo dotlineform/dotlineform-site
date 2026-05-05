@@ -38,6 +38,24 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-05 / UI-082
+
+- status: adopted
+- route: `/studio/analytics/`
+- issue: the Analytics dashboard still used intro copy, descriptive panel cards, and metric meta text after Catalogue and Library had moved to compact column-link entry pages.
+- triage: shared composition pattern
+- reasoning: Analytics is now another Studio domain entry point. Its dashboard should route operators into data workflows and tag tools with the same compact pattern rather than maintaining a page-local card grid.
+- outcome: removed the Analytics intro, section heading copy, panel grid, and metric meta text; replaced the route panels with `Data` and `Tags` columns using the shared `catalogueDashboardRoutes` / `catalogueDashboardColumn` / `catalogueDashboardPills` classes; and kept Analytics import/export links scope-aware.
+- files changed:
+  - `studio/analytics/index.md`
+  - `_docs_src/refine-analytics.md`
+  - `_docs_src/ui-pattern-column-links.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the Studio docs data and site
+  - open `/studio/analytics/` and confirm it no longer uses card panels or descriptive dashboard copy
+  - confirm the route uses the shared column-links classes and exposes scope-aware Analytics import/export links
+
 ## UI Rule Log 2026-05-05 / UI-081
 
 - status: adopted
