@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-37f5dbf4b171ad6f96b526503093c8bc",
-    "generated_at_utc": "2026-05-04T22:26:30Z",
-    "count": 173
+    "version": "blake2b-d59f07b8d9c4a5822785c22bd9a68bf3",
+    "generated_at_utc": "2026-05-05T14:50:35Z",
+    "count": 174
   },
   "entries": [
     {
@@ -2109,6 +2109,28 @@
         "04"
       ],
       "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-04 2026 05 04"
+    },
+    {
+      "id": "library-import-ui",
+      "kind": "doc",
+      "title": "Library Import - UI refinements",
+      "href": "/docs/?scope=studio&doc=library-import-ui",
+      "last_updated": "2026-05-05",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-05-05 • Library",
+      "search_terms": [
+        "library-import-ui",
+        "library",
+        "import",
+        "ui",
+        "library import - ui refinements",
+        "refinements",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "library-import-ui library import ui library import - ui refinements refinements 2026-05-05 2026 05"
     },
     {
       "id": "site-request-moments-prose-source-model",
