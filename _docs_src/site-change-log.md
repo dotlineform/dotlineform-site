@@ -8,6 +8,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Added UI Catalogue composition pattern pages
+
+**Status:** implemented
+
+**Area:** Studio / UI Catalogue
+
+**Summary:**
+The UI Catalogue index now uses the shared two-column route-link pattern already used by the Catalogue and Library dashboards.
+It groups links into `Primitives` and `Composition Patterns`.
+Added live UI Catalogue pages for the reopenable command result pattern and the column links pattern, plus a matching docs-viewer contract for Column Links.
+
+**Reason:**
+The catalogue index is a route-entry page, not a descriptive card surface.
+Reusing the dashboard column-link composition keeps the UI system catalogue aligned with the pattern it is documenting.
+
+**Files changed:**
+
+- `studio/ui-catalogue/index.md`
+- `studio/ui-catalogue/reopenable-command-result/index.md`
+- `studio/ui-catalogue/column-links/index.md`
+- `assets/studio/css/studio.css`
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+Repeated Studio route-entry link groups now have a named composition pattern and a live reference page.
+
 ## [2026-05-05] Added UI framework and catalogue target docs
 
 **Status:** implemented

@@ -2,8 +2,8 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: "2026-05-05"
-ui_status: urgent
+last_updated: "2026-05-05 18:22"
+ui_status: in-progress
 parent_id: design
 sort_order: 25
 ---
@@ -22,6 +22,8 @@ The UI catalogue pages expose static/reference route-ready state:
 - `/studio/ui-catalogue/input/` uses `#studioUiCatalogueInputRoot`
 - `/studio/ui-catalogue/list/` uses `#studioUiCatalogueListRoot`
 - `/studio/ui-catalogue/panel/` uses `#studioUiCataloguePanelRoot`
+- `/studio/ui-catalogue/reopenable-command-result/` uses `#studioUiCatalogueReopenableCommandResultRoot`
+- `/studio/ui-catalogue/column-links/` uses `#studioUiCatalogueColumnLinksRoot`
 
 These roots use `data-studio-mode="reference"` and mark ready after DOM load. The purpose is to give future primitive pages an obvious route-state contract to extend if a reference page later adds async demos or route-level controls.
 
@@ -56,7 +58,8 @@ Composition patterns cover UI behavior that depends on route state, server paylo
 
 Current pattern docs:
 
-- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result)
+- [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [live page](/studio/ui-catalogue/reopenable-command-result/)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [live page](/studio/ui-catalogue/column-links/)
 
 ## Primitive Scope
 

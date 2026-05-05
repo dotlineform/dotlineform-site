@@ -1410,7 +1410,6 @@ span.tagStudio__input--readonlyDisplay {
 
 .studioUiCataloguePage__intro,
 .studioUiPrimitivePage__intro,
-.studioUiCatalogueIndex__summary,
 .studioUiPrimitivePage__sectionSummary,
 .studioUiPrimitiveExample__summary {
   margin: 0;
@@ -1426,7 +1425,6 @@ span.tagStudio__input--readonlyDisplay {
   color: var(--muted, var(--studio-muted));
 }
 
-.studioUiCatalogueIndex,
 .studioUiPrimitivePage__live,
 .studioUiPrimitivePage__code,
 .studioUiPrimitivePage__notes {
@@ -1442,39 +1440,10 @@ span.tagStudio__input--readonlyDisplay {
   background: transparent;
 }
 
-.studioUiCatalogueIndex__header,
 .studioUiPrimitivePage__sectionHeader,
 .studioUiPrimitiveExample__header {
   display: grid;
   gap: 0.3rem;
-}
-
-.studioUiCatalogueIndex__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.studioUiCatalogueIndex__item {
-  display: grid;
-  gap: 0.12rem;
-  border: 1px solid var(--line, var(--studio-line));
-  border-radius: var(--studio-radius-md);
-  padding: 0.7rem 0.8rem;
-  background: var(--surface, var(--studio-surface));
-  text-decoration: none;
-  color: inherit;
-}
-
-.studioUiCatalogueIndex__title {
-  font-size: var(--font-body);
-}
-
-.studioUiCatalogueIndex__meta {
-  color: var(--muted, var(--studio-muted-body));
-  font-size: var(--font-small);
 }
 
 .studioUiPrimitiveDemo {

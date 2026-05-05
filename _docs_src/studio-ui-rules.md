@@ -33,9 +33,32 @@ Use these targets when promoting content out of this log:
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for the primitive and composition-pattern index
 - [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button), [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input), [List Primitive](/docs/?scope=studio&doc=ui-primitive-list), and [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) for primitive-specific contracts
 - [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) for command-result modal lifecycle guidance
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) for compact two-column route-link groups
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log) for historical site changes
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
+
+## UI Rule Log 2026-05-05 / UI-080
+
+- status: adopted
+- route: `/studio/ui-catalogue/`
+- issue: the UI Catalogue index still used a bespoke panel/list block after the same compact two-column route-link layout had appeared on Catalogue and Library dashboards.
+- triage: shared composition pattern
+- reasoning: the catalogue index is another route-entry surface. Reusing the existing column-link dashboard composition keeps dashboard-like pages visually consistent and gives the pattern a stable documentation target before more entry pages copy it.
+- outcome: replaced the bespoke `First Primitive Pages` panel with `Primitives` and `Composition Patterns` columns using the shared `catalogueDashboardRoutes` / `catalogueDashboardColumn` / `catalogueDashboardPills` classes, added live pattern pages for reopenable command results and column links, and added a matching Column Links pattern doc under UI Catalogue.
+- files changed:
+  - `studio/ui-catalogue/index.md`
+  - `studio/ui-catalogue/reopenable-command-result/index.md`
+  - `studio/ui-catalogue/column-links/index.md`
+  - `assets/studio/css/studio.css`
+  - `_docs_src/ui-pattern-reopenable-command-result.md`
+  - `_docs_src/ui-pattern-column-links.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the Studio docs data and site
+  - open `/studio/ui-catalogue/` and confirm it uses the same two-column pill-link pattern as `/studio/library/`
+  - open the two new pattern pages and confirm their static ready-state roots pass the Studio ready-state audit
 
 ## UI Rule Log 2026-05-05 / UI-079
 

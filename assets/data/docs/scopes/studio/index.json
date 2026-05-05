@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T17:03:14Z",
+  "generated_at": "2026-05-05T17:22:48Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -49,7 +49,7 @@
       "source_path": "ui.md",
       "viewer_url": "/docs/?scope=studio&doc=ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
-      "content_text_length": 2102
+      "content_text_length": 2123
     },
     {
       "scope": "studio",
@@ -749,7 +749,7 @@
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-05 18:22",
       "parent_id": "design",
       "sort_order": 25,
       "published": true,
@@ -757,8 +757,8 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6186,
-      "ui_status": "urgent"
+      "content_text_length": 6404,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -1015,7 +1015,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 143045
+      "content_text_length": 144571
     },
     {
       "scope": "studio",
@@ -2097,7 +2097,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 2737
+      "content_text_length": 2777
     },
     {
       "scope": "studio",
@@ -2114,6 +2114,21 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-detail-unified-editor.json",
       "content_text_length": 10651,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-pattern-column-links",
+      "title": "Column Links Pattern",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "sort_order": 120,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-pattern-column-links.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-column-links.json",
+      "content_text_length": 1849
     },
     {
       "scope": "studio",
@@ -2709,7 +2724,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 300276
+      "content_text_length": 301320
     },
     {
       "scope": "studio",

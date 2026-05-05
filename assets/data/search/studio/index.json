@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5232282ca6f3dfe1c0e05c8e91432df3",
-    "generated_at_utc": "2026-05-05T17:00:28Z",
-    "count": 180
+    "version": "blake2b-f1685275dd2f12dc3fd5716967edcc11",
+    "generated_at_utc": "2026-05-05T17:22:53Z",
+    "count": 181
   },
   "entries": [
     {
@@ -1179,21 +1179,23 @@
       "kind": "doc",
       "title": "UI Catalogue",
       "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-05 18:22",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-05-05 • Design",
+      "display_meta": "2026-05-05 18:22 • Design",
       "search_terms": [
         "ui-catalogue",
         "ui",
         "catalogue",
         "ui catalogue",
         "design",
-        "2026-05-05",
+        "2026-05-05 18:22",
         "2026",
-        "05"
+        "05",
+        "18",
+        "22"
       ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-05 2026 05"
+      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-05 18:22 2026 05 18 22"
     },
     {
       "id": "scripts-docs-import",
@@ -3335,6 +3337,30 @@
         "02"
       ],
       "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request change requests change requests 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "ui-pattern-column-links",
+      "kind": "doc",
+      "title": "Column Links Pattern",
+      "href": "/docs/?scope=studio&doc=ui-pattern-column-links",
+      "last_updated": "2026-05-05",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-05 • UI Catalogue",
+      "search_terms": [
+        "ui-pattern-column-links",
+        "ui",
+        "pattern",
+        "column",
+        "links",
+        "column links pattern",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
       "id": "config",

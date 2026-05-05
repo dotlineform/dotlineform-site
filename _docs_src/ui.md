@@ -63,6 +63,7 @@ Move primitive-specific details into matching primitive docs, for example:
 Move lifecycle and multi-part UI behavior into composition-pattern docs, for example:
 
 - [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result)
+- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)
 
 ## Current Status
 
