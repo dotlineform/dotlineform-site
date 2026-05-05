@@ -8,6 +8,46 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Made Library import/export routes scope-aware
+
+**Status:** implemented
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+`/studio/library-export/` and `/studio/library-import/` now expose a scope selector for `library`, `catalogue`, and `analytics`.
+Library remains the default scope.
+Export config filtering now uses the selected scope and handles future scopes with no enabled configs without failing the page.
+Import staged-file listing and preview generation now use `var/docs/import-staging/<scope>/` and `var/docs/import-preview/<scope>/` for the supported workflow scopes.
+Source-write apply actions remain enabled only for Library.
+
+**Reason:**
+Catalogue and Analytics need the same export/stage/preview workflow shape for future LLM review work, but their record shapes, config details, and write actions are not defined yet.
+The shared page and service infrastructure can support those scopes before the scope-specific contracts are designed.
+
+**Files changed:**
+
+- `studio/library-export/index.md`
+- `studio/library-import/index.md`
+- `assets/studio/js/library-export.js`
+- `assets/studio/js/library-import.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `scripts/docs/docs_import.py`
+- `scripts/docs/docs_management_server.py`
+- `tests/python/test_docs_import_service.py`
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+The workflow shell is ready for Catalogue and Analytics configs.
+Until those configs and source-write contracts exist, non-Library export scopes show no enabled configs and non-Library import scopes support staged preview only.
+
 ## [2026-05-05] Added UI Catalogue composition pattern pages
 
 **Status:** implemented

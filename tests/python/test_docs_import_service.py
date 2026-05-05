@@ -109,8 +109,8 @@ def make_repo() -> tempfile.TemporaryDirectory:
     return temp_dir
 
 
-def write_staged(root: Path, filename: str, payload: object) -> None:
-    path = root / "var/docs/import-staging/library" / filename
+def write_staged(root: Path, filename: str, payload: object, scope: str = "library") -> None:
+    path = root / "var/docs/import-staging" / scope / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     if filename.endswith(".jsonl"):
         rows = payload if isinstance(payload, list) else [payload]
@@ -206,22 +206,25 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
     assert preview_exists == []
 
 
-def test_library_import_preview_rejects_non_library_scope() -> None:
+def test_library_import_preview_supports_catalogue_staging_scope() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
-        try:
-            docs_management.handle_library_import_preview(
-                root,
-                {"scope": "studio", "staged_filename": "summaries.jsonl"},
-                dry_run=False,
-            )
-        except ValueError as exc:
-            message = str(exc)
-        else:
-            raise AssertionError("non-library import scope should fail")
+        write_staged(root, "works.jsonl", [{"doc_id": "work-1", "title": "Work 1"}], scope="catalogue")
+        files_payload = docs_management.handle_library_import_files(root, "catalogue")
+        preview_payload = docs_management.handle_library_import_preview(
+            root,
+            {"scope": "catalogue", "staged_filename": "works.jsonl"},
+            dry_run=True,
+        )
 
-    assert "only supports scope library" in message
+    assert files_payload["scope"] == "catalogue"
+    assert files_payload["staging_root"] == "var/docs/import-staging/catalogue"
+    assert [item["filename"] for item in files_payload["files"]] == ["works.jsonl"]
+    assert preview_payload["ok"] is True
+    assert preview_payload["scope"] == "catalogue"
+    assert preview_payload["preview_written"] is False
+    assert preview_payload["preview_files"][0]["path"].startswith("var/docs/import-preview/catalogue/work-1-")
+    assert preview_payload["summary_text"] == "Validated 1 Catalogue import preview file without writing."
 
 
 def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
@@ -473,7 +476,7 @@ def main() -> None:
         test_library_import_files_lists_json_and_jsonl_only,
         test_library_import_preview_writes_when_not_dry_run,
         test_library_import_preview_dry_run_reports_without_writing,
-        test_library_import_preview_rejects_non_library_scope,
+        test_library_import_preview_supports_catalogue_staging_scope,
         test_docs_export_summary_text_uses_context_aware_document_plural,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,

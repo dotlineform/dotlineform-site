@@ -19,7 +19,12 @@ import {
   renderStudioModalFrame
 } from "./studio-modal.js";
 
-const SCOPE = "library";
+const DEFAULT_SCOPE = "library";
+const WORKFLOW_SCOPES = [
+  { key: "library", labelKey: "scope_library", fallback: "library" },
+  { key: "catalogue", labelKey: "scope_catalogue", fallback: "catalogue" },
+  { key: "analytics", labelKey: "scope_analytics", fallback: "analytics" }
+];
 const LIST_FILTERS = [
   { key: "all", labelKey: "filter_show_all", fallback: "show all [{count}]" },
   { key: "no_content", labelKey: "filter_no_content", fallback: "no content [{count}]" },
@@ -63,7 +68,44 @@ function documentLabel(count) {
   return safeCount === 1 ? "1 document" : `${safeCount} documents`;
 }
 
+function workflowScopeFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = normalizeText(params.get("scope")).toLowerCase();
+  return WORKFLOW_SCOPES.some((item) => item.key === requested) ? requested : DEFAULT_SCOPE;
+}
+
+function scopeLabel(state, scope = state.scope) {
+  const item = WORKFLOW_SCOPES.find((candidate) => candidate.key === scope) || WORKFLOW_SCOPES[0];
+  return getStudioText(state.config, `library_export.${item.labelKey}`, item.fallback);
+}
+
+function scopeTitle(state, scope = state.scope) {
+  const label = scopeLabel(state, scope);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
+}
+
+function renderScopeSelect(state) {
+  state.scopeSelect.innerHTML = WORKFLOW_SCOPES.map((item) => {
+    const label = getStudioText(state.config, `library_export.${item.labelKey}`, item.fallback);
+    const selected = item.key === state.scope ? " selected" : "";
+    return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
+  }).join("");
+}
+
+function updateScopeUrl(scope) {
+  const nextScope = normalizeText(scope).toLowerCase();
+  if (!WORKFLOW_SCOPES.some((item) => item.key === nextScope)) return;
+  const url = new URL(window.location.href);
+  if (nextScope === DEFAULT_SCOPE) {
+    url.searchParams.delete("scope");
+  } else {
+    url.searchParams.set("scope", nextScope);
+  }
+  window.location.href = url.toString();
+}
+
 function routeStateDetail(state) {
+  if (state && state.root) state.root.dataset.studioScope = state.scope;
   return {
     route: "library-export",
     mode: "selection",
@@ -284,6 +326,11 @@ function defaultFormatForConfig(config) {
 function renderFormatOptions(state) {
   const config = selectedConfig(state);
   const supportedFormats = supportedFormatsForConfig(config);
+  if (!config) {
+    state.formatOptionsNode.innerHTML = "";
+    state.targetFormat = "";
+    return;
+  }
   if (!supportedFormats.includes(state.targetFormat)) {
     state.targetFormat = defaultFormatForConfig(config);
   }
@@ -320,8 +367,28 @@ function updateStatus(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "library_export.no_config", "No enabled Library export configs found.")
+      getStudioText(
+        state.config,
+        "library_export.no_config",
+        "No enabled {scope_label} export configs found.",
+        { scope_label: scopeTitle(state) }
+      )
     );
+    state.runButton.disabled = true;
+    return;
+  }
+  if (state.docsIndexError) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(
+        state.config,
+        "library_export.docs_index_unavailable",
+        "No generated {scope_label} data index is available for this export scope.",
+        { scope_label: scopeTitle(state) }
+      )
+    );
+    state.runButton.disabled = true;
     return;
   }
   if (!state.serviceAvailable) {
@@ -381,7 +448,12 @@ function renderDocList(state) {
     .map((doc) => renderDocRow(state, doc));
   state.listNode.innerHTML = rows.length
     ? `<ul class="tagStudioList__rows libraryExportList__rows">${rows.join("")}</ul>`
-    : `<p class="tagStudio__status">${escapeHtml(getStudioText(state.config, "library_export.empty_state", "No matching Library docs."))}</p>`;
+    : `<p class="tagStudio__status">${escapeHtml(getStudioText(
+      state.config,
+      "library_export.empty_state",
+      "No matching {scope_label} documents.",
+      { scope_label: scopeTitle(state) }
+    ))}</p>`;
   syncCheckboxStates(state);
   updateSelectionSummary(state);
 }
@@ -551,7 +623,7 @@ async function runExport(state) {
 
   try {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.exportDocs, {
-      scope: SCOPE,
+      scope: state.scope,
       config_id: configId,
       target_format: targetFormat,
       doc_ids: docIds,
@@ -589,6 +661,9 @@ async function init() {
   const state = {
     bootStatus,
     root,
+    scope: workflowScopeFromUrl(),
+    scopeLabelNode: document.getElementById("libraryExportScopeLabel"),
+    scopeSelect: document.getElementById("libraryExportScopeSelect"),
     configLabelNode: document.getElementById("libraryExportConfigLabel"),
     configSelect: document.getElementById("libraryExportConfigSelect"),
     missingSummaryOnlyWrap: document.getElementById("libraryExportMissingSummaryWrap"),
@@ -613,11 +688,14 @@ async function init() {
     selectedIds: new Set(),
     listFilter: "all",
     targetFormat: "",
+    docsIndexError: false,
     serviceAvailable: false,
     isRunning: false
   };
 
   const requiredNodes = [
+    state.scopeLabelNode,
+    state.scopeSelect,
     state.configLabelNode,
     state.configSelect,
     state.missingSummaryOnlyWrap,
@@ -639,24 +717,33 @@ async function init() {
   try {
     markBusy(state, true);
     state.config = await loadStudioConfig();
+    renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());
     const exportConfigPath = getStudioDataPath(state.config, "library_export_configs")
       || "/assets/studio/data/library_export_configs.json";
-    const docsIndexPath = getDocsScopeDataPath(state.config, SCOPE, "index")
-      || "/assets/data/docs/scopes/library/index.json";
-    const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(SCOPE) : docsIndexPath;
-    const [exportConfigPayload, docsIndexPayload] = await Promise.all([
-      loadJson(exportConfigPath),
-      loadJson(docsIndexReadPath)
-    ]);
+    const exportConfigPayload = await loadJson(exportConfigPath);
+    state.exportConfigs = enabledConfigsForScope(exportConfigPayload, state.scope);
 
-    state.exportConfigs = enabledConfigsForScope(exportConfigPayload, SCOPE);
+    let docsIndexPayload = { docs: [] };
+    if (state.exportConfigs.length) {
+      const docsIndexPath = getDocsScopeDataPath(state.config, state.scope, "index")
+        || `/assets/data/docs/scopes/${encodeURIComponent(state.scope)}/index.json`;
+      const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(state.scope) : docsIndexPath;
+      try {
+        docsIndexPayload = await loadJson(docsIndexReadPath);
+      } catch (error) {
+        console.warn("library_export: docs index load failed", state.scope, error);
+        state.docsIndexError = true;
+      }
+    }
+
     const docsTree = buildVisibleDocs(docsIndexPayload);
     state.docs = docsTree.docs;
     state.childrenByParent = docsTree.childrenByParent;
     state.depthById = docsTree.depthById;
     state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
+    setText(state.scopeLabelNode, getStudioText(state.config, "library_export.scope_label", "scope"));
     setText(state.configLabelNode, getStudioText(state.config, "library_export.config_label", "export pattern"));
     setText(
       state.missingSummaryLabelNode,
@@ -675,6 +762,7 @@ async function init() {
     renderConfigSelect(state);
     syncConfigOptions(state);
 
+    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value));
     state.configSelect.addEventListener("change", () => syncConfigOptions(state));
     state.formatOptionsNode.addEventListener("change", (event) => {
       const target = event.target;
@@ -726,7 +814,12 @@ async function init() {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "library_export.load_failed", "Failed to load Library export data.")
+      getStudioText(
+        state.config,
+        "library_export.load_failed",
+        "Failed to load {scope_label} export data.",
+        { scope_label: state.config ? scopeTitle(state) : "Library" }
+      )
     );
     markReady(state, true);
   } finally {

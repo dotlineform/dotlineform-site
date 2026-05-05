@@ -246,13 +246,13 @@ Runtime role:
 `GET /docs/library-import/files` accepts:
 
 ```text
-?scope=library
+?scope=library|catalogue|analytics
 ```
 
-Library import file listing behavior:
+Import file listing behavior:
 
-- `scope` must be `library` in v1
-- lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`
+- `scope` must be one of `library`, `catalogue`, or `analytics`
+- lists staged `.json` and `.jsonl` files under `var/docs/import-staging/<scope>/`
 - returns filename, repo-relative path, format, size, and modified time
 - does not parse or log file content
 
@@ -260,28 +260,29 @@ Library import file listing behavior:
 
 ```json
 {
-  "scope": "library",
+  "scope": "library|catalogue|analytics",
   "staged_filename": "library-document-summaries.jsonl"
 }
 ```
 
-Library import preview behavior:
+Import preview behavior:
 
-- `scope` must be `library` in v1
-- `staged_filename` must resolve inside `var/docs/import-staging/library/`
+- `scope` must be one of `library`, `catalogue`, or `analytics`
+- `staged_filename` must resolve inside `var/docs/import-staging/<scope>/`
 - parses the staged data file through `./scripts/docs/docs_import.py`
-- loads current generated Library docs index and payload state through the shared import engine
-- writes Markdown previews under `var/docs/import-preview/library/` in normal server mode
+- loads current generated docs index and payload state through the shared import engine when the selected scope has generated docs data
+- writes Markdown previews under `var/docs/import-preview/<scope>/` in normal server mode
 - reports planned preview paths without writing when the server runs with `--dry-run`
 - returns the same structured report shape as the import CLI, including `counts`, `issues`, `records`, `current_library`, `preview_files`, and `preview_written`
 - logs include scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths; logs do not include document body content or staged payload content
 
 Runtime role:
 
-- this endpoint is the browser-to-filesystem boundary for Library import preview files
+- this endpoint is the browser-to-filesystem boundary for import preview files
 - it does not mutate `_docs_library_src/*.md`
 - it does not apply summaries, relationship recommendations, or full-content changes to canonical source
 - generated preview files are local working artifacts for Studio review
+- Catalogue and Analytics source-write actions are not implemented yet
 
 `POST /docs/library-import/summary-apply` expects:
 

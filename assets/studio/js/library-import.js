@@ -12,7 +12,12 @@ import {
 } from "./studio-route-state.js";
 import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
 
-const SCOPE = "library";
+const DEFAULT_SCOPE = "library";
+const WORKFLOW_SCOPES = [
+  { key: "library", labelKey: "scope_library", fallback: "library" },
+  { key: "catalogue", labelKey: "scope_catalogue", fallback: "catalogue" },
+  { key: "analytics", labelKey: "scope_analytics", fallback: "analytics" }
+];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -42,6 +47,46 @@ function setStatus(node, state, message) {
   }
 }
 
+function workflowScopeFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = normalizeText(params.get("scope")).toLowerCase();
+  return WORKFLOW_SCOPES.some((item) => item.key === requested) ? requested : DEFAULT_SCOPE;
+}
+
+function scopeSupportsSourceApply(scope) {
+  return normalizeText(scope).toLowerCase() === "library";
+}
+
+function scopeLabel(state, scope = state.scope) {
+  const item = WORKFLOW_SCOPES.find((candidate) => candidate.key === scope) || WORKFLOW_SCOPES[0];
+  return getStudioText(state.config, `library_import.${item.labelKey}`, item.fallback);
+}
+
+function scopeTitle(state, scope = state.scope) {
+  const label = scopeLabel(state, scope);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
+}
+
+function renderScopeSelect(state) {
+  state.scopeSelect.innerHTML = WORKFLOW_SCOPES.map((item) => {
+    const label = getStudioText(state.config, `library_import.${item.labelKey}`, item.fallback);
+    const selected = item.key === state.scope ? " selected" : "";
+    return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
+  }).join("");
+}
+
+function updateScopeUrl(scope) {
+  const nextScope = normalizeText(scope).toLowerCase();
+  if (!WORKFLOW_SCOPES.some((item) => item.key === nextScope)) return;
+  const url = new URL(window.location.href);
+  if (nextScope === DEFAULT_SCOPE) {
+    url.searchParams.delete("scope");
+  } else {
+    url.searchParams.set("scope", nextScope);
+  }
+  window.location.href = url.toString();
+}
+
 function routeModeForState(state) {
   if (state.previewRows && state.previewRows.length) {
     return "result";
@@ -50,6 +95,7 @@ function routeModeForState(state) {
 }
 
 function routeStateDetail(state) {
+  if (state && state.root) state.root.dataset.studioScope = state.scope;
   return {
     route: "library-import",
     mode: routeModeForState(state),
@@ -198,7 +244,12 @@ function rowMetaParts(state, { docId, duplicate, currentLibrary }) {
     parts.push(getStudioText(state.config, "library_import.duplicate_doc_id", "duplicate doc_id"));
   }
   if (currentLibrary && currentLibrary.exists === false) {
-    parts.push(getStudioText(state.config, "library_import.not_current_library", "not in current Library"));
+    parts.push(getStudioText(
+      state.config,
+      "library_import.not_current_scope",
+      "not in current {scope_label}",
+      { scope_label: scopeTitle(state) }
+    ));
   }
   return parts.filter(Boolean);
 }
@@ -415,22 +466,24 @@ function renderResult(state, payload, failed = false) {
 }
 
 function setControlsDisabled(state, disabled) {
+  const supportsApply = scopeSupportsSourceApply(state.scope);
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
   state.clearButton.disabled = disabled || !state.previewRows.length;
-  state.updateSummaryButton.disabled = disabled || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
-  state.applyHierarchyButton.disabled = disabled || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  state.updateSummaryButton.disabled = disabled || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  state.applyHierarchyButton.disabled = disabled || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
 }
 
 function syncApplyActionState(state) {
   if (!state.updateSummaryButton || !state.applyHierarchyButton) return;
-  state.updateSummaryButton.disabled = state.isRunning || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
-  state.applyHierarchyButton.disabled = state.isRunning || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  const supportsApply = scopeSupportsSourceApply(state.scope);
+  state.updateSummaryButton.disabled = state.isRunning || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  state.applyHierarchyButton.disabled = state.isRunning || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
 }
 
-async function loadImportFiles() {
-  const url = `${DOCS_MANAGEMENT_ENDPOINTS.libraryImportFiles}?scope=${encodeURIComponent(SCOPE)}`;
+async function loadImportFiles(scope) {
+  const url = `${DOCS_MANAGEMENT_ENDPOINTS.libraryImportFiles}?scope=${encodeURIComponent(scope)}`;
   const payload = await getJson(url);
   return Array.isArray(payload.files) ? payload.files : [];
 }
@@ -461,7 +514,7 @@ async function runPreview(state) {
 
   try {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportPreview, {
-      scope: SCOPE,
+      scope: state.scope,
       staged_filename: file.filename
     });
     renderResult(state, payload, false);
@@ -640,7 +693,7 @@ async function runSummaryApply(state) {
 
   try {
     const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportSummaryApply, {
-      scope: SCOPE,
+      scope: state.scope,
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
@@ -682,7 +735,7 @@ async function runSummaryApply(state) {
       getStudioText(state.config, "library_import.summary_apply_running_status", "Updating selected summaries...")
     );
     const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportSummaryApply, {
-      scope: SCOPE,
+      scope: state.scope,
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true
@@ -731,7 +784,7 @@ async function runHierarchyApply(state) {
 
   try {
     const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportHierarchyApply, {
-      scope: SCOPE,
+      scope: state.scope,
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
@@ -773,7 +826,7 @@ async function runHierarchyApply(state) {
       getStudioText(state.config, "library_import.hierarchy_apply_running_status", "Updating selected hierarchy...")
     );
     const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportHierarchyApply, {
-      scope: SCOPE,
+      scope: state.scope,
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true
@@ -806,6 +859,9 @@ async function init() {
   const state = {
     bootStatus,
     root,
+    scope: workflowScopeFromUrl(),
+    scopeLabelNode: document.getElementById("libraryImportScopeLabel"),
+    scopeSelect: document.getElementById("libraryImportScopeSelect"),
     fileLabelNode: document.getElementById("libraryImportFileLabel"),
     fileSelect: document.getElementById("libraryImportFileSelect"),
     previewButton: document.getElementById("libraryImportPreview"),
@@ -827,6 +883,8 @@ async function init() {
   };
 
   const requiredNodes = [
+    state.scopeLabelNode,
+    state.scopeSelect,
     state.fileLabelNode,
     state.fileSelect,
     state.previewButton,
@@ -843,8 +901,10 @@ async function init() {
 
   try {
     state.config = await loadStudioConfig();
+    renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());
 
+    setText(state.scopeLabelNode, getStudioText(state.config, "library_import.scope_label", "scope"));
     setText(state.fileLabelNode, getStudioText(state.config, "library_import.file_label", "staged file"));
     setText(state.previewButton, getStudioText(state.config, "library_import.preview_button", "Generate preview"));
     setText(state.resultButton, getStudioText(state.config, "library_import.result_button", "results"));
@@ -868,6 +928,16 @@ async function init() {
       "library_import.apply_hierarchy_title",
       "Update selected document parent ids from the staged file."
     );
+    if (!scopeSupportsSourceApply(state.scope)) {
+      const unsupportedApplyTitle = getStudioText(
+        state.config,
+        "library_import.apply_unsupported_title",
+        "{scope_label} source apply actions are not implemented yet.",
+        { scope_label: scopeTitle(state) }
+      );
+      state.updateSummaryButton.title = unsupportedApplyTitle;
+      state.applyHierarchyButton.title = unsupportedApplyTitle;
+    }
     renderPreviewList(state);
     updateSelectionSummary(state);
     setControlsDisabled(state, true);
@@ -883,14 +953,15 @@ async function init() {
         getStudioText(
           state.config,
           "library_import.service_unavailable",
-          "Docs management service unavailable. Start bin/dev-studio to run Library imports."
+          "Docs management service unavailable. Start bin/dev-studio to run {scope_label} imports.",
+          { scope_label: scopeLabel(state) }
         )
       );
       markRouteReady(state, true);
       return;
     }
 
-    state.files = await loadImportFiles();
+    state.files = await loadImportFiles(state.scope);
     if (!state.files.length) {
       setControlsDisabled(state, true);
       setStatus(
@@ -899,7 +970,8 @@ async function init() {
         getStudioText(
           state.config,
           "library_import.no_files",
-          "No staged Library data files found under var/docs/import-staging/library/."
+          "No staged {scope_label} data files found under var/docs/import-staging/{scope}/.",
+          { scope_label: scopeLabel(state), scope: state.scope }
         )
       );
       markRouteReady(state, true);
@@ -917,11 +989,13 @@ async function init() {
       getStudioText(
         state.config,
         "library_import.idle_status",
-        "Select a staged data file and generate Markdown previews."
+        "Select a staged {scope_label} data file and generate previews.",
+        { scope_label: scopeLabel(state) }
       )
     );
     markRouteReady(state, true);
 
+    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value));
     state.fileSelect.addEventListener("change", () => {
       resetResult(state);
       state.lastImportResult = null;
@@ -933,7 +1007,8 @@ async function init() {
         getStudioText(
           state.config,
           "library_import.idle_status",
-          "Select a staged data file and generate Markdown previews."
+          "Select a staged {scope_label} data file and generate previews.",
+          { scope_label: scopeLabel(state) }
         )
       );
       syncRouteBusyState(state);
@@ -969,7 +1044,12 @@ async function init() {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config || {}, "library_import.load_failed", "Failed to load Library import data.")
+      getStudioText(
+        state.config || {},
+        "library_import.load_failed",
+        "Failed to load {scope_label} import data.",
+        { scope_label: state.config ? scopeTitle(state) : "Library" }
+      )
     );
     markRouteReady(state, true);
   } finally {

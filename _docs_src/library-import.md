@@ -343,9 +343,12 @@ Likely endpoints:
 Endpoint logs should include filenames, counts, status, and preview paths, not full document content.
 
 Status: implemented in `./scripts/docs/docs_management_server.py`.
-`GET /docs/library-import/files?scope=library` lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`.
-`POST /docs/library-import/preview` parses the selected staged file, runs current-Library lookup, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
+`GET /docs/library-import/files?scope=<scope>` lists staged `.json` and `.jsonl` files under `var/docs/import-staging/<scope>/` for the workflow scopes `library`, `catalogue`, and `analytics`.
+`POST /docs/library-import/preview` parses the selected staged file, runs current generated-doc lookup when that scope has a docs index, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
 The endpoint returns the same structured report as the CLI and logs only scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths.
+
+Library remains the only scope with source-write apply endpoints in v1.
+Catalogue and Analytics staging/preview support is infrastructure for future workflows; their config shapes, preview file expectations, and write actions still need separate design.
 
 ### Task 6. Add Studio Library Import Page
 
@@ -362,8 +365,9 @@ Status note:
 
 - implemented at `/studio/library-import/`
 - listed from the `/studio/library/` dashboard under Data
-- loads staged `.json` and `.jsonl` files through `GET /docs/library-import/files?scope=library`
-- runs preview generation through `POST /docs/library-import/preview`
+- defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
+- loads staged `.json` and `.jsonl` files through `GET /docs/library-import/files?scope=<scope>`
+- runs preview generation through `POST /docs/library-import/preview` for supported staged JSON/JSONL files
 - uses the same compact command/list shell as the Library export page
 - shows preview/apply counts and issues in a single-close result modal
 - renders generated preview records in the main selectable list area, ordered and indented by staged `parent_id` when relationship data is present
@@ -371,6 +375,7 @@ Status note:
 - labels missing titles, missing `doc_id`, duplicate `doc_id`, and records that do not map to current Library docs
 - exposes `select all` and `clear` selection pills for preview rows
 - enables `Update summary` and `Apply hierarchy` for selected document preview rows
+- keeps `Update summary` and `Apply hierarchy` disabled outside the Library scope until those source-write contracts exist
 - runs a preflight through `POST /docs/library-import/summary-apply`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library_src/*.md`
 - runs a preflight through `POST /docs/library-import/hierarchy-apply`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected `parent_id` changes only to `_docs_library_src/*.md`
 - preserves current `sort_order` values when applying hierarchy changes

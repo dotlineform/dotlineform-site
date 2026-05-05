@@ -62,6 +62,9 @@ It also feeds shared path resolution used by:
 
 - `assets/studio/js/studio-data.js`
 
+The Library export/import route text now includes shared data-workflow scope labels for `library`, `catalogue`, and `analytics`.
+Those labels only control the Studio UI shell; per-scope export configs and import apply contracts still live in the owning workflow docs and service code.
+
 ## When it is read
 
 - once per page load on Studio pages that call `loadStudioConfig()`

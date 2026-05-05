@@ -18,6 +18,12 @@ studio_page_doc: /docs/?scope=studio&doc=library-export
 >
   <div class="tagStudio__panel libraryExportPage__panel">
     <div class="libraryExportPage__controls">
+      <label class="tagStudioField libraryExportPage__scopeField" for="libraryExportScopeSelect">
+        <span class="tagStudioField__label" id="libraryExportScopeLabel"></span>
+        <span class="tagStudioField__control">
+          <select class="tagStudio__input" id="libraryExportScopeSelect"></select>
+        </span>
+      </label>
       <label class="tagStudioField libraryExportPage__field" for="libraryExportConfigSelect">
         <span class="tagStudioField__label" id="libraryExportConfigLabel"></span>
         <span class="tagStudioField__control">
@@ -38,7 +44,7 @@ studio_page_doc: /docs/?scope=studio&doc=library-export
     <p class="tagStudio__status" id="libraryExportStatus"></p>
     <p class="tagStudioForm__meta libraryExportPage__selectionSummary" id="libraryExportSelectionSummary"></p>
 
-    <div class="libraryExportPage__listActions" aria-label="Library export document selection actions">
+    <div class="libraryExportPage__listActions" aria-label="Export document selection actions">
       <span class="libraryExportPage__filterPills" id="libraryExportListFilters" aria-label="Library export list filters"></span>
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryExportSelectAll"></button>
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryExportClear"></button>
@@ -49,6 +55,6 @@ studio_page_doc: /docs/?scope=studio&doc=library-export
   </div>
 </div>
 
-<p class="tagStudio__status" id="libraryExportBootStatus">loading Library export…</p>
+<p class="tagStudio__status" id="libraryExportBootStatus">loading export...</p>
 
 <script type="module" src="{{ '/assets/studio/js/library-export.js' | relative_url }}"></script>

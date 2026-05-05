@@ -1081,20 +1081,23 @@ span.tagStudio__input--readonlyDisplay {
 
 .libraryImportPage__controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(8rem, 0.32fr) minmax(0, 0.68fr) minmax(0, 1fr);
   gap: 0.5rem 0.65rem;
   align-items: end;
 }
 
+.libraryImportPage__scopeField,
 .libraryImportPage__field {
   min-inline-size: 0;
   width: 100%;
 }
 
+.libraryImportPage__scopeField .tagStudioField__control,
 .libraryImportPage__field .tagStudioField__control {
   width: 100%;
 }
 
+.libraryImportPage__scopeField .tagStudioField__control > .tagStudio__input,
 .libraryImportPage__field .tagStudioField__control > .tagStudio__input {
   flex: 1 1 auto;
   width: 100%;
@@ -1226,12 +1229,13 @@ span.tagStudio__input--readonlyDisplay {
 
 .libraryExportPage__controls {
   display: grid;
-  grid-template-columns: max-content auto;
+  grid-template-columns: minmax(8rem, max-content) minmax(12rem, 24rem) auto;
   gap: 0.5rem 0.65rem;
   align-items: end;
   justify-content: start;
 }
 
+.libraryExportPage__scopeField,
 .libraryExportPage__field {
   min-inline-size: 0;
 }
@@ -1273,7 +1277,7 @@ span.tagStudio__input--readonlyDisplay {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  grid-column: 1;
+  grid-column: 2;
   min-height: var(--studio-control-height, 2rem);
   font-size: var(--font-small);
 }
@@ -3037,6 +3041,10 @@ button.tagStudioList__cellLink {
   .libraryImportPage__controls {
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
+  }
+
+  .libraryExportPage__toggle {
+    grid-column: auto;
   }
 
   .libraryImportList__label {

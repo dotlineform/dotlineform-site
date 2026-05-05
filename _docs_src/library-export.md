@@ -467,7 +467,10 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: implemented at `/studio/library-export/`. The page loads enabled Library export configs, reads the Library docs index through the docs-management generated-data endpoint when the local service is available, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
+Status: implemented at `/studio/library-export/`. The page defaults to `scope=library`, exposes a scope selector for `library`, `catalogue`, and `analytics`, loads enabled export configs for the selected scope, reads the generated docs index for configured docs-backed scopes, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
+
+Catalogue and Analytics are now valid UI workflow scopes, but they do not yet have enabled export configs or source data adapters.
+Their config shape, source indexes, record shapes, and import actions remain future design work.
 
 ### Task 6. Add Local Service Endpoint
 

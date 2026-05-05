@@ -18,6 +18,12 @@ studio_page_doc: /docs/?scope=studio&doc=library-import
 >
   <div class="tagStudio__panel libraryImportPage__panel">
     <div class="libraryImportPage__controls">
+      <label class="tagStudioField libraryImportPage__scopeField" for="libraryImportScopeSelect">
+        <span class="tagStudioField__label" id="libraryImportScopeLabel"></span>
+        <span class="tagStudioField__control">
+          <select class="tagStudio__input" id="libraryImportScopeSelect"></select>
+        </span>
+      </label>
       <label class="tagStudioField libraryImportPage__field" for="libraryImportFileSelect">
         <span class="tagStudioField__label" id="libraryImportFileLabel"></span>
         <span class="tagStudioField__control">
@@ -37,7 +43,7 @@ studio_page_doc: /docs/?scope=studio&doc=library-import
     </div>
     <p class="tagStudioForm__meta libraryImportPage__selectionSummary" id="libraryImportSelectionSummary"></p>
 
-    <div class="libraryImportPage__listActions" aria-label="Library import preview selection actions">
+    <div class="libraryImportPage__listActions" aria-label="Import preview selection actions">
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryImportSelectAll"></button>
       <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="libraryImportClear"></button>
     </div>
@@ -48,6 +54,6 @@ studio_page_doc: /docs/?scope=studio&doc=library-import
   </div>
 </div>
 
-<p class="tagStudio__status" id="libraryImportBootStatus">loading Library import...</p>
+<p class="tagStudio__status" id="libraryImportBootStatus">loading import...</p>
 
 <script type="module" src="{{ '/assets/studio/js/library-import.js' | relative_url }}"></script>

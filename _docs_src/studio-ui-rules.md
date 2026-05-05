@@ -38,6 +38,32 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-05 / UI-081
+
+- status: adopted
+- route: `/studio/library-export/`, `/studio/library-import/`
+- issue: the import/export workflow UI was named and wired as Library-only even though Catalogue and Analytics need the same export, staging, and preview workflow shell for future LLM review work.
+- triage: shared workflow shell
+- reasoning: scope-specific config shapes and write actions can be designed later, but the Studio route should already separate workflow scope from route implementation. The page should not fail just because a future scope has no enabled configs yet.
+- outcome: added scope selectors for `library`, `catalogue`, and `analytics`, made export config filtering and import staging/preview calls use the selected scope, allowed staged JSON/JSONL preview folders for the three workflow scopes, and kept Library source-write apply buttons disabled for non-Library scopes.
+- files changed:
+  - `studio/library-export/index.md`
+  - `studio/library-import/index.md`
+  - `assets/studio/js/library-export.js`
+  - `assets/studio/js/library-import.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_import.py`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/library-export.md`
+  - `_docs_src/library-import.md`
+  - `_docs_src/scripts-docs-import.md`
+  - `_docs_src/scripts-docs-management-server.md`
+- local verification:
+  - open Library import/export with default scope and confirm existing Library behavior still loads
+  - open `?scope=catalogue` and `?scope=analytics` and confirm the shell stays ready with scope-specific status text
+  - run the Docs import service test covering Catalogue staging preview
+
 ## UI Rule Log 2026-05-05 / UI-080
 
 - status: adopted

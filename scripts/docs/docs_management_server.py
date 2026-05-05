@@ -36,7 +36,7 @@ Security constraints:
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
   - Writes only allowlisted Markdown docs under _docs_src/, _docs_library_src/, and _docs_src_analysis/.
   - Writes export artifacts only under var/docs/exports/.
-  - Writes Library import preview artifacts only under var/docs/import-preview/library/.
+  - Writes import preview artifacts only under var/docs/import-preview/<scope>/ for supported data workflow scopes.
   - Creates timestamped backup bundles under var/docs/backups/.
   - Writes minimal local logs under var/docs/logs/.
 """
@@ -1083,18 +1083,38 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
     return report
 
 
+DATA_WORKFLOW_SCOPES = {"analytics", "catalogue", "library"}
+
+
+def normalize_data_workflow_scope(raw_scope: Any) -> str:
+    scope = str(raw_scope or "library").strip().lower()
+    if scope not in DATA_WORKFLOW_SCOPES:
+        raise ValueError(f"data workflow scope must be one of: {', '.join(sorted(DATA_WORKFLOW_SCOPES))}")
+    return scope
+
+
+def data_workflow_scope_title(scope: str) -> str:
+    labels = {
+        "analytics": "Analytics",
+        "catalogue": "Catalogue",
+        "library": "Library",
+    }
+    return labels.get(scope, scope.title())
+
+
 def normalize_library_import_scope(raw_scope: Any) -> str:
-    scope = normalize_scope(raw_scope or "library")
+    scope = str(raw_scope or "library").strip().lower()
     if scope != "library":
         raise ValueError("Library import v1 only supports scope library")
     return scope
 
 
 def handle_library_import_files(repo_root: Path, scope: str) -> Dict[str, Any]:
+    scope = normalize_data_workflow_scope(scope)
     files = list_staged_import_files(repo_root, scope)
     log_event(
         repo_root,
-        "docs-library-import-files",
+        "docs-import-files",
         {
             "scope": scope,
             "count": len(files),
@@ -1103,13 +1123,13 @@ def handle_library_import_files(repo_root: Path, scope: str) -> Dict[str, Any]:
     return {
         "ok": True,
         "scope": scope,
-        "staging_root": "var/docs/import-staging/library",
+        "staging_root": f"var/docs/import-staging/{scope}",
         "files": files,
     }
 
 
 def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_library_import_scope(body.get("scope"))
+    scope = normalize_data_workflow_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -1127,7 +1147,7 @@ def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run
     )
     log_event(
         repo_root,
-        "docs-library-import-preview",
+        "docs-import-preview",
         {
             "scope": scope,
             "staged_filename": staged_filename,
@@ -1152,7 +1172,7 @@ def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run
         preview_count = len(report.get("preview_files", []))
         preview_file_label = "preview file" if preview_count == 1 else "preview files"
         report["summary_text"] = (
-            f"{action} {preview_count} Library import {preview_file_label}{suffix}."
+            f"{action} {preview_count} {data_workflow_scope_title(scope)} import {preview_file_label}{suffix}."
         )
     return report
 
@@ -2616,7 +2636,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 )
                 return
             if parsed.path == "/docs/library-import/files":
-                scope = normalize_library_import_scope(query_param(self, "scope") or "library")
+                scope = normalize_data_workflow_scope(query_param(self, "scope") or "library")
                 write_response(self, HTTPStatus.OK, handle_library_import_files(self.app["repo_root"], scope))
                 return
             error_response(self, HTTPStatus.NOT_FOUND, "Not found")

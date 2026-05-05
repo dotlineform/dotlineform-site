@@ -372,6 +372,7 @@ Implementation notes:
 - generated Studio docs-viewer payloads and Studio docs-search payloads were rebuilt after docs-source changes
 - focused parser/service and Studio smoke checks were added or extended for each implemented runtime surface
 - Library import/export v2 now has a separate follow-up request for generated parent nodes: [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
+- The Studio export/import route shell is now scope-aware for `library`, `catalogue`, and `analytics`. Library remains the only scope with implemented export configs and source-write import apply actions in this v2 task. Catalogue and Analytics are infrastructure-ready for staged JSON/JSONL previews, but their export config shapes, source adapters, preview file expectations, and apply actions remain future work.
 
 ## Benefits And Risks
 

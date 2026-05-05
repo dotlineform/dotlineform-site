@@ -63,6 +63,7 @@ Implemented now:
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through docs-management endpoints for staged-file listing and preview generation
 - is exposed through the `/studio/library-import/` page for local preview generation
+- supports staged data workflow scopes `library`, `catalogue`, and `analytics`; Library remains the only scope with implemented source-write apply actions
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
 
@@ -82,6 +83,12 @@ Write Markdown previews for a staged Library summary export:
 
 ```bash
 ./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+```
+
+Write previews for a future Catalogue staged export shape:
+
+```bash
+./scripts/docs/docs_import.py --scope catalogue --file works.jsonl --write-previews
 ```
 
 Parse a staged Library relationships export and omit normalized records from the printed report:

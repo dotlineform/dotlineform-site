@@ -4,6 +4,7 @@
 Run:
   ./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl
   ./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+  ./scripts/docs/docs_import.py --scope catalogue --file works.jsonl --write-previews
 """
 
 from __future__ import annotations
@@ -21,7 +22,7 @@ from typing import Any
 STAGING_ROOT = Path("var/docs/import-staging")
 PREVIEW_ROOT = Path("var/docs/import-preview")
 DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
-SUPPORTED_SCOPES = {"library"}
+SUPPORTED_SCOPES = {"analytics", "catalogue", "library"}
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 FILENAME_RE = re.compile(r"[^a-z0-9-]+")
@@ -125,6 +126,16 @@ def detect_repo_root(explicit_root: str | None = None) -> Path:
 
 def normalize_text(value: Any) -> str:
     return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()
+
+
+def scope_title(scope: str) -> str:
+    normalized = normalize_text(scope).lower()
+    labels = {
+        "analytics": "Analytics",
+        "catalogue": "Catalogue",
+        "library": "Library",
+    }
+    return labels.get(normalized, normalized.title() if normalized else "Docs")
 
 
 def doc_payload_path(repo_root: Path, scope: str, doc: dict[str, Any]) -> Path:
@@ -519,6 +530,7 @@ def add_current_library_report(
     records: list[dict[str, Any]],
     *,
     current: dict[str, Any],
+    scope: str = "library",
 ) -> list[dict[str, Any]]:
     if not current.get("index_loaded"):
         return []
@@ -560,7 +572,7 @@ def add_current_library_report(
                 issue(
                     "warning",
                     "unknown_doc_id",
-                    f"record doc_id is not in the current Library index: {doc_id}",
+                    f"record doc_id is not in the current {scope_title(scope)} index: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -571,7 +583,7 @@ def add_current_library_report(
                 issue(
                     "warning",
                     "current_doc_unpublished",
-                    f"record exists in the current Library index but is unpublished: {doc_id}",
+                    f"record exists in the current {scope_title(scope)} index but is unpublished: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -598,7 +610,7 @@ def add_current_library_report(
                     issue(
                         "warning",
                         "missing_parent_id",
-                        f"parent_id is not in the current Library index or staged records: {parent_id}",
+                        f"parent_id is not in the current {scope_title(scope)} index or staged records: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,
@@ -777,7 +789,8 @@ def render_preview_metadata_sections(
     return "\n".join(lines)
 
 
-def render_metadata_lines(record: dict[str, Any]) -> list[str]:
+def render_metadata_lines(record: dict[str, Any], report: dict[str, Any]) -> list[str]:
+    scope = normalize_text(report.get("scope")) or ""
     lines = [
         "- doc_id: `" + (normalize_text(record.get("doc_id")) or "[missing]") + "`",
         "- parent_id: `" + (normalize_text(record.get("parent_id")) or "[root]") + "`",
@@ -788,7 +801,7 @@ def render_metadata_lines(record: dict[str, Any]) -> list[str]:
         payload = "yes" if current.get("payload_exists") else "no"
         lines.extend(
             [
-                f"- current library match: {exists}",
+                f"- current {scope_title(scope)} match: {exists}",
                 f"- generated payload: {payload}",
             ]
         )
@@ -806,7 +819,7 @@ def render_summary_preview(report: dict[str, Any], record: dict[str, Any], gener
         "",
         "## Import Metadata",
         "",
-        *render_metadata_lines(record),
+        *render_metadata_lines(record, report),
         "",
         *render_issue_list(issues_for_record(report, record)),
         "## Proposed Summary",
@@ -829,7 +842,7 @@ def render_full_content_preview(report: dict[str, Any], record: dict[str, Any], 
         "",
         "## Import Metadata",
         "",
-        *render_metadata_lines(record),
+        *render_metadata_lines(record, report),
         "",
         *render_issue_list(issues_for_record(report, record)),
     ]
@@ -893,13 +906,13 @@ def render_relationship_preview(report: dict[str, Any], generated_at: str) -> st
     lines = [
         front_matter(
             {
-                "title": "Library Import Relationship Tree",
+                "title": f"{scope_title(normalize_text(report.get('scope')))} Import Relationship Tree",
                 "import_type": normalize_text(report.get("detected_import_type")),
                 "preview_generated_at": generated_at,
             }
         ),
         "",
-        "# Library Import Relationship Tree",
+        f"# {scope_title(normalize_text(report.get('scope')))} Import Relationship Tree",
         "",
         "## Import Metadata",
         "",
@@ -1086,7 +1099,7 @@ def parse_staged_import(*, repo_root: Path, scope: str, staged_file: str) -> dic
     report["records"] = records
     report["detected_import_type"] = detect_import_type(source_export_id, records)
     report["current_library"] = current_report_context(current_context)
-    report["issues"].extend(add_current_library_report(records, current=current_context))
+    report["issues"].extend(add_current_library_report(records, current=current_context, scope=normalized_scope))
 
     if report["detected_import_type"] == "unknown" and raw_rows:
         report["issues"].append(issue("warning", "unsupported_import_shape", "could not detect import type"))
