@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-73634fbd29041cd01a0bcbea4a6a2e94",
-    "generated_at_utc": "2026-05-05T19:17:37Z",
-    "count": 181
+    "version": "blake2b-8c139a5af637247d8e89be9f56abec19",
+    "generated_at_utc": "2026-05-05T20:17:40Z",
+    "count": 182
   },
   "entries": [
     {
@@ -1217,6 +1217,32 @@
         "04"
       ],
       "search_text": "scripts-docs-import scripts docs import docs import 2026-05-04 2026 05 04"
+    },
+    {
+      "id": "site-request-docs-workbench-extraction",
+      "kind": "doc",
+      "title": "Docs Workbench Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-workbench-extraction",
+      "last_updated": "2026-05-05",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-05 • Change Requests",
+      "search_terms": [
+        "site-request-docs-workbench-extraction",
+        "site",
+        "request",
+        "docs",
+        "workbench",
+        "extraction",
+        "docs workbench extraction request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "site-request-docs-workbench-extraction site request docs workbench extraction docs workbench extraction request change requests change requests 2026-05-05 2026 05"
     },
     {
       "id": "studio-audits",
@@ -4028,21 +4054,18 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-03 21:56",
-      "display_meta": "2026-05-03 21:56",
+      "last_updated": "2026-05-05",
+      "display_meta": "2026-05-05",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-03 21:56",
+        "2026-05-05",
         "2026",
-        "05",
-        "03",
-        "21",
-        "56"
+        "05"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-03 21:56 2026 05 03 21 56"
+      "search_text": "change-requests change requests change requests 2026-05-05 2026 05"
     },
     {
       "id": "tag-editor",

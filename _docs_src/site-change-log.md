@@ -8,6 +8,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Added Docs Workbench extraction request
+
+**Status:** proposed
+
+**Area:** Docs / Tooling
+
+**Summary:**
+Added a change request to explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable Docs Workbench toolkit that other repositories can track from a master version.
+
+**Reason:**
+The combined docs viewer and export/import workflow is becoming a useful local tool beyond this site, but reuse needs a managed upstream model instead of copied files.
+
+**Files changed:**
+
+- [Docs Workbench Extraction Request](/docs/?scope=studio&doc=site-request-docs-workbench-extraction)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+
+**Impact:**
+The extraction idea now has a stable planning target with goals, non-goals, install-shape options, open questions, and acceptance criteria.
+
 ## [2026-05-05] Stabilized image-panel text across themes
 
 **Status:** implemented
