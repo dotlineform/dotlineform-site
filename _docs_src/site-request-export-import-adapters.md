@@ -1,8 +1,9 @@
 ---
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
-added_date: "2026-05-05"
-last_updated: "2026-05-05"
+added_date: 2026-05-05
+last_updated: "2026-05-05 22:25"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
 ---
