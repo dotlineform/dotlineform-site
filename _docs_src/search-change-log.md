@@ -28,6 +28,7 @@ A direct public search route should be useful without requiring a caller to choo
 `assets/js/search/search-page.js` treats a missing `scope` parameter as `all`, adds the source scope label to aggregate-result metadata, and keeps unsupported explicit scopes as error states.
 `assets/data/search/policy.json` defines `all`, docs-domain scopes, and scope-specific labels/placeholders for the dedicated route.
 The aggregate route hides the visible `all` scope label and tolerates individual scope-index load failures as long as at least one enabled scope index loads.
+On localhost, docs-domain dedicated search reads prefer the docs-management generated-search endpoint so `bin/dev-studio` does not ask Jekyll for generated docs-search JSON excluded by `_config.dev-studio.yml`.
 
 **Affected files/docs:**
 

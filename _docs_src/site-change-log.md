@@ -39,6 +39,7 @@ The public search route should be useful when opened directly now that multiple 
 **Impact:**
 Users can open `/search/` directly and search across Catalogue, Library, Studio docs, and Analysis results in one list.
 The aggregate route does not show a visible `all` heading and does not fail the whole page when one enabled scope index is unavailable.
+During `bin/dev-studio`, docs-domain search reads use the docs-management generated-search endpoint rather than Jekyll's dev-overlay output.
 
 ## [2026-05-05] Refined Search dashboard to column links
 

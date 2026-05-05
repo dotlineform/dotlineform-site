@@ -122,6 +122,7 @@ Current behaviour:
 - the root remains hidden until the initial search config and search index load attempt completes
 - while the page is loading, the status message is set to `loading search index…`
 - after the index is loaded, it stays in memory for the page session
+- when running on localhost, docs-domain dedicated search scopes prefer the docs-management generated-search endpoint before falling back to static JSON assets
 
 Current scope policy:
 

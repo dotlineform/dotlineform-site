@@ -6,7 +6,11 @@ let loadSearchPolicyFn = null;
 let getSearchRuntimePolicyFn = null;
 let getSearchScopePolicyFn = null;
 let getSearchMessageFn = null;
+let DOCS_MANAGEMENT_ENDPOINTS = null;
 let searchDepsPromise = null;
+
+const DOCS_SEARCH_SERVICE_SCOPES = new Set(["library", "studio", "analysis"]);
+const DOCS_SEARCH_SERVICE_TIMEOUT_MS = 500;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSearchPage);
@@ -84,8 +88,52 @@ async function initSearchPage() {
 }
 
 async function loadScopedSearchEntries(config, scopePolicy) {
-  const payload = await loadSearchIndexJsonFn(config, scopePolicy.scope);
+  const payload = await loadSearchIndexPayload(config, scopePolicy);
   return normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : [], scopePolicy);
+}
+
+async function loadSearchIndexPayload(config, scopePolicy) {
+  if (shouldUseDocsManagementSearch(scopePolicy.scope)) {
+    try {
+      return await loadDocsManagementSearchIndex(scopePolicy.scope);
+    } catch (error) {
+      console.warn("search: docs-management search read failed", scopePolicy.scope, error);
+    }
+  }
+  return loadSearchIndexJsonFn(config, scopePolicy.scope);
+}
+
+async function loadDocsManagementSearchIndex(scope) {
+  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedSearch);
+  url.searchParams.set("scope", scope);
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), DOCS_SEARCH_SERVICE_TIMEOUT_MS);
+  try {
+    const response = await fetch(url.toString(), {
+      cache: "no-store",
+      signal: controller.signal
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return response.json();
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+function shouldUseDocsManagementSearch(scope) {
+  return Boolean(
+    DOCS_MANAGEMENT_ENDPOINTS &&
+    DOCS_MANAGEMENT_ENDPOINTS.generatedSearch &&
+    DOCS_SEARCH_SERVICE_SCOPES.has(scope) &&
+    isLocalSearchHost()
+  );
+}
+
+function isLocalSearchHost() {
+  const hostname = String(window.location.hostname || "").toLowerCase();
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname.endsWith(".localhost");
 }
 
 async function loadAggregateSearchEntries(config, policy) {
@@ -118,8 +166,9 @@ async function loadSearchDeps() {
     searchDepsPromise = Promise.all([
       import(withAssetVersion("../../studio/js/studio-config.js", assetVersion)),
       import(withAssetVersion("../../studio/js/studio-data.js", assetVersion)),
-      import(withAssetVersion("./search-policy.js", assetVersion))
-    ]).then(([configModule, dataModule, policyModule]) => {
+      import(withAssetVersion("./search-policy.js", assetVersion)),
+      import(withAssetVersion("../../studio/js/studio-transport.js", assetVersion))
+    ]).then(([configModule, dataModule, policyModule, transportModule]) => {
       getStudioTextFn = configModule.getStudioText;
       getSearchPolicyPathFn = configModule.getSearchPolicyPath;
       loadStudioConfigFn = configModule.loadStudioConfig;
@@ -128,6 +177,7 @@ async function loadSearchDeps() {
       getSearchRuntimePolicyFn = policyModule.getSearchRuntimePolicy;
       getSearchScopePolicyFn = policyModule.getSearchScopePolicy;
       getSearchMessageFn = policyModule.getSearchMessage;
+      DOCS_MANAGEMENT_ENDPOINTS = transportModule.DOCS_MANAGEMENT_ENDPOINTS;
     });
   }
   return searchDepsPromise;
