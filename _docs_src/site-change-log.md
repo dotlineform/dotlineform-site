@@ -29,6 +29,7 @@ The adapter boundary keeps shared lifecycle behavior reusable without making doc
 
 **Impact:**
 Future export/import requirements now have a stable planning target that separates shared workbench responsibilities from scope-specific adapter behavior.
+Follow-up review resolved the initial direction: adapters map to data domains rather than route scopes, Library should use a general documents adapter with Library config, neutral export/import routes are preferred, and user-facing workflow folders should be data-domain-first.
 
 ## [2026-05-05] Added Docs Workbench extraction request
 
