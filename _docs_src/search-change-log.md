@@ -2,12 +2,46 @@
 doc_id: search-change-log
 title: "Search Change Log"
 added_date: 2026-04-24
-last_updated: 2026-05-04
+last_updated: "2026-05-05"
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-05-05] Added aggregate dedicated search
+
+**Status:** implemented
+
+**Area:** public search UI
+
+**Summary:**
+Direct `/search/` now uses a virtual `all` scope instead of showing the missing-scope error.
+The dedicated search runtime loads all enabled dedicated-route scope indexes and renders one mixed result list.
+Explicit scoped URLs such as `/search/?scope=catalogue`, `/search/?scope=library`, `/search/?scope=studio`, and `/search/?scope=analysis` still load a single scope.
+
+**Reason:**
+The site now has generated search indexes for Catalogue, Library, Studio docs, and Analysis.
+A direct public search route should be useful without requiring a caller to choose a scope first.
+
+**Effect:**
+`assets/js/search/search-page.js` treats a missing `scope` parameter as `all`, adds the source scope label to aggregate-result metadata, and keeps unsupported explicit scopes as error states.
+`assets/data/search/policy.json` defines `all`, docs-domain scopes, and scope-specific labels/placeholders for the dedicated route.
+The aggregate route hides the visible `all` scope label and tolerates individual scope-index load failures as long as at least one enabled scope index loads.
+
+**Affected files/docs:**
+
+- `assets/js/search/search-page.js`
+- `assets/js/search/search-policy.js`
+- `assets/data/search/policy.json`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
 
 ## [2026-05-04] Moved Archive search exclusion to viewability
 

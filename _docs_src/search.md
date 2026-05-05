@@ -2,7 +2,7 @@
 doc_id: search
 title: "Search"
 added_date: 2026-03-31
-last_updated: 2026-04-25
+last_updated: "2026-05-05"
 parent_id: ""
 sort_order: 180
 ---
@@ -12,7 +12,11 @@ This section describes the current search implementation.
 
 Current live search scopes:
 
-- `catalogue` on `/search/`
+- `all` on `/search/`
+- `catalogue` on `/search/?scope=catalogue`
+- `library` on `/search/?scope=library`
+- `studio` on `/search/?scope=studio`
+- `analysis` on `/search/?scope=analysis`
 - `studio` inline on `/docs/`
 - `library` inline on `/library/`
 

@@ -27,6 +27,7 @@ const DEFAULT_STUDIO_CONFIG = {
       series_page_base: "/series/",
       docs_page: "/docs/",
       library_page: "/library/",
+      analysis_page: "/analysis/",
       moments_page_base: "/moments/",
       works_page_base: "/works/",
       work_details_page_base: "/work_details/"
@@ -78,6 +79,9 @@ const DEFAULT_STUDIO_CONFIG = {
           },
           studio: {
             index: "/assets/data/search/studio/index.json"
+          },
+          analysis: {
+            index: "/assets/data/search/analysis/index.json"
           }
         }
       }
@@ -841,7 +845,8 @@ const DEFAULT_STUDIO_CONFIG = {
       result_meta_separator: " • ",
       result_kind_work: "work",
       result_kind_series: "series",
-      result_kind_moment: "moment"
+      result_kind_moment: "moment",
+      result_kind_doc: "doc"
     }
   }
 };

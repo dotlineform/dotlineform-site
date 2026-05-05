@@ -2,7 +2,7 @@
 doc_id: config-search-policy-json
 title: "Search Policy JSON"
 added_date: 2026-03-31
-last_updated: "2026-05-03 14:35"
+last_updated: "2026-05-05"
 parent_id: config
 sort_order: 50
 ---
@@ -27,7 +27,8 @@ Current responsibilities include:
 - debounce timing
 - initial and incremental result batch sizes
 - supported dedicated-route scopes and their labels
-- dedicated search-shell messages for missing or unsupported scopes
+- the virtual `all` scope used by direct `/search/`
+- dedicated search-shell messages for unsupported scopes
 
 ## What calls it
 
@@ -52,7 +53,11 @@ The policy helpers in `assets/js/search/search-policy.js` then expose:
 
 Current live dedicated-route scope:
 
+- `all`
 - `catalogue`
+- `library`
+- `studio`
+- `analysis`
 
 Current non-users of this file:
 

@@ -2,7 +2,7 @@
 doc_id: search-ui-behaviour
 title: "Search UI Behaviour"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-05"
 parent_id: search
 sort_order: 60
 ---
@@ -68,6 +68,7 @@ The v1 public surface favors explicit behaviour over more advanced overlay or au
 
 Current entry point:
 
+- dedicated public page: `/search/`
 - dedicated public page: `/search/?scope=catalogue`
 
 Current status:
@@ -81,7 +82,7 @@ Not yet implemented:
 
 - main site header search
 - overlay or dropdown search
-- public library search entry points
+- public library search entry points outside the dedicated `/search/` route and inline Library viewer
 
 ## Search activation behaviour
 
@@ -117,22 +118,31 @@ Current behaviour:
 
 - the page loads the search index during page initialization
 - the page appends a lightweight build-version query to the search module, shared config/data modules, and search JSON fetches to reduce stale-cache breakage after local JS or data changes
-- the page expects a valid `scope` URL parameter before it becomes usable
+- the page treats a missing `scope` URL parameter as the aggregate `all` scope
 - the root remains hidden until the initial search config and search index load attempt completes
 - while the page is loading, the status message is set to `loading search index…`
 - after the index is loaded, it stays in memory for the page session
 
 Current scope policy:
 
+- `all` is enabled and searches all enabled dedicated-route scopes
 - `catalogue` is enabled
-- no docs-domain scopes are configured on the dedicated search page
+- `library`, `studio`, and `analysis` docs-domain scopes are enabled on the dedicated search page
 
-If the page loads without a valid scope:
+If the page loads without a `scope` parameter:
 
 - the page still becomes visible
+- the aggregate scope label is hidden rather than rendering a visible `all` heading
 - the scope-owned back link is hidden
+- the input is enabled
+- the runtime loads the enabled dedicated-route scope indexes into one mixed search set
+- if one enabled scope index fails to load, the aggregate route logs that scope failure and continues with the remaining loaded scopes
+
+If the page loads with an unsupported explicit scope:
+
+- the page still becomes visible
 - the input is disabled
-- the status area shows a missing-scope message
+- the status area shows an unsupported-scope message
 - results and `more` are cleared
 
 If loading fails:
@@ -194,6 +204,7 @@ Each result currently displays:
 
 The metadata line may include:
 
+- the source scope label when searching the aggregate `all` scope
 - `display_meta`
 - `medium_type` for works
 - linked `series_titles` for works

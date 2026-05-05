@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: "Search Overview"
 added_date: 2026-03-31
-last_updated: 2026-04-25
+last_updated: "2026-05-05"
 parent_id: search
 sort_order: 20
 ---
@@ -31,7 +31,7 @@ Current goals:
 
 The current implementation has three live search surfaces:
 
-- a dedicated catalogue search page at `/search/`
+- a dedicated public search page at `/search/`, with direct aggregate search across enabled dedicated-route scopes
 - an inline Studio docs search experience on `/docs/`
 - an inline Library docs search experience on `/library/`
 
@@ -40,6 +40,7 @@ It is based on:
 - a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
 - a dedicated search-owned Studio search artifact: `assets/data/search/studio/index.json`
 - a dedicated search-owned Library search artifact: `assets/data/search/library/index.json`
+- a dedicated search-owned Analysis search artifact: `assets/data/search/analysis/index.json`
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
 - a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio and Library docs search
 - no third-party search libraries, plugins, or external search services
@@ -47,6 +48,7 @@ It is based on:
 - a build-owned source-family config at `scripts/search/build_config.json`
 
 The browser loads scope-owned search data into memory per surface as needed.
+The dedicated `/search/` page loads one scope index for explicit scope URLs and all enabled dedicated-route scope indexes for direct `/search/`.
 
 For the role of those artifacts in the wider site model, use [Data Models](/docs/?scope=studio&doc=data-models). This section stays focused on the search subsystem itself.
 
@@ -59,6 +61,7 @@ Current indexed content types:
 - moments
 - Studio docs
 - Library docs
+- Analysis docs
 
 Current content intentionally excluded from v1 search:
 
@@ -103,7 +106,8 @@ The client runtime loads the search index, normalizes the loaded values into run
 
 ### 5. Search UI
 
-Catalogue search uses the dedicated `/search/` page, while Studio docs search is handled inline in the docs viewer by replacing the right content pane with results when `q` is present in the docs URL.
+Catalogue and docs-domain searches can use the dedicated `/search/` page.
+Studio and Library docs search also remains available inline in the docs viewer by replacing the right content pane with results when `q` is present in the docs URL.
 
 ## Design principles
 

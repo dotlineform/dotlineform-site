@@ -2,7 +2,7 @@
 doc_id: search-public-ui-contract
 title: "Search Public UI Contract"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-05"
 parent_id: search
 sort_order: 55
 ---
@@ -22,6 +22,7 @@ This is a contract-and-behaviour document. It does not define ranking rules, ind
 Search now has:
 
 - a dedicated public route at `/search/`, with `catalogue` backed by `assets/data/search/catalogue/index.json`
+- an aggregate `/search/` mode that searches all enabled dedicated-route scopes when no `scope` query parameter is supplied
 - an inline Studio docs search surface on `/docs/`
 - an inline Library docs search surface on `/library/`
 
@@ -40,11 +41,8 @@ Public search should use:
 - search call-to-action entry points placed on the page that owns the search scope
 - the page anatomy that best fits the content domain, whether that is a dedicated route or inline viewer search
 
-Public search should not initially use:
-
-- a generic top-level nav item called `search`
-- implicit scope inferred only from the current page
-- one permanently global public search scope with unclear boundaries
+Public search should not infer a hidden scope from referrer context.
+When the page is opened directly without `scope`, it uses an explicit aggregate scope internally; the route remains visually unheaded rather than showing `all` as page chrome.
 
 ## Public route contract
 
@@ -65,6 +63,8 @@ Recommended URL contract:
 
 Examples for dedicated route search:
 
+- `/search/`
+- `/search/?scope=all`
 - `/search/?scope=catalogue`
 - `/search/?scope=catalogue&q=forest`
 
@@ -92,9 +92,17 @@ Reason:
 
 The current agreed public scope vocabulary is:
 
+- `all`
 - `catalogue`
 - `library`
 - `studio`
+- `analysis`
+
+### `all`
+
+This virtual scope is used by `/search/` when no `scope` query parameter is supplied.
+It loads the enabled dedicated-route scope indexes and renders one mixed ranked list.
+Each result keeps its own scope label in the metadata line.
 
 ### `catalogue`
 
@@ -111,13 +119,11 @@ Reason:
 
 ### `library`
 
-This scope currently exists as an inline docs-viewer search scope on `/library/`.
-
-The dedicated `/search/` page does not currently enable `library`.
+This scope exists as an inline docs-viewer search scope on `/library/` and as a dedicated-route scope on `/search/?scope=library`.
 
 ### `studio`
 
-This scope currently exists as an inline docs-viewer search scope on `/docs/`.
+This scope exists as an inline docs-viewer search scope on `/docs/` and as a dedicated-route scope on `/search/?scope=studio`.
 
 Current coverage:
 
@@ -127,6 +133,10 @@ Reason:
 
 - `studio` matches the site domain more clearly than the generic label `docs`
 - it remains scalable even if the first searchable Studio content is documentation-led
+
+### `analysis`
+
+This scope exists as a dedicated-route docs scope on `/search/?scope=analysis`.
 
 ## Search entry-point rule
 

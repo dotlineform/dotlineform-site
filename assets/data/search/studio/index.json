@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b68c6425d7a32c5c5179a37e70394652",
-    "generated_at_utc": "2026-05-05T19:09:09Z",
+    "version": "blake2b-73634fbd29041cd01a0bcbea4a6a2e94",
+    "generated_at_utc": "2026-05-05T19:17:37Z",
     "count": 181
   },
   "entries": [
@@ -901,21 +901,20 @@
       "kind": "doc",
       "title": "Search Overview",
       "href": "/docs/?scope=studio&doc=search-overview",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-05",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-25 • Search",
+      "display_meta": "2026-05-05 • Search",
       "search_terms": [
         "search-overview",
         "search",
         "overview",
         "search overview",
-        "2026-04-25",
+        "2026-05-05",
         "2026",
-        "04",
-        "25"
+        "05"
       ],
-      "search_text": "search-overview search overview search overview 2026-04-25 2026 04 25"
+      "search_text": "search-overview search overview search overview 2026-05-05 2026 05"
     },
     {
       "id": "site-shell-runtime",
@@ -1521,22 +1520,21 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-05",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-04 • Config",
+      "display_meta": "2026-05-05 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-04",
+        "2026-05-05",
         "2026",
-        "05",
-        "04"
+        "05"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-04 2026 05 04"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-05 2026 05"
     },
     {
       "id": "data-models-studio",
@@ -2289,10 +2287,10 @@
       "kind": "doc",
       "title": "Search Policy JSON",
       "href": "/docs/?scope=studio&doc=config-search-policy-json",
-      "last_updated": "2026-05-03 14:35",
+      "last_updated": "2026-05-05",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-03 14:35 • Config",
+      "display_meta": "2026-05-05 • Config",
       "search_terms": [
         "config-search-policy-json",
         "config",
@@ -2300,14 +2298,11 @@
         "policy",
         "json",
         "search policy json",
-        "2026-05-03 14:35",
+        "2026-05-05",
         "2026",
-        "05",
-        "03",
-        "14",
-        "35"
+        "05"
       ],
-      "search_text": "config-search-policy-json config search policy json search policy json 2026-05-03 14:35 2026 05 03 14 35"
+      "search_text": "config-search-policy-json config search policy json search policy json 2026-05-05 2026 05"
     },
     {
       "id": "scripts-srcset-builder",
@@ -2408,10 +2403,10 @@
       "kind": "doc",
       "title": "Search Public UI Contract",
       "href": "/docs/?scope=studio&doc=search-public-ui-contract",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-05-05",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-05-05 • Search",
       "search_terms": [
         "search-public-ui-contract",
         "search",
@@ -2419,12 +2414,11 @@
         "ui",
         "contract",
         "search public ui contract",
-        "2026-03-31",
+        "2026-05-05",
         "2026",
-        "03",
-        "31"
+        "05"
       ],
-      "search_text": "search-public-ui-contract search public ui contract search public ui contract 2026-03-31 2026 03 31"
+      "search_text": "search-public-ui-contract search public ui contract search public ui contract 2026-05-05 2026 05"
     },
     {
       "id": "site-request-analysis-doc-viewer",
@@ -2547,22 +2541,21 @@
       "kind": "doc",
       "title": "Search UI Behaviour",
       "href": "/docs/?scope=studio&doc=search-ui-behaviour",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-05-05",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-05-05 • Search",
       "search_terms": [
         "search-ui-behaviour",
         "search",
         "ui",
         "behaviour",
         "search ui behaviour",
-        "2026-03-31",
+        "2026-05-05",
         "2026",
-        "03",
-        "31"
+        "05"
       ],
-      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-03-31 2026 03 31"
+      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-05 2026 05"
     },
     {
       "id": "new-pipeline-studio-e2e-checklist",
@@ -3862,16 +3855,15 @@
       "kind": "doc",
       "title": "Search",
       "href": "/docs/?scope=studio&doc=search",
-      "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
+      "last_updated": "2026-05-05",
+      "display_meta": "2026-05-05",
       "search_terms": [
         "search",
-        "2026-04-25",
+        "2026-05-05",
         "2026",
-        "04",
-        "25"
+        "05"
       ],
-      "search_text": "search 2026-04-25 2026 04 25"
+      "search_text": "search 2026-05-05 2026 05"
     },
     {
       "id": "tag-registry",
@@ -4283,22 +4275,21 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-05",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-04 • Search",
+      "display_meta": "2026-05-05 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-05-04",
+        "2026-05-05",
         "2026",
-        "05",
-        "04"
+        "05"
       ],
-      "search_text": "search-change-log search change log search change log 2026-05-04 2026 05 04"
+      "search_text": "search-change-log search change log search change log 2026-05-05 2026 05"
     }
   ]
 }

@@ -8,6 +8,38 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Added aggregate public search
+
+**Status:** implemented
+
+**Area:** Search
+
+**Summary:**
+Direct `/search/` now works as an aggregate search across enabled dedicated-route scopes instead of showing the missing-scope message.
+Explicit scoped search URLs remain supported for Catalogue, Library, Studio, and Analysis.
+
+**Reason:**
+The public search route should be useful when opened directly now that multiple generated search indexes exist.
+
+**Files changed:**
+
+- `assets/js/search/search-page.js`
+- `assets/js/search/search-policy.js`
+- `assets/data/search/policy.json`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+- [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+
+**Impact:**
+Users can open `/search/` directly and search across Catalogue, Library, Studio docs, and Analysis results in one list.
+The aggregate route does not show a visible `all` heading and does not fail the whole page when one enabled scope index is unavailable.
+
 ## [2026-05-05] Refined Search dashboard to column links
 
 **Status:** implemented

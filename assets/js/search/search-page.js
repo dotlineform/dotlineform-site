@@ -35,16 +35,13 @@ async function initSearchPage() {
     status.textContent = searchText(config, "loading", "loading search index…");
     policy = await loadSearchPolicyFn(getSearchPolicyPathFn(config));
 
-    const scope = resolveScope();
+    const requestedScope = resolveScope();
+    const scope = requestedScope || "all";
     applyNavScopeState(scope);
-    if (!scope) {
-      showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy });
-      return;
-    }
-
     const scopePolicy = getSearchScopePolicyFn(policy, scope);
     if (!scopePolicy) {
-      showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy });
+      applyScopeText({ backLink, scopeLabel, input, config, scopePolicy: null, inputEnabled: false });
+      showUnsupportedScopeState({ root, status, results, more, policy });
       return;
     }
 
@@ -56,8 +53,9 @@ async function initSearchPage() {
       return;
     }
 
-    const payload = await loadSearchIndexJsonFn(config, scope);
-    const entries = normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
+    const entries = scope === "all"
+      ? await loadAggregateSearchEntries(config, policy)
+      : await loadScopedSearchEntries(config, scopePolicy);
     const state = {
       config,
       scope,
@@ -83,6 +81,35 @@ async function initSearchPage() {
     status.textContent = searchText(config, "load_failed_error", "Failed to load search data.");
     status.dataset.state = "error";
   }
+}
+
+async function loadScopedSearchEntries(config, scopePolicy) {
+  const payload = await loadSearchIndexJsonFn(config, scopePolicy.scope);
+  return normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : [], scopePolicy);
+}
+
+async function loadAggregateSearchEntries(config, policy) {
+  const scopePolicies = getAggregateSearchScopePolicies(policy);
+  const batches = await Promise.allSettled(scopePolicies.map((scopePolicy) => loadScopedSearchEntries(config, scopePolicy)));
+  const entries = [];
+  batches.forEach((result, index) => {
+    if (result.status === "fulfilled") {
+      entries.push(...result.value);
+      return;
+    }
+    console.warn("search: aggregate scope load failed", scopePolicies[index].scope, result.reason);
+  });
+  if (!entries.length && scopePolicies.length) {
+    throw new Error("No aggregate search scopes loaded.");
+  }
+  return entries;
+}
+
+function getAggregateSearchScopePolicies(policy) {
+  const scopes = policy && policy.scopes && typeof policy.scopes === "object" ? policy.scopes : {};
+  return Object.keys(scopes)
+    .map((scope) => getSearchScopePolicyFn(policy, scope))
+    .filter((scopePolicy) => scopePolicy && scopePolicy.enabled && scopePolicy.scope !== "all");
 }
 
 async function loadSearchDeps() {
@@ -140,7 +167,9 @@ function wireEvents(state) {
   });
 }
 
-function normalizeEntries(entries) {
+function normalizeEntries(entries, scopePolicy) {
+  const scope = scopePolicy ? scopePolicy.scope : "";
+  const scopeLabel = scopePolicy ? scopePolicy.scopeLabel : "";
   return entries
     .filter((entry) => entry && typeof entry === "object")
     .map((entry) => {
@@ -167,6 +196,8 @@ function normalizeEntries(entries) {
         mediumType: String(entry.medium_type || "").trim(),
         seriesType: String(entry.series_type || "").trim(),
         tagLabels: Array.isArray(entry.tag_labels) ? entry.tag_labels.map((item) => String(item || "").trim()).filter(Boolean) : [],
+        scope,
+        scopeLabel,
         searchTerms,
         searchText: normalize(String(entry.search_text || "")),
         titleNorm: normalize(title),
@@ -262,6 +293,7 @@ function matchesAllTokens(entry, queryTokens) {
 function renderEntry(state, entry) {
   const metaParts = [];
   const separator = searchText(state.config, "result_meta_separator", " • ");
+  if (state.scope === "all" && entry.scopeLabel) metaParts.push(escapeHtml(entry.scopeLabel));
   if (entry.displayMeta) metaParts.push(escapeHtml(entry.displayMeta));
   if (entry.kind === "work" && entry.mediumType) metaParts.push(escapeHtml(entry.mediumType));
   if (entry.kind === "work" && entry.seriesTitles.length) {
@@ -313,6 +345,7 @@ function kindLabel(config, kind) {
   if (kind === "work") return searchText(config, "result_kind_work", "work");
   if (kind === "series") return searchText(config, "result_kind_series", "series");
   if (kind === "moment") return searchText(config, "result_kind_moment", "moment");
+  if (kind === "doc") return searchText(config, "result_kind_doc", "doc");
   return kind;
 }
 
@@ -338,7 +371,9 @@ function applyScopeText({ backLink, scopeLabel, input, config, scopePolicy, inpu
   }
 
   if (scopeLabel) {
-    scopeLabel.textContent = scopePolicy ? scopePolicy.scopeLabel : "scope unavailable";
+    const isAggregateScope = scopePolicy && scopePolicy.scope === "all";
+    scopeLabel.hidden = Boolean(isAggregateScope);
+    scopeLabel.textContent = scopePolicy && !isAggregateScope ? scopePolicy.scopeLabel : "scope unavailable";
   }
 
   input.disabled = !inputEnabled;
