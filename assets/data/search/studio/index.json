@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8c139a5af637247d8e89be9f56abec19",
-    "generated_at_utc": "2026-05-05T20:17:40Z",
-    "count": 182
+    "version": "blake2b-1c62039706792c7e88adcb07ea1f17c1",
+    "generated_at_utc": "2026-05-05T20:47:02Z",
+    "count": 183
   },
   "entries": [
     {
@@ -1264,6 +1264,34 @@
         "03"
       ],
       "search_text": "studio-audits studio audits studio audits 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "site-request-export-import-adapters",
+      "kind": "doc",
+      "title": "Export Import Adapter Boundary Request",
+      "href": "/docs/?scope=studio&doc=site-request-export-import-adapters",
+      "last_updated": "2026-05-05",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-05 • Change Requests",
+      "search_terms": [
+        "site-request-export-import-adapters",
+        "site",
+        "request",
+        "export",
+        "import",
+        "adapters",
+        "export import adapter boundary request",
+        "adapter",
+        "boundary",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-05",
+        "2026",
+        "05"
+      ],
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-05 2026 05"
     },
     {
       "id": "scripts-run-checks",

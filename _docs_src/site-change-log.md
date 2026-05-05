@@ -8,6 +8,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-05] Added export/import adapter boundary request
+
+**Status:** proposed
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+Added a change request to adopt an adapter-based export/import architecture before more Library, Analytics, or Catalogue requirements are added to the shared workflow shell.
+The current Library document workflow is identified as the first adapter implementation target.
+
+**Reason:**
+Library import/export is document-specific, while future Analytics and Catalogue workflows need domain-specific validation and apply behavior against structured site data.
+The adapter boundary keeps shared lifecycle behavior reusable without making document preview semantics universal.
+
+**Files changed:**
+
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+
+**Impact:**
+Future export/import requirements now have a stable planning target that separates shared workbench responsibilities from scope-specific adapter behavior.
+
 ## [2026-05-05] Added Docs Workbench extraction request
 
 **Status:** proposed
