@@ -19,8 +19,9 @@ from pathlib import Path
 from typing import Any
 
 
-STAGING_ROOT = Path("var/docs/import-staging")
-PREVIEW_ROOT = Path("var/docs/import-preview")
+WORKFLOW_ROOT = Path("var/studio/export-import")
+STAGING_DIR_NAME = "import-staging"
+PREVIEW_DIR_NAME = "import-preview"
 DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
 SUPPORTED_SCOPES = {"analytics", "catalogue", "library"}
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
@@ -212,6 +213,14 @@ def relative_path(repo_root: Path, path: Path) -> str:
         return path.as_posix()
 
 
+def default_staging_root(scope: str) -> Path:
+    return WORKFLOW_ROOT / normalize_text(scope).lower() / STAGING_DIR_NAME
+
+
+def default_preview_root(scope: str) -> Path:
+    return WORKFLOW_ROOT / normalize_text(scope).lower() / PREVIEW_DIR_NAME
+
+
 def issue(
     level: str,
     code: str,
@@ -259,7 +268,7 @@ def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_r
     normalized_scope = normalize_text(scope).lower()
     if normalized_scope not in SUPPORTED_SCOPES:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
-    base_root = Path(staging_root) if staging_root else STAGING_ROOT / normalized_scope
+    base_root = Path(staging_root) if staging_root else default_staging_root(normalized_scope)
     raw_path = Path(staged_file)
     path = raw_path if raw_path.is_absolute() else repo_root / base_root / raw_path
     resolved = path.resolve()
@@ -273,7 +282,7 @@ def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | s
     normalized_scope = normalize_text(scope).lower()
     if normalized_scope not in SUPPORTED_SCOPES:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
-    base_root = Path(staging_root) if staging_root else STAGING_ROOT / normalized_scope
+    base_root = Path(staging_root) if staging_root else default_staging_root(normalized_scope)
     resolved_staging_root = (repo_root / base_root).resolve()
     if not resolved_staging_root.exists():
         return []
@@ -301,7 +310,7 @@ def resolve_preview_path(repo_root: Path, scope: str, filename: str, preview_roo
     relative = Path(filename)
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"unsafe preview filename: {filename}")
-    base_root = Path(preview_root) if preview_root else PREVIEW_ROOT / normalized_scope
+    base_root = Path(preview_root) if preview_root else default_preview_root(normalized_scope)
     path = (repo_root / base_root / relative).resolve()
     allowed_root = (repo_root / base_root).resolve()
     if path != allowed_root and allowed_root not in path.parents:
@@ -1130,9 +1139,9 @@ def parse_staged_import(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Parse staged Docs Viewer import data and optionally write Markdown previews.")
     parser.add_argument("--scope", default="library", help="Docs Viewer scope to import")
-    parser.add_argument("--file", required=True, help="Staged JSON or JSONL filename under var/docs/import-staging/<scope>/")
+    parser.add_argument("--file", required=True, help="Staged JSON or JSONL filename under var/studio/export-import/<scope>/import-staging/")
     parser.add_argument("--repo-root", default="", help="Override repo root")
-    parser.add_argument("--write-previews", action="store_true", help="Write Markdown previews under var/docs/import-preview/<scope>/")
+    parser.add_argument("--write-previews", action="store_true", help="Write Markdown previews under var/studio/export-import/<scope>/import-preview/")
     parser.add_argument("--no-records", action="store_true", help="Omit normalized records from the printed report")
     return parser.parse_args()
 

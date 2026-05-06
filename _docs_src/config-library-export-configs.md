@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-04"
+last_updated: "2026-05-06 12:05"
 parent_id: config
 sort_order: 70
 ---
@@ -121,8 +121,8 @@ Document-row configs may support JSONL and JSON when both are declared in `targe
 `output.path_pattern` must stay under:
 
 ```text
-var/docs/exports/{scope}/{export_id}-{timestamp}.json
-var/docs/exports/{scope}/{export_id}-{timestamp}.jsonl
+var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.json
+var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.jsonl
 ```
 
 The placeholders are resolved by the export engine.

@@ -974,7 +974,7 @@ async function init() {
         getStudioText(
           state.config,
           "library_import.no_files",
-          "No staged {scope_label} data files found under var/docs/import-staging/{scope}/.",
+          "No staged {scope_label} data files found under var/studio/export-import/{scope}/import-staging/.",
           { scope_label: scopeLabel(state), scope: state.scope }
         )
       );

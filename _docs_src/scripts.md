@@ -2,7 +2,7 @@
 doc_id: scripts
 title: "Scripts"
 added_date: 2026-04-23
-last_updated: "2026-05-03 20:25"
+last_updated: "2026-05-06 12:05"
 parent_id: ""
 sort_order: 130
 ---
@@ -89,9 +89,9 @@ Catalogue/runtime maintenance:
 - `./scripts/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
 - `./scripts/docs/docs_export.py`
-  - exports generated Docs Viewer data through source-controlled export configs into `var/docs/exports/`; also powers the Studio Library export service path
+  - exports generated Docs Viewer data through source-controlled export configs into `var/studio/export-import/<scope>/exports/`; also powers the Studio Library export service path
 - `./scripts/docs/docs_import.py`
-  - parses staged Library import JSON/JSONL files under `var/docs/import-staging/library/` and returns a read-only structured report
+  - parses staged Library import JSON/JSONL files under `var/studio/export-import/library/import-staging/` and returns a read-only structured report
 - `./scripts/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
 - `./scripts/migrate_catalogue_media_sections.py`

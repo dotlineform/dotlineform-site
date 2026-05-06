@@ -2,7 +2,7 @@
 doc_id: library-import-export-v2
 title: Library Export/Import v2
 added_date: 2026-05-04
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 ui_status: done
 parent_id: library
 sort_order: 50
@@ -43,7 +43,7 @@ add new checkboxes:
 
 ### Staging
 
-folder:`var/docs/exports/library`
+folder:`var/studio/export-import/library/exports`
 
 - export creates a JSON/L which includes the metadata defined by the config for the selected documents.
 
@@ -58,7 +58,7 @@ page:`/studio/library-import/`
 
 ### staging
 
-folder:`var/docs/import-staging/library`
+folder:`var/studio/export-import/library/import-staging`
 
 workflow:
 
@@ -66,7 +66,7 @@ workflow:
 
 ### preview
 
-folder:`var/docs/import-preview/library`
+folder:`var/studio/export-import/library/import-preview`
 
 workflow:
 
@@ -156,7 +156,7 @@ example:
 - The v2 work should start with the Import UI because the existing v1 import route, parser, preview renderer, and local service already provide enough data to reshape the page without changing source-write behavior.
 - The first import milestone should remain preview-only. Summary and hierarchy apply actions write canonical Library source and need a narrower confirmation, backup, and validation contract before they are enabled.
 - The source-write target for Library documents should be `_docs_library_src/*.md`, not `_docs_src/*.md`.
-- Preview files should continue to use Markdown-style preview files under `var/docs/import-preview/library/`; they are review artifacts, not source Markdown documents.
+- Preview files should continue to use Markdown-style preview files under `var/studio/export-import/library/import-preview/`; they are review artifacts, not source Markdown documents.
 - Export changes are lower risk if treated as small additions to the existing Library export page: list-filter pills first, then output-format options after the export config/runtime format contract is checked.
 
 ## Resolved Decisions
@@ -164,7 +164,7 @@ example:
 - Preview files should continue using Markdown-style files so they can use readable front-matter-like sections and body content without being confused with canonical Library source docs.
 - Preview file front matter does not need to be valid YAML. Preview files are human-readable review artifacts; apply actions read from the staged JSON or the service report, not from preview files.
 - When staged parent-child data is available, import preview should generate a hierarchy tree file in addition to per-document previews for all import types. Files without parent-child data should still preview cleanly.
-- The Import UI should show only preview files generated from the selected staged file, not all older files already present in `var/docs/import-preview/library/`.
+- The Import UI should show only preview files generated from the selected staged file, not all older files already present in `var/studio/export-import/library/import-preview/`.
 - Import actions should use the in-memory service report when it contains the needed data; otherwise they should read from the staged JSON. They should not read from generated preview files.
 - `Update summary` validation should only require that each selected `doc_id` exists as a target Library source document.
 - `Apply hierarchy` validation should only require that each selected `doc_id` exists as a target Library source document. Missing or unknown `parent_id` values are allowed, and the viewer should behave as if `parent_id` were blank.

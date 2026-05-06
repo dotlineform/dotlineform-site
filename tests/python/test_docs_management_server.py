@@ -93,9 +93,9 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                             "label": "Library",
                             "scope": "library",
                             "paths": {
-                                "export_root": "var/docs/exports/library",
-                                "staging_root": "var/docs/import-staging/library",
-                                "preview_root": "var/docs/import-preview/library",
+                                "export_root": "var/studio/export-import/library/exports",
+                                "staging_root": "var/studio/export-import/library/import-staging",
+                                "preview_root": "var/studio/export-import/library/import-preview",
                                 "source_root": "_docs_library_src",
                             },
                             "sources": {
@@ -302,7 +302,7 @@ def test_docs_export_request_passes_target_format() -> None:
         return {
             "ok": True,
             "target_format": kwargs["target_format"],
-            "output_file": "var/docs/exports/library/test.json",
+            "output_file": "var/studio/export-import/library/exports/test.json",
             "output_written": False,
             "counts": {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0},
             "issue_counts": {"errors": 0, "warnings": 0},

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 parent_id: scripts
 sort_order: 10
 ---
@@ -229,7 +229,7 @@ Export behavior:
 - `missing_summary_only` may be `true`, `false`, or `null`; unsupported configs ignore `true`
 - unsupported config/format combinations return the export engine's structured validation report without writing
 - the endpoint calls `./scripts/docs/docs_export.py`'s shared export engine in-process
-- output paths are validated by the export engine and must stay under `var/docs/exports/`
+- output paths are validated by the export engine and must stay under the adapter-declared export root
 - normal server mode writes the export file and returns `output_written: true`
 - server `--dry-run` mode validates and reports the target path without writing
 - failed validation returns the same report shape with `ok: false`, `errors`, `warnings`, `issue_counts`, and `output_written: false`
@@ -542,8 +542,8 @@ Apply behavior:
   - `_docs_src/*.md`
   - `_docs_library_src/*.md`
   - `var/docs/backups/`
-  - `var/docs/exports/`
-  - `var/docs/import-preview/library/`
+  - `var/studio/export-import/<data-domain>/exports/`
+  - `var/studio/export-import/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch

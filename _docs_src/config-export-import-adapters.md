@@ -2,7 +2,7 @@
 doc_id: config-export-import-adapters
 title: "Export Import Adapters"
 added_date: "2026-05-06 11:35"
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 parent_id: config
 sort_order: 38
 ---
@@ -43,8 +43,19 @@ The registry owns workflow paths that the shared export/import shell needs for d
 - `paths.preview_root`
 - `paths.source_root`
 
-The first Library mapping still points at the current Library folders.
-Future folder normalization should update this config instead of adding route-level folder decisions.
+The first Library mapping uses a data-domain-first workflow root:
+
+```text
+var/studio/export-import/library/
+```
+
+Under that root, Library uses:
+
+- `exports/`
+- `import-staging/`
+- `import-preview/`
+
+Future folder changes should update this config instead of adding route-level folder decisions.
 
 ## Related Runtime
 

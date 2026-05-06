@@ -37,9 +37,9 @@
           "label": "Library",
           "scope": "library",
           "paths": {
-            "export_root": "var/docs/exports/library",
-            "staging_root": "var/docs/import-staging/library",
-            "preview_root": "var/docs/import-preview/library",
+            "export_root": "var/studio/export-import/library/exports",
+            "staging_root": "var/studio/export-import/library/import-staging",
+            "preview_root": "var/studio/export-import/library/import-preview",
             "source_root": "_docs_library_src"
           },
           "sources": {

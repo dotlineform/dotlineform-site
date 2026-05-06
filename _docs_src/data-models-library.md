@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 parent_id: data-models
 sort_order: 40
 ---
@@ -31,13 +31,13 @@ Current source and generated artifacts:
   - `assets/studio/data/export_import_adapters.json`
   - `assets/studio/data/export_import_adapters.schema.json`
 - local generated export artifacts:
-  - `var/docs/exports/library/<export_id>-<timestamp>.json`
-  - `var/docs/exports/library/<export_id>-<timestamp>.jsonl`
+  - `var/studio/export-import/library/exports/<export_id>-<timestamp>.json`
+  - `var/studio/export-import/library/exports/<export_id>-<timestamp>.jsonl`
 - local import staging artifacts:
-  - `var/docs/import-staging/library/<filename>.json`
-  - `var/docs/import-staging/library/<filename>.jsonl`
+  - `var/studio/export-import/library/import-staging/<filename>.json`
+  - `var/studio/export-import/library/import-staging/<filename>.jsonl`
 - local import preview artifacts:
-  - `var/docs/import-preview/library/<filename>.md`
+  - `var/studio/export-import/library/import-preview/<filename>.md`
 
 Current public route:
 
@@ -137,8 +137,8 @@ Config files:
 
 Generated output:
 
-- `var/docs/exports/library/<export_id>-<timestamp>.json`
-- `var/docs/exports/library/<export_id>-<timestamp>.jsonl`
+- `var/studio/export-import/library/exports/<export_id>-<timestamp>.json`
+- `var/studio/export-import/library/exports/<export_id>-<timestamp>.jsonl`
 
 Current model:
 
@@ -167,12 +167,12 @@ Library import files are local working artifacts copied into a staging folder fo
 
 Staged input:
 
-- `var/docs/import-staging/library/<filename>.json`
-- `var/docs/import-staging/library/<filename>.jsonl`
+- `var/studio/export-import/library/import-staging/<filename>.json`
+- `var/studio/export-import/library/import-staging/<filename>.jsonl`
 
 Preview output:
 
-- `var/docs/import-preview/library/<filename>.md`
+- `var/studio/export-import/library/import-preview/<filename>.md`
 
 Current model:
 

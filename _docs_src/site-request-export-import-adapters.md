@@ -2,7 +2,7 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -382,9 +382,9 @@ Folder structures and dispatch decisions must not be hardcoded in route scripts,
         "library": {
           "label": "Library",
           "paths": {
-            "export_root": "var/docs/exports/library",
-            "staging_root": "var/docs/import-staging/library",
-            "preview_root": "var/docs/import-preview/library",
+            "export_root": "var/studio/export-import/library/exports",
+            "staging_root": "var/studio/export-import/library/import-staging",
+            "preview_root": "var/studio/export-import/library/import-preview",
             "backup_root": "var/docs/backups"
           },
           "sources": {
@@ -569,11 +569,28 @@ Task 3 benefits and risks:
 
 Status:
 
-- pending
+- completed
 
 Decide the config-declared folder layout that replaces the current hardcoded `var/docs/.../library` paths.
 
 Because current `var/` content is test-only, implementation can cleanly refactor those folders if doing so clarifies the adapter model.
+
+Implementation note:
+
+- normalized Library export/import workflow files under `var/studio/export-import/library/`
+- configured the `documents` adapter paths as:
+  - `var/studio/export-import/library/exports`
+  - `var/studio/export-import/library/import-staging`
+  - `var/studio/export-import/library/import-preview`
+- updated Library export config `output.path_pattern` values to write under the normalized export folder
+- changed export output validation so the docs-management service validates against the adapter-declared `export_root`
+- changed the import CLI defaults to the same normalized staging and preview layout
+
+Task 4 benefits and risks:
+
+- Benefit: workflow artifacts are now grouped by data domain and no longer imply that every export/import workflow is a Docs Viewer workflow.
+- Benefit: export, staging, and preview folders are now declared in adapter config and used by the service boundary.
+- Risk: existing local staged or preview files under the old `var/docs/...` test folders will not be discovered; that is acceptable because those files were test-only.
 
 ### Task 5. Add Future Adapter Stubs
 

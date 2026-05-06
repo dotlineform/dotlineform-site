@@ -634,7 +634,7 @@
       "idle_status": "Select a staged {scope_label} data file and generate previews.",
       "running_status": "Generating import previews...",
       "load_failed": "Failed to load {scope_label} import data.",
-      "no_files": "No staged {scope_label} data files found under var/docs/import-staging/{scope}/.",
+      "no_files": "No staged {scope_label} data files found under var/studio/export-import/{scope}/import-staging/.",
       "empty_state": "Generate a preview to list staged documents.",
       "file_required": "Select a staged data file first.",
       "missing_title": "missing title",

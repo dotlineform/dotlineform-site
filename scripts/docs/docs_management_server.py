@@ -34,8 +34,8 @@ Security constraints:
   - Binds to 127.0.0.1 only.
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
   - Writes only allowlisted Markdown docs under _docs_src/, _docs_library_src/, and _docs_src_analysis/.
-  - Writes export artifacts only under var/docs/exports/.
-  - Writes import preview artifacts only under var/docs/import-preview/<scope>/ for supported data workflow scopes.
+  - Writes export artifacts only under the resolved adapter export root.
+  - Writes import preview artifacts only under the resolved adapter preview root.
   - Creates timestamped backup bundles under var/docs/backups/.
   - Writes minimal local logs under var/docs/logs/.
 """
@@ -1054,6 +1054,7 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         write=not dry_run,
         config_path=adapter.config_path("export_configs_path").as_posix(),
         target_format=target_format or None,
+        output_root=adapter.path("export_root"),
     )
     report["data_domain"] = adapter.data_domain
     report["adapter_id"] = adapter.adapter_id

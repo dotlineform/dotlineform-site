@@ -2,11 +2,38 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06"
+last_updated: "2026-05-06 12:05"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-06] Normalized export/import workflow folders
+
+**Status:** implemented
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+Moved Library export/import working artifacts to a data-domain-first layout under `var/studio/export-import/library/`.
+The `documents` adapter now declares the Library export, staging, and preview roots used by the docs-management service.
+
+**Reason:**
+The shared export/import shell should not encode Docs Viewer folder names as the universal workflow layout.
+Keeping folders under the adapter registry makes the path contract explicit and keeps future domains from inheriting document-specific paths.
+
+**Files changed:**
+
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)
+- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+
+**Impact:**
+Exports now write under `var/studio/export-import/library/exports/`.
+Staged import files are read from `var/studio/export-import/library/import-staging/`, and generated previews write under `var/studio/export-import/library/import-preview/`.
+Old local files under the previous test folders are not migrated.
 
 ## [2026-05-06] Moved document import/export dispatch behind adapter config
 

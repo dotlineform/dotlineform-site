@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 parent_id: scripts
 sort_order: 25
 ---
@@ -19,7 +19,7 @@ Script:
 
 `docs_export.py` is the read-only export engine for Docs Viewer export configs.
 
-It reads generated Docs Viewer artifacts and source-controlled export configs, then writes an ephemeral export file under `var/docs/exports/`.
+It reads generated Docs Viewer artifacts and source-controlled export configs, then writes an ephemeral export file under `var/studio/export-import/<scope>/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
@@ -30,8 +30,8 @@ Current input paths:
 
 Current output pattern:
 
-- `var/docs/exports/<scope>/<export_id>-<timestamp>.json`
-- `var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl`
+- `var/studio/export-import/<scope>/exports/<export_id>-<timestamp>.json`
+- `var/studio/export-import/<scope>/exports/<export_id>-<timestamp>.jsonl`
 
 The filename timestamp is formatted in the local runtime timezone.
 Export metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
@@ -206,7 +206,7 @@ The engine validates runtime concerns that the static config schema cannot know:
 - required mapped fields are present
 - source-text mappings use plain-text conversion rather than raw rendered HTML
 - truncating mappings have configured integer limits
-- output paths stay under `var/docs/exports/`
+- output paths stay under `var/studio/export-import/` by default
 - unsupported sources, transforms, target formats, and record shapes are reported before writing
 
 Warnings report non-blocking context:
@@ -220,4 +220,4 @@ Warnings report non-blocking context:
 The static config schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
 The Studio page runs the same export engine through the docs-management local endpoint `POST /docs/export`.
-That endpoint first resolves `data_domain` and `operation` through `assets/studio/data/export_import_adapters.json`, then writes with the same `var/docs/exports/` allowlist and returns the same report shape used by the CLI.
+That endpoint first resolves `data_domain` and `operation` through `assets/studio/data/export_import_adapters.json`, then writes under the adapter-declared export root and returns the same report shape used by the CLI.

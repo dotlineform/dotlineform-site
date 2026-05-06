@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 parent_id: scripts
 sort_order: 26
 ---
@@ -26,8 +26,8 @@ The same engine is used by the docs-management local service for Studio integrat
 
 Current input path:
 
-- `var/docs/import-staging/library/<filename>.json`
-- `var/docs/import-staging/library/<filename>.jsonl`
+- `var/studio/export-import/library/import-staging/<filename>.json`
+- `var/studio/export-import/library/import-staging/<filename>.jsonl`
 
 Current lookup paths:
 
@@ -37,13 +37,13 @@ Current lookup paths:
 Current outputs:
 
 - a structured JSON report on stdout
-- optional Markdown previews under `var/docs/import-preview/library/`
+- optional Markdown previews under `var/studio/export-import/library/import-preview/`
 
 ## Current Capability
 
 Implemented now:
 
-- enforces that parsed files stay under `var/docs/import-staging/library/`
+- enforces that parsed files stay under `var/studio/export-import/library/import-staging/`
 - reads `.json` and `.jsonl`
 - parses JSON envelope exports with a `documents` array
 - parses JSON arrays of document-like records
@@ -56,7 +56,7 @@ Implemented now:
 - annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
 - renders one Markdown-style preview per parsed document
 - renders one additional whole-tree Markdown preview file whenever staged relationship metadata is available
-- writes previews only under `var/docs/import-preview/library/`
+- writes previews only under `var/studio/export-import/library/import-preview/`
 - supports timestamped document preview filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
 - uses the staged-file timestamp suffix for preview filenames when present, otherwise the current preview-generation time
 - supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
@@ -143,11 +143,11 @@ It blocks only concerns that prevent useful parsing:
 - unsupported file extension
 - unreadable or missing staged file
 - invalid JSON or JSONL
-- staged path outside `var/docs/import-staging/library/`
+- staged path outside `var/studio/export-import/library/import-staging/`
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.
-Preview writes are limited to `var/docs/import-preview/library/`.
+Preview writes are limited to `var/studio/export-import/library/import-preview/`.
 Apply-time freshness checks belong to later Library import tasks.
 
 ## Verification

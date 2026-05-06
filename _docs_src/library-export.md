@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export v1
 added_date: 2026-05-03
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 ui_status: done
 parent_id: library
 sort_order: 25
@@ -274,13 +274,13 @@ They should be safe to delete and reproducible from canonical Docs Viewer source
 Expected first output pattern:
 
 ```text
-var/docs/exports/<scope>/<export_id>-<timestamp>.json
+var/studio/export-import/<scope>/exports/<export_id>-<timestamp>.json
 ```
 
 JSONL configs use the same flat scope directory and filename timestamp pattern:
 
 ```text
-var/docs/exports/<scope>/<export_id>-<timestamp>.jsonl
+var/studio/export-import/<scope>/exports/<export_id>-<timestamp>.jsonl
 ```
 
 Filename timestamps use the local runtime timezone so Studio output paths match the operator's clock.
@@ -337,7 +337,7 @@ Request shape:
 `target_format` is optional.
 When omitted, the selected config's default `target.format` is used.
 The Studio page shows JSON and JSONL format options, disables unsupported config/format combinations before submission, and includes the selected format in the result modal.
-The endpoint calls the shared read-only export engine and writes only under `var/docs/exports/`.
+The endpoint calls the shared read-only export engine and writes only under the adapter-declared export root.
 It logs ids, counts, format, and write state, but not document body content or full export payloads.
 When the docs-management server runs with `--dry-run`, the endpoint validates and reports the target file path without writing the export file.
 
@@ -369,7 +369,7 @@ Blocking validation errors:
 
 - config file shape is invalid, including wrong `schema_version`, duplicate config ids, unsupported target format, unsupported record shape, unsupported field source, unsupported transform, duplicate or conflicting output paths, or mismatched output extension
 - selected config is disabled or does not support the requested scope
-- output path is missing, unsafe, or outside `var/docs/exports/`
+- output path is missing, unsafe, or outside the configured export root
 - explicit selected `doc_id` values are unknown
 - selection resolves to zero exportable documents after filters
 - required mapped fields are missing or empty
@@ -407,7 +407,7 @@ It loads enabled Library export configs, loads the generated Library docs index,
 The browser does not write files directly.
 
 The local service endpoint is the Studio write boundary.
-It validates request shape, calls the same export engine used by the CLI, writes only under `var/docs/exports/`, logs only ids/counts/status, and returns the structured report shown in the Studio result modal.
+It validates request shape, calls the same export engine used by the CLI, writes only under the configured export root, logs only ids/counts/status, and returns the structured report shown in the Studio result modal.
 
 The CLI is the operational and testable path.
 It can dry-run by default, write with `--write`, run the same config validation, and report the same selected/exported/skipped/failed/truncated counts.
@@ -422,9 +422,9 @@ They are not canonical source, are ignored by git, and should be reproducible fr
 The first supported output layouts are:
 
 ```text
-var/docs/exports/library/library-parent-child-relationships-<timestamp>.json
-var/docs/exports/library/library-document-summaries-<timestamp>.jsonl
-var/docs/exports/library/library-full-document-content-<timestamp>.jsonl
+var/studio/export-import/library/exports/library-parent-child-relationships-<timestamp>.json
+var/studio/export-import/library/exports/library-document-summaries-<timestamp>.jsonl
+var/studio/export-import/library/exports/library-full-document-content-<timestamp>.jsonl
 ```
 
 Document-row configs that declare both formats can also write `.json` files containing one JSON array of row objects.

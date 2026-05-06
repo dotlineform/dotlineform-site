@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-06 11:35"
+last_updated: "2026-05-06 12:05"
 ui_status: done
 parent_id: library
 sort_order: 30
@@ -69,13 +69,13 @@ Both workflows can use the docs-management local service, but they should keep s
 The v1 staging root is:
 
 ```text
-var/docs/import-staging/library/
+var/studio/export-import/library/import-staging/
 ```
 
 The v1 preview root is:
 
 ```text
-var/docs/import-preview/library/
+var/studio/export-import/library/import-preview/
 ```
 
 These artifacts are local working files.
@@ -109,7 +109,7 @@ review_note: Keep this staged-only value visible.
 preview_metadata
 import_type: document_summary
 preview_generated_at: 2026-05-03T20:01:00Z
-source_file: var/docs/import-staging/library/library-document-summaries-20260503-200000.jsonl
+source_file: var/studio/export-import/library/import-staging/library-document-summaries-20260503-200000.jsonl
 ---
 ```
 
@@ -249,8 +249,8 @@ Potential later apply flows:
 
 ## V1 Decisions
 
-- staging root: `var/docs/import-staging/library/`
-- preview root: `var/docs/import-preview/library/`
+- staging root: `var/studio/export-import/library/import-staging/`
+- preview root: `var/studio/export-import/library/import-preview/`
 - output shape: one Markdown preview file per imported document
 - relationship output shape: one additional Markdown preview file showing the whole imported candidate tree whenever relationship metadata is available
 - index files: none in v1
@@ -282,10 +282,10 @@ Confirm the staging root, preview root, per-document preview filename convention
 
 Expected outputs:
 
-- staging root `var/docs/import-staging/library/`
-- preview root under `var/docs/import-preview/`
-- one preview file per imported document under `var/docs/import-preview/library/`
-- one whole-tree preview file under `var/docs/import-preview/library/` whenever relationship metadata is available
+- staging root `var/studio/export-import/library/import-staging/`
+- preview root under `var/studio/export-import/library/import-preview/`
+- one preview file per imported document under `var/studio/export-import/library/import-preview/`
+- one whole-tree preview file under `var/studio/export-import/library/import-preview/` whenever relationship metadata is available
 - preview filename convention based primarily on `doc_id` plus the staged-file timestamp suffix, with a current preview-generation time fallback
 - front-matter-like matched-config, staged-only, and preview-metadata sections
 - docs-management allowlist rules for read/write paths
@@ -297,7 +297,7 @@ Implement a parser that reads staged `.json` and `.jsonl` files, detects support
 The parser should not write source docs.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
-The parser reads only from `var/docs/import-staging/library/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
+The parser reads only from `var/studio/export-import/library/import-staging/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
 It does not render Markdown previews or write any output files.
 
 ### Task 3. Add Report Issues And Current-Library Lookup
@@ -326,7 +326,7 @@ Source-file provenance and diagnostics should remain in the Studio report.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
 The parser can now render Markdown preview files with `--write-previews`.
-Imports write one file per parsed document under `var/docs/import-preview/library/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
+Imports write one file per parsed document under `var/studio/export-import/library/import-preview/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
 The timestamp comes from the staged filename suffix when present, otherwise from the current preview-generation time.
 When relationship metadata is available, imports also write one whole-tree Markdown file based on the staged filename, such as `relationships-tree-20260503-204000.md`.
 Preview files include front-matter-like matched-config, staged-only, and preview-metadata sections plus readable Markdown sections for relevant warnings, summaries, headings, source text, or candidate relationship trees.

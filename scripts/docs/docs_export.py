@@ -23,7 +23,7 @@ from typing import Any
 
 DEFAULT_CONFIG_PATH = Path("assets/studio/data/library_export_configs.json")
 DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
-OUTPUT_ROOT = Path("var/docs/exports")
+OUTPUT_ROOT = Path("var/studio/export-import")
 SCHEMA_VERSION = "library_export_configs_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 PUNCTUATION_SPACING_RE = re.compile(r"\s+([,.;:!?])")
@@ -919,7 +919,14 @@ def export_metadata(
     return {key: value for key, value in values.items() if key in include}
 
 
-def resolve_output_path(repo_root: Path, config: dict[str, Any], scope: str, timestamp: str, target_format: str) -> Path:
+def resolve_output_path(
+    repo_root: Path,
+    config: dict[str, Any],
+    scope: str,
+    timestamp: str,
+    target_format: str,
+    output_root: Path | str | None = None,
+) -> Path:
     config_id = normalize_text(config.get("id"))
     output = config.get("output") if isinstance(config.get("output"), dict) else {}
     pattern = normalize_text(output.get("path_pattern"))
@@ -936,8 +943,9 @@ def resolve_output_path(repo_root: Path, config: dict[str, Any], scope: str, tim
         raise ValueError(f"Unsafe export output path: {relative}")
     if target_format:
         relative = relative.with_suffix(f".{target_format}")
-    if relative.parts[:3] != OUTPUT_ROOT.parts:
-        raise ValueError(f"Export output path must stay under {OUTPUT_ROOT}: {relative}")
+    allowed_root = Path(output_root) if output_root else OUTPUT_ROOT
+    if relative.parts[:len(allowed_root.parts)] != allowed_root.parts:
+        raise ValueError(f"Export output path must stay under {allowed_root}: {relative}")
     return repo_root / relative
 
 
@@ -1006,6 +1014,7 @@ def build_export(
     write: bool,
     config_path: str | None = None,
     target_format: str | None = None,
+    output_root: Path | str | None = None,
 ) -> dict[str, Any]:
     generated_at, filename_timestamp_dt = export_run_times()
     config_payload = load_config_file(repo_root, config_path)
@@ -1072,7 +1081,7 @@ def build_export(
     output_path: Path | None = None
     relative_output = ""
     try:
-        output_path = resolve_output_path(repo_root, config, scope, timestamp, resolved_target_format)
+        output_path = resolve_output_path(repo_root, config, scope, timestamp, resolved_target_format, output_root)
         relative_output = str(output_path.relative_to(repo_root))
     except ValueError as exc:
         errors.append(f"config {config_id}: {exc}")

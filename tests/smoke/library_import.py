@@ -108,11 +108,11 @@ def install_mock_docs_service(page) -> None:
             payload = {
                 "ok": True,
                 "scope": "library",
-                "staging_root": "var/docs/import-staging/library",
+                "staging_root": "var/studio/export-import/library/import-staging",
                 "files": [
                     {
                         "filename": "summaries.jsonl",
-                        "path": "var/docs/import-staging/library/summaries.jsonl",
+                        "path": "var/studio/export-import/library/import-staging/summaries.jsonl",
                         "format": "jsonl",
                         "size_bytes": 512,
                         "modified_utc": "2026-05-04T12:00:00Z",
@@ -168,18 +168,18 @@ def install_mock_docs_service(page) -> None:
                 ],
                 "preview_files": [
                     {
-                        "path": "var/docs/import-preview/library/relationships-tree.md",
+                        "path": "var/studio/export-import/library/import-preview/relationships-tree.md",
                         "record_count": 3,
                         "kind": "relationship_tree",
                     },
                     {
-                        "path": "var/docs/import-preview/library/alpha-20260504-120500.md",
+                        "path": "var/studio/export-import/library/import-preview/alpha-20260504-120500.md",
                         "record_index": 1,
                         "doc_id": "alpha",
                         "kind": "document",
                     },
                     {
-                        "path": "var/docs/import-preview/library/beta-20260504-120500.md",
+                        "path": "var/studio/export-import/library/import-preview/beta-20260504-120500.md",
                         "record_index": 2,
                         "doc_id": "beta",
                         "kind": "document",
