@@ -297,7 +297,6 @@ Manual checks:
 
 ## Related References
 
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
 - [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [Studio](/docs/?scope=studio&doc=studio)

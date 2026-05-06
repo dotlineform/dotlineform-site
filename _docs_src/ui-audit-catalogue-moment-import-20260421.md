@@ -30,7 +30,7 @@ sort_order: 10
 - decision:
   Should the moment-import page grid, action row, and result-shell layout become a shared Studio composition rather than continuing to borrow `catalogueWork*` classes?
 - current owner/home:
-  This audit doc for now. Promote to [UI Requests](/docs/?scope=studio&doc=ui-requests) only if it becomes a real multi-route shared design/spec task rather than normal route remediation.
+  This audit doc for now. Promote to [Change Requests](/docs/?scope=studio&doc=change-requests) only if it becomes a real multi-route shared design/spec task rather than normal route remediation.
 
 ## Coverage Summary
 

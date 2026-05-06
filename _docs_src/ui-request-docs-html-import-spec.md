@@ -691,7 +691,6 @@ Interpretation:
 
 ## Related References
 
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)

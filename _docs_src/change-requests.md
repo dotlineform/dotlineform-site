@@ -26,11 +26,6 @@ Do not use it for:
 
 Those still belong in the owning reference docs and change logs.
 
-## Request Groups
-
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
-  UI-driven feature requests, working specs, and task breakdowns.
-
 ## Current Requests
 
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)

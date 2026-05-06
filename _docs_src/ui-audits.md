@@ -26,7 +26,7 @@ Those belong in:
 
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 - [Design](/docs/?scope=studio&doc=design)
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
 
 ## Naming Convention
 

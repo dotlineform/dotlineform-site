@@ -162,7 +162,7 @@ Use this section for:
 Escalation rule:
 
 - keep the decision in the audit doc while it remains part of that page’s remediation path
-- move it into [UI Requests](/docs/?scope=studio&doc=ui-requests) only when it has become a real shared design/spec task rather than a normal page fix
+- move it into [Change Requests](/docs/?scope=studio&doc=change-requests) only when it has become a real shared design/spec task rather than a normal page fix
 
 ### 4. Coverage Summary
 
@@ -233,13 +233,12 @@ This keeps page audit records separate from:
 
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log), which records implementation history
 - [Design](/docs/?scope=studio&doc=design), which defines standards
-- [UI Requests](/docs/?scope=studio&doc=ui-requests), which records task/request specs
 
 Working rule:
 
 - keep post-audit remediation, cleanup progress, and unresolved decisions in the audit doc itself
 - use [Site Change Log](/docs/?scope=studio&doc=site-change-log) only when a change has actually been implemented
-- use [UI Requests](/docs/?scope=studio&doc=ui-requests) only when the audit exposes a real shared design task that needs its own spec or request doc
+- use [Change Requests](/docs/?scope=studio&doc=change-requests) only when the audit exposes a real shared design task that needs its own spec or request doc
 
 ## What Should Be Flagged
 

@@ -130,7 +130,6 @@ Manual checks:
 
 ## Related References
 
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)

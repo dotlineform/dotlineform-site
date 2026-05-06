@@ -989,12 +989,6 @@ Request docs were split between Site Docs and the top-level UI Requests section,
 **Effect:**
 The docs viewer now has one top-level Change Requests section for proposed and in-progress request docs. UI Requests remains a subgroup, while site request docs now sit directly under Change Requests.
 
-**Affected files/docs:**
-
-- [Change Requests](/docs/?scope=studio&doc=change-requests)
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
-
 ## [2026-04-28] Added work-detail unified editor request
 
 **Status:** planned
@@ -2579,7 +2573,7 @@ Updated the Studio UI conformance process so audit docs now explicitly carry `Re
 The audit process could record findings and cleanup, but it did not yet make clear where post-audit remediation and unresolved decisions should live. Without that, important follow-up work could be buried or drift into the site change log.
 
 **Effect:**
-Studio audit docs are now explicitly living records until a page is settled. Post-audit remediation stays in the audit doc, the site change log remains reserved for implemented outcomes, and only genuinely shared design/spec questions should move into [UI Requests](/docs/?scope=studio&doc=ui-requests).
+Studio audit docs are now explicitly living records until a page is settled. Post-audit remediation stays in the audit doc, the site change log remains reserved for implemented outcomes, and only genuinely shared design/spec questions should move into [Change Requests](/docs/?scope=studio&doc=change-requests).
 
 **Affected files/docs:**
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
@@ -3309,12 +3303,7 @@ Replaced the temporary UI polish punch-list workflow with a permanent Studio UI 
 IAB-driven UI work needs a durable way to distinguish one-off fixes from permanent rules, and the older punch-list format overlapped with that goal.
 
 **Effect:**
-[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) now captures issue triage and systemic rules, while [UI Requests](/docs/?scope=studio&doc=ui-requests) holds UI feature specs and task docs such as the Docs Viewer favourites request.
-
-**Affected files/docs:**
-- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
-- [UI Requests](/docs/?scope=studio&doc=ui-requests)
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
+[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) now captures issue triage and systemic rules, while [Change Requests](/docs/?scope=studio&doc=change-requests) holds feature specs and task docs such as the Docs Viewer favourites request.
 
 **Notes:**
 This establishes the standing local-Codex UI workflow in place of PR-based tracking.

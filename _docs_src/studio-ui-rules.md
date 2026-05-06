@@ -1500,7 +1500,7 @@ Add new entries at the top of this section.
 - issue: the conformance spec and UI Audits section defined how to record findings, but they did not yet make it explicit where post-audit remediation progress and unresolved design decisions should live. That risked burying open work or pushing audit follow-up into the site change log.
 - triage: systemic
 - reasoning: audit docs should remain living records until a page is settled. That keeps findings, cleanup, remediation status, and unresolved decisions together without creating a separate ticket system.
-- permanent rule: Studio UI audit docs must include explicit `Remediation Status` and `Open Decisions` sections. Keep post-audit remediation and unresolved decisions in the audit doc itself. Use [Site Change Log](/docs/?scope=studio&doc=site-change-log) only for implemented outcomes, and promote items into [UI Requests](/docs/?scope=studio&doc=ui-requests) only when they become real shared design/spec tasks.
+- permanent rule: Studio UI audit docs must include explicit `Remediation Status` and `Open Decisions` sections. Keep post-audit remediation and unresolved decisions in the audit doc itself. Use [Site Change Log](/docs/?scope=studio&doc=site-change-log) only for significant implemented outcomes, and promote items into [Change Requests](/docs/?scope=studio&doc=change-requests) only when they become real shared design/spec tasks.
 - enforcement point: `_docs_src/studio-ui-conformance.md`, `_docs_src/ui-audits.md`
 - files changed:
   - `_docs_src/studio-ui-conformance.md`

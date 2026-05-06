@@ -68,6 +68,7 @@ def test_missing_docs_links_inside_code_blocks_are_ignored() -> None:
     content_html = """
     <p><a href="/docs/?scope=studio&amp;doc=missing-prose">Missing Prose</a></p>
     <pre><code><a href="/docs/?scope=studio&amp;doc=missing-code">Missing Code</a></code></pre>
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2"><a href="/docs/?scope=studio&amp;doc=missing-highlighted-code">Missing Highlighted Code</a></span></code></pre></div></div>
     """
     with make_repo(content_html) as temp_path:
         result = docs_broken_links.audit_docs_broken_links(Path(temp_path), "studio")

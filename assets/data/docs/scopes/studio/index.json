@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T15:18:37Z",
+  "generated_at": "2026-05-06T15:55:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -319,7 +319,7 @@
       "source_path": "ui-audit-catalogue-moment-import-20260421.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audit-catalogue-moment-import-20260421.json",
-      "content_text_length": 5446
+      "content_text_length": 5450
     },
     {
       "scope": "studio",
@@ -605,7 +605,7 @@
       "source_path": "site-change-log-2026-04.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
-      "content_text_length": 191221
+      "content_text_length": 191091
     },
     {
       "scope": "studio",
@@ -710,7 +710,7 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 9519
+      "content_text_length": 9480
     },
     {
       "scope": "studio",
@@ -1091,7 +1091,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 151844
+      "content_text_length": 151860
     },
     {
       "scope": "studio",
@@ -2496,7 +2496,7 @@
       "source_path": "ui-request-docs-html-import-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-spec.json",
-      "content_text_length": 23936,
+      "content_text_length": 23924,
       "ui_status": "done"
     },
     {
@@ -2542,7 +2542,7 @@
       "source_path": "ui-request-docs-html-import-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-task.json",
-      "content_text_length": 9275,
+      "content_text_length": 9263,
       "ui_status": "done"
     },
     {
@@ -2573,7 +2573,7 @@
       "source_path": "ui-request-docs-viewer-index-drag-undo-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json",
-      "content_text_length": 5032,
+      "content_text_length": 5020,
       "ui_status": "done"
     },
     {
@@ -2695,7 +2695,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
-      "content_text_length": 2008
+      "content_text_length": 2012
     },
     {
       "scope": "studio",
@@ -2710,7 +2710,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1533
+      "content_text_length": 1442
     },
     {
       "scope": "studio",
