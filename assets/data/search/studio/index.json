@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c2a892e5d9f75721431cd3c9f78a7fe3",
-    "generated_at_utc": "2026-05-06T18:34:49Z",
+    "version": "blake2b-5a48e83683de0b9e85a89caf839ce604",
+    "generated_at_utc": "2026-05-06T18:48:23Z",
     "count": 193
   },
   "entries": [
@@ -70,24 +70,6 @@
         "30"
       ],
       "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
-    },
-    {
-      "id": "ui",
-      "kind": "doc",
-      "title": "UI",
-      "href": "/docs/?scope=studio&doc=ui",
-      "last_updated": "2026-05-05",
-      "parent_id": "design",
-      "parent_title": "Design",
-      "display_meta": "2026-05-05 • Design",
-      "search_terms": [
-        "ui",
-        "design",
-        "2026-05-05",
-        "2026",
-        "05"
-      ],
-      "search_text": "ui design 2026-05-05 2026 05"
     },
     {
       "id": "bulk-add-work",
@@ -3799,10 +3781,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-03 13:55",
+      "last_updated": "2026-05-06 19:48",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 13:55 • Change Requests",
+      "display_meta": "2026-05-06 19:48 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -3812,14 +3794,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03 13:55",
+        "2026-05-06 19:48",
         "2026",
         "05",
-        "03",
-        "13",
-        "55"
+        "06",
+        "19",
+        "48"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-03 13:55 2026 05 03 13 55"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-06 19:48 2026 05 06 19 48"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -4510,22 +4492,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-06 19:34",
-      "display_meta": "2026-05-06 19:34",
+      "last_updated": "2026-05-06 19:48",
+      "display_meta": "2026-05-06 19:48",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-06 19:34",
+        "2026-05-06 19:48",
         "2026",
         "05",
         "06",
         "19",
-        "34"
+        "48"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-06 19:34 2026 05 06 19 34"
+      "search_text": "site-change-log site change log site change log 2026-05-06 19:48 2026 05 06 19 48"
     },
     {
       "id": "tiered-dimension-policy",
@@ -4632,6 +4614,24 @@
         "05"
       ],
       "search_text": "search-change-log search change log search change log 2026-05-05 2026 05"
+    },
+    {
+      "id": "ui",
+      "kind": "doc",
+      "title": "UI",
+      "href": "/docs/?scope=studio&doc=ui",
+      "last_updated": "2026-05-06 19:45",
+      "display_meta": "2026-05-06 19:45",
+      "search_terms": [
+        "ui",
+        "2026-05-06 19:45",
+        "2026",
+        "05",
+        "06",
+        "19",
+        "45"
+      ],
+      "search_text": "ui 2026-05-06 19:45 2026 05 06 19 45"
     }
   ]
 }

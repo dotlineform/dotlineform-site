@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-03 13:55"
+last_updated: "2026-05-06 19:48"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -65,7 +65,8 @@ Implemented now:
 - in available manage mode, status pill clicks write immediately through the metadata endpoint and reload the docs payload
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
-- when the metadata modal changes `parent_id` and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
+- when the metadata modal changes `parent_id` to a non-root parent and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
+- when the metadata modal changes `parent_id` to root, the visible `sort_order` field is respected rather than converted to append
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
 
 Not implemented yet:

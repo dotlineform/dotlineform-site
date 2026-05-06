@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 19:34"
+last_updated: "2026-05-06 19:48"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-06] Respected root sort order in Docs Viewer metadata edits
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Management
+
+**Summary:**
+Changing a doc's parent to root in the metadata modal now preserves the visible `sort_order` value instead of converting the save request to append.
+
+**Reason:**
+The modal's append shortcut was intended for moving a doc into another parent while leaving the existing sort field untouched.
+For root moves, that made the shown `sort_order` look ignored and placed the doc at the bottom of the root index.
+
+**Files changed:**
+
+- `assets/js/docs-viewer.js`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+Root reparenting now respects the sort field the user can see and edit.
+Moving into a non-root parent still appends by default when the sort field is left unchanged.
 
 ## [2026-05-06] Quieted available Docs Viewer manage mode
 

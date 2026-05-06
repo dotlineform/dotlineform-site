@@ -1768,7 +1768,7 @@
       return;
     }
     var payloadSortOrder = sortOrderText;
-    if (parentId !== originalParentId && sortOrderText === originalSortOrderText) {
+    if (parentId && parentId !== originalParentId && sortOrderText === originalSortOrderText) {
       payloadSortOrder = "append";
     }
     var payload = {

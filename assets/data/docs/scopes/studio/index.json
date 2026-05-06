@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T18:34:49Z",
+  "generated_at": "2026-05-06T18:48:22Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -35,21 +35,6 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-record-hash-simplification",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-record-hash-simplification.json",
       "content_text_length": 7052
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui",
-      "title": "UI",
-      "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
-      "parent_id": "design",
-      "sort_order": 9,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
-      "content_text_length": 2123
     },
     {
       "scope": "studio",
@@ -2390,7 +2375,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-03 13:55",
+      "last_updated": "2026-05-06 19:48",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -2398,7 +2383,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 25635,
+      "content_text_length": 25781,
       "ui_status": "done"
     },
     {
@@ -2851,7 +2836,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 19:34",
+      "last_updated": "2026-05-06 19:48",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2859,7 +2844,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 42092
+      "content_text_length": 42868
     },
     {
       "scope": "studio",
@@ -2935,6 +2920,21 @@
       "viewer_url": "/docs/?scope=studio&doc=search-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
       "content_text_length": 41518
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui",
+      "title": "UI",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-06 19:45",
+      "parent_id": "",
+      "sort_order": 1019,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
+      "content_text_length": 2123
     }
   ]
 }
