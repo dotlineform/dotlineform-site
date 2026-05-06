@@ -1,10 +1,10 @@
 ---
 doc_id: registry-driven-scoring-architecture
-title: "Registry-Driven Scoring Architecture"
+title: Registry-Driven Scoring Architecture
 added_date: 2026-04-16
-last_updated: 2026-04-16
-parent_id: studio
-sort_order: 240
+last_updated: "2026-05-06 20:21"
+parent_id: analytics
+sort_order: 60
 ---
 # Registry-Driven Scoring Architecture
 Draft design note for semantic-to-UI mapping

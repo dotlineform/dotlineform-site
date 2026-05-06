@@ -1,10 +1,10 @@
 ---
 doc_id: catalogue-field-registry-review
-title: "Catalogue Field Registry Review"
+title: Catalogue Field Registry Review
 added_date: 2026-05-01
-last_updated: "2026-05-03 14:35"
-parent_id: studio
-sort_order: 235
+last_updated: "2026-05-06 20:20"
+parent_id: catalogue
+sort_order: 60
 ---
 # Catalogue Field Registry Review
 

@@ -1,10 +1,10 @@
 ---
 doc_id: project-state-page
-title: "Project State Page"
+title: Project State Page
 added_date: 2026-04-27
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 42
+last_updated: "2026-05-06 20:22"
+parent_id: catalogue
+sort_order: 70
 ---
 # Project State Page
 

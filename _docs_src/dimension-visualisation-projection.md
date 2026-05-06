@@ -1,10 +1,10 @@
 ---
 doc_id: dimension-visualisation-projection
-title: "Dimension Visualisation Projection Table"
+title: Dimension Visualisation Projection Table
 added_date: 2026-04-16
-last_updated: 2026-04-16
-parent_id: studio
-sort_order: 260
+last_updated: "2026-05-06 20:21"
+parent_id: analytics
+sort_order: 70
 ---
 # Dimension Visualisation Projection Table
 Draft for linking native dimension types to shared diagrams

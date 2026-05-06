@@ -1,10 +1,10 @@
 ---
 doc_id: tiered-dimension-policy
-title: "Tiered Dimension Policy"
+title: Tiered Dimension Policy
 added_date: 2026-04-16
-last_updated: 2026-04-16
-parent_id: studio
-sort_order: 270
+last_updated: "2026-05-06 20:22"
+parent_id: analytics
+sort_order: 90
 ---
 # Tiered Dimension Policy
 Draft policy note for base, selectable, and experimental dimensions

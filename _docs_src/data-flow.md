@@ -1,12 +1,11 @@
 ---
 doc_id: data-flow
-title: "Data Flow"
+title: Data Flow
 added_date: 2026-03-31
-last_updated: 2026-04-30
-parent_id: architecture
-sort_order: 10
+last_updated: "2026-05-06 20:24"
+parent_id: catalogue
+sort_order: 90
 ---
-
 # Data Flow
 
 This document describes the current runtime data flow for the public catalogue.

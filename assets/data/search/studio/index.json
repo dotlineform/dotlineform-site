@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f2fb2aa38e3c47ea37e08f5adaece15b",
-    "generated_at_utc": "2026-05-06T19:17:48Z",
+    "version": "blake2b-211e860967aec7c1e12607752dbcedd3",
+    "generated_at_utc": "2026-05-06T19:25:00Z",
     "count": 193
   },
   "entries": [
@@ -142,28 +142,6 @@
         "01"
       ],
       "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map archive 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "data-flow",
-      "kind": "doc",
-      "title": "Data Flow",
-      "href": "/docs/?scope=studio&doc=data-flow",
-      "last_updated": "2026-04-30",
-      "parent_id": "architecture",
-      "parent_title": "Architecture",
-      "display_meta": "2026-04-30 • Architecture",
-      "search_terms": [
-        "data-flow",
-        "data",
-        "flow",
-        "data flow",
-        "architecture",
-        "2026-04-30",
-        "2026",
-        "04",
-        "30"
-      ],
-      "search_text": "data-flow data flow data flow architecture 2026-04-30 2026 04 30"
     },
     {
       "id": "scripts-docs-export",
@@ -1857,31 +1835,6 @@
       "search_text": "data-models-analysis data models analysis analysis scope scope data models 2026-04-26 2026 04 26"
     },
     {
-      "id": "docs-broken-links",
-      "kind": "doc",
-      "title": "Docs Broken Links",
-      "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-05-06 16:15",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-06 16:15 • Studio",
-      "search_terms": [
-        "docs-broken-links",
-        "docs",
-        "broken",
-        "links",
-        "docs broken links",
-        "studio",
-        "2026-05-06 16:15",
-        "2026",
-        "05",
-        "06",
-        "16",
-        "15"
-      ],
-      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-05-06 16:15 2026 05 06 16 15"
-    },
-    {
       "id": "docs-viewer-draft-publishing-spec",
       "kind": "doc",
       "title": "Viewability Workflow Spec",
@@ -2278,29 +2231,6 @@
         "02"
       ],
       "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and change requests change requests 2026-05-02 2026 05 02"
-    },
-    {
-      "id": "project-state-page",
-      "kind": "doc",
-      "title": "Project State Page",
-      "href": "/docs/?scope=studio&doc=project-state-page",
-      "last_updated": "2026-05-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-03 • Studio",
-      "search_terms": [
-        "project-state-page",
-        "project",
-        "state",
-        "page",
-        "project state page",
-        "studio",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "project-state-page project state page project state page studio 2026-05-03 2026 05 03"
     },
     {
       "id": "scripts-docs-management-server",
@@ -2744,6 +2674,30 @@
       "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs change requests change requests 2026-05-02 2026 05 02"
     },
     {
+      "id": "catalogue-field-registry-review",
+      "kind": "doc",
+      "title": "Catalogue Field Registry Review",
+      "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
+      "last_updated": "2026-05-06 20:20",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:20 • Catalogue",
+      "search_terms": [
+        "catalogue-field-registry-review",
+        "catalogue",
+        "field",
+        "registry",
+        "review",
+        "catalogue field registry review",
+        "2026-05-06 20:20",
+        "2026",
+        "05",
+        "06",
+        "20"
+      ],
+      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review 2026-05-06 20:20 2026 05 06 20"
+    },
+    {
       "id": "scripts-catalogue-source",
       "kind": "doc",
       "title": "Catalogue Source Utilities",
@@ -2812,6 +2766,32 @@
         "01"
       ],
       "search_text": "scripts-delete-work scripts delete work delete work archive 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "registry-driven-scoring-architecture",
+      "kind": "doc",
+      "title": "Registry-Driven Scoring Architecture",
+      "href": "/docs/?scope=studio&doc=registry-driven-scoring-architecture",
+      "last_updated": "2026-05-06 20:21",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 20:21 • Analytics",
+      "search_terms": [
+        "registry-driven-scoring-architecture",
+        "registry",
+        "driven",
+        "scoring",
+        "architecture",
+        "registry-driven scoring architecture",
+        "analytics",
+        "2026-05-06 20:21",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "21"
+      ],
+      "search_text": "registry-driven-scoring-architecture registry driven scoring architecture registry-driven scoring architecture analytics 2026-05-06 20:21 2026 05 06 20 21"
     },
     {
       "id": "search-ui-behaviour",
@@ -2951,6 +2931,30 @@
       "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan archive 2026-05-05 2026 05"
     },
     {
+      "id": "docs-broken-links",
+      "kind": "doc",
+      "title": "Docs Broken Links",
+      "href": "/docs/?scope=studio&doc=docs-broken-links",
+      "last_updated": "2026-05-06 20:22",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs",
+      "display_meta": "2026-05-06 20:22 • Docs",
+      "search_terms": [
+        "docs-broken-links",
+        "docs",
+        "broken",
+        "links",
+        "docs broken links",
+        "2026-05-06 20:22",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "22"
+      ],
+      "search_text": "docs-broken-links docs broken links docs broken links 2026-05-06 20:22 2026 05 06 20 22"
+    },
+    {
       "id": "scripts-project-state-report",
       "kind": "doc",
       "title": "Project State Report",
@@ -3052,6 +3056,32 @@
       "search_text": "css-audit-spec css audit spec css audit spec (v1) v1 ui 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
+      "id": "dimension-visualisation-projection",
+      "kind": "doc",
+      "title": "Dimension Visualisation Projection Table",
+      "href": "/docs/?scope=studio&doc=dimension-visualisation-projection",
+      "last_updated": "2026-05-06 20:21",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 20:21 • Analytics",
+      "search_terms": [
+        "dimension-visualisation-projection",
+        "dimension",
+        "visualisation",
+        "projection",
+        "dimension visualisation projection table",
+        "table",
+        "analytics",
+        "2026-05-06 20:21",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "21"
+      ],
+      "search_text": "dimension-visualisation-projection dimension visualisation projection dimension visualisation projection table table analytics 2026-05-06 20:21 2026 05 06 20 21"
+    },
+    {
       "id": "config-library-export-configs",
       "kind": "doc",
       "title": "Library Export Configs",
@@ -3075,6 +3105,31 @@
         "30"
       ],
       "search_text": "config-library-export-configs config library export configs library export configs 2026-05-06 12:30 2026 05 06 12 30"
+    },
+    {
+      "id": "project-state-page",
+      "kind": "doc",
+      "title": "Project State Page",
+      "href": "/docs/?scope=studio&doc=project-state-page",
+      "last_updated": "2026-05-06 20:22",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:22 • Catalogue",
+      "search_terms": [
+        "project-state-page",
+        "project",
+        "state",
+        "page",
+        "project state page",
+        "catalogue",
+        "2026-05-06 20:22",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "22"
+      ],
+      "search_text": "project-state-page project state page project state page catalogue 2026-05-06 20:22 2026 05 06 20 22"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -3211,6 +3266,30 @@
       "search_text": "architecture 2026-03-31 2026 03 31"
     },
     {
+      "id": "build-activity",
+      "kind": "doc",
+      "title": "Build Activity",
+      "href": "/docs/?scope=studio&doc=build-activity",
+      "last_updated": "2026-05-06 20:23",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:23 • Catalogue",
+      "search_terms": [
+        "build-activity",
+        "build",
+        "activity",
+        "build activity",
+        "catalogue",
+        "2026-05-06 20:23",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "23"
+      ],
+      "search_text": "build-activity build activity build activity catalogue 2026-05-06 20:23 2026 05 06 20 23"
+    },
+    {
       "id": "site-request-catalogue-delete-cleanup",
       "kind": "doc",
       "title": "Catalogue Delete Cleanup Request",
@@ -3262,6 +3341,31 @@
       "search_text": "css-refactor css refactor css refactor ui 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
+      "id": "experimental-dimension-framework",
+      "kind": "doc",
+      "title": "Experimental Dimension Framework",
+      "href": "/docs/?scope=studio&doc=experimental-dimension-framework",
+      "last_updated": "2026-05-06 20:21",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 20:21 • Analytics",
+      "search_terms": [
+        "experimental-dimension-framework",
+        "experimental",
+        "dimension",
+        "framework",
+        "experimental dimension framework",
+        "analytics",
+        "2026-05-06 20:21",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "21"
+      ],
+      "search_text": "experimental-dimension-framework experimental dimension framework experimental dimension framework analytics 2026-05-06 20:21 2026 05 06 20 21"
+    },
+    {
       "id": "search-validation-checklist",
       "kind": "doc",
       "title": "Search Validation Checklist",
@@ -3284,26 +3388,28 @@
       "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-04-25 2026 04 25"
     },
     {
-      "id": "build-activity",
+      "id": "data-flow",
       "kind": "doc",
-      "title": "Build Activity",
-      "href": "/docs/?scope=studio&doc=build-activity",
-      "last_updated": "2026-05-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-03 • Studio",
+      "title": "Data Flow",
+      "href": "/docs/?scope=studio&doc=data-flow",
+      "last_updated": "2026-05-06 20:24",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:24 • Catalogue",
       "search_terms": [
-        "build-activity",
-        "build",
-        "activity",
-        "build activity",
-        "studio",
-        "2026-05-03",
+        "data-flow",
+        "data",
+        "flow",
+        "data flow",
+        "catalogue",
+        "2026-05-06 20:24",
         "2026",
         "05",
-        "03"
+        "06",
+        "20",
+        "24"
       ],
-      "search_text": "build-activity build activity build activity studio 2026-05-03 2026 05 03"
+      "search_text": "data-flow data flow data flow catalogue 2026-05-06 20:24 2026 05 06 20 24"
     },
     {
       "id": "design",
@@ -3371,6 +3477,31 @@
         "31"
       ],
       "search_text": "scripts-tag-write-server scripts tag write server tag write server 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "tiered-dimension-policy",
+      "kind": "doc",
+      "title": "Tiered Dimension Policy",
+      "href": "/docs/?scope=studio&doc=tiered-dimension-policy",
+      "last_updated": "2026-05-06 20:22",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 20:22 • Analytics",
+      "search_terms": [
+        "tiered-dimension-policy",
+        "tiered",
+        "dimension",
+        "policy",
+        "tiered dimension policy",
+        "analytics",
+        "2026-05-06 20:22",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "22"
+      ],
+      "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy analytics 2026-05-06 20:22 2026 05 06 20 22"
     },
     {
       "id": "site-request-work-owned-files-links",
@@ -4466,103 +4597,6 @@
       "search_text": "site-change-log-guidance site change log guidance site change log guidance 2026-05-06 15:41 2026 05 06 15 41"
     },
     {
-      "id": "catalogue-field-registry-review",
-      "kind": "doc",
-      "title": "Catalogue Field Registry Review",
-      "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
-      "last_updated": "2026-05-03 14:35",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-03 14:35 • Studio",
-      "search_terms": [
-        "catalogue-field-registry-review",
-        "catalogue",
-        "field",
-        "registry",
-        "review",
-        "catalogue field registry review",
-        "studio",
-        "2026-05-03 14:35",
-        "2026",
-        "05",
-        "03",
-        "14",
-        "35"
-      ],
-      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review studio 2026-05-03 14:35 2026 05 03 14 35"
-    },
-    {
-      "id": "registry-driven-scoring-architecture",
-      "kind": "doc",
-      "title": "Registry-Driven Scoring Architecture",
-      "href": "/docs/?scope=studio&doc=registry-driven-scoring-architecture",
-      "last_updated": "2026-04-16",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-04-16 • Studio",
-      "search_terms": [
-        "registry-driven-scoring-architecture",
-        "registry",
-        "driven",
-        "scoring",
-        "architecture",
-        "registry-driven scoring architecture",
-        "studio",
-        "2026-04-16",
-        "2026",
-        "04",
-        "16"
-      ],
-      "search_text": "registry-driven-scoring-architecture registry driven scoring architecture registry-driven scoring architecture studio 2026-04-16 2026 04 16"
-    },
-    {
-      "id": "experimental-dimension-framework",
-      "kind": "doc",
-      "title": "Experimental Dimension Framework",
-      "href": "/docs/?scope=studio&doc=experimental-dimension-framework",
-      "last_updated": "2026-04-16",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-04-16 • Studio",
-      "search_terms": [
-        "experimental-dimension-framework",
-        "experimental",
-        "dimension",
-        "framework",
-        "experimental dimension framework",
-        "studio",
-        "2026-04-16",
-        "2026",
-        "04",
-        "16"
-      ],
-      "search_text": "experimental-dimension-framework experimental dimension framework experimental dimension framework studio 2026-04-16 2026 04 16"
-    },
-    {
-      "id": "dimension-visualisation-projection",
-      "kind": "doc",
-      "title": "Dimension Visualisation Projection Table",
-      "href": "/docs/?scope=studio&doc=dimension-visualisation-projection",
-      "last_updated": "2026-04-16",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-04-16 • Studio",
-      "search_terms": [
-        "dimension-visualisation-projection",
-        "dimension",
-        "visualisation",
-        "projection",
-        "dimension visualisation projection table",
-        "table",
-        "studio",
-        "2026-04-16",
-        "2026",
-        "04",
-        "16"
-      ],
-      "search_text": "dimension-visualisation-projection dimension visualisation projection dimension visualisation projection table table studio 2026-04-16 2026 04 16"
-    },
-    {
       "id": "site-change-log",
       "kind": "doc",
       "title": "Site Change Log",
@@ -4583,29 +4617,6 @@
         "48"
       ],
       "search_text": "site-change-log site change log site change log 2026-05-06 19:48 2026 05 06 19 48"
-    },
-    {
-      "id": "tiered-dimension-policy",
-      "kind": "doc",
-      "title": "Tiered Dimension Policy",
-      "href": "/docs/?scope=studio&doc=tiered-dimension-policy",
-      "last_updated": "2026-04-16",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-04-16 • Studio",
-      "search_terms": [
-        "tiered-dimension-policy",
-        "tiered",
-        "dimension",
-        "policy",
-        "tiered dimension policy",
-        "studio",
-        "2026-04-16",
-        "2026",
-        "04",
-        "16"
-      ],
-      "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy studio 2026-04-16 2026 04 16"
     },
     {
       "id": "archive",

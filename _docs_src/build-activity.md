@@ -1,10 +1,10 @@
 ---
 doc_id: build-activity
-title: "Build Activity"
+title: Build Activity
 added_date: 2026-04-18
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 90
+last_updated: "2026-05-06 20:23"
+parent_id: catalogue
+sort_order: 80
 ---
 # Build Activity
 
