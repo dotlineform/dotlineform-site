@@ -1,4 +1,4 @@
-import { getStudioText, loadStudioConfig } from "./studio-config.js";
+import { getStudioDataPath, getStudioText, loadStudioConfig } from "./studio-config.js";
 import {
   DOCS_MANAGEMENT_ENDPOINTS,
   getJson,
@@ -11,6 +11,12 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
+import {
+  workflowDomainForKey,
+  workflowDomainFromUrl,
+  workflowDomainIsActive,
+  workflowDomainsForOperation
+} from "./export-import-adapters.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
@@ -47,19 +53,19 @@ function setStatus(node, state, message) {
   }
 }
 
-function workflowScopeFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const requested = normalizeText(params.get("scope")).toLowerCase();
-  return WORKFLOW_SCOPES.some((item) => item.key === requested) ? requested : DEFAULT_SCOPE;
+function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
+  return workflowDomainFromUrl(domains, DEFAULT_SCOPE);
 }
 
-function scopeSupportsSourceApply(scope) {
-  return normalizeText(scope).toLowerCase() === "library";
+function scopeSupportsSourceApply(state) {
+  return workflowDomainIsActive(state.summaryApplyScopes, state.scope)
+    || workflowDomainIsActive(state.hierarchyApplyScopes, state.scope);
 }
 
 function scopeLabel(state, scope = state.scope) {
-  const item = WORKFLOW_SCOPES.find((candidate) => candidate.key === scope) || WORKFLOW_SCOPES[0];
-  return getStudioText(state.config, `library_import.${item.labelKey}`, item.fallback);
+  const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
+  if (item.labelKey) return getStudioText(state.config, `library_import.${item.labelKey}`, item.fallback);
+  return normalizeText(item.label) || item.fallback || scope;
 }
 
 function scopeTitle(state, scope = state.scope) {
@@ -68,16 +74,18 @@ function scopeTitle(state, scope = state.scope) {
 }
 
 function renderScopeSelect(state) {
-  state.scopeSelect.innerHTML = WORKFLOW_SCOPES.map((item) => {
-    const label = getStudioText(state.config, `library_import.${item.labelKey}`, item.fallback);
+  state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
+    const label = item.labelKey
+      ? getStudioText(state.config, `library_import.${item.labelKey}`, item.fallback)
+      : (normalizeText(item.label) || item.fallback);
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
   }).join("");
 }
 
-function updateScopeUrl(scope) {
+function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
   const nextScope = normalizeText(scope).toLowerCase();
-  if (!WORKFLOW_SCOPES.some((item) => item.key === nextScope)) return;
+  if (!domains.some((item) => item.key === nextScope)) return;
   const url = new URL(window.location.href);
   if (nextScope === DEFAULT_SCOPE) {
     url.searchParams.delete("scope");
@@ -85,6 +93,31 @@ function updateScopeUrl(scope) {
     url.searchParams.set("scope", nextScope);
   }
   window.location.href = url.toString();
+}
+
+async function loadJson(path) {
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
+}
+
+async function loadAdapterRegistry(config) {
+  const registryPath = getStudioDataPath(config, "export_import_adapters")
+    || "/assets/studio/data/export_import_adapters.json";
+  return loadJson(registryPath);
+}
+
+function scopeUnavailableMessage(state) {
+  const domain = workflowDomainForKey(state.workflowScopes, state.scope);
+  return normalizeText(domain && domain.message)
+    || getStudioText(
+      state.config,
+      "library_import.scope_unsupported",
+      "{scope_label} import is not implemented yet.",
+      { scope_label: scopeTitle(state) }
+    );
 }
 
 function routeModeForState(state) {
@@ -466,7 +499,7 @@ function renderResult(state, payload, failed = false) {
 }
 
 function setControlsDisabled(state, disabled) {
-  const supportsApply = scopeSupportsSourceApply(state.scope);
+  const supportsApply = scopeSupportsSourceApply(state);
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
@@ -477,7 +510,7 @@ function setControlsDisabled(state, disabled) {
 
 function syncApplyActionState(state) {
   if (!state.updateSummaryButton || !state.applyHierarchyButton) return;
-  const supportsApply = scopeSupportsSourceApply(state.scope);
+  const supportsApply = scopeSupportsSourceApply(state);
   state.updateSummaryButton.disabled = state.isRunning || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
   state.applyHierarchyButton.disabled = state.isRunning || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
 }
@@ -864,6 +897,9 @@ async function init() {
     bootStatus,
     root,
     scope: workflowScopeFromUrl(),
+    workflowScopes: WORKFLOW_SCOPES,
+    summaryApplyScopes: WORKFLOW_SCOPES,
+    hierarchyApplyScopes: WORKFLOW_SCOPES,
     scopeLabelNode: document.getElementById("libraryImportScopeLabel"),
     scopeSelect: document.getElementById("libraryImportScopeSelect"),
     fileLabelNode: document.getElementById("libraryImportFileLabel"),
@@ -905,6 +941,11 @@ async function init() {
 
   try {
     state.config = await loadStudioConfig();
+    const adapterRegistry = await loadAdapterRegistry(state.config);
+    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "import_files", WORKFLOW_SCOPES);
+    state.summaryApplyScopes = workflowDomainsForOperation(adapterRegistry, "summary_apply", []);
+    state.hierarchyApplyScopes = workflowDomainsForOperation(adapterRegistry, "hierarchy_apply", []);
+    state.scope = workflowScopeFromUrl(state.workflowScopes);
     renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());
 
@@ -932,7 +973,7 @@ async function init() {
       "library_import.apply_hierarchy_title",
       "Update selected document parent ids from the staged file."
     );
-    if (!scopeSupportsSourceApply(state.scope)) {
+    if (!scopeSupportsSourceApply(state)) {
       const unsupportedApplyTitle = getStudioText(
         state.config,
         "library_import.apply_unsupported_title",
@@ -948,6 +989,15 @@ async function init() {
 
     root.hidden = false;
     bootStatus.hidden = true;
+
+    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value, state.workflowScopes));
+
+    if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
+      setControlsDisabled(state, true);
+      setStatus(state.statusNode, "warn", scopeUnavailableMessage(state));
+      markRouteReady(state, true);
+      return;
+    }
 
     if (!state.serviceAvailable) {
       setControlsDisabled(state, true);
@@ -999,7 +1049,6 @@ async function init() {
     );
     markRouteReady(state, true);
 
-    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value));
     state.fileSelect.addEventListener("change", () => {
       resetResult(state);
       state.lastImportResult = null;

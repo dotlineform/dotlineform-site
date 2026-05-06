@@ -25,6 +25,36 @@
       "data_domain": "library",
       "operation": "hierarchy_apply",
       "adapter_id": "documents"
+    },
+    {
+      "data_domain": "catalogue",
+      "operation": "export",
+      "adapter_id": "catalogue"
+    },
+    {
+      "data_domain": "catalogue",
+      "operation": "import_files",
+      "adapter_id": "catalogue"
+    },
+    {
+      "data_domain": "catalogue",
+      "operation": "import_preview",
+      "adapter_id": "catalogue"
+    },
+    {
+      "data_domain": "analytics",
+      "operation": "export",
+      "adapter_id": "analytics"
+    },
+    {
+      "data_domain": "analytics",
+      "operation": "import_files",
+      "adapter_id": "analytics"
+    },
+    {
+      "data_domain": "analytics",
+      "operation": "import_preview",
+      "adapter_id": "analytics"
     }
   ],
   "adapters": [
@@ -32,10 +62,12 @@
       "id": "documents",
       "module": "documents",
       "label": "Documents",
+      "status": "active",
       "data_domains": {
         "library": {
           "label": "Library",
           "scope": "library",
+          "status": "active",
           "paths": {
             "export_root": "var/studio/export-import/library/exports",
             "staging_root": "var/studio/export-import/library/import-staging",
@@ -53,11 +85,113 @@
         }
       },
       "capabilities": [
-        "export",
-        "import_files",
-        "import_preview",
-        "summary_apply",
-        "hierarchy_apply"
+        {
+          "operation": "export",
+          "status": "active"
+        },
+        {
+          "operation": "import_files",
+          "status": "active"
+        },
+        {
+          "operation": "import_preview",
+          "status": "active"
+        },
+        {
+          "operation": "summary_apply",
+          "status": "active"
+        },
+        {
+          "operation": "hierarchy_apply",
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "id": "catalogue",
+      "module": "catalogue",
+      "label": "Catalogue",
+      "status": "stub",
+      "data_domains": {
+        "catalogue": {
+          "label": "Catalogue",
+          "scope": "catalogue",
+          "status": "stub",
+          "paths": {
+            "export_root": "var/studio/export-import/catalogue/exports",
+            "staging_root": "var/studio/export-import/catalogue/import-staging",
+            "preview_root": "var/studio/export-import/catalogue/import-preview",
+            "source_root": "assets/studio/data/catalogue"
+          },
+          "sources": {
+            "source_root": "assets/studio/data/catalogue",
+            "works": "assets/studio/data/catalogue/works.json",
+            "work_details": "assets/studio/data/catalogue/work_details.json",
+            "series": "assets/studio/data/catalogue/series.json",
+            "moments": "assets/studio/data/catalogue/moments.json"
+          },
+          "config": {}
+        }
+      },
+      "capabilities": [
+        {
+          "operation": "export",
+          "status": "planned",
+          "message": "Catalogue export is not implemented yet."
+        },
+        {
+          "operation": "import_files",
+          "status": "planned",
+          "message": "Catalogue import staging is not implemented yet."
+        },
+        {
+          "operation": "import_preview",
+          "status": "planned",
+          "message": "Catalogue import preview is not implemented yet."
+        }
+      ]
+    },
+    {
+      "id": "analytics",
+      "module": "analytics",
+      "label": "Analytics",
+      "status": "stub",
+      "data_domains": {
+        "analytics": {
+          "label": "Analytics",
+          "scope": "analytics",
+          "status": "stub",
+          "paths": {
+            "export_root": "var/studio/export-import/analytics/exports",
+            "staging_root": "var/studio/export-import/analytics/import-staging",
+            "preview_root": "var/studio/export-import/analytics/import-preview",
+            "source_root": "_docs_src_analysis"
+          },
+          "sources": {
+            "source_root": "_docs_src_analysis",
+            "docs_index": "assets/data/docs/scopes/analysis/index.json",
+            "docs_payload_root": "assets/data/docs/scopes/analysis/by-id",
+            "search_index": "assets/data/search/analysis/index.json"
+          },
+          "config": {}
+        }
+      },
+      "capabilities": [
+        {
+          "operation": "export",
+          "status": "planned",
+          "message": "Analytics export is not implemented yet."
+        },
+        {
+          "operation": "import_files",
+          "status": "planned",
+          "message": "Analytics import staging is not implemented yet."
+        },
+        {
+          "operation": "import_preview",
+          "status": "planned",
+          "message": "Analytics import preview is not implemented yet."
+        }
       ]
     }
   ]

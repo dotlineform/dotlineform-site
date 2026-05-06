@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:15"
 parent_id: scripts
 sort_order: 10
 ---
@@ -221,7 +221,8 @@ Broken-links behavior:
 
 Export behavior:
 
-- `data_domain` must resolve through `assets/studio/data/export_import_adapters.json`; the first configured domain is `library`
+- `data_domain` must resolve through `assets/studio/data/export_import_adapters.json`; the first implemented domain is `library`
+- stub adapters and planned capabilities fail closed before the endpoint runs document-specific export behavior
 - `config_id` must resolve in the adapter-declared export config file
 - `target_format` may be `json`, `jsonl`, or omitted; omitted uses the config's default `target.format`
 - `doc_ids` is an explicit list used by configs that support explicit selection
@@ -252,6 +253,7 @@ Import file listing behavior:
 
 - `data_domain` must resolve exactly one adapter through `assets/studio/data/export_import_adapters.json`
 - the first implementation maps `data_domain=library` to the `documents` adapter
+- stub adapters and planned capabilities fail closed before the endpoint runs document-specific import behavior
 - lists staged `.json` and `.jsonl` files under the adapter-declared staging root
 - returns filename, repo-relative path, format, size, and modified time
 - does not parse or log file content
@@ -268,6 +270,7 @@ Import file listing behavior:
 Import preview behavior:
 
 - `data_domain` must resolve exactly one adapter with `import_preview` capability
+- stub adapters and planned capabilities fail closed before the endpoint runs document-specific preview behavior
 - `staged_filename` must resolve inside the adapter-declared staging root
 - parses the staged data file through `./scripts/docs/docs_import.py`
 - loads current generated docs index and payload state through the shared import engine for the adapter-declared docs scope

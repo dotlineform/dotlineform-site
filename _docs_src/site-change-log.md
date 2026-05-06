@@ -2,11 +2,36 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:15"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-06] Added future export/import adapter stubs
+
+**Status:** implemented
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+Added explicit `catalogue` and `analytics` adapter stubs to the export/import adapter registry.
+The stubs declare planned capabilities and placeholder workflow roots without implementing domain behavior.
+
+**Reason:**
+Future Catalogue and Analytics requirements need named extension points, but they should not be folded into the Library documents adapter or inferred by route code.
+
+**Files changed:**
+
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- `assets/studio/data/export_import_adapters.json`
+- `scripts/docs/export_import_adapters.py`
+
+**Impact:**
+The current export/import pages read domain availability from the adapter registry and can show planned future domains as unavailable.
+The docs-management service still dispatches only active capabilities, so stub adapters fail closed before document-specific code runs.
 
 ## [2026-05-06] Normalized export/import workflow folders
 

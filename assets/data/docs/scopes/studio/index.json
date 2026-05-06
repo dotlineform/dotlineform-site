@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T10:31:38Z",
+  "generated_at": "2026-05-06T10:49:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -116,7 +116,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "scripts",
       "sort_order": 10,
       "published": true,
@@ -124,7 +124,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 23447
+      "content_text_length": 23779
     },
     {
       "scope": "studio",
@@ -810,7 +810,7 @@
       "doc_id": "site-request-export-import-adapters",
       "title": "Export Import Adapter Boundary Request",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -818,7 +818,7 @@
       "source_path": "site-request-export-import-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-export-import-adapters",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-export-import-adapters.json",
-      "content_text_length": 28883,
+      "content_text_length": 30289,
       "ui_status": "in-progress"
     },
     {
@@ -1008,7 +1008,7 @@
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "config",
       "sort_order": 30,
       "published": true,
@@ -1016,7 +1016,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 7378
+      "content_text_length": 7690
     },
     {
       "scope": "studio",
@@ -1159,7 +1159,7 @@
       "doc_id": "config-export-import-adapters",
       "title": "Export Import Adapters",
       "added_date": "2026-05-06 11:35",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "config",
       "sort_order": 38,
       "published": true,
@@ -1167,7 +1167,7 @@
       "source_path": "config-export-import-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-export-import-adapters",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-export-import-adapters.json",
-      "content_text_length": 1584
+      "content_text_length": 2780
     },
     {
       "scope": "studio",
@@ -2762,7 +2762,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2770,7 +2770,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 312097
+      "content_text_length": 313044
     },
     {
       "scope": "studio",

@@ -2,7 +2,7 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:15"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -596,7 +596,7 @@ Task 4 benefits and risks:
 
 Status:
 
-- pending
+- completed
 
 Add explicit placeholder config or docs entries for Analytics and Catalogue adapters without implementing domain apply behavior.
 
@@ -605,6 +605,25 @@ Expected outcome:
 - future scope support has a named extension point
 - the shared shell can show unsupported or preview-only capabilities without guessing
 - Analytics and Catalogue requirements do not need to be added to the Library adapter
+
+Implementation note:
+
+- added `catalogue` and `analytics` adapter entries to `assets/studio/data/export_import_adapters.json`
+- marked both future adapters as `status: "stub"` with `planned` export, staged-file listing, and import-preview capabilities
+- declared data-domain-first placeholder roots under:
+  - `var/studio/export-import/catalogue/`
+  - `var/studio/export-import/analytics/`
+- updated the adapter schema so capabilities can carry `active`, `planned`, or `unsupported` status and an optional user-facing message
+- changed adapter resolution so only active adapters, data domains, and capabilities can dispatch to service behavior
+- changed the current export/import pages to read domain availability from the adapter registry and show configured unavailable states for future domains
+
+Task 5 benefits and risks:
+
+- Benefit: Catalogue and Analytics now have named extension points without adding their requirements to the Library document adapter.
+- Benefit: future-domain UI availability is config-driven rather than inferred from hardcoded scope lists.
+- Benefit: service dispatch fails before document parsing when a request targets a stub adapter.
+- Risk: the current pages still use Library route names and document-oriented list rendering until the shared shell route refactor completes.
+- Risk: the future stubs reserve folder roots but do not define record contracts, relationship validation, write allowlists, or apply behavior yet.
 
 ### Task 6. Update Docs And Verification
 

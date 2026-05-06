@@ -52,6 +52,10 @@
             "type": "string",
             "minLength": 1
           },
+          "status": {
+            "type": "string",
+            "enum": ["active", "stub"]
+          },
           "data_domains": {
             "type": "object",
             "minProperties": 1,
@@ -68,6 +72,10 @@
                   "type": "string",
                   "minLength": 1
                 },
+                "status": {
+                  "type": "string",
+                  "enum": ["active", "stub"]
+                },
                 "paths": {
                   "type": "object",
                   "required": ["export_root", "staging_root", "preview_root", "source_root"],
@@ -78,7 +86,6 @@
                 },
                 "sources": {
                   "type": "object",
-                  "required": ["docs_index", "docs_payload_root", "source_root"],
                   "additionalProperties": {
                     "type": "string",
                     "minLength": 1
@@ -86,7 +93,6 @@
                 },
                 "config": {
                   "type": "object",
-                  "required": ["export_configs_path"],
                   "additionalProperties": {
                     "type": "string",
                     "minLength": 1
@@ -99,8 +105,31 @@
             "type": "array",
             "minItems": 1,
             "items": {
-              "type": "string",
-              "minLength": 1
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "object",
+                  "required": ["operation", "status"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "operation": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["active", "planned", "unsupported"]
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              ]
             }
           }
         }

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b4c01397c74fcb4c40382fb669576350",
-    "generated_at_utc": "2026-05-06T10:31:28Z",
+    "version": "blake2b-4c7ddce04ab9cd0b28e0a392361097d9",
+    "generated_at_utc": "2026-05-06T10:50:00Z",
     "count": 184
   },
   "entries": [
@@ -190,10 +190,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-06 12:05 • Scripts",
+      "display_meta": "2026-05-06 12:15 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -201,13 +201,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-06 12:05",
+        "2026-05-06 12:15",
         "2026",
         "05",
         "06",
-        "12"
+        "12",
+        "15"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-06 12:05 2026 05 06 12"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-06 12:15 2026 05 06 12 15"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -1275,10 +1276,10 @@
       "kind": "doc",
       "title": "Export Import Adapter Boundary Request",
       "href": "/docs/?scope=studio&doc=site-request-export-import-adapters",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-06 12:05 • Change Requests",
+      "display_meta": "2026-05-06 12:15 • Change Requests",
       "search_terms": [
         "site-request-export-import-adapters",
         "site",
@@ -1292,13 +1293,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-06 12:05",
+        "2026-05-06 12:15",
         "2026",
         "05",
         "06",
-        "12"
+        "12",
+        "15"
       ],
-      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 12:05 2026 05 06 12"
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 12:15 2026 05 06 12 15"
     },
     {
       "id": "scripts-run-checks",
@@ -1583,23 +1585,24 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-06 12:05 • Config",
+      "display_meta": "2026-05-06 12:15 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-06 12:05",
+        "2026-05-06 12:15",
         "2026",
         "05",
         "06",
-        "12"
+        "12",
+        "15"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-06 12:05 2026 05 06 12"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-06 12:15 2026 05 06 12 15"
     },
     {
       "id": "data-models-studio",
@@ -1827,10 +1830,10 @@
       "kind": "doc",
       "title": "Export Import Adapters",
       "href": "/docs/?scope=studio&doc=config-export-import-adapters",
-      "last_updated": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-06 12:05 • Config",
+      "display_meta": "2026-05-06 12:15 • Config",
       "search_terms": [
         "config-export-import-adapters",
         "config",
@@ -1838,13 +1841,14 @@
         "import",
         "adapters",
         "export import adapters",
-        "2026-05-06 12:05",
+        "2026-05-06 12:15",
         "2026",
         "05",
         "06",
-        "12"
+        "12",
+        "15"
       ],
-      "search_text": "config-export-import-adapters config export import adapters export import adapters 2026-05-06 12:05 2026 05 06 12"
+      "search_text": "config-export-import-adapters config export import adapters export import adapters 2026-05-06 12:15 2026 05 06 12 15"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -4296,21 +4300,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-06 12:05",
-      "display_meta": "2026-05-06 12:05",
+      "last_updated": "2026-05-06 12:15",
+      "display_meta": "2026-05-06 12:15",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-06 12:05",
+        "2026-05-06 12:15",
         "2026",
         "05",
         "06",
-        "12"
+        "12",
+        "15"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-06 12:05 2026 05 06 12"
+      "search_text": "site-change-log site change log site change log 2026-05-06 12:15 2026 05 06 12 15"
     },
     {
       "id": "tiered-dimension-policy",

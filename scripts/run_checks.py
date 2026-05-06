@@ -92,6 +92,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Viewer export configs and representative Library export dry-runs.",
         ),
         CheckCommand(
+            "export-import-adapter-tests",
+            (sys.executable, "tests/python/test_export_import_adapters.py"),
+            "Verify export/import adapter dispatch and future stub rejection.",
+        ),
+        CheckCommand(
             "docs-import-tests",
             (sys.executable, "tests/python/test_docs_import.py"),
             "Verify staged Library import parsing and preview rendering.",

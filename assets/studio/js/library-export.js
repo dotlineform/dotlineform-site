@@ -18,6 +18,12 @@ import {
   createStudioModalHost,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  workflowDomainForKey,
+  workflowDomainFromUrl,
+  workflowDomainIsActive,
+  workflowDomainsForOperation
+} from "./export-import-adapters.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
@@ -68,15 +74,14 @@ function documentLabel(count) {
   return safeCount === 1 ? "1 document" : `${safeCount} documents`;
 }
 
-function workflowScopeFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const requested = normalizeText(params.get("scope")).toLowerCase();
-  return WORKFLOW_SCOPES.some((item) => item.key === requested) ? requested : DEFAULT_SCOPE;
+function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
+  return workflowDomainFromUrl(domains, DEFAULT_SCOPE);
 }
 
 function scopeLabel(state, scope = state.scope) {
-  const item = WORKFLOW_SCOPES.find((candidate) => candidate.key === scope) || WORKFLOW_SCOPES[0];
-  return getStudioText(state.config, `library_export.${item.labelKey}`, item.fallback);
+  const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
+  if (item.labelKey) return getStudioText(state.config, `library_export.${item.labelKey}`, item.fallback);
+  return normalizeText(item.label) || item.fallback || scope;
 }
 
 function scopeTitle(state, scope = state.scope) {
@@ -85,16 +90,18 @@ function scopeTitle(state, scope = state.scope) {
 }
 
 function renderScopeSelect(state) {
-  state.scopeSelect.innerHTML = WORKFLOW_SCOPES.map((item) => {
-    const label = getStudioText(state.config, `library_export.${item.labelKey}`, item.fallback);
+  state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
+    const label = item.labelKey
+      ? getStudioText(state.config, `library_export.${item.labelKey}`, item.fallback)
+      : (normalizeText(item.label) || item.fallback);
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
   }).join("");
 }
 
-function updateScopeUrl(scope) {
+function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
   const nextScope = normalizeText(scope).toLowerCase();
-  if (!WORKFLOW_SCOPES.some((item) => item.key === nextScope)) return;
+  if (!domains.some((item) => item.key === nextScope)) return;
   const url = new URL(window.location.href);
   if (nextScope === DEFAULT_SCOPE) {
     url.searchParams.delete("scope");
@@ -102,6 +109,23 @@ function updateScopeUrl(scope) {
     url.searchParams.set("scope", nextScope);
   }
   window.location.href = url.toString();
+}
+
+async function loadAdapterRegistry(config) {
+  const registryPath = getStudioDataPath(config, "export_import_adapters")
+    || "/assets/studio/data/export_import_adapters.json";
+  return loadJson(registryPath);
+}
+
+function scopeUnavailableMessage(state) {
+  const domain = workflowDomainForKey(state.workflowScopes, state.scope);
+  return normalizeText(domain && domain.message)
+    || getStudioText(
+      state.config,
+      "library_export.scope_unsupported",
+      "{scope_label} export is not implemented yet.",
+      { scope_label: scopeTitle(state) }
+    );
 }
 
 function routeStateDetail(state) {
@@ -362,6 +386,11 @@ function syncConfigOptions(state) {
 }
 
 function updateStatus(state) {
+  if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
+    setStatus(state.statusNode, "warn", scopeUnavailableMessage(state));
+    state.runButton.disabled = true;
+    return;
+  }
   const config = selectedConfig(state);
   if (!config) {
     setStatus(
@@ -584,6 +613,10 @@ function handleListChange(state, event) {
 
 async function runExport(state) {
   if (!state.serviceAvailable || state.isRunning) return;
+  if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
+    updateStatus(state);
+    return;
+  }
   const config = selectedConfig(state);
   if (!config) {
     updateStatus(state);
@@ -662,6 +695,7 @@ async function init() {
     bootStatus,
     root,
     scope: workflowScopeFromUrl(),
+    workflowScopes: WORKFLOW_SCOPES,
     scopeLabelNode: document.getElementById("libraryExportScopeLabel"),
     scopeSelect: document.getElementById("libraryExportScopeSelect"),
     configLabelNode: document.getElementById("libraryExportConfigLabel"),
@@ -717,15 +751,20 @@ async function init() {
   try {
     markBusy(state, true);
     state.config = await loadStudioConfig();
+    const adapterRegistry = await loadAdapterRegistry(state.config);
+    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "export", WORKFLOW_SCOPES);
+    state.scope = workflowScopeFromUrl(state.workflowScopes);
     renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());
-    const exportConfigPath = getStudioDataPath(state.config, "library_export_configs")
-      || "/assets/studio/data/library_export_configs.json";
-    const exportConfigPayload = await loadJson(exportConfigPath);
-    state.exportConfigs = enabledConfigsForScope(exportConfigPayload, state.scope);
+    if (workflowDomainIsActive(state.workflowScopes, state.scope)) {
+      const exportConfigPath = getStudioDataPath(state.config, "library_export_configs")
+        || "/assets/studio/data/library_export_configs.json";
+      const exportConfigPayload = await loadJson(exportConfigPath);
+      state.exportConfigs = enabledConfigsForScope(exportConfigPayload, state.scope);
+    }
 
     let docsIndexPayload = { docs: [] };
-    if (state.exportConfigs.length) {
+    if (workflowDomainIsActive(state.workflowScopes, state.scope) && state.exportConfigs.length) {
       const docsIndexPath = getDocsScopeDataPath(state.config, state.scope, "index")
         || `/assets/data/docs/scopes/${encodeURIComponent(state.scope)}/index.json`;
       const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(state.scope) : docsIndexPath;
@@ -762,7 +801,7 @@ async function init() {
     renderConfigSelect(state);
     syncConfigOptions(state);
 
-    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value));
+    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value, state.workflowScopes));
     state.configSelect.addEventListener("change", () => syncConfigOptions(state));
     state.formatOptionsNode.addEventListener("change", (event) => {
       const target = event.target;

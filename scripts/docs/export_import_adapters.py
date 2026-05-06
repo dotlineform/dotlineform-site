@@ -44,6 +44,7 @@ class AdapterResolution:
     adapter_id: str
     adapter: dict[str, Any]
     domain: dict[str, Any]
+    capability: dict[str, Any]
 
     @property
     def label(self) -> str:
@@ -60,6 +61,37 @@ class AdapterResolution:
     def config_path(self, key: str) -> Path:
         config = self.domain.get("config") if isinstance(self.domain.get("config"), dict) else {}
         return safe_relative_path(config.get(key), field=f"config.{key}")
+
+
+def adapter_status(adapter: dict[str, Any]) -> str:
+    return normalize_id(adapter.get("status") or "active")
+
+
+def domain_status(adapter: dict[str, Any], domain: dict[str, Any]) -> str:
+    return normalize_id(domain.get("status") or adapter_status(adapter) or "active")
+
+
+def capability_records(adapter: dict[str, Any]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for item in adapter.get("capabilities", []):
+        if isinstance(item, str):
+            operation = normalize_id(item)
+            if operation:
+                records.append({"operation": operation, "status": "active"})
+            continue
+        if not isinstance(item, dict):
+            continue
+        operation = normalize_id(item.get("operation"))
+        if not operation:
+            continue
+        records.append(
+            {
+                "operation": operation,
+                "status": normalize_id(item.get("status") or "active"),
+                "message": str(item.get("message") or "").strip(),
+            }
+        )
+    return records
 
 
 def load_registry(repo_root: Path, config_path: str | Path | None = None) -> dict[str, Any]:
@@ -110,17 +142,33 @@ def resolve_adapter(
     if len(adapters) != 1:
         raise ValueError(f"adapter {adapter_id!r} is not defined exactly once")
     adapter = adapters[0]
-    capabilities = {
-        normalize_id(item)
-        for item in adapter.get("capabilities", [])
-        if normalize_id(item)
-    }
-    if resolved_operation not in capabilities:
+    capabilities = [
+        item
+        for item in capability_records(adapter)
+        if normalize_id(item.get("operation")) == resolved_operation
+    ]
+    if not capabilities:
         raise ValueError(f"adapter {adapter_id!r} does not declare {resolved_operation} capability")
+    if len(capabilities) > 1:
+        raise ValueError(f"adapter {adapter_id!r} declares {resolved_operation} capability more than once")
+    capability = capabilities[0]
     data_domains = adapter.get("data_domains") if isinstance(adapter.get("data_domains"), dict) else {}
     domain = data_domains.get(resolved_data_domain)
     if not isinstance(domain, dict):
         raise ValueError(f"adapter {adapter_id!r} has no configuration for data_domain {resolved_data_domain!r}")
+    resolved_adapter_status = adapter_status(adapter)
+    resolved_domain_status = domain_status(adapter, domain)
+    resolved_capability_status = normalize_id(capability.get("status") or resolved_domain_status or resolved_adapter_status or "active")
+    if resolved_adapter_status != "active":
+        raise ValueError(f"adapter {adapter_id!r} is {resolved_adapter_status} and has no implemented service")
+    if resolved_domain_status != "active":
+        raise ValueError(f"adapter {adapter_id!r} data_domain {resolved_data_domain!r} is {resolved_domain_status}")
+    if resolved_capability_status != "active":
+        message = str(capability.get("message") or "").strip()
+        detail = f": {message}" if message else ""
+        raise ValueError(
+            f"adapter {adapter_id!r} capability {resolved_operation!r} is {resolved_capability_status}{detail}"
+        )
 
     return AdapterResolution(
         data_domain=resolved_data_domain,
@@ -128,4 +176,5 @@ def resolve_adapter(
         adapter_id=adapter_id,
         adapter=adapter,
         domain=domain,
+        capability=capability,
     )

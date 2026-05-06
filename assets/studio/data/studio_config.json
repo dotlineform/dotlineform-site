@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-06T10:35:00Z",
+  "updated_at_utc": "2026-05-06T11:15:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -591,6 +591,7 @@
       "loading": "loading Library export...",
       "idle_status": "",
       "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run exports.",
+      "scope_unsupported": "{scope_label} export is not implemented yet.",
       "no_config": "No enabled {scope_label} export configs found.",
       "docs_index_unavailable": "No generated {scope_label} data index is available for this export scope.",
       "load_failed": "Failed to load {scope_label} export data.",
@@ -633,6 +634,7 @@
       "loading": "loading Library import...",
       "idle_status": "Select a staged {scope_label} data file and generate previews.",
       "running_status": "Generating import previews...",
+      "scope_unsupported": "{scope_label} import is not implemented yet.",
       "load_failed": "Failed to load {scope_label} import data.",
       "no_files": "No staged {scope_label} data files found under var/studio/export-import/{scope}/import-staging/.",
       "empty_state": "Generate a preview to list staged documents.",
