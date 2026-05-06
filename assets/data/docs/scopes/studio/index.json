@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T13:28:58Z",
+  "generated_at": "2026-05-06T13:38:04Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1158,7 +1158,7 @@
       "doc_id": "docs-broken-links",
       "title": "Docs Broken Links",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-06 14:28",
+      "last_updated": "2026-05-06 14:37",
       "parent_id": "studio",
       "sort_order": 35,
       "published": true,
@@ -1166,7 +1166,7 @@
       "source_path": "docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json",
-      "content_text_length": 2362
+      "content_text_length": 2464
     },
     {
       "scope": "studio",
@@ -2837,7 +2837,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 14:28",
+      "last_updated": "2026-05-06 14:37",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2845,7 +2845,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 38876
+      "content_text_length": 39552
     },
     {
       "scope": "studio",

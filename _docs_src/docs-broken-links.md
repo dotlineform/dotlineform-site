@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: "Docs Broken Links"
 added_date: 2026-04-23
-last_updated: "2026-05-06 14:28"
+last_updated: "2026-05-06 14:37"
 parent_id: studio
 sort_order: 35
 ---
@@ -48,6 +48,7 @@ The page shows:
 Current behavior:
 
 - `linked page`, `link`, and `from page` all open in a new tab
+- docs-viewer result links open with `mode=manage` so the target page can be inspected or edited directly
 - when the problem is `not found`, the first two links intentionally point at the failing target so the broken case is visible directly
 - issue filters render as count-bearing pills for `all`, `not found`, and `wrong title`
 - the default filter is `not found`

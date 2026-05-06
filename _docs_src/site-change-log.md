@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 14:28"
+last_updated: "2026-05-06 14:37"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-06] Opened Docs Broken Links results in manage mode
+
+**Status:** implemented
+
+**Area:** Studio / Docs maintenance
+
+**Summary:**
+Docs Broken Links result-row links now append `mode=manage` for docs-viewer targets.
+The `from page`, `linked page`, and reported `link` columns still open in a new tab.
+
+**Reason:**
+Broken-link review usually needs direct source inspection or metadata edits, so opening result targets in manage mode reduces the manual URL adjustment step.
+
+**Files changed:**
+
+- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
+- `assets/studio/js/docs-broken-links.js`
+
+**Impact:**
+Studio and Library docs-viewer result links from `/studio/docs-broken-links/` now open directly in manage mode.
+Non-viewer links remain unchanged.
 
 ## [2026-05-06] Relaxed archived changelog title-link audits
 

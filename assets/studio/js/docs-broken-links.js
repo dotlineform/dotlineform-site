@@ -66,9 +66,28 @@ function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
+function manageModeHref(href) {
+  const raw = normalizeText(href);
+  if (!raw || raw === "#") return raw || "#";
+  try {
+    const url = new URL(raw, window.location.href);
+    const path = url.pathname.replace(/\/+$/, "");
+    if (path === "/docs" || path === "/library") {
+      url.searchParams.set("mode", "manage");
+      if (url.origin === window.location.origin) {
+        return `${url.pathname}${url.search}${url.hash}`;
+      }
+      return url.toString();
+    }
+  } catch (_error) {
+    return raw;
+  }
+  return raw;
+}
+
 function linkHtml(label, href) {
   const text = normalizeText(label) || normalizeText(href) || "link";
-  const url = normalizeText(href) || "#";
+  const url = manageModeHref(href);
   return `<a class="docsBrokenLinksRow__link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`;
 }
 
