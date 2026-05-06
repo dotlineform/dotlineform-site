@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T17:03:50Z",
+  "generated_at": "2026-05-06T17:56:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -50,6 +50,21 @@
       "viewer_url": "/docs/?scope=studio&doc=ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
       "content_text_length": 2123
+    },
+    {
+      "scope": "studio",
+      "doc_id": "bulk-add-work",
+      "title": "Bulk Add Work",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-05-06 18:38",
+      "parent_id": "catalogue",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "bulk-add-work.md",
+      "viewer_url": "/docs/?scope=studio&doc=bulk-add-work",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/bulk-add-work.json",
+      "content_text_length": 2530
     },
     {
       "scope": "studio",
@@ -308,6 +323,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "tag-groups",
+      "title": "Tag Groups",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-06 18:36",
+      "parent_id": "analytics",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "tag-groups.md",
+      "viewer_url": "/docs/?scope=studio&doc=tag-groups",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json",
+      "content_text_length": 2559
+    },
+    {
+      "scope": "studio",
       "doc_id": "ui-audit-catalogue-moment-import-20260421",
       "title": "UI Audit: Catalogue Moment Import (2026-04-21)",
       "added_date": "2026-04-21",
@@ -395,6 +425,21 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
       "content_text_length": 4270
+    },
+    {
+      "scope": "studio",
+      "doc_id": "user-guide",
+      "title": "User Guide",
+      "added_date": "2026-04-23",
+      "last_updated": "2026-05-06 18:15",
+      "parent_id": "",
+      "sort_order": 15,
+      "published": true,
+      "viewable": true,
+      "source_path": "user-guide.md",
+      "viewer_url": "/docs/?scope=studio&doc=user-guide",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide.json",
+      "content_text_length": 858
     },
     {
       "scope": "studio",
@@ -501,21 +546,6 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-input.json",
       "content_text_length": 1735
-    },
-    {
-      "scope": "studio",
-      "doc_id": "library-semantic-enrichment-spec",
-      "title": "Library Semantic Enrichment Spec",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-03 18:28",
-      "parent_id": "library",
-      "sort_order": 20,
-      "published": true,
-      "viewable": true,
-      "source_path": "library-semantic-enrichment-spec.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-semantic-enrichment-spec.json",
-      "content_text_length": 12705
     },
     {
       "scope": "studio",
@@ -714,6 +744,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue",
+      "title": "Catalogue",
+      "added_date": "2026-05-06 18:37",
+      "last_updated": "2026-05-06 18:38",
+      "parent_id": "",
+      "sort_order": 25,
+      "published": true,
+      "viewable": true,
+      "source_path": "catalogue.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue.json",
+      "content_text_length": 0
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-docs-export",
       "title": "Docs Export",
       "added_date": "2026-05-03 15:05",
@@ -726,22 +771,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-export.json",
       "content_text_length": 7022
-    },
-    {
-      "scope": "studio",
-      "doc_id": "library-export",
-      "title": "Library Export v1",
-      "added_date": "2026-05-03",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "library",
-      "sort_order": 25,
-      "published": true,
-      "viewable": true,
-      "source_path": "library-export.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-export",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
-      "content_text_length": 22290,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -773,22 +802,6 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
       "content_text_length": 7483
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-catalogue",
-      "title": "UI Catalogue",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-05 18:22",
-      "parent_id": "design",
-      "sort_order": 25,
-      "published": true,
-      "viewable": true,
-      "source_path": "ui-catalogue.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6404,
-      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -853,6 +866,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "library",
+      "title": "Library",
+      "added_date": "2026-04-18",
+      "last_updated": "2026-05-06 18:51",
+      "parent_id": "",
+      "sort_order": 27,
+      "published": true,
+      "viewable": true,
+      "source_path": "library.md",
+      "viewer_url": "/docs/?scope=studio&doc=library",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library.json",
+      "content_text_length": 289
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-run-checks",
       "title": "Run Checks",
       "added_date": "2026-05-01",
@@ -880,6 +908,21 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-studio-ready-state.json",
       "content_text_length": 1575
+    },
+    {
+      "scope": "studio",
+      "doc_id": "analytics",
+      "title": "Analytics",
+      "added_date": "2026-05-06 18:19",
+      "last_updated": "2026-05-06 18:34",
+      "parent_id": "",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "analytics.md",
+      "viewer_url": "/docs/?scope=studio&doc=analytics",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/analytics.json",
+      "content_text_length": 19
     },
     {
       "scope": "studio",
@@ -941,22 +984,6 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
       "content_text_length": 3719
-    },
-    {
-      "scope": "studio",
-      "doc_id": "library-import",
-      "title": "Library Import v1",
-      "added_date": "2026-05-03",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "library",
-      "sort_order": 30,
-      "published": true,
-      "viewable": true,
-      "source_path": "library-import.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-import",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "content_text_length": 23761,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1095,36 +1122,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "tag-groups",
-      "title": "Tag Groups",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-03",
-      "parent_id": "studio",
-      "sort_order": 30,
-      "published": true,
-      "viewable": true,
-      "source_path": "tag-groups.md",
-      "viewer_url": "/docs/?scope=studio&doc=tag-groups",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json",
-      "content_text_length": 2559
-    },
-    {
-      "scope": "studio",
-      "doc_id": "user-guide",
-      "title": "User Guide",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-04-29",
-      "parent_id": "",
-      "sort_order": 30,
-      "published": true,
-      "viewable": true,
-      "source_path": "user-guide.md",
-      "viewer_url": "/docs/?scope=studio&doc=user-guide",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide.json",
-      "content_text_length": 858
-    },
-    {
-      "scope": "studio",
       "doc_id": "new-pipeline-web-system-spec",
       "title": "Web System Specification",
       "added_date": "2026-04-17",
@@ -1232,21 +1229,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "bulk-add-work",
-      "title": "Bulk Add Work",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-05-03",
-      "parent_id": "studio",
-      "sort_order": 40,
-      "published": true,
-      "viewable": true,
-      "source_path": "bulk-add-work.md",
-      "viewer_url": "/docs/?scope=studio&doc=bulk-add-work",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/bulk-add-work.json",
-      "content_text_length": 2530
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-cloud-environments",
       "title": "Cloud Environments",
       "added_date": "2026-04-14",
@@ -1304,22 +1286,6 @@
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-implementation-plan.json",
       "content_text_length": 26653
-    },
-    {
-      "scope": "studio",
-      "doc_id": "library-export-ui",
-      "title": "Library Export - UI refinements",
-      "added_date": "2026-05-04",
-      "last_updated": "2026-05-04",
-      "parent_id": "library",
-      "sort_order": 40,
-      "published": true,
-      "viewable": true,
-      "source_path": "library-export-ui.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-ui.json",
-      "content_text_length": 1550,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1517,38 +1483,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json",
       "content_text_length": 11845
-    },
-    {
-      "scope": "studio",
-      "doc_id": "library-import-export-v2",
-      "title": "Library Export/Import v2",
-      "added_date": "2026-05-04",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "library",
-      "sort_order": 50,
-      "published": true,
-      "viewable": true,
-      "source_path": "library-import-export-v2.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
-      "content_text_length": 18230,
-      "ui_status": "done"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "library-import-ui",
-      "title": "Library Import - UI refinements",
-      "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
-      "parent_id": "library",
-      "sort_order": 50,
-      "published": true,
-      "viewable": true,
-      "source_path": "library-import-ui.md",
-      "viewer_url": "/docs/?scope=studio&doc=library-import-ui",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-ui.json",
-      "content_text_length": 1368,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1912,6 +1846,21 @@
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json",
       "content_text_length": 14916
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-catalogue",
+      "title": "UI Catalogue",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-06 18:37",
+      "parent_id": "design",
+      "sort_order": 70,
+      "published": true,
+      "viewable": true,
+      "source_path": "ui-catalogue.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
+      "content_text_length": 6404
     },
     {
       "scope": "studio",
@@ -2516,21 +2465,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "library",
-      "title": "Library",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-05-03 19:09",
-      "parent_id": "",
-      "sort_order": 165,
-      "published": true,
-      "viewable": true,
-      "source_path": "library.md",
-      "viewer_url": "/docs/?scope=studio&doc=library",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/library.json",
-      "content_text_length": 1980
-    },
-    {
-      "scope": "studio",
       "doc_id": "ui-request-docs-html-import-task",
       "title": "Docs HTML Import Task",
       "added_date": "2026-04-23",
@@ -2575,6 +2509,21 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json",
       "content_text_length": 5020,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-semantic-enrichment-spec",
+      "title": "Library Semantic Enrichment Spec",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "sort_order": 180,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-semantic-enrichment-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-semantic-enrichment-spec.json",
+      "content_text_length": 12705
     },
     {
       "scope": "studio",
@@ -2638,6 +2587,38 @@
     },
     {
       "scope": "studio",
+      "doc_id": "library-export",
+      "title": "Library Export v1",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "sort_order": 190,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-export.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-export",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
+      "content_text_length": 22290,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-import",
+      "title": "Library Import v1",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "sort_order": 200,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-import.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-import",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
+      "content_text_length": 23761,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
       "doc_id": "tag-aliases",
       "title": "Tag Aliases",
       "added_date": "2026-03-31",
@@ -2665,6 +2646,22 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json",
       "content_text_length": 8853,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-export-ui",
+      "title": "Library Export - UI refinements",
+      "added_date": "2026-05-04",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "sort_order": 210,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-export-ui.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-ui.json",
+      "content_text_length": 1550,
       "ui_status": "done"
     },
     {
@@ -2714,6 +2711,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "library-import-export-v2",
+      "title": "Library Export/Import v2",
+      "added_date": "2026-05-04",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "sort_order": 220,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-import-export-v2.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
+      "content_text_length": 18230,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
       "doc_id": "tag-editor",
       "title": "Tag Editor",
       "added_date": "2026-03-31",
@@ -2726,6 +2739,22 @@
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-editor.json",
       "content_text_length": 10069
+    },
+    {
+      "scope": "studio",
+      "doc_id": "library-import-ui",
+      "title": "Library Import - UI refinements",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-06 18:13",
+      "parent_id": "archive",
+      "sort_order": 230,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-import-ui.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-import-ui",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-ui.json",
+      "content_text_length": 1368,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2876,6 +2905,21 @@
       "viewer_url": "/docs/?scope=studio&doc=search-change-log-guidance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log-guidance.json",
       "content_text_length": 7539
+    },
+    {
+      "scope": "studio",
+      "doc_id": "import-export",
+      "title": "Import/Export",
+      "added_date": "2026-05-06 18:39",
+      "last_updated": "2026-05-06 18:40",
+      "parent_id": "",
+      "sort_order": 1009,
+      "published": true,
+      "viewable": true,
+      "source_path": "import-export.md",
+      "viewer_url": "/docs/?scope=studio&doc=import-export",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/import-export.json",
+      "content_text_length": 369
     },
     {
       "scope": "studio",

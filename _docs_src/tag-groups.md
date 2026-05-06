@@ -1,12 +1,11 @@
 ---
 doc_id: tag-groups
-title: "Tag Groups"
+title: Tag Groups
 added_date: 2026-03-31
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 30
+last_updated: "2026-05-06 18:36"
+parent_id: analytics
+sort_order: 10
 ---
-
 # Tag Groups
 
 Route:

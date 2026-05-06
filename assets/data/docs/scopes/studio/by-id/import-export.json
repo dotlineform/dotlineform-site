@@ -1,0 +1,14 @@
+{
+  "scope": "studio",
+  "doc_id": "import-export",
+  "title": "Import/Export",
+  "added_date": "2026-05-06 18:39",
+  "last_updated": "2026-05-06 18:40",
+  "parent_id": "",
+  "sort_order": 1009,
+  "published": true,
+  "viewable": true,
+  "source_path": "import-export.md",
+  "viewer_url": "/docs/?scope=studio&doc=import-export",
+  "content_html": "<h1 id=\"importexport\">Import/Export</h1>\n\n<p>Data can be exported as JSON files for external editing (typically by an LLM).</p>\n\n<p>A generic page handles the shared UI which is called from Studio pages that relate to a supported data domain, for example, <a href=\"/studio/library/\">Library</a></p>\n\n<p>Data extraction and import is handled by <em>adapters</em> which are config-driven client and server-side functions that ensure data is correctly structured and saved.</p>\n"
+}

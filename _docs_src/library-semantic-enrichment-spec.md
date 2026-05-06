@@ -1,12 +1,11 @@
 ---
 doc_id: library-semantic-enrichment-spec
-title: "Library Semantic Enrichment Spec"
+title: Library Semantic Enrichment Spec
 added_date: 2026-04-24
-last_updated: "2026-05-03 18:28"
-parent_id: library
-sort_order: 20
+last_updated: "2026-05-06 18:12"
+parent_id: archive
+sort_order: 180
 ---
-
 # Library Semantic Enrichment Spec
 
 ## Sections

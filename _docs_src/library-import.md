@@ -2,10 +2,10 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-06 12:30"
+last_updated: "2026-05-06 18:12"
 ui_status: done
-parent_id: library
-sort_order: 30
+parent_id: archive
+sort_order: 200
 ---
 # Library Import v1
 

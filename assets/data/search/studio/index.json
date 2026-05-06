@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-61fea5748f1e5c564946a5e450b30f9c",
-    "generated_at_utc": "2026-05-06T17:03:51Z",
-    "count": 190
+    "version": "blake2b-e8c10f3d1dd9196767ee3fd42cbc33bc",
+    "generated_at_utc": "2026-05-06T17:51:11Z",
+    "count": 193
   },
   "entries": [
     {
@@ -88,6 +88,31 @@
         "05"
       ],
       "search_text": "ui design 2026-05-05 2026 05"
+    },
+    {
+      "id": "bulk-add-work",
+      "kind": "doc",
+      "title": "Bulk Add Work",
+      "href": "/docs/?scope=studio&doc=bulk-add-work",
+      "last_updated": "2026-05-06 18:38",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 18:38 • Catalogue",
+      "search_terms": [
+        "bulk-add-work",
+        "bulk",
+        "add",
+        "work",
+        "bulk add work",
+        "catalogue",
+        "2026-05-06 18:38",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "38"
+      ],
+      "search_text": "bulk-add-work bulk add work bulk add work catalogue 2026-05-06 18:38 2026 05 06 18 38"
     },
     {
       "id": "ui-primitive-button",
@@ -497,6 +522,30 @@
       "search_text": "studio-runtime studio runtime studio runtime 2026-05-02 2026 05 02"
     },
     {
+      "id": "tag-groups",
+      "kind": "doc",
+      "title": "Tag Groups",
+      "href": "/docs/?scope=studio&doc=tag-groups",
+      "last_updated": "2026-05-06 18:36",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 18:36 • Analytics",
+      "search_terms": [
+        "tag-groups",
+        "tag",
+        "groups",
+        "tag groups",
+        "analytics",
+        "2026-05-06 18:36",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "36"
+      ],
+      "search_text": "tag-groups tag groups tag groups analytics 2026-05-06 18:36 2026 05 06 18 36"
+    },
+    {
       "id": "ui-audit-catalogue-moment-import-20260421",
       "kind": "doc",
       "title": "UI Audit: Catalogue Moment Import (2026-04-21)",
@@ -638,6 +687,27 @@
         "03"
       ],
       "search_text": "studio-ui-start studio ui start studio ui start design 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "user-guide",
+      "kind": "doc",
+      "title": "User Guide",
+      "href": "/docs/?scope=studio&doc=user-guide",
+      "last_updated": "2026-05-06 18:15",
+      "display_meta": "2026-05-06 18:15",
+      "search_terms": [
+        "user-guide",
+        "user",
+        "guide",
+        "user guide",
+        "2026-05-06 18:15",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "15"
+      ],
+      "search_text": "user-guide user guide user guide 2026-05-06 18:15 2026 05 06 18 15"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -811,31 +881,6 @@
         "05"
       ],
       "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-05 2026 05"
-    },
-    {
-      "id": "library-semantic-enrichment-spec",
-      "kind": "doc",
-      "title": "Library Semantic Enrichment Spec",
-      "href": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
-      "last_updated": "2026-05-03 18:28",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-03 18:28 • Library",
-      "search_terms": [
-        "library-semantic-enrichment-spec",
-        "library",
-        "semantic",
-        "enrichment",
-        "spec",
-        "library semantic enrichment spec",
-        "2026-05-03 18:28",
-        "2026",
-        "05",
-        "03",
-        "18",
-        "28"
-      ],
-      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-05-03 18:28 2026 05 03 18 28"
     },
     {
       "id": "llm-semantic-enrichment-spec",
@@ -1138,6 +1183,24 @@
       "search_text": "studio-ui-conformance studio ui conformance studio ui conformance spec spec design 2026-04-21 2026 04 21"
     },
     {
+      "id": "catalogue",
+      "kind": "doc",
+      "title": "Catalogue",
+      "href": "/docs/?scope=studio&doc=catalogue",
+      "last_updated": "2026-05-06 18:38",
+      "display_meta": "2026-05-06 18:38",
+      "search_terms": [
+        "catalogue",
+        "2026-05-06 18:38",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "38"
+      ],
+      "search_text": "catalogue 2026-05-06 18:38 2026 05 06 18 38"
+    },
+    {
       "id": "scripts-docs-export",
       "kind": "doc",
       "title": "Docs Export",
@@ -1159,30 +1222,6 @@
         "12"
       ],
       "search_text": "scripts-docs-export scripts docs export docs export 2026-05-06 12:05 2026 05 06 12"
-    },
-    {
-      "id": "library-export",
-      "kind": "doc",
-      "title": "Library Export v1",
-      "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-06 12:30 • Library",
-      "search_terms": [
-        "library-export",
-        "library",
-        "export",
-        "library export v1",
-        "v1",
-        "2026-05-06 12:30",
-        "2026",
-        "05",
-        "06",
-        "12",
-        "30"
-      ],
-      "search_text": "library-export library export library export v1 v1 2026-05-06 12:30 2026 05 06 12 30"
     },
     {
       "id": "site-request-local-docs-data-server-reads",
@@ -1236,29 +1275,6 @@
         "40"
       ],
       "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-03 22:40 2026 05 03 22 40"
-    },
-    {
-      "id": "ui-catalogue",
-      "kind": "doc",
-      "title": "UI Catalogue",
-      "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-05-05 18:22",
-      "parent_id": "design",
-      "parent_title": "Design",
-      "display_meta": "2026-05-05 18:22 • Design",
-      "search_terms": [
-        "ui-catalogue",
-        "ui",
-        "catalogue",
-        "ui catalogue",
-        "design",
-        "2026-05-05 18:22",
-        "2026",
-        "05",
-        "18",
-        "22"
-      ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-05 18:22 2026 05 18 22"
     },
     {
       "id": "scripts-docs-import",
@@ -1363,6 +1379,24 @@
       "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 12:30 2026 05 06 12 30"
     },
     {
+      "id": "library",
+      "kind": "doc",
+      "title": "Library",
+      "href": "/docs/?scope=studio&doc=library",
+      "last_updated": "2026-05-06 18:51",
+      "display_meta": "2026-05-06 18:51",
+      "search_terms": [
+        "library",
+        "2026-05-06 18:51",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "51"
+      ],
+      "search_text": "library 2026-05-06 18:51 2026 05 06 18 51"
+    },
+    {
       "id": "scripts-run-checks",
       "kind": "doc",
       "title": "Run Checks",
@@ -1409,6 +1443,24 @@
         "03"
       ],
       "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "analytics",
+      "kind": "doc",
+      "title": "Analytics",
+      "href": "/docs/?scope=studio&doc=analytics",
+      "last_updated": "2026-05-06 18:34",
+      "display_meta": "2026-05-06 18:34",
+      "search_terms": [
+        "analytics",
+        "2026-05-06 18:34",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "34"
+      ],
+      "search_text": "analytics 2026-05-06 18:34 2026 05 06 18 34"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",
@@ -1509,30 +1561,6 @@
         "25"
       ],
       "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-04-25 2026 04 25"
-    },
-    {
-      "id": "library-import",
-      "kind": "doc",
-      "title": "Library Import v1",
-      "href": "/docs/?scope=studio&doc=library-import",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-06 12:30 • Library",
-      "search_terms": [
-        "library-import",
-        "library",
-        "import",
-        "library import v1",
-        "v1",
-        "2026-05-06 12:30",
-        "2026",
-        "05",
-        "06",
-        "12",
-        "30"
-      ],
-      "search_text": "library-import library import library import v1 v1 2026-05-06 12:30 2026 05 06 12 30"
     },
     {
       "id": "ui-primitive-list",
@@ -1752,47 +1780,6 @@
       "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-05-06 18:03 2026 05 06 18 03"
     },
     {
-      "id": "tag-groups",
-      "kind": "doc",
-      "title": "Tag Groups",
-      "href": "/docs/?scope=studio&doc=tag-groups",
-      "last_updated": "2026-05-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-03 • Studio",
-      "search_terms": [
-        "tag-groups",
-        "tag",
-        "groups",
-        "tag groups",
-        "studio",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "tag-groups tag groups tag groups studio 2026-05-03 2026 05 03"
-    },
-    {
-      "id": "user-guide",
-      "kind": "doc",
-      "title": "User Guide",
-      "href": "/docs/?scope=studio&doc=user-guide",
-      "last_updated": "2026-04-29",
-      "display_meta": "2026-04-29",
-      "search_terms": [
-        "user-guide",
-        "user",
-        "guide",
-        "user guide",
-        "2026-04-29",
-        "2026",
-        "04",
-        "29"
-      ],
-      "search_text": "user-guide user guide user guide 2026-04-29 2026 04 29"
-    },
-    {
       "id": "new-pipeline-web-system-spec",
       "kind": "doc",
       "title": "Web System Specification",
@@ -1977,29 +1964,6 @@
       "search_text": "site-request-studio-audits-page site request studio audits page studio audits page request change requests change requests 2026-05-03 2026 05 03"
     },
     {
-      "id": "bulk-add-work",
-      "kind": "doc",
-      "title": "Bulk Add Work",
-      "href": "/docs/?scope=studio&doc=bulk-add-work",
-      "last_updated": "2026-05-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-03 • Studio",
-      "search_terms": [
-        "bulk-add-work",
-        "bulk",
-        "add",
-        "work",
-        "bulk add work",
-        "studio",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "bulk-add-work bulk add work bulk add work studio 2026-05-03 2026 05 03"
-    },
-    {
       "id": "scripts-cloud-environments",
       "kind": "doc",
       "title": "Cloud Environments",
@@ -2081,29 +2045,6 @@
         "01"
       ],
       "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan archive 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "library-export-ui",
-      "kind": "doc",
-      "title": "Library Export - UI refinements",
-      "href": "/docs/?scope=studio&doc=library-export-ui",
-      "last_updated": "2026-05-04",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-04 • Library",
-      "search_terms": [
-        "library-export-ui",
-        "library",
-        "export",
-        "ui",
-        "library export - ui refinements",
-        "refinements",
-        "2026-05-04",
-        "2026",
-        "05",
-        "04"
-      ],
-      "search_text": "library-export-ui library export ui library export - ui refinements refinements 2026-05-04 2026 05 04"
     },
     {
       "id": "data-models-library",
@@ -2426,53 +2367,6 @@
         "02"
       ],
       "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-02 2026 05 02"
-    },
-    {
-      "id": "library-import-export-v2",
-      "kind": "doc",
-      "title": "Library Export/Import v2",
-      "href": "/docs/?scope=studio&doc=library-import-export-v2",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-06 12:30 • Library",
-      "search_terms": [
-        "library-import-export-v2",
-        "library",
-        "import",
-        "export",
-        "v2",
-        "library export/import v2",
-        "2026-05-06 12:30",
-        "2026",
-        "05",
-        "06",
-        "12",
-        "30"
-      ],
-      "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-06 12:30 2026 05 06 12 30"
-    },
-    {
-      "id": "library-import-ui",
-      "kind": "doc",
-      "title": "Library Import - UI refinements",
-      "href": "/docs/?scope=studio&doc=library-import-ui",
-      "last_updated": "2026-05-05",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-05 • Library",
-      "search_terms": [
-        "library-import-ui",
-        "library",
-        "import",
-        "ui",
-        "library import - ui refinements",
-        "refinements",
-        "2026-05-05",
-        "2026",
-        "05"
-      ],
-      "search_text": "library-import-ui library import ui library import - ui refinements refinements 2026-05-05 2026 05"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -3043,6 +2937,30 @@
         "26"
       ],
       "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-26 2026 04 26"
+    },
+    {
+      "id": "ui-catalogue",
+      "kind": "doc",
+      "title": "UI Catalogue",
+      "href": "/docs/?scope=studio&doc=ui-catalogue",
+      "last_updated": "2026-05-06 18:37",
+      "parent_id": "design",
+      "parent_title": "Design",
+      "display_meta": "2026-05-06 18:37 • Design",
+      "search_terms": [
+        "ui-catalogue",
+        "ui",
+        "catalogue",
+        "ui catalogue",
+        "design",
+        "2026-05-06 18:37",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "37"
+      ],
+      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-05-06 18:37 2026 05 06 18 37"
     },
     {
       "id": "scripts-verify-catalogue-field-registry",
@@ -3995,24 +3913,6 @@
       "search_text": "docs-viewer docs viewer docs viewer 2026-04-24 2026 04 24"
     },
     {
-      "id": "library",
-      "kind": "doc",
-      "title": "Library",
-      "href": "/docs/?scope=studio&doc=library",
-      "last_updated": "2026-05-03 19:09",
-      "display_meta": "2026-05-03 19:09",
-      "search_terms": [
-        "library",
-        "2026-05-03 19:09",
-        "2026",
-        "05",
-        "03",
-        "19",
-        "09"
-      ],
-      "search_text": "library 2026-05-03 19:09 2026 05 03 19 09"
-    },
-    {
       "id": "ui-request-docs-html-import-task",
       "kind": "doc",
       "title": "Docs HTML Import Task",
@@ -4092,6 +3992,32 @@
         "03"
       ],
       "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo change requests change requests 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "library-semantic-enrichment-spec",
+      "kind": "doc",
+      "title": "Library Semantic Enrichment Spec",
+      "href": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 18:12 • Archive",
+      "search_terms": [
+        "library-semantic-enrichment-spec",
+        "library",
+        "semantic",
+        "enrichment",
+        "spec",
+        "library semantic enrichment spec",
+        "archive",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "search",
@@ -4179,6 +4105,56 @@
       "search_text": "catalogue-moment-import catalogue moment import catalogue moment import studio 2026-04-29 2026 04 29"
     },
     {
+      "id": "library-export",
+      "kind": "doc",
+      "title": "Library Export v1",
+      "href": "/docs/?scope=studio&doc=library-export",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 18:12 • Archive",
+      "search_terms": [
+        "library-export",
+        "library",
+        "export",
+        "library export v1",
+        "v1",
+        "archive",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-export library export library export v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "library-import",
+      "kind": "doc",
+      "title": "Library Import v1",
+      "href": "/docs/?scope=studio&doc=library-import",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 18:12 • Archive",
+      "search_terms": [
+        "library-import",
+        "library",
+        "import",
+        "library import v1",
+        "v1",
+        "archive",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-import library import library import v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
       "id": "tag-aliases",
       "kind": "doc",
       "title": "Tag Aliases",
@@ -4224,6 +4200,32 @@
         "02"
       ],
       "search_text": "ui-status-emoji ui status emoji ui status emoji change requests change requests 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "library-export-ui",
+      "kind": "doc",
+      "title": "Library Export - UI refinements",
+      "href": "/docs/?scope=studio&doc=library-export-ui",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 18:12 • Archive",
+      "search_terms": [
+        "library-export-ui",
+        "library",
+        "export",
+        "ui",
+        "library export - ui refinements",
+        "refinements",
+        "archive",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "series-tags",
@@ -4286,6 +4288,32 @@
       "search_text": "change-requests change requests change requests 2026-05-06 2026 05 06"
     },
     {
+      "id": "library-import-export-v2",
+      "kind": "doc",
+      "title": "Library Export/Import v2",
+      "href": "/docs/?scope=studio&doc=library-import-export-v2",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 18:12 • Archive",
+      "search_terms": [
+        "library-import-export-v2",
+        "library",
+        "import",
+        "export",
+        "v2",
+        "library export/import v2",
+        "archive",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-import-export-v2 library import export v2 library export/import v2 archive 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
       "id": "tag-editor",
       "kind": "doc",
       "title": "Tag Editor",
@@ -4306,6 +4334,32 @@
         "03"
       ],
       "search_text": "tag-editor tag editor tag editor studio 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "library-import-ui",
+      "kind": "doc",
+      "title": "Library Import - UI refinements",
+      "href": "/docs/?scope=studio&doc=library-import-ui",
+      "last_updated": "2026-05-06 18:13",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 18:13 • Archive",
+      "search_terms": [
+        "library-import-ui",
+        "library",
+        "import",
+        "ui",
+        "library import - ui refinements",
+        "refinements",
+        "archive",
+        "2026-05-06 18:13",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "13"
+      ],
+      "search_text": "library-import-ui library import ui library import - ui refinements refinements archive 2026-05-06 18:13 2026 05 06 18 13"
     },
     {
       "id": "site-change-log-guidance",
@@ -4533,6 +4587,27 @@
         "31"
       ],
       "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "import-export",
+      "kind": "doc",
+      "title": "Import/Export",
+      "href": "/docs/?scope=studio&doc=import-export",
+      "last_updated": "2026-05-06 18:40",
+      "display_meta": "2026-05-06 18:40",
+      "search_terms": [
+        "import-export",
+        "import",
+        "export",
+        "import/export",
+        "2026-05-06 18:40",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "40"
+      ],
+      "search_text": "import-export import export import/export 2026-05-06 18:40 2026 05 06 18 40"
     },
     {
       "id": "search-change-log",

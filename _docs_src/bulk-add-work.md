@@ -1,10 +1,10 @@
 ---
 doc_id: bulk-add-work
-title: "Bulk Add Work"
+title: Bulk Add Work
 added_date: 2026-04-19
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 40
+last_updated: "2026-05-06 18:38"
+parent_id: catalogue
+sort_order: 10
 ---
 # Bulk Add Work
 
