@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-06 12:15"
+last_updated: "2026-05-06 12:30"
 parent_id: scripts
 sort_order: 10
 ---
@@ -563,6 +563,19 @@ Apply behavior:
 - successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server
 - `var/` is excluded from Jekyll because docs-management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
 - `bin/dev-studio` also uses a local-only Jekyll overlay so generated docs/search JSON can be read from this server without making Jekyll watch those generated files
+
+## Verification
+
+Export/import adapter behavior is covered by focused checks:
+
+- `tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
+- `tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
+- `tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
+- `tests/python/test_export_import_adapters.py` verifies active adapter resolution and future stub rejection.
+- `tests/smoke/library_import.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
+
+The `docs` profile runs the parser, service, and adapter checks.
+The `studio-smoke` profile builds a temporary site and runs the Studio import route smokes.
 
 ## Related References
 

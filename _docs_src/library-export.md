@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export v1
 added_date: 2026-05-03
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:30"
 ui_status: done
 parent_id: library
 sort_order: 25
@@ -23,6 +23,13 @@ It is a generated document produced from selected Docs Viewer source documents, 
 The first use case is Library semantic enrichment, especially document summaries and structure review.
 The export framework should still be extensible across all Docs Viewer scopes.
 Library is the primary scope and should drive the first implementation.
+
+Current implementation note:
+
+- Library export is the first active export/import data domain.
+- The browser sends `data_domain: "library"` to the neutral docs-management export endpoint.
+- `assets/studio/data/export_import_adapters.json` maps Library export to the active `documents` adapter.
+- Catalogue and Analytics appear only as future adapter stubs until their own record contracts and service behavior are implemented.
 
 The implementation should ship a narrow v1 and then iterate from real export runs.
 The first version should prioritize predictable files, explicit selection, and simple config-driven shapes over automatic batching, direct LLM calls, or broad reporting infrastructure.
@@ -341,6 +348,13 @@ The endpoint calls the shared read-only export engine and writes only under the 
 It logs ids, counts, format, and write state, but not document body content or full export payloads.
 When the docs-management server runs with `--dry-run`, the endpoint validates and reports the target file path without writing the export file.
 
+Adapter dispatch rules:
+
+- `data_domain` and `operation: "export"` must resolve exactly one active adapter capability.
+- Library currently resolves to the `documents` adapter and uses `assets/studio/data/library_export_configs.json`.
+- Stub adapters fail before document export code runs.
+- Export paths come from the adapter registry and the selected export config; route code does not decide workflow folders.
+
 ## Open Questions
 
 - What real thresholds should later trigger batching or long-document chunking?
@@ -349,6 +363,7 @@ When the docs-management server runs with `--dry-run`, the endpoint validates an
 
 - V1 should be small and iterative rather than attempting a complete export platform.
 - Library is the first implementation scope, but configs should not prevent future Docs Viewer scopes.
+- Future non-Library domains must use their own adapter config and cannot inherit Library document behavior by omission.
 - Export configs should live in a dedicated Library export config file.
 - V1 should support config-selected `json` and `jsonl`.
 - JSONL is preferred when multiple complete document records are exported in one file for LLM upload.

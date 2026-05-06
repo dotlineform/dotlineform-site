@@ -2,11 +2,36 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 12:15"
+last_updated: "2026-05-06 12:30"
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-05-06] Closed export/import adapter boundary request
+
+**Status:** implemented
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+Completed the export/import adapter boundary documentation and verification pass.
+The request now records the implemented Library documents adapter, normalized workflow folders, future Catalogue and Analytics stubs, and verification coverage.
+
+**Reason:**
+The adapter boundary should be visible in stable Library, script, config, and change-request docs before future data-domain work starts.
+
+**Files changed:**
+
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
+**Impact:**
+Standard checks now include adapter dispatch verification and a Studio smoke case for disabled future adapters.
+The change request is marked implemented while Catalogue and Analytics behavior remains explicitly deferred.
 
 ## [2026-05-06] Added future export/import adapter stubs
 

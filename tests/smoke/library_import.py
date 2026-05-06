@@ -99,6 +99,25 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     }
 
 
+def assert_unsupported_adapter_state(page, expected_status: str) -> dict[str, object]:
+    preview_disabled = page.locator("#libraryImportPreview").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#libraryImportUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#libraryImportApplyHierarchy").evaluate("button => button.disabled")
+    file_select_disabled = page.locator("#libraryImportFileSelect").evaluate("select => select.disabled")
+    status_text = page.locator("#libraryImportStatus").text_content()
+    if status_text != expected_status:
+        raise AssertionError(f"unexpected unsupported-adapter status: {status_text!r}")
+    if not preview_disabled or not update_summary_disabled or not apply_hierarchy_disabled or not file_select_disabled:
+        raise AssertionError("future adapter controls should be disabled")
+    return {
+        "status": status_text,
+        "preview_disabled": bool(preview_disabled),
+        "update_summary_disabled": bool(update_summary_disabled),
+        "apply_hierarchy_disabled": bool(apply_hierarchy_disabled),
+        "file_select_disabled": bool(file_select_disabled),
+    }
+
+
 def install_mock_docs_service(page) -> None:
     def handle(route):
         parsed = urlparse(route.request.url)
@@ -423,6 +442,8 @@ def main() -> int:
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
     parser.add_argument("--mock-docs-service", action="store_true")
+    parser.add_argument("--route-path", default="/studio/library-import/")
+    parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
@@ -440,12 +461,14 @@ def main() -> int:
                     page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
                 elif args.mock_docs_service:
                     install_mock_docs_service(page)
-                page.goto(route_url(base_url, "/studio/library-import/"), wait_until="domcontentloaded")
+                page.goto(route_url(base_url, args.route_path), wait_until="domcontentloaded")
                 attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
                 assert_ready_contract(attrs)
                 if args.block_docs_service and attrs["service"] != "unavailable":
                     raise AssertionError(f"expected unavailable service state: {attrs!r}")
                 content = assert_route_content(page, args.block_docs_service)
+                if args.expect_unsupported:
+                    content["unsupported_adapter"] = assert_unsupported_adapter_state(page, args.expect_unsupported)
                 if args.mock_docs_service:
                     content["mock_preview"] = assert_mock_preview_flow(page)
                 print(json.dumps({"route": attrs, "content": content}, sort_keys=True))

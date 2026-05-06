@@ -140,6 +140,21 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the Studio Library import route ready state with docs-management unavailable.",
         ),
         CheckCommand(
+            "library-import-unsupported-adapter-smoke",
+            (
+                sys.executable,
+                "tests/smoke/library_import.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+                "--block-docs-service",
+                "--route-path",
+                "/studio/library-import/?scope=catalogue",
+                "--expect-unsupported",
+                "Catalogue import staging is not implemented yet.",
+            ),
+            "Smoke-check that future import adapter stubs render disabled unavailable states.",
+        ),
+        CheckCommand(
             "library-import-preview-smoke",
             (
                 sys.executable,

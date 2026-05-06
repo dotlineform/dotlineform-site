@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:30"
 ui_status: done
 parent_id: library
 sort_order: 30
@@ -27,6 +27,13 @@ The first goal is to turn staged JSON or JSONL files into human-readable Markdow
 
 This is the import-side counterpart to [Library Export v1](/docs/?scope=studio&doc=library-export).
 Export creates local working files from canonical Docs Viewer data; import reads local working files copied into a staging area and prepares them for inspection.
+
+Current implementation note:
+
+- Library import is the first active import data domain.
+- The browser sends `data_domain: "library"` to neutral docs-management import endpoints.
+- `assets/studio/data/export_import_adapters.json` maps Library staged-file listing, preview, summary apply, and hierarchy apply to the active `documents` adapter.
+- Catalogue and Analytics are visible only as future adapter stubs until their own parser, preview, validation, and apply contracts exist.
 
 ## Spec
 
@@ -80,6 +87,7 @@ var/studio/export-import/library/import-preview/
 
 These artifacts are local working files.
 They should be ignored by git, safe to delete, and reproducible from the staged data file plus the current import renderer.
+The folder roots are declared in `assets/studio/data/export_import_adapters.json`; route code and browser modules should not introduce separate workflow folder decisions.
 
 Preview output is document-centric.
 Each parsed document should produce one Markdown-style preview file.
@@ -221,6 +229,9 @@ The page should:
 - show document preview rows without preview-file path details
 - provide a completion modal with record/update counts and warnings or errors
 
+The current page reads the export/import adapter registry to decide which data domains are selectable and which ones are active.
+Future stub domains should render as unavailable with disabled controls, not fall through to Library document parsing.
+
 The page should not offer an Apply button in the first implementation unless the apply behavior is explicitly narrowed to summary-only front-matter updates and has its own validation contract.
 
 Current Studio UI behavior:
@@ -348,8 +359,8 @@ Status: implemented in `./scripts/docs/docs_management_server.py`.
 `POST /docs/import/preview` parses the selected staged file through the configured `documents` adapter, runs current generated-doc lookup for Library, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
 The endpoint returns the same structured report as the CLI and logs only scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths.
 
-Library remains the only configured data domain for the `documents` adapter in this implementation.
-Catalogue and Analytics must be added through explicit adapter config before the shared shell dispatches to them.
+Library remains the only active data domain for the `documents` adapter in this implementation.
+Catalogue and Analytics have explicit stub adapter entries, but those entries are not active service implementations and must fail closed.
 
 ### Task 6. Add Studio Library Import Page
 
@@ -367,6 +378,7 @@ Status note:
 - implemented at `/studio/library-import/`
 - listed from the `/studio/library/` dashboard under Data
 - defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
+- reads selectable data domains and unavailable-state messages from `assets/studio/data/export_import_adapters.json`
 - loads staged `.json` and `.jsonl` files through `GET /docs/import/files?data_domain=library`
 - runs preview generation through `POST /docs/import/preview` for supported staged JSON/JSONL files
 - uses the same compact command/list shell as the Library export page
@@ -377,6 +389,7 @@ Status note:
 - exposes `select all` and `clear` selection pills for preview rows
 - enables `Update summary` and `Apply hierarchy` for selected document preview rows
 - keeps `Update summary` and `Apply hierarchy` disabled outside the Library scope until those source-write contracts exist
+- keeps all staged-file, preview, and apply controls disabled for future stub adapters
 - runs a preflight through `POST /docs/import/apply` with `operation: "summary_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library_src/*.md`
 - runs a preflight through `POST /docs/import/apply` with `operation: "hierarchy_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected `parent_id` changes only to `_docs_library_src/*.md`
 - preserves current `sort_order` values when applying hierarchy changes

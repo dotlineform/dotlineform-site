@@ -2,7 +2,7 @@
 doc_id: library-import-export-v2
 title: Library Export/Import v2
 added_date: 2026-05-04
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:30"
 ui_status: done
 parent_id: library
 sort_order: 50
@@ -372,7 +372,7 @@ Implementation notes:
 - generated Studio docs-viewer payloads and Studio docs-search payloads were rebuilt after docs-source changes
 - focused parser/service and Studio smoke checks were added or extended for each implemented runtime surface
 - Library import/export v2 now has a separate follow-up request for generated parent nodes: [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
-- The Studio export/import route shell is now scope-aware for `library`, `catalogue`, and `analytics`. Library remains the only scope with implemented export configs and source-write import apply actions in this v2 task. Catalogue and Analytics are infrastructure-ready for staged JSON/JSONL previews, but their export config shapes, source adapters, preview file expectations, and apply actions remain future work.
+- The Studio export/import route shell now reads data-domain availability from `assets/studio/data/export_import_adapters.json`. Library remains the only active data domain with implemented export configs, staged-file listing, preview generation, and source-write import apply actions in this v2 task. Catalogue and Analytics are named stub adapters only; their export config shapes, source adapters, preview file expectations, and apply actions remain future work.
 
 ## Benefits And Risks
 

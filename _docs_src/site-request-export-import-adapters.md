@@ -2,8 +2,8 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 12:15"
-ui_status: in-progress
+last_updated: "2026-05-06 12:30"
+ui_status: done
 parent_id: change-requests
 sort_order: 27
 ---
@@ -11,7 +11,7 @@ sort_order: 27
 
 Status:
 
-- proposed
+- implemented
 
 ## Summary
 
@@ -629,7 +629,7 @@ Task 5 benefits and risks:
 
 Status:
 
-- pending
+- completed
 
 Update the Library export/import docs, scripts docs, and related UI/shared-shell docs so the adapter boundary is visible.
 
@@ -639,6 +639,21 @@ Add or update checks that verify:
 - Library adapter preview still works
 - source-write apply actions remain gated by service capability and confirmation
 - unsupported future adapters fail or disable controls clearly
+
+Implementation note:
+
+- updated Library export, Library import, Library export/import v2, Library export config, docs-management, adapter config, Studio config, and site-change-log docs to describe the adapter boundary
+- rebuilt generated Studio docs-viewer and Studio docs-search payloads
+- added adapter-dispatch tests for active Library resolution and future stub rejection
+- added a Studio import smoke case for the Catalogue stub unavailable state
+- wired adapter and unsupported-stub checks into `./scripts/run_checks.py`
+
+Task 6 benefits and risks:
+
+- Benefit: the active Library workflow and future-domain stubs are documented through stable docs rather than only the implementation plan.
+- Benefit: the standard check profiles now cover active Library export/import behavior, source-write gates, and disabled future adapters.
+- Risk: the docs still describe the current Library-named page shells because the neutral shared route rename is a separate refactor.
+- Risk: future Catalogue and Analytics docs will need another pass when their real data contracts are specified.
 
 ## Resolved Direction
 
@@ -667,6 +682,11 @@ This request is ready to close when:
 - future Analytics and Catalogue adapters have named extension points
 - neutral shared export/import routes and endpoints are implemented without Library-named compatibility layers
 - implementation tasks are clear enough to start without adding new domain behavior to the shell
+
+Current status:
+
+- all acceptance criteria for this request are met
+- future Catalogue and Analytics behavior remains out of scope beyond named stub adapters
 
 ## Related Docs
 

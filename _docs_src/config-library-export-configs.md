@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: "Library Export Configs"
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 12:30"
 parent_id: config
 sort_order: 70
 ---
@@ -21,7 +21,8 @@ Schema file:
 
 `library_export_configs.json` defines saved export patterns for the Library export workflow.
 
-The first implementation scope is Library, but the schema keeps the scope field as an array so the same export engine can later support other Docs Viewer scopes.
+The first active data domain is Library.
+The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `assets/studio/data/export_import_adapters.json`.
 
 The config is source-controlled project configuration.
 The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
@@ -60,6 +61,7 @@ The first config file defines three enabled Library export patterns:
 
 These configs are Library-only for v1.
 They include generated but non-viewable docs and exclude unpublished docs. `archive` is treated like any other generated Library doc.
+Catalogue and Analytics do not use these configs unless a future adapter explicitly chooses a compatible document-backed export model.
 
 ## Top-Level Shape
 
