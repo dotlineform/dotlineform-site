@@ -2,7 +2,7 @@
 doc_id: scripts-docs-broken-links
 title: "Docs Broken Links Audit"
 added_date: 2026-04-23
-last_updated: "2026-05-06 15:41"
+last_updated: "2026-05-06 16:15"
 parent_id: scripts
 sort_order: 15
 ---
@@ -31,6 +31,7 @@ Current link-text rule:
 
 Ignored links:
 
+- links inside rendered code blocks
 - fragment-only links within the same doc, such as `#section`
 - same-doc viewer links with a fragment, such as `/docs/?scope=studio&doc=this-doc#section`
 - same-doc source-markdown links with a fragment

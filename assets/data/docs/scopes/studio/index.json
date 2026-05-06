@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T14:48:35Z",
+  "generated_at": "2026-05-06T15:18:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -371,7 +371,7 @@
       "doc_id": "scripts-docs-broken-links",
       "title": "Docs Broken Links Audit",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-06 15:41",
+      "last_updated": "2026-05-06 16:15",
       "parent_id": "scripts",
       "sort_order": 15,
       "published": true,
@@ -379,7 +379,7 @@
       "source_path": "scripts-docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-broken-links.json",
-      "content_text_length": 1909
+      "content_text_length": 1943
     },
     {
       "scope": "studio",
@@ -856,7 +856,7 @@
       "doc_id": "scripts-run-checks",
       "title": "Run Checks",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-06 16:15",
       "parent_id": "scripts",
       "sort_order": 28,
       "published": true,
@@ -864,7 +864,7 @@
       "source_path": "scripts-run-checks.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json",
-      "content_text_length": 1554
+      "content_text_length": 1573
     },
     {
       "scope": "studio",
@@ -1158,7 +1158,7 @@
       "doc_id": "docs-broken-links",
       "title": "Docs Broken Links",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-06 15:41",
+      "last_updated": "2026-05-06 16:15",
       "parent_id": "studio",
       "sort_order": 35,
       "published": true,
@@ -1166,7 +1166,7 @@
       "source_path": "docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json",
-      "content_text_length": 2117
+      "content_text_length": 2163
     },
     {
       "scope": "studio",
@@ -2822,7 +2822,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 15:41",
+      "last_updated": "2026-05-06 16:15",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2830,7 +2830,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 39794
+      "content_text_length": 40456
     },
     {
       "scope": "studio",

@@ -48,9 +48,13 @@ class AnchorCollector(HTMLParser):
         self.anchors: list[dict[str, str]] = []
         self._current_href: str | None = None
         self._current_parts: list[str] = []
+        self._pre_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag.lower() != "a":
+        normalized_tag = tag.lower()
+        if normalized_tag == "pre":
+            self._pre_depth += 1
+        if normalized_tag != "a" or self._pre_depth > 0:
             return
         href = ""
         for key, value in attrs:
@@ -61,7 +65,10 @@ class AnchorCollector(HTMLParser):
         self._current_parts = []
 
     def handle_endtag(self, tag: str) -> None:
-        if tag.lower() != "a" or self._current_href is None:
+        normalized_tag = tag.lower()
+        if normalized_tag == "pre":
+            self._pre_depth = max(0, self._pre_depth - 1)
+        if normalized_tag != "a" or self._current_href is None:
             return
         self.anchors.append(
             {

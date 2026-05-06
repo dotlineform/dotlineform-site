@@ -112,6 +112,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Management Server archive-parent handling.",
         ),
         CheckCommand(
+            "docs-broken-links-tests",
+            (sys.executable, "tests/python/test_docs_broken_links.py"),
+            "Verify Docs Broken Links audit filtering.",
+        ),
+        CheckCommand(
             "studio-docs-build",
             ("./scripts/build_docs.rb", "--scope", "studio", "--write"),
             "Regenerate Studio docs-viewer payloads.",

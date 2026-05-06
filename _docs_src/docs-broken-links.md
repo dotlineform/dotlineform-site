@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: "Docs Broken Links"
 added_date: 2026-04-23
-last_updated: "2026-05-06 15:41"
+last_updated: "2026-05-06 16:15"
 parent_id: studio
 sort_order: 35
 ---
@@ -30,6 +30,7 @@ Current rule:
 
 - visible link text is not checked against the current target title
 - changed or shortened link labels are allowed because they can be useful corrections to outdated titles
+- links inside rendered code blocks are ignored
 - same-doc fragment links are ignored
 - this includes `#section` and links back to the current docs page with a fragment
 

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 15:41"
+last_updated: "2026-05-06 16:15"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-06] Ignored code-block links in Docs Broken Links
+
+**Status:** implemented
+
+**Area:** Docs / Validation
+
+**Summary:**
+The Docs Broken Links audit now skips links rendered inside code blocks.
+
+**Reason:**
+Code examples may intentionally contain illustrative docs URLs that are not live navigation and should not be reported as broken links.
+
+**Files changed:**
+
+- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
+- [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- `scripts/docs/docs_broken_links.py`
+- `scripts/run_checks.py`
+- `tests/python/test_docs_broken_links.py`
+
+**Impact:**
+The audit remains focused on navigable prose links while code samples can show obsolete, example, or placeholder docs URLs without creating maintenance findings.
 
 ## [2026-05-06] Removed title mismatches from Docs Broken Links
 
