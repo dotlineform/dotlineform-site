@@ -2,7 +2,7 @@
 doc_id: site-change-log-guidance
 title: "Site Change Log Guidance"
 added_date: 2026-03-31
-last_updated: "2026-05-06 14:28"
+last_updated: "2026-05-06 14:48"
 parent_id: ""
 sort_order: 230
 ---
@@ -44,11 +44,20 @@ Without a dedicated non-search site log, later review becomes harder when trying
 Add a site change-log entry when a change materially affects one or more of:
 
 - works, series, or moments behaviour
-- shared layouts or site shell runtime
+- shared layouts or site shell runtime in a way that changes the public or Studio experience beyond a local affordance
 - generated JSON contracts used by the site
-- non-search Studio feature behaviour
-- site-level build pipeline or validation
+- non-search Studio feature behaviour at workflow, data, or server/API level
+- site-level build pipeline or validation policy
 - architecture boundaries in the wider site
+
+Use these questions before adding an entry:
+
+- did the change alter server behavior, service endpoints, generated data contracts, or build/write responsibilities?
+- did it introduce a new module, route, workflow, or meaningful abstraction, or significantly change existing shared code?
+- did it change user-facing behavior enough to require focused smoke testing, manual validation, or a product/design decision?
+- would a future maintainer reasonably look in the change log to answer when this behavior or contract changed?
+
+If the answer is no to all of those questions, do not add a site change-log entry.
 
 Do not add an entry for:
 
@@ -56,6 +65,9 @@ Do not add an entry for:
 - formatting-only edits
 - typo fixes
 - internal cleanup with no behavioural or structural effect
+- local copy, link-target, label, or small UI affordance changes that do not alter workflow semantics
+- routine docs updates that explain or follow a small implementation change
+- narrow bug fixes where the affected feature doc, script doc, or code diff is the better record
 
 ## Relationship to other documents
 
@@ -106,6 +118,9 @@ If a change materially affects both, add short entries to both logs.
 
 If a change is meaningful enough to alter behaviour, architecture, data contracts, or maintenance burden, update the site change log in the same change set.
 
+Do not add an entry merely because `_docs_src/` changed.
+The focused owning doc should usually carry small implementation notes without promoting them into site history.
+
 ### 3. Codex writes the entry at close-out
 
 Because Codex is currently writing most implementation work in this repo, Codex should draft the site change-log entry during close-out.
@@ -126,6 +141,7 @@ Keep entries ordered newest first.
 Prefer one entry per meaningful site change set.
 
 Do not create one entry per file.
+Do not create an entry for every small follow-up inside an already logged workflow unless it changes the settled contract or closes a meaningful phase.
 
 ### 6. Record effect, not just activity
 
@@ -134,10 +150,12 @@ Entries should describe behaviour, data flow, architecture, or maintenance impac
 Bad:
 
 - “Updated site docs”
+- “Changed result links to open in manage mode”
 
 Good:
 
 - “Moved work detail runtime to per-work JSON and retired the old aggregate work details index”
+- “Moved document import/export dispatch behind adapter config”
 
 ### 7. Keep affected files selective
 
