@@ -1,12 +1,11 @@
 ---
 doc_id: local-setup
-title: "Local Setup"
+title: Local Setup
 added_date: 2026-04-13
-last_updated: 2026-04-13
-parent_id: scripts
+last_updated: "2026-05-06 20:38"
+parent_id: site-docs
 sort_order: 30
 ---
-
 # Local Setup
 
 This guide centralizes the current local toolchain needed to run the Python scripts in this repo and to verify the Jekyll site locally.

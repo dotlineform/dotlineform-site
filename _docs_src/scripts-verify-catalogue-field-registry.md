@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-verify-catalogue-field-registry
-title: "Catalogue Field Registry Verification"
+title: Catalogue Field Registry Verification
 added_date: 2026-05-01
-last_updated: 2026-05-03
-parent_id: scripts
-sort_order: 75
+last_updated: "2026-05-06 20:43"
+parent_id: catalogue
+sort_order: 70
 ---
 # Catalogue Field Registry Verification
 

@@ -2,7 +2,7 @@
 doc_id: local-studio-server-architecture
 title: "Local Studio Server Architecture"
 added_date: 2026-04-17
-last_updated: 2026-04-17
+last_updated: "2026-05-06 21:05"
 parent_id: servers
 sort_order: 10
 ---
@@ -11,19 +11,38 @@ sort_order: 10
 
 ## Current Position
 
-Studio currently has separate localhost write services:
+Studio currently uses `bin/dev-studio` as the integrated local runner for everyday Studio development.
+That runner starts Jekyll plus several separate localhost services:
 
 - `scripts/studio/tag_write_server.py`
 - `scripts/studio/catalogue_write_server.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/studio/audit_service.py`
 
-That separation is intentional for the current implementation phase. The tag server is already broad and stable. The catalogue write service is new and deliberately narrow while the JSON-led catalogue workflow is still settling.
+When docs live watching is enabled, the same runner also starts:
 
-Keeping the first catalogue service separate reduces regression risk:
+- `scripts/docs/docs_live_rebuild_watcher.py`
+
+This means the current implementation is already an integrated local workflow, but not a combined server process.
+Each local service still owns its own port, health surface, CORS handling, route set, logging, and write boundary.
+
+That separation remains intentional for the current implementation phase.
+The tag server is broad and stable.
+The catalogue write service has grown into the active JSON-led catalogue source writer, but it still benefits from a narrow domain boundary.
+The docs management server and audit service also have distinct safety profiles: docs management owns source-doc writes and generated docs reads, while the audit service runs only allowlisted local checks.
+
+Keeping these services separate for now reduces regression risk:
 
 - tag write behavior can remain unchanged
 - catalogue source writes get their own explicit allowlist
-- backup and validation behavior can be tested without changing tag routes
-- the work-save contract can settle before shared server infrastructure is introduced
+- docs source writes and generated-data reads stay isolated from catalogue writes
+- audit commands stay isolated from write endpoints
+- backup, validation, and rebuild behavior can be tested within each domain before shared server infrastructure is introduced
+
+The architecture described below is still the preferred development option for a future consolidation pass.
+It should be treated as a deliberate refactor, not as a requirement for ordinary feature work.
+Use the existing owning service for narrow tag, catalogue, docs, or audit changes.
+Start the combined-server work when a new local capability would otherwise add another long-running server or duplicate loopback, CORS, health, logging, capability, backup, or write-allowlist logic.
 
 ## Target Direction
 

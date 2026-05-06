@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-211e860967aec7c1e12607752dbcedd3",
-    "generated_at_utc": "2026-05-06T19:25:00Z",
+    "version": "blake2b-3a7fdbeee8b9205eb91d9d77e8ae1bca",
+    "generated_at_utc": "2026-05-06T19:43:59Z",
     "count": 193
   },
   "entries": [
@@ -325,10 +325,10 @@
       "kind": "doc",
       "title": "Local Studio Server Architecture",
       "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-05-06 21:05",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-04-17 • Servers",
+      "display_meta": "2026-05-06 21:05 • Servers",
       "search_terms": [
         "local-studio-server-architecture",
         "local",
@@ -337,12 +337,13 @@
         "architecture",
         "local studio server architecture",
         "servers",
-        "2026-04-17",
+        "2026-05-06 21:05",
         "2026",
-        "04",
-        "17"
+        "05",
+        "06",
+        "21"
       ],
-      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-04-17 2026 04 17"
+      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-06 21:05 2026 05 06 21"
     },
     {
       "id": "docs-viewer-overview",
@@ -579,55 +580,6 @@
       "search_text": "generic-llm-helper-pattern generic llm helper pattern generic llm helper pattern 2026-04-16 2026 04 16"
     },
     {
-      "id": "scripts-dev-studio",
-      "kind": "doc",
-      "title": "Dev Studio Runner",
-      "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-04",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-04 • Scripts",
-      "search_terms": [
-        "scripts-dev-studio",
-        "scripts",
-        "dev",
-        "studio",
-        "dev studio runner",
-        "runner",
-        "2026-05-04",
-        "2026",
-        "05",
-        "04"
-      ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-05-04 2026 05 04"
-    },
-    {
-      "id": "scripts-docs-broken-links",
-      "kind": "doc",
-      "title": "Docs Broken Links Audit",
-      "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
-      "last_updated": "2026-05-06 16:15",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-06 16:15 • Scripts",
-      "search_terms": [
-        "scripts-docs-broken-links",
-        "scripts",
-        "docs",
-        "broken",
-        "links",
-        "docs broken links audit",
-        "audit",
-        "2026-05-06 16:15",
-        "2026",
-        "05",
-        "06",
-        "16",
-        "15"
-      ],
-      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit 2026-05-06 16:15 2026 05 06 16 15"
-    },
-    {
       "id": "user-guide",
       "kind": "doc",
       "title": "User Guide",
@@ -722,6 +674,60 @@
       "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-05-03 2026 05 03"
     },
     {
+      "id": "scripts-css-token-audit",
+      "kind": "doc",
+      "title": "CSS Token Audit",
+      "href": "/docs/?scope=studio&doc=scripts-css-token-audit",
+      "last_updated": "2026-05-06 20:42",
+      "parent_id": "ui-audits",
+      "parent_title": "UI Audits",
+      "display_meta": "2026-05-06 20:42 • UI Audits",
+      "search_terms": [
+        "scripts-css-token-audit",
+        "scripts",
+        "css",
+        "token",
+        "audit",
+        "css token audit",
+        "ui audits",
+        "ui",
+        "audits",
+        "2026-05-06 20:42",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "42"
+      ],
+      "search_text": "scripts-css-token-audit scripts css token audit css token audit ui audits ui audits 2026-05-06 20:42 2026 05 06 20 42"
+    },
+    {
+      "id": "scripts-dev-studio",
+      "kind": "doc",
+      "title": "Dev Studio Runner",
+      "href": "/docs/?scope=studio&doc=scripts-dev-studio",
+      "last_updated": "2026-05-06 20:36",
+      "parent_id": "servers",
+      "parent_title": "Servers",
+      "display_meta": "2026-05-06 20:36 • Servers",
+      "search_terms": [
+        "scripts-dev-studio",
+        "scripts",
+        "dev",
+        "studio",
+        "dev studio runner",
+        "runner",
+        "servers",
+        "2026-05-06 20:36",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "36"
+      ],
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-06 20:36 2026 05 06 20 36"
+    },
+    {
       "id": "site-request-docs-build-incremental",
       "kind": "doc",
       "title": "Docs Build Incremental Request",
@@ -798,31 +804,6 @@
         "13"
       ],
       "search_text": "scripts-docs-import scripts docs import docs import import/export export 2026-05-06 20:13 2026 05 06 20 13"
-    },
-    {
-      "id": "scripts-docs-builder",
-      "kind": "doc",
-      "title": "Docs Viewer Builder",
-      "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-06 19:03",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-06 19:03 • Scripts",
-      "search_terms": [
-        "scripts-docs-builder",
-        "scripts",
-        "docs",
-        "builder",
-        "docs viewer builder",
-        "viewer",
-        "2026-05-06 19:03",
-        "2026",
-        "05",
-        "06",
-        "19",
-        "03"
-      ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-06 19:03 2026 05 06 19 03"
     },
     {
       "id": "ui-primitive-input",
@@ -1341,30 +1322,6 @@
       "search_text": "scripts-run-checks scripts run checks run checks 2026-05-06 16:15 2026 05 06 16 15"
     },
     {
-      "id": "scripts-audit-studio-ready-state",
-      "kind": "doc",
-      "title": "Studio Ready-State Audit",
-      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
-      "last_updated": "2026-05-03",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-03 • Scripts",
-      "search_terms": [
-        "scripts-audit-studio-ready-state",
-        "scripts",
-        "audit",
-        "studio",
-        "ready",
-        "state",
-        "studio ready-state audit",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-03 2026 05 03"
-    },
-    {
       "id": "analytics",
       "kind": "doc",
       "title": "Analytics",
@@ -1532,22 +1489,26 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-04-13",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-04-13 • Scripts",
+      "last_updated": "2026-05-06 20:38",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-05-06 20:38 • Site Docs",
       "search_terms": [
         "local-setup",
         "local",
         "setup",
         "local setup",
-        "scripts",
-        "2026-04-13",
+        "site docs",
+        "site",
+        "docs",
+        "2026-05-06 20:38",
         "2026",
-        "04",
-        "13"
+        "05",
+        "06",
+        "20",
+        "38"
       ],
-      "search_text": "local-setup local setup local setup scripts 2026-04-13 2026 04 13"
+      "search_text": "local-setup local setup local setup site docs site docs 2026-05-06 20:38 2026 05 06 20 38"
     },
     {
       "id": "search-field-registry",
@@ -1621,29 +1582,6 @@
         "31"
       ],
       "search_text": "sorting-architecture sorting architecture sorting architecture 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "scripts-studio-audit-service",
-      "kind": "doc",
-      "title": "Studio Audit Service",
-      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
-      "last_updated": "2026-05-03",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-03 • Scripts",
-      "search_terms": [
-        "scripts-studio-audit-service",
-        "scripts",
-        "studio",
-        "audit",
-        "service",
-        "studio audit service",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-03 2026 05 03"
     },
     {
       "id": "config-studio-config-json",
@@ -1768,6 +1706,32 @@
       "search_text": "tag-registry tag registry tag registry analytics 2026-05-06 20:14 2026 05 06 20 14"
     },
     {
+      "id": "scripts-tag-write-server",
+      "kind": "doc",
+      "title": "Tag Write Server",
+      "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
+      "last_updated": "2026-05-06 20:40",
+      "parent_id": "servers",
+      "parent_title": "Servers",
+      "display_meta": "2026-05-06 20:40 • Servers",
+      "search_terms": [
+        "scripts-tag-write-server",
+        "scripts",
+        "tag",
+        "write",
+        "server",
+        "tag write server",
+        "servers",
+        "2026-05-06 20:40",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "40"
+      ],
+      "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-06 20:40 2026 05 06 20 40"
+    },
+    {
       "id": "new-pipeline-web-system-spec",
       "kind": "doc",
       "title": "Web System Specification",
@@ -1859,6 +1823,31 @@
         "25"
       ],
       "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow 2026-04-25 2026 04 25"
+    },
+    {
+      "id": "scripts-studio-audit-service",
+      "kind": "doc",
+      "title": "Studio Audit Service",
+      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
+      "last_updated": "2026-05-06 20:35",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-06 20:35 • Studio",
+      "search_terms": [
+        "scripts-studio-audit-service",
+        "scripts",
+        "studio",
+        "audit",
+        "service",
+        "studio audit service",
+        "2026-05-06 20:35",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "35"
+      ],
+      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-06 20:35 2026 05 06 20 35"
     },
     {
       "id": "site-request-studio-ready-state-contract",
@@ -1971,22 +1960,27 @@
       "kind": "doc",
       "title": "Cloud Environments",
       "href": "/docs/?scope=studio&doc=scripts-cloud-environments",
-      "last_updated": "2026-04-14",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-04-14 • Scripts",
+      "last_updated": "2026-05-06 20:39",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-05-06 20:39 • Site Docs",
       "search_terms": [
         "scripts-cloud-environments",
         "scripts",
         "cloud",
         "environments",
         "cloud environments",
-        "2026-04-14",
+        "site docs",
+        "site",
+        "docs",
+        "2026-05-06 20:39",
         "2026",
-        "04",
-        "14"
+        "05",
+        "06",
+        "20",
+        "39"
       ],
-      "search_text": "scripts-cloud-environments scripts cloud environments cloud environments 2026-04-14 2026 04 14"
+      "search_text": "scripts-cloud-environments scripts cloud environments cloud environments site docs site docs 2026-05-06 20:39 2026 05 06 20 39"
     },
     {
       "id": "docs-viewer",
@@ -2287,6 +2281,32 @@
       "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
     },
     {
+      "id": "scripts-audit-studio-ready-state",
+      "kind": "doc",
+      "title": "Studio Ready-State Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
+      "last_updated": "2026-05-06 20:38",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-06 20:38 • Studio",
+      "search_terms": [
+        "scripts-audit-studio-ready-state",
+        "scripts",
+        "audit",
+        "studio",
+        "ready",
+        "state",
+        "studio ready-state audit",
+        "2026-05-06 20:38",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "38"
+      ],
+      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-06 20:38 2026 05 06 20 38"
+    },
+    {
       "id": "catalogue-work-detail-editor",
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
@@ -2478,28 +2498,6 @@
       "search_text": "series-tags series tags series tags analytics 2026-05-06 20:16 2026 05 06 20 16"
     },
     {
-      "id": "scripts-srcset-builder",
-      "kind": "doc",
-      "title": "Srcset Builder",
-      "href": "/docs/?scope=studio&doc=scripts-srcset-builder",
-      "last_updated": "2026-04-27",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-04-27 • Scripts",
-      "search_terms": [
-        "scripts-srcset-builder",
-        "scripts",
-        "srcset",
-        "builder",
-        "srcset builder",
-        "2026-04-27",
-        "2026",
-        "04",
-        "27"
-      ],
-      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder 2026-04-27 2026 04 27"
-    },
-    {
       "id": "new-pipeline-studio-implementation-plan",
       "kind": "doc",
       "title": "Studio Implementation Plan",
@@ -2550,29 +2548,6 @@
         "55"
       ],
       "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-06 19:55 2026 05 06 19 55"
-    },
-    {
-      "id": "scripts-studio-backup-retention",
-      "kind": "doc",
-      "title": "Studio Backup Retention",
-      "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
-      "last_updated": "2026-05-04",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-04 • Scripts",
-      "search_terms": [
-        "scripts-studio-backup-retention",
-        "scripts",
-        "studio",
-        "backup",
-        "retention",
-        "studio backup retention",
-        "2026-05-04",
-        "2026",
-        "05",
-        "04"
-      ],
-      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-04 2026 05 04"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -2646,6 +2621,31 @@
       "search_text": "search-public-ui-contract search public ui contract search public ui contract 2026-05-05 2026 05"
     },
     {
+      "id": "scripts-studio-backup-retention",
+      "kind": "doc",
+      "title": "Studio Backup Retention",
+      "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
+      "last_updated": "2026-05-06 20:41",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-06 20:41 • Studio",
+      "search_terms": [
+        "scripts-studio-backup-retention",
+        "scripts",
+        "studio",
+        "backup",
+        "retention",
+        "studio backup retention",
+        "2026-05-06 20:41",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "41"
+      ],
+      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-06 20:41 2026 05 06 20 41"
+    },
+    {
       "id": "site-request-analysis-doc-viewer",
       "kind": "doc",
       "title": "Analysis Docs Viewer Request",
@@ -2676,49 +2676,27 @@
     {
       "id": "catalogue-field-registry-review",
       "kind": "doc",
-      "title": "Catalogue Field Registry Review",
+      "title": "Catalogue Field Registry",
       "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
-      "last_updated": "2026-05-06 20:20",
+      "last_updated": "2026-05-06 20:43",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:20 • Catalogue",
+      "display_meta": "2026-05-06 20:43 • Catalogue",
       "search_terms": [
         "catalogue-field-registry-review",
         "catalogue",
         "field",
         "registry",
         "review",
-        "catalogue field registry review",
-        "2026-05-06 20:20",
+        "catalogue field registry",
+        "2026-05-06 20:43",
         "2026",
         "05",
         "06",
-        "20"
+        "20",
+        "43"
       ],
-      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry review 2026-05-06 20:20 2026 05 06 20"
-    },
-    {
-      "id": "scripts-catalogue-source",
-      "kind": "doc",
-      "title": "Catalogue Source Utilities",
-      "href": "/docs/?scope=studio&doc=scripts-catalogue-source",
-      "last_updated": "2026-05-03",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-03 • Scripts",
-      "search_terms": [
-        "scripts-catalogue-source",
-        "scripts",
-        "catalogue",
-        "source",
-        "catalogue source utilities",
-        "utilities",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-03 2026 05 03"
+      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry 2026-05-06 20:43 2026 05 06 20 43"
     },
     {
       "id": "css-primitives",
@@ -2978,6 +2956,33 @@
       "search_text": "scripts-project-state-report scripts project state report project state report 2026-05-02 2026 05 02"
     },
     {
+      "id": "scripts-verify-catalogue-field-registry",
+      "kind": "doc",
+      "title": "Catalogue Field Registry Verification",
+      "href": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
+      "last_updated": "2026-05-06 20:43",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:43 • Catalogue",
+      "search_terms": [
+        "scripts-verify-catalogue-field-registry",
+        "scripts",
+        "verify",
+        "catalogue",
+        "field",
+        "registry",
+        "catalogue field registry verification",
+        "verification",
+        "2026-05-06 20:43",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "43"
+      ],
+      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-06 20:43 2026 05 06 20 43"
+    },
+    {
       "id": "site-request-catalogue-moment-editor",
       "kind": "doc",
       "title": "Catalogue Moment Editor Request",
@@ -3107,31 +3112,6 @@
       "search_text": "config-library-export-configs config library export configs library export configs 2026-05-06 12:30 2026 05 06 12 30"
     },
     {
-      "id": "project-state-page",
-      "kind": "doc",
-      "title": "Project State Page",
-      "href": "/docs/?scope=studio&doc=project-state-page",
-      "last_updated": "2026-05-06 20:22",
-      "parent_id": "catalogue",
-      "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:22 • Catalogue",
-      "search_terms": [
-        "project-state-page",
-        "project",
-        "state",
-        "page",
-        "project state page",
-        "catalogue",
-        "2026-05-06 20:22",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "22"
-      ],
-      "search_text": "project-state-page project state page project state page catalogue 2026-05-06 20:22 2026 05 06 20 22"
-    },
-    {
       "id": "scripts-build-catalogue-json",
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
@@ -3199,29 +3179,30 @@
       "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-06 20:11 2026 05 06 20 11"
     },
     {
-      "id": "scripts-verify-catalogue-field-registry",
+      "id": "scripts-docs-broken-links",
       "kind": "doc",
-      "title": "Catalogue Field Registry Verification",
-      "href": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
-      "last_updated": "2026-05-03",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-03 • Scripts",
+      "title": "Docs Broken Links Audit",
+      "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
+      "last_updated": "2026-05-06 20:37",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs",
+      "display_meta": "2026-05-06 20:37 • Docs",
       "search_terms": [
-        "scripts-verify-catalogue-field-registry",
+        "scripts-docs-broken-links",
         "scripts",
-        "verify",
-        "catalogue",
-        "field",
-        "registry",
-        "catalogue field registry verification",
-        "verification",
-        "2026-05-03",
+        "docs",
+        "broken",
+        "links",
+        "docs broken links audit",
+        "audit",
+        "2026-05-06 20:37",
         "2026",
         "05",
-        "03"
+        "06",
+        "20",
+        "37"
       ],
-      "search_text": "scripts-verify-catalogue-field-registry scripts verify catalogue field registry catalogue field registry verification verification 2026-05-03 2026 05 03"
+      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit 2026-05-06 20:37 2026 05 06 20 37"
     },
     {
       "id": "search-studio-v1-index-shape",
@@ -3250,6 +3231,27 @@
       "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-04-24 2026 04 24"
     },
     {
+      "id": "ui-audits",
+      "kind": "doc",
+      "title": "UI Audits",
+      "href": "/docs/?scope=studio&doc=ui-audits",
+      "last_updated": "2026-05-06 20:35",
+      "display_meta": "2026-05-06 20:35",
+      "search_terms": [
+        "ui-audits",
+        "ui",
+        "audits",
+        "ui audits",
+        "2026-05-06 20:35",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "35"
+      ],
+      "search_text": "ui-audits ui audits ui audits 2026-05-06 20:35 2026 05 06 20 35"
+    },
+    {
       "id": "architecture",
       "kind": "doc",
       "title": "Architecture",
@@ -3264,30 +3266,6 @@
         "31"
       ],
       "search_text": "architecture 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "build-activity",
-      "kind": "doc",
-      "title": "Build Activity",
-      "href": "/docs/?scope=studio&doc=build-activity",
-      "last_updated": "2026-05-06 20:23",
-      "parent_id": "catalogue",
-      "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:23 • Catalogue",
-      "search_terms": [
-        "build-activity",
-        "build",
-        "activity",
-        "build activity",
-        "catalogue",
-        "2026-05-06 20:23",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "23"
-      ],
-      "search_text": "build-activity build activity build activity catalogue 2026-05-06 20:23 2026 05 06 20 23"
     },
     {
       "id": "site-request-catalogue-delete-cleanup",
@@ -3366,6 +3344,31 @@
       "search_text": "experimental-dimension-framework experimental dimension framework experimental dimension framework analytics 2026-05-06 20:21 2026 05 06 20 21"
     },
     {
+      "id": "project-state-page",
+      "kind": "doc",
+      "title": "Project State Page",
+      "href": "/docs/?scope=studio&doc=project-state-page",
+      "last_updated": "2026-05-06 20:22",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:22 • Catalogue",
+      "search_terms": [
+        "project-state-page",
+        "project",
+        "state",
+        "page",
+        "project state page",
+        "catalogue",
+        "2026-05-06 20:22",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "22"
+      ],
+      "search_text": "project-state-page project state page project state page catalogue 2026-05-06 20:22 2026 05 06 20 22"
+    },
+    {
       "id": "search-validation-checklist",
       "kind": "doc",
       "title": "Search Validation Checklist",
@@ -3388,28 +3391,53 @@
       "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-04-25 2026 04 25"
     },
     {
-      "id": "data-flow",
+      "id": "scripts-docs-builder",
       "kind": "doc",
-      "title": "Data Flow",
-      "href": "/docs/?scope=studio&doc=data-flow",
-      "last_updated": "2026-05-06 20:24",
-      "parent_id": "catalogue",
-      "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:24 • Catalogue",
+      "title": "Docs Viewer Builder",
+      "href": "/docs/?scope=studio&doc=scripts-docs-builder",
+      "last_updated": "2026-05-06 20:37",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs",
+      "display_meta": "2026-05-06 20:37 • Docs",
       "search_terms": [
-        "data-flow",
-        "data",
-        "flow",
-        "data flow",
-        "catalogue",
-        "2026-05-06 20:24",
+        "scripts-docs-builder",
+        "scripts",
+        "docs",
+        "builder",
+        "docs viewer builder",
+        "viewer",
+        "2026-05-06 20:37",
         "2026",
         "05",
         "06",
         "20",
-        "24"
+        "37"
       ],
-      "search_text": "data-flow data flow data flow catalogue 2026-05-06 20:24 2026 05 06 20 24"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-06 20:37 2026 05 06 20 37"
+    },
+    {
+      "id": "build-activity",
+      "kind": "doc",
+      "title": "Build Activity",
+      "href": "/docs/?scope=studio&doc=build-activity",
+      "last_updated": "2026-05-06 20:23",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:23 • Catalogue",
+      "search_terms": [
+        "build-activity",
+        "build",
+        "activity",
+        "build activity",
+        "catalogue",
+        "2026-05-06 20:23",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "23"
+      ],
+      "search_text": "build-activity build activity build activity catalogue 2026-05-06 20:23 2026 05 06 20 23"
     },
     {
       "id": "design",
@@ -3454,29 +3482,6 @@
         "25"
       ],
       "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-04-25 2026 04 25"
-    },
-    {
-      "id": "scripts-tag-write-server",
-      "kind": "doc",
-      "title": "Tag Write Server",
-      "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
-      "search_terms": [
-        "scripts-tag-write-server",
-        "scripts",
-        "tag",
-        "write",
-        "server",
-        "tag write server",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "scripts-tag-write-server scripts tag write server tag write server 2026-03-31 2026 03 31"
     },
     {
       "id": "tiered-dimension-policy",
@@ -3577,6 +3582,30 @@
         "30"
       ],
       "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server 2026-04-30 2026 04 30"
+    },
+    {
+      "id": "data-flow",
+      "kind": "doc",
+      "title": "Data Flow",
+      "href": "/docs/?scope=studio&doc=data-flow",
+      "last_updated": "2026-05-06 20:24",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:24 • Catalogue",
+      "search_terms": [
+        "data-flow",
+        "data",
+        "flow",
+        "data flow",
+        "catalogue",
+        "2026-05-06 20:24",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "24"
+      ],
+      "search_text": "data-flow data flow data flow catalogue 2026-05-06 20:24 2026 05 06 20 24"
     },
     {
       "id": "site-request-field-aware-build-scoping",
@@ -3817,6 +3846,56 @@
       "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
+      "id": "scripts-srcset-builder",
+      "kind": "doc",
+      "title": "Srcset Builder",
+      "href": "/docs/?scope=studio&doc=scripts-srcset-builder",
+      "last_updated": "2026-05-06 20:39",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:39 • Catalogue",
+      "search_terms": [
+        "scripts-srcset-builder",
+        "scripts",
+        "srcset",
+        "builder",
+        "srcset builder",
+        "catalogue",
+        "2026-05-06 20:39",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "39"
+      ],
+      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-06 20:39 2026 05 06 20 39"
+    },
+    {
+      "id": "scripts-catalogue-source",
+      "kind": "doc",
+      "title": "Catalogue Source Utilities",
+      "href": "/docs/?scope=studio&doc=scripts-catalogue-source",
+      "last_updated": "2026-05-06 20:41",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-06 20:41 • Catalogue",
+      "search_terms": [
+        "scripts-catalogue-source",
+        "scripts",
+        "catalogue",
+        "source",
+        "catalogue source utilities",
+        "utilities",
+        "2026-05-06 20:41",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "41"
+      ],
+      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-06 20:41 2026 05 06 20 41"
+    },
+    {
       "id": "site-request-catalogue-work-detail-unified-editor",
       "kind": "doc",
       "title": "Catalogue Work Detail Unified Editor Request",
@@ -3885,29 +3964,6 @@
         "12"
       ],
       "search_text": "config 2026-05-06 12:05 2026 05 06 12"
-    },
-    {
-      "id": "scripts-css-token-audit",
-      "kind": "doc",
-      "title": "CSS Token Audit",
-      "href": "/docs/?scope=studio&doc=scripts-css-token-audit",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
-      "search_terms": [
-        "scripts-css-token-audit",
-        "scripts",
-        "css",
-        "token",
-        "audit",
-        "css token audit",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "scripts-css-token-audit scripts css token audit css token audit 2026-03-31 2026 03 31"
     },
     {
       "id": "site-request-catalogue-series-unified-editor",
@@ -4106,31 +4162,6 @@
         "03"
       ],
       "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites change requests change requests 2026-05-03 2026 05 03"
-    },
-    {
-      "id": "scripts-fix-missing-title-sort",
-      "kind": "doc",
-      "title": "Legacy Title Sort Fix",
-      "href": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
-      "search_terms": [
-        "scripts-fix-missing-title-sort",
-        "scripts",
-        "fix",
-        "missing",
-        "title",
-        "sort",
-        "legacy title sort fix",
-        "legacy",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "scripts-fix-missing-title-sort scripts fix missing title sort legacy title sort fix legacy 2026-03-31 2026 03 31"
     },
     {
       "id": "servers",
@@ -4484,25 +4515,6 @@
       "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "ui-audits",
-      "kind": "doc",
-      "title": "UI Audits",
-      "href": "/docs/?scope=studio&doc=ui-audits",
-      "last_updated": "2026-04-21",
-      "display_meta": "2026-04-21",
-      "search_terms": [
-        "ui-audits",
-        "ui",
-        "audits",
-        "ui audits",
-        "2026-04-21",
-        "2026",
-        "04",
-        "21"
-      ],
-      "search_text": "ui-audits ui audits ui audits 2026-04-21 2026 04 21"
-    },
-    {
       "id": "change-requests",
       "kind": "doc",
       "title": "Change Requests",
@@ -4595,6 +4607,34 @@
         "41"
       ],
       "search_text": "site-change-log-guidance site change log guidance site change log guidance 2026-05-06 15:41 2026 05 06 15 41"
+    },
+    {
+      "id": "scripts-fix-missing-title-sort",
+      "kind": "doc",
+      "title": "Legacy Title Sort Fix",
+      "href": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
+      "last_updated": "2026-05-06 20:40",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 20:40 • Archive",
+      "search_terms": [
+        "scripts-fix-missing-title-sort",
+        "scripts",
+        "fix",
+        "missing",
+        "title",
+        "sort",
+        "legacy title sort fix",
+        "legacy",
+        "archive",
+        "2026-05-06 20:40",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "40"
+      ],
+      "search_text": "scripts-fix-missing-title-sort scripts fix missing title sort legacy title sort fix legacy archive 2026-05-06 20:40 2026 05 06 20 40"
     },
     {
       "id": "site-change-log",

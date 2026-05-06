@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-css-token-audit
-title: "CSS Token Audit"
+title: CSS Token Audit
 added_date: 2026-03-31
-last_updated: 2026-03-31
-parent_id: scripts
-sort_order: 120
+last_updated: "2026-05-06 20:42"
+parent_id: ui-audits
+sort_order: 20
 ---
 # CSS Token Audit
 

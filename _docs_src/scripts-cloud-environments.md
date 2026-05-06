@@ -1,9 +1,9 @@
 ---
 doc_id: scripts-cloud-environments
-title: "Cloud Environments"
+title: Cloud Environments
 added_date: 2026-04-14
-last_updated: 2026-04-14
-parent_id: scripts
+last_updated: "2026-05-06 20:39"
+parent_id: site-docs
 sort_order: 40
 ---
 # Cloud Environments (Codex + Codespaces + R2)

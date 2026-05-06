@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-docs-builder
-title: "Docs Viewer Builder"
+title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-06 19:03"
-parent_id: scripts
-sort_order: 20
+last_updated: "2026-05-06 20:37"
+parent_id: docs-viewer
+sort_order: 85
 ---
 # Docs Viewer Builder
 

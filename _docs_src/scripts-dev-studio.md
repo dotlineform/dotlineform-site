@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-dev-studio
-title: "Dev Studio Runner"
+title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-04"
-parent_id: scripts
-sort_order: 15
+last_updated: "2026-05-06 20:36"
+parent_id: servers
+sort_order: 20
 ---
 # Dev Studio Runner
 

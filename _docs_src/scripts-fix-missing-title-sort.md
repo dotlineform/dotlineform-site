@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-fix-missing-title-sort
-title: "Legacy Title Sort Fix"
+title: Legacy Title Sort Fix
 added_date: 2026-03-31
-last_updated: 2026-03-31
-parent_id: scripts
-sort_order: 140
+last_updated: "2026-05-06 20:40"
+parent_id: archive
+sort_order: 240
 ---
 # Legacy Title Sort Fix
 

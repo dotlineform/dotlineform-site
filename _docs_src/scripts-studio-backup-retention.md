@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-studio-backup-retention
-title: "Studio Backup Retention"
+title: Studio Backup Retention
 added_date: 2026-05-04
-last_updated: "2026-05-04"
-parent_id: scripts
-sort_order: 52
+last_updated: "2026-05-06 20:41"
+parent_id: studio
+sort_order: 56
 ---
 # Studio Backup Retention
 

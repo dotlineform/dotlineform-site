@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-docs-broken-links
-title: "Docs Broken Links Audit"
+title: Docs Broken Links Audit
 added_date: 2026-04-23
-last_updated: "2026-05-06 16:15"
-parent_id: scripts
-sort_order: 15
+last_updated: "2026-05-06 20:37"
+parent_id: docs-viewer
+sort_order: 75
 ---
 # Docs Broken Links Audit
 

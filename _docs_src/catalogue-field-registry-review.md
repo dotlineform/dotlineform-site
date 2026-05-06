@@ -1,12 +1,12 @@
 ---
 doc_id: catalogue-field-registry-review
-title: Catalogue Field Registry Review
+title: Catalogue Field Registry
 added_date: 2026-05-01
-last_updated: "2026-05-06 20:20"
+last_updated: "2026-05-06 20:43"
 parent_id: catalogue
 sort_order: 60
 ---
-# Catalogue Field Registry Review
+# Catalogue Field Registry
 
 Route:
 
