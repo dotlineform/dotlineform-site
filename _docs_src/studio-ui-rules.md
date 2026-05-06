@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
 added_date: 2026-04-24
-last_updated: "2026-05-05"
+last_updated: "2026-05-06 18:03"
 parent_id: design
 sort_order: 30
 ---
@@ -37,6 +37,20 @@ Use these targets when promoting content out of this log:
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log) for historical site changes
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
+
+## UI Rule Log 2026-05-06 / UI-087
+
+- status: adopted
+- route: `/studio/docs-broken-links/`
+- issue: running the Docs Broken Links audit for a scope with no findings displayed two near-duplicate empty-success messages.
+- triage: route-local command-result cleanup
+- reasoning: the status line is already the command result surface for this route. Showing a second empty paragraph with equivalent copy adds noise without adding a distinct next action.
+- outcome: kept the success status message for zero-result audits and hid/cleared the secondary empty paragraph in that path.
+- files changed:
+  - `assets/studio/js/docs-broken-links.js`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - run a mocked `/studio/docs-broken-links/` audit returning zero entries and confirm only one visible no-results message is shown
 
 ## UI Rule Log 2026-05-05 / UI-086
 

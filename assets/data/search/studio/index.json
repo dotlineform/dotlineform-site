@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3fda9cb3fcffadbc645a36224ddda5ed",
-    "generated_at_utc": "2026-05-06T15:17:07Z",
+    "version": "blake2b-61fea5748f1e5c564946a5e450b30f9c",
+    "generated_at_utc": "2026-05-06T17:03:51Z",
     "count": 190
   },
   "entries": [
@@ -1728,10 +1728,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-06 18:03",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-05-05 • Design",
+      "display_meta": "2026-05-06 18:03 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -1742,11 +1742,14 @@
         "decision",
         "log",
         "design",
-        "2026-05-05",
+        "2026-05-06 18:03",
         "2026",
-        "05"
+        "05",
+        "06",
+        "18",
+        "03"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-05-05 2026 05"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-05-06 18:03 2026 05 06 18 03"
     },
     {
       "id": "tag-groups",

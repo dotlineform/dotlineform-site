@@ -236,11 +236,8 @@ async function runAudit(state) {
         "success",
         getStudioText(state.config, "docs_broken_links.status_success_empty", "No broken links found.")
       );
-      setText(
-        state.emptyNode,
-        getStudioText(state.config, "docs_broken_links.empty_state", "No broken links found for this scope.")
-      );
-      state.emptyNode.hidden = false;
+      state.emptyNode.hidden = true;
+      state.emptyNode.textContent = "";
       state.listWrap.hidden = true;
       state.listWrap.innerHTML = "";
       return;
