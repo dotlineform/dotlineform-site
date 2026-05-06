@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T22:01:04Z",
+  "generated_at": "2026-05-06T22:01:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -98,21 +98,6 @@
       "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
       "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json",
       "content_text_length": 5538
-    },
-    {
-      "scope": "library",
-      "doc_id": "from-3d-space-to-many-dimensions-a-timeline-diagram",
-      "title": "From 3D Space to Many Dimensions — A Timeline & Diagram",
-      "added_date": "2026-05-06 22:59",
-      "last_updated": "2026-05-06 22:59",
-      "parent_id": "",
-      "sort_order": 60,
-      "published": true,
-      "viewable": false,
-      "source_path": "from-3d-space-to-many-dimensions-a-timeline-diagram.md",
-      "viewer_url": "/library/?doc=from-3d-space-to-many-dimensions-a-timeline-diagram",
-      "content_url": "/assets/data/docs/scopes/library/by-id/from-3d-space-to-many-dimensions-a-timeline-diagram.json",
-      "content_text_length": 4624
     }
   ]
 }
