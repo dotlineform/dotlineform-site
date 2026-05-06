@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-05"
+last_updated: "2026-05-06"
 parent_id: ""
 sort_order: 270
 ---
@@ -28,24 +28,24 @@ The adapter boundary keeps shared lifecycle behavior reusable without making doc
 - [Change Requests](/docs/?scope=studio&doc=change-requests)
 
 **Impact:**
-Future export/import requirements now have a stable planning target that separates shared workbench responsibilities from scope-specific adapter behavior.
+Future export/import requirements now have a stable planning target that separates shared shell responsibilities from scope-specific adapter behavior.
 Follow-up review resolved the initial direction: adapters map to data domains rather than route scopes, Library should use a general documents adapter with Library config, neutral export/import routes are preferred, and user-facing workflow folders should be data-domain-first.
 
-## [2026-05-05] Added Docs Workbench extraction request
+## [2026-05-05] Added Docs Toolkit extraction request
 
 **Status:** proposed
 
 **Area:** Docs / Tooling
 
 **Summary:**
-Added a change request to explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable Docs Workbench toolkit that other repositories can track from a master version.
+Added a change request to explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable docs toolkit that other repositories can track from a master version.
 
 **Reason:**
 The combined docs viewer and export/import workflow is becoming a useful local tool beyond this site, but reuse needs a managed upstream model instead of copied files.
 
 **Files changed:**
 
-- [Docs Workbench Extraction Request](/docs/?scope=studio&doc=site-request-docs-workbench-extraction)
+- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Change Requests](/docs/?scope=studio&doc=change-requests)
 
 **Impact:**

@@ -1,12 +1,12 @@
 ---
-doc_id: site-request-docs-workbench-extraction
-title: Docs Workbench Extraction Request
+doc_id: site-request-docs-toolkit-extraction
+title: Docs Toolkit Extraction Request
 added_date: "2026-05-05"
-last_updated: "2026-05-05"
+last_updated: "2026-05-06"
 parent_id: change-requests
 sort_order: 26
 ---
-# Docs Workbench Extraction Request
+# Docs Toolkit Extraction Request
 
 Status:
 
@@ -14,7 +14,7 @@ Status:
 
 ## Summary
 
-Explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable Docs Workbench toolkit that other repositories or local installs can track from a master version.
+Explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable docs toolkit that other repositories or local installs can track from a master version.
 
 The current repo should stay the first consumer while the reusable boundary is tested.
 The goal of this request is to define the product boundary, update model, configuration contract, and open questions before any extraction work starts.
@@ -37,7 +37,7 @@ Any reused install needs a way to track a master version, receive fixes, and kee
 
 ## Goals
 
-- Define the reusable boundary for a first Docs Workbench version.
+- Define the reusable boundary for a first docs toolkit version.
 - Identify which code and docs stay project-local.
 - Choose a pragmatic master-version and install-tracking model.
 - Define the configuration and lifecycle contracts needed by downstream installs.
@@ -79,7 +79,7 @@ The first model should prefer traceable source control over early packaging.
 
 Candidate approach:
 
-- Create or designate an upstream Docs Workbench repo as the master source.
+- Create or designate an upstream shared docs toolkit repo as the master source.
 - Track releases with version tags, a change log, and migration notes.
 - Install into downstream repos with Git subtree or Git submodule first.
 - Keep downstream repos responsible for project-local config, routes, and theme adapters.
@@ -124,7 +124,7 @@ Package distribution:
 ## Investigation Tasks
 
 1. Inventory current files and classify them as reusable core, adapter, or dotlineform-local.
-2. Define the v0 product boundary for Docs Workbench.
+2. Define the v0 product boundary for the docs toolkit.
 3. Draft a config schema covering docs scopes, generated payloads, search, local server capabilities, and export/import workflows.
 4. Prototype a minimal downstream install using either subtree or submodule.
 5. Define update and migration workflow, including how downstream repos record the tracked upstream version.

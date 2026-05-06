@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1c62039706792c7e88adcb07ea1f17c1",
-    "generated_at_utc": "2026-05-05T20:47:02Z",
+    "version": "blake2b-7836541762a0dcc5d6c321444ff97af2",
+    "generated_at_utc": "2026-05-06T09:42:41Z",
     "count": 183
   },
   "entries": [
@@ -1219,30 +1219,31 @@
       "search_text": "scripts-docs-import scripts docs import docs import 2026-05-04 2026 05 04"
     },
     {
-      "id": "site-request-docs-workbench-extraction",
+      "id": "site-request-docs-toolkit-extraction",
       "kind": "doc",
-      "title": "Docs Workbench Extraction Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-workbench-extraction",
-      "last_updated": "2026-05-05",
+      "title": "Docs Toolkit Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
+      "last_updated": "2026-05-06",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-05 • Change Requests",
+      "display_meta": "2026-05-06 • Change Requests",
       "search_terms": [
-        "site-request-docs-workbench-extraction",
+        "site-request-docs-toolkit-extraction",
         "site",
         "request",
         "docs",
-        "workbench",
+        "toolkit",
         "extraction",
-        "docs workbench extraction request",
+        "docs toolkit extraction request",
         "change requests",
         "change",
         "requests",
-        "2026-05-05",
+        "2026-05-06",
         "2026",
-        "05"
+        "05",
+        "06"
       ],
-      "search_text": "site-request-docs-workbench-extraction site request docs workbench extraction docs workbench extraction request change requests change requests 2026-05-05 2026 05"
+      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-06 2026 05 06"
     },
     {
       "id": "studio-audits",
@@ -1270,10 +1271,10 @@
       "kind": "doc",
       "title": "Export Import Adapter Boundary Request",
       "href": "/docs/?scope=studio&doc=site-request-export-import-adapters",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-06 12:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-05 • Change Requests",
+      "display_meta": "2026-05-06 12:00 • Change Requests",
       "search_terms": [
         "site-request-export-import-adapters",
         "site",
@@ -1287,11 +1288,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-05",
+        "2026-05-06 12:00",
         "2026",
-        "05"
+        "05",
+        "06",
+        "12",
+        "00"
       ],
-      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-05 2026 05"
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 12:00 2026 05 06 12 00"
     },
     {
       "id": "scripts-run-checks",
@@ -4082,18 +4086,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-05",
-      "display_meta": "2026-05-05",
+      "last_updated": "2026-05-06",
+      "display_meta": "2026-05-06",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-05",
+        "2026-05-06",
         "2026",
-        "05"
+        "05",
+        "06"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-05 2026 05"
+      "search_text": "change-requests change requests change requests 2026-05-06 2026 05 06"
     },
     {
       "id": "tag-editor",
@@ -4261,19 +4266,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-05",
-      "display_meta": "2026-05-05",
+      "last_updated": "2026-05-06",
+      "display_meta": "2026-05-06",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-05",
+        "2026-05-06",
         "2026",
-        "05"
+        "05",
+        "06"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-05 2026 05"
+      "search_text": "site-change-log site change log site change log 2026-05-06 2026 05 06"
     },
     {
       "id": "tiered-dimension-policy",

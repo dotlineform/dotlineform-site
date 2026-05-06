@@ -2,7 +2,7 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-05 22:25"
+last_updated: "2026-05-06 12:00"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -18,12 +18,12 @@ Status:
 Adopt an adapter-based export/import architecture before the current Library workflow becomes heavily used or accumulates more requirements in the shared shell.
 
 The current Library export/import workflow should become the first adapter implementation.
-The shared layer should remain a workbench shell for data-domain selection, command execution, staging, status, and result display.
+The shared layer should remain a generic shell for data-domain selection, command execution, staging, status, and result display.
 Domain behavior should live behind adapters that are selected by data model and workflow needs, not by route scope alone.
 
 ## Decision Direction
 
-Use one shared export/import workbench shell with data-domain adapters.
+Use one shared export/import shell with data-domain adapters.
 
 Do not make the existing Library document workflow the universal model for every scope.
 The Library workflow is document-oriented: it exports documents, stages document-shaped JSON, generates document preview files, and can apply document metadata changes.
@@ -51,7 +51,7 @@ That creates a near-term risk:
 - new Library requirements will naturally be added to the shell because there is no adapter boundary yet
 - future Analytics and Catalogue workflows will inherit document assumptions that do not fit their data
 - the eventual split will be harder after the Library system is in full use
-- the broader [Docs Workbench Extraction Request](/docs/?scope=studio&doc=site-request-docs-workbench-extraction) will be harder to reason about if export/import remains mixed with Library semantics
+- the broader [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction) will be harder to reason about if export/import remains mixed with Library semantics
 
 The design issue is not whether scopes should share infrastructure.
 They should.
@@ -65,7 +65,7 @@ The issue is where domain behavior belongs.
 - Move document-specific assumptions out of the shared shell.
 - Leave clear extension points for Analytics and Catalogue without implementing their full workflows yet.
 - Keep staging, preview, result, and backup conventions explicit enough for local write safety.
-- Move toward neutral export/import routes for the shared workbench instead of Library-named routes.
+- Move toward neutral export/import routes for the shared shell instead of Library-named routes.
 
 ## Non-Goals
 
@@ -76,7 +76,7 @@ The issue is where domain behavior belongs.
 - Do not turn the adapter system into a broad plugin framework before there is more than one real implementation.
 - Do not expose adapter terminology as the primary user-facing navigation language.
 
-## Shared Workbench Responsibilities
+## Shared Shell Responsibilities
 
 The shared shell should own the common lifecycle only:
 
@@ -184,7 +184,7 @@ Likely candidates:
 - work relationships
 - selected structured metadata for LLM review
 
-Catalogue may use the same workbench lifecycle, but it should not inherit document-import behavior by default.
+Catalogue may use the same shared lifecycle, but it should not inherit document-import behavior by default.
 Its adapter will need relationship validation, source ownership rules, and apply boundaries that match Catalogue data.
 
 ## Folder And Data Layout
@@ -194,7 +194,7 @@ They currently contain only testing content, so there is no durable migration re
 
 Candidate direction:
 
-- keep workflow files grouped under a common export/import workbench root
+- keep workflow files grouped under a common export/import root
 - make folder layout data-domain-first from the user's perspective
 - keep adapter identity in metadata or a lower-level path only where it is operationally useful
 - avoid path names that imply every scope is document-based
@@ -211,10 +211,90 @@ Users should not need to know which adapter is handling that folder.
 
 Status:
 
-- pending
+- completed
 
 Review the current Library export/import route scripts, server endpoints, import service code, config, and docs.
-Classify each behavior as either shared workbench lifecycle or Library-document adapter behavior.
+Classify each behavior as either shared-shell lifecycle or Library-document adapter behavior.
+
+#### Task 1 Inventory
+
+Inventory date:
+
+- 2026-05-06
+
+Current implementation files reviewed:
+
+- `studio/library-export/index.md`
+- `studio/library-import/index.md`
+- `assets/studio/js/library-export.js`
+- `assets/studio/js/library-import.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/data/library_export_configs.json`
+- `assets/studio/data/library_export_configs.schema.json`
+- `scripts/docs/docs_export.py`
+- `scripts/docs/docs_import.py`
+- `scripts/docs/docs_management_server.py`
+- `tests/python/test_docs_export.py`
+- `tests/python/test_docs_import.py`
+- `tests/python/test_docs_import_service.py`
+- `_docs_src/library-export.md`
+- `_docs_src/library-import.md`
+- `_docs_src/config-library-export-configs.md`
+- `_docs_src/data-models-library.md`
+
+Shared-shell lifecycle behavior:
+
+- route boot, ready, busy, and local-service availability state
+- scope or data-domain selector rendering and URL synchronization
+- command button enablement around service health, staged files, selected rows, and running state
+- config or staged-file selection controls
+- command launch over the docs-management loopback service
+- dry-run-aware service responses and result reporting
+- status messages, selection summaries, result modals, issue lists, and reopenable result behavior
+- output-file reporting without exposing full generated payloads in Studio
+- staged-file discovery under a workflow root
+- preview/apply request shape basics: scope, staged filename, selected record indices, confirmation state
+- minimal local logging of ids, counts, status, and paths instead of full document bodies
+- write safety conventions for dry-run mode, backups, source writes, rebuilds, and generated-search refreshes
+
+Library-document adapter behavior:
+
+- generated Docs Viewer index loading from `assets/data/docs/scopes/<scope>/index.json`
+- per-doc generated payload loading from `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+- document identity based on `doc_id`, title, `parent_id`, publication state, viewability, `summary`, headings, and rendered content
+- hierarchical document selection, descendant expansion, depth calculation, indeterminate parent checkboxes, and relationship-tree ordering
+- document list filters such as no content, not viewable, published exclusion, archive handling, and missing summaries only
+- export config schema concepts named around documents: `document_fields`, document rows, document arrays, `explicit_doc_ids`, `include_descendants`, and document text transforms
+- supported export field sources such as `parent_title`, `ancestor_ids`, `child_ids`, `current_summary`, `source_text`, `viewable`, and `published`
+- rendered-HTML to plain-text conversion for document body export
+- import shape detection for Library export families: parent-child relationships, document summaries, and full document content
+- minimal hand-authored JSON/JSONL rows treated as document-like records
+- parser normalization around `doc_id`, title, `parent_id`, summary/current-summary, headings, source text, and relationship metadata
+- current-Library lookup annotations and warnings for unknown docs, unpublished docs, missing generated payloads, and missing or unpublished parents
+- Markdown preview rendering with one preview file per document plus an optional relationship-tree preview
+- preview row rendering as document rows and relationship-tree rows
+- selected document `record_index` apply targeting
+- summary apply and hierarchy apply against `_docs_library_src/*.md`
+- source-write rebuild/search refresh for Library docs after summary or hierarchy writes
+
+Mixed or transitional seams:
+
+- the routes are still named `/studio/library-export/` and `/studio/library-import/`, even though the UI now exposes Library, Catalogue, and Analytics workflow scopes
+- client modules and DOM ids are still `library-export` and `library-import`
+- Studio text keys live under `library_export` and `library_import`
+- transport endpoints use neutral `POST /docs/export` for export, but import still uses `/docs/library-import/...`
+- staged import files and preview files support `library`, `catalogue`, and `analytics` folders, but the parser and preview renderer still assume document-like records
+- source apply is explicitly gated to Library by the client and by `normalize_library_import_scope()` in `scripts/docs/docs_management_server.py`
+- `assets/studio/data/library_export_configs.json` has a `scopes` array, but all enabled configs are Library-only and the schema is still Library-named
+- tests encode useful Library behavior, but they currently test the document workflow and service seams together rather than a separate shared-shell contract and documents-adapter contract
+
+Initial boundary conclusion:
+
+- The shared shell should own route state, service probing, scope/data-domain selection, command lifecycle, staged-file discovery, result modals, generic counts/issues, dry-run reporting, backup/logging conventions, and dispatch to adapter services.
+- The first `documents` adapter should own Docs Viewer generated-data reads, document export configs, document field mapping and transforms, tree selection, document-shaped staged payload parsing, Markdown document preview rendering, and Library summary/hierarchy apply behavior.
+- Catalogue and Analytics should not reuse the document parser or Markdown document preview renderer by default. They can reuse the shell lifecycle and then provide structured-data adapters with their own export shape, validation model, preview/result presentation, and apply contract.
+- Existing Library-named routes and endpoints can remain as compatibility seams during the first refactor, but the new adapter contract should avoid adding more Library-specific behavior to the shared shell.
 
 ### Task 2. Define A Minimal Adapter Contract
 
@@ -281,7 +361,7 @@ Status:
 
 - pending
 
-Update the Library export/import docs, scripts docs, and related UI/workbench docs so the adapter boundary is visible.
+Update the Library export/import docs, scripts docs, and related UI/shared-shell docs so the adapter boundary is visible.
 
 Add or update checks that verify:
 
@@ -295,7 +375,7 @@ Add or update checks that verify:
 - Adapters should not map one-to-one with route scopes. They should map to data models and workflows.
 - Use `data domain` as the user-facing concept where possible; keep `scope` for existing route/runtime terminology until code is renamed.
 - The first implementation should use a general `documents` adapter with Library configuration, not a hard-coded `library-documents` adapter as the durable concept.
-- Export/import routes should move toward neutral shared workbench routes. Existing Library-named routes can stay during transition if redirects or compatibility are needed.
+- Export/import routes should move toward neutral shared routes. Existing Library-named routes can stay during transition if redirects or compatibility are needed.
 - Folder layout should be data-domain-first from the user's perspective, because a user staging Library data should be able to find a Library folder without knowing adapter internals.
 - Minimum shared modal result shape is success/failure plus warnings/errors, with optional adapter-owned details.
 - The import page provides a selection/reporting space; the adapter populates that space with a list or another domain-appropriate presentation.
@@ -311,7 +391,7 @@ Add or update checks that verify:
 
 This request is ready to close when:
 
-- the shared workbench responsibilities are documented separately from adapter responsibilities
+- the shared shell responsibilities are documented separately from adapter responsibilities
 - the current Library workflow is represented as the first `documents` adapter configuration
 - `var/` folder handling is decided and documented
 - future Analytics and Catalogue adapters have named extension points
@@ -321,7 +401,7 @@ This request is ready to close when:
 ## Related Docs
 
 - [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
-- [Docs Workbench Extraction Request](/docs/?scope=studio&doc=site-request-docs-workbench-extraction)
+- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Library Import](/docs/?scope=studio&doc=library-import)
 - [Library Export](/docs/?scope=studio&doc=library-export)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
