@@ -95,6 +95,6 @@ What it is not for:
 ## Related References
 
 - **[Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)** for the live scoped rebuild entrypoint
-- **[New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)** for the current workflow boundary
+- **[Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)** for the catalogue source and generated artifact boundary
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the Studio route shell and page inventory
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for the shared Studio config boundary

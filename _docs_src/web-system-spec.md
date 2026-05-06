@@ -3,11 +3,13 @@ doc_id: new-pipeline-web-system-spec
 title: "Web System Specification"
 added_date: 2026-04-17
 last_updated: 2026-05-02
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 30
 ---
 
 # Web System Specification
+
+Archived: current Studio route and local-write behavior now lives in [Studio Runtime](/docs/?scope=studio&doc=studio-runtime), [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow), and [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server).
 
 This document specifies the Studio web system that replaces workbook-led catalogue maintenance.
 

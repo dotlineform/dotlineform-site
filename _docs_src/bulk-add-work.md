@@ -74,4 +74,4 @@ The page root `#bulkAddWorkRoot` exposes the shared Studio route-ready contract:
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
-- [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

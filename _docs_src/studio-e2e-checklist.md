@@ -3,11 +3,13 @@ doc_id: new-pipeline-studio-e2e-checklist
 title: "Studio E2E Checklist"
 added_date: 2026-04-19
 last_updated: 2026-04-29
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 60
 ---
 
 # Studio End-To-End Checklist
+
+Archived: current repeatable check guidance lives in [Testing](/docs/?scope=studio&doc=testing) and [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing).
 
 This document is the execution surface for the first end-to-end testing pass across the Studio workflow.
 

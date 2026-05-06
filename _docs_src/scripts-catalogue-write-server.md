@@ -697,6 +697,8 @@ Source JSON:
 - `assets/studio/data/catalogue/works.json`
 - `assets/studio/data/catalogue/work_details.json`
 - `assets/studio/data/catalogue/series.json`
+- `assets/studio/data/catalogue/moments.json`
+- `assets/studio/data/catalogue/meta.json`
 
 Studio activity feed:
 
@@ -719,6 +721,6 @@ Operational log target:
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Servers](/docs/?scope=studio&doc=servers)
 - [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
-- [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source)
-- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
-- [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)

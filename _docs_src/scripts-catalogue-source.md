@@ -109,8 +109,6 @@ Required fields such as detail `section_id` and `section_title` must not be adde
 
 ## Related References
 
-- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
-- [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
-- [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

@@ -3,11 +3,13 @@ doc_id: new-pipeline-refine-analytics
 title: "Analytics Plan"
 added_date: 2026-04-18
 last_updated: "2026-05-05"
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 61
 ---
 
 # Analytics Plan
+
+Archived: Analytics planning is no longer part of the new-pipeline section.
 
 This is a planning stub for the Analytics domain so tagging and future analytical tooling can be planned in parallel with Catalogue-led Studio work.
 

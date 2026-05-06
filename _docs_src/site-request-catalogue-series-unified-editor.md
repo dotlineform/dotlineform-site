@@ -446,9 +446,9 @@ Update docs and verification around the unified series route.
 Expected docs:
 
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
-- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status), if draft-series visibility changes
+- [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status), if draft-series visibility changes
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
+- [Testing](/docs/?scope=studio&doc=testing)
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules), if a reusable route-migration or create-mode rule changes
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)

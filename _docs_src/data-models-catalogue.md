@@ -20,6 +20,7 @@ Current checked-in catalogue model families:
   - `assets/studio/data/catalogue/series.json`
   - `assets/studio/data/catalogue/work_details.json`
   - `assets/studio/data/catalogue/moments.json`
+  - `assets/studio/data/catalogue/meta.json`
 - canonical prose sources:
   - `_docs_src_catalogue/works/<work_id>.md`
   - `_docs_src_catalogue/series/<series_id>.md`
@@ -50,9 +51,32 @@ Primary writers:
 
 Primary validator:
 
-- [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)
 
 ## Source Record Shape
+
+### Source File Headers
+
+Catalogue source JSON files use a deterministic top-level header plus one primary map.
+
+Typical shape:
+
+```json
+{
+  "header": {
+    "schema": "catalogue_source_works_v1",
+    "count": 0
+  },
+  "works": {}
+}
+```
+
+Header fields:
+
+- `schema`: stable schema identifier for the source file family
+- `count`: number of records in the primary map, where the file owns record rows
+
+Source headers avoid volatile timestamps so ordinary source edits produce focused Git diffs. Write timestamps belong in Studio activity artifacts and JSONL logs, not canonical catalogue source records.
 
 ### Work Source Records
 
@@ -63,6 +87,14 @@ Work records in `assets/studio/data/catalogue/works.json` own the primary work s
 - `project_filename`
 
 `project_subfolder` is persisted only when non-empty. Public runtime work images still resolve generated media by `work_id`; the source path fields are for Studio editing, local media readiness, and generator/source media lookup.
+
+Other work source-model notes:
+
+- `work_id` is duplicated inside each record for readability and import/export compatibility.
+- `series_ids` is an ordered array; the first item is the primary series for work-level context.
+- `width_px` and `height_px` are source metadata once measured, but they are generator/media-maintained rather than normal user-editable metadata.
+- work prose is ID-derived from `_docs_src_catalogue/works/<work_id>.md`; source records no longer carry a prose filename override field.
+- source-only fields such as `notes` and `provenance` stay out of public projections unless an explicit runtime contract includes them.
 
 ### Work Detail Source Records
 
@@ -75,6 +107,40 @@ Work-detail records in `assets/studio/data/catalogue/work_details.json` use the 
 - `project_filename`: detail source-image filename
 
 Detail records no longer use legacy `project_subfolder`. Empty `details_subfolder` values are omitted from source JSON; when absent, the detail source image resolves directly under the parent work's `project_folder`.
+
+### Series Source Records
+
+Series records in `assets/studio/data/catalogue/series.json` own series metadata and publication state.
+
+Current source-model notes:
+
+- `sort_fields` is the current JSON-source replacement for the retired workbook `SeriesSort` table.
+- `primary_work_id` must reference a work whose `series_ids` includes the series before the series can be published; draft series may temporarily omit it.
+- `series_type` remains explicit because Studio distinguishes primary series from other holdings or curated groups.
+- series prose is ID-derived from `_docs_src_catalogue/series/<series_id>.md`; source records no longer carry a prose filename override field.
+
+### Catalogue Source Metadata
+
+`assets/studio/data/catalogue/meta.json` records source-level metadata that does not belong to a record family.
+
+Current shape:
+
+```json
+{
+  "header": {
+    "schema": "catalogue_source_meta_v1"
+  },
+  "source": {
+    "canonical": "json"
+  },
+  "id_policy": {
+    "work_id_width": 5,
+    "detail_id_width": 3
+  }
+}
+```
+
+Mutable counters are intentionally avoided. Work IDs, detail IDs, and suggested next IDs are derived from the current source records where practical, which is less fragile than storing counters in canonical metadata.
 
 ### Per-Work Runtime JSON
 

@@ -153,8 +153,8 @@ Catalogue/runtime maintenance:
 ## Related References
 
 - [Servers](/docs/?scope=studio&doc=servers)
-- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
-- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
+- [CSS Audit Spec (v1)](/docs/?scope=studio&doc=css-audit-spec)
 - [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)

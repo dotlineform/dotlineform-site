@@ -3,11 +3,13 @@ doc_id: new-pipeline-current-pipeline-map
 title: "Current Pipeline Map"
 added_date: 2026-04-17
 last_updated: 2026-05-01
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 10
 ---
 
 # Current Pipeline Map
+
+Archived: the current catalogue model and build boundaries now live in [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue) and [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json).
 
 This document maps the current JSON-source catalogue pipeline.
 
@@ -24,6 +26,7 @@ Current source families:
 - `works.json`
 - `work_details.json`
 - `series.json`
+- `moments.json`
 - `meta.json`
 
 Work-owned downloads and links are stored directly on work records as `downloads` and `links`. Retired standalone file/link source families are not part of the current source boundary.
@@ -32,7 +35,6 @@ Other canonical inputs:
 
 - source media under `DOTLINEFORM_PROJECTS_BASE_DIR`
 - repo-local catalogue prose under `_docs_src_catalogue/`
-- moment prose and metadata sources under `moments/`
 - Studio-owned local state such as tag assignments and activity feeds where documented by their owning pages
 
 ## Studio Maintenance
@@ -78,5 +80,5 @@ Workbook-led scripts and historical workflow docs are retained only where they p
 
 - [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
 - [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
-- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
-- [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)

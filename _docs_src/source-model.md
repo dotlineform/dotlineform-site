@@ -3,11 +3,13 @@ doc_id: new-pipeline-source-model
 title: "Source Model"
 added_date: 2026-04-17
 last_updated: 2026-05-02
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 20
 ---
 
 # Source Model
+
+Archived: current catalogue source-model details now live in [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue), with script behavior documented under [Scripts](/docs/?scope=studio&doc=scripts).
 
 This document specifies the proposed JSON source model for the web-based catalogue pipeline.
 

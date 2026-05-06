@@ -13,7 +13,7 @@ This document describes the current runtime data flow for the public catalogue.
 
 It focuses on which generated artifacts each route reads at runtime. It does not try to document every field in those payloads.
 
-For the catalogue artifact contracts themselves, use [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
+For the catalogue artifact contracts themselves, use [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
 
 Current public browsing routes covered here:
 
@@ -23,7 +23,7 @@ Current public browsing routes covered here:
 - `/work_details/<detail_uid>/`
 - `/moments/<moment_id>/`
 
-The main live rebuild path for these artifacts is the scoped JSON build flow described in [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) and [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline).
+The main live rebuild path for these artifacts is the scoped JSON build flow described in [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json).
 
 ## Overview
 
@@ -165,7 +165,7 @@ It reads:
 
 Search behavior, ranking, and index structure are documented in the [Search](/docs/?scope=studio&doc=search) section rather than repeated here.
 
-The catalogue artifact families themselves are documented in [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
+The catalogue artifact families themselves are documented in [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
 
 ## Current State
 

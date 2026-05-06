@@ -11,7 +11,7 @@ sort_order: 165
 
 This is a planning stub for the Library domain so Studio can develop as a multi-domain tool rather than waiting for Catalogue to be fully complete first.
 
-This document should be developed in parallel with **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)**.
+This document should be developed alongside the current Studio runtime and shared data workflow docs.
 
 ## Purpose
 
@@ -47,7 +47,7 @@ This document should be developed in parallel with **[Studio Implementation Plan
 
 ## Dependencies
 
-- shared Studio navigation from **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)**
+- shared Studio navigation from **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)**
 - any shared write-service or activity conventions used across Studio domains
 
 ## Open Questions

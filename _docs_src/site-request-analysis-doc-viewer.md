@@ -277,4 +277,4 @@ Manual checks should include:
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
-- [Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)
+- [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)

@@ -122,4 +122,4 @@ Warning policy:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

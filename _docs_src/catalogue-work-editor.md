@@ -276,4 +276,4 @@ Work prose is no longer edited through a source filename field. Use `Import stag
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
-- [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

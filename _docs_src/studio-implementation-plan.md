@@ -3,11 +3,13 @@ doc_id: new-pipeline-studio-implementation-plan
 title: "Studio Implementation Plan"
 added_date: 2026-04-18
 last_updated: 2026-05-01
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 50
 ---
 
 # Studio Implementation Plan
+
+Archived: current Studio behavior now lives in [Studio](/docs/?scope=studio&doc=studio), [Studio Runtime](/docs/?scope=studio&doc=studio-runtime), and the page-level Studio docs.
 
 This document defines the next phased implementation pass after Phases 0-15 of the JSON-led catalogue pipeline.
 

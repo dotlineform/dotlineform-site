@@ -3,11 +3,13 @@ doc_id: new-pipeline-refine-search
 title: "Search Plan"
 added_date: 2026-04-18
 last_updated: "2026-05-05"
-parent_id: new-pipeline
+parent_id: archive
 sort_order: 62
 ---
 
 # Search Plan
+
+Archived: current Search documentation lives under [Search](/docs/?scope=studio&doc=search).
 
 This is a planning stub for the Search domain so search configuration, validation, and operational tooling can be developed in parallel with the wider Studio roadmap.
 

@@ -1,12 +1,14 @@
 ---
 doc_id: new-pipeline
-title: "New Cat Pipeline"
+title: "New Catalogue Pipeline"
 added_date: 2026-04-19
 last_updated: 2026-05-01
-parent_id: ""
+parent_id: archive
 sort_order: 170
 ---
 # New Catalogue Pipeline
+
+Archived: this planning section has been superseded by the current Studio, scripts, data-model, and architecture docs.
 
 This section describes the active catalogue workflow: local Studio maintenance backed by canonical JSON source files.
 

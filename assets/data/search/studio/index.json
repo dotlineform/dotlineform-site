@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e00cf893b6de90efa9c3b5fb8c7891d0",
-    "generated_at_utc": "2026-05-06T13:54:57Z",
+    "version": "blake2b-1c7f42156efe3b987e948d1661452b0c",
+    "generated_at_utc": "2026-05-06T14:29:40Z",
     "count": 190
   },
   "entries": [
@@ -118,9 +118,9 @@
       "title": "Current Pipeline Map",
       "href": "/docs/?scope=studio&doc=new-pipeline-current-pipeline-map",
       "last_updated": "2026-05-01",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-01 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "new-pipeline-current-pipeline-map",
         "new",
@@ -128,14 +128,13 @@
         "current",
         "map",
         "current pipeline map",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map new cat pipeline cat 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map archive 2026-05-01 2026 05 01"
     },
     {
       "id": "data-flow",
@@ -388,19 +387,21 @@
       "href": "/docs/?scope=studio&doc=pipeline-use-cases",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "display_meta": "2026-05-01",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "pipeline-use-cases",
         "pipeline",
         "use",
         "cases",
         "pipeline use cases",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases 2026-05-01 2026 05 01"
+      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases archive 2026-05-01 2026 05 01"
     },
     {
       "id": "data-models-shared",
@@ -669,7 +670,8 @@
       "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "display_meta": "2026-05-01",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "scripts-main-pipeline",
         "scripts",
@@ -678,12 +680,13 @@
         "build catalogue",
         "build",
         "catalogue",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-05-01 2026 05 01"
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-05-01 2026 05 01"
     },
     {
       "id": "data-models-catalogue",
@@ -1004,9 +1007,9 @@
       "title": "Source Model",
       "href": "/docs/?scope=studio&doc=new-pipeline-source-model",
       "last_updated": "2026-05-02",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-02 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
       "search_terms": [
         "new-pipeline-source-model",
         "new",
@@ -1014,14 +1017,13 @@
         "source",
         "model",
         "source model",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "new-pipeline-source-model new pipeline source model source model new cat pipeline cat 2026-05-02 2026 05 02"
+      "search_text": "new-pipeline-source-model new pipeline source model source model archive 2026-05-02 2026 05 02"
     },
     {
       "id": "docs-viewer-source-organisation",
@@ -1465,7 +1467,8 @@
       "href": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "display_meta": "2026-05-01",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "scripts-copy-draft-media",
         "scripts",
@@ -1473,12 +1476,13 @@
         "draft",
         "media",
         "copy draft media",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-05-01 2026 05 01"
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-05-01 2026 05 01"
     },
     {
       "id": "docs-viewer-runtime-boundary",
@@ -1789,9 +1793,9 @@
       "title": "Web System Specification",
       "href": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
       "last_updated": "2026-05-02",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-02 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
       "search_terms": [
         "new-pipeline-web-system-spec",
         "new",
@@ -1801,14 +1805,13 @@
         "spec",
         "web system specification",
         "specification",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification new cat pipeline cat 2026-05-02 2026 05 02"
+      "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification archive 2026-05-02 2026 05 02"
     },
     {
       "id": "data-models-analysis",
@@ -2056,9 +2059,9 @@
       "title": "Implementation Plan",
       "href": "/docs/?scope=studio&doc=new-pipeline-implementation-plan",
       "last_updated": "2026-05-01",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-01 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "new-pipeline-implementation-plan",
         "new",
@@ -2066,14 +2069,13 @@
         "implementation",
         "plan",
         "implementation plan",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan new cat pipeline cat 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan archive 2026-05-01 2026 05 01"
     },
     {
       "id": "library-export-ui",
@@ -2403,7 +2405,8 @@
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "display_meta": "2026-05-02",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -2411,12 +2414,13 @@
         "work",
         "pages",
         "generate work pages",
+        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-02 2026 05 02"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-02 2026 05 02"
     },
     {
       "id": "library-import-export-v2",
@@ -2565,9 +2569,9 @@
       "title": "Studio Implementation Plan",
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "last_updated": "2026-05-01",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-01 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "new-pipeline-studio-implementation-plan",
         "new",
@@ -2576,14 +2580,13 @@
         "implementation",
         "plan",
         "studio implementation plan",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan new cat pipeline cat 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan archive 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-studio-backup-retention",
@@ -2755,19 +2758,21 @@
       "href": "/docs/?scope=studio&doc=scripts-delete-work",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "display_meta": "2026-05-01",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "scripts-delete-work",
         "scripts",
         "delete",
         "work",
         "delete work",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-delete-work scripts delete work delete work 2026-05-01 2026 05 01"
+      "search_text": "scripts-delete-work scripts delete work delete work archive 2026-05-01 2026 05 01"
     },
     {
       "id": "search-ui-behaviour",
@@ -2796,9 +2801,9 @@
       "title": "Studio E2E Checklist",
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
       "last_updated": "2026-04-29",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-29 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-04-29 • Archive",
       "search_terms": [
         "new-pipeline-studio-e2e-checklist",
         "new",
@@ -2807,14 +2812,13 @@
         "e2e",
         "checklist",
         "studio e2e checklist",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-04-29",
         "2026",
         "04",
         "29"
       ],
-      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist new cat pipeline cat 2026-04-29 2026 04 29"
+      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist archive 2026-04-29 2026 04 29"
     },
     {
       "id": "new-pipeline-refine-analytics",
@@ -2822,9 +2826,9 @@
       "title": "Analytics Plan",
       "href": "/docs/?scope=studio&doc=new-pipeline-refine-analytics",
       "last_updated": "2026-05-05",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-05 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-05 • Archive",
       "search_terms": [
         "new-pipeline-refine-analytics",
         "new",
@@ -2833,13 +2837,12 @@
         "analytics",
         "analytics plan",
         "plan",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-05",
         "2026",
         "05"
       ],
-      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan new cat pipeline cat 2026-05-05 2026 05"
+      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan archive 2026-05-05 2026 05"
     },
     {
       "id": "new-pipeline-studio-ui-polish",
@@ -2847,9 +2850,9 @@
       "title": "Studio UI Polish",
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-ui-polish",
       "last_updated": "2026-04-19",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-04-19 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-04-19 • Archive",
       "search_terms": [
         "new-pipeline-studio-ui-polish",
         "new",
@@ -2858,14 +2861,13 @@
         "ui",
         "polish",
         "studio ui polish",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-04-19",
         "2026",
         "04",
         "19"
       ],
-      "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish new cat pipeline cat 2026-04-19 2026 04 19"
+      "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish archive 2026-04-19 2026 04 19"
     },
     {
       "id": "new-pipeline-refine-search",
@@ -2873,9 +2875,9 @@
       "title": "Search Plan",
       "href": "/docs/?scope=studio&doc=new-pipeline-refine-search",
       "last_updated": "2026-05-05",
-      "parent_id": "new-pipeline",
-      "parent_title": "New Cat Pipeline",
-      "display_meta": "2026-05-05 • New Cat Pipeline",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-05 • Archive",
       "search_terms": [
         "new-pipeline-refine-search",
         "new",
@@ -2884,13 +2886,12 @@
         "search",
         "search plan",
         "plan",
-        "new cat pipeline",
-        "cat",
+        "archive",
         "2026-05-05",
         "2026",
         "05"
       ],
-      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan new cat pipeline cat 2026-05-05 2026 05"
+      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan archive 2026-05-05 2026 05"
     },
     {
       "id": "scripts-project-state-report",
@@ -4036,22 +4037,25 @@
     {
       "id": "new-pipeline",
       "kind": "doc",
-      "title": "New Cat Pipeline",
+      "title": "New Catalogue Pipeline",
       "href": "/docs/?scope=studio&doc=new-pipeline",
       "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-01 • Archive",
       "search_terms": [
         "new-pipeline",
         "new",
         "pipeline",
-        "new cat pipeline",
-        "cat",
+        "new catalogue pipeline",
+        "catalogue",
+        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline new pipeline new cat pipeline cat 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline new pipeline new catalogue pipeline catalogue archive 2026-05-01 2026 05 01"
     },
     {
       "id": "ui-request-docs-viewer-index-drag-undo-task",

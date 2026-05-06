@@ -93,5 +93,5 @@ What it is not for:
 
 - **[Studio](/docs/?scope=studio&doc=studio)**
 - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
-- **[New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)**
-- **[Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)**
+- **[Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)**
+- **[Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)**

@@ -14,7 +14,7 @@ Script:
 ./scripts/catalogue_json_build.py --work-id 00001
 ```
 
-This helper is the Phase 5 JSON-source rebuild entrypoint for focused work, series, and moment scopes.
+This helper is the current JSON-source rebuild entrypoint for focused work, series, and moment scopes.
 
 It also supports a focused moment scope used by the first Studio moments import page.
 
@@ -172,7 +172,7 @@ This is the command-path companion to Studio public-update actions on `/studio/c
 
 Work and series scopes require published source records before runtime build/apply. Draft source saves remain source-only and are recovered through Catalogue Drafts rather than public rebuild paths.
 
-It keeps Phase 5 narrow:
+It keeps the current source/public-update boundary narrow:
 
 - source save remains separate from rebuild
 - rebuild scope is explicit
@@ -184,4 +184,4 @@ It keeps Phase 5 narrow:
 - [Build Activity](/docs/?scope=studio&doc=build-activity)
 - [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
-- [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

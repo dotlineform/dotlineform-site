@@ -123,4 +123,4 @@ This means:
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
-- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

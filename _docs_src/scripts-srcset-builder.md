@@ -86,5 +86,5 @@ The builder writes image derivatives only. It does not update workbook rows or g
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Local Setup](/docs/?scope=studio&doc=local-setup)

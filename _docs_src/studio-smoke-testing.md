@@ -10,7 +10,7 @@ sort_order: 25
 
 This document records the practical harness rules for lightweight Codex-run Studio browser smoke tests.
 
-It complements the broader [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist). Use this page for test mechanics, not for scenario coverage.
+It complements the broader [Testing](/docs/?scope=studio&doc=testing) guidance. Use this page for Studio browser-test mechanics, not for general check policy.
 
 ## Purpose
 
