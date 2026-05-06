@@ -2,9 +2,9 @@
 doc_id: scripts-srcset-builder
 title: Srcset Builder
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:43"
+last_updated: "2026-05-06 20:49"
 parent_id: catalogue
-sort_order: 110
+sort_order: 120
 ---
 # Srcset Builder
 

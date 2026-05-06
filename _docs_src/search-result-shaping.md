@@ -1,8 +1,8 @@
 ---
 doc_id: search-result-shaping
-title: "Search Result Shaping"
+title: Search Result Shaping
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-06 20:49"
 parent_id: ""
 sort_order: 280
 published: false

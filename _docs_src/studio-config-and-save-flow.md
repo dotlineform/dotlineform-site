@@ -1,12 +1,11 @@
 ---
 doc_id: studio-config-and-save-flow
-title: "Studio Config and Save Flow"
+title: Studio Config and Save Flow
 added_date: 2026-04-22
-last_updated: 2026-04-30
+last_updated: "2026-05-06 20:51"
 parent_id: studio
-sort_order: 20
+sort_order: 30
 ---
-
 # Studio Config and Save Flow
 
 This document describes the current shared Studio config, data-loading boundary, and local/offline save behavior.

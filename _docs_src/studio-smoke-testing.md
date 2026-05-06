@@ -1,10 +1,10 @@
 ---
 doc_id: studio-smoke-testing
-title: "Studio Smoke Testing"
+title: Studio Smoke Testing
 added_date: 2026-05-01
-last_updated: "2026-05-03 22:40"
+last_updated: "2026-05-06 20:51"
 parent_id: studio
-sort_order: 25
+sort_order: 40
 ---
 # Studio Smoke Testing
 

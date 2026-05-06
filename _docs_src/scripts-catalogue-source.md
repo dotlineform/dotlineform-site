@@ -2,9 +2,9 @@
 doc_id: scripts-catalogue-source
 title: Catalogue Source Utilities
 added_date: 2026-04-18
-last_updated: "2026-05-06 20:43"
+last_updated: "2026-05-06 20:49"
 parent_id: catalogue
-sort_order: 120
+sort_order: 130
 ---
 # Catalogue Source Utilities
 

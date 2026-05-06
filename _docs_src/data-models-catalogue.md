@@ -1,12 +1,11 @@
 ---
 doc_id: data-models-catalogue
-title: "Catalogue Scope"
+title: Catalogue Scope
 added_date: 2026-04-01
-last_updated: 2026-05-03
-parent_id: data-models
+last_updated: "2026-05-06 20:49"
+parent_id: catalogue
 sort_order: 20
 ---
-
 # Catalogue Scope
 
 This document covers the current data model for the public catalogue: works, series, moments, detail pages, and catalogue search.

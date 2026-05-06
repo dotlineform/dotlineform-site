@@ -1,8 +1,8 @@
 ---
 doc_id: site-change-log
-title: "Site Change Log"
+title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-06 19:48"
+last_updated: "2026-05-06 20:49"
 parent_id: ""
 sort_order: 270
 ---

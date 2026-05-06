@@ -2,9 +2,9 @@
 doc_id: series-tags
 title: Series Tags
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:16"
+last_updated: "2026-05-06 20:54"
 parent_id: analytics
-sort_order: 50
+sort_order: 60
 ---
 # Series Tags
 

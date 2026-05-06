@@ -1,8 +1,8 @@
 ---
 doc_id: data-models
-title: "Data Models"
+title: Data Models
 added_date: 2026-03-31
-last_updated: 2026-04-26
+last_updated: "2026-05-06 20:49"
 parent_id: ""
 sort_order: 110
 ---

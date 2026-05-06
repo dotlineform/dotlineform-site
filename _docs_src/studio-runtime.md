@@ -1,12 +1,11 @@
 ---
 doc_id: studio-runtime
-title: "Studio Runtime"
+title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-05-02
+last_updated: "2026-05-06 20:51"
 parent_id: studio
-sort_order: 10
+sort_order: 20
 ---
-
 # Studio Runtime
 
 This document describes the current Studio route shell, shared runtime modules, and the way Studio pages connect into the scoped Docs Viewer.

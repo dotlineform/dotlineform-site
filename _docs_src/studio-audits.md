@@ -1,10 +1,10 @@
 ---
 doc_id: studio-audits
-title: "Studio Audits"
+title: Studio Audits
 added_date: 2026-05-03
-last_updated: 2026-05-03
+last_updated: "2026-05-06 20:51"
 parent_id: studio
-sort_order: 26
+sort_order: 50
 ---
 # Studio Audits
 

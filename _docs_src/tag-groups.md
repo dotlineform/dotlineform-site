@@ -2,9 +2,9 @@
 doc_id: tag-groups
 title: Tag Groups
 added_date: 2026-03-31
-last_updated: "2026-05-06 18:36"
+last_updated: "2026-05-06 20:54"
 parent_id: analytics
-sort_order: 10
+sort_order: 20
 ---
 # Tag Groups
 

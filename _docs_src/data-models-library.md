@@ -1,12 +1,11 @@
 ---
 doc_id: data-models-library
-title: "Library Scope"
+title: Library Scope
 added_date: 2026-03-31
-last_updated: "2026-05-06 12:05"
-parent_id: data-models
-sort_order: 40
+last_updated: "2026-05-06 20:52"
+parent_id: library
+sort_order: 10
 ---
-
 # Library Scope
 
 This document covers the current checked-in data model for the Library scope.

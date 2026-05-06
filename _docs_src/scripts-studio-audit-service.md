@@ -2,9 +2,9 @@
 doc_id: scripts-studio-audit-service
 title: Studio Audit Service
 added_date: 2026-05-03
-last_updated: "2026-05-06 20:35"
+last_updated: "2026-05-06 20:51"
 parent_id: studio
-sort_order: 36
+sort_order: 60
 ---
 # Studio Audit Service
 

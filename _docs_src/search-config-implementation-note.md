@@ -1,8 +1,8 @@
 ---
 doc_id: search-config-implementation-note
-title: "Search Config Implementation Note"
+title: Search Config Implementation Note
 added_date: 2026-03-30
-last_updated: 2026-03-30
+last_updated: "2026-05-06 20:49"
 parent_id: ""
 sort_order: 240
 published: false

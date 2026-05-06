@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-catalogue-lookup
-title: "Catalogue Lookup Export"
+title: Catalogue Lookup Export
 added_date: 2026-04-17
-last_updated: 2026-05-02
-parent_id: scripts
-sort_order: 110
+last_updated: "2026-05-06 20:49"
+parent_id: catalogue
+sort_order: 160
 ---
 # Catalogue Lookup Export
 

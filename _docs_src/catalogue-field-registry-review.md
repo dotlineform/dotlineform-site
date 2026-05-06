@@ -2,9 +2,9 @@
 doc_id: catalogue-field-registry-review
 title: Catalogue Field Registry
 added_date: 2026-05-01
-last_updated: "2026-05-06 20:43"
+last_updated: "2026-05-06 20:49"
 parent_id: catalogue
-sort_order: 60
+sort_order: 70
 ---
 # Catalogue Field Registry
 

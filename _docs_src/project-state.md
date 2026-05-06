@@ -1,11 +1,11 @@
 ---
 doc_id: project-state
-title: "Project State"
+title: Project State
 added_date: 2026-04-27
-last_updated: 2026-05-02
-published: false
+last_updated: "2026-05-06 20:49"
 parent_id: ""
 sort_order: 999
+published: false
 ---
 # Project State
 
