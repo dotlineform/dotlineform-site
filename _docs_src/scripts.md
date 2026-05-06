@@ -157,4 +157,4 @@ Catalogue/runtime maintenance:
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec (v1)](/docs/?scope=studio&doc=css-audit-spec)
-- [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)
+- CSS Audit Latest

@@ -462,7 +462,7 @@ Manual checks:
 ## Related References
 
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
-- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
+- Catalogue Work File Editor
+- Catalogue Work Link Editor
 - [Data Models](/docs/?scope=studio&doc=data-models)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)

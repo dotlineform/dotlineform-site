@@ -3326,8 +3326,8 @@ The shared Docs Viewer now supports IndexedDB-backed favourites, star-based add/
 - `_includes/docs_viewer_shell.html`
 - `assets/js/docs-viewer.js`
 - `assets/css/main.css`
-- [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=docs-viewer-favourites-spec)
-- [Docs Viewer Favourites Task](/docs/?scope=studio&doc=docs-viewer-favourites-task)
+- Docs Viewer Favourites Spec
+- Docs Viewer Favourites Task
 
 **Notes:**
 Private browsing still limits persistence, so this remains a browser-local feature rather than a hosted user-account feature.
@@ -3399,7 +3399,7 @@ The Studio surface had grown large enough that ad hoc testing no longer gave a r
 The execution-prep docs now spell out prerequisites, manual versus Codex execution, route coverage, public-runtime follow-through checks, responsive checks, and a failure-triage model.
 
 **Affected files/docs:**
-- [Studio End-To-End Checklist](/docs/?scope=studio&doc=new-pipeline-studio-end-to-end-checklist)
+- Studio End-To-End Checklist
 - [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
 
 **Notes:**
@@ -3667,7 +3667,7 @@ Work details needed their own source-backed edit surface while still being easy 
 - `/studio/catalogue-work-detail/`
 - `/studio/catalogue-work/`
 - `work_details.json`
-- [Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-work-detail)
+- Catalogue Work Detail
 
 **Notes:**
 This built on the earlier single-work editor and scoped JSON rebuild path.
