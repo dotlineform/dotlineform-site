@@ -2,7 +2,7 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 10:47"
+last_updated: "2026-05-06 10:59"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -65,7 +65,7 @@ The issue is where domain behavior belongs.
 - Move document-specific assumptions out of the shared shell.
 - Leave clear extension points for Analytics and Catalogue without implementing their full workflows yet.
 - Keep staging, preview, result, and backup conventions explicit enough for local write safety.
-- Move toward neutral export/import routes for the shared shell instead of Library-named routes.
+- Use neutral export/import routes for the shared shell instead of Library-named routes.
 
 ## Non-Goals
 
@@ -189,7 +189,7 @@ Its adapter will need relationship validation, source ownership rules, and apply
 
 ## Folder And Data Layout
 
-The current `var/` import/export folders can be refactored as part of the adapter implementation.
+The current `var/` import/export folders should be replaced by config-declared adapter paths as part of the adapter implementation.
 They currently contain only testing content, so there is no durable migration requirement for existing staged or preview files.
 
 Candidate direction:
@@ -199,7 +199,7 @@ Candidate direction:
 - keep adapter identity in metadata or a lower-level path only where it is operationally useful
 - avoid path names that imply every scope is document-based
 
-The implementation can either retain the existing Library paths temporarily or migrate them to adapter-shaped paths in the first refactor.
+The implementation should move to the config-declared paths in the first refactor.
 If paths change, old test artifacts do not need to be preserved.
 
 User-facing folder discovery should favor paths that are easy to understand, such as a Library staging area for Library document work.
@@ -294,7 +294,7 @@ Initial boundary conclusion:
 - The shared shell should own route state, service probing, scope/data-domain selection, command lifecycle, staged-file discovery, result modals, generic counts/issues, dry-run reporting, backup/logging conventions, and dispatch to adapter services.
 - The first `documents` adapter should own Docs Viewer generated-data reads, document export configs, document field mapping and transforms, tree selection, document-shaped staged payload parsing, Markdown document preview rendering, and Library summary/hierarchy apply behavior.
 - Catalogue and Analytics should not reuse the document parser or Markdown document preview renderer by default. They can reuse the shell lifecycle and then provide structured-data adapters with their own export shape, validation model, preview/result presentation, and apply contract.
-- Existing Library-named routes and endpoints can remain as compatibility seams during the first refactor, but the new adapter contract should avoid adding more Library-specific behavior to the shared shell.
+- Existing Library-named routes and endpoints are prototype names to replace, not compatibility targets. The first adapter implementation should design cleanly around the shared shell and adapter contract as the sole target.
 
 ### Task 2. Define A Minimal Adapter Contract
 
@@ -328,7 +328,7 @@ Core concepts:
 
 - `data_domain`
   User-facing workflow domain, such as `library`, `catalogue`, or `analytics`.
-  This replaces route scope as the primary export/import selection concept, although existing `scope` parameters can remain as compatibility aliases during migration.
+  This replaces route scope as the primary export/import selection concept for new export/import requests.
 - `adapter`
   A stable implementation family selected by data model and workflow needs.
   The first adapter is `documents`; future examples include tag-registry or catalogue-record adapters.
@@ -341,15 +341,62 @@ Core concepts:
 
 Minimal adapter registry shape:
 
+The first implementation must add an explicit source-controlled adapter config and schema:
+
+- `assets/studio/data/export_import_adapters.json`
+- `assets/studio/data/export_import_adapters.schema.json`
+
+The shell must load this config to resolve requests, capabilities, adapter ids, and folder roots.
+Folder structures and dispatch decisions must not be hardcoded in route scripts, client modules, or service handlers.
+
 ```json
 {
   "schema_version": "export_import_adapters_v1",
+  "dispatch": [
+    {
+      "data_domain": "library",
+      "operation": "export",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "import_preview",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "summary_apply",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "hierarchy_apply",
+      "adapter_id": "documents"
+    }
+  ],
   "adapters": [
     {
       "id": "documents",
       "label": "Documents",
-      "data_domains": ["library"],
-      "default_data_domain": "library",
+      "data_domains": {
+        "library": {
+          "label": "Library",
+          "paths": {
+            "export_root": "var/docs/exports/library",
+            "staging_root": "var/docs/import-staging/library",
+            "preview_root": "var/docs/import-preview/library",
+            "backup_root": "var/docs/backups"
+          },
+          "sources": {
+            "docs_index": "assets/data/docs/scopes/library/index.json",
+            "docs_payload_root": "assets/data/docs/scopes/library/by-id",
+            "source_root": "_docs_library_src"
+          },
+          "config": {
+            "export_configs_path": "assets/studio/data/library_export_configs.json"
+          }
+        }
+      },
       "capabilities": {
         "export": true,
         "staged_file_listing": true,
@@ -357,23 +404,18 @@ Minimal adapter registry shape:
         "source_apply": true,
         "summary_apply": true,
         "hierarchy_apply": true
-      },
-      "paths": {
-        "export_root": "var/docs/exports/library",
-        "staging_root": "var/docs/import-staging/library",
-        "preview_root": "var/docs/import-preview/library",
-        "backup_root": "var/docs/backups"
-      },
-      "config": {
-        "export_configs_path": "assets/studio/data/library_export_configs.json"
       }
     }
   ]
 }
 ```
 
-This registry does not need to be a new file in the first implementation if a smaller in-code configuration is cleaner.
-The important contract is the shape: the shell discovers domains, capabilities, paths, and config locations without hardcoding document behavior.
+Dispatch rules:
+
+- a shell request must include `data_domain` and `operation`
+- the config may contain multiple adapters that could support a data domain, but dispatch must resolve to exactly one adapter for a specific request
+- if dispatch finds no match or more than one match, the shell must fail closed with a clear configuration error
+- route scripts and service handlers must not contain fallback logic such as "Library means documents" or hardcoded folder roots
 
 Shared shell contract:
 
@@ -385,6 +427,7 @@ Shared shell contract:
 - render generic selectable lists from adapter-provided presentation rows
 - render generic counts, warnings, errors, output files, backup paths, and dry-run state
 - avoid document-specific assumptions such as `doc_id`, `parent_id`, summaries, generated payloads, or Markdown preview files
+- avoid hardcoded adapter selection, operation dispatch, and workflow folder paths
 
 Adapter service contract:
 
@@ -465,12 +508,12 @@ First adapter mapping:
 - preview output: Markdown document previews plus optional relationship tree preview
 - apply operations: summary front-matter update and hierarchy `parent_id` update
 
-Compatibility notes:
+Route and endpoint requirements:
 
-- current `/studio/library-export/` and `/studio/library-import/` routes can continue to host the first shell while neutral routes are introduced later
-- current `POST /docs/export` is already close to the shared export endpoint shape
-- current `/docs/library-import/...` endpoints can stay as compatibility endpoints, but new adapter work should move toward neutral dispatch endpoints such as `/docs/import/files`, `/docs/import/preview`, and `/docs/import/apply`
-- current `scope` request fields can continue as aliases for `data_domain` until the code is renamed
+- the implementation target is neutral shared routes, not Library-named routes
+- the implementation target is neutral dispatch endpoints such as `/docs/export`, `/docs/import/files`, `/docs/import/preview`, and `/docs/import/apply`
+- new export/import requests should use `data_domain`, not `scope`
+- existing Library-named routes and import endpoints should be renamed or replaced as part of the adapter implementation, not retained as compatibility layers
 
 Guardrails:
 
@@ -479,13 +522,14 @@ Guardrails:
 - do not make document preview files mandatory for non-document adapters
 - do not let Catalogue or Analytics staged data reuse the document parser unless that domain explicitly chooses the `documents` adapter
 - do not add new Library requirements to the shared shell after this contract is accepted
+- do not hardcode adapter decisions or workflow folder structures outside `export_import_adapters.json`
 
 Task 2 benefits and risks:
 
 - Benefit: the first implementation can refactor toward adapters without breaking the current Library workflow.
 - Benefit: future Analytics and Catalogue work can reuse lifecycle UI and service safety without inheriting document semantics.
-- Risk: keeping Library-named compatibility routes and endpoints may blur boundaries during the transition.
-- Risk: a registry shape introduced too early could become busywork if it grows beyond the current single-adapter need; keep v0 small and implementation-driven.
+- Benefit: explicit adapter config keeps dispatch and folder ownership visible instead of spreading them across route scripts, client modules, and service handlers.
+- Risk: a config file introduced before multiple adapters exist can become abstract too early; keep v0 limited to dispatch, capabilities, paths, and the first `documents` adapter.
 
 ### Task 3. Move Library Behavior Behind The Documents Adapter
 
@@ -498,7 +542,7 @@ Refactor the current Library workflow so document-specific behavior is owned by 
 Expected outcome:
 
 - shared shell no longer assumes preview results are documents
-- Library document behavior remains available at the current routes
+- Library document behavior remains available through the neutral shared routes
 - status/result UI remains familiar
 - source writes still target `_docs_library_src/*.md`
 
@@ -508,7 +552,7 @@ Status:
 
 - pending
 
-Decide whether to keep the current `var/docs/.../library` paths temporarily or move to a clearer data-domain-first layout.
+Decide the config-declared folder layout that replaces the current hardcoded `var/docs/.../library` paths.
 
 Because current `var/` content is test-only, implementation can cleanly refactor those folders if doing so clarifies the adapter model.
 
@@ -544,9 +588,9 @@ Add or update checks that verify:
 ## Resolved Direction
 
 - Adapters should not map one-to-one with route scopes. They should map to data models and workflows.
-- Use `data domain` as the user-facing concept where possible; keep `scope` for existing route/runtime terminology until code is renamed.
+- Use `data domain` as the export/import concept. Keep `scope` only for existing non-export/import route/runtime terminology until that code is separately renamed.
 - The first implementation should use a general `documents` adapter with Library configuration, not a hard-coded `library-documents` adapter as the durable concept.
-- Export/import routes should move toward neutral shared routes. Existing Library-named routes can stay during transition if redirects or compatibility are needed.
+- Export/import routes should use neutral shared routes as the sole target. Existing Library-named route and endpoint names should be replaced, not preserved as compatibility layers.
 - Folder layout should be data-domain-first from the user's perspective, because a user staging Library data should be able to find a Library folder without knowing adapter internals.
 - Minimum shared modal result shape is success/failure plus warnings/errors, with optional adapter-owned details.
 - The import page provides a selection/reporting space; the adapter populates that space with a list or another domain-appropriate presentation.
@@ -566,7 +610,7 @@ This request is ready to close when:
 - the current Library workflow is represented as the first `documents` adapter configuration
 - `var/` folder handling is decided and documented
 - future Analytics and Catalogue adapters have named extension points
-- neutral shared export/import route direction is decided
+- neutral shared export/import routes and endpoints are implemented without Library-named compatibility layers
 - implementation tasks are clear enough to start without adding new domain behavior to the shell
 
 ## Related Docs
