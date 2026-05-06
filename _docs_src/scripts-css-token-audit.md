@@ -43,4 +43,4 @@ Target artifact:
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
-- [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)
+- CSS Audit Latest

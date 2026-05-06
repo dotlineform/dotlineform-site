@@ -191,4 +191,4 @@ Pipeline policy config:
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
-- [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)
+- CSS Audit Latest
