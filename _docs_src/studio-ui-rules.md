@@ -38,6 +38,26 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-06 / UI-088
+
+- status: adopted
+- route: `/studio/docs-import/`
+- issue: new Markdown docs created by staged HTML import were deriving the `doc_id` and filename from the imported document title, which can be much longer and less file-like than the staged source filename.
+- triage: local workflow refinement
+- reasoning: the staged filename is already the user's compact source handle for the import artifact. The HTML title should remain the display title, but it should not force verbose source filenames or ids.
+- outcome: HTML import previews now derive the proposed `doc_id` from the staged filename stem. Create writes therefore save `<staged-filename-stem>.md`, while overwrite still preserves the existing target doc id and filename.
+- files changed:
+  - `scripts/docs/docs_html_import.py`
+  - `tests/python/test_docs_import_service.py`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/user-guide-docs-html-import.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - import a staged HTML file whose filename is shorter than its HTML title and confirm the created Markdown filename uses the staged filename stem
+  - confirm the imported page title still uses the HTML title
+- follow-up:
+  - keep create-time identifiers tied to source handles when an import workflow already exposes a deliberate staged filename
+
 ## UI Rule Log 2026-05-06 / UI-087
 
 - status: adopted

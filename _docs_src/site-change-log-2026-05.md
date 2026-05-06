@@ -12,6 +12,34 @@ This archive currently contains May 2026 entries older than the current window o
 
 Return to [Site Change Log](/docs/?scope=studio&doc=site-change-log).
 
+## [2026-05-06] Filename-derived docs HTML import ids
+
+**Status:** implemented
+
+**Area:** Studio / Docs HTML Import
+
+**Summary:**
+Changed staged HTML imports so new Markdown source filenames and `doc_id` values are derived from the staged HTML filename stem rather than the imported document title.
+
+**Reason:**
+Imported HTML titles can be descriptive and long, while the staged filename is usually the compact source handle the user chose for the import.
+
+**Changes:**
+`./scripts/docs/docs_html_import.py` now reports `proposed_doc_id` from the staged source filename stem while preserving the extracted HTML title as the document title.
+Create writes now target `<staged-filename-stem>.md`; overwrite behavior still preserves the existing target `doc_id` and filename.
+
+**Files changed:**
+
+- `./scripts/docs/docs_html_import.py`
+- `tests/python/test_docs_import_service.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs HTML Import User Guide](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+New imports produce more compact and predictable source filenames while keeping page titles intact.
+If two staged files share the same meaningful stem, the existing overwrite-confirmation path will still be triggered for that generated target.
+
 ## [2026-05-03] Timestamped Library import document previews
 
 **Status:** implemented

@@ -161,6 +161,7 @@ Import behavior:
 - converts plain-text `http://` and `https://` URLs in prose into Markdown autolinks while leaving existing anchors and code/preformatted text alone
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec
+- derives the proposed `doc_id` and new Markdown filename stem from the staged HTML filename, not from the imported document title
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio imports write `published: true`, `viewable: true`

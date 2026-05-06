@@ -47,6 +47,7 @@ The import page:
 5. Click `Import`.
 
 If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
+The new source doc's `doc_id` and Markdown filename come from the staged HTML filename stem, while the document title is preserved from the imported HTML.
 
 New `library` and `analysis` imports use the same default import behavior: they are generated and opened for review through manage-mode viewer links before becoming normal public tree items.
 

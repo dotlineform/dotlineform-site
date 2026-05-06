@@ -172,6 +172,12 @@ def write_staged(root: Path, filename: str, payload: object, scope: str = "libra
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_staged_html(root: Path, filename: str, html: str) -> None:
+    path = root / "var/docs/import-staging" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(html, encoding="utf-8")
+
+
 def write_library_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
     lines = ["---"]
     for key, value in front_matter.items():
@@ -305,6 +311,53 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
 
     assert singular["summary_text"].startswith("Validated export 1 document to ")
     assert plural["summary_text"].startswith("Validated export 2 documents to ")
+
+
+def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_html(
+            root,
+            "compact-name.html",
+            """
+            <html>
+              <head><title>An Overly Descriptive Document Title</title></head>
+              <body><h1>An Overly Descriptive Document Title</h1><p>Imported body.</p></body>
+            </html>
+            """,
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_html(
+                root,
+                {"scope": "library", "staged_filename": "compact-name.html"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_path = root / "_docs_library_src/compact-name.md"
+        source_exists = source_path.exists()
+        source_text = source_path.read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["operation"] == "create"
+    assert payload["doc_id"] == "compact-name"
+    assert payload["path"] == "_docs_library_src/compact-name.md"
+    assert payload["title"] == "An Overly Descriptive Document Title"
+    assert payload["import_preview"]["proposed_doc_id_source"] == "filename"
+    assert source_exists
+    assert "doc_id: compact-name" in source_text
+    assert "title: An Overly Descriptive Document Title" in source_text
 
 
 def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> None:
@@ -528,6 +581,7 @@ def main() -> None:
         test_library_import_preview_dry_run_reports_without_writing,
         test_documents_import_rejects_unconfigured_data_domain,
         test_docs_export_summary_text_uses_context_aware_document_plural,
+        test_html_import_create_uses_staged_filename_for_doc_id_and_path,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,

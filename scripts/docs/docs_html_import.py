@@ -462,7 +462,14 @@ def render_block(node: Any, warnings: list[str], include_prompt_meta: bool) -> s
     return "\n\n".join(part for part in (render_block(child, warnings, include_prompt_meta) for child in node.children) if part)
 
 
-def build_summary(root: ElementNode, *, source_html: str, title: str, include_prompt_meta: bool) -> dict[str, Any]:
+def build_summary(
+    root: ElementNode,
+    *,
+    source_html: str,
+    source_filename_stem: str,
+    title: str,
+    include_prompt_meta: bool,
+) -> dict[str, Any]:
     warnings: list[str] = []
     body = find_first(root, "body") or root
     markdown = render_block(body, warnings, include_prompt_meta=include_prompt_meta).strip()
@@ -491,7 +498,8 @@ def build_summary(root: ElementNode, *, source_html: str, title: str, include_pr
     return {
         "title": title or "Imported Doc",
         "title_source": title_source,
-        "proposed_doc_id": slugify(title or "Imported Doc"),
+        "proposed_doc_id": slugify(source_filename_stem or title or "Imported Doc"),
+        "proposed_doc_id_source": "filename" if source_filename_stem else "title",
         "source_stats": {
             "chars": len(source_html),
             "links": len(links),
@@ -595,6 +603,7 @@ def generate_import_preview(
     summary = build_summary(
         parsed.root,
         source_html=source_html,
+        source_filename_stem=source_path.stem,
         title=title,
         include_prompt_meta=include_prompt_meta,
     )
