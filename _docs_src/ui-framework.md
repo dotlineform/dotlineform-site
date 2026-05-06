@@ -2,7 +2,7 @@
 doc_id: ui-framework
 title: "UI Framework"
 added_date: 2026-04-24
-last_updated: "2026-05-05"
+last_updated: "2026-05-06 19:34"
 parent_id: design
 sort_order: 10
 ---
@@ -195,6 +195,7 @@ The current shared treatment is:
 - docs-viewer search uses `last_updated` for its date metadata, while recently-added uses `added_date`
 - active state should be obvious without turning the viewer into a tabbed interface
 - scope-level structural visibility, such as a manage-only Archive branch, should come from generated docs index options rather than hard-coded scope checks in the viewer
+- in manage mode, the toolbar note should appear only for actionable states such as checking, unavailable server, active search, archive unavailable, or operation results; the available local-server state should stay quiet
 - in manage mode, the draft checkbox adds non-viewable docs to the tree while keeping viewable docs visible for context
 - draft/non-viewable tree-row color and font weight should come from `studio_config.json` so accessibility can be tuned without code changes
 - in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"

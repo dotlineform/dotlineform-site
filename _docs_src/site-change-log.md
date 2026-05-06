@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 19:03"
+last_updated: "2026-05-06 19:34"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-06] Quieted available Docs Viewer manage mode
+
+**Status:** implemented
+
+**Area:** Docs Viewer / UI
+
+**Summary:**
+The Docs Viewer no longer shows the "Manage mode is local-only" note after the local docs-management server is confirmed available.
+
+**Reason:**
+The visible note was only useful while manage mode was unavailable or still checking.
+Once the local server is running and the management toolbar is enabled, it became persistent chrome rather than actionable status.
+
+**Files changed:**
+
+- `assets/js/docs-viewer.js`
+- `assets/studio/data/studio_config.json`
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+Manage mode still shows checking, server-unavailable, archive-unavailable, search-blocked, and operation-result notes.
+The normal available state is quieter and leaves the management controls to carry the mode context.
 
 ## [2026-05-06] Preserved cross-scope Docs Viewer links
 

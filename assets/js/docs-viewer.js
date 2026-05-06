@@ -114,7 +114,6 @@
       archiveUnavailableNote: "Archive is unavailable for this scope until `archive` exists.",
       checkingNote: "Checking manage mode...",
       clearSearchNote: "Clear search to manage the current doc.",
-      manageModeNote: "Manage mode is local-only and writes through the docs-management server.",
       undoMoveLabel: "Undo move",
       undoMoveStatus: "Undoing move...",
       serverNotConfiguredError: "Local docs-management server is not configured.",
@@ -335,7 +334,6 @@
     state.managementText.archiveUnavailableNote = getConfigText(config, "docs_viewer.manage_archive_unavailable_note", state.managementText.archiveUnavailableNote);
     state.managementText.checkingNote = getConfigText(config, "docs_viewer.manage_checking_note", state.managementText.checkingNote);
     state.managementText.clearSearchNote = getConfigText(config, "docs_viewer.manage_clear_search_note", state.managementText.clearSearchNote);
-    state.managementText.manageModeNote = getConfigText(config, "docs_viewer.manage_mode_note", state.managementText.manageModeNote);
     state.managementText.undoMoveLabel = getConfigText(config, "docs_viewer.undo_move_label", state.managementText.undoMoveLabel);
     state.managementText.undoMoveStatus = getConfigText(config, "docs_viewer.undo_move_status", state.managementText.undoMoveStatus);
     state.managementText.serverNotConfiguredError = getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
@@ -1458,7 +1456,7 @@
     if (!managementArchiveAvailable()) {
       return state.managementText.archiveUnavailableNote;
     }
-    return state.managementText.manageModeNote;
+    return "";
   }
 
   function renderManagementUi() {
@@ -1491,6 +1489,7 @@
         noteIsError = state.managementMessageIsError;
       }
       manageNote.textContent = noteText;
+      manageNote.hidden = !noteText;
       manageNote.classList.toggle("is-error", noteIsError);
     }
 
