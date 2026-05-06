@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c1d1e8200133390420a919187790a163",
-    "generated_at_utc": "2026-05-06T13:48:33Z",
-    "count": 189
+    "version": "blake2b-e00cf893b6de90efa9c3b5fb8c7891d0",
+    "generated_at_utc": "2026-05-06T13:54:57Z",
+    "count": 190
   },
   "entries": [
     {
@@ -4482,6 +4482,24 @@
         "16"
       ],
       "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy studio 2026-04-16 2026 04 16"
+    },
+    {
+      "id": "archive",
+      "kind": "doc",
+      "title": "Archive",
+      "href": "/docs/?scope=studio&doc=archive",
+      "last_updated": "2026-05-06 14:54",
+      "display_meta": "2026-05-06 14:54",
+      "search_terms": [
+        "archive",
+        "2026-05-06 14:54",
+        "2026",
+        "05",
+        "06",
+        "14",
+        "54"
+      ],
+      "search_text": "archive 2026-05-06 14:54 2026 05 06 14 54"
     },
     {
       "id": "search-change-log-guidance",
