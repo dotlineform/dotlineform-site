@@ -2,7 +2,7 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 12:00"
+last_updated: "2026-05-06 10:47"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -300,7 +300,7 @@ Initial boundary conclusion:
 
 Status:
 
-- pending
+- completed
 
 Define the smallest contract needed to keep the current Library workflow running while making future Analytics and Catalogue adapters possible.
 
@@ -315,6 +315,177 @@ Expected contract areas:
 - apply actions
 - write targets and backup requirements
 - capability flags
+
+#### Task 2 Minimal Contract
+
+Contract goal:
+
+- keep the shared shell reusable for export/import lifecycle work
+- move document-specific parsing, preview, list, and apply behavior behind the first `documents` adapter
+- leave clear seams for future structured-data adapters without requiring a general plugin framework
+
+Core concepts:
+
+- `data_domain`
+  User-facing workflow domain, such as `library`, `catalogue`, or `analytics`.
+  This replaces route scope as the primary export/import selection concept, although existing `scope` parameters can remain as compatibility aliases during migration.
+- `adapter`
+  A stable implementation family selected by data model and workflow needs.
+  The first adapter is `documents`; future examples include tag-registry or catalogue-record adapters.
+- `operation`
+  A command the adapter supports, such as `export`, `import_preview`, `summary_apply`, or `hierarchy_apply`.
+- `capability`
+  A declared boolean or mode that tells the shell which controls to enable and which unsupported actions to hide or disable.
+- `presentation`
+  Adapter-owned list/result data that the shell can render without knowing whether an item is a document, tag, work, or relationship proposal.
+
+Minimal adapter registry shape:
+
+```json
+{
+  "schema_version": "export_import_adapters_v1",
+  "adapters": [
+    {
+      "id": "documents",
+      "label": "Documents",
+      "data_domains": ["library"],
+      "default_data_domain": "library",
+      "capabilities": {
+        "export": true,
+        "staged_file_listing": true,
+        "preview": true,
+        "source_apply": true,
+        "summary_apply": true,
+        "hierarchy_apply": true
+      },
+      "paths": {
+        "export_root": "var/docs/exports/library",
+        "staging_root": "var/docs/import-staging/library",
+        "preview_root": "var/docs/import-preview/library",
+        "backup_root": "var/docs/backups"
+      },
+      "config": {
+        "export_configs_path": "assets/studio/data/library_export_configs.json"
+      }
+    }
+  ]
+}
+```
+
+This registry does not need to be a new file in the first implementation if a smaller in-code configuration is cleaner.
+The important contract is the shape: the shell discovers domains, capabilities, paths, and config locations without hardcoding document behavior.
+
+Shared shell contract:
+
+- load available adapters and data domains
+- render the data-domain selector and operation/config selectors
+- probe the local service and reflect service availability
+- dispatch export, staged-file listing, preview, and apply commands
+- manage busy/ready state, status messages, command enablement, confirmation flow, and result modals
+- render generic selectable lists from adapter-provided presentation rows
+- render generic counts, warnings, errors, output files, backup paths, and dry-run state
+- avoid document-specific assumptions such as `doc_id`, `parent_id`, summaries, generated payloads, or Markdown preview files
+
+Adapter service contract:
+
+All adapter service responses should include these common fields where relevant:
+
+```json
+{
+  "ok": true,
+  "adapter_id": "documents",
+  "data_domain": "library",
+  "operation": "import_preview",
+  "dry_run": false,
+  "summary_text": "Generated 4 Library import preview files.",
+  "counts": {},
+  "warnings": [],
+  "errors": [],
+  "issues": [],
+  "output_files": [],
+  "backup_dir": "",
+  "requires_confirmation": false,
+  "presentation": {}
+}
+```
+
+Operation request boundaries:
+
+- `export`
+  The shell supplies adapter id, data domain, config id, target format, and adapter-neutral selection data.
+  The adapter resolves that selection against its own model and writes export artifacts only under its declared export root.
+- `staged_file_listing`
+  The shell asks for staged files for one data domain.
+  The adapter returns filename, path, format, size, and modified timestamp without parsing the full payload.
+- `import_preview`
+  The shell supplies adapter id, data domain, and staged filename.
+  The adapter parses the staged payload, validates it enough for preview, writes or plans preview artifacts according to dry-run mode, and returns adapter-owned presentation rows.
+- `apply`
+  The shell supplies adapter id, data domain, staged filename, selected presentation item ids or record indices, operation id, and confirmation state.
+  The adapter owns preflight validation, write allowlists, backups, source writes, rebuild/search refresh, and apply-specific result details.
+
+Presentation row contract:
+
+```json
+{
+  "id": "alpha-record-1",
+  "type": "document",
+  "label": "Alpha",
+  "meta": "alpha; duplicate doc_id",
+  "depth": 1,
+  "selectable": true,
+  "apply_target": {
+    "kind": "record_index",
+    "value": 0
+  },
+  "details": {}
+}
+```
+
+The shell may render `id`, `type`, `label`, `meta`, `depth`, and `selectable`.
+Everything in `apply_target` and `details` belongs to the adapter.
+For the current Library workflow, `type: "document"` and `type: "relationship_tree"` are documents-adapter rows, not shared shell concepts.
+
+Write safety contract:
+
+- every write-capable adapter must declare source roots, backup root, and supported apply operations
+- apply operations must support preflight and confirmed modes
+- confirmed writes must create a backup before source mutation
+- dry-run mode must report planned writes without writing source, preview, export, backup, or generated docs/search artifacts
+- unsupported data domains must fail closed or expose disabled capabilities rather than falling through to document behavior
+
+First adapter mapping:
+
+- adapter id: `documents`
+- initial data domain: `library`
+- source data: generated Docs Viewer index and per-doc payloads for Library
+- source write root: `_docs_library_src/*.md`
+- export config source: `assets/studio/data/library_export_configs.json`
+- import staging input: JSON/JSONL document-like staged files
+- preview output: Markdown document previews plus optional relationship tree preview
+- apply operations: summary front-matter update and hierarchy `parent_id` update
+
+Compatibility notes:
+
+- current `/studio/library-export/` and `/studio/library-import/` routes can continue to host the first shell while neutral routes are introduced later
+- current `POST /docs/export` is already close to the shared export endpoint shape
+- current `/docs/library-import/...` endpoints can stay as compatibility endpoints, but new adapter work should move toward neutral dispatch endpoints such as `/docs/import/files`, `/docs/import/preview`, and `/docs/import/apply`
+- current `scope` request fields can continue as aliases for `data_domain` until the code is renamed
+
+Guardrails:
+
+- do not dynamically load arbitrary adapter code from config
+- do not expose adapter ids as primary navigation labels
+- do not make document preview files mandatory for non-document adapters
+- do not let Catalogue or Analytics staged data reuse the document parser unless that domain explicitly chooses the `documents` adapter
+- do not add new Library requirements to the shared shell after this contract is accepted
+
+Task 2 benefits and risks:
+
+- Benefit: the first implementation can refactor toward adapters without breaking the current Library workflow.
+- Benefit: future Analytics and Catalogue work can reuse lifecycle UI and service safety without inheriting document semantics.
+- Risk: keeping Library-named compatibility routes and endpoints may blur boundaries during the transition.
+- Risk: a registry shape introduced too early could become busywork if it grows beyond the current single-adapter need; keep v0 small and implementation-driven.
 
 ### Task 3. Move Library Behavior Behind The Documents Adapter
 
