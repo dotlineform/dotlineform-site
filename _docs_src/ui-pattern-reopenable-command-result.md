@@ -12,7 +12,7 @@ This composition pattern covers command results that open in a modal and can be 
 
 Current live examples:
 
-- `/studio/library-import/`
+- `/studio/import/`
 - [Reopenable command result pattern page](/studio/ui-catalogue/reopenable-command-result/)
 
 ## Scope

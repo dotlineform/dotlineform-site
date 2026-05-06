@@ -8,18 +8,18 @@ ui_catalogue_pattern: reopenable-command-result
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-{% capture status_markup %}<div class="libraryImportPage__statusRow">
+{% capture status_markup %}<div class="dataImportPage__statusRow">
   <p class="tagStudio__status" data-state="success">Generated 6 Library import preview files.</p>
-  <button class="tagStudio__button libraryImportPage__resultButton" type="button">results</button>
+  <button class="tagStudio__button dataImportPage__resultButton" type="button">results</button>
 </div>
 {% endcapture %}
 
 {% capture modal_markup %}<div class="tagStudioModal" data-role="studio-modal">
   <div class="tagStudioModal__backdrop" data-role="modal-cancel"></div>
-  <div class="tagStudioModal__dialog libraryImportResultModal" role="dialog" aria-modal="true" aria-labelledby="studioPatternResultTitle">
+  <div class="tagStudioModal__dialog dataImportResultModal" role="dialog" aria-modal="true" aria-labelledby="studioPatternResultTitle">
     <h3 id="studioPatternResultTitle">Import preview</h3>
     <p>Generated 6 Library import preview files.</p>
-    <dl class="libraryImportResultModal__counts">
+    <dl class="dataImportResultModal__counts">
       <dt>records</dt>
       <dd>5</dd>
       <dt>parsed</dt>

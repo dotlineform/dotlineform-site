@@ -88,7 +88,7 @@ Current site mapping:
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides docs with `viewable: false`; `/library/?mode=manage` can show those generated docs for local management
 - Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
-- `/studio/library-export/` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
+- `/studio/export/` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
@@ -150,7 +150,7 @@ Current model:
 
 Current consumers:
 
-- `/studio/library-export/`
+- `/studio/export/`
 - `POST /docs/export` on the docs-management server
 - `./scripts/docs/docs_export.py`
 
@@ -194,7 +194,7 @@ Current consumers:
 - `GET /docs/import/files` on the docs-management server
 - `POST /docs/import/preview` on the docs-management server
 - `POST /docs/import/apply` on the docs-management server
-- `/studio/library-import/`
+- `/studio/import/`
 
 Current limits:
 

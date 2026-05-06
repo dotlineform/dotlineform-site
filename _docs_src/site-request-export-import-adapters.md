@@ -224,10 +224,10 @@ Inventory date:
 
 Current implementation files reviewed:
 
-- `studio/library-export/index.md`
-- `studio/library-import/index.md`
-- `assets/studio/js/library-export.js`
-- `assets/studio/js/library-import.js`
+- `studio/export/index.md`
+- `studio/import/index.md`
+- `assets/studio/js/data-export.js`
+- `assets/studio/js/data-import.js`
 - `assets/studio/js/studio-transport.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/data/library_export_configs.json`
@@ -280,10 +280,9 @@ Library-document adapter behavior:
 
 Mixed or transitional seams:
 
-- the routes are still named `/studio/library-export/` and `/studio/library-import/`, even though the UI now exposes Library, Catalogue, and Analytics workflow scopes
-- client modules and DOM ids are still `library-export` and `library-import`
-- Studio text keys live under `library_export` and `library_import`
-- transport endpoints use neutral `POST /docs/export` for export, but import still uses `/docs/library-import/...`
+- the shared routes are now `/studio/export/` and `/studio/import/`, while Library remains the only active implemented data domain
+- client modules, DOM ids, ready-state route names, and Studio text keys now use `data-export`/`data-import` naming
+- transport endpoints now use neutral `/docs/export` and `/docs/import/...` paths
 - staged import files and preview files support `library`, `catalogue`, and `analytics` folders, but the parser and preview renderer still assume document-like records
 - source apply is explicitly gated to Library by the client and by `normalize_library_import_scope()` in `scripts/docs/docs_management_server.py`
 - `assets/studio/data/library_export_configs.json` has a `scopes` array, but all enabled configs are Library-only and the schema is still Library-named

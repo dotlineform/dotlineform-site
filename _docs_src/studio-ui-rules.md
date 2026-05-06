@@ -59,7 +59,7 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 ## UI Rule Log 2026-05-05 / UI-085
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/import/`
 - issue: in dark mode, Studio panels still used fixed light surfaces while field labels and disabled control text resolved through dark-mode muted text tokens, leaving pale grey text on white panels.
 - triage: shared primitive token defect
 - reasoning: panel surface, border, body text, muted text, and control tokens need to switch theme together. Fixing one route locally would leave the same low-contrast combination available on every Studio panel.
@@ -70,7 +70,7 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - build the site
-  - open `/studio/library-import/` in dark theme and confirm the panel, controls, labels, and disabled text render on one coherent dark surface
+  - open `/studio/import/` in dark theme and confirm the panel, controls, labels, and disabled text render on one coherent dark surface
 
 ## UI Rule Log 2026-05-05 / UI-084
 
@@ -130,16 +130,16 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 ## UI Rule Log 2026-05-05 / UI-081
 
 - status: adopted
-- route: `/studio/library-export/`, `/studio/library-import/`
+- route: `/studio/export/`, `/studio/import/`
 - issue: the import/export workflow UI was named and wired as Library-only even though Catalogue and Analytics need the same export, staging, and preview workflow shell for future LLM review work.
 - triage: shared workflow shell
 - reasoning: scope-specific config shapes and write actions can be designed later, but the Studio route should already separate workflow scope from route implementation. The page should not fail just because a future scope has no enabled configs yet.
 - outcome: added scope selectors for `library`, `catalogue`, and `analytics`, made export config filtering and import staging/preview calls use the selected scope, allowed staged JSON/JSONL preview folders for the three workflow scopes, and kept Library source-write apply buttons disabled for non-Library scopes.
 - files changed:
-  - `studio/library-export/index.md`
-  - `studio/library-import/index.md`
-  - `assets/studio/js/library-export.js`
-  - `assets/studio/js/library-import.js`
+  - `studio/export/index.md`
+  - `studio/import/index.md`
+  - `assets/studio/js/data-export.js`
+  - `assets/studio/js/data-import.js`
   - `assets/studio/css/studio.css`
   - `assets/studio/data/studio_config.json`
   - `scripts/docs/docs_import.py`
@@ -178,58 +178,58 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 ## UI Rule Log 2026-05-05 / UI-079
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/import/`
 - issue: Library import still showed staged-file technical metadata, preview-file paths in the document list, bottom-row apply commands, and a persistent result panel after the route had become a compact review/apply surface.
 - triage: route-local refinement
 - reasoning: the useful persistent state is the staged-file choice, document preview selection, and enabled apply commands. File/path/report details are transient operation output and fit the shared Studio modal pattern better than a permanent panel below the list.
 - outcome: removed the staged-file metadata row, moved `Generate preview`, `Update summary`, and `Apply hierarchy` into one command row after the dropdown, made the dropdown use half the desktop command row and full mobile width, removed preview-file paths from document row metadata, replaced preview/apply result panels with single-close modals showing compact vertical counts and issues, and added a transient `results` button beside the preview success message for reopening the last preview result.
 - files changed:
-  - `studio/library-import/index.md`
-  - `assets/studio/js/library-import.js`
+  - `studio/import/index.md`
+  - `assets/studio/js/data-import.js`
   - `assets/studio/js/studio-modal.js`
   - `assets/studio/css/studio.css`
   - `assets/studio/data/studio_config.json`
-  - `tests/smoke/library_import.py`
+  - `tests/smoke/data_import.py`
   - `_docs_src/library-import-ui.md`
   - `_docs_src/library-import.md`
   - `_docs_src/config-studio-config-json.md`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - open `/studio/library-import/` on desktop and mobile and confirm the single command row, wider dropdown, document-only list metadata, and result modals render correctly
+  - open `/studio/import/` on desktop and mobile and confirm the single command row, wider dropdown, document-only list metadata, and result modals render correctly
   - run the Library import smoke check with a mocked docs-management response and confirm preview, summary apply, and hierarchy apply result modals expose the expected counts and issues
 
 ## UI Rule Log 2026-05-04 / UI-078
 
 - status: adopted
-- route: `/studio/library-import/`
+- route: `/studio/import/`
 - issue: Library import still used an intro-led form and separate result panel after Library export had moved to a compact command/list shell.
 - triage: route-local alignment
 - reasoning: Library import v2 starts with preview review, so its first milestone should share the export page's staged control row, selection summary, list actions, and main list area before source-write actions are wired.
 - outcome: moved Preview beside the staged-file selector, removed the intro, added Select all and Clear pills, moved preview output into a selectable Studio list, ordered and indented preview rows from staged `parent_id` metadata, surfaced relationship-tree preview rows, and kept disabled `Update summary` and `Apply hierarchy` commands visible until their service contracts exist.
 - files changed:
-  - `studio/library-import/index.md`
-  - `assets/studio/js/library-import.js`
+  - `studio/import/index.md`
+  - `assets/studio/js/data-import.js`
   - `assets/studio/css/studio.css`
   - `assets/studio/data/studio_config.json`
-  - `tests/smoke/library_import.py`
+  - `tests/smoke/data_import.py`
   - `_docs_src/library-import.md`
   - `_docs_src/library-import-export-v2.md`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - open `/studio/library-import/` and confirm the command row, selection pills, disabled apply actions, and empty preview list render correctly on desktop and mobile
+  - open `/studio/import/` and confirm the command row, selection pills, disabled apply actions, and empty preview list render correctly on desktop and mobile
   - run the Library import smoke checks with docs-management unavailable and with a mocked relationship preview response; confirm hierarchy depth, tree row visibility, and disabled future apply actions
 
 ## UI Rule Log 2026-05-04 / UI-077
 
 - status: adopted
-- route: `/studio/library-export/`
+- route: `/studio/export/`
 - issue: the Library export route still used passive helper text, a persistent result panel, and command placement that made the export controls less compact than the rest of the Library Studio surface.
 - triage: route-local refinement
 - reasoning: Library export is a command page with one primary setup row and one checklist. The useful persistent state is selection, while completed export details are better treated as an interruptible result that can be dismissed after the file path has been noted.
 - outcome: removed the intro and idle helper messages, changed selection copy to selected-document count only, moved Run export beside the export-pattern dropdown, moved the missing-summary option under that dropdown, converted Select all and Clear to pills directly above the list, and replaced the result panel with a shared Studio modal.
 - files changed:
-  - `studio/library-export/index.md`
-  - `assets/studio/js/library-export.js`
+  - `studio/export/index.md`
+  - `assets/studio/js/data-export.js`
   - `assets/studio/css/studio.css`
   - `assets/studio/data/studio_config.json`
   - `assets/studio/js/studio-config.js`
@@ -240,13 +240,13 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
   - `_docs_src/config-studio-config-json.md`
   - `_docs_src/studio-ui-rules.md`
 - local verification:
-  - open `/studio/library-export/` and confirm the control row, checklist pills, and empty idle status render correctly on desktop and mobile
+  - open `/studio/export/` and confirm the control row, checklist pills, and empty idle status render correctly on desktop and mobile
   - run an export with the docs-management service available and confirm the result opens in a modal with a filename-only read-only text box
 
 ## UI Rule Log 2026-05-04 / UI-076
 
 - status: adopted
-- route: `/studio/library-export/`
+- route: `/studio/export/`
 - issue: the Parent-child relationships export pattern showed the normal document checklist, but the config used `all_matching`, causing the route to ignore checklist selection and export every matching Library document.
 - triage: route-local config contract
 - reasoning: when a Studio route presents explicit checklist selection, each listed export pattern should respect those selected ids unless the user invokes Select all. Whole-corpus relationship review remains useful, but it should be an explicit operator choice.
@@ -260,7 +260,7 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - run the focused Docs export test and confirm the parent-child config exports only `can-the-brain-comprehend-how-it-works` when that is the selected doc id
-  - open `/studio/library-export/`, choose Parent-child relationships, select a branch, run export, and confirm the exported file contains only that branch
+  - open `/studio/export/`, choose Parent-child relationships, select a branch, run export, and confirm the exported file contains only that branch
 
 ## UI Rule Log 2026-05-03 / UI-075
 
@@ -275,7 +275,7 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
   - `_docs_src/studio-ui-rules.md`
 - local verification:
   - open `/studio/library/` on desktop and mobile and confirm the layout shows two route columns
-  - confirm `Library` opens `/library/?mode=manage&doc=library`, `HTML Import` opens `/studio/docs-import/?scope=library`, and `export` opens `/studio/library-export/`
+  - confirm `Library` opens `/library/?mode=manage&doc=library`, `HTML Import` opens `/studio/docs-import/?scope=library`, and `export` opens `/studio/export/`
 - follow-up:
   - consider a shared dashboard-route-column name if non-Catalogue dashboards continue to reuse this compact pattern
 

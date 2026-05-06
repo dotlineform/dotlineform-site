@@ -62,7 +62,7 @@ Implemented now:
 - supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through docs-management endpoints for staged-file listing and preview generation
-- is exposed through the `/studio/library-import/` page for local preview generation
+- is exposed through the `/studio/import/` page for local preview generation
 - supports staged data workflow scopes `library`, `catalogue`, and `analytics`; Library remains the only scope with implemented source-write apply actions
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
@@ -172,7 +172,7 @@ The parser and service checks run in the `docs` profile:
 ./scripts/run_checks.py --profile docs
 ```
 
-The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `tests/smoke/library_import.py`.
+The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `tests/smoke/data_import.py`.
 That smoke check runs in the `studio-smoke` profile after a temporary Jekyll build:
 
 ```bash

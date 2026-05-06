@@ -31,7 +31,8 @@ Current direct importers include:
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
 - `assets/studio/js/build-activity.js`
-- `assets/studio/js/library-export.js`
+- `assets/studio/js/data-export.js`
+- `assets/studio/js/data-import.js`
 - `assets/js/search/search-page.js`
 
 Its exported helpers are also used indirectly through:

@@ -25,7 +25,7 @@ Current responsibilities include:
 - scope-specific Docs Viewer UI status emoji definitions
 - the route and feed path for the current Studio build-activity page
 - route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
-- route and data paths for the Library export Studio page
+- route and data paths for the shared Studio data export/import pages
 - the Studio Audits route path and UI text
 - catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
@@ -50,8 +50,8 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/studio-audits.js`
-- `assets/studio/js/library-export.js`
-- `assets/studio/js/library-import.js`
+- `assets/studio/js/data-export.js`
+- `assets/studio/js/data-import.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
@@ -62,7 +62,7 @@ It also feeds shared path resolution used by:
 
 - `assets/studio/js/studio-data.js`
 
-The Library export/import route text includes fallback shared data-workflow labels and unavailable-state copy.
+The data export/import route text includes fallback shared data-workflow labels and unavailable-state copy.
 The active data-domain list and capability status come from `assets/studio/data/export_import_adapters.json`.
 Per-domain export configs and import apply contracts still live in the owning workflow docs and service code.
 
@@ -85,37 +85,37 @@ What stays here:
 - the lookup path for dedicated search policy and scope-owned search indexes
 - the lookup path for generated docs indexes used by Studio pages, such as the Library export selector
 
-## Library export page
+## Data export page
 
-The Library export page reads:
+The data export page reads:
 
-- `paths.routes.library_export`
+- `paths.routes.data_export`
 - `paths.data.studio.export_import_adapters`
 - `paths.data.studio.library_export_configs`
 - `paths.data.docs.scopes.library.index`
-- `ui_text.library_export`
+- `ui_text.data_export`
 
 The export config file owns export pattern definitions.
 `studio_config.json` only owns browser-facing route, payload, and UI-copy lookup for the Studio page.
 The page runs exports through the fixed docs-management transport endpoint `POST /docs/export`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
 Adapter dispatch belongs in `assets/studio/data/export_import_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
-`ui_text.library_export.format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
-`ui_text.library_export.filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
-`ui_text.library_export.result_title`, `result_close`, `result_files_label`, the `count_*` labels, `warnings_heading`, and `issues_heading` control the result modal copy shown after an export run.
+`ui_text.data_export.format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
+`ui_text.data_export.filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
+`ui_text.data_export.result_title`, `result_close`, `result_files_label`, the `count_*` labels, `warnings_heading`, and `issues_heading` control the result modal copy shown after an export run.
 
 Do not add export field mappings, output formats, or selection defaults to `studio_config.json`.
 Those belong in `assets/studio/data/library_export_configs.json` so the CLI, service endpoint, and Studio UI all run the same pattern.
 
-## Library import page
+## Data import page
 
-The Library import page reads:
+The data import page reads:
 
-- `paths.routes.library_import`
+- `paths.routes.data_import`
 - `paths.data.studio.export_import_adapters`
-- `ui_text.library_import`
+- `ui_text.data_import`
 
-`ui_text.library_import` owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
+`ui_text.data_import` owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
 The fixed docs-management transport endpoints for staged-file listing, preview generation, and apply live in `assets/studio/js/studio-transport.js`.
 Adapter dispatch belongs in `assets/studio/data/export_import_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.

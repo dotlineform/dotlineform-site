@@ -13,7 +13,7 @@ Status:
 
 - implemented
 
-These UI refinements apply to the page `/studio/library-export/`.
+These UI refinements apply to the page `/studio/export/`.
 
 ## Text and messages
 

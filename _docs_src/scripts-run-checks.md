@@ -47,7 +47,7 @@ Run the broad profile:
 - `docs`
   Runs focused Docs Viewer export, Library import engine, Library import service, and Docs Management Server checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Studio Library import route with docs-management unavailable and a mocked Library import preview flow.
+  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Studio data import route with docs-management unavailable and a mocked Library import preview flow.
 - `full`
   Runs `quick`, `catalogue`, `docs`, and `studio-smoke`.
 

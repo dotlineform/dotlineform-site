@@ -218,7 +218,7 @@ Diagnostics should stay in the Studio report; v1 should not write a separate mac
 The intended v1 Studio page is likely:
 
 ```text
-/studio/library-import/
+/studio/import/
 ```
 
 The page should:
@@ -242,7 +242,7 @@ Current Studio UI behavior:
 - result modal counts use a vertical label/value stack, with issue messages below the counts
 - document rows show the document title and document-oriented metadata only; generated preview file paths stay out of the list
 
-The Library dashboard should link to the Library import page under the existing `Data` column, beneath the export link.
+The Library dashboard should link to the shared data import route under the existing `Data` column, beneath the export link.
 The page can be created early as a staged-file listing before preview generation exists.
 Once previews are available, the list should focus on document rows rather than generated file paths.
 
@@ -283,7 +283,7 @@ Potential later apply flows:
 
 - What exact preview filename should be used for duplicate or missing `doc_id` records?
 - Should unknown metadata be rendered in a small human-readable metadata section in each preview, or only in the Studio report?
-- How much UI should the early `/studio/library-import/` page expose before preview generation exists?
+- How much UI should the early `/studio/import/` page expose before preview generation exists?
 
 ## Initial Likely Tasks
 
@@ -375,13 +375,13 @@ The page can ship first as a staged-file listing and then grow preview generatio
 
 Status note:
 
-- implemented at `/studio/library-import/`
+- implemented at `/studio/import/`
 - listed from the `/studio/library/` dashboard under Data
 - defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
 - reads selectable data domains and unavailable-state messages from `assets/studio/data/export_import_adapters.json`
 - loads staged `.json` and `.jsonl` files through `GET /docs/import/files?data_domain=library`
 - runs preview generation through `POST /docs/import/preview` for supported staged JSON/JSONL files
-- uses the same compact command/list shell as the Library export page
+- uses the same compact command/list shell as the data export page
 - shows preview/apply counts and issues in a single-close result modal
 - renders generated preview records in the main selectable list area, ordered and indented by staged `parent_id` when relationship data is present
 - shows a relationship-tree preview row when the service report includes a generated tree preview file
@@ -424,9 +424,9 @@ Add focused tests for:
 
 Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output for relationship and non-relationship imports, deterministic staged-timestamp preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, non-Library scope rejection, summary-apply missing target docs, backup creation, skipped rows, hierarchy missing target docs, hierarchy backup creation, unknown parent warnings, partial selections, no-write dry runs, and source write output is implemented in `tests/python/test_docs_import_service.py`.
-A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/library_import.py`.
+A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/data_import.py`.
 The `docs` profile in `./scripts/run_checks.py` runs the parser and local service checks.
-The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs Library import route smokes with the docs-management service blocked and with mocked preview, summary-apply, and hierarchy-apply responses.
+The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs data import route smokes with the docs-management service blocked and with mocked Library preview, summary-apply, and hierarchy-apply responses.
 
 ### Task 9. Decide Summary Apply Scope
 

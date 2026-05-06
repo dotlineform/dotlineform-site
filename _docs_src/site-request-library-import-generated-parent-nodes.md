@@ -155,7 +155,7 @@ Status:
 
 - proposed
 
-Update `/studio/library-import/` so generated parent nodes are visible before apply and so the confirmation modal distinguishes creates from reparent writes.
+Update `/studio/import/` so generated parent nodes are visible before apply and so the confirmation modal distinguishes creates from reparent writes.
 
 ### Task 6. Add Verification
 

@@ -30,8 +30,8 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-analytics
     <section class="catalogueDashboardColumn">
       <h3>Data</h3>
       <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/studio/library-export/?scope=analytics' | relative_url }}">export</a></li>
-        <li><a href="{{ '/studio/library-import/?scope=analytics' | relative_url }}">import</a></li>
+        <li><a href="{{ '/studio/export/?scope=analytics' | relative_url }}">export</a></li>
+        <li><a href="{{ '/studio/import/?scope=analytics' | relative_url }}">import</a></li>
         <li><a href="{{ '/studio/docs-import/?scope=analysis' | relative_url }}">docs import</a></li>
         <li><a href="{{ '/docs/?scope=studio&doc=new-pipeline-refine-analytics' | relative_url }}">plan</a></li>
       </ul>

@@ -144,8 +144,8 @@ Adopted routes:
 - `/studio/audits/` with `#studioAuditsRoot`
 - `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
 - `/studio/library/` with `#studioLibraryDashboardRoot`
-- `/studio/library-export/` with `#libraryExportRoot`
-- `/studio/library-import/` with `#libraryImportRoot`
+- `/studio/export/` with `#dataExportRoot`
+- `/studio/import/` with `#dataImportRoot`
 - `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
 - `/studio/search/` with `#studioSearchDashboardRoot`
 - `/studio/ui-catalogue/` with `#studioUiCatalogueRoot`

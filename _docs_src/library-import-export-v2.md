@@ -22,7 +22,7 @@ Current behaviour is described in places for clarification/context.
 
 ## Export
 
-page:`/studio/library-export/`
+page:`/studio/export/`
 
 - No need to preview or manually edit files, export straight to staging as v1 does.
 
@@ -49,7 +49,7 @@ folder:`var/studio/export-import/library/exports`
 
 ## Import
 
-page:`/studio/library-import/`
+page:`/studio/import/`
 
 ### workflow
 
@@ -122,7 +122,7 @@ list selection buttons: add two new buttons (as on the export page):
 
 ## Import Actions
 
-The following actions are available on the library-import page:
+The following actions are available on the data-import page:
 
 1. Update summary
 2. Apply hierarchy
@@ -157,7 +157,7 @@ example:
 - The first import milestone should remain preview-only. Summary and hierarchy apply actions write canonical Library source and need a narrower confirmation, backup, and validation contract before they are enabled.
 - The source-write target for Library documents should be `_docs_library_src/*.md`, not `_docs_src/*.md`.
 - Preview files should continue to use Markdown-style preview files under `var/studio/export-import/library/import-preview/`; they are review artifacts, not source Markdown documents.
-- Export changes are lower risk if treated as small additions to the existing Library export page: list-filter pills first, then output-format options after the export config/runtime format contract is checked.
+- Export changes are lower risk if treated as small additions to the existing data export page in Library scope: list-filter pills first, then output-format options after the export config/runtime format contract is checked.
 
 ## Resolved Decisions
 
@@ -186,7 +186,7 @@ Status:
 
 - implemented
 
-Reshape `/studio/library-import/` to mirror the Library export page’s layout, status handling, selection controls, and result presentation.
+Reshape `/studio/import/` to mirror the data export page’s layout, status handling, selection controls, and result presentation.
 
 Expected outputs:
 
@@ -261,7 +261,7 @@ Status:
 - implemented
 
 Add the requested Library export list filters without changing the export write path.
-The Library export page now shows `show all`, `no content`, and `not viewable` filter pills with counts from the generated Library docs index.
+The data export page now shows `show all`, `no content`, and `not viewable` filter pills with counts from the generated Library docs index.
 `no content` uses generated `content_text_length`, which is derived from rendered document HTML after plain-text extraction and title stripping.
 The active list filter limits the displayed rows and Select all behavior, while existing selected ids remain the export request contract.
 

@@ -8,6 +8,39 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-06] Stabilized shared data export/import routes
+
+**Status:** implemented
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+Moved the active Studio export/import shells to `/studio/export/` and `/studio/import/`.
+The browser modules, route-ready names, DOM ids, CSS classes, Studio config route keys, and UI text namespaces now use shared `data_export` and `data_import` naming.
+The Library-specific export config file remains Library-named because it is the current documents-adapter config contract.
+
+**Reason:**
+The shared route shell should be the stable target before Catalogue and Analytics workflow requirements grow.
+Keeping active routes neutral avoids preserving the old Library route names as compatibility aliases while still leaving Library domain docs and adapter configs explicit.
+
+**Files changed:**
+
+- [Studio Data Export](/docs/?scope=studio&doc=studio-data-export)
+- [Studio Data Import](/docs/?scope=studio&doc=studio-data-import)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- `studio/export/index.md`
+- `studio/import/index.md`
+- `assets/studio/js/data-export.js`
+- `assets/studio/js/data-import.js`
+- `tests/smoke/data_export.py`
+- `tests/smoke/data_import.py`
+
+**Impact:**
+Library dashboard links and future Catalogue/Analytics dashboard links all target the same shared shell with `scope=...`.
+The old `/studio/library-export/` and `/studio/library-import/` pages are removed rather than retained as aliases.
+
 ## [2026-05-06] Closed export/import adapter boundary request
 
 **Status:** implemented
@@ -185,7 +218,7 @@ Keeping one text treatment avoids per-theme image swaps and makes image/overlay 
 
 **Summary:**
 Studio panels now switch their surface, border, muted text, default-value, and control tokens together in dark mode.
-This prevents light panels from combining with dark-mode muted text on routes such as `/studio/library-import/`.
+This prevents light panels from combining with dark-mode muted text on routes such as `/studio/import/`.
 
 **Reason:**
 The previous token mix left field labels and disabled controls nearly invisible in dark mode because the panel stayed white while muted text became pale grey.
@@ -314,7 +347,7 @@ The three main Studio domain dashboards now share the same compact route-entry l
 **Area:** Studio / Data workflows
 
 **Summary:**
-`/studio/library-export/` and `/studio/library-import/` now expose a scope selector for `library`, `catalogue`, and `analytics`.
+`/studio/export/` and `/studio/import/` now expose a scope selector for `library`, `catalogue`, and `analytics`.
 Library remains the default scope.
 Export config filtering now uses the selected scope and handles future scopes with no enabled configs without failing the page.
 Import staged-file listing and preview generation now use `var/docs/import-staging/<scope>/` and `var/docs/import-preview/<scope>/` for the supported workflow scopes.
@@ -326,10 +359,10 @@ The shared page and service infrastructure can support those scopes before the s
 
 **Files changed:**
 
-- `studio/library-export/index.md`
-- `studio/library-import/index.md`
-- `assets/studio/js/library-export.js`
-- `assets/studio/js/library-import.js`
+- `studio/export/index.md`
+- `studio/import/index.md`
+- `assets/studio/js/data-export.js`
+- `assets/studio/js/data-import.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
@@ -425,12 +458,12 @@ Persistent file and result details made the page harder to scan after the docume
 
 **Files changed:**
 
-- `studio/library-import/index.md`
-- `assets/studio/js/library-import.js`
+- `studio/import/index.md`
+- `assets/studio/js/data-import.js`
 - `assets/studio/js/studio-modal.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
-- `tests/smoke/library_import.py`
+- `tests/smoke/data_import.py`
 - [Library Import UI Refinements](/docs/?scope=studio&doc=library-import-ui)
 - [Library Import](/docs/?scope=studio&doc=library-import)
 - [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
@@ -472,7 +505,7 @@ Future generated parent-node work has its own request and should not be folded i
 **Summary:**
 The Library import page can now apply selected staged `parent_id` values to canonical Library source documents.
 `Apply hierarchy` enables only for selected document preview rows, runs a preflight against staged record indexes and current `_docs_library_src/` files, shows a shared OK/Cancel confirmation modal, then writes only selected parent-id changes.
-The docs-management endpoint creates a timestamped `library-import-hierarchy-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.
+The docs-management endpoint creates a timestamped `data-import-hierarchy-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.
 Generated Library docs data now treats unresolved imported source parents as root-level relationships so unknown external parents do not break `/library/`.
 
 **Reason:**
@@ -481,13 +514,13 @@ Keeping this parent-id-only preserves current `sort_order` and leaves future sor
 
 **Files changed:**
 
-- `assets/studio/js/library-import.js`
+- `assets/studio/js/data-import.js`
 - `assets/studio/js/studio-transport.js`
 - `assets/studio/data/studio_config.json`
 - `scripts/docs/docs_management_server.py`
 - `scripts/build_docs.rb`
 - `tests/python/test_docs_import_service.py`
-- `tests/smoke/library_import.py`
+- `tests/smoke/data_import.py`
 - [Library Import](/docs/?scope=studio&doc=library-import)
 - [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
@@ -509,7 +542,7 @@ Full-content applies and imported `sort_order` writes remain separate future con
 **Summary:**
 The Library import page can now apply selected staged summaries to canonical Library source documents.
 `Update summary` enables only for selected document preview rows, runs a preflight against the staged record indexes and current `_docs_library_src/` files, shows a shared OK/Cancel confirmation modal, then writes only the selected summary changes.
-The docs-management endpoint creates a timestamped `library-import-summary-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.
+The docs-management endpoint creates a timestamped `data-import-summary-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.
 
 **Reason:**
 Task 7 needed the first narrow source-write path before hierarchy writes.
@@ -517,12 +550,12 @@ Keeping the apply action summary-only makes the import flow useful for missing-s
 
 **Files changed:**
 
-- `assets/studio/js/library-import.js`
+- `assets/studio/js/data-import.js`
 - `assets/studio/js/studio-transport.js`
 - `assets/studio/data/studio_config.json`
 - `scripts/docs/docs_management_server.py`
 - `tests/python/test_docs_import_service.py`
-- `tests/smoke/library_import.py`
+- `tests/smoke/data_import.py`
 - [Library Import](/docs/?scope=studio&doc=library-import)
 - [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
@@ -554,12 +587,12 @@ Keeping supported formats config-declared lets the CLI, service endpoint, and St
 - `assets/studio/data/library_export_configs.schema.json`
 - `scripts/docs/docs_export.py`
 - `scripts/docs/docs_management_server.py`
-- `studio/library-export/index.md`
-- `assets/studio/js/library-export.js`
+- `studio/export/index.md`
+- `assets/studio/js/data-export.js`
 - `assets/studio/css/studio.css`
 - `tests/python/test_docs_export.py`
 - `tests/python/test_docs_management_server.py`
-- `tests/smoke/library_export.py`
+- `tests/smoke/data_export.py`
 - [Library Export](/docs/?scope=studio&doc=library-export)
 - [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
@@ -586,11 +619,11 @@ Library export review needs quick slices for empty generated docs and generated-
 **Files changed:**
 
 - `scripts/build_docs.rb`
-- `studio/library-export/index.md`
-- `assets/studio/js/library-export.js`
+- `studio/export/index.md`
+- `assets/studio/js/data-export.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
-- `tests/smoke/library_export.py`
+- `tests/smoke/data_export.py`
 - [Library Export](/docs/?scope=studio&doc=library-export)
 - [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)
@@ -636,7 +669,7 @@ Consumers should expect relationship fields in the full-content rows, but not `s
 **Area:** Studio / Library import
 
 **Summary:**
-Updated `/studio/library-import/` so its first v2 milestone uses the same compact command/list shell as `/studio/library-export/`.
+Updated `/studio/import/` so its first v2 milestone uses the same compact command/list shell as `/studio/export/`.
 The page now places Preview beside the staged-file selector, shows Select all and Clear pills, renders generated previews in the main selectable list area, and keeps future `Update summary` and `Apply hierarchy` actions visible but disabled.
 Preview rows are ordered and indented from staged `parent_id` metadata when relationship data is available, and generated relationship-tree preview files appear as their own visible list row.
 Preview files now use staged-file timestamp suffixes when present, include front-matter-like matched-config and staged-only sections, and generate a whole-tree preview whenever staged relationship metadata is available.
@@ -647,11 +680,11 @@ Sharing the export page structure keeps the Library data workflows predictable w
 
 **Files changed:**
 
-- `studio/library-import/index.md`
-- `assets/studio/js/library-import.js`
+- `studio/import/index.md`
+- `assets/studio/js/data-import.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
-- `tests/smoke/library_import.py`
+- `tests/smoke/data_import.py`
 - [Library Import](/docs/?scope=studio&doc=library-import)
 - [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -761,14 +794,14 @@ Local docs source edits can still rebuild generated docs/search data immediately
 **Area:** Studio / local data reads
 
 **Summary:**
-`/studio/library-export/` now reads the generated Library docs index through the docs-management server when that service is available. The Studio dashboard also uses docs-management generated-data reads for Library docs count and docs-search metrics when running locally.
+`/studio/export/` now reads the generated Library docs index through the docs-management server when that service is available. The Studio dashboard also uses docs-management generated-data reads for Library docs count and docs-search metrics when running locally.
 
 **Reason:**
 The dev-only Jekyll overlay removes generated docs/search JSON from Jekyll output, so Studio pages must not fetch those static paths while `bin/dev-studio` is running.
 
 **Files changed:**
 
-- `assets/studio/js/library-export.js`
+- `assets/studio/js/data-export.js`
 - `assets/studio/js/studio-dashboard.js`
 - `assets/studio/js/studio-transport.js`
 - [Library Export v1](/docs/?scope=studio&doc=library-export)
@@ -801,7 +834,7 @@ Library export now includes generated Archive docs according to the same selecti
 - `scripts/build_search.rb`
 - `scripts/docs/docs_management_server.py`
 - `assets/js/docs-viewer.js`
-- `assets/studio/js/library-export.js`
+- `assets/studio/js/data-export.js`
 - `assets/studio/data/library_export_configs.json`
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
@@ -831,8 +864,8 @@ The docs-management export summary now uses `document` or `documents` according 
 
 **Files changed:**
 
-- `studio/library-export/index.md`
-- `assets/studio/js/library-export.js`
+- `studio/export/index.md`
+- `assets/studio/js/data-export.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
@@ -857,7 +890,7 @@ The modal adds a small interaction step after successful exports, but keeps the 
 Changed the Parent-child relationships export pattern from implicit all-matching selection to explicit selected-document selection.
 
 **Reason:**
-The `/studio/library-export/` page displayed the same hierarchical checklist for this pattern as for the other export patterns, but the config asked the export engine to include all matching docs.
+The `/studio/export/` page displayed the same hierarchical checklist for this pattern as for the other export patterns, but the config asked the export engine to include all matching docs.
 That made selected branches irrelevant and produced whole-corpus exports.
 
 **Changes:**
@@ -917,12 +950,12 @@ Completed Library import Task 8 by adding the retained Library import route smok
 Parser, renderer, and service verification existed, but the Studio route smoke test still needed to be part of the standard retained check runner.
 
 **Changes:**
-`tests/smoke/library_import.py` can now serve a built site root through a temporary loopback HTTP server for repeatable route checks.
+`tests/smoke/data_import.py` can now serve a built site root through a temporary loopback HTTP server for repeatable route checks.
 `./scripts/run_checks.py --profile studio-smoke` now builds the temporary Jekyll site and runs the Library import smoke with the docs-management service blocked.
 
 **Files changed:**
 
-- `tests/smoke/library_import.py`
+- `tests/smoke/data_import.py`
 - `scripts/run_checks.py`
 - [Library Import v1](/docs/?scope=studio&doc=library-import)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
@@ -941,7 +974,7 @@ The smoke profile now requires Playwright browser availability, so sandboxed run
 **Area:** Library / Studio data import
 
 **Summary:**
-Completed Library import Task 6 by adding `/studio/library-import/`.
+Completed Library import Task 6 by adding `/studio/import/`.
 
 **Reason:**
 The Library import parser, preview renderer, and local service endpoints existed, but there was not yet a Studio route for selecting staged Library data files and generating preview Markdown from the browser.
@@ -953,13 +986,13 @@ Visible runtime copy is stored in `assets/studio/data/studio_config.json`.
 
 **Files changed:**
 
-- `studio/library-import/index.md`
-- `assets/studio/js/library-import.js`
+- `studio/import/index.md`
+- `assets/studio/js/data-import.js`
 - `assets/studio/js/studio-transport.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
 - `studio/library/index.md`
-- `tests/smoke/library_import.py`
+- `tests/smoke/data_import.py`
 - [Library Import v1](/docs/?scope=studio&doc=library-import)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
@@ -1009,8 +1042,8 @@ Completed Library import Task 5 by adding docs-management endpoints for staged L
 The import engine can parse staged files and write review previews, but Studio needs a localhost service boundary before a UI can list files or trigger preview creation.
 
 **Changes:**
-`GET /docs/library-import/files?scope=library` now lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`.
-`POST /docs/library-import/preview` now parses the selected staged file, runs current-Library lookup, renders previews through the shared import engine, and writes them under `var/docs/import-preview/library/` unless the server is running with `--dry-run`.
+`GET /docs/data-import/files?scope=library` now lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`.
+`POST /docs/data-import/preview` now parses the selected staged file, runs current-Library lookup, renders previews through the shared import engine, and writes them under `var/docs/import-preview/library/` unless the server is running with `--dry-run`.
 Service logs include scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths, but not staged payload content or document body text.
 Focused service tests cover file listing, preview writing, dry-run preview reporting, and non-Library scope rejection.
 
@@ -1184,13 +1217,13 @@ The v1 export path now spans config, CLI, generated docs data, local service int
 
 **Changes:**
 `tests/python/test_docs_export.py` now verifies config loading, selected-document descendant resolution, deterministic JSONL output for a fixed run time, and representative dry-runs for all three v1 Library export configs.
-`tests/smoke/library_export.py` smoke-checks `/studio/library-export/` route readiness, config loading, document-list rendering, archive exclusion, and disabled run behavior when the docs-management service is unavailable.
+`tests/smoke/data_export.py` smoke-checks `/studio/export/` route readiness, config loading, document-list rendering, archive exclusion, and disabled run behavior when the docs-management service is unavailable.
 The `docs` profile in `./scripts/run_checks.py` now runs the export checks before regenerating Studio docs and search payloads.
 
 **Files changed:**
 
 - `tests/python/test_docs_export.py`
-- `tests/smoke/library_export.py`
+- `tests/smoke/data_export.py`
 - `scripts/run_checks.py`
 - [Library Export v1](/docs/?scope=studio&doc=library-export)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
@@ -1281,7 +1314,7 @@ The Studio Library export result UI now distinguishes warnings from blocking iss
 
 - `scripts/docs/docs_export.py`
 - `scripts/docs/docs_management_server.py`
-- `assets/studio/js/library-export.js`
+- `assets/studio/js/data-export.js`
 - `assets/studio/data/studio_config.json`
 - `tests/python/test_docs_export.py`
 - [Library Export v1](/docs/?scope=studio&doc=library-export)
@@ -1363,14 +1396,14 @@ The Library export page could select configs and documents, but needed a loopbac
 
 **Changes:**
 `POST /docs/export` now calls the shared export engine in-process, validates config id, scope, explicit `doc_ids`, `select_all`, and `missing_summary_only`, and writes only through the export engine's `var/docs/exports/` path allowlist.
-The Studio transport layer exposes the endpoint, and `/studio/library-export/` now probes the docs-management service, enables Run when available, posts selected docs/config options, and displays output path, format, counts, warnings, and errors.
+The Studio transport layer exposes the endpoint, and `/studio/export/` now probes the docs-management service, enables Run when available, posts selected docs/config options, and displays output path, format, counts, warnings, and errors.
 
 **Files changed:**
 
 - `scripts/docs/docs_management_server.py`
 - `assets/studio/js/studio-transport.js`
-- `assets/studio/js/library-export.js`
-- `studio/library-export/index.md`
+- `assets/studio/js/data-export.js`
+- `studio/export/index.md`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
 - [Library Export v1](/docs/?scope=studio&doc=library-export)
@@ -1388,7 +1421,7 @@ The main remaining risk is validation/reporting depth for unusual configs or mis
 **Area:** Library / Studio docs export
 
 **Summary:**
-Added `/studio/library-export/` as the first Studio UI slice for Library exports.
+Added `/studio/export/` as the first Studio UI slice for Library exports.
 
 **Reason:**
 Library export now has configs and a read-only engine, but it also needs a clear document-selection surface before adding the service-backed run endpoint.
@@ -1400,9 +1433,9 @@ The run button stays disabled until the Task 6 loopback endpoint is added.
 
 **Files changed:**
 
-- `studio/library-export/index.md`
+- `studio/export/index.md`
 - `studio/library/index.md`
-- `assets/studio/js/library-export.js`
+- `assets/studio/js/data-export.js`
 - `assets/studio/js/studio-config.js`
 - `assets/studio/css/studio.css`
 - `assets/studio/data/studio_config.json`
@@ -4388,13 +4421,13 @@ The work and series editors now expose `Import staged prose` when the matching s
 **Area:** Studio / dashboards
 
 **Summary:**
-Renamed the shared docs HTML import page from `/studio/library-import/` to `/studio/docs-import/`, then updated Analytics and Library dashboard panels to enter that page with scope-specific defaults.
+Renamed the shared docs HTML import page from `/studio/import/` to `/studio/docs-import/`, then updated Analytics and Library dashboard panels to enter that page with scope-specific defaults.
 
 **Reason:**
 The import workflow now supports Library, Analysis, and Studio docs, so the route should not imply that it belongs only to Library. The Analytics dashboard also had too many equal-weight tag panels for one related maintenance cluster.
 
 **Effect:**
-Analytics now has an import panel that opens `/studio/docs-import/?scope=analysis`, a single Tag tools panel with plain links to the four tag pages, and the existing Analytics plan panel. Library now opens `/studio/docs-import/?scope=library`, and its Import copy no longer mentions Studio scope selection. The old `/studio/library-import/` route is removed.
+Analytics now has an import panel that opens `/studio/docs-import/?scope=analysis`, a single Tag tools panel with plain links to the four tag pages, and the existing Analytics plan panel. Library now opens `/studio/docs-import/?scope=library`, and its Import copy no longer mentions Studio scope selection. The old `/studio/import/` route is removed.
 
 **Affected files/docs:**
 

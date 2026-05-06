@@ -56,8 +56,8 @@ Current behavior:
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
-- also used by `/studio/library-export/` to read the generated Library docs index locally and write configured Library export artifacts
-- also used by `/studio/library-import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
+- also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
+- also used by `/studio/import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
@@ -572,7 +572,7 @@ Export/import adapter behavior is covered by focused checks:
 - `tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
 - `tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
 - `tests/python/test_export_import_adapters.py` verifies active adapter resolution and future stub rejection.
-- `tests/smoke/library_import.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
+- `tests/smoke/data_import.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
 
 The `docs` profile runs the parser, service, and adapter checks.
 The `studio-smoke` profile builds a temporary site and runs the Studio import route smokes.

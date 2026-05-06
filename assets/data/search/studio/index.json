@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-808b74385f1ed196cc898e9821ec6abf",
-    "generated_at_utc": "2026-05-06T10:56:45Z",
-    "count": 184
+    "version": "blake2b-a29ce76f16a1a60769c9ece52b12d31e",
+    "generated_at_utc": "2026-05-06T11:21:03Z",
+    "count": 186
   },
   "entries": [
     {
@@ -2185,6 +2185,54 @@
         "35"
       ],
       "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
+    },
+    {
+      "id": "studio-data-export",
+      "kind": "doc",
+      "title": "Studio Data Export",
+      "href": "/docs/?scope=studio&doc=studio-data-export",
+      "last_updated": "2026-05-06 12:30",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-06 12:30 • Studio",
+      "search_terms": [
+        "studio-data-export",
+        "studio",
+        "data",
+        "export",
+        "studio data export",
+        "2026-05-06 12:30",
+        "2026",
+        "05",
+        "06",
+        "12",
+        "30"
+      ],
+      "search_text": "studio-data-export studio data export studio data export 2026-05-06 12:30 2026 05 06 12 30"
+    },
+    {
+      "id": "studio-data-import",
+      "kind": "doc",
+      "title": "Studio Data Import",
+      "href": "/docs/?scope=studio&doc=studio-data-import",
+      "last_updated": "2026-05-06 12:30",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-06 12:30 • Studio",
+      "search_terms": [
+        "studio-data-import",
+        "studio",
+        "data",
+        "import",
+        "studio data import",
+        "2026-05-06 12:30",
+        "2026",
+        "05",
+        "06",
+        "12",
+        "30"
+      ],
+      "search_text": "studio-data-import studio data import studio data import 2026-05-06 12:30 2026 05 06 12 30"
     },
     {
       "id": "catalogue-status",

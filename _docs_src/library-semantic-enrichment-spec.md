@@ -15,7 +15,7 @@ sort_order: 20
 - [Problems To Solve](#problems-to-solve)
 - [Proposed Source Metadata](#proposed-source-metadata)
 - [Docs Viewer Summary Display](#docs-viewer-summary-display)
-- [Library Export Boundary](#library-export-boundary)
+- [Library Export Boundary](#data-export-boundary)
 - [Summary Import Format](#summary-import-format)
 - [Structure Recommendation Format](#structure-recommendation-format)
 - [Role Of Codex And ChatGPT](#role-of-codex-and-chatgpt)

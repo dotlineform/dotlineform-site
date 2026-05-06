@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the Library import Studio route."""
+"""Smoke-check the data import Studio route."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
 
 
-ROOT_SELECTOR = "#libraryImportRoot"
+ROOT_SELECTOR = "#dataImportRoot"
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -58,7 +58,7 @@ def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> di
 
 
 def assert_ready_contract(attrs: dict[str, str]) -> None:
-    if attrs["route"] != "library-import":
+    if attrs["route"] != "data-import":
         raise AssertionError(f"unexpected route attribute: {attrs['route']!r}")
     if attrs["ready"] != "true":
         raise AssertionError(f"route did not become ready: {attrs!r}")
@@ -73,13 +73,13 @@ def assert_ready_contract(attrs: dict[str, str]) -> None:
 
 
 def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, object]:
-    preview_disabled = page.locator("#libraryImportPreview").evaluate("button => button.disabled")
-    select_all_disabled = page.locator("#libraryImportSelectAll").evaluate("button => button.disabled")
-    clear_disabled = page.locator("#libraryImportClear").evaluate("button => button.disabled")
-    update_summary_disabled = page.locator("#libraryImportUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#libraryImportApplyHierarchy").evaluate("button => button.disabled")
-    file_option_count = page.locator("#libraryImportFileSelect option").count()
-    list_exists = page.locator("#libraryImportList").count() == 1
+    preview_disabled = page.locator("#dataImportPreview").evaluate("button => button.disabled")
+    select_all_disabled = page.locator("#dataImportSelectAll").evaluate("button => button.disabled")
+    clear_disabled = page.locator("#dataImportClear").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#dataImportUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#dataImportApplyHierarchy").evaluate("button => button.disabled")
+    file_option_count = page.locator("#dataImportFileSelect option").count()
+    list_exists = page.locator("#dataImportList").count() == 1
     if not list_exists:
         raise AssertionError("preview list shell is missing")
     if expect_unavailable_service and not preview_disabled:
@@ -100,11 +100,11 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
 
 
 def assert_unsupported_adapter_state(page, expected_status: str) -> dict[str, object]:
-    preview_disabled = page.locator("#libraryImportPreview").evaluate("button => button.disabled")
-    update_summary_disabled = page.locator("#libraryImportUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#libraryImportApplyHierarchy").evaluate("button => button.disabled")
-    file_select_disabled = page.locator("#libraryImportFileSelect").evaluate("select => select.disabled")
-    status_text = page.locator("#libraryImportStatus").text_content()
+    preview_disabled = page.locator("#dataImportPreview").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#dataImportUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#dataImportApplyHierarchy").evaluate("button => button.disabled")
+    file_select_disabled = page.locator("#dataImportFileSelect").evaluate("select => select.disabled")
+    status_text = page.locator("#dataImportStatus").text_content()
     if status_text != expected_status:
         raise AssertionError(f"unexpected unsupported-adapter status: {status_text!r}")
     if not preview_disabled or not update_summary_disabled or not apply_hierarchy_disabled or not file_select_disabled:
@@ -289,17 +289,17 @@ def install_mock_docs_service(page) -> None:
 
 
 def assert_mock_preview_flow(page) -> dict[str, object]:
-    page.locator("#libraryImportPreview").click()
-    page.wait_for_selector("[data-library-import-preview]", timeout=5000)
+    page.locator("#dataImportPreview").click()
+    page.wait_for_selector("[data-data-import-preview]", timeout=5000)
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     preview_modal_title = page.locator("#studioModalTitle").text_content()
-    preview_count_labels = page.locator(".libraryImportResultModal__counts dt").evaluate_all(
+    preview_count_labels = page.locator(".dataImportResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    preview_count_values = page.locator(".libraryImportResultModal__counts dd").evaluate_all(
+    preview_count_values = page.locator(".dataImportResultModal__counts dd").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    preview_issue_text = " ".join(page.locator(".libraryImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    preview_issue_text = " ".join(page.locator(".dataImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
     if preview_modal_title != "Import preview":
         raise AssertionError(f"unexpected preview result modal title: {preview_modal_title!r}")
     if preview_count_labels != ["records", "parsed", "malformed", "warnings", "errors"]:
@@ -310,23 +310,23 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"preview warning missing from modal issues: {preview_issue_text!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    result_button = page.locator("#libraryImportResults")
+    result_button = page.locator("#dataImportResults")
     if result_button.is_hidden() or result_button.text_content() != "results":
         raise AssertionError("preview results button should be visible after successful preview status")
     result_button.click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     reopened_title = page.locator("#studioModalTitle").text_content()
-    reopened_summary = page.locator(".libraryImportResultModal__summary").text_content()
+    reopened_summary = page.locator(".dataImportResultModal__summary").text_content()
     if reopened_title != "Import preview" or reopened_summary != "Generated 3 Library import preview files.":
         raise AssertionError(f"unexpected reopened results modal: {reopened_title!r}, {reopened_summary!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    rows = page.locator("[data-library-import-preview]").count()
-    titles = page.locator(".libraryImportList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
-    depths = page.locator("[data-library-import-preview]").evaluate_all(
-        "nodes => nodes.map(node => Number(node.dataset.libraryImportDepth || 0))"
+    rows = page.locator("[data-data-import-preview]").count()
+    titles = page.locator(".dataImportList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    depths = page.locator("[data-data-import-preview]").evaluate_all(
+        "nodes => nodes.map(node => Number(node.dataset.dataImportDepth || 0))"
     )
-    meta = page.locator(".libraryImportList__meta").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    meta = page.locator(".dataImportList__meta").evaluate_all("nodes => nodes.map(node => node.textContent)")
     if rows != 4:
         raise AssertionError(f"expected four preview rows, found {rows}")
     if titles != ["Relationship tree", "Library", "Alpha", "Beta"]:
@@ -335,43 +335,43 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"unexpected hierarchy depths: {depths!r}")
     if "not in current Library" not in meta[-1]:
         raise AssertionError(f"unknown current-Library state was not surfaced: {meta!r}")
-    page.locator("#libraryImportSelectAll").click()
-    selection = page.locator("#libraryImportSelectionSummary").text_content()
+    page.locator("#dataImportSelectAll").click()
+    selection = page.locator("#dataImportSelectionSummary").text_content()
     if selection != "4 previews selected.":
         raise AssertionError(f"unexpected selection summary: {selection!r}")
-    update_summary_disabled = page.locator("#libraryImportUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#libraryImportApplyHierarchy").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#dataImportUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#dataImportApplyHierarchy").evaluate("button => button.disabled")
     if update_summary_disabled or apply_hierarchy_disabled:
         raise AssertionError("summary and hierarchy apply should enable for selected document previews")
-    page.locator("#libraryImportUpdateSummary").click()
+    page.locator("#dataImportUpdateSummary").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     modal_title = page.locator("#studioModalTitle").text_content()
     if modal_title != "Update summaries?":
         raise AssertionError(f"unexpected summary apply modal title: {modal_title!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    cancelled_status = page.locator("#libraryImportStatus").text_content()
+    cancelled_status = page.locator("#dataImportStatus").text_content()
     if cancelled_status != "Summary update cancelled.":
         raise AssertionError(f"unexpected cancelled status: {cancelled_status!r}")
-    page.locator("#libraryImportUpdateSummary").click()
+    page.locator("#dataImportUpdateSummary").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 2 Library summary update(s).'",
-        arg="#libraryImportStatus",
+        arg="#dataImportStatus",
         timeout=5000,
     )
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     summary_modal_title = page.locator("#studioModalTitle").text_content()
-    summary_count_labels = page.locator(".libraryImportResultModal__counts dt").evaluate_all(
+    summary_count_labels = page.locator(".dataImportResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    summary_count_values = page.locator(".libraryImportResultModal__counts dd").evaluate_all(
+    summary_count_values = page.locator(".dataImportResultModal__counts dd").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    applied_status = page.locator("#libraryImportStatus").text_content()
-    summary = page.locator(".libraryImportResultModal__summary").text_content()
-    issue_text = " ".join(page.locator(".libraryImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    applied_status = page.locator("#dataImportStatus").text_content()
+    summary = page.locator(".dataImportResultModal__summary").text_content()
+    issue_text = " ".join(page.locator(".dataImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
     if applied_status != "Updated 2 Library summary update(s).":
         raise AssertionError(f"unexpected applied status: {applied_status!r}")
     if summary_modal_title != "Summary update complete":
@@ -386,35 +386,35 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"summary apply skipped row missing from issues: {issue_text!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    page.locator("#libraryImportApplyHierarchy").click()
+    page.locator("#dataImportApplyHierarchy").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     hierarchy_modal_title = page.locator("#studioModalTitle").text_content()
     if hierarchy_modal_title != "Update hierarchy?":
         raise AssertionError(f"unexpected hierarchy apply modal title: {hierarchy_modal_title!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    hierarchy_cancelled_status = page.locator("#libraryImportStatus").text_content()
+    hierarchy_cancelled_status = page.locator("#dataImportStatus").text_content()
     if hierarchy_cancelled_status != "Hierarchy update cancelled.":
         raise AssertionError(f"unexpected hierarchy cancelled status: {hierarchy_cancelled_status!r}")
-    page.locator("#libraryImportApplyHierarchy").click()
+    page.locator("#dataImportApplyHierarchy").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 1 Library hierarchy change(s).'",
-        arg="#libraryImportStatus",
+        arg="#dataImportStatus",
         timeout=5000,
     )
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     hierarchy_result_title = page.locator("#studioModalTitle").text_content()
-    hierarchy_count_labels = page.locator(".libraryImportResultModal__counts dt").evaluate_all(
+    hierarchy_count_labels = page.locator(".dataImportResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    hierarchy_count_values = page.locator(".libraryImportResultModal__counts dd").evaluate_all(
+    hierarchy_count_values = page.locator(".dataImportResultModal__counts dd").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    hierarchy_status = page.locator("#libraryImportStatus").text_content()
-    hierarchy_summary = page.locator(".libraryImportResultModal__summary").text_content()
-    hierarchy_issue_text = " ".join(page.locator(".libraryImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    hierarchy_status = page.locator("#dataImportStatus").text_content()
+    hierarchy_summary = page.locator(".dataImportResultModal__summary").text_content()
+    hierarchy_issue_text = " ".join(page.locator(".dataImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
     if hierarchy_result_title != "Hierarchy update complete":
         raise AssertionError(f"unexpected hierarchy result modal title: {hierarchy_result_title!r}")
     if hierarchy_count_labels != ["changed", "unchanged", "skipped", "warnings", "errors"]:
@@ -442,7 +442,7 @@ def main() -> int:
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
     parser.add_argument("--mock-docs-service", action="store_true")
-    parser.add_argument("--route-path", default="/studio/library-import/")
+    parser.add_argument("--route-path", default="/studio/import/")
     parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()

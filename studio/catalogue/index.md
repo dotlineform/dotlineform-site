@@ -54,8 +54,8 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
     <section class="catalogueDashboardColumn">
       <h3>Data</h3>
       <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/studio/library-export/?scope=catalogue' | relative_url }}">export</a></li>
-        <li><a href="{{ '/studio/library-import/?scope=catalogue' | relative_url }}">import</a></li>
+        <li><a href="{{ '/studio/export/?scope=catalogue' | relative_url }}">export</a></li>
+        <li><a href="{{ '/studio/import/?scope=catalogue' | relative_url }}">import</a></li>
       </ul>
     </section>
   </section>

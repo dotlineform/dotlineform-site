@@ -25,7 +25,7 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 ## Current Boundary
 
 - existing tag-oriented Studio pages remain live and useful
-- `/studio/library-export/?scope=analytics` and `/studio/library-import/?scope=analytics` expose the shared scoped data workflow shell for future Analytics export and staged-import review contracts
+- `/studio/export/?scope=analytics` and `/studio/import/?scope=analytics` expose the shared scoped data workflow shell for future Analytics export and staged-import review contracts
 - Analytics should not absorb Catalogue, Library, or Search concerns unless a workflow is genuinely cross-domain
 - shared shell, nav, and common Studio patterns belong to the Studio implementation plan
 

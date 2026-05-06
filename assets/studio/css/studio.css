@@ -1132,76 +1132,76 @@ span.tagStudio__input--readonlyDisplay {
   padding-left: 1.1rem;
 }
 
-.libraryImportPage__panel {
+.dataImportPage__panel {
   display: grid;
   gap: 0.8rem;
 }
 
-.libraryImportPage__summary,
-.libraryImportPage__selectionSummary,
-.libraryImportResultModal__issues ul {
+.dataImportPage__summary,
+.dataImportPage__selectionSummary,
+.dataImportResultModal__issues ul {
   margin: 0;
 }
 
-.libraryImportPage__selectionSummary {
+.dataImportPage__selectionSummary {
   color: var(--muted, var(--studio-muted-body));
   font-size: var(--font-small);
 }
 
-.libraryImportPage__controls {
+.dataImportPage__controls {
   display: grid;
   grid-template-columns: minmax(8rem, 0.32fr) minmax(0, 0.68fr) minmax(0, 1fr);
   gap: 0.5rem 0.65rem;
   align-items: end;
 }
 
-.libraryImportPage__scopeField,
-.libraryImportPage__field {
+.dataImportPage__scopeField,
+.dataImportPage__field {
   min-inline-size: 0;
   width: 100%;
 }
 
-.libraryImportPage__scopeField .tagStudioField__control,
-.libraryImportPage__field .tagStudioField__control {
+.dataImportPage__scopeField .tagStudioField__control,
+.dataImportPage__field .tagStudioField__control {
   width: 100%;
 }
 
-.libraryImportPage__scopeField .tagStudioField__control > .tagStudio__input,
-.libraryImportPage__field .tagStudioField__control > .tagStudio__input {
+.dataImportPage__scopeField .tagStudioField__control > .tagStudio__input,
+.dataImportPage__field .tagStudioField__control > .tagStudio__input {
   flex: 1 1 auto;
   width: 100%;
 }
 
-.libraryImportPage__commandButtons {
+.dataImportPage__commandButtons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 0.65rem;
   align-items: center;
 }
 
-.libraryImportPage__statusRow {
+.dataImportPage__statusRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.55rem;
   align-items: center;
 }
 
-.libraryImportPage__statusRow > .tagStudio__status {
+.dataImportPage__statusRow > .tagStudio__status {
   margin: 0;
 }
 
-.libraryImportPage__resultButton[hidden] {
+.dataImportPage__resultButton[hidden] {
   display: none;
 }
 
-.libraryImportPage__listActions {
+.dataImportPage__listActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
 }
 
-.libraryImportResultModal__counts {
+.dataImportResultModal__counts {
   display: grid;
   grid-template-columns: max-content minmax(2rem, max-content);
   column-gap: 0.7rem;
@@ -1210,16 +1210,16 @@ span.tagStudio__input--readonlyDisplay {
   margin: 0;
 }
 
-.libraryImportResultModal__counts > div {
+.dataImportResultModal__counts > div {
   display: contents;
 }
 
-.libraryImportResultModal__counts > div:last-child dt,
-.libraryImportResultModal__counts > div:last-child dd {
+.dataImportResultModal__counts > div:last-child dt,
+.dataImportResultModal__counts > div:last-child dd {
   border-bottom: 0;
 }
 
-.libraryImportResultModal__counts dt {
+.dataImportResultModal__counts dt {
   margin: 0;
   border-bottom: 1px solid var(--line, var(--studio-line));
   padding-block: 0.3rem;
@@ -1228,7 +1228,7 @@ span.tagStudio__input--readonlyDisplay {
   text-transform: lowercase;
 }
 
-.libraryImportResultModal__counts dd {
+.dataImportResultModal__counts dd {
   margin: 0;
   border-bottom: 1px solid var(--line, var(--studio-line));
   padding-block: 0.3rem;
@@ -1236,67 +1236,67 @@ span.tagStudio__input--readonlyDisplay {
   text-align: right;
 }
 
-.libraryImportResultModal__issues {
+.dataImportResultModal__issues {
   display: grid;
   gap: 0.5rem;
   padding-top: 0.5rem;
 }
 
-.libraryImportResultModal__issues > h4 {
+.dataImportResultModal__issues > h4 {
   margin: 0;
 }
 
-.libraryImportResultModal__issues ul {
+.dataImportResultModal__issues ul {
   padding-left: 1.1rem;
   font-size: var(--font-small);
 }
 
-.libraryImportList__meta {
+.dataImportList__meta {
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);
 }
 
-.libraryImportList__row {
+.dataImportList__row {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.libraryImportList__label {
+.dataImportList__label {
   display: grid;
   grid-template-columns: 1rem minmax(0, 0.42fr) minmax(0, 0.58fr);
   gap: 0.5rem;
   align-items: center;
   min-width: 0;
-  padding-left: calc(var(--library-import-depth, 0) * 1.15rem);
+  padding-left: calc(var(--data-import-depth, 0) * 1.15rem);
 }
 
-.libraryImportList__checkbox {
+.dataImportList__checkbox {
   width: 1rem;
   height: 1rem;
   margin: 0;
 }
 
-.libraryImportList__title,
-.libraryImportList__meta {
+.dataImportList__title,
+.dataImportList__meta {
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.libraryImportList__row--tree .libraryImportList__title {
+.dataImportList__row--tree .dataImportList__title {
   font-weight: 600;
 }
 
-.libraryExportPage__panel {
+.dataExportPage__panel {
   display: grid;
   gap: 0.8rem;
 }
 
-.libraryExportPage__selectionSummary {
+.dataExportPage__selectionSummary {
   margin: 0;
   color: var(--muted, var(--studio-muted-body));
   font-size: var(--font-small);
 }
 
-.libraryExportPage__controls {
+.dataExportPage__controls {
   display: grid;
   grid-template-columns: minmax(8rem, max-content) minmax(12rem, 24rem) auto;
   gap: 0.5rem 0.65rem;
@@ -1304,12 +1304,12 @@ span.tagStudio__input--readonlyDisplay {
   justify-content: start;
 }
 
-.libraryExportPage__scopeField,
-.libraryExportPage__field {
+.dataExportPage__scopeField,
+.dataExportPage__field {
   min-inline-size: 0;
 }
 
-.libraryExportPage__format {
+.dataExportPage__format {
   display: inline-grid;
   grid-template-columns: max-content max-content;
   gap: 0.4rem;
@@ -1319,30 +1319,30 @@ span.tagStudio__input--readonlyDisplay {
   border: 0;
 }
 
-.libraryExportPage__format legend {
+.dataExportPage__format legend {
   padding: 0;
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-small);
 }
 
-.libraryExportPage__formatOptions {
+.dataExportPage__formatOptions {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 0.35rem;
 }
 
-.libraryExportPage__formatOption input {
+.dataExportPage__formatOption input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.libraryExportPage__formatOption input:disabled + span {
+.dataExportPage__formatOption input:disabled + span {
   cursor: not-allowed;
   opacity: 0.45;
 }
 
-.libraryExportPage__toggle {
+.dataExportPage__toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1351,66 +1351,66 @@ span.tagStudio__input--readonlyDisplay {
   font-size: var(--font-small);
 }
 
-.libraryExportPage__toggle[hidden] {
+.dataExportPage__toggle[hidden] {
   display: none;
 }
 
-.libraryExportPage__listActions {
+.dataExportPage__listActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
 }
 
-.libraryExportPage__filterPills {
+.dataExportPage__filterPills {
   display: contents;
 }
 
-.libraryExportModal__details,
-.libraryExportModal__counts {
+.dataExportModal__details,
+.dataExportModal__counts {
   display: grid;
   gap: 0.35rem;
   margin: 0;
 }
 
-.libraryExportModal__counts {
+.dataExportModal__counts {
   margin-top: 0.7rem;
 }
 
-.libraryExportModal__countRow {
+.dataExportModal__countRow {
   display: grid;
   grid-template-columns: minmax(6rem, 0.35fr) minmax(0, 1fr);
   gap: 0.5rem;
   align-items: baseline;
 }
 
-.libraryExportModal__countRow dt {
+.dataExportModal__countRow dt {
   margin: 0;
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);
   text-transform: lowercase;
 }
 
-.libraryExportModal__countRow dd {
+.dataExportModal__countRow dd {
   margin: 0;
   overflow-wrap: anywhere;
 }
 
-.libraryExportModal__files {
+.dataExportModal__files {
   display: grid;
   gap: 0.35rem;
   margin-top: 0.85rem;
 }
 
-.libraryExportModal__files > span,
-.libraryExportModal__issues > h4 {
+.dataExportModal__files > span,
+.dataExportModal__issues > h4 {
   margin: 0;
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);
   text-transform: lowercase;
 }
 
-.libraryExportModal__fileList {
+.dataExportModal__fileList {
   min-height: 5rem;
   resize: vertical;
   font-family: var(--font-mono, monospace);
@@ -1418,48 +1418,48 @@ span.tagStudio__input--readonlyDisplay {
   white-space: pre;
 }
 
-.libraryExportModal__issues {
+.dataExportModal__issues {
   display: grid;
   gap: 0.35rem;
   margin-top: 0.85rem;
 }
 
-.libraryExportModal__issues ul {
+.dataExportModal__issues ul {
   margin: 0;
   padding-left: 1.1rem;
 }
 
-.libraryExportList__row {
+.dataExportList__row {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.libraryExportList__label {
+.dataExportList__label {
   display: grid;
   grid-template-columns: 1rem 0.55rem minmax(0, 1fr);
   gap: 0.5rem;
   align-items: center;
   min-width: 0;
-  padding-left: calc(var(--library-export-depth, 0) * 1.15rem);
+  padding-left: calc(var(--data-export-depth, 0) * 1.15rem);
 }
 
-.libraryExportList__checkbox {
+.dataExportList__checkbox {
   width: 1rem;
   height: 1rem;
   margin: 0;
 }
 
-.libraryExportList__viewable {
+.dataExportList__viewable {
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 999px;
   background: transparent;
 }
 
-.libraryExportList__viewable.is-viewable {
+.dataExportList__viewable.is-viewable {
   background: var(--studio-success);
 }
 
-.libraryExportList__title {
+.dataExportList__title {
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -3101,26 +3101,26 @@ button.tagStudioList__cellLink {
   }
 
   .docsHtmlImportPage__controls,
-  .libraryImportPage__controls,
-  .libraryExportPage__controls,
+  .dataImportPage__controls,
+  .dataExportPage__controls,
   .docsHtmlImportPage__resultGrid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .libraryImportPage__controls {
+  .dataImportPage__controls {
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
   }
 
-  .libraryExportPage__toggle {
+  .dataExportPage__toggle {
     grid-column: auto;
   }
 
-  .libraryImportList__label {
+  .dataImportList__label {
     grid-template-columns: 1rem minmax(0, 1fr);
   }
 
-  .libraryImportList__meta {
+  .dataImportList__meta {
     grid-column: 2;
   }
 

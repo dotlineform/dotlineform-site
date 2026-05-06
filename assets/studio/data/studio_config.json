@@ -13,8 +13,8 @@
       "docs_broken_links": "/studio/docs-broken-links/",
       "project_state": "/studio/project-state/",
       "docs_html_import": "/studio/docs-import/",
-      "library_export": "/studio/library-export/",
-      "library_import": "/studio/library-import/",
+      "data_export": "/studio/export/",
+      "data_import": "/studio/import/",
       "catalogue_status": "/studio/catalogue-status/",
       "catalogue_activity": "/studio/catalogue-activity/",
       "bulk_add_work": "/studio/bulk-add-work/",
@@ -570,7 +570,7 @@
       "status_request_failed": "Audit request failed.",
       "output_label": "output"
     },
-    "library_export": {
+    "data_export": {
       "scope_label": "scope",
       "scope_library": "library",
       "scope_catalogue": "catalogue",
@@ -588,7 +588,7 @@
       "clear": "clear",
       "run_button": "Run export",
       "run_disabled_title": "Requires the local docs-management service.",
-      "loading": "loading Library export...",
+      "loading": "loading Data export...",
       "idle_status": "",
       "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run exports.",
       "scope_unsupported": "{scope_label} export is not implemented yet.",
@@ -599,7 +599,7 @@
       "selection_summary": "{count} documents selected.",
       "selection_summary_one": "1 document selected.",
       "selection_required": "Select at least one document.",
-      "status_running": "Running Library export...",
+      "status_running": "Running Data export...",
       "status_success": "Export completed.",
       "status_failed": "Export failed.",
       "result_title": "Export result",
@@ -616,7 +616,7 @@
       "warnings_heading": "Warnings",
       "issues_heading": "Issues"
     },
-    "library_import": {
+    "data_import": {
       "scope_label": "scope",
       "scope_library": "library",
       "scope_catalogue": "catalogue",
@@ -631,7 +631,7 @@
       "apply_hierarchy_title": "Update selected document parent ids from the staged file.",
       "apply_unsupported_title": "{scope_label} source apply actions are not implemented yet.",
       "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run {scope_label} imports.",
-      "loading": "loading Library import...",
+      "loading": "loading Data import...",
       "idle_status": "Select a staged {scope_label} data file and generate previews.",
       "running_status": "Generating import previews...",
       "scope_unsupported": "{scope_label} import is not implemented yet.",
