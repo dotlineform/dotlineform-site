@@ -1,12 +1,12 @@
 ---
 doc_id: studio-works
-title: "Studio Works"
+title: Catalogue Works
 added_date: 2026-04-01
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 230
+last_updated: "2026-05-06 20:17"
+parent_id: catalogue
+sort_order: 50
 ---
-# Studio Works
+# Catalogue Works
 
 Route:
 

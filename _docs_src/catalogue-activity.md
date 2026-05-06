@@ -1,10 +1,10 @@
 ---
 doc_id: catalogue-activity
-title: "Catalogue Activity"
+title: Catalogue Activity
 added_date: 2026-04-18
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 60
+last_updated: "2026-05-06 20:15"
+parent_id: catalogue
+sort_order: 30
 ---
 # Catalogue Activity
 

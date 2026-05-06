@@ -1,10 +1,10 @@
 ---
 doc_id: series-tags
-title: "Series Tags"
+title: Series Tags
 added_date: 2026-03-31
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 210
+last_updated: "2026-05-06 20:16"
+parent_id: analytics
+sort_order: 50
 ---
 # Series Tags
 

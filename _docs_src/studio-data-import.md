@@ -1,12 +1,11 @@
 ---
 doc_id: studio-data-import
-title: "Studio Data Import"
+title: Studio Data Import
 added_date: 2026-05-06
-last_updated: "2026-05-06 12:30"
-parent_id: studio
-sort_order: 48
+last_updated: "2026-05-06 20:14"
+parent_id: import-export
+sort_order: 40
 ---
-
 # Studio Data Import
 
 Route:

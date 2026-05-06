@@ -1,10 +1,10 @@
 ---
 doc_id: tag-editor
-title: "Tag Editor"
+title: Tag Editor
 added_date: 2026-03-31
-last_updated: 2026-05-03
-parent_id: studio
-sort_order: 220
+last_updated: "2026-05-06 20:14"
+parent_id: analytics
+sort_order: 20
 ---
 # Tag Editor
 

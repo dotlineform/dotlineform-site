@@ -1,12 +1,11 @@
 ---
 doc_id: studio-ui-framework
-title: "Studio UI Framework"
+title: Studio UI Framework
 added_date: 2026-04-21
-last_updated: "2026-05-05"
-parent_id: design
-sort_order: 20
+last_updated: "2026-05-06 19:55"
+parent_id: ui
+sort_order: 30
 ---
-
 # Studio UI Framework
 
 This is a legacy source doc.

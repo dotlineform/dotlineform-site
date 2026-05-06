@@ -1,10 +1,10 @@
 ---
 doc_id: design
-title: "Design"
+title: Design
 added_date: 2026-04-21
-last_updated: "2026-05-05"
-parent_id: ""
-sort_order: 40
+last_updated: "2026-05-06 20:02"
+parent_id: ui
+sort_order: 90
 ---
 # Design
 

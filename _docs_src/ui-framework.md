@@ -1,12 +1,11 @@
 ---
 doc_id: ui-framework
-title: "UI Framework"
+title: UI Framework
 added_date: 2026-04-24
-last_updated: "2026-05-06 19:34"
-parent_id: design
+last_updated: "2026-05-06 19:54"
+parent_id: ui
 sort_order: 10
 ---
-
 # UI Framework
 
 This is a legacy source doc.

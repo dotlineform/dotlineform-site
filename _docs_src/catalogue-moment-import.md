@@ -1,10 +1,10 @@
 ---
 doc_id: catalogue-moment-import
-title: "Catalogue Moment Import"
+title: Catalogue Moment Import
 added_date: 2026-04-18
-last_updated: 2026-04-29
-parent_id: studio
-sort_order: 190
+last_updated: "2026-05-06 20:15"
+parent_id: catalogue
+sort_order: 40
 ---
 # Catalogue Moment Import
 

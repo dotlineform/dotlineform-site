@@ -1,10 +1,10 @@
 ---
 doc_id: docs-viewer
-title: "Docs Viewer"
+title: Docs
 added_date: 2026-04-24
-last_updated: 2026-04-24
+last_updated: "2026-05-06 20:12"
 parent_id: ""
-sort_order: 160
+sort_order: 40
 ---
 # Docs Viewer
 

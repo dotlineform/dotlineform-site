@@ -1,12 +1,11 @@
 ---
 doc_id: scripts-docs-export
-title: "Docs Export"
+title: Docs Export
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-06 12:05"
-parent_id: scripts
-sort_order: 25
+last_updated: "2026-05-06 20:13"
+parent_id: import-export
+sort_order: 10
 ---
-
 # Docs Export
 
 Script:

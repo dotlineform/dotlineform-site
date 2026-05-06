@@ -1,10 +1,10 @@
 ---
 doc_id: search
-title: "Search"
+title: Search
 added_date: 2026-03-31
-last_updated: "2026-05-05"
+last_updated: "2026-05-06 20:06"
 parent_id: ""
-sort_order: 180
+sort_order: 32
 ---
 # Search
 
