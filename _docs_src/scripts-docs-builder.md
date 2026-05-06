@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
 added_date: 2026-04-23
-last_updated: "2026-05-03 13:55"
+last_updated: "2026-05-06 19:03"
 parent_id: scripts
 sort_order: 20
 ---
@@ -44,7 +44,7 @@ Generated outputs:
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
-- rewrites doc-to-doc links onto the scope-owned viewer route
+- rewrites same-scope doc-to-doc links onto the scope-owned viewer route
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
@@ -102,6 +102,7 @@ Internal doc links:
 - preferred Library public link format: `/library/?doc=<doc_id>`
 - optional anchors should use the normal hash suffix on the scope-owned route
 - the builder rewrites scope-owned viewer links and relative `.md` links onto the current scope-owned viewer route
+- cross-scope viewer links are preserved when the linked viewer path or explicit `scope` query belongs to another docs scope
 - the builder no longer rewrites legacy `/docs/.../` path links
 
 Docs media tokens:

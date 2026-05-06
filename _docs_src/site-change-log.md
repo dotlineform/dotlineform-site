@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 16:15"
+last_updated: "2026-05-06 19:03"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-06] Preserved cross-scope Docs Viewer links
+
+**Status:** implemented
+
+**Area:** Docs / Builder
+
+**Summary:**
+The docs builder now keeps cross-scope viewer links on their original viewer route instead of resolving matching `doc` query values against the current build scope.
+
+**Reason:**
+The Studio `library` doc intentionally links to the public Library viewer at `/library/?doc=library`.
+Because the Studio docs scope also has a `library` doc id, the previous link rewrite treated that public Library route as a same-scope Studio docs link and generated `/docs/?scope=studio&doc=library`.
+
+**Files changed:**
+
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Library](/docs/?scope=studio&doc=library)
+- `scripts/build_docs.rb`
+
+**Impact:**
+Same-scope viewer links and relative `.md` links still normalize onto the current scope's viewer route.
+Cross-scope links such as `/library/?doc=library` now keep their intended public destination.
 
 ## [2026-05-06] Ignored code-block links in Docs Broken Links
 

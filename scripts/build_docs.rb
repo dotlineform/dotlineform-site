@@ -377,7 +377,7 @@ class DocsDataBuilder
     return href if path_part.empty?
 
     viewer_doc_id = query_values.fetch("doc", []).first.to_s
-    if !viewer_doc_id.empty? && viewer_path_match?(path_part)
+    if !viewer_doc_id.empty? && viewer_path_match?(path_part, query_values)
       target_doc = docs_by_id[viewer_doc_id]
       return target_doc ? viewer_url_for(target_doc.doc_id, anchor) : href
     end
@@ -395,8 +395,25 @@ class DocsDataBuilder
     target_doc ? viewer_url_for(target_doc.doc_id, anchor) : href
   end
 
-  def viewer_path_match?(path_part)
-    path_part == @viewer_base_url || path_part == "/docs/" || path_part == "/library/" || path_part == "/analysis/"
+  def viewer_path_match?(path_part, query_values)
+    explicit_scope = query_values.fetch("scope", []).first.to_s
+    return false if !explicit_scope.empty? && explicit_scope != @scope_id
+    return true if path_part == @viewer_base_url
+
+    viewer_scope_for_path(path_part) == @scope_id
+  end
+
+  def viewer_scope_for_path(path_part)
+    case path_part
+    when "/docs/"
+      "studio"
+    when "/library/"
+      "library"
+    when "/analysis/"
+      "analysis"
+    else
+      ""
+    end
   end
 
   def doc_sort_key(doc)

@@ -10,5 +10,5 @@
   "viewable": true,
   "source_path": "library.md",
   "viewer_url": "/docs/?scope=studio&doc=library",
-  "content_html": "<h1 id=\"library\">Library</h1>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&doc=library\">Library</a> is a Docs Viewer page on the public-facing site but it is a distinct data domain from Catalogue</li>\n  <li><a href=\"/studio/library/\">Library Dashboard</a> is its Studio administraton page.</li>\n</ul>\n\n<h2 id=\"dependencies\">Dependencies</h2>\n\n<ul>\n  <li>shared Studio navigation from <strong><a href=\"/docs/?scope=studio&doc=studio-runtime\">Studio Runtime</a></strong></li>\n  <li>any shared write-service or activity conventions used across Studio domains</li>\n</ul>\n"
+  "content_html": "<h1 id=\"library\">Library</h1>\n\n<ul>\n  <li><a href=\"/library/?doc=library\">Library</a> is a Docs Viewer page on the public-facing site but it is a distinct data domain from Catalogue</li>\n  <li><a href=\"/studio/library/\">Library Dashboard</a> is its Studio administraton page.</li>\n</ul>\n\n<h2 id=\"dependencies\">Dependencies</h2>\n\n<ul>\n  <li>shared Studio navigation from <strong><a href=\"/docs/?scope=studio&doc=studio-runtime\">Studio Runtime</a></strong></li>\n  <li>any shared write-service or activity conventions used across Studio domains</li>\n</ul>\n"
 }
