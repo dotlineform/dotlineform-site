@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T15:55:00Z",
+  "generated_at": "2026-05-06T16:30:39Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -605,7 +605,7 @@
       "source_path": "site-change-log-2026-04.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
-      "content_text_length": 191091
+      "content_text_length": 191067
     },
     {
       "scope": "studio",

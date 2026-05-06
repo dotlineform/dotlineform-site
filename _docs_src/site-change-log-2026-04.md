@@ -212,7 +212,7 @@ Series publish preview reports attached draft works that will be promoted. Serie
 - `scripts/studio/catalogue_write_server.py`
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/data/studio_config.json`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -235,7 +235,7 @@ The first accepted member work fills blank `primary_work_id` immediately in the 
 **Affected files/docs:**
 
 - `assets/studio/js/catalogue-series-editor.js`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 
 ## [2026-04-29] Relaxed series primary work for draft workflow
@@ -256,7 +256,7 @@ Published series still block deleting their primary work. Draft series that poin
 **Affected files/docs:**
 
 - `scripts/studio/catalogue_write_server.py`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -463,7 +463,7 @@ Work and Series status now reads as display state through span-based `tagStudio_
 - `_includes/studio_ui_catalogue_input_demo.html`
 - `studio/ui-catalogue/input/index.md`
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
@@ -515,7 +515,7 @@ The series status field is now read-only, `Save` never changes publication statu
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/js/studio-transport.js`
 - `assets/studio/data/studio_config.json`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -672,7 +672,7 @@ The unified series editor could create a valid draft with year metadata, then la
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
 - `scripts/studio/catalogue_write_server.py`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -754,7 +754,7 @@ The stale public aggregate artifacts were also regenerated so series `002` is re
 - `assets/data/recent_index.json`
 - `assets/data/search/catalogue/index.json`
 - `_series/002.md`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
@@ -802,7 +802,7 @@ The Catalogue dashboard now exposes one `Series Editor` entry. Old `/studio/cata
 - `studio/catalogue-new-series/index.md`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
@@ -832,7 +832,7 @@ The series editor can now create draft series source records through `POST /cata
 - `assets/studio/js/catalogue-series-fields.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
 - [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
 
@@ -1302,7 +1302,7 @@ Work delete now removes generated work artifacts, dependent generated detail art
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 
 ## [2026-04-27] Added change request for catalogue delete cleanup
 
@@ -1523,7 +1523,7 @@ The User Guide now lists the catalogue editor docs alongside other task-focused 
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 
 ## [2026-04-26] Removed legacy prose filename fields from catalogue editors
 
@@ -1549,8 +1549,7 @@ New work, work editor, new series, and series editor forms no longer render or s
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 
 ## [2026-04-26] Switched work and series prose generation to repo-local sources
 
@@ -1602,7 +1601,7 @@ The work and series editors now expose `Import staged prose` when the matching s
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 
 ## [2026-04-26] Renamed Docs Import Route and Cleaned Dashboard Panels
 
@@ -2433,9 +2432,9 @@ The catalogue save endpoints now accept optional `apply_build: true` and return 
 - `assets/studio/js/studio-config.js`
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
-- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
-- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Work File Editor
+- Catalogue Work Link Editor
+- Catalogue Series Editor
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -2834,7 +2833,7 @@ The section was duplicating both its heading and its navigation affordance, and 
 `/studio/catalogue-series/` now uses a single `member works` heading, the `work_id` link is the only navigation affordance to the work editor, `Add` and `Remove` use the shared default width, and the member search only appears when the list exceeds the visible cap.
 
 **Affected files/docs:**
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Series Editor
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - `studio/catalogue-series/index.md`
 - `assets/studio/js/catalogue-series-editor.js`
@@ -2858,9 +2857,9 @@ Those editors share the same partial-page action-row pattern as the work and wor
 `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, and `/studio/catalogue-series/` now use small standard-width buttons with the shorter labels, `Enter` in each search field still acts as an alternative to clicking `Open`, and the supporting docs now distinguish `Save` from `Rebuild` explicitly.
 
 **Affected files/docs:**
-- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
-- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
-- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- Catalogue Work File Editor
+- Catalogue Work Link Editor
+- Catalogue Series Editor
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - `studio/catalogue-work-file/index.md`
 - `studio/catalogue-work-link/index.md`
@@ -3498,8 +3497,8 @@ Work files and work links needed the same source-backed local editing model as w
 - `/studio/catalogue-work/`
 - `work_files.json`
 - `work_links.json`
-- [Work Files](/docs/?scope=studio&doc=catalogue-work-files)
-- [Work Links](/docs/?scope=studio&doc=catalogue-work-links)
+- Work Files
+- Work Links
 
 **Notes:**
 The surrounding Studio runtime/docs routing and local save-flow docs were updated to match these new surfaces.
@@ -3644,7 +3643,7 @@ Series-level metadata and membership needed the same local editing and scoped re
 - `/studio/catalogue-series/`
 - `series.json`
 - `works.json`
-- [Catalogue Series](/docs/?scope=studio&doc=catalogue-series)
+- Catalogue Series
 
 **Notes:**
 This was the first series-specific editing surface in Studio.
@@ -3691,7 +3690,7 @@ Studio needed a practical proof that individual work metadata could be edited sa
 **Affected files/docs:**
 - `/studio/catalogue-work/`
 - `scripts/studio/catalogue_write_server.py`
-- [Catalogue Work](/docs/?scope=studio&doc=catalogue-work)
+- Catalogue Work
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 
 **Notes:**
