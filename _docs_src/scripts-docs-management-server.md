@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-06 12:30"
+last_updated: "2026-05-06 15:41"
 parent_id: scripts
 sort_order: 10
 ---
@@ -200,9 +200,9 @@ Rebuild behavior:
 
 Broken-links behavior:
 
-- `scope` must be `studio`, `analysis`, or `library`
+- `scope` must be `studio` or `library`
 - runs the shared docs broken-links audit for that scope
-- reports `not found` and strict `wrong title` issues
+- reports missing target issues only
 - does not write source docs or generated outputs
 - is intended for the Studio audit page and terminal-backed local maintenance
 

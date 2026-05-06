@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit Docs Viewer links for missing targets and title mismatches.
+"""Audit Docs Viewer links for missing targets.
 
 Run:
   ./scripts/docs/docs_broken_links.py --scope studio
@@ -25,7 +25,6 @@ SCOPE_OUTPUT_DIRS = {
 }
 TEMP_BASE_URL = "https://dotlineform.local"
 WHITESPACE_PATTERN = re.compile(r"\s+")
-CHANGE_LOG_ARCHIVE_DOC_ID_PATTERN = re.compile(r"^site-change-log-\d{4}(?:-|$)")
 
 
 @dataclass(frozen=True)
@@ -245,10 +244,6 @@ def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> b
     return False
 
 
-def should_skip_title_check(current_doc: DocMeta) -> bool:
-    return current_doc.scope == "studio" and bool(CHANGE_LOG_ARCHIVE_DOC_ID_PATTERN.match(current_doc.doc_id))
-
-
 def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
     docs_by_key: dict[tuple[str, str], DocMeta] = {}
@@ -292,31 +287,12 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
 
             target_scope = normalize_text(target.get("scope"))
             target_doc_id = normalize_text(target.get("doc_id"))
-            target_meta = docs_by_key.get((target_scope, target_doc_id))
-            if target_meta is None:
+            if docs_by_key.get((target_scope, target_doc_id)) is None:
                 entries.append(
                     {
                         "problem": "not found",
                         "linked_page_text": linked_page_text_for_missing(target, resolved_href),
                         "linked_page_url": resolved_href,
-                        "link_text": link_text,
-                        "link_url": resolved_href,
-                        "from_page_text": from_page_text,
-                        "from_page_url": from_page_url,
-                    }
-                )
-                continue
-
-            if (
-                not should_skip_title_check(doc.meta)
-                and link_text
-                and normalize_text(link_text) != normalize_text(target_meta.title)
-            ):
-                entries.append(
-                    {
-                        "problem": "wrong title",
-                        "linked_page_text": target_meta.title,
-                        "linked_page_url": target_meta.viewer_url,
                         "link_text": link_text,
                         "link_url": resolved_href,
                         "from_page_text": from_page_text,
@@ -334,7 +310,6 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
     )
 
     not_found_count = sum(1 for item in entries if item["problem"] == "not found")
-    wrong_title_count = sum(1 for item in entries if item["problem"] == "wrong title")
 
     return {
         "ok": True,
@@ -342,7 +317,6 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
         "summary": {
             "total": len(entries),
             "not_found": not_found_count,
-            "wrong_title": wrong_title_count,
         },
         "entries": entries,
     }
@@ -353,10 +327,8 @@ def print_human_summary(payload: dict[str, Any]) -> None:
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
     total = int(summary.get("total") or 0)
     not_found = int(summary.get("not_found") or 0)
-    wrong_title = int(summary.get("wrong_title") or 0)
     print(f"Docs broken links for {scope}: {total} issue(s)")
     print(f"  not found: {not_found}")
-    print(f"  wrong title: {wrong_title}")
     for entry in payload.get("entries") or []:
         if not isinstance(entry, dict):
             continue
@@ -368,7 +340,7 @@ def print_human_summary(payload: dict[str, Any]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Audit Docs Viewer links for missing targets and title mismatches.")
+    parser = argparse.ArgumentParser(description="Audit Docs Viewer links for missing targets.")
     parser.add_argument("--scope", required=True, help="Docs scope to audit: studio or library")
     parser.add_argument("--repo-root", help="Override repo root auto-detection")
     parser.add_argument("--json", action="store_true", help="Print JSON payload")

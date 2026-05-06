@@ -2,7 +2,7 @@
 doc_id: scripts
 title: "Scripts"
 added_date: 2026-04-23
-last_updated: "2026-05-06 12:05"
+last_updated: "2026-05-06 15:41"
 parent_id: ""
 sort_order: 130
 ---
@@ -116,7 +116,7 @@ Catalogue/runtime maintenance:
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   Build scope-owned docs JSON for Studio and Library docs.
 - [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
-  Audit Studio or Library docs links for missing targets and strict title mismatches.
+  Audit Studio or Library docs links for missing targets.
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
   Run the local Docs Viewer create/archive/delete service with explicit write allowlists.
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)

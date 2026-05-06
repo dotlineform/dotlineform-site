@@ -2,13 +2,13 @@
 doc_id: docs-broken-links
 title: "Docs Broken Links"
 added_date: 2026-04-23
-last_updated: "2026-05-06 14:37"
+last_updated: "2026-05-06 15:41"
 parent_id: studio
 sort_order: 35
 ---
 # Docs Broken Links
 
-This page provides a Studio-facing audit for Docs Viewer links.
+This page provides a Studio-facing audit for Docs Viewer links that no longer resolve.
 
 Route:
 
@@ -21,18 +21,15 @@ Use it to run a broken-links check for one docs scope at a time:
 
 ## What It Checks
 
-The page reports two problem types:
+The page reports one problem type:
 
 - `not found`
   the link points at a docs page that does not exist
-- `wrong title`
-  the link resolves to a real docs page, but the visible link text does not exactly match that page's current title
 
 Current rule:
 
-- `wrong title` is a strict exact-title check
-- intentionally shortened labels such as `Overview` linking to `Docs Viewer Overview` are reported
-- historical site-change-log archive docs still report `not found`, but skip strict `wrong title` checks so preserved changelog wording does not dominate audit results
+- visible link text is not checked against the current target title
+- changed or shortened link labels are allowed because they can be useful corrections to outdated titles
 - same-doc fragment links are ignored
 - this includes `#section` and links back to the current docs page with a fragment
 
@@ -50,8 +47,6 @@ Current behavior:
 - `linked page`, `link`, and `from page` all open in a new tab
 - docs-viewer result links open with `mode=manage` so the target page can be inspected or edited directly
 - when the problem is `not found`, the first two links intentionally point at the failing target so the broken case is visible directly
-- issue filters render as count-bearing pills for `all`, `not found`, and `wrong title`
-- the default filter is `not found`
 - all result columns are sortable
 - the default sort is `from page` ascending
 

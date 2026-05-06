@@ -2,7 +2,7 @@
 doc_id: scripts-docs-broken-links
 title: "Docs Broken Links Audit"
 added_date: 2026-04-23
-last_updated: "2026-05-06 14:28"
+last_updated: "2026-05-06 15:41"
 parent_id: scripts
 sort_order: 15
 ---
@@ -16,21 +16,18 @@ Script:
 
 ## Purpose
 
-This script audits Docs Viewer links for one selected docs scope.
+This script audits Docs Viewer links for one selected docs scope and reports links whose targets no longer resolve.
 
-It reports two problem types:
+It reports one problem type:
 
 - `not found`
   the link target does not resolve to a published docs page
-- `wrong title`
-  the link resolves to a published docs page, but the visible link text does not exactly match that page's current title
 
-Current title rule:
+Current link-text rule:
 
-- title matching is strict
-- intentionally shortened labels are reported
-- Studio site-change-log archive docs with ids such as `site-change-log-2026-05` skip strict title matching so historical wording can remain intact
-- archive docs still report `not found` links
+- link text is not compared with the current target title
+- changed, shortened, or historically preserved labels are allowed
+- target resolution is still strict
 
 Ignored links:
 

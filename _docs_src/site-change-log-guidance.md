@@ -2,7 +2,7 @@
 doc_id: site-change-log-guidance
 title: "Site Change Log Guidance"
 added_date: 2026-03-31
-last_updated: "2026-05-06 14:48"
+last_updated: "2026-05-06 15:41"
 parent_id: ""
 sort_order: 230
 ---
@@ -252,7 +252,7 @@ Changes to higher-level structure, boundaries, or long-lived design decisions.
 Keep links in the current [Site Change Log](/docs/?scope=studio&doc=site-change-log) clean when writing new entries.
 
 For archive docs, preserve historical wording unless a link no longer resolves.
-Archived site change-log docs intentionally skip strict wrong-title audit checks, but missing targets are still reported by [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links).
+The [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links) reports missing targets only, so visible link text can keep useful historical context.
 
 When an archived entry points at a retired document:
 

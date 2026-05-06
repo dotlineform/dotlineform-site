@@ -10,13 +10,6 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 
-const FILTERS = Object.freeze([
-  { key: "all", problem: "", labelKey: "filter_all", fallback: "all" },
-  { key: "not_found", problem: "not found", labelKey: "filter_not_found", fallback: "not found" },
-  { key: "wrong_title", problem: "wrong title", labelKey: "filter_wrong_title", fallback: "wrong title" }
-]);
-
-const DEFAULT_FILTER_KEY = "not_found";
 const DEFAULT_SORT_KEY = "fromPage";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["problem", "fromPage", "linkedPage", "link"]);
@@ -91,27 +84,6 @@ function linkHtml(label, href) {
   return `<a class="docsBrokenLinksRow__link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`;
 }
 
-function problemFilterKey(problem) {
-  const normalized = normalizeText(problem);
-  const found = FILTERS.find((filter) => filter.problem === normalized);
-  return found ? found.key : "";
-}
-
-function countEntries(entries) {
-  const counts = { all: entries.length, not_found: 0, wrong_title: 0 };
-  entries.forEach((entry) => {
-    const key = problemFilterKey(entry.problem);
-    if (key && key !== "all") counts[key] = (counts[key] || 0) + 1;
-  });
-  return counts;
-}
-
-function filterEntries(entries, filterKey) {
-  const filter = FILTERS.find((item) => item.key === filterKey) || FILTERS[1];
-  if (!filter.problem) return entries.slice();
-  return entries.filter((entry) => normalizeText(entry.problem) === filter.problem);
-}
-
 function sortValue(entry, sortKey) {
   if (sortKey === "problem") return normalizeText(entry.problem);
   if (sortKey === "linkedPage") return normalizeText(entry.linked_page_text || entry.linked_page_url);
@@ -139,8 +111,7 @@ function compareEntries(a, b, sortKey, sortDir) {
 }
 
 function sortedVisibleEntries(state) {
-  return filterEntries(state.entries, state.filterKey)
-    .sort((a, b) => compareEntries(a, b, state.sortKey, state.sortDir));
+  return state.entries.slice().sort((a, b) => compareEntries(a, b, state.sortKey, state.sortDir));
 }
 
 function sortIndicator(state, sortKey) {
@@ -156,21 +127,6 @@ function sortButton(state, sortKey, label) {
       ${escapeHtml(label)}${sortIndicator(state, sortKey)}
     </button>
   `;
-}
-
-function renderFilters(state) {
-  const counts = countEntries(state.entries);
-  state.filterNode.innerHTML = FILTERS.map((filter) => {
-    const label = getStudioText(state.config, `docs_broken_links.${filter.labelKey}`, filter.fallback);
-    const count = Number(counts[filter.key] || 0);
-    const active = state.filterKey === filter.key;
-    return `
-      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-filter-key="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
-        ${escapeHtml(label)} [${count}]
-      </button>
-    `;
-  }).join("");
-  state.filterNode.hidden = false;
 }
 
 function renderRows(config, entries) {
@@ -203,14 +159,13 @@ function renderRows(config, entries) {
 }
 
 function renderResults(state) {
-  renderFilters(state);
   const entries = sortedVisibleEntries(state);
   if (!entries.length) {
     state.listWrap.innerHTML = "";
     state.listWrap.hidden = true;
     setText(
       state.emptyNode,
-      getStudioText(state.config, "docs_broken_links.filter_empty_state", "No broken links found for this filter.")
+      getStudioText(state.config, "docs_broken_links.empty_state", "No broken links found for this scope.")
     );
     state.emptyNode.hidden = false;
     return;
@@ -261,8 +216,6 @@ async function runAudit(state) {
   syncRouteBusyState(state);
   state.runButton.disabled = true;
   state.emptyNode.hidden = true;
-  state.filterNode.hidden = true;
-  state.filterNode.innerHTML = "";
   state.listWrap.hidden = true;
   state.listWrap.innerHTML = "";
   setStatus(
@@ -275,7 +228,6 @@ async function runAudit(state) {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.brokenLinks, { scope });
     const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
     state.entries = entries;
-    state.filterKey = DEFAULT_FILTER_KEY;
     state.sortKey = DEFAULT_SORT_KEY;
     state.sortDir = DEFAULT_SORT_DIR;
     if (!entries.length) {
@@ -289,8 +241,6 @@ async function runAudit(state) {
         getStudioText(state.config, "docs_broken_links.empty_state", "No broken links found for this scope.")
       );
       state.emptyNode.hidden = false;
-      state.filterNode.hidden = true;
-      state.filterNode.innerHTML = "";
       state.listWrap.hidden = true;
       state.listWrap.innerHTML = "";
       return;
@@ -305,8 +255,6 @@ async function runAudit(state) {
   } catch (error) {
     console.warn("docs_broken_links: audit failed", error);
     state.entries = [];
-    state.filterNode.hidden = true;
-    state.filterNode.innerHTML = "";
     state.listWrap.hidden = true;
     state.listWrap.innerHTML = "";
     setStatus(
@@ -329,11 +277,10 @@ async function init() {
   const scopeSelect = document.getElementById("docsBrokenLinksScope");
   const runButton = document.getElementById("docsBrokenLinksRun");
   const statusNode = document.getElementById("docsBrokenLinksStatus");
-  const filterNode = document.getElementById("docsBrokenLinksFilters");
   const listWrap = document.getElementById("docsBrokenLinksListWrap");
   const emptyNode = document.getElementById("docsBrokenLinksEmpty");
   if (
-    !bootStatus || !root || !introNode || !scopeLabel || !scopeSelect || !runButton || !statusNode || !filterNode || !listWrap || !emptyNode
+    !bootStatus || !root || !introNode || !scopeLabel || !scopeSelect || !runButton || !statusNode || !listWrap || !emptyNode
   ) {
     return;
   }
@@ -367,27 +314,17 @@ async function init() {
       scopeSelect,
       runButton,
       statusNode,
-      filterNode,
       listWrap,
       emptyNode,
       root,
       serviceAvailable,
       isRunning: false,
       entries: [],
-      filterKey: DEFAULT_FILTER_KEY,
       sortKey: DEFAULT_SORT_KEY,
       sortDir: DEFAULT_SORT_DIR
     };
     runButton.addEventListener("click", () => {
       runAudit(state).catch((error) => console.warn("docs_broken_links: unexpected run failure", error));
-    });
-    filterNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-filter-key]") : null;
-      if (!button) return;
-      const filterKey = normalizeText(button.getAttribute("data-filter-key"));
-      if (!FILTERS.some((filter) => filter.key === filterKey)) return;
-      state.filterKey = filterKey;
-      renderResults(state);
     });
     listWrap.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-sort-key]") : null;

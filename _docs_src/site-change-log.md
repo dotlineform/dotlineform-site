@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: "Site Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-06 14:48"
+last_updated: "2026-05-06 15:41"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-06] Removed title mismatches from Docs Broken Links
+
+**Status:** implemented
+
+**Area:** Docs / Validation
+
+**Summary:**
+The Docs Broken Links audit now reports only missing docs targets. The Studio route no longer renders title-mismatch filters or counts, and the CLI summary no longer includes `wrong title`.
+
+**Reason:**
+Visible link labels are not hard failures. They may intentionally shorten a title, preserve historical wording, or correct an outdated target title in context.
+
+**Files changed:**
+
+- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
+- [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_broken_links.py`
+- `scripts/docs/docs_management_server.py`
+
+**Impact:**
+The audit is focused on links that fail to resolve. Stale or intentionally different link text is left to editorial review rather than treated as a broken-link issue.
 
 ## [2026-05-06] Relaxed archived changelog title-link audits
 
@@ -38,8 +63,8 @@ Missing targets are still useful maintenance findings, but exact title warnings 
 - `scripts/docs/docs_broken_links.py`
 
 **Impact:**
-The Studio broken-links page and CLI now keep archived site-history checks focused on links that no longer resolve.
-Current docs and the current Site Change Log page still use the normal strict title check.
+This was superseded later on 2026-05-06 when title mismatches were removed from the broken-links audit altogether.
+The archived-doc exception is no longer needed, but this entry remains as historical context for the intermediate behavior.
 
 ## [2026-05-06] Split the site change log into dated archive docs
 

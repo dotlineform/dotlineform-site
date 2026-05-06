@@ -537,7 +537,7 @@
       "none": "none"
     },
     "docs_broken_links": {
-      "intro": "Run a strict docs-viewer link audit for Studio or Library docs.",
+      "intro": "Run a docs-viewer broken-link audit for Studio or Library docs.",
       "scope_label": "scope",
       "scope_option_studio": "studio",
       "scope_option_library": "library",
@@ -549,10 +549,6 @@
       "status_success_empty": "No broken links found.",
       "status_failed": "Failed to run docs broken-links audit.",
       "empty_state": "No broken links found for this scope.",
-      "filter_empty_state": "No broken links found for this filter.",
-      "filter_all": "all",
-      "filter_not_found": "not found",
-      "filter_wrong_title": "wrong title",
       "column_problem": "problem",
       "column_linked_page": "linked page",
       "column_link": "link",
