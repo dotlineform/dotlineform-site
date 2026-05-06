@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: "Library Scope"
 added_date: 2026-03-31
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-06 11:35"
 parent_id: data-models
 sort_order: 40
 ---
@@ -27,6 +27,9 @@ Current source and generated artifacts:
 - Library export configs:
   - `assets/studio/data/library_export_configs.json`
   - `assets/studio/data/library_export_configs.schema.json`
+- export/import adapter dispatch:
+  - `assets/studio/data/export_import_adapters.json`
+  - `assets/studio/data/export_import_adapters.schema.json`
 - local generated export artifacts:
   - `var/docs/exports/library/<export_id>-<timestamp>.json`
   - `var/docs/exports/library/<export_id>-<timestamp>.jsonl`
@@ -188,8 +191,9 @@ Current model:
 Current consumers:
 
 - `./scripts/docs/docs_import.py`
-- `GET /docs/library-import/files` on the docs-management server
-- `POST /docs/library-import/preview` on the docs-management server
+- `GET /docs/import/files` on the docs-management server
+- `POST /docs/import/preview` on the docs-management server
+- `POST /docs/import/apply` on the docs-management server
 - `/studio/library-import/`
 
 Current limits:

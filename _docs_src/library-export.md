@@ -2,7 +2,7 @@
 doc_id: library-export
 title: Library Export v1
 added_date: 2026-05-03
-last_updated: "2026-05-04"
+last_updated: "2026-05-06 11:35"
 ui_status: done
 parent_id: library
 sort_order: 25
@@ -325,7 +325,7 @@ Request shape:
 
 ```json
 {
-  "scope": "library",
+  "data_domain": "library",
   "config_id": "library-document-summaries",
   "target_format": "jsonl",
   "doc_ids": ["library"],
@@ -467,7 +467,7 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: implemented at `/studio/library-export/`. The page defaults to `scope=library`, exposes a scope selector for `library`, `catalogue`, and `analytics`, loads enabled export configs for the selected scope, reads the generated docs index for configured docs-backed scopes, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, runs exports through the local service endpoint, and displays counts, output path, warnings, and errors.
+Status: implemented at `/studio/library-export/`. The page defaults to `scope=library`, exposes a scope selector for `library`, `catalogue`, and `analytics`, loads enabled export configs for the selected scope, reads the generated docs index for configured docs-backed scopes, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, and runs exports through the local service endpoint using `data_domain` for adapter dispatch.
 
 Catalogue and Analytics are now valid UI workflow scopes, but they do not yet have enabled export configs or source data adapters.
 Their config shape, source indexes, record shapes, and import actions remain future design work.
@@ -476,7 +476,7 @@ Their config shape, source indexes, record shapes, and import actions remain fut
 
 Expose the export engine through a loopback-only Studio service endpoint with an allowlisted output directory and minimal logs.
 
-Status: implemented as `POST /docs/export` on `./scripts/docs/docs_management_server.py`; the Studio Library export page now runs exports through that endpoint and displays the output file, format, counts, and warnings.
+Status: implemented as `POST /docs/export` on `./scripts/docs/docs_management_server.py`; the Studio Library export page now runs exports through that endpoint with config-driven adapter dispatch and displays the output file, format, counts, and warnings.
 
 ### Task 7. Add Validation And Reporting
 

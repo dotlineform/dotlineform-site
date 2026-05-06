@@ -76,6 +76,43 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "viewable": True,
         },
     )
+    write_json(
+        repo_root / "assets/studio/data/export_import_adapters.json",
+        {
+            "schema_version": "export_import_adapters_v1",
+            "dispatch": [
+                {"data_domain": "library", "operation": "export", "adapter_id": "documents"},
+            ],
+            "adapters": [
+                {
+                    "id": "documents",
+                    "module": "documents",
+                    "label": "Documents",
+                    "data_domains": {
+                        "library": {
+                            "label": "Library",
+                            "scope": "library",
+                            "paths": {
+                                "export_root": "var/docs/exports/library",
+                                "staging_root": "var/docs/import-staging/library",
+                                "preview_root": "var/docs/import-preview/library",
+                                "source_root": "_docs_library_src",
+                            },
+                            "sources": {
+                                "docs_index": "assets/data/docs/scopes/library/index.json",
+                                "docs_payload_root": "assets/data/docs/scopes/library/by-id",
+                                "source_root": "_docs_library_src",
+                            },
+                            "config": {
+                                "export_configs_path": "assets/studio/data/library_export_configs.json",
+                            },
+                        }
+                    },
+                    "capabilities": ["export"],
+                }
+            ],
+        },
+    )
     return temp_dir
 
 
@@ -278,7 +315,7 @@ def test_docs_export_request_passes_target_format() -> None:
             result = docs_management_server.handle_docs_export(
                 repo_root,
                 {
-                    "scope": "library",
+                    "data_domain": "library",
                     "config_id": "library-document-summaries",
                     "doc_ids": ["library"],
                     "select_all": False,

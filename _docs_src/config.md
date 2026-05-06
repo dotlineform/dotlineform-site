@@ -2,7 +2,7 @@
 doc_id: config
 title: "Config"
 added_date: 2026-03-31
-last_updated: "2026-05-03 14:35"
+last_updated: "2026-05-06 11:35"
 parent_id: ""
 sort_order: 120
 ---
@@ -20,6 +20,8 @@ Use this section for:
 - build-owned search source-family config in `scripts/search/build_config.json`
 - Library export config patterns in `assets/studio/data/library_export_configs.json`
 - Library export config schema in `assets/studio/data/library_export_configs.schema.json`
+- export/import adapter dispatch in `assets/studio/data/export_import_adapters.json`
+- export/import adapter schema in `assets/studio/data/export_import_adapters.schema.json`
 
 This section is not for:
 
@@ -35,6 +37,7 @@ Read this section in this order:
 5. **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
 6. **[Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)**
 7. **[Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)**
+8. **[Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)**
 
 Related subsystem docs:
 

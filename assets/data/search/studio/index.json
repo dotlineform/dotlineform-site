@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c6ad2090a8ff5e209950b617274ce823",
-    "generated_at_utc": "2026-05-06T10:00:15Z",
-    "count": 183
+    "version": "blake2b-325dac975970400533a05ef9a93df859",
+    "generated_at_utc": "2026-05-06T10:16:08Z",
+    "count": 184
   },
   "entries": [
     {
@@ -190,10 +190,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-04 • Scripts",
+      "display_meta": "2026-05-06 11:35 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -201,12 +201,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-04",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "04"
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-04 2026 05 04"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -1081,44 +1083,48 @@
       "kind": "doc",
       "title": "Docs Export",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-04 • Scripts",
+      "display_meta": "2026-05-06 11:35 • Scripts",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
         "docs",
         "export",
         "docs export",
-        "2026-05-04",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "04"
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-04 2026 05 04"
+      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "library-export",
       "kind": "doc",
       "title": "Library Export v1",
       "href": "/docs/?scope=studio&doc=library-export",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-04 • Library",
+      "display_meta": "2026-05-06 11:35 • Library",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export v1",
         "v1",
-        "2026-05-04",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "04"
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "library-export library export library export v1 v1 2026-05-04 2026 05 04"
+      "search_text": "library-export library export library export v1 v1 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "site-request-local-docs-data-server-reads",
@@ -1201,22 +1207,24 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-05-04 • Scripts",
+      "display_meta": "2026-05-06 11:35 • Scripts",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
         "docs",
         "import",
         "docs import",
-        "2026-05-04",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "04"
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-04 2026 05 04"
+      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "site-request-docs-toolkit-extraction",
@@ -1271,10 +1279,10 @@
       "kind": "doc",
       "title": "Export Import Adapter Boundary Request",
       "href": "/docs/?scope=studio&doc=site-request-export-import-adapters",
-      "last_updated": "2026-05-06 10:59",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-06 10:59 • Change Requests",
+      "display_meta": "2026-05-06 11:35 • Change Requests",
       "search_terms": [
         "site-request-export-import-adapters",
         "site",
@@ -1288,14 +1296,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-06 10:59",
+        "2026-05-06 11:35",
         "2026",
         "05",
         "06",
-        "10",
-        "59"
+        "11",
+        "35"
       ],
-      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 10:59 2026 05 06 10 59"
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "scripts-run-checks",
@@ -1446,21 +1454,24 @@
       "kind": "doc",
       "title": "Library Import v1",
       "href": "/docs/?scope=studio&doc=library-import",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-05 • Library",
+      "display_meta": "2026-05-06 11:35 • Library",
       "search_terms": [
         "library-import",
         "library",
         "import",
         "library import v1",
         "v1",
-        "2026-05-05",
+        "2026-05-06 11:35",
         "2026",
-        "05"
+        "05",
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "library-import library import library import v1 v1 2026-05-05 2026 05"
+      "search_text": "library-import library import library import v1 v1 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "ui-primitive-list",
@@ -1578,21 +1589,24 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-05 • Config",
+      "display_meta": "2026-05-06 11:35 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-05",
+        "2026-05-06 11:35",
         "2026",
-        "05"
+        "05",
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-05 2026 05"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "data-models-studio",
@@ -1816,6 +1830,31 @@
       "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-03 22:38 2026 05 03 22 38"
     },
     {
+      "id": "config-export-import-adapters",
+      "kind": "doc",
+      "title": "Export Import Adapters",
+      "href": "/docs/?scope=studio&doc=config-export-import-adapters",
+      "last_updated": "2026-05-06 11:35",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-06 11:35 • Config",
+      "search_terms": [
+        "config-export-import-adapters",
+        "config",
+        "export",
+        "import",
+        "adapters",
+        "export import adapters",
+        "2026-05-06 11:35",
+        "2026",
+        "05",
+        "06",
+        "11",
+        "35"
+      ],
+      "search_text": "config-export-import-adapters config export import adapters export import adapters 2026-05-06 11:35 2026 05 06 11 35"
+    },
+    {
       "id": "site-request-studio-audits-page",
       "kind": "doc",
       "title": "Studio Audits Page Request",
@@ -1977,10 +2016,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-03 22:38 • Data Models",
+      "display_meta": "2026-05-06 11:35 • Data Models",
       "search_terms": [
         "data-models-library",
         "data",
@@ -1989,14 +2028,14 @@
         "library scope",
         "scope",
         "data models",
-        "2026-05-03 22:38",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "03",
-        "22",
-        "38"
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "data-models-library data models library library scope scope data models 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "data-models-library data models library library scope scope data models 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "ui-primitive-panel",
@@ -2250,10 +2289,10 @@
       "kind": "doc",
       "title": "Library Export/Import v2",
       "href": "/docs/?scope=studio&doc=library-import-export-v2",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-06 11:35",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-04 • Library",
+      "display_meta": "2026-05-06 11:35 • Library",
       "search_terms": [
         "library-import-export-v2",
         "library",
@@ -2261,12 +2300,14 @@
         "export",
         "v2",
         "library export/import v2",
-        "2026-05-04",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "04"
+        "06",
+        "11",
+        "35"
       ],
-      "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-04 2026 05 04"
+      "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "library-import-ui",
@@ -3416,18 +3457,18 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-05-03 14:35",
-      "display_meta": "2026-05-03 14:35",
+      "last_updated": "2026-05-06 11:35",
+      "display_meta": "2026-05-06 11:35",
       "search_terms": [
         "config",
-        "2026-05-03 14:35",
+        "2026-05-06 11:35",
         "2026",
         "05",
-        "03",
-        "14",
+        "06",
+        "11",
         "35"
       ],
-      "search_text": "config 2026-05-03 14:35 2026 05 03 14 35"
+      "search_text": "config 2026-05-06 11:35 2026 05 06 11 35"
     },
     {
       "id": "scripts-css-token-audit",

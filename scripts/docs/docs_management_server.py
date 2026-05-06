@@ -12,12 +12,11 @@ Endpoints:
   GET /health
   GET /capabilities
   GET /docs/import-html-files
-  GET /docs/library-import/files
+  GET /docs/import/files
   POST /docs/import-html
   POST /docs/export
-  POST /docs/library-import/preview
-  POST /docs/library-import/summary-apply
-  POST /docs/library-import/hierarchy-apply
+  POST /docs/import/preview
+  POST /docs/import/apply
   POST /docs/rebuild
   POST /docs/broken-links
   POST /docs/open-source
@@ -66,6 +65,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
+from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
 from docs_html_import import generate_import_preview, list_staged_html_files, resolve_staged_html  # noqa: E402
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
 from docs_watch_suppression import (  # noqa: E402
@@ -1026,7 +1026,8 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
 
 
 def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
+    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "export")
+    scope = normalize_scope(adapter.scope)
     config_id = str(body.get("config_id") or "").strip()
     if not config_id:
         raise ValueError("config_id is required")
@@ -1051,12 +1052,17 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         select_all=select_all,
         missing_summary_only=missing_summary_only,
         write=not dry_run,
+        config_path=adapter.config_path("export_configs_path").as_posix(),
         target_format=target_format or None,
     )
+    report["data_domain"] = adapter.data_domain
+    report["adapter_id"] = adapter.adapter_id
     log_event(
         repo_root,
         "docs-export",
         {
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
             "scope": scope,
             "config_id": config_id,
             "dry_run": dry_run,
@@ -1083,53 +1089,41 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
     return report
 
 
-DATA_WORKFLOW_SCOPES = {"analytics", "catalogue", "library"}
+def resolve_documents_adapter(repo_root: Path, data_domain: Any, operation: str) -> AdapterResolution:
+    adapter = resolve_adapter(repo_root, data_domain=data_domain, operation=operation)
+    if str(adapter.adapter.get("module") or "").strip() != "documents":
+        raise ValueError(f"adapter {adapter.adapter_id!r} is not implemented by the documents service")
+    return adapter
 
 
-def normalize_data_workflow_scope(raw_scope: Any) -> str:
-    scope = str(raw_scope or "library").strip().lower()
-    if scope not in DATA_WORKFLOW_SCOPES:
-        raise ValueError(f"data workflow scope must be one of: {', '.join(sorted(DATA_WORKFLOW_SCOPES))}")
-    return scope
-
-
-def data_workflow_scope_title(scope: str) -> str:
-    labels = {
-        "analytics": "Analytics",
-        "catalogue": "Catalogue",
-        "library": "Library",
-    }
-    return labels.get(scope, scope.title())
-
-
-def normalize_library_import_scope(raw_scope: Any) -> str:
-    scope = str(raw_scope or "library").strip().lower()
-    if scope != "library":
-        raise ValueError("Library import v1 only supports scope library")
-    return scope
-
-
-def handle_library_import_files(repo_root: Path, scope: str) -> Dict[str, Any]:
-    scope = normalize_data_workflow_scope(scope)
-    files = list_staged_import_files(repo_root, scope)
+def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str, Any]:
+    adapter = resolve_documents_adapter(repo_root, data_domain, "import_files")
+    scope = normalize_scope(adapter.scope)
+    staging_root = adapter.path("staging_root")
+    files = list_staged_import_files(repo_root, scope, staging_root=staging_root)
     log_event(
         repo_root,
         "docs-import-files",
         {
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
             "scope": scope,
             "count": len(files),
         },
     )
     return {
         "ok": True,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
         "scope": scope,
-        "staging_root": f"var/docs/import-staging/{scope}",
+        "staging_root": staging_root.as_posix(),
         "files": files,
     }
 
 
-def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_data_workflow_scope(body.get("scope"))
+def handle_documents_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "import_preview")
+    scope = normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -1138,17 +1132,23 @@ def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run
         repo_root=repo_root,
         scope=scope,
         staged_file=staged_filename,
+        staging_root=adapter.path("staging_root"),
     )
     report = render_markdown_previews(
         repo_root=repo_root,
         scope=scope,
         report=report,
         write=not dry_run,
+        preview_root=adapter.path("preview_root"),
     )
+    report["data_domain"] = adapter.data_domain
+    report["adapter_id"] = adapter.adapter_id
     log_event(
         repo_root,
         "docs-import-preview",
         {
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
             "scope": scope,
             "staged_filename": staged_filename,
             "dry_run": dry_run,
@@ -1172,7 +1172,7 @@ def handle_library_import_preview(repo_root: Path, body: Dict[str, Any], dry_run
         preview_count = len(report.get("preview_files", []))
         preview_file_label = "preview file" if preview_count == 1 else "preview files"
         report["summary_text"] = (
-            f"{action} {preview_count} {data_workflow_scope_title(scope)} import {preview_file_label}{suffix}."
+            f"{action} {preview_count} {adapter.label} import {preview_file_label}{suffix}."
         )
     return report
 
@@ -1241,8 +1241,13 @@ def selected_import_records(
     return selected_rows, skipped, selected_records
 
 
-def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_library_import_scope(body.get("scope"))
+def handle_documents_import_summary_apply(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: AdapterResolution,
+) -> Dict[str, Any]:
+    scope = normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -1251,7 +1256,12 @@ def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], d
         raise ValueError("record_indices must include at least one selected record")
     confirmed = bool(body.get("confirm"))
 
-    report = parse_staged_import(repo_root=repo_root, scope=scope, staged_file=staged_filename)
+    report = parse_staged_import(
+        repo_root=repo_root,
+        scope=scope,
+        staged_file=staged_filename,
+        staging_root=adapter.path("staging_root"),
+    )
     docs = load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     selected_rows, skipped, selected_records = selected_import_records(report, selected_indices)
@@ -1303,7 +1313,7 @@ def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], d
         backup_dir = make_backup_bundle(
             repo_root,
             scope,
-            "library-import-summary-apply",
+            "documents-summary-apply",
             rewrite_docs,
             {
                 "staged_filename": staged_filename,
@@ -1316,12 +1326,14 @@ def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], d
             scope,
             [doc.path for doc in rewrite_docs],
             lambda: [write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
-            suppression_reason="docs-library-import-summary-apply",
+            suppression_reason="docs-import-summary-apply",
             search_doc_ids=[item["doc_id"] for item in updates],
         )
 
     payload: Dict[str, Any] = {
         "ok": ok,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
         "scope": scope,
         "staged_filename": staged_filename,
         "operation": "summary_apply",
@@ -1348,11 +1360,13 @@ def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], d
     }
     action = "Validated" if not confirmed or dry_run else "Updated"
     suffix = " without writing" if not confirmed or dry_run else ""
-    payload["summary_text"] = f"{action} {len(updates)} Library summary update(s){suffix}."
+    payload["summary_text"] = f"{action} {len(updates)} {adapter.label} summary update(s){suffix}."
     log_event(
         repo_root,
-        "docs-library-import-summary-apply",
+        "docs-import-summary-apply",
         {
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
             "scope": scope,
             "staged_filename": staged_filename,
             "dry_run": dry_run,
@@ -1366,8 +1380,13 @@ def handle_library_import_summary_apply(repo_root: Path, body: Dict[str, Any], d
     return payload
 
 
-def handle_library_import_hierarchy_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_library_import_scope(body.get("scope"))
+def handle_documents_import_hierarchy_apply(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: AdapterResolution,
+) -> Dict[str, Any]:
+    scope = normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -1376,7 +1395,12 @@ def handle_library_import_hierarchy_apply(repo_root: Path, body: Dict[str, Any],
         raise ValueError("record_indices must include at least one selected record")
     confirmed = bool(body.get("confirm"))
 
-    report = parse_staged_import(repo_root=repo_root, scope=scope, staged_file=staged_filename)
+    report = parse_staged_import(
+        repo_root=repo_root,
+        scope=scope,
+        staged_file=staged_filename,
+        staging_root=adapter.path("staging_root"),
+    )
     docs = load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     selected_rows, skipped, selected_records = selected_import_records(report, selected_indices)
@@ -1431,7 +1455,7 @@ def handle_library_import_hierarchy_apply(repo_root: Path, body: Dict[str, Any],
         backup_dir = make_backup_bundle(
             repo_root,
             scope,
-            "library-import-hierarchy-apply",
+            "documents-hierarchy-apply",
             rewrite_docs,
             {
                 "staged_filename": staged_filename,
@@ -1444,12 +1468,14 @@ def handle_library_import_hierarchy_apply(repo_root: Path, body: Dict[str, Any],
             scope,
             [doc.path for doc in rewrite_docs],
             lambda: [write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
-            suppression_reason="docs-library-import-hierarchy-apply",
+            suppression_reason="docs-import-hierarchy-apply",
             search_doc_ids=[item["doc_id"] for item in updates],
         )
 
     payload: Dict[str, Any] = {
         "ok": ok,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
         "scope": scope,
         "staged_filename": staged_filename,
         "operation": "hierarchy_apply",
@@ -1479,11 +1505,13 @@ def handle_library_import_hierarchy_apply(repo_root: Path, body: Dict[str, Any],
     }
     action = "Validated" if not confirmed or dry_run else "Updated"
     suffix = " without writing" if not confirmed or dry_run else ""
-    payload["summary_text"] = f"{action} {len(updates)} Library hierarchy change(s){suffix}."
+    payload["summary_text"] = f"{action} {len(updates)} {adapter.label} hierarchy change(s){suffix}."
     log_event(
         repo_root,
-        "docs-library-import-hierarchy-apply",
+        "docs-import-hierarchy-apply",
         {
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
             "scope": scope,
             "staged_filename": staged_filename,
             "dry_run": dry_run,
@@ -1497,6 +1525,16 @@ def handle_library_import_hierarchy_apply(repo_root: Path, body: Dict[str, Any],
         },
     )
     return payload
+
+
+def handle_documents_import_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    operation = str(body.get("operation") or "").strip()
+    if operation not in {"summary_apply", "hierarchy_apply"}:
+        raise ValueError("operation must be summary_apply or hierarchy_apply")
+    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), operation)
+    if operation == "summary_apply":
+        return handle_documents_import_summary_apply(repo_root, body, dry_run, adapter)
+    return handle_documents_import_hierarchy_apply(repo_root, body, dry_run, adapter)
 
 
 def imported_body_markdown(preview: Dict[str, Any]) -> str:
@@ -2635,9 +2673,9 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                     },
                 )
                 return
-            if parsed.path == "/docs/library-import/files":
-                scope = normalize_data_workflow_scope(query_param(self, "scope") or "library")
-                write_response(self, HTTPStatus.OK, handle_library_import_files(self.app["repo_root"], scope))
+            if parsed.path == "/docs/import/files":
+                data_domain = query_param(self, "data_domain")
+                write_response(self, HTTPStatus.OK, handle_documents_import_files(self.app["repo_root"], data_domain))
                 return
             error_response(self, HTTPStatus.NOT_FOUND, "Not found")
         except FileNotFoundError as error:
@@ -2673,16 +2711,12 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 payload = handle_import_html(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
-            if self.path == "/docs/library-import/preview":
-                payload = handle_library_import_preview(repo_root, body, dry_run)
+            if self.path == "/docs/import/preview":
+                payload = handle_documents_import_preview(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
                 return
-            if self.path == "/docs/library-import/summary-apply":
-                payload = handle_library_import_summary_apply(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
-                return
-            if self.path == "/docs/library-import/hierarchy-apply":
-                payload = handle_library_import_hierarchy_apply(repo_root, body, dry_run)
+            if self.path == "/docs/import/apply":
+                payload = handle_documents_import_apply(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
                 return
             if self.path == "/docs/update-metadata":

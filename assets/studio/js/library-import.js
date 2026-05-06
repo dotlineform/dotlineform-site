@@ -483,7 +483,7 @@ function syncApplyActionState(state) {
 }
 
 async function loadImportFiles(scope) {
-  const url = `${DOCS_MANAGEMENT_ENDPOINTS.libraryImportFiles}?scope=${encodeURIComponent(scope)}`;
+  const url = `${DOCS_MANAGEMENT_ENDPOINTS.importFiles}?data_domain=${encodeURIComponent(scope)}`;
   const payload = await getJson(url);
   return Array.isArray(payload.files) ? payload.files : [];
 }
@@ -513,8 +513,8 @@ async function runPreview(state) {
   );
 
   try {
-    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportPreview, {
-      scope: state.scope,
+    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importPreview, {
+      data_domain: state.scope,
       staged_filename: file.filename
     });
     renderResult(state, payload, false);
@@ -692,8 +692,9 @@ async function runSummaryApply(state) {
   );
 
   try {
-    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportSummaryApply, {
-      scope: state.scope,
+    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+      data_domain: state.scope,
+      operation: "summary_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
@@ -734,8 +735,9 @@ async function runSummaryApply(state) {
       "",
       getStudioText(state.config, "library_import.summary_apply_running_status", "Updating selected summaries...")
     );
-    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportSummaryApply, {
-      scope: state.scope,
+    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+      data_domain: state.scope,
+      operation: "summary_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true
@@ -783,8 +785,9 @@ async function runHierarchyApply(state) {
   );
 
   try {
-    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportHierarchyApply, {
-      scope: state.scope,
+    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+      data_domain: state.scope,
+      operation: "hierarchy_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
@@ -825,8 +828,9 @@ async function runHierarchyApply(state) {
       "",
       getStudioText(state.config, "library_import.hierarchy_apply_running_status", "Updating selected hierarchy...")
     );
-    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.libraryImportHierarchyApply, {
-      scope: state.scope,
+    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+      data_domain: state.scope,
+      operation: "hierarchy_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true

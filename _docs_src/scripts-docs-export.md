@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: "Docs Export"
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-04"
+last_updated: "2026-05-06 11:35"
 parent_id: scripts
 sort_order: 25
 ---
@@ -220,4 +220,4 @@ Warnings report non-blocking context:
 The static config schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
 The Studio page runs the same export engine through the docs-management local endpoint `POST /docs/export`.
-That endpoint writes with the same `var/docs/exports/` allowlist and returns the same report shape used by the CLI.
+That endpoint first resolves `data_domain` and `operation` through `assets/studio/data/export_import_adapters.json`, then writes with the same `var/docs/exports/` allowlist and returns the same report shape used by the CLI.

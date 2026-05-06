@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dotlineform.com/schemas/export_import_adapters.schema.json",
+  "title": "Export/import adapter registry",
+  "type": "object",
+  "required": ["schema_version", "dispatch", "adapters"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "export_import_adapters_v1"
+    },
+    "dispatch": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["data_domain", "operation", "adapter_id"],
+        "additionalProperties": false,
+        "properties": {
+          "data_domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "adapter_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "module", "label", "data_domains", "capabilities"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "module": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data_domains": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "required": ["label", "scope", "paths", "sources", "config"],
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "paths": {
+                  "type": "object",
+                  "required": ["export_root", "staging_root", "preview_root", "source_root"],
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "sources": {
+                  "type": "object",
+                  "required": ["docs_index", "docs_payload_root", "source_root"],
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "config": {
+                  "type": "object",
+                  "required": ["export_configs_path"],
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "capabilities": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

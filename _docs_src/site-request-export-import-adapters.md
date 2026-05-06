@@ -2,7 +2,7 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 10:59"
+last_updated: "2026-05-06 11:35"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -535,7 +535,7 @@ Task 2 benefits and risks:
 
 Status:
 
-- pending
+- completed
 
 Refactor the current Library workflow so document-specific behavior is owned by the `documents` adapter with Library configuration.
 
@@ -545,6 +545,25 @@ Expected outcome:
 - Library document behavior remains available through the neutral shared routes
 - status/result UI remains familiar
 - source writes still target `_docs_library_src/*.md`
+
+Implementation note:
+
+- added `assets/studio/data/export_import_adapters.json` and `assets/studio/data/export_import_adapters.schema.json`
+- added config-driven dispatch in `scripts/docs/export_import_adapters.py`
+- moved active import file listing, preview, summary apply, and hierarchy apply calls to neutral docs-management endpoints:
+  - `GET /docs/import/files?data_domain=library`
+  - `POST /docs/import/preview`
+  - `POST /docs/import/apply`
+- changed export calls to send `data_domain` so `POST /docs/export` resolves the `documents` adapter before running the Library export config
+- removed the Library-named import service endpoints rather than keeping aliases
+- kept the current Studio page identity and result UI stable for this task; generic page naming belongs with the shared shell route refactor
+
+Task 3 benefits and risks:
+
+- Benefit: import/export dispatch now has an explicit adapter registry instead of route-level Library assumptions.
+- Benefit: removed import endpoint compatibility aliases now, while the implementation surface is still small.
+- Benefit: the document parser and source-apply logic are reachable only after config resolves Library to the `documents` adapter.
+- Risk: the browser page still has Library-specific DOM ids and copy keys until the shared shell route refactor handles presentation naming.
 
 ### Task 4. Normalize Or Refactor Workflow Folders
 

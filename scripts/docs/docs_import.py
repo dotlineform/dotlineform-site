@@ -255,28 +255,30 @@ def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any
     }
 
 
-def resolve_staged_path(repo_root: Path, scope: str, staged_file: str) -> Path:
+def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_root: Path | str | None = None) -> Path:
     normalized_scope = normalize_text(scope).lower()
     if normalized_scope not in SUPPORTED_SCOPES:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
+    base_root = Path(staging_root) if staging_root else STAGING_ROOT / normalized_scope
     raw_path = Path(staged_file)
-    path = raw_path if raw_path.is_absolute() else repo_root / STAGING_ROOT / normalized_scope / raw_path
+    path = raw_path if raw_path.is_absolute() else repo_root / base_root / raw_path
     resolved = path.resolve()
-    allowed_root = (repo_root / STAGING_ROOT / normalized_scope).resolve()
+    allowed_root = (repo_root / base_root).resolve()
     if resolved != allowed_root and allowed_root not in resolved.parents:
-        raise ValueError(f"staged file must stay under {STAGING_ROOT / normalized_scope}")
+        raise ValueError(f"staged file must stay under {base_root}")
     return resolved
 
 
-def list_staged_import_files(repo_root: Path, scope: str) -> list[dict[str, Any]]:
+def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
     normalized_scope = normalize_text(scope).lower()
     if normalized_scope not in SUPPORTED_SCOPES:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
-    staging_root = (repo_root / STAGING_ROOT / normalized_scope).resolve()
-    if not staging_root.exists():
+    base_root = Path(staging_root) if staging_root else STAGING_ROOT / normalized_scope
+    resolved_staging_root = (repo_root / base_root).resolve()
+    if not resolved_staging_root.exists():
         return []
     files: list[dict[str, Any]] = []
-    for path in sorted(staging_root.iterdir()):
+    for path in sorted(resolved_staging_root.iterdir()):
         if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
             continue
         stat = path.stat()
@@ -292,17 +294,18 @@ def list_staged_import_files(repo_root: Path, scope: str) -> list[dict[str, Any]
     return files
 
 
-def resolve_preview_path(repo_root: Path, scope: str, filename: str) -> Path:
+def resolve_preview_path(repo_root: Path, scope: str, filename: str, preview_root: Path | str | None = None) -> Path:
     normalized_scope = normalize_text(scope).lower()
     if normalized_scope not in SUPPORTED_SCOPES:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
     relative = Path(filename)
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"unsafe preview filename: {filename}")
-    path = (repo_root / PREVIEW_ROOT / normalized_scope / relative).resolve()
-    allowed_root = (repo_root / PREVIEW_ROOT / normalized_scope).resolve()
+    base_root = Path(preview_root) if preview_root else PREVIEW_ROOT / normalized_scope
+    path = (repo_root / base_root / relative).resolve()
+    allowed_root = (repo_root / base_root).resolve()
     if path != allowed_root and allowed_root not in path.parents:
-        raise ValueError(f"preview file must stay under {PREVIEW_ROOT / normalized_scope}")
+        raise ValueError(f"preview file must stay under {base_root}")
     return path
 
 
@@ -958,6 +961,7 @@ def render_markdown_previews(
     report: dict[str, Any],
     write: bool,
     generated_at: str | None = None,
+    preview_root: Path | str | None = None,
 ) -> dict[str, Any]:
     if not report.get("ok"):
         report["preview_files"] = []
@@ -972,7 +976,7 @@ def render_markdown_previews(
 
     if has_relationship_metadata(records):
         filename = relationship_preview_filename(report, timestamp_suffix)
-        path = resolve_preview_path(repo_root, scope, filename)
+        path = resolve_preview_path(repo_root, scope, filename, preview_root)
         content = render_relationship_preview(report, generated)
         preview_files.append({"path": relative_path(repo_root, path), "record_count": len(records), "kind": "relationship_tree"})
         if write:
@@ -982,7 +986,7 @@ def render_markdown_previews(
     seen: dict[str, int] = {}
     for record in records:
         filename = record_preview_filename(record, seen, timestamp_suffix)
-        path = resolve_preview_path(repo_root, scope, filename)
+        path = resolve_preview_path(repo_root, scope, filename, preview_root)
         if import_type == "full_document_content":
             content = render_full_content_preview(report, record, generated)
         else:
@@ -1004,11 +1008,17 @@ def render_markdown_previews(
     return report
 
 
-def parse_staged_import(*, repo_root: Path, scope: str, staged_file: str) -> dict[str, Any]:
+def parse_staged_import(
+    *,
+    repo_root: Path,
+    scope: str,
+    staged_file: str,
+    staging_root: Path | str | None = None,
+) -> dict[str, Any]:
     normalized_scope = normalize_text(scope).lower()
     report = empty_report(repo_root, normalized_scope, staged_file)
     try:
-        path = resolve_staged_path(repo_root, normalized_scope, staged_file)
+        path = resolve_staged_path(repo_root, normalized_scope, staged_file, staging_root)
     except ValueError as exc:
         report["issues"].append(issue("error", "unsafe_staged_path", str(exc)))
         report["counts"]["errors"] = 1

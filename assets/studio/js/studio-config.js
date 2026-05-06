@@ -52,6 +52,7 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_lookup_work_detail_base: "/assets/studio/data/catalogue_lookup/work_details/",
         catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/",
         catalogue_field_registry: "/assets/studio/data/catalogue_field_registry.json",
+        export_import_adapters: "/assets/studio/data/export_import_adapters.json",
         library_export_configs: "/assets/studio/data/library_export_configs.json"
       },
       site: {

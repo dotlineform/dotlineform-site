@@ -104,7 +104,7 @@ def install_mock_docs_service(page) -> None:
         parsed = urlparse(route.request.url)
         if parsed.path == "/health":
             payload = {"ok": True}
-        elif parsed.path == "/docs/library-import/files":
+        elif parsed.path == "/docs/import/files":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -119,7 +119,7 @@ def install_mock_docs_service(page) -> None:
                     }
                 ],
             }
-        elif parsed.path == "/docs/library-import/preview":
+        elif parsed.path == "/docs/import/preview":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -186,7 +186,7 @@ def install_mock_docs_service(page) -> None:
                     }
                 ],
             }
-        elif parsed.path == "/docs/library-import/summary-apply":
+        elif parsed.path == "/docs/import/apply":
             request_body = {}
             try:
                 post_data_json = route.request.post_data_json
@@ -196,80 +196,72 @@ def install_mock_docs_service(page) -> None:
                 if callable(post_data):
                     post_data = post_data()
                 request_body = json.loads(post_data or "{}")
-            payload = {
-                "ok": True,
-                "scope": "library",
-                "staged_filename": "summaries.jsonl",
-                "operation": "summary_apply",
-                "confirmed": bool(request_body.get("confirm")),
-                "dry_run": False,
-                "selected_records": [
-                    {"record_index": 0, "doc_id": "library"},
-                    {"record_index": 1, "doc_id": "alpha"},
-                    {"record_index": 2, "doc_id": "beta"},
-                ],
-                "updates": [
-                    {"record_index": 0, "doc_id": "library"},
-                    {"record_index": 1, "doc_id": "alpha"},
-                ],
-                "skipped": [
-                    {"record_index": 2, "doc_id": "beta", "reason": "missing_summary"}
-                ],
-                "errors": [],
-                "warnings": [],
-                "counts": {"selected": 3, "updates": 2, "skipped": 1, "errors": 0, "warnings": 1},
-                "backup_dir": "var/docs/backups/library/20260504-120600-library-import-summary-apply",
-                "rebuild": {"ok": True},
-                "summary_apply_written": bool(request_body.get("confirm")),
-                "requires_confirmation": not bool(request_body.get("confirm")),
-                "summary_text": "Updated 2 Library summary update(s)." if request_body.get("confirm") else "Validated 2 Library summary update(s) without writing.",
-            }
-        elif parsed.path == "/docs/library-import/hierarchy-apply":
-            request_body = {}
-            try:
-                post_data_json = route.request.post_data_json
-                request_body = post_data_json() if callable(post_data_json) else post_data_json
-            except (AttributeError, json.JSONDecodeError):
-                post_data = getattr(route.request, "post_data", "") or "{}"
-                if callable(post_data):
-                    post_data = post_data()
-                request_body = json.loads(post_data or "{}")
-            payload = {
-                "ok": True,
-                "scope": "library",
-                "staged_filename": "summaries.jsonl",
-                "operation": "hierarchy_apply",
-                "confirmed": bool(request_body.get("confirm")),
-                "dry_run": False,
-                "selected_records": [
-                    {"record_index": 0, "doc_id": "library"},
-                    {"record_index": 1, "doc_id": "alpha"},
-                    {"record_index": 2, "doc_id": "beta"},
-                ],
-                "updates": [
-                    {"record_index": 1, "doc_id": "alpha", "from_parent_id": "", "to_parent_id": "library"}
-                ],
-                "unchanged": [
-                    {"record_index": 0, "doc_id": "library", "parent_id": ""}
-                ],
-                "skipped": [],
-                "errors": [],
-                "warnings": [
-                    {
-                        "record_index": 2,
-                        "doc_id": "beta",
-                        "parent_id": "external-root",
-                        "reason": "unknown_parent_id",
-                        "message": "parent_id is not a current Library source doc and will render at root level: external-root",
-                    }
-                ],
-                "counts": {"selected": 3, "changed": 1, "updates": 1, "unchanged": 1, "skipped": 0, "errors": 0, "warnings": 1},
-                "backup_dir": "var/docs/backups/library/20260504-120700-library-import-hierarchy-apply",
-                "rebuild": {"ok": True},
-                "hierarchy_apply_written": bool(request_body.get("confirm")),
-                "requires_confirmation": not bool(request_body.get("confirm")),
-                "summary_text": "Updated 1 Library hierarchy change(s)." if request_body.get("confirm") else "Validated 1 Library hierarchy change(s) without writing.",
-            }
+            if request_body.get("operation") == "hierarchy_apply":
+                payload = {
+                    "ok": True,
+                    "scope": "library",
+                    "staged_filename": "summaries.jsonl",
+                    "operation": "hierarchy_apply",
+                    "confirmed": bool(request_body.get("confirm")),
+                    "dry_run": False,
+                    "selected_records": [
+                        {"record_index": 0, "doc_id": "library"},
+                        {"record_index": 1, "doc_id": "alpha"},
+                        {"record_index": 2, "doc_id": "beta"},
+                    ],
+                    "updates": [
+                        {"record_index": 1, "doc_id": "alpha", "from_parent_id": "", "to_parent_id": "library"}
+                    ],
+                    "unchanged": [
+                        {"record_index": 0, "doc_id": "library", "parent_id": ""}
+                    ],
+                    "skipped": [],
+                    "errors": [],
+                    "warnings": [
+                        {
+                            "record_index": 2,
+                            "doc_id": "beta",
+                            "parent_id": "external-root",
+                            "reason": "unknown_parent_id",
+                            "message": "parent_id is not a current Library source doc and will render at root level: external-root",
+                        }
+                    ],
+                    "counts": {"selected": 3, "changed": 1, "updates": 1, "unchanged": 1, "skipped": 0, "errors": 0, "warnings": 1},
+                    "backup_dir": "var/docs/backups/library/20260504-120700-documents-hierarchy-apply",
+                    "rebuild": {"ok": True},
+                    "hierarchy_apply_written": bool(request_body.get("confirm")),
+                    "requires_confirmation": not bool(request_body.get("confirm")),
+                    "summary_text": "Updated 1 Library hierarchy change(s)." if request_body.get("confirm") else "Validated 1 Library hierarchy change(s) without writing.",
+                }
+            else:
+                payload = {
+                    "ok": True,
+                    "scope": "library",
+                    "staged_filename": "summaries.jsonl",
+                    "operation": "summary_apply",
+                    "confirmed": bool(request_body.get("confirm")),
+                    "dry_run": False,
+                    "selected_records": [
+                        {"record_index": 0, "doc_id": "library"},
+                        {"record_index": 1, "doc_id": "alpha"},
+                        {"record_index": 2, "doc_id": "beta"},
+                    ],
+                    "updates": [
+                        {"record_index": 0, "doc_id": "library"},
+                        {"record_index": 1, "doc_id": "alpha"},
+                    ],
+                    "skipped": [
+                        {"record_index": 2, "doc_id": "beta", "reason": "missing_summary"}
+                    ],
+                    "errors": [],
+                    "warnings": [],
+                    "counts": {"selected": 3, "updates": 2, "skipped": 1, "errors": 0, "warnings": 1},
+                    "backup_dir": "var/docs/backups/library/20260504-120600-documents-summary-apply",
+                    "rebuild": {"ok": True},
+                    "summary_apply_written": bool(request_body.get("confirm")),
+                    "requires_confirmation": not bool(request_body.get("confirm")),
+                    "summary_text": "Updated 2 Library summary update(s)." if request_body.get("confirm") else "Validated 2 Library summary update(s) without writing.",
+                }
         else:
             payload = {"ok": False, "error": f"Unhandled mock route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))

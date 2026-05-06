@@ -8,6 +8,31 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-05-06] Moved document import/export dispatch behind adapter config
+
+**Status:** implemented
+
+**Area:** Studio / Data workflows
+
+**Summary:**
+Added the explicit export/import adapter registry and routed the Library document export/import behavior through the configured `documents` adapter.
+The active import service endpoints are now neutral dispatch endpoints instead of Library-named service routes.
+
+**Reason:**
+The first implementation should target the shell-adapter architecture directly so old route names and migration artifacts do not become long-lived compatibility layers.
+
+**Files changed:**
+
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Library Import](/docs/?scope=studio&doc=library-import)
+- [Library Export](/docs/?scope=studio&doc=library-export)
+- [Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
+**Impact:**
+`data_domain` and `operation` now resolve exactly one configured adapter before the docs-management service runs document-specific import/export logic.
+Unconfigured domains fail closed, and the removed Library-named import endpoints are not retained as aliases.
+
 ## [2026-05-05] Added export/import adapter boundary request
 
 **Status:** proposed

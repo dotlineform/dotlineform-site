@@ -1,0 +1,64 @@
+{
+  "schema_version": "export_import_adapters_v1",
+  "dispatch": [
+    {
+      "data_domain": "library",
+      "operation": "export",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "import_files",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "import_preview",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "summary_apply",
+      "adapter_id": "documents"
+    },
+    {
+      "data_domain": "library",
+      "operation": "hierarchy_apply",
+      "adapter_id": "documents"
+    }
+  ],
+  "adapters": [
+    {
+      "id": "documents",
+      "module": "documents",
+      "label": "Documents",
+      "data_domains": {
+        "library": {
+          "label": "Library",
+          "scope": "library",
+          "paths": {
+            "export_root": "var/docs/exports/library",
+            "staging_root": "var/docs/import-staging/library",
+            "preview_root": "var/docs/import-preview/library",
+            "source_root": "_docs_library_src"
+          },
+          "sources": {
+            "docs_index": "assets/data/docs/scopes/library/index.json",
+            "docs_payload_root": "assets/data/docs/scopes/library/by-id",
+            "source_root": "_docs_library_src"
+          },
+          "config": {
+            "export_configs_path": "assets/studio/data/library_export_configs.json"
+          }
+        }
+      },
+      "capabilities": [
+        "export",
+        "import_files",
+        "import_preview",
+        "summary_apply",
+        "hierarchy_apply"
+      ]
+    }
+  ]
+}

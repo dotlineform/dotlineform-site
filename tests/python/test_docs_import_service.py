@@ -106,6 +106,59 @@ def make_repo() -> tempfile.TemporaryDirectory:
         + "\n",
         encoding="utf-8",
     )
+    adapter_path = root / "assets/studio/data/export_import_adapters.json"
+    adapter_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "export_import_adapters_v1",
+                "dispatch": [
+                    {"data_domain": "library", "operation": "export", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "import_files", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "import_preview", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "summary_apply", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "hierarchy_apply", "adapter_id": "documents"},
+                ],
+                "adapters": [
+                    {
+                        "id": "documents",
+                        "module": "documents",
+                        "label": "Documents",
+                        "data_domains": {
+                            "library": {
+                                "label": "Library",
+                                "scope": "library",
+                                "paths": {
+                                    "export_root": "var/docs/exports/library",
+                                    "staging_root": "var/docs/import-staging/library",
+                                    "preview_root": "var/docs/import-preview/library",
+                                    "source_root": "_docs_library_src",
+                                },
+                                "sources": {
+                                    "docs_index": "assets/data/docs/scopes/library/index.json",
+                                    "docs_payload_root": "assets/data/docs/scopes/library/by-id",
+                                    "source_root": "_docs_library_src",
+                                },
+                                "config": {
+                                    "export_configs_path": "assets/studio/data/library_export_configs.json",
+                                },
+                            }
+                        },
+                        "capabilities": [
+                            "export",
+                            "import_files",
+                            "import_preview",
+                            "summary_apply",
+                            "hierarchy_apply",
+                        ],
+                    }
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return temp_dir
 
 
@@ -150,7 +203,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
         write_staged(root, "relationships.json", {"documents": []})
         (root / "var/docs/import-staging/library/notes.txt").write_text("ignore\n", encoding="utf-8")
-        payload = docs_management.handle_library_import_files(root, "library")
+        payload = docs_management.handle_documents_import_files(root, "library")
 
     assert payload["ok"] is True
     assert payload["scope"] == "library"
@@ -167,9 +220,9 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             "summaries.jsonl",
             [{"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary."}],
         )
-        payload = docs_management.handle_library_import_preview(
+        payload = docs_management.handle_documents_import_preview(
             root,
-            {"scope": "library", "staged_filename": "summaries.jsonl"},
+            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl"},
             dry_run=False,
         )
         preview_paths = sorted((root / "var/docs/import-preview/library").glob("alpha-*.md"))
@@ -191,9 +244,9 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
-        payload = docs_management.handle_library_import_preview(
+        payload = docs_management.handle_documents_import_preview(
             root,
-            {"scope": "library", "staged_filename": "summaries.jsonl"},
+            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl"},
             dry_run=True,
         )
         preview_exists = list((root / "var/docs/import-preview/library").glob("alpha-*.md"))
@@ -206,25 +259,22 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
     assert preview_exists == []
 
 
-def test_library_import_preview_supports_catalogue_staging_scope() -> None:
+def test_documents_import_rejects_unconfigured_data_domain() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "works.jsonl", [{"doc_id": "work-1", "title": "Work 1"}], scope="catalogue")
-        files_payload = docs_management.handle_library_import_files(root, "catalogue")
-        preview_payload = docs_management.handle_library_import_preview(
-            root,
-            {"scope": "catalogue", "staged_filename": "works.jsonl"},
-            dry_run=True,
-        )
+        try:
+            docs_management.handle_documents_import_preview(
+                root,
+                {"data_domain": "catalogue", "staged_filename": "works.jsonl"},
+                dry_run=True,
+            )
+        except ValueError as error:
+            message = str(error)
+        else:
+            raise AssertionError("unconfigured data domain should fail closed")
 
-    assert files_payload["scope"] == "catalogue"
-    assert files_payload["staging_root"] == "var/docs/import-staging/catalogue"
-    assert [item["filename"] for item in files_payload["files"]] == ["works.jsonl"]
-    assert preview_payload["ok"] is True
-    assert preview_payload["scope"] == "catalogue"
-    assert preview_payload["preview_written"] is False
-    assert preview_payload["preview_files"][0]["path"].startswith("var/docs/import-preview/catalogue/work-1-")
-    assert preview_payload["summary_text"] == "Validated 1 Catalogue import preview file without writing."
+    assert "no export/import adapter configured for catalogue/import_preview" in message
 
 
 def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
@@ -233,7 +283,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
         singular = docs_management.handle_docs_export(
             root,
             {
-                "scope": "library",
+                "data_domain": "library",
                 "config_id": "library-document-summaries",
                 "doc_ids": ["alpha"],
                 "select_all": False,
@@ -244,7 +294,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
         plural = docs_management.handle_docs_export(
             root,
             {
-                "scope": "library",
+                "data_domain": "library",
                 "config_id": "library-document-summaries",
                 "doc_ids": ["library", "alpha"],
                 "select_all": False,
@@ -269,9 +319,9 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
                 {"doc_id": "missing", "title": "Missing", "summary": "Missing summary."},
             ],
         )
-        payload = docs_management.handle_library_import_summary_apply(
+        payload = docs_management.handle_documents_import_apply(
             root,
-            {"scope": "library", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -301,9 +351,9 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
                 },
             )
             write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
-            payload = docs_management.handle_library_import_summary_apply(
+            payload = docs_management.handle_documents_import_apply(
                 root,
-                {"scope": "library", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
+                {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
                 dry_run=False,
             )
             source_text = (root / "_docs_library_src/alpha.md").read_text(encoding="utf-8")
@@ -320,7 +370,7 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
     assert payload["backup_dir"].startswith("var/docs/backups/")
     assert backup_exists
     assert backup_source_exists
-    assert manifest["operation"] == "library-import-summary-apply"
+    assert manifest["operation"] == "documents-summary-apply"
     assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
     assert "summary: New summary." in source_text
 
@@ -338,9 +388,9 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
                 {"doc_id": "library", "title": "Library"},
             ],
         )
-        payload = docs_management.handle_library_import_summary_apply(
+        payload = docs_management.handle_documents_import_apply(
             root,
-            {"scope": "library", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -363,9 +413,9 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
                 {"doc_id": "missing", "title": "Missing", "parent_id": "library"},
             ],
         )
-        payload = docs_management.handle_library_import_hierarchy_apply(
+        payload = docs_management.handle_documents_import_apply(
             root,
-            {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -402,9 +452,9 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
                     {"doc_id": "alpha", "title": "Alpha", "parent_id": ""},
                 ],
             )
-            payload = docs_management.handle_library_import_hierarchy_apply(
+            payload = docs_management.handle_documents_import_apply(
                 root,
-                {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
+                {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
                 dry_run=False,
             )
             alpha_text = (root / "_docs_library_src/alpha.md").read_text(encoding="utf-8")
@@ -418,7 +468,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
     assert payload["hierarchy_apply_written"] is True
     assert payload["counts"]["changed"] == 1
     assert payload["backup_dir"].startswith("var/docs/backups/")
-    assert manifest["operation"] == "library-import-hierarchy-apply"
+    assert manifest["operation"] == "documents-hierarchy-apply"
     assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
     assert 'parent_id: ""' in alpha_text
     assert "sort_order: 30" in alpha_text
@@ -430,9 +480,9 @@ def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_wri
         root = Path(temp)
         write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
         write_staged(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
-        payload = docs_management.handle_library_import_hierarchy_apply(
+        payload = docs_management.handle_documents_import_apply(
             root,
-            {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
+            {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
             dry_run=True,
         )
         source_text = (root / "_docs_library_src/alpha.md").read_text(encoding="utf-8")
@@ -458,9 +508,9 @@ def test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows() -> 
                 {"doc_id": "library", "title": "Library", "parent_id": "library"},
             ],
         )
-        payload = docs_management.handle_library_import_hierarchy_apply(
+        payload = docs_management.handle_documents_import_apply(
             root,
-            {"scope": "library", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -476,7 +526,7 @@ def main() -> None:
         test_library_import_files_lists_json_and_jsonl_only,
         test_library_import_preview_writes_when_not_dry_run,
         test_library_import_preview_dry_run_reports_without_writing,
-        test_library_import_preview_supports_catalogue_staging_scope,
+        test_documents_import_rejects_unconfigured_data_domain,
         test_docs_export_summary_text_uses_context_aware_document_plural,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,

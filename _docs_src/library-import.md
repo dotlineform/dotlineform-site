@@ -2,7 +2,7 @@
 doc_id: library-import
 title: Library Import v1
 added_date: 2026-05-03
-last_updated: "2026-05-05"
+last_updated: "2026-05-06 11:35"
 ui_status: done
 parent_id: library
 sort_order: 30
@@ -337,18 +337,19 @@ Expose staged-file listing and preview generation through the docs-management lo
 
 Likely endpoints:
 
-- `GET /docs/library-import/files`
-- `POST /docs/library-import/preview`
+- `GET /docs/import/files`
+- `POST /docs/import/preview`
+- `POST /docs/import/apply`
 
 Endpoint logs should include filenames, counts, status, and preview paths, not full document content.
 
 Status: implemented in `./scripts/docs/docs_management_server.py`.
-`GET /docs/library-import/files?scope=<scope>` lists staged `.json` and `.jsonl` files under `var/docs/import-staging/<scope>/` for the workflow scopes `library`, `catalogue`, and `analytics`.
-`POST /docs/library-import/preview` parses the selected staged file, runs current generated-doc lookup when that scope has a docs index, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
+`GET /docs/import/files?data_domain=library` lists staged `.json` and `.jsonl` files through the configured `documents` adapter path for Library.
+`POST /docs/import/preview` parses the selected staged file through the configured `documents` adapter, runs current generated-doc lookup for Library, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
 The endpoint returns the same structured report as the CLI and logs only scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths.
 
-Library remains the only scope with source-write apply endpoints in v1.
-Catalogue and Analytics staging/preview support is infrastructure for future workflows; their config shapes, preview file expectations, and write actions still need separate design.
+Library remains the only configured data domain for the `documents` adapter in this implementation.
+Catalogue and Analytics must be added through explicit adapter config before the shared shell dispatches to them.
 
 ### Task 6. Add Studio Library Import Page
 
@@ -366,8 +367,8 @@ Status note:
 - implemented at `/studio/library-import/`
 - listed from the `/studio/library/` dashboard under Data
 - defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
-- loads staged `.json` and `.jsonl` files through `GET /docs/library-import/files?scope=<scope>`
-- runs preview generation through `POST /docs/library-import/preview` for supported staged JSON/JSONL files
+- loads staged `.json` and `.jsonl` files through `GET /docs/import/files?data_domain=library`
+- runs preview generation through `POST /docs/import/preview` for supported staged JSON/JSONL files
 - uses the same compact command/list shell as the Library export page
 - shows preview/apply counts and issues in a single-close result modal
 - renders generated preview records in the main selectable list area, ordered and indented by staged `parent_id` when relationship data is present
@@ -376,8 +377,8 @@ Status note:
 - exposes `select all` and `clear` selection pills for preview rows
 - enables `Update summary` and `Apply hierarchy` for selected document preview rows
 - keeps `Update summary` and `Apply hierarchy` disabled outside the Library scope until those source-write contracts exist
-- runs a preflight through `POST /docs/library-import/summary-apply`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library_src/*.md`
-- runs a preflight through `POST /docs/library-import/hierarchy-apply`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected `parent_id` changes only to `_docs_library_src/*.md`
+- runs a preflight through `POST /docs/import/apply` with `operation: "summary_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library_src/*.md`
+- runs a preflight through `POST /docs/import/apply` with `operation: "hierarchy_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected `parent_id` changes only to `_docs_library_src/*.md`
 - preserves current `sort_order` values when applying hierarchy changes
 - allows unknown staged `parent_id` values as warnings; generated Library docs data treats unresolved parent ids as root-level relationships
 - keeps the route disabled when the docs-management local service is unavailable

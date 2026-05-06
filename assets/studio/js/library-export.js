@@ -623,7 +623,7 @@ async function runExport(state) {
 
   try {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.exportDocs, {
-      scope: state.scope,
+      data_domain: state.scope,
       config_id: configId,
       target_format: targetFormat,
       doc_ids: docIds,

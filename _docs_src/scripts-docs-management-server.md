@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
 added_date: 2026-04-24
-last_updated: "2026-05-04"
+last_updated: "2026-05-06 11:35"
 parent_id: scripts
 sort_order: 10
 ---
@@ -33,12 +33,11 @@ Exposed endpoints:
 - `GET /docs/doc`
 - `GET /docs/search`
 - `GET /docs/import-html-files`
-- `GET /docs/library-import/files`
+- `GET /docs/import/files`
 - `POST /docs/import-html`
 - `POST /docs/export`
-- `POST /docs/library-import/preview`
-- `POST /docs/library-import/summary-apply`
-- `POST /docs/library-import/hierarchy-apply`
+- `POST /docs/import/preview`
+- `POST /docs/import/apply`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -211,7 +210,7 @@ Broken-links behavior:
 
 ```json
 {
-  "scope": "library",
+  "data_domain": "library",
   "config_id": "library-document-summaries",
   "target_format": "jsonl",
   "doc_ids": ["library"],
@@ -222,8 +221,8 @@ Broken-links behavior:
 
 Export behavior:
 
-- `scope` must be `studio`, `analysis`, or `library`, though the current export configs are Library-only
-- `config_id` must resolve in `assets/studio/data/library_export_configs.json`
+- `data_domain` must resolve through `assets/studio/data/export_import_adapters.json`; the first configured domain is `library`
+- `config_id` must resolve in the adapter-declared export config file
 - `target_format` may be `json`, `jsonl`, or omitted; omitted uses the config's default `target.format`
 - `doc_ids` is an explicit list used by configs that support explicit selection
 - `select_all: true` asks the export engine to select every doc matching the config filters
@@ -234,7 +233,7 @@ Export behavior:
 - normal server mode writes the export file and returns `output_written: true`
 - server `--dry-run` mode validates and reports the target path without writing
 - failed validation returns the same report shape with `ok: false`, `errors`, `warnings`, `issue_counts`, and `output_written: false`
-- logs include scope, config id, counts, target format, dry-run state, issue counts, and whether output was written; logs do not include document body content or export payloads
+- logs include data domain, adapter id, scope, config id, counts, target format, dry-run state, issue counts, and whether output was written; logs do not include document body content or export payloads
 
 Runtime role:
 
@@ -243,35 +242,36 @@ Runtime role:
 - config-defined paths are resolved and allowlisted by the shared export engine
 - generated export files are local working artifacts for Studio reporting or manual external use
 
-`GET /docs/library-import/files` accepts:
+`GET /docs/import/files` accepts:
 
 ```text
-?scope=library|catalogue|analytics
+?data_domain=library
 ```
 
 Import file listing behavior:
 
-- `scope` must be one of `library`, `catalogue`, or `analytics`
-- lists staged `.json` and `.jsonl` files under `var/docs/import-staging/<scope>/`
+- `data_domain` must resolve exactly one adapter through `assets/studio/data/export_import_adapters.json`
+- the first implementation maps `data_domain=library` to the `documents` adapter
+- lists staged `.json` and `.jsonl` files under the adapter-declared staging root
 - returns filename, repo-relative path, format, size, and modified time
 - does not parse or log file content
 
-`POST /docs/library-import/preview` expects:
+`POST /docs/import/preview` expects:
 
 ```json
 {
-  "scope": "library|catalogue|analytics",
+  "data_domain": "library",
   "staged_filename": "library-document-summaries.jsonl"
 }
 ```
 
 Import preview behavior:
 
-- `scope` must be one of `library`, `catalogue`, or `analytics`
-- `staged_filename` must resolve inside `var/docs/import-staging/<scope>/`
+- `data_domain` must resolve exactly one adapter with `import_preview` capability
+- `staged_filename` must resolve inside the adapter-declared staging root
 - parses the staged data file through `./scripts/docs/docs_import.py`
-- loads current generated docs index and payload state through the shared import engine when the selected scope has generated docs data
-- writes Markdown previews under `var/docs/import-preview/<scope>/` in normal server mode
+- loads current generated docs index and payload state through the shared import engine for the adapter-declared docs scope
+- writes Markdown previews under the adapter-declared preview root in normal server mode
 - reports planned preview paths without writing when the server runs with `--dry-run`
 - returns the same structured report shape as the import CLI, including `counts`, `issues`, `records`, `current_library`, `preview_files`, and `preview_written`
 - logs include scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths; logs do not include document body content or staged payload content
@@ -282,13 +282,14 @@ Runtime role:
 - it does not mutate `_docs_library_src/*.md`
 - it does not apply summaries, relationship recommendations, or full-content changes to canonical source
 - generated preview files are local working artifacts for Studio review
-- Catalogue and Analytics source-write actions are not implemented yet
+- unconfigured data domains fail closed instead of falling back to document parsing
 
-`POST /docs/library-import/summary-apply` expects:
+`POST /docs/import/apply` expects for summary updates:
 
 ```json
 {
-  "scope": "library",
+  "data_domain": "library",
+  "operation": "summary_apply",
   "staged_filename": "library-document-summaries.jsonl",
   "record_indices": [0, 3, 4],
   "confirm": false
@@ -297,8 +298,8 @@ Runtime role:
 
 Library import summary-apply behavior:
 
-- `scope` must be `library`
-- `staged_filename` must resolve inside `var/docs/import-staging/library/`
+- `data_domain` and `operation` must resolve the `documents` adapter
+- `staged_filename` must resolve inside the adapter-declared staging root
 - `record_indices` must be a non-empty list of selected staged record indexes
 - `confirm: false` runs a non-writing preflight and reports selected rows, updates, skipped rows, warnings, errors, and counts
 - `confirm: true` applies the selected summary updates when the preflight has no blocking errors
@@ -306,7 +307,7 @@ Library import summary-apply behavior:
 - only selected missing target source docs are blocking errors
 - selected rows with missing staged records, missing `doc_id`, duplicate `doc_id`, missing summary text, or unchanged summary text are skipped
 - source writes update only `summary`, preserve or initialize `added_date`, and refresh `last_updated`
-- successful writes create a timestamped `library-import-summary-apply` backup bundle under `var/docs/backups/` before writing source files
+- successful writes create a timestamped `documents-summary-apply` backup bundle under `var/docs/backups/` before writing source files
 - successful writes rebuild Library docs payloads and run targeted docs-search updates for changed ids
 - server `--dry-run` mode validates and reports without writing even when `confirm: true`
 
@@ -317,11 +318,12 @@ Runtime role:
 - it does not apply full content, `parent_id`, `sort_order`, or other relationship changes
 - backups use the existing docs-management backup root so Studio backup retention can manage them with the other docs source-write backups
 
-`POST /docs/library-import/hierarchy-apply` expects:
+`POST /docs/import/apply` expects for hierarchy updates:
 
 ```json
 {
-  "scope": "library",
+  "data_domain": "library",
+  "operation": "hierarchy_apply",
   "staged_filename": "library-parent-child-relationships.json",
   "record_indices": [0, 3, 4],
   "confirm": false
@@ -330,8 +332,8 @@ Runtime role:
 
 Library import hierarchy-apply behavior:
 
-- `scope` must be `library`
-- `staged_filename` must resolve inside `var/docs/import-staging/library/`
+- `data_domain` and `operation` must resolve the `documents` adapter
+- `staged_filename` must resolve inside the adapter-declared staging root
 - `record_indices` must be a non-empty list of selected staged record indexes
 - `confirm: false` runs a non-writing preflight and reports selected rows, changed rows, unchanged rows, skipped rows, warnings, errors, and counts
 - `confirm: true` applies the selected `parent_id` updates when the preflight has no blocking errors
@@ -340,7 +342,7 @@ Library import hierarchy-apply behavior:
 - selected rows with missing staged records, missing `doc_id`, duplicate `doc_id`, or self-parent ids are skipped
 - unknown non-empty staged `parent_id` values are warnings and are allowed
 - source writes update only `parent_id`, preserve current `sort_order`, preserve or initialize `added_date`, and refresh `last_updated`
-- successful writes create a timestamped `library-import-hierarchy-apply` backup bundle under `var/docs/backups/` before writing source files
+- successful writes create a timestamped `documents-hierarchy-apply` backup bundle under `var/docs/backups/` before writing source files
 - successful writes rebuild Library docs payloads and run targeted docs-search updates for changed ids
 - server `--dry-run` mode validates and reports without writing even when `confirm: true`
 

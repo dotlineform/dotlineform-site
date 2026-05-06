@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: "Docs Import"
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-04"
+last_updated: "2026-05-06 11:35"
 parent_id: scripts
 sort_order: 26
 ---
@@ -118,7 +118,7 @@ The script prints a JSON report with:
 - `preview_files`
 - `preview_written`
 
-The docs-management endpoint returns this same report shape from `POST /docs/library-import/preview`.
+The docs-management endpoint returns this same report shape from `POST /docs/import/preview` after adapter dispatch.
 
 `counts` includes:
 

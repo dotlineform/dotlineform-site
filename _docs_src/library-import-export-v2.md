@@ -2,7 +2,7 @@
 doc_id: library-import-export-v2
 title: Library Export/Import v2
 added_date: 2026-05-04
-last_updated: "2026-05-04"
+last_updated: "2026-05-06 11:35"
 ui_status: done
 parent_id: library
 sort_order: 50
@@ -314,9 +314,9 @@ Expected outputs:
 Implementation notes:
 
 - Studio enables `Update summary` only after at least one document preview row is selected.
-- The browser sends selected staged `record_index` values to `POST /docs/library-import/summary-apply`; relationship-tree preview rows are not apply targets.
+- The browser sends selected staged `record_index` values to `POST /docs/import/apply` with `operation: "summary_apply"`; relationship-tree preview rows are not apply targets.
 - The endpoint performs a preflight when `confirm: false`, reports update, skipped, warning, and error counts, and opens a shared OK/Cancel confirmation modal only when writes are available.
-- Apply mode requires `confirm: true`, creates a timestamped `library-import-summary-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library_src/*.md` source documents.
+- Apply mode requires `confirm: true`, creates a timestamped `documents-summary-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library_src/*.md` source documents.
 - Validation errors are limited to selected `doc_id` values that do not resolve to current Library source docs. Missing summaries, duplicate selected ids, missing staged rows, and unchanged summaries are reported as skipped rows.
 - The write path updates only `summary`, preserves `added_date`, refreshes `last_updated`, rebuilds Library docs payloads, and runs targeted docs-search updates for changed ids.
 
@@ -343,9 +343,9 @@ Expected outputs:
 Implementation notes:
 
 - Studio enables `Apply hierarchy` only after at least one document preview row is selected.
-- The browser sends selected staged `record_index` values to `POST /docs/library-import/hierarchy-apply`; relationship-tree preview rows are not apply targets.
+- The browser sends selected staged `record_index` values to `POST /docs/import/apply` with `operation: "hierarchy_apply"`; relationship-tree preview rows are not apply targets.
 - The endpoint performs a preflight when `confirm: false`, reports changed, unchanged, skipped, warning, and error counts, and opens a shared OK/Cancel confirmation modal only when writes are available.
-- Apply mode requires `confirm: true`, creates a timestamped `library-import-hierarchy-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library_src/*.md` source documents.
+- Apply mode requires `confirm: true`, creates a timestamped `documents-hierarchy-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library_src/*.md` source documents.
 - Validation errors remain limited to selected `doc_id` values that do not resolve to current Library source docs. Unknown staged `parent_id` values are warnings and are allowed.
 - The write path updates only `parent_id`, preserves current `sort_order`, preserves `added_date`, refreshes `last_updated`, rebuilds Library docs payloads, and runs targeted docs-search updates for changed ids.
 - Generated Library docs data normalizes unresolved source `parent_id` values to root-level relationships so `/library/` can render the tree while preserving the imported `parent_id` in source.
