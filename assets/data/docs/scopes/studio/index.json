@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T11:22:42Z",
+  "generated_at": "2026-05-06T13:28:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -263,6 +263,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-change-log-2026-05",
+      "title": "Site Change Log Archive: May 2026",
+      "added_date": "2026-05-06",
+      "last_updated": "2026-05-06 14:11",
+      "parent_id": "site-change-log",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-change-log-2026-05.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-05",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-05.json",
+      "content_text_length": 76231
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-docs",
       "title": "Site Docs",
       "added_date": "2026-04-19",
@@ -356,7 +371,7 @@
       "doc_id": "scripts-docs-broken-links",
       "title": "Docs Broken Links Audit",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-06 14:28",
       "parent_id": "scripts",
       "sort_order": 15,
       "published": true,
@@ -364,7 +379,7 @@
       "source_path": "scripts-docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-broken-links.json",
-      "content_text_length": 1901
+      "content_text_length": 2087
     },
     {
       "scope": "studio",
@@ -576,6 +591,21 @@
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
       "content_text_length": 6935
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-change-log-2026-04",
+      "title": "Site Change Log Archive: April 2026",
+      "added_date": "2026-05-06",
+      "last_updated": "2026-05-06 14:11",
+      "parent_id": "site-change-log",
+      "sort_order": 20,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-change-log-2026-04.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
+      "content_text_length": 191221
     },
     {
       "scope": "studio",
@@ -975,6 +1005,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-change-log-2026-03-and-earlier",
+      "title": "Site Change Log Archive: March 2026 And Earlier",
+      "added_date": "2026-05-06",
+      "last_updated": "2026-05-06 14:11",
+      "parent_id": "site-change-log",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-change-log-2026-03-and-earlier.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-03-and-earlier.json",
+      "content_text_length": 11254
+    },
+    {
+      "scope": "studio",
       "doc_id": "sorting-architecture",
       "title": "Sorting Architecture",
       "added_date": "2026-03-31",
@@ -1113,7 +1158,7 @@
       "doc_id": "docs-broken-links",
       "title": "Docs Broken Links",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-06 14:28",
       "parent_id": "studio",
       "sort_order": 35,
       "published": true,
@@ -1121,7 +1166,7 @@
       "source_path": "docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json",
-      "content_text_length": 2199
+      "content_text_length": 2362
     },
     {
       "scope": "studio",
@@ -2702,7 +2747,7 @@
       "doc_id": "site-change-log-guidance",
       "title": "Site Change Log Guidance",
       "added_date": "2026-03-31",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-05-06 14:28",
       "parent_id": "",
       "sort_order": 230,
       "published": true,
@@ -2710,7 +2755,7 @@
       "source_path": "site-change-log-guidance.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-guidance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-guidance.json",
-      "content_text_length": 5124
+      "content_text_length": 6554
     },
     {
       "scope": "studio",
@@ -2792,7 +2837,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 12:30",
+      "last_updated": "2026-05-06 14:28",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2800,7 +2845,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 314952
+      "content_text_length": 38876
     },
     {
       "scope": "studio",

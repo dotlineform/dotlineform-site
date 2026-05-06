@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: "Docs Broken Links"
 added_date: 2026-04-23
-last_updated: 2026-05-03
+last_updated: "2026-05-06 14:28"
 parent_id: studio
 sort_order: 35
 ---
@@ -32,6 +32,7 @@ Current rule:
 
 - `wrong title` is a strict exact-title check
 - intentionally shortened labels such as `Overview` linking to `Docs Viewer Overview` are reported
+- historical site-change-log archive docs still report `not found`, but skip strict `wrong title` checks so preserved changelog wording does not dominate audit results
 - same-doc fragment links are ignored
 - this includes `#section` and links back to the current docs page with a fragment
 

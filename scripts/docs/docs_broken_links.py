@@ -25,6 +25,7 @@ SCOPE_OUTPUT_DIRS = {
 }
 TEMP_BASE_URL = "https://dotlineform.local"
 WHITESPACE_PATTERN = re.compile(r"\s+")
+CHANGE_LOG_ARCHIVE_DOC_ID_PATTERN = re.compile(r"^site-change-log-\d{4}(?:-|$)")
 
 
 @dataclass(frozen=True)
@@ -244,6 +245,10 @@ def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> b
     return False
 
 
+def should_skip_title_check(current_doc: DocMeta) -> bool:
+    return current_doc.scope == "studio" and bool(CHANGE_LOG_ARCHIVE_DOC_ID_PATTERN.match(current_doc.doc_id))
+
+
 def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
     docs_by_key: dict[tuple[str, str], DocMeta] = {}
@@ -302,7 +307,11 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
                 )
                 continue
 
-            if link_text and normalize_text(link_text) != normalize_text(target_meta.title):
+            if (
+                not should_skip_title_check(doc.meta)
+                and link_text
+                and normalize_text(link_text) != normalize_text(target_meta.title)
+            ):
                 entries.append(
                     {
                         "problem": "wrong title",

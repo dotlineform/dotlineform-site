@@ -2,7 +2,7 @@
 doc_id: scripts-docs-broken-links
 title: "Docs Broken Links Audit"
 added_date: 2026-04-23
-last_updated: 2026-04-23
+last_updated: "2026-05-06 14:28"
 parent_id: scripts
 sort_order: 15
 ---
@@ -29,6 +29,8 @@ Current title rule:
 
 - title matching is strict
 - intentionally shortened labels are reported
+- Studio site-change-log archive docs with ids such as `site-change-log-2026-05` skip strict title matching so historical wording can remain intact
+- archive docs still report `not found` links
 
 Ignored links:
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a29ce76f16a1a60769c9ece52b12d31e",
-    "generated_at_utc": "2026-05-06T11:21:03Z",
-    "count": 186
+    "version": "blake2b-62bc15b3899f6e01ab8da74ab799509d",
+    "generated_at_utc": "2026-05-06T13:28:58Z",
+    "count": 189
   },
   "entries": [
     {
@@ -429,6 +429,33 @@
       "search_text": "data-models-shared data models shared shared patterns patterns data models 2026-05-03 13:55 2026 05 03 13 55"
     },
     {
+      "id": "site-change-log-2026-05",
+      "kind": "doc",
+      "title": "Site Change Log Archive: May 2026",
+      "href": "/docs/?scope=studio&doc=site-change-log-2026-05",
+      "last_updated": "2026-05-06 14:11",
+      "parent_id": "site-change-log",
+      "parent_title": "Site Change Log",
+      "display_meta": "2026-05-06 14:11 • Site Change Log",
+      "search_terms": [
+        "site-change-log-2026-05",
+        "site",
+        "change",
+        "log",
+        "2026",
+        "05",
+        "site change log archive: may 2026",
+        "archive",
+        "may",
+        "site change log",
+        "2026-05-06 14:11",
+        "06",
+        "14",
+        "11"
+      ],
+      "search_text": "site-change-log-2026-05 site change log 2026 05 site change log archive: may 2026 archive may site change log 2026-05-06 14:11 06 14 11"
+    },
+    {
       "id": "site-docs",
       "kind": "doc",
       "title": "Site Docs",
@@ -567,10 +594,10 @@
       "kind": "doc",
       "title": "Docs Broken Links Audit",
       "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-05-06 14:28",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-23 • Scripts",
+      "display_meta": "2026-05-06 14:28 • Scripts",
       "search_terms": [
         "scripts-docs-broken-links",
         "scripts",
@@ -579,12 +606,14 @@
         "links",
         "docs broken links audit",
         "audit",
-        "2026-04-23",
+        "2026-05-06 14:28",
         "2026",
-        "04",
-        "23"
+        "05",
+        "06",
+        "14",
+        "28"
       ],
-      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit 2026-04-23 2026 04 23"
+      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit 2026-05-06 14:28 2026 05 06 14 28"
     },
     {
       "id": "studio-ui-start",
@@ -917,6 +946,34 @@
         "05"
       ],
       "search_text": "search-overview search overview search overview 2026-05-05 2026 05"
+    },
+    {
+      "id": "site-change-log-2026-04",
+      "kind": "doc",
+      "title": "Site Change Log Archive: April 2026",
+      "href": "/docs/?scope=studio&doc=site-change-log-2026-04",
+      "last_updated": "2026-05-06 14:11",
+      "parent_id": "site-change-log",
+      "parent_title": "Site Change Log",
+      "display_meta": "2026-05-06 14:11 • Site Change Log",
+      "search_terms": [
+        "site-change-log-2026-04",
+        "site",
+        "change",
+        "log",
+        "2026",
+        "04",
+        "site change log archive: april 2026",
+        "archive",
+        "april",
+        "site change log",
+        "2026-05-06 14:11",
+        "05",
+        "06",
+        "14",
+        "11"
+      ],
+      "search_text": "site-change-log-2026-04 site change log 2026 04 site change log archive: april 2026 archive april site change log 2026-05-06 14:11 05 06 14 11"
     },
     {
       "id": "site-shell-runtime",
@@ -1539,6 +1596,36 @@
       "search_text": "search-field-registry search field registry search field registry 2026-04-01 2026 04 01"
     },
     {
+      "id": "site-change-log-2026-03-and-earlier",
+      "kind": "doc",
+      "title": "Site Change Log Archive: March 2026 And Earlier",
+      "href": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
+      "last_updated": "2026-05-06 14:11",
+      "parent_id": "site-change-log",
+      "parent_title": "Site Change Log",
+      "display_meta": "2026-05-06 14:11 • Site Change Log",
+      "search_terms": [
+        "site-change-log-2026-03-and-earlier",
+        "site",
+        "change",
+        "log",
+        "2026",
+        "03",
+        "and",
+        "earlier",
+        "site change log archive: march 2026 and earlier",
+        "archive",
+        "march",
+        "site change log",
+        "2026-05-06 14:11",
+        "05",
+        "06",
+        "14",
+        "11"
+      ],
+      "search_text": "site-change-log-2026-03-and-earlier site change log 2026 03 and earlier site change log archive: march 2026 and earlier archive march site change log 2026-05-06 14:11 05 06 14 11"
+    },
+    {
       "id": "sorting-architecture",
       "kind": "doc",
       "title": "Sorting Architecture",
@@ -1752,10 +1839,10 @@
       "kind": "doc",
       "title": "Docs Broken Links",
       "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-06 14:28",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-03 • Studio",
+      "display_meta": "2026-05-06 14:28 • Studio",
       "search_terms": [
         "docs-broken-links",
         "docs",
@@ -1763,12 +1850,14 @@
         "links",
         "docs broken links",
         "studio",
-        "2026-05-03",
+        "2026-05-06 14:28",
         "2026",
         "05",
-        "03"
+        "06",
+        "14",
+        "28"
       ],
-      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-05-03 2026 05 03"
+      "search_text": "docs-broken-links docs broken links docs broken links studio 2026-05-06 14:28 2026 05 06 14 28"
     },
     {
       "id": "docs-viewer-draft-publishing-spec",
@@ -4213,8 +4302,8 @@
       "kind": "doc",
       "title": "Site Change Log Guidance",
       "href": "/docs/?scope=studio&doc=site-change-log-guidance",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-05-06 14:28",
+      "display_meta": "2026-05-06 14:28",
       "search_terms": [
         "site-change-log-guidance",
         "site",
@@ -4222,12 +4311,14 @@
         "log",
         "guidance",
         "site change log guidance",
-        "2026-03-31",
+        "2026-05-06 14:28",
         "2026",
-        "03",
-        "31"
+        "05",
+        "06",
+        "14",
+        "28"
       ],
-      "search_text": "site-change-log-guidance site change log guidance site change log guidance 2026-03-31 2026 03 31"
+      "search_text": "site-change-log-guidance site change log guidance site change log guidance 2026-05-06 14:28 2026 05 06 14 28"
     },
     {
       "id": "studio-works",
@@ -4352,22 +4443,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-06 12:30",
-      "display_meta": "2026-05-06 12:30",
+      "last_updated": "2026-05-06 14:28",
+      "display_meta": "2026-05-06 14:28",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-06 12:30",
+        "2026-05-06 14:28",
         "2026",
         "05",
         "06",
-        "12",
-        "30"
+        "14",
+        "28"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-06 12:30 2026 05 06 12 30"
+      "search_text": "site-change-log site change log site change log 2026-05-06 14:28 2026 05 06 14 28"
     },
     {
       "id": "tiered-dimension-policy",

@@ -2,7 +2,7 @@
 doc_id: site-change-log-guidance
 title: "Site Change Log Guidance"
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-06 14:28"
 parent_id: ""
 sort_order: 230
 ---
@@ -75,6 +75,25 @@ Search-specific history belongs in:
 
 ## Repo-specific maintenance rules
 
+### 0. Keep the current page compact
+
+Add new entries to [Site Change Log](/docs/?scope=studio&doc=site-change-log).
+
+Keep older entries in dated archive child docs under the same parent when the current page becomes too long to edit comfortably.
+Use flat `_docs_src/*.md` files with `parent_id: site-change-log` so the docs-viewer tree remains metadata-driven.
+
+Current archive docs:
+
+- [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
+- [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
+- [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+Preferred archive threshold:
+
+- keep roughly the latest 20-40 entries on the main page
+- archive by month when practical
+- use a broader oldest-history archive only when a period has too few entries to justify its own file
+
 ### 1. Keep search and non-search history separate
 
 If a change is search-specific, log it in [Search Change Log](/docs/?scope=studio&doc=search-change-log).
@@ -130,9 +149,9 @@ Use this exact structure:
 
 ## [YYYY-MM-DD] Short change title
 
-**Status:** proposed | implemented | revised | reverted
+**Status:** proposed \| implemented \| revised \| reverted
 
-**Area:** works | series | moments | site shell | Studio | build pipeline | validation | architecture
+**Area:** works \| series \| moments \| site shell \| Studio \| build pipeline \| validation \| architecture
 
 **Summary:**  
 Short statement of what changed.
@@ -210,11 +229,26 @@ Changes to higher-level structure, boundaries, or long-lived design decisions.
 - mention code and docs together when both changed as one logical change
 - focus on the effect of the change rather than the activity of editing files
 
+## Broken-link handling
+
+Keep links in the current [Site Change Log](/docs/?scope=studio&doc=site-change-log) clean when writing new entries.
+
+For archive docs, preserve historical wording unless a link no longer resolves.
+Archived site change-log docs intentionally skip strict wrong-title audit checks, but missing targets are still reported by [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links).
+
+When an archived entry points at a retired document:
+
+- update the URL if there is a clear replacement doc
+- keep the original visible link text when it is useful historical context
+- convert the link to plain text only when there is no useful current target
+- avoid creating stub docs solely to satisfy old changelog links
+
 ## Initial guidance for close / commit process
 
 For any meaningful non-search site or Studio change, Codex should do this before final close-out:
 
 1. update the relevant focused docs
 2. add or revise the site change-log entry
-3. rebuild docs payloads if `_docs_src/` changed
-4. include the site-log update in the final summary
+3. archive older site change-log entries if the current page has grown beyond the preferred compact window
+4. rebuild docs payloads if `_docs_src/` changed
+5. include the site-log update in the final summary
