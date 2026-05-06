@@ -1,10 +1,10 @@
 ---
 doc_id: scripts-audit-site-consistency
-title: "Site Consistency Audit"
+title: Site Consistency Audit
 added_date: 2026-03-31
-last_updated: 2026-05-02
-parent_id: scripts
-sort_order: 130
+last_updated: "2026-05-06 21:18"
+parent_id: site-docs
+sort_order: 70
 ---
 # Site Consistency Audit
 

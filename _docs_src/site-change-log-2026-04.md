@@ -2,9 +2,9 @@
 doc_id: site-change-log-2026-04
 title: "Site Change Log Archive: April 2026"
 added_date: 2026-05-06
-last_updated: "2026-05-06 14:11"
+last_updated: "2026-05-06 20:57"
 parent_id: site-change-log
-sort_order: 20
+sort_order: 30
 ---
 # Site Change Log Archive: April 2026
 

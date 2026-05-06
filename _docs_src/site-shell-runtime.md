@@ -1,12 +1,11 @@
 ---
 doc_id: site-shell-runtime
-title: "Site Shell Runtime"
+title: Site Shell Runtime
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-06 21:10"
 parent_id: architecture
-sort_order: 20
+sort_order: 30
 ---
-
 # Site Shell Runtime
 
 This document records the current shared shell around page content and the boundary between public pages, Studio pages, and docs-viewer routes.

@@ -1,12 +1,11 @@
 ---
 doc_id: config-export-import-adapters
-title: "Export Import Adapters"
+title: Export Import Adapters
 added_date: "2026-05-06 11:35"
-last_updated: "2026-05-06 12:15"
-parent_id: config
-sort_order: 38
+last_updated: "2026-05-06 21:14"
+parent_id: import-export
+sort_order: 60
 ---
-
 # Export Import Adapters
 
 Config files:

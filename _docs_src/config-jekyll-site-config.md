@@ -1,12 +1,11 @@
 ---
 doc_id: config-jekyll-site-config
-title: "Jekyll Site Config"
+title: Jekyll Site Config
 added_date: 2026-03-31
-last_updated: "2026-05-03 22:01"
-parent_id: config
-sort_order: 10
+last_updated: "2026-05-06 21:11"
+parent_id: site-docs
+sort_order: 50
 ---
-
 # Jekyll Site Config
 
 Config file:

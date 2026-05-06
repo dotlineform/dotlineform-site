@@ -1,12 +1,11 @@
 ---
 doc_id: config-studio-config-json
-title: "Studio Config JSON"
+title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-06 12:15"
-parent_id: config
-sort_order: 30
+last_updated: "2026-05-06 21:12"
+parent_id: studio
+sort_order: 90
 ---
-
 # Studio Config JSON
 
 Config file:

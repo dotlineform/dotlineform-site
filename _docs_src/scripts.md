@@ -2,13 +2,13 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-06 20:49"
-parent_id: ""
-sort_order: 130
+last_updated: "2026-05-06 21:19"
+parent_id: site-docs
+sort_order: 80
 ---
 # Scripts
 
-This section describes the active repo scripts used to maintain site data.
+This document summarises the active repo scripts used to maintain site data.
 
 # Introduction
 

@@ -1,12 +1,11 @@
 ---
 doc_id: config-studio-config-js
-title: "Studio Config Loader JS"
+title: Studio Config Loader JS
 added_date: 2026-04-01
-last_updated: "2026-05-03 16:42"
-parent_id: config
-sort_order: 40
+last_updated: "2026-05-06 21:15"
+parent_id: studio
+sort_order: 100
 ---
-
 # Studio Config Loader JS
 
 Config module:

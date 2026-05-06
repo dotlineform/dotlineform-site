@@ -1,12 +1,11 @@
 ---
 doc_id: sorting-architecture
-title: "Sorting Architecture"
+title: Sorting Architecture
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-06 21:10"
 parent_id: architecture
-sort_order: 30
+sort_order: 40
 ---
-
 # Sorting Architecture
 
 This document records the current canonical ordering rules across generated artifacts and runtime pages.

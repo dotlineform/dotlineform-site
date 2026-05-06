@@ -2,15 +2,13 @@
 doc_id: config
 title: Config
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:49"
-parent_id: ""
-sort_order: 120
+last_updated: "2026-05-06 21:18"
+parent_id: architecture
+sort_order: 50
 ---
 # Config
 
-This section documents the checked-in configuration artifacts that the current site and build scripts load directly.
-
-Use this section for:
+Checked-in configuration artifacts that the current site and build scripts load directly:
 
 - site-wide Jekyll config in `_config.yml`
 - shared catalogue/media/runtime defaults in `_data/pipeline.json`
@@ -23,12 +21,7 @@ Use this section for:
 - export/import adapter dispatch in `assets/studio/data/export_import_adapters.json`
 - export/import adapter schema in `assets/studio/data/export_import_adapters.schema.json`
 
-This section is not for:
-
-- local shell exports and machine-specific setup
-- detailed payload schemas, which belong in [Data Models](/docs/?scope=studio&doc=data-models)
-
-Read this section in this order:
+Key documents:
 
 1. **[Jekyll Site Config](/docs/?scope=studio&doc=config-jekyll-site-config)**
 2. **[Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)**
@@ -43,5 +36,4 @@ Related subsystem docs:
 
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)**
 - **[Search Overview](/docs/?scope=studio&doc=search-overview)**
-- **[Scripts](/docs/?scope=studio&doc=scripts)**
 - **[JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption)**

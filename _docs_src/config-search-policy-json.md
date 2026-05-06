@@ -1,12 +1,11 @@
 ---
 doc_id: config-search-policy-json
-title: "Search Policy JSON"
+title: Search Policy JSON
 added_date: 2026-03-31
-last_updated: "2026-05-05"
-parent_id: config
-sort_order: 50
+last_updated: "2026-05-06 21:12"
+parent_id: search
+sort_order: 1020
 ---
-
 # Search Policy JSON
 
 Config file:

@@ -1,12 +1,11 @@
 ---
 doc_id: config-library-export-configs
-title: "Library Export Configs"
+title: Library Export Configs
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-06 12:30"
-parent_id: config
-sort_order: 70
+last_updated: "2026-05-06 21:14"
+parent_id: import-export
+sort_order: 50
 ---
-
 # Library Export Configs
 
 Config file:
