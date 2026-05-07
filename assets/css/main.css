@@ -1026,7 +1026,6 @@ th{ background: var(--panel-2); }
 .docsViewer{
   --docs-viewer-measure: var(--content-measure);
   --docs-viewer-draft-color: var(--muted);
-  --docs-viewer-draft-font-weight: 600;
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
   column-gap: var(--space-5);
@@ -1234,9 +1233,14 @@ th{ background: var(--panel-2); }
   line-height: 1;
 }
 
+.docsViewer__draftPrefix{
+  display: inline-block;
+  margin-right: 0.35rem;
+  line-height: 1;
+}
+
 .docsViewer__navRow.is-draft .docsViewer__navLink{
   color: var(--docs-viewer-draft-color);
-  font-weight: var(--docs-viewer-draft-font-weight);
 }
 
 .docsViewer__navLink[draggable="true"]{

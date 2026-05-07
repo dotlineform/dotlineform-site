@@ -2,11 +2,11 @@
 doc_id: beyond-conscious-subconscious
 title: Beyond Conscious vs. Subconscious
 added_date: "2026-05-07 19:09"
-last_updated: "2026-05-07 21:23"
+last_updated: "2026-05-07 22:13"
 parent_id: ""
 sort_order: 110
 published: true
-viewable: false
+viewable: true
 ---
 # Memory — Beyond Conscious vs. Subconscious
 

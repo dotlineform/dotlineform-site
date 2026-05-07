@@ -2,11 +2,11 @@
 doc_id: bayesian-reasoning
 title: Bayesian Reasoning
 added_date: "2026-05-07 16:55"
-last_updated: "2026-05-07 16:55"
+last_updated: "2026-05-07 22:13"
 parent_id: ""
 sort_order: 80
 published: true
-viewable: false
+viewable: true
 ---
 # Bayesian Reasoning
 

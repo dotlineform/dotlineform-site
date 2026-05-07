@@ -56,6 +56,7 @@
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
   var DEFAULT_RECENT_LIMIT = 10;
+  var DRAFT_STATUS_VALUE = "draft";
   var BOOKMARK_DB_NAME = "dotlineform-docs-viewer";
   var BOOKMARK_DB_VERSION = 1;
   var BOOKMARK_STORE_NAME = "favorites";
@@ -123,6 +124,7 @@
       viewableInvalidChoice: "Viewability update cancelled: expected `all` or `selected`.",
       metadataStatusLabel: "status",
       metadataStatusNoneOption: "<none>",
+      metadataStatusDraftOption: "draft",
       statusPillSetLabel: "Set status: {label}",
       statusPillClearLabel: "Clear status: {label}",
       statusPillReadonlyLabel: "Status: {label}",
@@ -130,7 +132,7 @@
       statusPillSaved: "Status saved.",
       statusPillFailed: "Status update failed."
     },
-    showDrafts: false,
+    showViewable: true,
     reloadNonce: "",
     reloadExpectedDocId: "",
     dragDocId: "",
@@ -306,12 +308,8 @@
       return [status.ui_status, status];
     }));
     var draftColor = String(getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
-    var draftFontWeight = String(getConfigValue(config, "docs_viewer.draft_nav_font_weight") || "").trim();
     if (draftColor) {
       root.style.setProperty("--docs-viewer-draft-color", draftColor);
-    }
-    if (draftFontWeight) {
-      root.style.setProperty("--docs-viewer-draft-font-weight", draftFontWeight);
     }
     if (recentButton) {
       var label = getConfigText(config, "docs_viewer.recently_added_button", "recently added");
@@ -320,10 +318,10 @@
       recentButton.title = label;
     }
     if (draftLabel) {
-      draftLabel.textContent = getConfigText(config, "docs_viewer.draft_toggle_label", "drafts");
+      draftLabel.textContent = getConfigText(config, "docs_viewer.draft_toggle_label", "show viewable");
     }
     if (draftToggle) {
-      draftToggle.setAttribute("aria-label", getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show draft docs"));
+      draftToggle.setAttribute("aria-label", getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show viewable docs"));
     }
     if (manageViewableButton) {
       var makeViewableLabel = getConfigText(config, "docs_viewer.make_viewable_button", "Make viewable");
@@ -343,6 +341,7 @@
     state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
     state.managementText.metadataStatusLabel = getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
     state.managementText.metadataStatusNoneOption = getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
+    state.managementText.metadataStatusDraftOption = getConfigText(config, "docs_viewer.metadata_status_draft_option", state.managementText.metadataStatusDraftOption);
     state.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
     state.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
     state.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
@@ -803,8 +802,14 @@
 
   function buildChildrenMap(docs) {
     var childrenByParent = new Map();
+    var visibleDocIds = new Set(docs.map(function (doc) {
+      return doc.doc_id;
+    }));
     docs.forEach(function (doc) {
       var parentId = doc.parent_id || "";
+      if (state.managementMode && !state.showViewable && parentId && !visibleDocIds.has(parentId)) {
+        parentId = "";
+      }
       if (!childrenByParent.has(parentId)) {
         childrenByParent.set(parentId, []);
       }
@@ -834,7 +839,8 @@
 
   function shouldIncludeDoc(doc) {
     if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
-    return isDocViewable(doc) || (state.managementMode && state.showDrafts);
+    if (!state.managementMode) return isDocViewable(doc);
+    return !isDocViewable(doc) || state.showViewable;
   }
 
   function applyDocVisibility() {
@@ -859,13 +865,13 @@
     return null;
   }
 
-  function syncDraftVisibilityForRequestedDoc() {
+  function syncViewableVisibilityForRequestedDoc() {
     if (!state.managementMode) return;
     var requestedDocId = getCurrentDocId();
     if (!requestedDocId) return;
     var requestedDoc = findAllDocById(requestedDocId);
-    if (requestedDoc && !isDocViewable(requestedDoc)) {
-      state.showDrafts = true;
+    if (requestedDoc && isDocViewable(requestedDoc)) {
+      state.showViewable = true;
     }
   }
 
@@ -1029,6 +1035,13 @@
         statusIcon.setAttribute("aria-hidden", "true");
         statusIcon.textContent = uiStatus.emoji;
         link.appendChild(statusIcon);
+      }
+      if (!isDocViewable(doc)) {
+        var draftIcon = document.createElement("span");
+        draftIcon.className = "docsViewer__draftPrefix";
+        draftIcon.setAttribute("aria-hidden", "true");
+        draftIcon.textContent = "✏️";
+        link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));
       row.appendChild(link);
@@ -1367,8 +1380,12 @@
     var options = [{
       value: "",
       label: state.managementText.metadataStatusNoneOption
+    }, {
+      value: DRAFT_STATUS_VALUE,
+      label: state.managementText.metadataStatusDraftOption
     }];
     state.uiStatuses.forEach(function (status) {
+      if (status.ui_status === DRAFT_STATUS_VALUE) return;
       options.push({
         value: status.ui_status,
         label: status.emoji + " " + status.label
@@ -1379,7 +1396,8 @@
 
   function renderMetadataStatusOptions(doc) {
     if (!metadataStatusInput) return;
-    var selectedValue = String(doc && doc.ui_status || "").trim();
+    var docStatus = String(doc && doc.ui_status || "").trim();
+    var selectedValue = (!isDocViewable(doc) || docStatus === DRAFT_STATUS_VALUE) ? DRAFT_STATUS_VALUE : docStatus;
     metadataStatusInput.innerHTML = metadataStatusOptions(doc).map(function (option) {
       var selected = option.value === selectedValue ? ' selected' : "";
       return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(option.label) + "</option>";
@@ -1541,7 +1559,7 @@
     manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
     if (draftToggle) {
       draftToggle.disabled = !state.managementAvailable || state.managementBusy;
-      draftToggle.checked = state.showDrafts;
+      draftToggle.checked = state.showViewable;
     }
     if (metadataSaveButton) {
       metadataSaveButton.disabled = state.managementBusy;
@@ -1771,12 +1789,15 @@
     if (parentId && parentId !== originalParentId && sortOrderText === originalSortOrderText) {
       payloadSortOrder = "append";
     }
+    var selectedStatus = String(metadataStatusInput.value || "").trim();
+    var isDraftStatus = selectedStatus === DRAFT_STATUS_VALUE;
     var payload = {
       scope: viewerScope,
       doc_id: doc.doc_id,
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
-      ui_status: String(metadataStatusInput.value || "").trim(),
+      ui_status: isDraftStatus ? "" : selectedStatus,
+      viewable: !isDraftStatus,
       parent_id: parentId,
       sort_order: payloadSortOrder
     };
@@ -1808,6 +1829,7 @@
       title: String(doc.title || "").trim(),
       summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
       ui_status: String(uiStatus || "").trim(),
+      viewable: true,
       parent_id: String(doc.parent_id || "").trim(),
       sort_order: normalizeSortOrderValue(doc.sort_order)
     };
@@ -1997,7 +2019,7 @@
 
   function handleDraftToggleChange() {
     if (!draftToggle) return;
-    state.showDrafts = Boolean(draftToggle.checked);
+    state.showViewable = Boolean(draftToggle.checked);
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     applyDocVisibility();
     renderSidebar();
@@ -2706,7 +2728,7 @@
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.showUpdatedDate = viewerOptions.show_updated_date !== false;
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
-    syncDraftVisibilityForRequestedDoc();
+    syncViewableVisibilityForRequestedDoc();
     applyDocVisibility();
 
     renderSidebar();
@@ -2723,7 +2745,7 @@
   function applyCurrentRoute(options) {
     setRecentModeActive(false);
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    syncDraftVisibilityForRequestedDoc();
+    syncViewableVisibilityForRequestedDoc();
     applyDocVisibility();
     var route = resolveDocId();
     var docId = route.docId;

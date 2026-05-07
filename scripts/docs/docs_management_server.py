@@ -2011,7 +2011,11 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
     current_ui_status = normalize_ui_status(target.front_matter.get("ui_status"))
     ui_status = normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
     status_changed = status_was_provided and ui_status != current_ui_status
-    if not (title_changed or parent_changed or sort_changed or summary_changed or status_changed):
+    viewable_was_provided = "viewable" in body
+    current_viewable = target.viewable
+    viewable = front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
+    viewable_changed = viewable_was_provided and viewable != current_viewable
+    if not (title_changed or parent_changed or sort_changed or summary_changed or status_changed or viewable_changed):
         return {
             "ok": True,
             "scope": scope,
@@ -2024,6 +2028,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "sort_order": target.sort_order,
                 "summary": current_summary,
                 "ui_status": current_ui_status,
+                "viewable": current_viewable,
             },
             "changes": {
                 "title_changed": False,
@@ -2031,6 +2036,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "sort_changed": False,
                 "summary_changed": False,
                 "status_changed": False,
+                "viewable_changed": False,
             },
             "summary_text": f"No metadata changes for {target.doc_id}.",
             "dry_run": dry_run,
@@ -2053,6 +2059,8 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             updated_front_matter["ui_status"] = ui_status
         else:
             updated_front_matter.pop("ui_status", None)
+    if viewable_was_provided:
+        updated_front_matter["viewable"] = viewable
     updated_front_matter["parent_id"] = parent_id
     if sort_order is None:
         updated_front_matter.pop("sort_order", None)
@@ -2078,10 +2086,11 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "to_sort_order": sort_order,
                 "summary_changed": summary_changed,
                 "status_changed": status_changed,
+                "viewable_changed": viewable_changed,
             },
         )
         search_doc_ids = metadata_search_doc_ids(docs, target.doc_id, title_changed=title_changed)
-        if status_changed and not (title_changed or parent_changed or sort_changed or summary_changed):
+        if status_changed and not (title_changed or parent_changed or sort_changed or summary_changed or viewable_changed):
             search_doc_ids = []
         rebuild = perform_source_write_and_rebuild(
             repo_root,
@@ -2102,6 +2111,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
                 "sort_changed": sort_changed,
                 "summary_changed": summary_changed,
                 "status_changed": status_changed,
+                "viewable_changed": viewable_changed,
             },
         )
 
@@ -2117,6 +2127,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             "sort_order": sort_order,
             "summary": summary,
             "ui_status": ui_status,
+            "viewable": viewable,
         },
         "changes": {
             "title_changed": title_changed,
@@ -2124,6 +2135,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             "sort_changed": sort_changed,
             "summary_changed": summary_changed,
             "status_changed": status_changed,
+            "viewable_changed": viewable_changed,
         },
         "summary_text": f"Updated metadata for {target.doc_id}.",
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",

@@ -166,6 +166,29 @@ def test_archive_doc_is_editable_in_dry_run() -> None:
     assert result["record"]["sort_order"] == 30
 
 
+def test_update_metadata_can_change_viewability_in_dry_run() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        result = docs_management_server.handle_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "other",
+                "title": "Other",
+                "parent_id": "",
+                "sort_order": "",
+                "ui_status": "",
+                "viewable": False,
+            },
+            dry_run=True,
+        )
+
+    assert result["ok"] is True
+    assert result["record"]["viewable"] is False
+    assert result["changes"]["viewable_changed"] is True
+    assert result["changes"]["status_changed"] is False
+
+
 def test_archive_doc_viewability_can_be_changed_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -336,6 +359,7 @@ def test_docs_export_request_passes_target_format() -> None:
 def main() -> None:
     tests = [
         test_archive_doc_is_editable_in_dry_run,
+        test_update_metadata_can_change_viewability_in_dry_run,
         test_archive_doc_viewability_can_be_changed_in_dry_run,
         test_archive_parent_delete_is_blocked_only_by_children,
         test_archive_command_noops_on_archive_parent,

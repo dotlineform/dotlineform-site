@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: "2026-05-04"
+last_updated: "2026-05-07 21:52"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -144,10 +144,11 @@ Current visibility behavior:
 Current manage-mode draft behavior:
 
 - public/default tree rendering includes only docs whose generated index row is not `viewable: false`
-- manage mode has a `drafts` checkbox that adds non-viewable docs to the tree
-- manage-mode direct links to a non-viewable doc auto-enable the drafts state so Studio import/create completion links can land on the target
-- viewable docs remain visible when drafts are shown, so the tree keeps context
-- non-viewable docs are marked with configurable tree-row styling from `studio_config.json`
+- manage mode always includes non-viewable docs in the tree
+- the manage toolbar has a `show viewable` checkbox, checked by default, that keeps viewable docs visible for context
+- unchecking `show viewable` gives a focused non-viewable/draft review tree
+- manage-mode direct links to a viewable doc auto-enable `show viewable` so links can land on the target
+- non-viewable docs are prefixed with `✏️` in the index and use the configured draft color from `studio_config.json`
 - a selected non-viewable doc can be made viewable through the manage toolbar; the action prompts before also making required non-viewable ancestors or optional descendants viewable
 
 Document view updated-date metadata is scope-configurable because it is more useful in Studio Docs than Library. Docs search continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.

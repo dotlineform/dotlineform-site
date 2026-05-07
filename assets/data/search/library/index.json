@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-5029c4759de751d494ee8c8feb18cd8e",
-    "generated_at_utc": "2026-05-07T20:18:02Z",
-    "count": 6
+    "version": "blake2b-1f8d9849f2fda5f39ea7119671898a93",
+    "generated_at_utc": "2026-05-07T21:13:30Z",
+    "count": 12
   },
   "entries": [
     {
@@ -136,6 +136,145 @@
         "37"
       ],
       "search_text": "3d-space-to-many-dimensions 3d space to many dimensions from 3d space to many dimensions from 2026-05-07 16:37 2026 05 07 16 37"
+    },
+    {
+      "id": "abstract-thought",
+      "kind": "doc",
+      "title": "Abstract Thought and Physical Processes",
+      "href": "/library/?doc=abstract-thought",
+      "last_updated": "2026-05-07 22:13",
+      "display_meta": "2026-05-07 22:13",
+      "search_terms": [
+        "abstract-thought",
+        "abstract",
+        "thought",
+        "abstract thought and physical processes",
+        "and",
+        "physical",
+        "processes",
+        "2026-05-07 22:13",
+        "2026",
+        "05",
+        "07",
+        "22",
+        "13"
+      ],
+      "search_text": "abstract-thought abstract thought abstract thought and physical processes and physical processes 2026-05-07 22:13 2026 05 07 22 13"
+    },
+    {
+      "id": "bayesian-reasoning",
+      "kind": "doc",
+      "title": "Bayesian Reasoning",
+      "href": "/library/?doc=bayesian-reasoning",
+      "last_updated": "2026-05-07 22:13",
+      "display_meta": "2026-05-07 22:13",
+      "search_terms": [
+        "bayesian-reasoning",
+        "bayesian",
+        "reasoning",
+        "bayesian reasoning",
+        "2026-05-07 22:13",
+        "2026",
+        "05",
+        "07",
+        "22",
+        "13"
+      ],
+      "search_text": "bayesian-reasoning bayesian reasoning bayesian reasoning 2026-05-07 22:13 2026 05 07 22 13"
+    },
+    {
+      "id": "beauty-memory-meaning",
+      "kind": "doc",
+      "title": "Beauty × Memory × Meaning — Pattern, Resonance, Renewal",
+      "href": "/library/?doc=beauty-memory-meaning",
+      "last_updated": "2026-05-07 22:13",
+      "display_meta": "2026-05-07 22:13",
+      "search_terms": [
+        "beauty-memory-meaning",
+        "beauty",
+        "memory",
+        "meaning",
+        "beauty × memory × meaning — pattern, resonance, renewal",
+        "pattern",
+        "resonance",
+        "renewal",
+        "2026-05-07 22:13",
+        "2026",
+        "05",
+        "07",
+        "22",
+        "13"
+      ],
+      "search_text": "beauty-memory-meaning beauty memory meaning beauty × memory × meaning — pattern, resonance, renewal pattern resonance renewal 2026-05-07 22:13 2026 05 07 22 13"
+    },
+    {
+      "id": "beauty",
+      "kind": "doc",
+      "title": "Beauty",
+      "href": "/library/?doc=beauty",
+      "last_updated": "2026-05-07 22:13",
+      "display_meta": "2026-05-07 22:13",
+      "search_terms": [
+        "beauty",
+        "2026-05-07 22:13",
+        "2026",
+        "05",
+        "07",
+        "22",
+        "13"
+      ],
+      "search_text": "beauty 2026-05-07 22:13 2026 05 07 22 13"
+    },
+    {
+      "id": "beyond-conscious-subconscious",
+      "kind": "doc",
+      "title": "Beyond Conscious vs. Subconscious",
+      "href": "/library/?doc=beyond-conscious-subconscious",
+      "last_updated": "2026-05-07 22:13",
+      "display_meta": "2026-05-07 22:13",
+      "search_terms": [
+        "beyond-conscious-subconscious",
+        "beyond",
+        "conscious",
+        "subconscious",
+        "beyond conscious vs. subconscious",
+        "vs",
+        "2026-05-07 22:13",
+        "2026",
+        "05",
+        "07",
+        "22",
+        "13"
+      ],
+      "search_text": "beyond-conscious-subconscious beyond conscious subconscious beyond conscious vs. subconscious vs 2026-05-07 22:13 2026 05 07 22 13"
+    },
+    {
+      "id": "closed-vs-open-universe",
+      "kind": "doc",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "href": "/library/?doc=closed-vs-open-universe",
+      "last_updated": "2026-05-07 22:12",
+      "display_meta": "2026-05-07 22:12",
+      "search_terms": [
+        "closed-vs-open-universe",
+        "closed",
+        "vs",
+        "open",
+        "universe",
+        "entropy & evolution under two cosmologies",
+        "entropy",
+        "evolution",
+        "under",
+        "two",
+        "cosmologies",
+        "2026-05-07 22:12",
+        "2026",
+        "05",
+        "07",
+        "22",
+        "12"
+      ],
+      "search_text": "closed-vs-open-universe closed vs open universe entropy & evolution under two cosmologies entropy evolution under two cosmologies 2026-05-07 22:12 2026 05 07 22 12"
     }
   ]
 }

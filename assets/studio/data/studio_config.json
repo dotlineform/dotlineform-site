@@ -124,7 +124,6 @@
   "docs_viewer": {
     "recently_added_limit": 10,
     "draft_nav_color": "var(--muted)",
-    "draft_nav_font_weight": "600",
     "ui_statuses_by_scope": {
       "studio": [
         {
@@ -153,10 +152,11 @@
   "ui_text": {
     "docs_viewer": {
       "recently_added_button": "recently added",
-      "draft_toggle_label": "drafts",
-      "draft_toggle_aria_label": "Show draft docs",
+      "draft_toggle_label": "show viewable",
+      "draft_toggle_aria_label": "Show viewable docs",
       "metadata_status_label": "status",
       "metadata_status_none_option": "<none>",
+      "metadata_status_draft_option": "draft",
       "status_pill_set_label": "Set status: {label}",
       "status_pill_clear_label": "Clear status: {label}",
       "status_pill_readonly_label": "Status: {label}",

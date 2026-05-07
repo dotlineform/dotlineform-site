@@ -2,7 +2,7 @@
 doc_id: ui-framework
 title: UI Framework
 added_date: 2026-04-24
-last_updated: "2026-05-07 21:09"
+last_updated: "2026-05-07 21:52"
 parent_id: ui
 sort_order: 10
 ---
@@ -205,8 +205,8 @@ The current shared treatment is:
 - active state should be obvious without turning the viewer into a tabbed interface
 - scope-level structural visibility, such as a manage-only Archive branch, should come from generated docs index options rather than hard-coded scope checks in the viewer
 - in manage mode, the toolbar note should appear only for actionable states such as checking, unavailable server, active search, archive unavailable, or operation results; the available local-server state should stay quiet
-- in manage mode, the draft checkbox adds non-viewable docs to the tree while keeping viewable docs visible for context
-- draft/non-viewable tree-row color and font weight should come from `studio_config.json` so accessibility can be tuned without code changes
+- in manage mode, non-viewable docs remain visible by default and the checked-by-default `show viewable` checkbox controls whether viewable docs stay in the tree for context
+- non-viewable tree rows use a `✏️` title prefix plus the draft color from `studio_config.json`; they should not rely on bold text as the primary distinction
 - in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"
 - the "move after" state should render a visible insert line after the target row rather than relying only on a subtle row shadow
 - drag/drop tree moves should normalize the destination sibling set to sparse unique sort orders so the requested placement is visible even when earlier metadata contains duplicate order values

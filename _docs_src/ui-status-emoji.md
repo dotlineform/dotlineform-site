@@ -2,7 +2,7 @@
 doc_id: ui-status-emoji
 title: UI Status Emoji
 added_date: 2026-05-02
-last_updated: 2026-05-02
+last_updated: "2026-05-07 21:52"
 ui_status: done
 parent_id: change-requests
 sort_order: 200
@@ -52,7 +52,7 @@ For example:
 
 - This would be a shared feature available to all scopes (Studio docs, Library, Analysis), with each scope able to define a different allowed status set.
 - If the status is not present in front-matter, or the value does not correspond to a value in config, it is ignored by the viewer.
-- The status can be edited in the Doc Viewer ‘Edit’ modal (in manage mode) by selecting from a dropdown control which lists the available config values. The default is the value entered in the front-matter, if that value corresponds to one defined in config. Otherwise the dropdown is blank.
+- The status can be edited in the Doc Viewer ‘Edit’ modal (in manage mode) by selecting from a dropdown control which lists the fixed `draft` option plus the available config values. The default is `draft` when `viewable: false`; otherwise it is the configured front-matter `ui_status` value when valid, or blank.
 - The available status values are also displayed as small circular pills next to the ‘favourites’ pill displayed above the document. The pills contain the associated emoji. When not selected, the pills show the emoji in grey. When selected, the pills show the coloured emoji. The pills can be toggle on/off in the same way as the favourites pill.
 
 ## Review Notes
@@ -69,9 +69,10 @@ For example:
 - `ui_status` values on hidden, manage-only, or non-loadable docs are ignored by the viewer.
 - The emoji prefix appears only in the left index panel. It is a UI visual prompt, not part of search output, breadcrumb/path text, bookmark labels, or document titles.
 - The Edit modal only writes a status change when the user clicks `Save`.
+- The Edit modal treats `draft` as viewability state: selecting `draft` writes `viewable: false` and clears `ui_status`; selecting any non-draft status writes `viewable: true`.
 - The status pills write immediately in manage mode by setting or removing the document's `ui_status` front matter, which causes the index emoji to appear or disappear after the docs payload reloads.
 - When manage mode is unavailable, status pills remain visible as read-only indicators.
-- The dropdown includes a fixed blank `<none>` option outside the configured status values.
+- The dropdown includes fixed `<none>` and `draft` options outside the configured status values.
 - Docs search output is not affected by this feature.
 - Malformed config entries are ignored by the viewer rather than treated as build failures.
 

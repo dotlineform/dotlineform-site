@@ -17,6 +17,18 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Clarified Docs Viewer draft visibility
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Management
+
+**Summary:**
+Changed manage-mode draft visibility from a hidden `drafts` toggle and bold index styling to always-visible non-viewable docs with a `✏️` prefix, plus a checked-by-default `show viewable` toggle.
+
+**Impact:**
+The Edit modal status dropdown now includes `draft` across all scopes. Saving `draft` writes `viewable: false`; saving any non-draft status writes `viewable: true`.
+
 ## [2026-05-07] Fixed Studio mobile nav overflow
 
 **Status:** implemented

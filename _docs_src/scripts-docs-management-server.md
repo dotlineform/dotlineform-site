@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-07"
+last_updated: "2026-05-07 21:52"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -420,6 +420,7 @@ Open-source behavior:
   "title": "Docs Viewer Management",
   "summary": "Manage-mode source editing contract.",
   "ui_status": "done",
+  "viewable": true,
   "parent_id": "ui-requests",
   "sort_order": 21
 }
@@ -428,13 +429,14 @@ Open-source behavior:
 Metadata-update behavior:
 
 - updates only front matter; body content and filename remain unchanged
-- currently supports `title`, `summary`, `ui_status`, `parent_id`, and `sort_order`
+- currently supports `title`, `summary`, `ui_status`, `viewable`, `parent_id`, and `sort_order`
 - title changes do not mutate `doc_id` or filename
 - `added_date` is preserved; `last_updated` is refreshed to the current minute after a successful metadata write
 - blank `summary` removes the front matter field
 - blank `ui_status` removes the front matter field
 - non-blank `ui_status` is stored as the raw status key supplied by the client; the write server does not validate it against Docs Viewer config
-- responses include `changes.status_changed` alongside the other metadata change flags
+- `viewable` is stored as a boolean when supplied; the Docs Viewer Edit modal uses this to map `status = draft` to `viewable: false` and any non-draft status to `viewable: true`
+- responses include `changes.status_changed` and `changes.viewable_changed` alongside the other metadata change flags
 - `parent_id` may be blank for root, but must otherwise resolve inside the same scope
 - `parent_id` cannot point at the current doc or any of its descendants
 - `sort_order` accepts a non-negative integer, blank, or `append`
@@ -442,6 +444,7 @@ Metadata-update behavior:
 - always rebuilds docs payloads for the scope
 - runs a targeted same-scope docs-search update for affected ids after a successful write
 - skips docs-search updates when `ui_status` is the only changed field, because status emoji are viewer-only metadata
+- keeps docs-search updates enabled for `viewable` changes so non-viewable docs are removed from search and newly viewable docs are added back
 
 `POST /docs/update-viewability` expects:
 

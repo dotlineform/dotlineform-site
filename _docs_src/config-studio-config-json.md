@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-06 21:12"
+last_updated: "2026-05-07 21:52"
 parent_id: studio
 sort_order: 90
 ---
@@ -158,6 +158,9 @@ Contract:
 
 Related status-pill labels and save-state messages live under `ui_text.docs_viewer`, including:
 
+- `draft_toggle_label`
+- `draft_toggle_aria_label`
+- `metadata_status_draft_option`
 - `status_pill_set_label`
 - `status_pill_clear_label`
 - `status_pill_readonly_label`

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-06 19:48"
+last_updated: "2026-05-07 21:52"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -39,7 +39,7 @@ Implemented now:
 - create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
 - docs-management writes new `added_date` and changed `last_updated` values in `YYYY-MM-DD HH:MM` form; existing date-only docs remain valid and do not need migration
 - Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`
-- manage mode can show draft/non-viewable docs with a checkbox while keeping viewable docs visible for context
+- manage mode always shows draft/non-viewable docs and uses a checked-by-default `show viewable` checkbox to keep viewable docs visible for context
 - selected non-viewable docs can be made viewable through the manage toolbar
 - `Make viewable` includes required non-viewable ancestors after confirmation and can optionally include descendants
 - viewability changes are sent through a bulk endpoint so one action writes the affected source files and runs one docs/search rebuild
@@ -56,13 +56,16 @@ Implemented now:
   - `title`
   - `summary`
   - `ui_status`
+  - `viewable`
   - `parent_id`
   - `sort_order`
 - blank `summary` removes the front matter field
 - blank `ui_status` removes the front matter field
+- selecting `draft` in the metadata status dropdown writes `viewable: false` and clears `ui_status`
+- selecting any non-draft status, including `<none>`, writes `viewable: true`
 - configured `ui_status` values also render as compact document status pills beside the bookmark control
 - status pills are read-only outside available manage mode
-- in available manage mode, status pill clicks write immediately through the metadata endpoint and reload the docs payload
+- in available manage mode, status pill clicks write immediately through the metadata endpoint, set `viewable: true`, and reload the docs payload
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
 - when the metadata modal changes `parent_id` to a non-root parent and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent

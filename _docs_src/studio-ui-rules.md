@@ -38,6 +38,23 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-07 / UI-099
+
+- status: adopted
+- route: shared Docs Viewer manage mode
+- issue: non-viewable docs were indicated mainly by bolder index text and were hidden behind a `drafts` checkbox, while draft state could not be set directly from the Edit modal status dropdown.
+- triage: shared docs-viewer management refinement
+- reasoning: draft/non-viewable state should be visible without relying on font weight, and the Edit modal should expose the same operational state that controls public discoverability. A checked-by-default `show viewable` toggle keeps the normal context view while making it easy to focus on non-viewable docs by unchecking it.
+- outcome: non-viewable docs now remain in the manage-mode tree by default with a `✏️` title prefix, the visibility toggle is labelled `show viewable`, and the Edit modal status dropdown includes fixed `draft` across all scopes. Saving `draft` writes `viewable: false`; saving any non-draft status writes `viewable: true`.
+- files changed:
+  - `assets/js/docs-viewer.js`
+  - `assets/css/main.css`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke `/docs/?scope=studio&mode=manage` with viewable and non-viewable docs and confirm the pencil prefix, `show viewable` default, focused non-viewable view, and Edit modal draft/viewable writes
+
 ## UI Rule Log 2026-05-07 / UI-098
 
 - status: adopted
