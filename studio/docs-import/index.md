@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: "Docs HTML Import"
+title: "Docs Import"
 permalink: /studio/docs-import/
 section: docs-html-import
 studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
@@ -34,7 +34,7 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
       </label>
     </div>
 
-    <label class="docsHtmlImportPage__toggle">
+    <label class="docsHtmlImportPage__toggle" id="docsHtmlImportIncludePromptMetaWrap">
       <input type="checkbox" id="docsHtmlImportIncludePromptMeta">
       <span id="docsHtmlImportIncludePromptMetaLabel"></span>
     </label>

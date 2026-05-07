@@ -1,14 +1,14 @@
 ---
 doc_id: user-guide-docs-html-import
-title: "Docs HTML Import"
+title: "Docs Import"
 added_date: 2026-04-24
-last_updated: 2026-05-03
+last_updated: 2026-05-07
 parent_id: user-guide
 sort_order: 20
 ---
-# Docs HTML Import
+# Docs Import
 
-Use this page when you have a staged self-contained HTML export that should become a Library, Analysis, or Studio docs source doc.
+Use this page when you have staged self-contained HTML or body-only Markdown that should become a Library, Analysis, or Studio docs source doc.
 
 The Studio route is:
 
@@ -16,20 +16,24 @@ The Studio route is:
 
 ## Before You Start
 
-Put the original HTML file in:
+Put the original HTML or Markdown file in:
 
 - `var/docs/import-staging/`
 
 This staging directory is repo-local and untracked, so it is a practical place to keep the original export nearby while you test imports.
 
+Staged Markdown files should not include predefined front matter.
+The importer creates or preserves the normal Docs Viewer front matter when it writes the target source doc.
+
 ## What The Page Does
 
 The import page:
 
-- lists staged `.html` files from `var/docs/import-staging/`
+- lists staged `.html`, `.htm`, `.md`, and `.markdown` files from `var/docs/import-staging/`
 - lets you choose whether the imported doc should publish into `library`, `analysis`, or `studio`
-- optionally keeps clearly identifiable prompt/meta blocks
-- converts the HTML into a best-attempt Markdown source doc
+- optionally keeps clearly identifiable prompt/meta blocks for HTML imports
+- converts HTML into a best-attempt Markdown source doc
+- imports staged Markdown as the source body without HTML conversion
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
 - writes a new doc immediately when the target is free
@@ -38,16 +42,18 @@ The import page:
 ## Basic Workflow
 
 1. Open `/studio/docs-import/`.
-2. Choose the staged HTML file.
+2. Choose the staged HTML or Markdown file.
 3. Choose the publish scope:
    - `library` for the public Library viewer
    - `analysis` for the public Analysis viewer
    - `studio` for the Studio docs viewer
-4. Decide whether to include obvious prompt/meta blocks.
+4. For HTML files, decide whether to include obvious prompt/meta blocks.
 5. Click `Import`.
 
 If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
-The new source doc's `doc_id` and Markdown filename come from the staged HTML filename stem, while the document title is preserved from the imported HTML.
+The new source doc's `doc_id` and Markdown filename come from the staged source filename stem.
+HTML imports preserve the imported HTML title.
+Markdown imports use the first `# H1` as the title when present and otherwise humanize the staged filename stem.
 
 New `library` and `analysis` imports use the same default import behavior: they are generated and opened for review through manage-mode viewer links before becoming normal public tree items.
 
@@ -62,7 +68,8 @@ When it is disabled:
 
 - those sections are dropped when the importer can identify them clearly
 
-If you are unsure, start with the option off and only enable it when the prompt/meta content is part of the document you actually want to keep.
+This option is hidden for Markdown files because staged Markdown is already the source body.
+If you are unsure for HTML, start with the option off and only enable it when the prompt/meta content is part of the document you actually want to keep.
 
 ## Overwrite Behavior
 
@@ -103,13 +110,13 @@ The page root `#docsHtmlImportRoot` exposes the shared Studio route-ready contra
 - `data-studio-busy` is `true` while an import or confirmed overwrite is running
 - `data-studio-mode` is `idle` before import, `confirm` when an overwrite warning is shown, and `result` after a successful import
 - `data-studio-service` reports whether the Docs Management Server is available
-- `data-studio-record-loaded` is `true` when staged HTML files are available
+- `data-studio-record-loaded` is `true` when staged HTML or Markdown files are available
 
 ## Current Practical Limits
 
 This importer is intentionally best-effort.
 
-Expect good results for:
+Expect good HTML conversion results for:
 
 - normal prose docs
 - headings and lists
@@ -125,6 +132,9 @@ Expect simplified output for:
 - interactive disclosure UI such as `details/summary`
 - prompt/meta shells
 - image cases where the source is unclear or awkward for Markdown
+
+Markdown files bypass the HTML converter.
+They are still validated through the current Jekyll docs renderer before write success.
 
 ## Related References
 

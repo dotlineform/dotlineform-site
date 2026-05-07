@@ -178,6 +178,12 @@ def write_staged_html(root: Path, filename: str, html: str) -> None:
     path.write_text(html, encoding="utf-8")
 
 
+def write_staged_markdown(root: Path, filename: str, markdown: str) -> None:
+    path = root / "var/docs/import-staging" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(markdown, encoding="utf-8")
+
+
 def write_library_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
     lines = ["---"]
     for key, value in front_matter.items():
@@ -358,6 +364,61 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
     assert source_exists
     assert "doc_id: compact-name" in source_text
     assert "title: An Overly Descriptive Document Title" in source_text
+
+
+def test_source_import_files_list_html_and_markdown() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_html(root, "source.html", "<html><body><h1>Source</h1></body></html>")
+        write_staged_markdown(root, "source.md", "# Source\n")
+
+        files = docs_management.list_staged_import_source_files(root)
+
+    by_filename = {item["filename"]: item for item in files}
+    assert by_filename["source.html"]["source_format"] == "html"
+    assert by_filename["source.md"]["source_format"] == "markdown"
+
+
+def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_markdown(
+            root,
+            "markdown-note.md",
+            "# Imported Markdown\n\nBody from staged Markdown with [a link](https://example.com).\n",
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "markdown-note.md"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_path = root / "_docs_library_src/markdown-note.md"
+        source_text = source_path.read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["operation"] == "create"
+    assert payload["doc_id"] == "markdown-note"
+    assert payload["title"] == "Imported Markdown"
+    assert payload["import_preview"]["source_format"] == "markdown"
+    assert payload["import_preview"]["proposed_doc_id_source"] == "filename"
+    assert "doc_id: markdown-note" in source_text
+    assert "title: Imported Markdown" in source_text
+    assert "# Imported Markdown" in source_text
+    assert "Body from staged Markdown" in source_text
 
 
 def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> None:

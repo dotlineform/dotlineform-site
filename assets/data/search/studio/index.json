@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-670df6556f0754a799604b060fb46dec",
-    "generated_at_utc": "2026-05-07T11:00:47Z",
+    "version": "blake2b-92414c746f48ef0342fce8a88fd02fac",
+    "generated_at_utc": "2026-05-07T16:16:58Z",
     "count": 194
   },
   "entries": [
@@ -711,31 +711,6 @@
       "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request change requests change requests 2026-05-02 2026 05 02"
     },
     {
-      "id": "user-guide-docs-html-import",
-      "kind": "doc",
-      "title": "Docs HTML Import",
-      "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-03",
-      "parent_id": "user-guide",
-      "parent_title": "User Guide",
-      "display_meta": "2026-05-03 • User Guide",
-      "search_terms": [
-        "user-guide-docs-html-import",
-        "user",
-        "guide",
-        "docs",
-        "html",
-        "import",
-        "docs html import",
-        "user guide",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs html import user guide 2026-05-03 2026 05 03"
-    },
-    {
       "id": "scripts-docs-import",
       "kind": "doc",
       "title": "Docs Import",
@@ -760,6 +735,31 @@
         "13"
       ],
       "search_text": "scripts-docs-import scripts docs import docs import import/export export 2026-05-06 20:13 2026 05 06 20 13"
+    },
+    {
+      "id": "user-guide-docs-html-import",
+      "kind": "doc",
+      "title": "Docs Import",
+      "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
+      "last_updated": "2026-05-07",
+      "parent_id": "user-guide",
+      "parent_title": "User Guide",
+      "display_meta": "2026-05-07 • User Guide",
+      "search_terms": [
+        "user-guide-docs-html-import",
+        "user",
+        "guide",
+        "docs",
+        "html",
+        "import",
+        "docs import",
+        "user guide",
+        "2026-05-07",
+        "2026",
+        "05",
+        "07"
+      ],
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-07 2026 05 07"
     },
     {
       "id": "ui-primitive-input",
@@ -2073,10 +2073,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-06 20:08",
+      "last_updated": "2026-05-07",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-06 20:08 • Docs",
+      "display_meta": "2026-05-07 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2084,14 +2084,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-06 20:08",
+        "2026-05-07",
         "2026",
         "05",
-        "06",
-        "20",
-        "08"
+        "07"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-06 20:08 2026 05 06 20 08"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-07 2026 05 07"
     },
     {
       "id": "site-request-json-schema-adoption",

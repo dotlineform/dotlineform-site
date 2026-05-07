@@ -17,6 +17,36 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Enabled Markdown files in Docs Import
+
+**Status:** implemented
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Extended `/studio/docs-import/` so staged body-only Markdown files can be imported alongside staged HTML files.
+
+**Reason:**
+Some source material is already authored as Markdown and should not be forced through the HTML conversion path.
+
+**Files changed:**
+
+- `studio/docs-import/index.md`
+- `studio/library/index.md`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/js/studio-transport.js`
+- `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/docs_management_server.py`
+- `tests/python/test_docs_import_service.py`
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+
+**Impact:**
+The import page now lists `.html`, `.htm`, `.md`, and `.markdown` files from `var/docs/import-staging/`.
+Markdown imports are treated as body-only source, derive `doc_id` from the staged filename, derive title from the first `# H1` when present, and get normal Docs Viewer front matter during create or overwrite.
+
 ## [2026-05-07] Added a dense Studio list primitive variant
 
 **Status:** implemented

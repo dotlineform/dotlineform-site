@@ -62,14 +62,14 @@ Source writes should be a later apply step after preview quality, apply-time val
 Import v1 is not a flight check for those later apply workflows.
 It should be permissive enough to preview imperfect files and make defects visible rather than refusing to inspect them.
 
-### Relationship To Existing HTML Import
+### Relationship To Existing Docs Import
 
 This workflow is separate from `/studio/docs-import/?scope=library`.
 
-The existing HTML import flow creates or overwrites Library source Markdown from staged `.html` files.
+The existing Docs Import flow creates or overwrites Library source Markdown from staged HTML or body-only Markdown files.
 Library import v1 reads staged export-derived data files, usually `.json` or `.jsonl`, and writes preview Markdown only.
 
-Both workflows can use the docs-management local service, but they should keep separate staging conventions and endpoint names so staged HTML imports are not confused with staged data imports.
+Both workflows can use the docs-management local service, but they should keep separate staging conventions and endpoint names so staged source-doc imports are not confused with staged data imports.
 
 ### Staging And Preview Artifacts
 

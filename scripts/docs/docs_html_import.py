@@ -25,6 +25,9 @@ SCOPE_ROOTS = {
     "library": Path("_docs_library_src"),
 }
 STAGING_REL_DIR = Path("var/docs/import-staging")
+HTML_STAGED_SUFFIXES = {".html", ".htm"}
+MARKDOWN_STAGED_SUFFIXES = {".md", ".markdown"}
+SUPPORTED_STAGED_SUFFIXES = HTML_STAGED_SUFFIXES | MARKDOWN_STAGED_SUFFIXES
 BLOCK_TAGS = {
     "body",
     "section",
@@ -54,6 +57,9 @@ ROWSPAN_COLSPAN_ATTRS = {"rowspan", "colspan"}
 PROMPT_META_TEXT_PREFIXES = ("[prompt]", "original prompt", "follow-up")
 PLAIN_URL_PATTERN = re.compile(r"https?://[^\s<>\"]+")
 PLAIN_URL_TRAILING_PUNCTUATION = ".,;:!?)]}'"
+MARKDOWN_HEADING_PATTERN = re.compile(r"^\s*#\s+(.+?)\s*#*\s*$", re.MULTILINE)
+MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 
 
 def normalize_space(text: str) -> str:
@@ -95,6 +101,10 @@ def slugify(value: str) -> str:
     return text or "imported-doc"
 
 
+def humanize(value: str) -> str:
+    return " ".join(part.capitalize() for part in re.split(r"[_\-\s]+", value.strip()) if part)
+
+
 def fence_code(text: str) -> str:
     content = text.rstrip("\n")
     return f"```\n{content}\n```"
@@ -119,6 +129,18 @@ def detect_bundle_bin() -> Optional[str]:
     if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
         return str(rbenv_bundle)
     return shutil.which("bundle")
+
+
+def source_format_for_path(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix in HTML_STAGED_SUFFIXES:
+        return "html"
+    if suffix in MARKDOWN_STAGED_SUFFIXES:
+        return "markdown"
+    raise ValueError(
+        "staged file must be an HTML or Markdown source "
+        f"({', '.join(sorted(SUPPORTED_STAGED_SUFFIXES))})"
+    )
 
 
 @dataclass
@@ -559,6 +581,15 @@ def validate_markdown_with_jekyll(repo_root: Path, markdown: str) -> dict[str, A
 
 
 def resolve_staged_html(repo_root: Path, staged_filename: str) -> Path:
+    return resolve_staged_import_source(repo_root, staged_filename, allowed_suffixes=HTML_STAGED_SUFFIXES)
+
+
+def resolve_staged_import_source(
+    repo_root: Path,
+    staged_filename: str,
+    *,
+    allowed_suffixes: set[str] | None = None,
+) -> Path:
     filename = str(staged_filename or "").strip()
     if not filename:
         raise ValueError("staged_filename is required")
@@ -567,21 +598,38 @@ def resolve_staged_html(repo_root: Path, staged_filename: str) -> Path:
     if staging_root not in [path, *path.parents]:
         raise ValueError(f"staged file must resolve inside {STAGING_REL_DIR.as_posix()}")
     if not path.exists():
-        raise FileNotFoundError(f"staged HTML does not exist: {filename}")
+        raise FileNotFoundError(f"staged import source does not exist: {filename}")
+    suffixes = allowed_suffixes or SUPPORTED_STAGED_SUFFIXES
+    if path.suffix.lower() not in suffixes:
+        raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(suffixes)))
     return path
 
 
 def list_staged_html_files(repo_root: Path) -> list[dict[str, Any]]:
+    return [
+        file
+        for file in list_staged_import_source_files(repo_root)
+        if file.get("source_format") == "html"
+    ]
+
+
+def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
     staging_root = (repo_root / STAGING_REL_DIR).resolve()
     if not staging_root.exists():
         return []
     files: list[dict[str, Any]] = []
-    for path in sorted(staging_root.glob("*.html")):
+    candidates = [
+        path
+        for path in staging_root.iterdir()
+        if path.is_file() and path.suffix.lower() in SUPPORTED_STAGED_SUFFIXES
+    ]
+    for path in sorted(candidates, key=lambda candidate: candidate.name.lower()):
         stat = path.stat()
         files.append(
             {
                 "filename": path.name,
                 "path": relative_path(repo_root, path),
+                "source_format": source_format_for_path(path),
                 "size_bytes": stat.st_size,
                 "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             }
@@ -590,6 +638,28 @@ def list_staged_html_files(repo_root: Path) -> list[dict[str, Any]]:
 
 
 def generate_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+    include_prompt_meta: bool,
+) -> dict[str, Any]:
+    source_format = source_format_for_path(source_path)
+    if source_format == "markdown":
+        return generate_markdown_import_preview(
+            repo_root,
+            source_path=source_path,
+            scope=scope,
+        )
+    return generate_html_import_preview(
+        repo_root,
+        source_path=source_path,
+        scope=scope,
+        include_prompt_meta=include_prompt_meta,
+    )
+
+
+def generate_html_import_preview(
     repo_root: Path,
     *,
     source_path: Path,
@@ -608,10 +678,73 @@ def generate_import_preview(
         include_prompt_meta=include_prompt_meta,
     )
     summary["scope"] = normalized_scope
+    summary["source_format"] = "html"
+    summary["source_path"] = relative_path(repo_root, source_path)
     summary["source_html"] = relative_path(repo_root, source_path)
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    return summary
+
+
+def extract_markdown_title(markdown: str, fallback: str) -> tuple[str, str]:
+    match = MARKDOWN_HEADING_PATTERN.search(markdown or "")
+    if match:
+        title = normalize_space(re.sub(r"\s+#*$", "", match.group(1)))
+        if title:
+            return title, "h1"
+    return humanize(fallback) or "Imported Doc", "filename"
+
+
+def build_markdown_summary(source_markdown: str, source_filename_stem: str) -> dict[str, Any]:
+    markdown = (source_markdown or "").lstrip("\ufeff").strip()
+    title, title_source = extract_markdown_title(markdown, source_filename_stem)
+    warnings: list[str] = []
+    if not markdown:
+        markdown = f"# {title}"
+        warnings.append("Staged Markdown was blank; generated a title-only body.")
+    link_matches = MARKDOWN_LINK_PATTERN.findall(markdown)
+    image_matches = MARKDOWN_IMAGE_PATTERN.findall(markdown)
+    plain_url_text = MARKDOWN_IMAGE_PATTERN.sub("", MARKDOWN_LINK_PATTERN.sub("", markdown))
+    return {
+        "title": title,
+        "title_source": title_source,
+        "proposed_doc_id": slugify(source_filename_stem or title or "Imported Doc"),
+        "proposed_doc_id_source": "filename" if source_filename_stem else "title",
+        "source_stats": {
+            "chars": len(source_markdown or ""),
+            "links": len(link_matches) + len(PLAIN_URL_PATTERN.findall(plain_url_text)),
+            "images": len(image_matches),
+            "svg": markdown.lower().count("<svg"),
+            "details": markdown.lower().count("<details"),
+        },
+        "image_summary": {
+            "external": sum(1 for src in image_matches if src.startswith("http://") or src.startswith("https://")),
+            "data_urls": sum(1 for src in image_matches if src.startswith("data:")),
+            "repo_local_or_other": sum(1 for src in image_matches if not (src.startswith("http://") or src.startswith("https://") or src.startswith("data:"))),
+        },
+        "warnings": warnings,
+        "markdown_preview": markdown,
+    }
+
+
+def generate_markdown_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    source_markdown = source_path.read_text(encoding="utf-8", errors="replace")
+    summary = build_markdown_summary(source_markdown, source_path.stem)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "markdown"
+    summary["source_path"] = relative_path(repo_root, source_path)
+    summary["source_markdown"] = relative_path(repo_root, source_path)
+    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["tag_counts"] = {}
+    summary["comment_count"] = 0
     summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
     return summary
 

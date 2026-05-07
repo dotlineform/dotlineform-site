@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-06 20:08"
+last_updated: "2026-05-07"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -32,8 +32,10 @@ Exposed endpoints:
 - `GET /docs/index`
 - `GET /docs/doc`
 - `GET /docs/search`
+- `GET /docs/import-source-files`
 - `GET /docs/import-html-files`
 - `GET /docs/import/files`
+- `POST /docs/import-source`
 - `POST /docs/import-html`
 - `POST /docs/export`
 - `POST /docs/import/preview`
@@ -55,7 +57,7 @@ Current behavior:
 - local-only write service for the shared Docs Viewer
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
-- also used by `/studio/docs-import/` for staged-file listing and docs HTML import writes
+- also used by `/studio/docs-import/` for staged-file listing and docs HTML or Markdown import writes
 - also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
 - also used by `/studio/import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
@@ -133,13 +135,15 @@ Request behavior:
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
 - `sort_order` appends as the last sibling when both `after_doc_id` and explicit `sort_order` are omitted
 
-`GET /docs/import-html-files` returns:
+`GET /docs/import-source-files` returns:
 
-- the current staged `.html` files under `var/docs/import-staging/`
-- filename, repo-relative path, size, and modified time for each staged file
+- the current staged `.html`, `.htm`, `.md`, and `.markdown` files under `var/docs/import-staging/`
+- filename, repo-relative path, source format, size, and modified time for each staged file
 - a read-only listing intended for the Studio import page
 
-`POST /docs/import-html` expects:
+`GET /docs/import-html-files` remains a compatibility alias for older callers and returns the same source-file listing.
+
+`POST /docs/import-source` expects:
 
 ```json
 {
@@ -156,18 +160,23 @@ Import behavior:
 
 - `scope` must be `studio`, `analysis`, or `library`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
-- parses the full staged HTML file through the shared importer
+- accepts staged HTML (`.html`, `.htm`) and body-only Markdown (`.md`, `.markdown`)
+- parses full staged HTML files through the shared converter
+- imports staged Markdown as the source body without predefined front matter
 - escapes literal pipe characters from source text so mathematical notation such as `I(X;Y|Z)` does not become an accidental Markdown table
 - converts plain-text `http://` and `https://` URLs in prose into Markdown autolinks while leaving existing anchors and code/preformatted text alone
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
-- supports the prompt/meta include toggle already defined by the import spec
-- derives the proposed `doc_id` and new Markdown filename stem from the staged HTML filename, not from the imported document title
+- supports the prompt/meta include toggle already defined by the import spec for HTML imports
+- derives the proposed `doc_id` and new Markdown filename stem from the staged source filename, not from the imported document title
+- derives Markdown import titles from the first `# H1` when present, then falls back to the staged filename
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio imports write `published: true`, `viewable: true`
 - new Analysis imports write `published: true`, `viewable: false`
 - new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
+
+`POST /docs/import-html` remains a compatibility alias for older callers and delegates to the same source import handler.
 - reports collision details when the generated import target already matches an existing `doc_id`
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state

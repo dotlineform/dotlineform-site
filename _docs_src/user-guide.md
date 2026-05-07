@@ -24,7 +24,7 @@ User Guide pages should focus on actions, examples, and decision help first.
 Current guides:
 
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
-- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)

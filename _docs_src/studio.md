@@ -54,7 +54,7 @@ Read this section in this order:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
-   - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
+   - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
    - **[Studio Data Export](/docs/?scope=studio&doc=studio-data-export)**
    - **[Studio Data Import](/docs/?scope=studio&doc=studio-data-import)**

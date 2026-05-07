@@ -11,8 +11,10 @@ Run:
 Endpoints:
   GET /health
   GET /capabilities
+  GET /docs/import-source-files
   GET /docs/import-html-files
   GET /docs/import/files
+  POST /docs/import-source
   POST /docs/import-html
   POST /docs/export
   POST /docs/import/preview
@@ -66,7 +68,7 @@ from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
-from docs_html_import import generate_import_preview, list_staged_html_files, resolve_staged_html  # noqa: E402
+from docs_html_import import generate_import_preview, list_staged_import_source_files, resolve_staged_import_source  # noqa: E402
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
 from docs_watch_suppression import (  # noqa: E402
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -1579,14 +1581,14 @@ def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc
     return format_source(front_matter, imported_body_markdown(preview))
 
 
-def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
     overwrite_doc_id = str(body.get("overwrite_doc_id") or "").strip()
     confirm_overwrite = bool(body.get("confirm_overwrite"))
     preview_only = bool(body.get("preview_only"))
-    source_path = resolve_staged_html(repo_root, staged_filename)
+    source_path = resolve_staged_import_source(repo_root, staged_filename)
     preview = generate_import_preview(
         repo_root,
         source_path=source_path,
@@ -1621,6 +1623,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             {
                 "scope": scope,
                 "staged_filename": staged_filename,
+                "source_format": preview.get("source_format"),
                 "include_prompt_meta": include_prompt_meta,
                 "proposed_doc_id": preview["proposed_doc_id"],
                 "collision": collision["exists"],
@@ -1639,7 +1642,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             "summary_text": (
                 f"Overwrite confirmation required for {collision['doc_id']}."
                 if requires_overwrite_confirmation
-                else f"Prepared HTML import preview for {staged_filename}."
+                else f"Prepared import preview for {staged_filename}."
             ),
             "dry_run": dry_run,
         }
@@ -1662,7 +1665,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
                 {
                     "staged_filename": staged_filename,
                     "include_prompt_meta": include_prompt_meta,
-                    "source_html": preview.get("source_html"),
+                    "source_path": preview.get("source_path"),
                     "title": preview.get("title"),
                 },
             )
@@ -1680,6 +1683,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
             {
                 "scope": scope,
                 "staged_filename": staged_filename,
+                "source_format": preview.get("source_format"),
                 "doc_id": collision_doc.doc_id,
                 "path": relative_path(repo_root, collision_doc.path),
                 "include_prompt_meta": include_prompt_meta,
@@ -1728,7 +1732,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
                 "doc_id": doc_id,
                 "title": preview["title"],
                 "path": relative_path(repo_root, target_path),
-                "source_html": preview.get("source_html"),
+                "source_path": preview.get("source_path"),
             },
         )
         rebuild = perform_source_write_and_rebuild(
@@ -1745,6 +1749,7 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         {
             "scope": scope,
             "staged_filename": staged_filename,
+            "source_format": preview.get("source_format"),
             "doc_id": doc_id,
             "path": relative_path(repo_root, target_path),
             "include_prompt_meta": include_prompt_meta,
@@ -1777,6 +1782,10 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         "summary_text": f"Created {doc_id} from {staged_filename}.",
         "dry_run": dry_run,
     }
+
+
+def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    return handle_import_source(repo_root, body, dry_run)
 
 
 def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
@@ -2663,13 +2672,13 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 payload = read_generated_search_index(self.app["repo_root"], scope)
                 write_response(self, HTTPStatus.OK, payload)
                 return
-            if parsed.path == "/docs/import-html-files":
+            if parsed.path in {"/docs/import-source-files", "/docs/import-html-files"}:
                 write_response(
                     self,
                     HTTPStatus.OK,
                     {
                         "ok": True,
-                        "files": list_staged_html_files(self.app["repo_root"]),
+                        "files": list_staged_import_source_files(self.app["repo_root"]),
                     },
                 )
                 return
@@ -2707,8 +2716,8 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 payload = handle_docs_export(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
                 return
-            if self.path == "/docs/import-html":
-                payload = handle_import_html(repo_root, body, dry_run)
+            if self.path in {"/docs/import-source", "/docs/import-html"}:
+                payload = handle_import_source(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/import/preview":

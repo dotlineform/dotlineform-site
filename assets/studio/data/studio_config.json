@@ -691,7 +691,7 @@
       "issues_heading": "Issues"
     },
     "docs_html_import": {
-      "intro": "Import a staged self-contained HTML file into the Studio, Analysis, or Library docs source as a best-attempt Markdown doc.",
+      "intro": "Import staged HTML or body-only Markdown into the Studio, Analysis, or Library docs source.",
       "file_label": "staged file",
       "scope_label": "publish into",
       "scope_option_studio": "studio",
@@ -704,11 +704,11 @@
       "cancel_overwrite_button": "Cancel",
       "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run imports.",
       "loading": "loading docs import…",
-      "idle_status": "Select a staged HTML file and import it into Studio, Analysis, or Library docs.",
-      "running_status": "Converting and validating staged HTML…",
-      "load_files_failed": "Failed to load staged HTML files.",
-      "no_files": "No staged HTML files found under var/docs/import-staging/.",
-      "file_required": "Select a staged HTML file first.",
+      "idle_status": "Select a staged HTML or Markdown file and import it into Studio, Analysis, or Library docs.",
+      "running_status": "Converting and validating staged source…",
+      "load_files_failed": "Failed to load staged import files.",
+      "no_files": "No staged HTML or Markdown files found under var/docs/import-staging/.",
+      "file_required": "Select a staged file first.",
       "import_failed": "Import failed.",
       "overwrite_required": "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
       "overwrite_cancelled": "Overwrite cancelled.",
@@ -724,6 +724,7 @@
       "result_open_viewer": "Open viewer",
       "result_open_source_failed": "Failed to open source doc.",
       "result_summary_counts": "{links} links, {images} images, {svg} SVG, {details} details blocks",
+      "result_markdown_counts": "{chars} chars, {links} links, {images} images",
       "warnings_heading": "Warnings",
       "collision_heading": "Overwrite warning",
       "collision_body": "This import matches an existing doc target. Confirm overwrite to replace the current source while keeping the same doc identity and filename."

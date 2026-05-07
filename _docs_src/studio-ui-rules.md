@@ -115,6 +115,28 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 - local verification:
   - smoke `/studio/library-documents/` on desktop and mobile and confirm the toolbar, column order, top-aligned indicators, and widened `doc_id` column
 
+## UI Rule Log 2026-05-07 / UI-093
+
+- status: adopted
+- route: `/studio/docs-import/`
+- issue: the import route was named and worded around HTML even though the same workflow now also needs to accept body-only Markdown files.
+- triage: local workflow refinement with service aliasing
+- reasoning: Markdown import belongs in the existing docs-import route because the target behavior is the same source-doc create/overwrite flow. The UI should use generic source-import endpoints and hide the HTML-only prompt/meta option for Markdown selections, while older HTML endpoint names remain as compatibility aliases.
+- outcome: the route title and copy now describe Docs Import, the staged-file list includes HTML and Markdown extensions, Markdown selections hide prompt/meta controls, and the service derives Markdown titles from the first `# H1` before writing normal Docs Viewer front matter.
+- files changed:
+  - `studio/docs-import/index.md`
+  - `studio/library/index.md`
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/js/studio-transport.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_html_import.py`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/user-guide-docs-html-import.md`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke `/studio/docs-import/` with staged HTML and Markdown files and confirm the file list, prompt/meta visibility, and successful Markdown create flow
+
 ## UI Rule Log 2026-05-06 / UI-088
 
 - status: adopted

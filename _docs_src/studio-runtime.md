@@ -79,7 +79,7 @@ Current page-level doc links:
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
 - Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
 - Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
-- Docs HTML Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
+- Docs Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
 - Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import` compatibility route note

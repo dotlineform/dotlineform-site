@@ -105,12 +105,30 @@ function sourceDocLinkHtml(scope, docId) {
 }
 
 async function fetchImportFiles() {
-  const response = await fetch(DOCS_MANAGEMENT_ENDPOINTS.importHtmlFiles, { cache: "no-store" });
+  const response = await fetch(DOCS_MANAGEMENT_ENDPOINTS.importSourceFiles, { cache: "no-store" });
   const payload = await response.json().catch(() => null);
   if (!response.ok || !payload || !payload.ok) {
     throw new Error(payload && payload.error ? payload.error : `HTTP ${response.status}`);
   }
   return Array.isArray(payload.files) ? payload.files : [];
+}
+
+function selectedFileRecord(state) {
+  const filename = normalizeText(state.fileSelect.value);
+  return state.files.find((file) => normalizeText(file && file.filename) === filename) || null;
+}
+
+function selectedSourceFormat(state) {
+  const record = selectedFileRecord(state);
+  return normalizeText(record && record.source_format).toLowerCase() || "html";
+}
+
+function syncSourceFormatControls(state) {
+  const isMarkdown = selectedSourceFormat(state) === "markdown";
+  state.includePromptMeta.checked = isMarkdown ? false : state.includePromptMeta.checked;
+  state.includePromptMeta.disabled = isMarkdown || !state.serviceAvailable;
+  state.includePromptMetaWrap.hidden = isMarkdown;
+  state.includePromptMetaHintNode.hidden = isMarkdown;
 }
 
 function resetWarning(state) {
@@ -167,7 +185,7 @@ function renderResult(state, payload) {
   setText(state.resultScopeNode, payload.scope);
   setHtml(state.resultDocIdNode, sourceDocLinkHtml(payload.scope, payload.doc_id));
   setText(state.resultDocTitleNode, payload.title || preview.title || "");
-  setText(state.resultSourceNode, preview.source_html || payload.staged_filename || "");
+  setText(state.resultSourceNode, preview.source_path || preview.source_html || payload.staged_filename || "");
   setHtml(
     state.resultViewerNode,
     payload.viewer_url ? viewerLinkHtml(state.config, payload.viewer_url, "Open viewer") : ""
@@ -175,20 +193,36 @@ function renderResult(state, payload) {
   setText(state.resultBackupNode, payload.backup_dir || "");
 
   const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
-  setText(
-    state.resultCountsNode,
-    getStudioText(
-      state.config,
-      "docs_html_import.result_summary_counts",
-      "{links} links, {images} images, {svg} SVG, {details} details blocks",
-      {
-        links: Number(stats.links || 0),
-        images: Number(stats.images || 0),
-        svg: Number(stats.svg || 0),
-        details: Number(stats.details || 0)
-      }
-    )
-  );
+  if (preview.source_format === "markdown") {
+    setText(
+      state.resultCountsNode,
+      getStudioText(
+        state.config,
+        "docs_html_import.result_markdown_counts",
+        "{chars} chars, {links} links, {images} images",
+        {
+          chars: Number(stats.chars || 0),
+          links: Number(stats.links || 0),
+          images: Number(stats.images || 0)
+        }
+      )
+    );
+  } else {
+    setText(
+      state.resultCountsNode,
+      getStudioText(
+        state.config,
+        "docs_html_import.result_summary_counts",
+        "{links} links, {images} images, {svg} SVG, {details} details blocks",
+        {
+          links: Number(stats.links || 0),
+          images: Number(stats.images || 0),
+          svg: Number(stats.svg || 0),
+          details: Number(stats.details || 0)
+        }
+      )
+    );
+  }
   renderWarnings(state, preview.warnings);
   state.resultNode.hidden = false;
 }
@@ -255,7 +289,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "docs_html_import.file_required", "Select a staged HTML file first.")
+      getStudioText(state.config, "docs_html_import.file_required", "Select a staged file first.")
     );
     return;
   }
@@ -268,16 +302,16 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
   state.cancelButton.disabled = true;
   resetImportView(
     state,
-    getStudioText(state.config, "docs_html_import.running_status", "Converting and validating staged HTML…")
+    getStudioText(state.config, "docs_html_import.running_status", "Converting and validating staged source…")
   );
   state.isRunning = true;
   syncRouteBusyState(state);
 
   try {
-    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importHtml, {
+    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importSource, {
       scope,
       staged_filename: stagedFilename,
-      include_prompt_meta: Boolean(state.includePromptMeta.checked),
+      include_prompt_meta: selectedSourceFormat(state) === "markdown" ? false : Boolean(state.includePromptMeta.checked),
       overwrite_doc_id: overwriteDocId,
       confirm_overwrite: confirmOverwrite,
       preview_only: false
@@ -327,6 +361,7 @@ async function init() {
     scopeLabelNode: document.getElementById("docsHtmlImportScopeLabel"),
     scopeSelect: document.getElementById("docsHtmlImportScopeSelect"),
     includePromptMeta: document.getElementById("docsHtmlImportIncludePromptMeta"),
+    includePromptMetaWrap: document.getElementById("docsHtmlImportIncludePromptMetaWrap"),
     includePromptMetaLabelNode: document.getElementById("docsHtmlImportIncludePromptMetaLabel"),
     includePromptMetaHintNode: document.getElementById("docsHtmlImportIncludePromptMetaHint"),
     runButton: document.getElementById("docsHtmlImportRun"),
@@ -369,6 +404,7 @@ async function init() {
     state.scopeLabelNode,
     state.scopeSelect,
     state.includePromptMeta,
+    state.includePromptMetaWrap,
     state.includePromptMetaLabelNode,
     state.includePromptMetaHintNode,
     state.runButton,
@@ -410,7 +446,7 @@ async function init() {
       getStudioText(
         state.config,
         "docs_html_import.intro",
-        "Import a staged self-contained HTML file into the Studio, Analysis, or Library docs source as a best-attempt Markdown doc."
+        "Import staged HTML or body-only Markdown into the Studio, Analysis, or Library docs source."
       )
     );
     setText(state.fileLabelNode, getStudioText(state.config, "docs_html_import.file_label", "staged file"));
@@ -479,9 +515,9 @@ async function init() {
         state.statusNode,
         "warn",
         getStudioText(
-          state.config,
-          "docs_html_import.no_files",
-          "No staged HTML files found under var/docs/import-staging/."
+        state.config,
+        "docs_html_import.no_files",
+          "No staged HTML or Markdown files found under var/docs/import-staging/."
         )
       );
       markRouteReady(state, true);
@@ -490,8 +526,11 @@ async function init() {
 
     state.fileSelect.innerHTML = files.map((file) => {
       const filename = normalizeText(file.filename);
-      return `<option value="${escapeHtml(filename)}">${escapeHtml(filename)}</option>`;
+      const sourceFormat = normalizeText(file.source_format);
+      const label = sourceFormat ? `${filename} [${sourceFormat}]` : filename;
+      return `<option value="${escapeHtml(filename)}">${escapeHtml(label)}</option>`;
     }).join("");
+    syncSourceFormatControls(state);
 
     setStatus(
       state.statusNode,
@@ -499,18 +538,19 @@ async function init() {
       getStudioText(
         state.config,
         "docs_html_import.idle_status",
-        "Select a staged HTML file and import it into Studio, Analysis, or Library docs."
+        "Select a staged HTML or Markdown file and import it into Studio, Analysis, or Library docs."
       )
     );
     markRouteReady(state, true);
 
     state.fileSelect.addEventListener("change", () => {
+      syncSourceFormatControls(state);
       resetImportView(
         state,
         getStudioText(
           state.config,
           "docs_html_import.idle_status",
-          "Select a staged HTML file and import it into Studio, Analysis, or Library docs."
+          "Select a staged HTML or Markdown file and import it into Studio, Analysis, or Library docs."
         )
       );
     });
@@ -551,7 +591,7 @@ async function init() {
     setStatus(
       bootStatus,
       "error",
-      getStudioText(state.config || {}, "docs_html_import.load_files_failed", "Failed to load staged HTML files.")
+      getStudioText(state.config || {}, "docs_html_import.load_files_failed", "Failed to load staged import files.")
     );
     root.hidden = false;
     state.serviceAvailable = false;

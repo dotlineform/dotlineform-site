@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T11:38:04Z",
+  "generated_at": "2026-05-07T16:18:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -349,7 +349,7 @@
       "source_path": "user-guide.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide.json",
-      "content_text_length": 858
+      "content_text_length": 853
     },
     {
       "scope": "studio",
@@ -429,21 +429,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "user-guide-docs-html-import",
-      "title": "Docs HTML Import",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-03",
-      "parent_id": "user-guide",
-      "sort_order": 20,
-      "published": true,
-      "viewable": true,
-      "source_path": "user-guide-docs-html-import.md",
-      "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 4060
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-docs-import",
       "title": "Docs Import",
       "added_date": "2026-05-03 20:25",
@@ -456,6 +441,21 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json",
       "content_text_length": 6431
+    },
+    {
+      "scope": "studio",
+      "doc_id": "user-guide-docs-html-import",
+      "title": "Docs Import",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-05-07",
+      "parent_id": "user-guide",
+      "sort_order": 20,
+      "published": true,
+      "viewable": true,
+      "source_path": "user-guide-docs-html-import.md",
+      "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
+      "content_text_length": 4754
     },
     {
       "scope": "studio",
@@ -620,7 +620,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4996
+      "content_text_length": 4991
     },
     {
       "scope": "studio",
@@ -635,7 +635,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 11107
+      "content_text_length": 11102
     },
     {
       "scope": "studio",
@@ -1278,7 +1278,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 20:08",
+      "last_updated": "2026-05-07",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1286,7 +1286,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 24774
+      "content_text_length": 25403
     },
     {
       "scope": "studio",
@@ -1483,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 159215
+      "content_text_length": 160620
     },
     {
       "scope": "studio",
@@ -2764,7 +2764,7 @@
       "source_path": "library-import.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "content_text_length": 23761,
+      "content_text_length": 23788,
       "ui_status": "done"
     },
     {
@@ -2874,7 +2874,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 45500
+      "content_text_length": 46492
     },
     {
       "scope": "studio",
