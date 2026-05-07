@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T19:51:43Z",
+  "generated_at": "2026-05-07T20:01:32Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -311,7 +311,7 @@
       "doc_id": "ui-framework",
       "title": "UI Framework",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-07 20:41",
+      "last_updated": "2026-05-07 21:09",
       "parent_id": "ui",
       "sort_order": 10,
       "published": true,
@@ -319,7 +319,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
-      "content_text_length": 10773
+      "content_text_length": 11237
     },
     {
       "scope": "studio",
@@ -1483,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 165986
+      "content_text_length": 167458
     },
     {
       "scope": "studio",
@@ -2922,7 +2922,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 53545
+      "content_text_length": 53954
     },
     {
       "scope": "studio",

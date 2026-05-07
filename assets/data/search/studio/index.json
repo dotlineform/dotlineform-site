@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3fb5c77cbebd9f76021005e2bcb23cad",
-    "generated_at_utc": "2026-05-07T19:41:57Z",
+    "version": "blake2b-ffdf0134e71610948ba419fb96b5046e",
+    "generated_at_utc": "2026-05-07T20:01:32Z",
     "count": 197
   },
   "entries": [
@@ -517,23 +517,23 @@
       "kind": "doc",
       "title": "UI Framework",
       "href": "/docs/?scope=studio&doc=ui-framework",
-      "last_updated": "2026-05-07 20:41",
+      "last_updated": "2026-05-07 21:09",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-07 20:41 • UI",
+      "display_meta": "2026-05-07 21:09 • UI",
       "search_terms": [
         "ui-framework",
         "ui",
         "framework",
         "ui framework",
-        "2026-05-07 20:41",
+        "2026-05-07 21:09",
         "2026",
         "05",
         "07",
-        "20",
-        "41"
+        "21",
+        "09"
       ],
-      "search_text": "ui-framework ui framework ui framework 2026-05-07 20:41 2026 05 07 20 41"
+      "search_text": "ui-framework ui framework ui framework 2026-05-07 21:09 2026 05 07 21 09"
     },
     {
       "id": "generic-llm-helper-pattern",

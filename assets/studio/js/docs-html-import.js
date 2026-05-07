@@ -713,9 +713,7 @@ async function init() {
 
     state.fileSelect.innerHTML = files.map((file) => {
       const filename = normalizeText(file.filename);
-      const sourceFormat = normalizeText(file.source_format);
-      const label = sourceFormat ? `${filename} [${sourceFormat}]` : filename;
-      return `<option value="${escapeHtml(filename)}">${escapeHtml(label)}</option>`;
+      return `<option value="${escapeHtml(filename)}">${escapeHtml(filename)}</option>`;
     }).join("");
     syncSourceFormatControls(state);
 

@@ -1981,12 +1981,26 @@ select.docsViewer__fieldInput{
   list-style: none;
   cursor: pointer;
   background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--text);
   font-size: var(--font-heading-3);
+  font-family: inherit;
   line-height: 1;
   font-weight: 700; /* bolder hamburger */
   padding: 4px 10px;
 }
 .nav-more__summary::-webkit-details-marker{ display: none; } /* Safari/Chrome */
+
+.nav-more__summary:hover{
+  background: var(--panel-2);
+}
+
+.nav-more__summary:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  background: var(--panel-2);
+}
 
 /* Only style the active state for the summary (so we don't change your link-active behaviour elsewhere) */
 .site-nav .nav-more__summary.is-active{

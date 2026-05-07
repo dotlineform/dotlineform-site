@@ -17,6 +17,18 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Fixed Studio mobile nav overflow
+
+**Status:** implemented
+
+**Area:** Studio / Navigation
+
+**Summary:**
+Moved secondary Studio header links behind the existing shared mobile `nav-more` menu and removed source-format suffixes from the Docs Import staged-file dropdown.
+
+**Impact:**
+Studio pages no longer force horizontal page overflow on mobile due to the full inline nav, while desktop keeps the full header link row.
+
 ## [2026-05-07] Refined Docs Import result panel layout
 
 **Status:** implemented

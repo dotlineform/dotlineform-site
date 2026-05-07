@@ -32,9 +32,31 @@
 {%- if studio_domain == 'analytics' -%}{%- assign is_analytics_active = true -%}{%- endif -%}
 {%- if studio_domain == 'search' -%}{%- assign is_search_active = true -%}{%- endif -%}
 
+{%- assign is_studio_more_active = false -%}
+{%- if is_catalogue_active or is_library_active or is_analytics_active or is_search_active or is_docs_page -%}
+  {%- assign is_studio_more_active = true -%}
+{%- endif -%}
+
 {% include nav_item.html label="studio" href='/studio/' class_name='nav-item nav-item--studio-home' is_current=is_studio_home_active is_active=is_studio_home_active %}
-{% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-item' is_current=false is_active=is_catalogue_active %}
-{% include nav_item.html label="library" href='/studio/library/' class_name='nav-item' is_current=false is_active=is_library_active %}
-{% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-item' is_current=false is_active=is_analytics_active %}
-{% include nav_item.html label="search" href='/studio/search/' class_name='nav-item' is_current=false is_active=is_search_active %}
-{% include nav_item.html label="docs" href='/docs/?scope=studio&doc=site-docs&mode=manage' class_name='nav-item' is_current=is_docs_page is_active=is_docs_page %}
+{% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_catalogue_active %}
+{% include nav_item.html label="library" href='/studio/library/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_library_active %}
+{% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_analytics_active %}
+{% include nav_item.html label="search" href='/studio/search/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_search_active %}
+{% include nav_item.html label="docs" href='/docs/?scope=studio&doc=site-docs&mode=manage' class_name='nav-item nav-item--overflow' is_current=is_docs_page is_active=is_docs_page %}
+
+<div class="nav-more" data-nav-more>
+  <button
+    type="button"
+    class="nav-more__summary{% if is_studio_more_active %} is-active{% endif %}"
+    aria-label="Open Studio navigation menu"
+    aria-expanded="false"
+    aria-controls="studioNavMorePanel"
+  >☰</button>
+  <div class="nav-more__panel" id="studioNavMorePanel" hidden>
+    {% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-more__item' is_current=false is_active=is_catalogue_active %}
+    {% include nav_item.html label="library" href='/studio/library/' class_name='nav-more__item' is_current=false is_active=is_library_active %}
+    {% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-more__item' is_current=false is_active=is_analytics_active %}
+    {% include nav_item.html label="search" href='/studio/search/' class_name='nav-more__item' is_current=false is_active=is_search_active %}
+    {% include nav_item.html label="docs" href='/docs/?scope=studio&doc=site-docs&mode=manage' class_name='nav-more__item' is_current=is_docs_page is_active=is_docs_page %}
+  </div>
+</div>

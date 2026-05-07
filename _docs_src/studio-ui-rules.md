@@ -38,6 +38,24 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-07 / UI-098
+
+- status: adopted
+- route: Studio header navigation and `/studio/docs-import/`
+- issue: the Studio header navigation overflowed on mobile when all Studio section links remained inline, and the Docs Import staged-file dropdown repeated source-format metadata already implied by import behavior.
+- triage: shared header overflow pattern plus route-local label cleanup
+- reasoning: the main site already had a `nav-more` disclosure behavior for mobile overflow, so Studio should use that shared header pattern instead of adding a route-specific nav fix. The staged-file selector should identify the file only; technical format suffixes make the control noisier without changing the selected source.
+- outcome: Studio header links keep `studio` visible on mobile and move section destinations into the shared hamburger menu, while desktop keeps the full inline link row. Docs Import staged-file options now display only filenames.
+- files changed:
+  - `_includes/studio_header_nav.html`
+  - `assets/css/main.css`
+  - `assets/studio/js/docs-html-import.js`
+  - `_docs_src/ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke Studio pages at mobile and desktop widths and confirm the mobile header no longer creates horizontal overflow, the menu opens/closes through the existing nav-more behavior, and desktop still shows the full Studio link row
+  - smoke `/studio/docs-import/` with mocked staged source files and confirm dropdown labels no longer include `[format]` suffixes
+
 ## UI Rule Log 2026-05-07 / UI-097
 
 - status: adopted

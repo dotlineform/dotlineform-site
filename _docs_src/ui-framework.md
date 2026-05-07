@@ -2,7 +2,7 @@
 doc_id: ui-framework
 title: UI Framework
 added_date: 2026-04-24
-last_updated: "2026-05-07 20:41"
+last_updated: "2026-05-07 21:09"
 parent_id: ui
 sort_order: 10
 ---
@@ -74,6 +74,15 @@ Site interactions should default to progressive enhancement:
 - preserve baseline links, buttons, keyboard behavior, and visible controls
 - add JS behavior on top of existing navigation and control flows rather than replacing them
 - keep behavior scoped to the relevant content region rather than binding globally unless the page architecture genuinely requires it
+
+### Header navigation overflow
+
+When a section-specific header has more top-level links than fit on narrow screens:
+
+- keep the primary/root destination visible as a normal link
+- move secondary destinations behind the shared `nav-more` menu at mobile widths
+- use the existing `data-nav-more` disclosure behavior so Escape, outside-click close, active-state styling, and ordinary links stay consistent
+- keep the desktop link row unchanged unless the desktop layout also overflows
 
 ### Prev/next and paginated navigation
 
