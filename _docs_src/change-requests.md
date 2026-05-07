@@ -31,6 +31,7 @@ Those still belong in the owning reference docs and change logs.
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 - [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
+- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
 - [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)

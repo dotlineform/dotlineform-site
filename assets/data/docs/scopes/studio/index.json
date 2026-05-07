@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T16:51:22Z",
+  "generated_at": "2026-05-07T17:06:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2801,6 +2801,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-r2-media-upload-automation",
+      "title": "R2 Media Upload Automation Request",
+      "added_date": "2026-05-07",
+      "last_updated": "2026-05-07",
+      "parent_id": "change-requests",
+      "sort_order": 206,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-r2-media-upload-automation.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
+      "content_text_length": 7807,
+      "ui_status": "proposed"
+    },
+    {
+      "scope": "studio",
       "doc_id": "library-export-ui",
       "title": "Library Export - UI refinements",
       "added_date": "2026-05-04",
@@ -2828,7 +2844,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1496
+      "content_text_length": 1531
     },
     {
       "scope": "studio",
@@ -2890,7 +2906,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 47277
+      "content_text_length": 48030
     },
     {
       "scope": "studio",

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-556bd3f4c5a1f6bd652ca8a149ae8470",
-    "generated_at_utc": "2026-05-07T16:51:13Z",
-    "count": 195
+    "version": "blake2b-9243cb983cf717249b654103cfe18441",
+    "generated_at_utc": "2026-05-07T17:06:41Z",
+    "count": 196
   },
   "entries": [
     {
@@ -4571,6 +4571,34 @@
         "07"
       ],
       "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-07 2026 05 07"
+    },
+    {
+      "id": "site-request-r2-media-upload-automation",
+      "kind": "doc",
+      "title": "R2 Media Upload Automation Request",
+      "href": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
+      "last_updated": "2026-05-07",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-07 • Change Requests",
+      "search_terms": [
+        "site-request-r2-media-upload-automation",
+        "site",
+        "request",
+        "r2",
+        "media",
+        "upload",
+        "automation",
+        "r2 media upload automation request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-07",
+        "2026",
+        "05",
+        "07"
+      ],
+      "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-07 2026 05 07"
     },
     {
       "id": "library-export-ui",

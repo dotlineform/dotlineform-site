@@ -17,6 +17,28 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Added R2 media upload automation request
+
+**Status:** proposed
+
+**Area:** Catalogue / media publishing
+
+**Summary:**
+Added a change request for replacing manual R2 media uploads with a script-managed publishing workflow.
+
+**Reason:**
+Catalogue primary derivatives are generated locally but still require a manual R2 handoff.
+That is easy to miss today and would become harder to manage once docs imports can create media assets too.
+
+**Files changed:**
+
+- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The request proposes a dry-run-first R2 publisher, secure credential loading through local environment variables or gitignored secret files, catalogue primary-image support first, and a registry-style adapter path for future docs media.
+
 ## [2026-05-07] Added Docs Import registry and media support request
 
 **Status:** proposed
