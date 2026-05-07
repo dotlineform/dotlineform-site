@@ -77,6 +77,44 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
   - build the Studio docs data and site
   - smoke `/studio/studio-works/` on desktop and mobile and confirm the route remains ready, sortable, divider-free, `--text-xs`, and bold in the title column
 
+## UI Rule Log 2026-05-07 / UI-091
+
+- status: adopted
+- route: `/studio/library-documents/`
+- issue: Library needed a compact generated-document review page without borrowing the export workflow's selection behavior or creating another page-local table style.
+- triage: shared primitive reuse
+- reasoning: this page is read-only review, so it should use the dense list primitive for scan-table presentation and keep export-specific checkbox hierarchy behavior out of the route. The viewable dot can reuse the same small green status treatment as export, while parent state is derived directly from generated `parent_id` relationships.
+- outcome: added `/studio/library-documents/`, linked it from the Library dashboard, rendered generated Library docs with `tagStudioList--dense`, added sortable `doc_id`, `added_date`, and `title` columns, and added independent `viewable` and `parent` filter pills.
+- files changed:
+  - `studio/library-documents/index.md`
+  - `assets/studio/js/library-documents.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `studio/library/index.md`
+  - `_docs_src/library-documents.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the Studio docs data and site
+  - smoke `/studio/library-documents/` on desktop and mobile and confirm sorting, filter pills, green viewable dots, and parent ticks
+
+## UI Rule Log 2026-05-07 / UI-092
+
+- status: adopted
+- route: `/studio/library-documents/`
+- issue: the first Library Documents list pass placed the count apart from the filters, kept parent state after title, and centered the compact status indicators vertically, which made the list scan less cleanly.
+- triage: local layout refinement using shared primitive constraints
+- reasoning: the filter controls and result count are one toolbar group, while parent and viewable are compact boolean attributes that should sit before the title and align to the first text line. The `doc_id` column needs more width because Library ids are often longer than dates.
+- outcome: moved filters before the document count in the toolbar, changed the dense list order to `doc_id`, `added_date`, parent, viewable, title, top-aligned the boolean columns, applied a small optical top offset to the viewable dot, and widened `doc_id` by the prior added-date column width.
+- files changed:
+  - `studio/library-documents/index.md`
+  - `assets/studio/js/library-documents.js`
+  - `assets/studio/css/studio.css`
+  - `_docs_src/library-documents.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke `/studio/library-documents/` on desktop and mobile and confirm the toolbar, column order, top-aligned indicators, and widened `doc_id` column
+
 ## UI Rule Log 2026-05-06 / UI-088
 
 - status: adopted

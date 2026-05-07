@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-07"
 parent_id: ""
 sort_order: 20
 ---
@@ -24,7 +24,7 @@ The current Studio shell is organized around domain dashboards:
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
 
-The Library dashboard includes `/studio/export/` for running configured exports from generated Library Docs Viewer data and `/studio/import/` for generating preview Markdown from staged Library import data.
+The Library dashboard includes `/studio/library-documents/` for reviewing generated Library document records, `/studio/export/` for running configured exports from generated Library Docs Viewer data, and `/studio/import/` for generating preview Markdown from staged Library import data.
 Those pages depend on the docs-management local service for file writes; when the service is unavailable, command execution stays unavailable.
 Export pattern definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
@@ -55,6 +55,7 @@ Read this section in this order:
    - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
+   - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
    - **[Studio Data Export](/docs/?scope=studio&doc=studio-data-export)**
    - **[Studio Data Import](/docs/?scope=studio&doc=studio-data-import)**
    - **[Library Export v1](/docs/?scope=studio&doc=library-export)**
@@ -90,6 +91,7 @@ Current workflow/detail routes:
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
 - `/studio/docs-import/`
+- `/studio/library-documents/`
 - `/studio/export/`
 - `/studio/import/`
 - `/studio/catalogue-status/`

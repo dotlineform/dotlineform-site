@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T09:55:14Z",
+  "generated_at": "2026-05-07T11:34:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -474,6 +474,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "library-documents",
+      "title": "Library Documents",
+      "added_date": "2026-05-07",
+      "last_updated": "2026-05-07",
+      "parent_id": "library",
+      "sort_order": 20,
+      "published": true,
+      "viewable": true,
+      "source_path": "library-documents.md",
+      "viewer_url": "/docs/?scope=studio&doc=library-documents",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/library-documents.json",
+      "content_text_length": 1864
+    },
+    {
+      "scope": "studio",
       "doc_id": "llm-semantic-enrichment-spec",
       "title": "LLM Semantic Enrichment Spec",
       "added_date": "2026-04-24",
@@ -597,7 +612,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -605,7 +620,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4873
+      "content_text_length": 4996
     },
     {
       "scope": "studio",
@@ -719,7 +734,7 @@
       "doc_id": "library",
       "title": "Library",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
       "parent_id": "",
       "sort_order": 27,
       "published": true,
@@ -727,7 +742,7 @@
       "source_path": "library.md",
       "viewer_url": "/docs/?scope=studio&doc=library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library.json",
-      "content_text_length": 289
+      "content_text_length": 360
     },
     {
       "scope": "studio",
@@ -1468,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 156578
+      "content_text_length": 159174
     },
     {
       "scope": "studio",
@@ -2859,7 +2874,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 44503
+      "content_text_length": 45455
     },
     {
       "scope": "studio",

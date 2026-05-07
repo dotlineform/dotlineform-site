@@ -68,6 +68,36 @@ Once the dense list became a shared primitive, the Studio works page no longer n
 **Impact:**
 The route keeps works-specific data loading, return links, and column templates while sharing the dense list type scale, row rhythm, sortable-header styling, indicator styling, and title emphasis.
 
+## [2026-05-07] Added the Library Documents Studio page
+
+**Status:** implemented
+
+**Area:** Studio / Library
+
+**Summary:**
+Added `/studio/library-documents/` as a read-only dense-list review page for generated Library Docs Viewer records.
+
+**Reason:**
+Library document review needs a compact scan table with viewable and parent state without entering the export selection workflow.
+
+**Files changed:**
+
+- `studio/library-documents/index.md`
+- `assets/studio/js/library-documents.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `studio/library/index.md`
+- [Library Documents](/docs/?scope=studio&doc=library-documents)
+- [Library](/docs/?scope=studio&doc=library)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The Library dashboard now links to a document index under the HTML Import entry.
+The page sorts by `doc_id`, `added_date`, and `title`, places parent and viewable status before the title, shows the export-style green viewable dot, marks parent docs with a tick, and filters independently by `viewable` and `parent`.
+
 ## [2026-05-06] Respected root sort order in Docs Viewer metadata edits
 
 **Status:** implemented

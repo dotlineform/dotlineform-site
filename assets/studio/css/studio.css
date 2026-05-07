@@ -1464,6 +1464,61 @@ span.tagStudio__input--readonlyDisplay {
   overflow-wrap: anywhere;
 }
 
+.libraryDocumentsPage {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.libraryDocumentsPage__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.libraryDocumentsPage__status {
+  margin: 0;
+}
+
+.libraryDocumentsPage__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.libraryDocumentsList__head,
+.libraryDocumentsList__row {
+  grid-template-columns: minmax(16rem, 19.5rem) 7.5rem 3.5rem 4rem minmax(0, 1fr);
+}
+
+.libraryDocumentsList__viewable {
+  display: inline-block;
+  justify-self: center;
+  align-self: start;
+  margin-top: 0.25em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.libraryDocumentsList__viewable.is-viewable {
+  background: var(--studio-success);
+}
+
+.libraryDocumentsList__parentTick {
+  justify-self: center;
+  align-self: start;
+  color: inherit;
+}
+
+.libraryDocumentsList__docId,
+.libraryDocumentsList__title {
+  min-width: 0;
+}
+
 .tagStudio__chipList {
   display: flex;
   flex-wrap: wrap;
@@ -3143,7 +3198,9 @@ button.tagStudioList__cellLink {
   .worksList--studio .worksList__head,
   .worksList--studio .worksList__item,
   .worksList--studio.worksList--singleSeries .worksList__head,
-  .worksList--studio.worksList--singleSeries .worksList__item {
+  .worksList--studio.worksList--singleSeries .worksList__item,
+  .libraryDocumentsList__head,
+  .libraryDocumentsList__row {
     grid-template-columns: minmax(0, 1fr);
   }
 

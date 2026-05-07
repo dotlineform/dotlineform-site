@@ -12,6 +12,7 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_field_registry_review: "/studio/catalogue-field-registry/",
       docs_broken_links: "/studio/docs-broken-links/",
       docs_html_import: "/studio/docs-import/",
+      library_documents: "/studio/library-documents/",
       data_export: "/studio/export/",
       data_import: "/studio/import/",
       catalogue_status: "/studio/catalogue-status/",
@@ -209,6 +210,13 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     studio_works: {
       copy_series_button: "copy series"
+    },
+    library_documents: {
+      filter_viewable: "viewable [{count}]",
+      filter_parent: "parent [{count}]",
+      status: "{count} documents",
+      status_one: "1 document",
+      load_failed: "Failed to load Library documents."
     },
     build_activity: {
       load_failed_error: "Failed to load build activity.",

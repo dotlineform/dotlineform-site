@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1e3c902ac006a788197a2fb81cb5c6ea",
-    "generated_at_utc": "2026-05-07T09:55:14Z",
-    "count": 193
+    "version": "blake2b-670df6556f0754a799604b060fb46dec",
+    "generated_at_utc": "2026-05-07T11:00:47Z",
+    "count": 194
   },
   "entries": [
     {
@@ -785,6 +785,27 @@
       "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-05 2026 05"
     },
     {
+      "id": "library-documents",
+      "kind": "doc",
+      "title": "Library Documents",
+      "href": "/docs/?scope=studio&doc=library-documents",
+      "last_updated": "2026-05-07",
+      "parent_id": "library",
+      "parent_title": "Library",
+      "display_meta": "2026-05-07 • Library",
+      "search_terms": [
+        "library-documents",
+        "library",
+        "documents",
+        "library documents",
+        "2026-05-07",
+        "2026",
+        "05",
+        "07"
+      ],
+      "search_text": "library-documents library documents library documents 2026-05-07 2026 05 07"
+    },
+    {
       "id": "llm-semantic-enrichment-spec",
       "kind": "doc",
       "title": "LLM Semantic Enrichment Spec",
@@ -980,18 +1001,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
+      "display_meta": "2026-05-07",
       "search_terms": [
         "studio",
-        "2026-05-06 20:49",
+        "2026-05-07",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "07"
       ],
-      "search_text": "studio 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "studio 2026-05-07 2026 05 07"
     },
     {
       "id": "studio-runtime",
@@ -1174,18 +1193,16 @@
       "kind": "doc",
       "title": "Library",
       "href": "/docs/?scope=studio&doc=library",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
+      "display_meta": "2026-05-07",
       "search_terms": [
         "library",
-        "2026-05-06 20:49",
+        "2026-05-07",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "07"
       ],
-      "search_text": "library 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "library 2026-05-07 2026 05 07"
     },
     {
       "id": "analytics",
