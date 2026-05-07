@@ -38,6 +38,20 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-07 / UI-097
+
+- status: adopted
+- route: `/studio/docs-import/`
+- issue: the Docs Import result panel used a two-column result grid, which made multi-line media paths, R2 keys, and media tokens harder to scan after inline media extraction.
+- triage: route-local command-result layout refinement
+- reasoning: Docs Import results are operational messages rather than comparable table fields. Stacking each field vertically preserves full-width reading space for long paths and keeps the panel compact by using the small text token for message values.
+- outcome: the result panel now stacks all result fields in one column and renders result values, summary counts, and warning messages at `--text-sm`.
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke `/studio/docs-import/` on desktop and mobile and confirm result fields stack vertically, long media values wrap within the panel, and message text uses the small text size
+
 ## UI Rule Log 2026-05-07 / UI-096
 
 - status: adopted

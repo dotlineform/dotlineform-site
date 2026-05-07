@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T19:41:57Z",
+  "generated_at": "2026-05-07T19:51:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1483,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 165014
+      "content_text_length": 165986
     },
     {
       "scope": "studio",
@@ -2922,7 +2922,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 53190
+      "content_text_length": 53545
     },
     {
       "scope": "studio",

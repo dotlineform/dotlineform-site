@@ -17,6 +17,18 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Refined Docs Import result panel layout
+
+**Status:** implemented
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Stacked Docs Import result fields vertically and reduced result message text to the small text token.
+
+**Impact:**
+Long staged media paths, R2 keys, and media tokens now use the full result-panel width and wrap more predictably on desktop and mobile.
+
 ## [2026-05-07] Refined Docs Import filename conflict UI
 
 **Status:** implemented

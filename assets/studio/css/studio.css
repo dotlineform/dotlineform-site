@@ -1135,8 +1135,8 @@ span.tagStudio__input--readonlyDisplay {
 
 .docsHtmlImportPage__resultGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem 0.8rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
   margin: 0;
 }
 
@@ -1153,7 +1153,13 @@ span.tagStudio__input--readonlyDisplay {
 
 .docsHtmlImportPage__resultGrid dd {
   margin: 0;
+  font-size: var(--text-sm, var(--font-small));
   overflow-wrap: anywhere;
+}
+
+.docsHtmlImportPage__result > .tagStudioForm__meta,
+.docsHtmlImportPage__warnings ul {
+  font-size: var(--text-sm, var(--font-small));
 }
 
 .docsHtmlImportPage__warnings ul {
@@ -3250,8 +3256,7 @@ button.tagStudioList__cellLink {
   }
 
   .dataImportPage__controls,
-  .dataExportPage__controls,
-  .docsHtmlImportPage__resultGrid {
+  .dataExportPage__controls {
     grid-template-columns: minmax(0, 1fr);
   }
 
