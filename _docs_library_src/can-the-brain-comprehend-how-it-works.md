@@ -2,15 +2,16 @@
 doc_id: can-the-brain-comprehend-how-it-works
 title: "Can the Brain Comprehend How It Works?"
 added_date: 2026-04-23
-last_updated: 2026-04-25
+last_updated: "2026-05-07 21:18"
 parent_id: ""
 sort_order: 50
 published: true
 viewable: true
+summary: "The brain’s inability to fully comprehend itself reflects structural limits and the use of simplified self-models, not an inherent dysfunction. Dysfunction arises only when those models and limits become sources of conflict, distress, or breakdown in integration."
 ---
 # Can the Brain Comprehend How It Works?
 
-> "Does this lead to dysfunction?"
+> "Does this lead to dysfunction, where the brain can’t comprehend how it works?"
 
 ## 1. Structural Limits vs. Dysfunction
 
@@ -51,20 +52,10 @@ In those cases, one can see clinical phenomena such as depersonalisation (feelin
 
 In everyday life, by contrast, operating with partial self-knowledge is the norm and can be perfectly compatible with psychological health. Scientific and contemplative practices can both expand and refine our self-understanding, even if they never make it complete.
 
-## 6. Summary
+## References
 
-A concise way to put this is:
-
-**The brain’s inability to fully comprehend itself reflects structural limits and the use of simplified self-models, not an inherent dysfunction. Dysfunction arises only when those models and limits become sources of conflict, distress, or breakdown in integration.**
-
-## 7. Citations
-
-Key sources used in this note, with titles and URLs for further reading.
-
-| Topic | Reference | URL |
-| --- | --- | --- |
-| Limits of introspection and confabulation | Nisbett & Wilson, 1977, *Telling more than we can know* | [https://philpapers.org/rec/NISTMT-2](https://philpapers.org/rec/NISTMT-2) |
-| Choice blindness and introspective limits | Johansson et al., 2005/2006, *Choice blindness* | [https://pubmed.ncbi.nlm.nih.gov/17049881/](https://pubmed.ncbi.nlm.nih.gov/17049881/) |
-| Self-model theory of subjectivity | Metzinger, 2003, *Being No One* | [https://direct.mit.edu/books/monograph/1991/Being-No-OneThe-Self-Model-Theory-of-Subjectivity](https://direct.mit.edu/books/monograph/1991/Being-No-OneThe-Self-Model-Theory-of-Subjectivity) |
-| Attention schema theory and awareness | Graziano, 2015, *The attention schema theory* | [https://pmc.ncbi.nlm.nih.gov/articles/PMC4407481/](https://pmc.ncbi.nlm.nih.gov/articles/PMC4407481/) |
-| Cognitive closure and limits of explanation | McGinn, 1989/1991, *The problem of consciousness* | [https://www.jstor.org/stable/2940985](https://www.jstor.org/stable/2940985) |
+- Graziano, M. S. A. (2015). The attention schema theory: A mechanistic account of subjective awareness. *Frontiers in Psychology, 6*, 500. [https://pmc.ncbi.nlm.nih.gov/articles/PMC4407481/](https://pmc.ncbi.nlm.nih.gov/articles/PMC4407481/)
+- Johansson, P., Hall, L., Sikström, S., & Olsson, A. (2005). Failure to detect mismatches between intention and outcome in a simple decision task. *Science, 310*(5745), 116–119. [https://pubmed.ncbi.nlm.nih.gov/17049881/](https://pubmed.ncbi.nlm.nih.gov/17049881/)
+- McGinn, C. (1991). *The problem of consciousness*. Blackwell. [https://www.jstor.org/stable/2940985](https://www.jstor.org/stable/2940985)
+- Metzinger, T. (2003). *Being no one: The self-model theory of subjectivity*. MIT Press. [https://direct.mit.edu/books/monograph/1991/Being-No-OneThe-Self-Model-Theory-of-Subjectivity](https://direct.mit.edu/books/monograph/1991/Being-No-OneThe-Self-Model-Theory-of-Subjectivity)
+- Nisbett, R. E., & Wilson, T. D. (1977). Telling more than we can know: Verbal reports on mental processes. *Psychological Review, 84*(3), 231–259. [https://philpapers.org/rec/NISTMT-2](https://philpapers.org/rec/NISTMT-2)

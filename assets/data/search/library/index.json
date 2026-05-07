@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-b0256bfe0b867dfc1aef4b9c542a0cdc",
-    "generated_at_utc": "2026-05-07T15:37:07Z",
+    "version": "blake2b-5029c4759de751d494ee8c8feb18cd8e",
+    "generated_at_utc": "2026-05-07T20:18:02Z",
     "count": 6
   },
   "entries": [
@@ -91,8 +91,8 @@
       "kind": "doc",
       "title": "Can the Brain Comprehend How It Works?",
       "href": "/library/?doc=can-the-brain-comprehend-how-it-works",
-      "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
+      "last_updated": "2026-05-07 21:18",
+      "display_meta": "2026-05-07 21:18",
       "search_terms": [
         "can-the-brain-comprehend-how-it-works",
         "can",
@@ -103,12 +103,14 @@
         "it",
         "works",
         "can the brain comprehend how it works?",
-        "2026-04-25",
+        "2026-05-07 21:18",
         "2026",
-        "04",
-        "25"
+        "05",
+        "07",
+        "21",
+        "18"
       ],
-      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-25 2026 04 25"
+      "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-05-07 21:18 2026 05 07 21 18"
     },
     {
       "id": "3d-space-to-many-dimensions",

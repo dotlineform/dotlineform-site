@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T19:56:40Z",
+  "generated_at": "2026-05-07T20:24:16Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -89,7 +89,7 @@
       "doc_id": "can-the-brain-comprehend-how-it-works",
       "title": "Can the Brain Comprehend How It Works?",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-07 21:18",
       "parent_id": "",
       "sort_order": 50,
       "published": true,
@@ -97,7 +97,8 @@
       "source_path": "can-the-brain-comprehend-how-it-works.md",
       "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
       "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json",
-      "content_text_length": 5538
+      "content_text_length": 5370,
+      "summary": "The brain’s inability to fully comprehend itself reflects structural limits and the use of simplified self-models, not an inherent dysfunction. Dysfunction arises only when those models and limits become sources of conflict, distress, or breakdown in integration."
     },
     {
       "scope": "library",
@@ -178,9 +179,9 @@
     {
       "scope": "library",
       "doc_id": "beyond-conscious-subconscious",
-      "title": "Loose Ends — Memory — Beyond Conscious vs. Subconscious — Layers Explainer",
+      "title": "Beyond Conscious vs. Subconscious",
       "added_date": "2026-05-07 19:09",
-      "last_updated": "2026-05-07 20:31",
+      "last_updated": "2026-05-07 21:23",
       "parent_id": "",
       "sort_order": 110,
       "published": true,
@@ -188,7 +189,7 @@
       "source_path": "beyond-conscious-subconscious.md",
       "viewer_url": "/library/?doc=beyond-conscious-subconscious",
       "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json",
-      "content_text_length": 3436
+      "content_text_length": 3423
     }
   ]
 }

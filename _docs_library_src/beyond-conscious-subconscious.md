@@ -1,14 +1,14 @@
 ---
 doc_id: beyond-conscious-subconscious
-title: "Loose Ends — Memory — Beyond Conscious vs. Subconscious — Layers Explainer"
+title: Beyond Conscious vs. Subconscious
 added_date: "2026-05-07 19:09"
-last_updated: "2026-05-07 20:31"
+last_updated: "2026-05-07 21:23"
 parent_id: ""
 sort_order: 110
 published: true
 viewable: false
 ---
-# Loose Ends — Memory — Beyond Conscious vs. Subconscious
+# Memory — Beyond Conscious vs. Subconscious
 
 ## Why the duality is too simple
 
