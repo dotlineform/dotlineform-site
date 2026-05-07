@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T22:01:33Z",
+  "generated_at": "2026-05-07T15:36:05Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -98,6 +98,21 @@
       "viewer_url": "/library/?doc=can-the-brain-comprehend-how-it-works",
       "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json",
       "content_text_length": 5538
+    },
+    {
+      "scope": "library",
+      "doc_id": "3d-space-to-many-dimensions",
+      "title": "From 3D Space to Many Dimensions",
+      "added_date": "2026-05-07 15:56",
+      "last_updated": "2026-05-07 15:56",
+      "parent_id": "",
+      "sort_order": 60,
+      "published": true,
+      "viewable": false,
+      "source_path": "3d-space-to-many-dimensions.md",
+      "viewer_url": "/library/?doc=3d-space-to-many-dimensions",
+      "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json",
+      "content_text_length": 3156
     }
   ]
 }
