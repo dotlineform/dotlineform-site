@@ -38,6 +38,22 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-07 / UI-095
+
+- status: adopted
+- route: `/studio/docs-import/`
+- issue: inline raster extraction can create multiple staged media files from one source import, while the existing result panel only displayed singular media fields for standalone image and file imports.
+- triage: local workflow refinement with transitional payload support
+- reasoning: Docs Import should report every generated staged file, expected R2 key, and media token in the command result so the manual R2 handoff remains explicit. The UI also needs to keep reading the older singular `media_plan` contract for standalone media imports while supporting the new plural `media_plans` contract for extracted inline raster images.
+- outcome: the result panel now renders staged media paths, R2 keys, and media tokens from either singular or plural media plans, with escaped line-separated values for multi-image imports.
+- files changed:
+  - `studio/docs-import/index.md`
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/data/studio_config.json`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke `/studio/docs-import/` on desktop and mobile and confirm image/file imports still show one media result while inline raster imports show every staged path, R2 key, and media token without overflowing the result panel
+
 ## UI Rule Log 2026-05-07 / UI-089
 
 - status: adopted

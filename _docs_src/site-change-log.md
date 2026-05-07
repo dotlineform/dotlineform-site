@@ -17,6 +17,37 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Implemented Docs Import inline raster extraction
+
+**Status:** implemented
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Implemented extraction of inline raster data URLs from Docs Import sources into generated staged media files.
+
+**Reason:**
+Imported docs can contain very long `data:image/...;base64,...` Markdown image targets. Those should become normal docs media tokens with explicit staged files and manual R2 copy instructions.
+
+**Files changed:**
+
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/docs_management_server.py`
+- `studio/docs-import/index.md`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/data/studio_config.json`
+- `tests/python/test_docs_import_service.py`
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+- [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+HTML and Markdown imports now rewrite Markdown-image-form inline PNG, JPEG, WebP, and GIF data URLs to <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code> tokens during preview.
+On create or overwrite, the docs service decodes the planned images into `var/docs/import-staging/` with incrementing filenames such as `example-doc-image-01.png`, returns `inline_media_written`, and the Studio result panel lists staged paths, R2 keys, and media tokens for copying to R2.
+
 ## [2026-05-07] Implemented Docs Import source registry and media support
 
 **Status:** implemented
@@ -46,7 +77,7 @@ Docs Import needed a structured importer boundary before adding text, standalone
 
 **Impact:**
 The route now lists HTML, Markdown, text, SVG, raster image, and file-media staged files.
-Text imports autolink plain URLs, HTML and standalone SVG share SVG safety behavior, image and file imports generate `[[media:docs/<scope>/...]]` wrappers with manual R2 copy warnings, and source-stem collisions prompt for a replacement title instead of silently suffixing.
+Text imports autolink plain URLs, HTML and standalone SVG share SVG safety behavior, image and file imports generate <code>&#91;&#91;media:docs/&lt;scope&gt;/...&#93;&#93;</code> wrappers with manual R2 copy warnings, and source-stem collisions prompt for a replacement title instead of silently suffixing.
 
 ## [2026-05-07] Added duplicate stem handling to Docs Import media request
 
@@ -87,7 +118,7 @@ The import model should keep SVG behavior consistent across source formats and s
 
 **Impact:**
 The request now treats images and downloadable files as separate docs media classes, with image links under `docs/<scope>/img/` and file links under `docs/<scope>/files/`.
-The generated Markdown points at `[[media:...]]` tokens while the actual R2 copy remains manual.
+The generated Markdown points at <code>&#91;&#91;media:...&#93;&#93;</code> tokens while the actual R2 copy remains manual.
 
 ## [2026-05-07] Added R2 media upload automation request
 

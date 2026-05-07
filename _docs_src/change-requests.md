@@ -53,6 +53,7 @@ Those still belong in the owning reference docs and change logs.
 
 ## Completed Requests
 
+- [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)
 - [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
 - [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
 - [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)

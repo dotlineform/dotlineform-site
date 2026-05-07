@@ -3,7 +3,7 @@ doc_id: site-request-docs-html-inline-raster-media
 title: Docs HTML Inline Raster Media Request
 added_date: 2026-05-07
 last_updated: "2026-05-07 19:55"
-ui_status: proposed
+ui_status: done
 parent_id: change-requests
 sort_order: 207
 ---
@@ -11,7 +11,7 @@ sort_order: 207
 
 Status:
 
-- proposed
+- implemented
 
 ## Summary
 
@@ -26,6 +26,18 @@ The desired behavior is:
 - decode each supported inline image into a generated file under `var/docs/import-staging/`
 - replace the inline data URL with a normal docs media token
 - return a list of media plans so the user can manually copy each generated file to R2
+
+## Implementation Status
+
+Implemented for HTML and Markdown imports.
+
+The importer now:
+
+- rewrites Markdown-image-form raster data URLs to docs media tokens during preview
+- returns `media_plans` for extracted inline raster images
+- writes decoded media files to `var/docs/import-staging/` during create or overwrite
+- keeps standalone image and file imports on the existing singular `media_plan` contract
+- shows staged media paths, R2 keys, and media tokens in the Studio result panel
 
 ## Problem
 
@@ -176,7 +188,7 @@ Implementation will likely touch:
 
 - `scripts/docs/docs_html_import.py`
 - `scripts/docs/docs_management_server.py`
-- `assets/studio/js/docs-import.js`
+- `assets/studio/js/docs-html-import.js`
 - `assets/studio/data/studio_config.json`
 - `_docs_src/user-guide-docs-html-import.md`
 - `_docs_src/scripts-docs-management-server.md`

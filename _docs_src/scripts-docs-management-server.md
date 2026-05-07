@@ -175,8 +175,9 @@ Import behavior:
 - imports staged Markdown as the source body without predefined front matter
 - imports staged text as plain Markdown prose and converts plain URLs to Markdown autolinks
 - imports standalone SVG as a wrapper Markdown doc with sanitized inline SVG
-- imports raster images as wrapper Markdown docs pointing at `[[media:docs/<scope>/img/<filename>]]`
-- imports downloadable files as wrapper Markdown docs pointing at `[[media:docs/<scope>/files/<filename>]]`
+- imports raster images as wrapper Markdown docs pointing at <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>
+- imports downloadable files as wrapper Markdown docs pointing at <code>&#91;&#91;media:docs/&lt;scope&gt;/files/&lt;filename&gt;&#93;&#93;</code>
+- extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files under `var/docs/import-staging/`
 - escapes literal pipe characters from source text so mathematical notation such as `I(X;Y|Z)` does not become an accidental Markdown table
 - converts plain-text `http://` and `https://` URLs in prose into Markdown autolinks while leaving existing anchors and code/preformatted text alone
 - applies the same SVG safety rules to HTML inline SVG and standalone SVG files
@@ -191,13 +192,15 @@ Import behavior:
 - new Analysis imports write `published: true`, `viewable: false`
 - new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
-- reports `media_plan` for image and file-media imports, including the expected R2 key and generated media token
+- reports `media_plan` for standalone image and file-media imports, including the expected R2 key and generated media token
+- reports `media_plans` for extracted inline raster images, including staged filenames, expected R2 keys, generated media tokens, MIME type, and decoded byte sizes
 - reports collision details when the generated import target already matches an existing `doc_id` or source filename stem
 - asks browser callers to provide `replacement_title` for normal collision recovery
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
 - refreshes the overwritten doc's `last_updated` to the current minute
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
+- writes decoded inline raster media files only during create or overwrite, not during preview-only responses
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild the same-scope docs payloads and run targeted docs-search updates for affected ids
 

@@ -68,7 +68,13 @@ from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
-from docs_html_import import generate_import_preview, list_staged_import_source_files, resolve_staged_import_source  # noqa: E402
+from docs_html_import import (  # noqa: E402
+    generate_import_preview,
+    list_staged_import_source_files,
+    materialize_inline_raster_media,
+    resolve_staged_import_source,
+    retarget_inline_raster_media_plans,
+)
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
 from docs_watch_suppression import (  # noqa: E402
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -1614,6 +1620,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     )
     if replacement_title:
         apply_replacement_title_to_preview(preview, replacement_title)
+        retarget_inline_raster_media_plans(repo_root, preview, scope)
 
     docs = load_scope_docs(repo_root, scope)
     proposed_doc_id = str(preview["proposed_doc_id"])
@@ -1653,6 +1660,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
                 "include_prompt_meta": include_prompt_meta,
                 "proposed_doc_id": preview["proposed_doc_id"],
                 "collision": collision["exists"],
+                "inline_media_count": len(preview.get("media_plans") or []),
                 "requires_overwrite_confirmation": requires_overwrite_confirmation,
                 "replacement_title_required": bool(preview.get("replacement_title_required")),
             },
@@ -1677,6 +1685,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
 
     backup_dir = None
     rebuild = None
+    inline_media_written: list[dict[str, Any]] = []
     if collision_doc is not None:
         source_text = imported_source_text_for_overwrite(preview, collision_doc)
         overwrite_title = str(preview.get("title") or collision_doc.title).strip() or collision_doc.title
@@ -1697,11 +1706,21 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
                     "title": preview.get("title"),
                 },
             )
+            def write_import_artifacts() -> None:
+                nonlocal inline_media_written
+                inline_media_written = materialize_inline_raster_media(
+                    repo_root,
+                    source_path=source_path,
+                    import_preview=preview,
+                    include_prompt_meta=include_prompt_meta,
+                )
+                write_text_atomic(collision_doc.path, source_text)
+
             rebuild = perform_source_write_and_rebuild(
                 repo_root,
                 scope,
                 [collision_doc.path],
-                lambda: write_text_atomic(collision_doc.path, source_text),
+                write_import_artifacts,
                 suppression_reason="docs-import-html-overwrite",
                 search_doc_ids=search_doc_ids,
             )
@@ -1712,6 +1731,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
                 "scope": scope,
                 "staged_filename": staged_filename,
                 "source_format": preview.get("source_format"),
+                "inline_media_count": len(preview.get("media_plans") or []),
                 "doc_id": collision_doc.doc_id,
                 "path": relative_path(repo_root, collision_doc.path),
                 "include_prompt_meta": include_prompt_meta,
@@ -1739,6 +1759,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
             },
             "collision": collision,
             "import_preview": preview,
+            "inline_media_written": inline_media_written,
             "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
             "rebuild": rebuild,
             "summary_text": f"Overwrote {collision_doc.doc_id} from {staged_filename}.",
@@ -1763,11 +1784,21 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
                 "source_path": preview.get("source_path"),
             },
         )
+        def write_import_artifacts() -> None:
+            nonlocal inline_media_written
+            inline_media_written = materialize_inline_raster_media(
+                repo_root,
+                source_path=source_path,
+                import_preview=preview,
+                include_prompt_meta=include_prompt_meta,
+            )
+            write_text_atomic(target_path, source_text)
+
         rebuild = perform_source_write_and_rebuild(
             repo_root,
             scope,
             [target_path],
-            lambda: write_text_atomic(target_path, source_text),
+            write_import_artifacts,
             suppression_reason="docs-import-html-create",
             search_doc_ids=[doc_id],
         )
@@ -1778,6 +1809,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
             "scope": scope,
             "staged_filename": staged_filename,
             "source_format": preview.get("source_format"),
+            "inline_media_count": len(preview.get("media_plans") or []),
             "doc_id": doc_id,
             "path": relative_path(repo_root, target_path),
             "include_prompt_meta": include_prompt_meta,
@@ -1805,6 +1837,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         },
         "collision": collision,
         "import_preview": preview,
+        "inline_media_written": inline_media_written,
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
         "rebuild": rebuild,
         "summary_text": f"Created {doc_id} from {staged_filename}.",

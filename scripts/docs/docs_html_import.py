@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import datetime as dt
 import json
 import os
@@ -71,8 +73,19 @@ PLAIN_URL_TRAILING_PUNCTUATION = ".,;:!?)]}'"
 MARKDOWN_HEADING_PATTERN = re.compile(r"^\s*#\s+(.+?)\s*#*\s*$", re.MULTILINE)
 MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+MARKDOWN_INLINE_RASTER_IMAGE_PATTERN = re.compile(
+    r"!\[(?P<alt>[^\]]*)\]\((?P<url>data:image/(?P<subtype>png|jpe?g|webp|gif);base64,(?P<data>[A-Za-z0-9+/=]+))\)",
+    re.IGNORECASE,
+)
 SVG_EVENT_ATTR_PATTERN = re.compile(r"\son[a-z]+\s*=", re.IGNORECASE)
 SVG_EXTERNAL_REF_ATTRS = {"href", "xlink:href", "src"}
+INLINE_RASTER_EXTENSIONS = {
+    "gif": "gif",
+    "jpeg": "jpg",
+    "jpg": "jpg",
+    "png": "png",
+    "webp": "webp",
+}
 
 
 @dataclass(frozen=True)
@@ -609,6 +622,183 @@ def build_summary(
     }
 
 
+def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
+    safe_doc_id = slugify(doc_id or "imported-doc")
+    safe_extension = INLINE_RASTER_EXTENSIONS.get(extension.lower(), extension.lower()).lstrip(".")
+    index = 1
+    while True:
+        filename = f"{safe_doc_id}-image-{index:02d}.{safe_extension}"
+        if filename not in used_filenames and not (staging_root / filename).exists():
+            used_filenames.add(filename)
+            return filename
+        index += 1
+
+
+def inline_media_plan(scope: str, filename: str, title: str, *, mime_type: str, size_bytes: int) -> dict[str, Any]:
+    source_path = Path(filename)
+    plan = build_media_plan(scope, "img", source_path, title)
+    plan.update(
+        {
+            "source": "inline_data_url",
+            "staging_path": (STAGING_REL_DIR / filename).as_posix(),
+            "mime_type": mime_type,
+            "size_bytes": size_bytes,
+        }
+    )
+    return plan
+
+
+def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], scope: str) -> None:
+    markdown = str(summary.get("markdown_preview") or "")
+    if "data:image/" not in markdown:
+        return
+
+    staging_root = repo_root / STAGING_REL_DIR
+    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
+    used_filenames: set[str] = set()
+    plans: list[dict[str, Any]] = []
+    warnings = summary.setdefault("warnings", [])
+
+    def replace(match: re.Match[str]) -> str:
+        subtype = match.group("subtype").lower()
+        extension = INLINE_RASTER_EXTENSIONS.get(subtype)
+        alt = normalize_space(match.group("alt"))
+        if not extension:
+            warnings.append(f"Unsupported inline image media type image/{subtype}; left the data URL inline.")
+            return match.group(0)
+        try:
+            decoded = base64.b64decode(match.group("data"), validate=True)
+        except (binascii.Error, ValueError):
+            warnings.append(f"Could not decode inline image data for {alt or 'an imported image'}; left the data URL inline.")
+            return match.group(0)
+
+        filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
+        title = alt or f"Inline image {len(plans) + 1:02d}"
+        plan = inline_media_plan(
+            scope,
+            filename,
+            title,
+            mime_type=f"image/{'jpeg' if extension == 'jpg' else extension}",
+            size_bytes=len(decoded),
+        )
+        plans.append(plan)
+        warnings.append(f"Copy {filename} to R2 at {plan['r2_key']} before the rendered doc can display it.")
+        return f"![{match.group('alt')}]({plan['media_token']})"
+
+    normalized = MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.sub(replace, markdown)
+    if plans:
+        summary["markdown_preview"] = normalized
+        summary["media_plans"] = plans
+
+
+def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], scope: str) -> None:
+    plans = summary.get("media_plans")
+    if not isinstance(plans, list) or not plans:
+        return
+
+    staging_root = repo_root / STAGING_REL_DIR
+    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
+    used_filenames: set[str] = set()
+    markdown = str(summary.get("markdown_preview") or "")
+    warnings = summary.get("warnings") if isinstance(summary.get("warnings"), list) else []
+
+    for index, plan in enumerate(plans):
+        if not isinstance(plan, dict):
+            continue
+        old_token = str(plan.get("media_token") or "")
+        old_filename = str(plan.get("source_path") or "")
+        extension = Path(old_filename).suffix.lstrip(".") or "png"
+        new_filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
+        new_plan = inline_media_plan(
+            scope,
+            new_filename,
+            str(plan.get("title") or f"Inline image {index + 1:02d}"),
+            mime_type=str(plan.get("mime_type") or f"image/{'jpeg' if extension == 'jpg' else extension}"),
+            size_bytes=int(plan.get("size_bytes") or 0),
+        )
+        if old_token:
+            markdown = markdown.replace(old_token, new_plan["media_token"], 1)
+        if old_filename != new_filename:
+            for warning_index, warning in enumerate(warnings):
+                if isinstance(warning, str) and old_filename in warning:
+                    warnings[warning_index] = warning.replace(old_filename, new_filename).replace(
+                        f"docs/{scope}/img/{old_filename}",
+                        new_plan["r2_key"],
+                    )
+        plans[index] = new_plan
+    summary["markdown_preview"] = markdown
+
+
+def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: bool) -> str:
+    source_format = source_format_for_path(source_path)
+    if source_format == "html":
+        source_html = source_path.read_text(encoding="utf-8", errors="replace")
+        parsed = parse_with_bs4(source_html)
+        title = extract_title(parsed.root)
+        summary = build_summary(
+            parsed.root,
+            source_html=source_html,
+            source_filename_stem=source_path.stem,
+            title=title,
+            include_prompt_meta=include_prompt_meta,
+        )
+        return str(summary.get("markdown_preview") or "")
+    if source_format == "markdown":
+        summary = build_markdown_summary(source_path.read_text(encoding="utf-8", errors="replace"), source_path.stem)
+        return str(summary.get("markdown_preview") or "")
+    return ""
+
+
+def materialize_inline_raster_media(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    import_preview: dict[str, Any],
+    include_prompt_meta: bool,
+) -> list[dict[str, Any]]:
+    plans = import_preview.get("media_plans")
+    if not isinstance(plans, list) or not plans:
+        return []
+
+    raw_markdown = raw_markdown_for_inline_media(source_path, include_prompt_meta=include_prompt_meta)
+    valid_matches: list[tuple[re.Match[str], bytes]] = []
+    for match in MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.finditer(raw_markdown):
+        try:
+            decoded = base64.b64decode(match.group("data"), validate=True)
+        except (binascii.Error, ValueError):
+            continue
+        valid_matches.append((match, decoded))
+
+    if len(valid_matches) < len(plans):
+        raise RuntimeError("Inline media extraction plan no longer matches the staged source.")
+
+    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    staging_root.mkdir(parents=True, exist_ok=True)
+    written: list[dict[str, Any]] = []
+    for plan, (_, decoded) in zip(plans, valid_matches):
+        if not isinstance(plan, dict):
+            continue
+        filename = str(plan.get("source_path") or "").strip()
+        if not filename or Path(filename).name != filename:
+            raise ValueError(f"Invalid inline media filename: {filename!r}")
+        target_path = (staging_root / filename).resolve()
+        if not target_path.is_relative_to(staging_root):
+            raise ValueError(f"Inline media filename escapes staging root: {filename!r}")
+        if target_path.exists():
+            raise FileExistsError(f"Inline media target already exists: {STAGING_REL_DIR / filename}")
+        target_path.write_bytes(decoded)
+        written.append(
+            {
+                "source_path": filename,
+                "staging_path": (STAGING_REL_DIR / filename).as_posix(),
+                "size_bytes": len(decoded),
+                "r2_key": plan.get("r2_key", ""),
+                "media_token": plan.get("media_token", ""),
+            }
+        )
+    return written
+
+
 def validate_markdown_with_jekyll(repo_root: Path, markdown: str) -> dict[str, Any]:
     renderer_script = repo_root / "scripts" / "render_markdown_with_jekyll.rb"
     if not renderer_script.exists():
@@ -776,6 +966,7 @@ def generate_html_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
+    apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
     summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
     return summary
 
@@ -944,6 +1135,7 @@ def generate_markdown_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
+    apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
     summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
     return summary
 

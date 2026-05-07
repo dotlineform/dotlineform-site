@@ -27,6 +27,7 @@ The importer creates or preserves the normal Docs Viewer front matter when it wr
 
 For image and downloadable file imports, copy the media file to R2 manually after import.
 The importer creates the wrapper Markdown and reports the expected R2 key, but it does not upload media.
+For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file to R2 after import.
 
 ## What The Page Does
 
@@ -41,6 +42,7 @@ The import page:
 - imports standalone `.svg` files as wrapper docs with sanitized inline SVG
 - imports raster images as wrapper docs that point at `docs/<scope>/img/<filename>` R2 media
 - imports supported downloadable files as wrapper docs that point at `docs/<scope>/files/<filename>` R2 media
+- extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
 - writes a new doc immediately when the target is free
@@ -103,14 +105,29 @@ Low-level overwrite support remains available to the local service for explicit 
 
 Raster image wrappers use:
 
-- `[[media:docs/<scope>/img/<filename>]]`
+- <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>
 
 Downloadable file wrappers use:
 
-- `[[media:docs/<scope>/files/<filename>]]`
+- <code>&#91;&#91;media:docs/&lt;scope&gt;/files/&lt;filename&gt;&#93;&#93;</code>
 
 Those tokens resolve against `_config.yml` `media_base` when docs payloads are built.
 The import result shows the expected R2 key so you can copy the source file manually to the matching R2 folder.
+
+HTML and Markdown imports also extract inline raster data URLs that appear as Markdown images, such as:
+
+```md
+![Diagram](data:image/png;base64,...)
+```
+
+The importer writes decoded image files under `var/docs/import-staging/` during the import write.
+Generated filenames use the final proposed `doc_id` plus an incrementing suffix, such as:
+
+- `example-doc-image-01.png`
+- `example-doc-image-02.jpg`
+
+The generated Markdown points at the matching docs media token and the result panel lists each staged media path, R2 key, and media token.
+Copy each generated staged image file to the reported R2 key before expecting the rendered doc to display it.
 
 Supported raster image extensions:
 
@@ -148,7 +165,8 @@ After a successful import, the page reports:
 - the imported title
 - the original staged source path
 - the viewer link for the imported doc
-- the expected R2 key and media token for image and file-media imports
+- generated staged media paths for inline raster images
+- the expected R2 key and media token for image, file-media, and extracted inline raster imports
 - any non-routine conversion warnings
 
 ## Route Ready State
@@ -174,6 +192,7 @@ Expect good HTML conversion results for:
 - plain-text `http://` and `https://` URLs, which become clickable autolinks
 - inline SVG diagrams
 - standalone SVG files, using the same SVG safety rules as HTML inline SVG
+- inline raster images that appear as Markdown images with `data:image/<type>;base64,...` targets
 - technical notation that needs safe inline HTML such as subscripts
 
 Expect simplified output for:

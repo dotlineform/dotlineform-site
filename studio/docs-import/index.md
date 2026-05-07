@@ -97,6 +97,10 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
           <dt id="docsHtmlImportResultBackupLabel"></dt>
           <dd id="docsHtmlImportResultBackup"></dd>
         </div>
+        <div id="docsHtmlImportResultMediaSourceRow" hidden>
+          <dt id="docsHtmlImportResultMediaSourceLabel"></dt>
+          <dd id="docsHtmlImportResultMediaSource"></dd>
+        </div>
         <div id="docsHtmlImportResultMediaKeyRow" hidden>
           <dt id="docsHtmlImportResultMediaKeyLabel"></dt>
           <dd id="docsHtmlImportResultMediaKey"></dd>

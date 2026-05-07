@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T18:38:37Z",
+  "generated_at": "2026-05-07T18:56:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -455,7 +455,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 6510
+      "content_text_length": 7516
     },
     {
       "scope": "studio",
@@ -1286,7 +1286,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 26425
+      "content_text_length": 26813
     },
     {
       "scope": "studio",
@@ -1483,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 162176
+      "content_text_length": 163454
     },
     {
       "scope": "studio",
@@ -2828,8 +2828,8 @@
       "source_path": "site-request-docs-html-inline-raster-media.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-html-inline-raster-media.json",
-      "content_text_length": 6073,
-      "ui_status": "proposed"
+      "content_text_length": 6547,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2860,7 +2860,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1531
+      "content_text_length": 1569
     },
     {
       "scope": "studio",
@@ -2922,7 +2922,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 50832
+      "content_text_length": 52028
     },
     {
       "scope": "studio",

@@ -546,6 +546,132 @@ def test_image_import_creates_r2_media_plan_wrapper() -> None:
     assert "[[media:docs/library/img/reference-image.png]]" in source_text
 
 
+def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_html(
+            root,
+            "inline-diagram.html",
+            """
+            <html>
+              <head><title>Inline Diagram</title></head>
+              <body>
+                <h1>Inline Diagram</h1>
+                <p><img alt="Layered diagram" src="data:image/png;base64,aW5saW5lLXBuZw=="></p>
+              </body>
+            </html>
+            """,
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "inline-diagram.html"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/inline-diagram.md").read_text(encoding="utf-8")
+        media_path = root / "var/docs/import-staging/inline-diagram-image-01.png"
+        media_bytes = media_path.read_bytes()
+
+    assert payload["ok"] is True
+    assert payload["import_preview"]["media_plans"][0]["source_path"] == "inline-diagram-image-01.png"
+    assert payload["import_preview"]["media_plans"][0]["r2_key"] == "docs/library/img/inline-diagram-image-01.png"
+    assert payload["inline_media_written"][0]["staging_path"] == "var/docs/import-staging/inline-diagram-image-01.png"
+    assert media_bytes == b"inline-png"
+    assert "data:image/png;base64" not in source_text
+    assert "![Layered diagram]([[media:docs/library/img/inline-diagram-image-01.png]])" in source_text
+
+
+def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_bytes(root, "inline-note-image-01.png", b"existing")
+        write_staged_markdown(
+            root,
+            "inline-note.md",
+            "# Inline Note\n\n![Inline](data:image/png;base64,bWFya2Rvd24tcG5n)\n",
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "inline-note.md"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/inline-note.md").read_text(encoding="utf-8")
+        media_path = root / "var/docs/import-staging/inline-note-image-02.png"
+        media_bytes = media_path.read_bytes()
+
+    assert payload["ok"] is True
+    assert payload["import_preview"]["source_format"] == "markdown"
+    assert payload["import_preview"]["media_plans"][0]["source_path"] == "inline-note-image-02.png"
+    assert media_bytes == b"markdown-png"
+    assert "data:image/png;base64" not in source_text
+    assert "[[media:docs/library/img/inline-note-image-02.png]]" in source_text
+
+
+def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_markdown(
+            root,
+            "mixed-inline.md",
+            "# Mixed Inline\n\n![Broken](data:image/png;base64,abc)\n\n![Valid](data:image/png;base64,dmFsaWQtcG5n)\n",
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "mixed-inline.md"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/mixed-inline.md").read_text(encoding="utf-8")
+        media_path = root / "var/docs/import-staging/mixed-inline-image-01.png"
+        media_bytes = media_path.read_bytes()
+
+    assert payload["ok"] is True
+    assert len(payload["import_preview"]["media_plans"]) == 1
+    assert media_bytes == b"valid-png"
+    assert "![Broken](data:image/png;base64,abc)" in source_text
+    assert "[[media:docs/library/img/mixed-inline-image-01.png]]" in source_text
+
+
 def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -848,6 +974,9 @@ def main() -> None:
         test_text_import_autolinks_plain_urls,
         test_svg_import_strips_unsafe_content,
         test_image_import_creates_r2_media_plan_wrapper,
+        test_html_import_extracts_inline_png_to_staged_media_plan,
+        test_markdown_import_extracts_inline_png_with_incremented_filename,
+        test_inline_media_write_skips_invalid_data_urls_before_valid_images,
         test_file_media_import_creates_r2_file_plan_wrapper,
         test_import_collision_prompts_for_replacement_title,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,

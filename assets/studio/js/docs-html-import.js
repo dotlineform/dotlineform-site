@@ -104,6 +104,21 @@ function sourceDocLinkHtml(scope, docId) {
   ].join("");
 }
 
+function mediaPlansFromPreview(preview) {
+  if (Array.isArray(preview.media_plans)) {
+    return preview.media_plans.filter((plan) => plan && typeof plan === "object");
+  }
+  return preview.media_plan && typeof preview.media_plan === "object" ? [preview.media_plan] : [];
+}
+
+function mediaPlanListHtml(plans, key) {
+  return plans
+    .map((plan) => normalizeText(plan[key]))
+    .filter(Boolean)
+    .map((value) => escapeHtml(value))
+    .join("<br>");
+}
+
 async function fetchImportFiles() {
   const response = await fetch(DOCS_MANAGEMENT_ENDPOINTS.importSourceFiles, { cache: "no-store" });
   const payload = await response.json().catch(() => null);
@@ -184,6 +199,7 @@ function renderResult(state, payload) {
   setText(state.resultSourceLabelNode, getStudioText(state.config, "docs_html_import.result_source", "source"));
   setText(state.resultViewerLabelNode, getStudioText(state.config, "docs_html_import.result_viewer", "viewer"));
   setText(state.resultBackupLabelNode, getStudioText(state.config, "docs_html_import.result_backup", "backup"));
+  setText(state.resultMediaSourceLabelNode, getStudioText(state.config, "docs_html_import.result_media_source", "staged media"));
   setText(state.resultMediaKeyLabelNode, getStudioText(state.config, "docs_html_import.result_media_key", "R2 key"));
   setText(state.resultMediaTokenLabelNode, getStudioText(state.config, "docs_html_import.result_media_token", "media link"));
   setText(state.resultScopeNode, payload.scope);
@@ -195,19 +211,29 @@ function renderResult(state, payload) {
     payload.viewer_url ? viewerLinkHtml(state.config, payload.viewer_url, "Open viewer") : ""
   );
   setText(state.resultBackupNode, payload.backup_dir || "");
-  const mediaPlan = preview.media_plan && typeof preview.media_plan === "object" ? preview.media_plan : null;
-  if (mediaPlan && normalizeText(mediaPlan.r2_key)) {
-    setText(state.resultMediaKeyNode, mediaPlan.r2_key);
+  const mediaPlans = mediaPlansFromPreview(preview);
+  const mediaSourceHtml = mediaPlanListHtml(mediaPlans, "staging_path") || mediaPlanListHtml(mediaPlans, "source_path");
+  if (mediaSourceHtml) {
+    setHtml(state.resultMediaSourceNode, mediaSourceHtml);
+    state.resultMediaSourceRow.hidden = false;
+  } else {
+    setHtml(state.resultMediaSourceNode, "");
+    state.resultMediaSourceRow.hidden = true;
+  }
+  const mediaKeyHtml = mediaPlanListHtml(mediaPlans, "r2_key");
+  if (mediaKeyHtml) {
+    setHtml(state.resultMediaKeyNode, mediaKeyHtml);
     state.resultMediaKeyRow.hidden = false;
   } else {
-    setText(state.resultMediaKeyNode, "");
+    setHtml(state.resultMediaKeyNode, "");
     state.resultMediaKeyRow.hidden = true;
   }
-  if (mediaPlan && normalizeText(mediaPlan.media_token)) {
-    setText(state.resultMediaTokenNode, mediaPlan.media_token);
+  const mediaTokenHtml = mediaPlanListHtml(mediaPlans, "media_token");
+  if (mediaTokenHtml) {
+    setHtml(state.resultMediaTokenNode, mediaTokenHtml);
     state.resultMediaTokenRow.hidden = false;
   } else {
-    setText(state.resultMediaTokenNode, "");
+    setHtml(state.resultMediaTokenNode, "");
     state.resultMediaTokenRow.hidden = true;
   }
 
@@ -477,6 +503,9 @@ async function init() {
     resultViewerNode: document.getElementById("docsHtmlImportResultViewer"),
     resultBackupLabelNode: document.getElementById("docsHtmlImportResultBackupLabel"),
     resultBackupNode: document.getElementById("docsHtmlImportResultBackup"),
+    resultMediaSourceRow: document.getElementById("docsHtmlImportResultMediaSourceRow"),
+    resultMediaSourceLabelNode: document.getElementById("docsHtmlImportResultMediaSourceLabel"),
+    resultMediaSourceNode: document.getElementById("docsHtmlImportResultMediaSource"),
     resultMediaKeyRow: document.getElementById("docsHtmlImportResultMediaKeyRow"),
     resultMediaKeyLabelNode: document.getElementById("docsHtmlImportResultMediaKeyLabel"),
     resultMediaKeyNode: document.getElementById("docsHtmlImportResultMediaKey"),
@@ -530,6 +559,9 @@ async function init() {
     state.resultViewerNode,
     state.resultBackupLabelNode,
     state.resultBackupNode,
+    state.resultMediaSourceRow,
+    state.resultMediaSourceLabelNode,
+    state.resultMediaSourceNode,
     state.resultMediaKeyRow,
     state.resultMediaKeyLabelNode,
     state.resultMediaKeyNode,
