@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9243cb983cf717249b654103cfe18441",
-    "generated_at_utc": "2026-05-07T17:06:41Z",
-    "count": 196
+    "version": "blake2b-a8397c86102a6165112eb00a63642f21",
+    "generated_at_utc": "2026-05-07T18:38:48Z",
+    "count": 197
   },
   "entries": [
     {
@@ -4546,10 +4546,10 @@
       "kind": "doc",
       "title": "Docs Import Source Registry And Media Support Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-07 19:31",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-07 • Change Requests",
+      "display_meta": "2026-05-07 19:31 • Change Requests",
       "search_terms": [
         "site-request-docs-import-source-registry-media",
         "site",
@@ -4565,22 +4565,24 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-07",
+        "2026-05-07 19:31",
         "2026",
         "05",
-        "07"
+        "07",
+        "19",
+        "31"
       ],
-      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-07 2026 05 07"
+      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-07 19:31 2026 05 07 19 31"
     },
     {
       "id": "site-request-r2-media-upload-automation",
       "kind": "doc",
       "title": "R2 Media Upload Automation Request",
       "href": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-07 19:06",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-07 • Change Requests",
+      "display_meta": "2026-05-07 19:06 • Change Requests",
       "search_terms": [
         "site-request-r2-media-upload-automation",
         "site",
@@ -4593,12 +4595,45 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-07",
+        "2026-05-07 19:06",
         "2026",
         "05",
-        "07"
+        "07",
+        "19",
+        "06"
       ],
-      "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-07 2026 05 07"
+      "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-07 19:06 2026 05 07 19 06"
+    },
+    {
+      "id": "site-request-docs-html-inline-raster-media",
+      "kind": "doc",
+      "title": "Docs HTML Inline Raster Media Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
+      "last_updated": "2026-05-07 19:55",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-07 19:55 • Change Requests",
+      "search_terms": [
+        "site-request-docs-html-inline-raster-media",
+        "site",
+        "request",
+        "docs",
+        "html",
+        "inline",
+        "raster",
+        "media",
+        "docs html inline raster media request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-07 19:55",
+        "2026",
+        "05",
+        "07",
+        "19",
+        "55"
+      ],
+      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request change requests change requests 2026-05-07 19:55 2026 05 07 19 55"
     },
     {
       "id": "library-export-ui",

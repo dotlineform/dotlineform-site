@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T18:31:42Z",
+  "generated_at": "2026-05-07T18:38:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2814,6 +2814,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
       "content_text_length": 7807,
       "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-html-inline-raster-media",
+      "title": "Docs HTML Inline Raster Media Request",
+      "added_date": "2026-05-07",
+      "last_updated": "2026-05-07 19:55",
+      "parent_id": "change-requests",
+      "sort_order": 207,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-docs-html-inline-raster-media.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-html-inline-raster-media.json",
+      "content_text_length": 6073,
+      "ui_status": "proposed"
     },
     {
       "scope": "studio",
