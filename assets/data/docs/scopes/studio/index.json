@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T17:41:18Z",
+  "generated_at": "2026-05-07T17:51:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -455,7 +455,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 4754
+      "content_text_length": 6510
     },
     {
       "scope": "studio",
@@ -1286,7 +1286,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 25403
+      "content_text_length": 26425
     },
     {
       "scope": "studio",
@@ -1483,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 160620
+      "content_text_length": 162176
     },
     {
       "scope": "studio",
@@ -2796,8 +2796,8 @@
       "source_path": "site-request-docs-import-source-registry-media.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-import-source-registry-media.json",
-      "content_text_length": 13710,
-      "ui_status": "proposed"
+      "content_text_length": 13713,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2906,7 +2906,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 49697
+      "content_text_length": 50832
     },
     {
       "scope": "studio",

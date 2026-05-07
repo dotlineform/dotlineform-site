@@ -1581,6 +1581,22 @@ def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc
     return format_source(front_matter, imported_body_markdown(preview))
 
 
+def apply_replacement_title_to_preview(preview: Dict[str, Any], replacement_title: str) -> None:
+    title = str(replacement_title or "").strip()
+    if not title:
+        raise ValueError("replacement_title is required when the proposed doc_id collides")
+    preview["title"] = title
+    preview["title_source"] = "replacement_title"
+    preview["proposed_doc_id"] = slugify(title)
+    preview["proposed_doc_id_source"] = "replacement_title"
+    markdown = str(preview.get("markdown_preview") or "")
+    if markdown.startswith("# "):
+        lines = markdown.splitlines()
+        if lines:
+            lines[0] = f"# {title}"
+            preview["markdown_preview"] = "\n".join(lines)
+
+
 def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
@@ -1588,6 +1604,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     overwrite_doc_id = str(body.get("overwrite_doc_id") or "").strip()
     confirm_overwrite = bool(body.get("confirm_overwrite"))
     preview_only = bool(body.get("preview_only"))
+    replacement_title = str(body.get("replacement_title") or "").strip()
     source_path = resolve_staged_import_source(repo_root, staged_filename)
     preview = generate_import_preview(
         repo_root,
@@ -1595,15 +1612,24 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         scope=scope,
         include_prompt_meta=include_prompt_meta,
     )
+    if replacement_title:
+        apply_replacement_title_to_preview(preview, replacement_title)
 
     docs = load_scope_docs(repo_root, scope)
-    collision_doc = next((doc for doc in docs if doc.doc_id == preview["proposed_doc_id"]), None)
+    proposed_doc_id = str(preview["proposed_doc_id"])
+    collision_doc = next(
+        (doc for doc in docs if doc.doc_id == proposed_doc_id or doc.path.stem == proposed_doc_id),
+        None,
+    )
     collision = {
         "exists": collision_doc is not None,
         "doc_id": collision_doc.doc_id if collision_doc else "",
         "title": collision_doc.title if collision_doc else "",
         "path": relative_path(repo_root, collision_doc.path) if collision_doc else "",
+        "stem": collision_doc.path.stem if collision_doc else "",
     }
+    preview["doc_id_collision"] = collision
+    preview["replacement_title_required"] = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
 
     if overwrite_doc_id and collision_doc is None:
         raise ValueError("overwrite_doc_id is only allowed when the generated import target collides with an existing doc")
@@ -1613,7 +1639,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     requires_overwrite_confirmation = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
     if requires_overwrite_confirmation:
         preview.setdefault("warnings", []).append(
-            f"Proposed doc_id {collision_doc.doc_id!r} already exists in {scope}; explicit overwrite flow will be required."
+            f"Proposed doc_id {preview['proposed_doc_id']!r} already exists in {scope}; enter a replacement title before import."
         )
 
     if dry_run or preview_only or requires_overwrite_confirmation:
@@ -1628,6 +1654,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
                 "proposed_doc_id": preview["proposed_doc_id"],
                 "collision": collision["exists"],
                 "requires_overwrite_confirmation": requires_overwrite_confirmation,
+                "replacement_title_required": bool(preview.get("replacement_title_required")),
             },
         )
         return {
@@ -1637,10 +1664,11 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
             "include_prompt_meta": include_prompt_meta,
             "preview_only": True,
             "requires_overwrite_confirmation": requires_overwrite_confirmation,
+            "replacement_title_required": bool(preview.get("replacement_title_required")),
             "collision": collision,
             "import_preview": preview,
             "summary_text": (
-                f"Overwrite confirmation required for {collision['doc_id']}."
+                f"Replacement title required for {preview['proposed_doc_id']}."
                 if requires_overwrite_confirmation
                 else f"Prepared import preview for {staged_filename}."
             ),

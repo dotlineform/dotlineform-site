@@ -57,7 +57,7 @@ Current behavior:
 - local-only write service for the shared Docs Viewer
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
-- also used by `/studio/docs-import/` for staged-file listing and docs HTML or Markdown import writes
+- also used by `/studio/docs-import/` for staged-file listing and source import writes
 - also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
 - also used by `/studio/import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
@@ -137,9 +137,18 @@ Request behavior:
 
 `GET /docs/import-source-files` returns:
 
-- the current staged `.html`, `.htm`, `.md`, and `.markdown` files under `var/docs/import-staging/`
+- the current supported staged source files under `var/docs/import-staging/`
 - filename, repo-relative path, source format, size, and modified time for each staged file
 - a read-only listing intended for the Studio import page
+
+Supported source formats:
+
+- `html`: `.html`, `.htm`
+- `markdown`: `.md`, `.markdown`
+- `text`: `.txt`
+- `svg`: `.svg`
+- `image`: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`
+- `file`: `.pdf`, `.zip`, `.csv`, `.tsv`, `.json`, `.jsonl`, `.docx`, `.xlsx`, `.pptx`
 
 `GET /docs/import-html-files` remains a compatibility alias for older callers and returns the same source-file listing.
 
@@ -152,6 +161,7 @@ Request behavior:
   "include_prompt_meta": false,
   "overwrite_doc_id": "",
   "confirm_overwrite": false,
+  "replacement_title": "",
   "preview_only": false
 }
 ```
@@ -160,30 +170,38 @@ Import behavior:
 
 - `scope` must be `studio`, `analysis`, or `library`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
-- accepts staged HTML (`.html`, `.htm`) and body-only Markdown (`.md`, `.markdown`)
+- accepts the supported staged source formats listed above
 - parses full staged HTML files through the shared converter
 - imports staged Markdown as the source body without predefined front matter
+- imports staged text as plain Markdown prose and converts plain URLs to Markdown autolinks
+- imports standalone SVG as a wrapper Markdown doc with sanitized inline SVG
+- imports raster images as wrapper Markdown docs pointing at `[[media:docs/<scope>/img/<filename>]]`
+- imports downloadable files as wrapper Markdown docs pointing at `[[media:docs/<scope>/files/<filename>]]`
 - escapes literal pipe characters from source text so mathematical notation such as `I(X;Y|Z)` does not become an accidental Markdown table
 - converts plain-text `http://` and `https://` URLs in prose into Markdown autolinks while leaving existing anchors and code/preformatted text alone
+- applies the same SVG safety rules to HTML inline SVG and standalone SVG files
 - validates the generated Markdown through the repo's Jekyll renderer helper before returning success
 - supports the prompt/meta include toggle already defined by the import spec for HTML imports
 - derives the proposed `doc_id` and new Markdown filename stem from the staged source filename, not from the imported document title
 - derives Markdown import titles from the first `# H1` when present, then falls back to the staged filename
+- derives replacement `doc_id` values from `replacement_title` when the initial staged filename stem collides
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio imports write `published: true`, `viewable: true`
 - new Analysis imports write `published: true`, `viewable: false`
 - new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
-
-`POST /docs/import-html` remains a compatibility alias for older callers and delegates to the same source import handler.
-- reports collision details when the generated import target already matches an existing `doc_id`
-- requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc
+- reports `media_plan` for image and file-media imports, including the expected R2 key and generated media token
+- reports collision details when the generated import target already matches an existing `doc_id` or source filename stem
+- asks browser callers to provide `replacement_title` for normal collision recovery
+- requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
 - refreshes the overwritten doc's `last_updated` to the current minute
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild the same-scope docs payloads and run targeted docs-search updates for affected ids
+
+`POST /docs/import-html` remains a compatibility alias for older callers and delegates to the same source import handler.
 
 `POST /docs/rebuild` expects:
 

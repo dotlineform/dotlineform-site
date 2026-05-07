@@ -137,6 +137,28 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 - local verification:
   - smoke `/studio/docs-import/` with staged HTML and Markdown files and confirm the file list, prompt/meta visibility, and successful Markdown create flow
 
+## UI Rule Log 2026-05-07 / UI-094
+
+- status: adopted
+- route: `/studio/docs-import/`
+- issue: Docs Import expanded from HTML and Markdown into a source-registry workflow that can also import text, standalone SVG, R2-backed image wrappers, and R2-backed file wrappers.
+- triage: local workflow refinement with shared command-page constraints
+- reasoning: the route should remain one source-import workflow, but format-specific controls must stay relevant to the selected file. HTML keeps the prompt/meta toggle, non-HTML formats hide it, media formats report R2 copy plans, and duplicate source stems should ask the user for a replacement title instead of silently appending a suffix.
+- outcome: the staged-file list now includes supported source, image, and file formats; image/file imports surface R2 key and media-token results; duplicate `doc_id` collisions prompt for a replacement title seeded with the current name; and the result panel preserves the existing source-link and viewer-link follow-up actions.
+- files changed:
+  - `studio/docs-import/index.md`
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_html_import.py`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/user-guide-docs-html-import.md`
+  - `_docs_src/scripts-docs-management-server.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - run the docs check profile
+  - smoke `/studio/docs-import/` with staged text, SVG, image, and file-media entries
+  - confirm non-HTML selections hide the prompt/meta toggle, media results show R2 keys, and collisions prompt for a replacement title
+
 ## UI Rule Log 2026-05-06 / UI-088
 
 - status: adopted

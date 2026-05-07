@@ -184,6 +184,18 @@ def write_staged_markdown(root: Path, filename: str, markdown: str) -> None:
     path.write_text(markdown, encoding="utf-8")
 
 
+def write_staged_text(root: Path, filename: str, text: str) -> None:
+    path = root / "var/docs/import-staging" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def write_staged_bytes(root: Path, filename: str, payload: bytes) -> None:
+    path = root / "var/docs/import-staging" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(payload)
+
+
 def write_library_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
     lines = ["---"]
     for key, value in front_matter.items():
@@ -371,12 +383,20 @@ def test_source_import_files_list_html_and_markdown() -> None:
         root = Path(temp)
         write_staged_html(root, "source.html", "<html><body><h1>Source</h1></body></html>")
         write_staged_markdown(root, "source.md", "# Source\n")
+        write_staged_text(root, "source.txt", "Source\n")
+        write_staged_text(root, "source.svg", "<svg viewBox='0 0 10 10'></svg>\n")
+        write_staged_bytes(root, "source.png", b"fake image")
+        write_staged_bytes(root, "source.pdf", b"fake pdf")
 
         files = docs_management.list_staged_import_source_files(root)
 
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["source.html"]["source_format"] == "html"
     assert by_filename["source.md"]["source_format"] == "markdown"
+    assert by_filename["source.txt"]["source_format"] == "text"
+    assert by_filename["source.svg"]["source_format"] == "svg"
+    assert by_filename["source.png"]["source_format"] == "image"
+    assert by_filename["source.pdf"]["source_format"] == "file"
 
 
 def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None:
@@ -419,6 +439,186 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
     assert "title: Imported Markdown" in source_text
     assert "# Imported Markdown" in source_text
     assert "Body from staged Markdown" in source_text
+
+
+def test_text_import_autolinks_plain_urls() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_text(root, "plain-note.txt", "Plain Note\n\nSee https://example.com/path.\n")
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "plain-note.txt"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/plain-note.md").read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["import_preview"]["source_format"] == "text"
+    assert "<https://example.com/path>" in source_text
+
+
+def test_svg_import_strips_unsafe_content() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_text(
+            root,
+            "diagram.svg",
+            """
+            <svg viewBox="0 0 10 10" onclick="alert(1)">
+              <title>Unsafe Diagram</title>
+              <script>alert(1)</script>
+              <rect width="10" height="10" />
+            </svg>
+            """,
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "diagram.svg"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/diagram.md").read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["title"] == "Unsafe Diagram"
+    assert payload["import_preview"]["source_format"] == "svg"
+    assert "<script" not in source_text
+    assert "onclick" not in source_text
+    assert "<title>Unsafe Diagram</title>" in source_text
+    assert any("script" in warning for warning in payload["import_preview"]["warnings"])
+
+
+def test_image_import_creates_r2_media_plan_wrapper() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_bytes(root, "reference-image.png", b"fake image")
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "reference-image.png"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/reference-image.md").read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["import_preview"]["source_format"] == "image"
+    assert payload["import_preview"]["media_plan"]["r2_key"] == "docs/library/img/reference-image.png"
+    assert "[[media:docs/library/img/reference-image.png]]" in source_text
+
+
+def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "reference-file.pdf"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library_src/reference-file.md").read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["import_preview"]["source_format"] == "file"
+    assert payload["import_preview"]["media_plan"]["r2_key"] == "docs/library/files/reference-file.pdf"
+    assert "[[media:docs/library/files/reference-file.pdf]]" in source_text
+
+
+def test_import_collision_prompts_for_replacement_title() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_library_doc(root, "reference-file.md", {"doc_id": "reference-file", "title": "Reference File", "parent_id": ""})
+        write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
+        original_rebuild = stub_rebuild()
+        validation_globals = docs_management.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            preview_payload = docs_management.handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "reference-file.pdf"},
+                dry_run=False,
+            )
+            apply_payload = docs_management.handle_import_source(
+                root,
+                {
+                    "scope": "library",
+                    "staged_filename": "reference-file.pdf",
+                    "replacement_title": "Reference File 2",
+                },
+                dry_run=False,
+            )
+        finally:
+            docs_management.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_exists = (root / "_docs_library_src/reference-file-2.md").exists()
+
+    assert preview_payload["preview_only"] is True
+    assert preview_payload["replacement_title_required"] is True
+    assert preview_payload["collision"]["doc_id"] == "reference-file"
+    assert apply_payload["ok"] is True
+    assert apply_payload["operation"] == "create"
+    assert apply_payload["doc_id"] == "reference-file-2"
+    assert source_exists
 
 
 def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> None:
@@ -643,6 +843,13 @@ def main() -> None:
         test_documents_import_rejects_unconfigured_data_domain,
         test_docs_export_summary_text_uses_context_aware_document_plural,
         test_html_import_create_uses_staged_filename_for_doc_id_and_path,
+        test_source_import_files_list_html_and_markdown,
+        test_markdown_import_create_wraps_body_with_generated_front_matter,
+        test_text_import_autolinks_plain_urls,
+        test_svg_import_strips_unsafe_content,
+        test_image_import_creates_r2_media_plan_wrapper,
+        test_file_media_import_creates_r2_file_plan_wrapper,
+        test_import_collision_prompts_for_replacement_title,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,

@@ -124,17 +124,19 @@ function selectedSourceFormat(state) {
 }
 
 function syncSourceFormatControls(state) {
-  const isMarkdown = selectedSourceFormat(state) === "markdown";
-  state.includePromptMeta.checked = isMarkdown ? false : state.includePromptMeta.checked;
-  state.includePromptMeta.disabled = isMarkdown || !state.serviceAvailable;
-  state.includePromptMetaWrap.hidden = isMarkdown;
-  state.includePromptMetaHintNode.hidden = isMarkdown;
+  const supportsPromptMeta = selectedSourceFormat(state) === "html";
+  state.includePromptMeta.checked = supportsPromptMeta ? state.includePromptMeta.checked : false;
+  state.includePromptMeta.disabled = !supportsPromptMeta || !state.serviceAvailable;
+  state.includePromptMetaWrap.hidden = !supportsPromptMeta;
+  state.includePromptMetaHintNode.hidden = !supportsPromptMeta;
 }
 
 function resetWarning(state) {
   state.pendingOverwriteDocId = "";
+  state.replacementTitleRequired = false;
   state.warningNode.hidden = true;
   setText(state.collisionMetaNode, "");
+  state.replacementTitleWrap.hidden = true;
   state.confirmButton.hidden = true;
   state.cancelButton.hidden = true;
 }
@@ -182,6 +184,8 @@ function renderResult(state, payload) {
   setText(state.resultSourceLabelNode, getStudioText(state.config, "docs_html_import.result_source", "source"));
   setText(state.resultViewerLabelNode, getStudioText(state.config, "docs_html_import.result_viewer", "viewer"));
   setText(state.resultBackupLabelNode, getStudioText(state.config, "docs_html_import.result_backup", "backup"));
+  setText(state.resultMediaKeyLabelNode, getStudioText(state.config, "docs_html_import.result_media_key", "R2 key"));
+  setText(state.resultMediaTokenLabelNode, getStudioText(state.config, "docs_html_import.result_media_token", "media link"));
   setText(state.resultScopeNode, payload.scope);
   setHtml(state.resultDocIdNode, sourceDocLinkHtml(payload.scope, payload.doc_id));
   setText(state.resultDocTitleNode, payload.title || preview.title || "");
@@ -191,6 +195,21 @@ function renderResult(state, payload) {
     payload.viewer_url ? viewerLinkHtml(state.config, payload.viewer_url, "Open viewer") : ""
   );
   setText(state.resultBackupNode, payload.backup_dir || "");
+  const mediaPlan = preview.media_plan && typeof preview.media_plan === "object" ? preview.media_plan : null;
+  if (mediaPlan && normalizeText(mediaPlan.r2_key)) {
+    setText(state.resultMediaKeyNode, mediaPlan.r2_key);
+    state.resultMediaKeyRow.hidden = false;
+  } else {
+    setText(state.resultMediaKeyNode, "");
+    state.resultMediaKeyRow.hidden = true;
+  }
+  if (mediaPlan && normalizeText(mediaPlan.media_token)) {
+    setText(state.resultMediaTokenNode, mediaPlan.media_token);
+    state.resultMediaTokenRow.hidden = false;
+  } else {
+    setText(state.resultMediaTokenNode, "");
+    state.resultMediaTokenRow.hidden = true;
+  }
 
   const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
   if (preview.source_format === "markdown") {
@@ -283,6 +302,52 @@ function renderOverwriteWarning(state, payload) {
   state.cancelButton.hidden = false;
 }
 
+function renderReplacementTitlePrompt(state, payload) {
+  const collision = payload && payload.collision && typeof payload.collision === "object" ? payload.collision : {};
+  const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
+    ? payload.import_preview
+    : {};
+  state.replacementTitleRequired = true;
+  setText(
+    state.collisionHeadingNode,
+    getStudioText(state.config, "docs_html_import.replacement_title_heading", "New title required")
+  );
+  setText(
+    state.collisionBodyNode,
+    getStudioText(
+      state.config,
+      "docs_html_import.replacement_title_body",
+      "This staged file matches an existing doc filename. Enter a new title, then run import again."
+    )
+  );
+  setText(
+    state.collisionMetaNode,
+    getStudioText(
+      state.config,
+      "docs_html_import.replacement_title_meta",
+      "Existing doc_id: {doc_id}.",
+      { doc_id: collision.doc_id || preview.proposed_doc_id || "" }
+    )
+  );
+  setText(
+    state.replacementTitleLabelNode,
+    getStudioText(state.config, "docs_html_import.replacement_title_label", "new title")
+  );
+  state.replacementTitleInput.value = normalizeText(preview.title || collision.title || preview.proposed_doc_id);
+  state.replacementTitleWrap.hidden = false;
+  state.warningNode.hidden = false;
+  state.confirmButton.hidden = true;
+  state.cancelButton.hidden = false;
+  window.setTimeout(() => {
+    try {
+      state.replacementTitleInput.focus();
+      state.replacementTitleInput.select();
+    } catch (_error) {
+      // Focus is a convenience only.
+    }
+  }, 0);
+}
+
 async function runImport(state, { overwriteDocId = "", confirmOverwrite = false } = {}) {
   const stagedFilename = normalizeText(state.fileSelect.value);
   if (!stagedFilename) {
@@ -296,6 +361,17 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
 
   const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
   const scope = ["analysis", "library", "studio"].includes(selectedScope) ? selectedScope : "library";
+  const replacementTitle = state.replacementTitleRequired
+    ? normalizeText(state.replacementTitleInput.value)
+    : "";
+  if (state.replacementTitleRequired && !replacementTitle) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(state.config, "docs_html_import.replacement_title_required", "Enter a new title first.")
+    );
+    return;
+  }
   persistSelectedScope(scope);
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
@@ -311,11 +387,23 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importSource, {
       scope,
       staged_filename: stagedFilename,
-      include_prompt_meta: selectedSourceFormat(state) === "markdown" ? false : Boolean(state.includePromptMeta.checked),
+      include_prompt_meta: selectedSourceFormat(state) === "html" ? Boolean(state.includePromptMeta.checked) : false,
       overwrite_doc_id: overwriteDocId,
       confirm_overwrite: confirmOverwrite,
+      replacement_title: replacementTitle,
       preview_only: false
     });
+
+    if (payload.preview_only && payload.replacement_title_required) {
+      renderReplacementTitlePrompt(state, payload);
+      renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
+      setStatus(
+        state.statusNode,
+        "warn",
+        payload.summary_text || getStudioText(state.config, "docs_html_import.replacement_title_required", "Enter a new title first.")
+      );
+      return;
+    }
 
     if (payload.preview_only && payload.requires_overwrite_confirmation) {
       renderOverwriteWarning(state, payload);
@@ -372,6 +460,9 @@ async function init() {
     collisionHeadingNode: document.getElementById("docsHtmlImportCollisionHeading"),
     collisionBodyNode: document.getElementById("docsHtmlImportCollisionBody"),
     collisionMetaNode: document.getElementById("docsHtmlImportCollisionMeta"),
+    replacementTitleWrap: document.getElementById("docsHtmlImportReplacementTitleWrap"),
+    replacementTitleLabelNode: document.getElementById("docsHtmlImportReplacementTitleLabel"),
+    replacementTitleInput: document.getElementById("docsHtmlImportReplacementTitle"),
     resultNode: document.getElementById("docsHtmlImportResult"),
     resultTitleNode: document.getElementById("docsHtmlImportResultTitle"),
     resultScopeLabelNode: document.getElementById("docsHtmlImportResultScopeLabel"),
@@ -386,11 +477,18 @@ async function init() {
     resultViewerNode: document.getElementById("docsHtmlImportResultViewer"),
     resultBackupLabelNode: document.getElementById("docsHtmlImportResultBackupLabel"),
     resultBackupNode: document.getElementById("docsHtmlImportResultBackup"),
+    resultMediaKeyRow: document.getElementById("docsHtmlImportResultMediaKeyRow"),
+    resultMediaKeyLabelNode: document.getElementById("docsHtmlImportResultMediaKeyLabel"),
+    resultMediaKeyNode: document.getElementById("docsHtmlImportResultMediaKey"),
+    resultMediaTokenRow: document.getElementById("docsHtmlImportResultMediaTokenRow"),
+    resultMediaTokenLabelNode: document.getElementById("docsHtmlImportResultMediaTokenLabel"),
+    resultMediaTokenNode: document.getElementById("docsHtmlImportResultMediaToken"),
     resultCountsNode: document.getElementById("docsHtmlImportResultCounts"),
     warningsWrap: document.getElementById("docsHtmlImportWarnings"),
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     pendingOverwriteDocId: "",
+    replacementTitleRequired: false,
     serviceAvailable: false,
     isRunning: false,
     files: [],
@@ -415,6 +513,9 @@ async function init() {
     state.collisionHeadingNode,
     state.collisionBodyNode,
     state.collisionMetaNode,
+    state.replacementTitleWrap,
+    state.replacementTitleLabelNode,
+    state.replacementTitleInput,
     state.resultNode,
     state.resultTitleNode,
     state.resultScopeLabelNode,
@@ -429,6 +530,12 @@ async function init() {
     state.resultViewerNode,
     state.resultBackupLabelNode,
     state.resultBackupNode,
+    state.resultMediaKeyRow,
+    state.resultMediaKeyLabelNode,
+    state.resultMediaKeyNode,
+    state.resultMediaTokenRow,
+    state.resultMediaTokenLabelNode,
+    state.resultMediaTokenNode,
     state.resultCountsNode,
     state.warningsWrap,
     state.warningsHeading,
@@ -446,7 +553,7 @@ async function init() {
       getStudioText(
         state.config,
         "docs_html_import.intro",
-        "Import staged HTML or body-only Markdown into the Studio, Analysis, or Library docs source."
+        "Import staged source files into the Studio, Analysis, or Library docs source."
       )
     );
     setText(state.fileLabelNode, getStudioText(state.config, "docs_html_import.file_label", "staged file"));
@@ -515,9 +622,9 @@ async function init() {
         state.statusNode,
         "warn",
         getStudioText(
-        state.config,
-        "docs_html_import.no_files",
-          "No staged HTML or Markdown files found under var/docs/import-staging/."
+          state.config,
+          "docs_html_import.no_files",
+          "No supported staged import files found under var/docs/import-staging/."
         )
       );
       markRouteReady(state, true);
@@ -538,7 +645,7 @@ async function init() {
       getStudioText(
         state.config,
         "docs_html_import.idle_status",
-        "Select a staged HTML or Markdown file and import it into Studio, Analysis, or Library docs."
+        "Select a staged source file and import it into Studio, Analysis, or Library docs."
       )
     );
     markRouteReady(state, true);
@@ -550,7 +657,7 @@ async function init() {
         getStudioText(
           state.config,
           "docs_html_import.idle_status",
-          "Select a staged HTML or Markdown file and import it into Studio, Analysis, or Library docs."
+          "Select a staged source file and import it into Studio, Analysis, or Library docs."
         )
       );
     });

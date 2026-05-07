@@ -17,6 +17,37 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Implemented Docs Import source registry and media support
+
+**Status:** implemented
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Implemented the Docs Import source registry and expanded staged imports beyond HTML and Markdown.
+
+**Reason:**
+Docs Import needed a structured importer boundary before adding text, standalone SVG, R2-backed image wrappers, and downloadable file wrappers.
+
+**Files changed:**
+
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/docs_management_server.py`
+- `studio/docs-import/index.md`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/data/studio_config.json`
+- `tests/python/test_docs_import_service.py`
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The route now lists HTML, Markdown, text, SVG, raster image, and file-media staged files.
+Text imports autolink plain URLs, HTML and standalone SVG share SVG safety behavior, image and file imports generate `[[media:docs/<scope>/...]]` wrappers with manual R2 copy warnings, and source-stem collisions prompt for a replacement title instead of silently suffixing.
+
 ## [2026-05-07] Added duplicate stem handling to Docs Import media request
 
 **Status:** proposed

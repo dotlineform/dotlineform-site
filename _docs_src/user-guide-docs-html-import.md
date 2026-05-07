@@ -8,7 +8,7 @@ sort_order: 20
 ---
 # Docs Import
 
-Use this page when you have staged self-contained HTML or body-only Markdown that should become a Library, Analysis, or Studio docs source doc.
+Use this page when you have a staged source file that should become a Library, Analysis, or Studio docs source doc.
 
 The Studio route is:
 
@@ -16,7 +16,7 @@ The Studio route is:
 
 ## Before You Start
 
-Put the original HTML or Markdown file in:
+Put the original source file in:
 
 - `var/docs/import-staging/`
 
@@ -25,24 +25,31 @@ This staging directory is repo-local and untracked, so it is a practical place t
 Staged Markdown files should not include predefined front matter.
 The importer creates or preserves the normal Docs Viewer front matter when it writes the target source doc.
 
+For image and downloadable file imports, copy the media file to R2 manually after import.
+The importer creates the wrapper Markdown and reports the expected R2 key, but it does not upload media.
+
 ## What The Page Does
 
 The import page:
 
-- lists staged `.html`, `.htm`, `.md`, and `.markdown` files from `var/docs/import-staging/`
+- lists supported staged files from `var/docs/import-staging/`
 - lets you choose whether the imported doc should publish into `library`, `analysis`, or `studio`
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
 - converts HTML into a best-attempt Markdown source doc
 - imports staged Markdown as the source body without HTML conversion
+- imports `.txt` files as plain Markdown prose and converts plain URLs to autolinks
+- imports standalone `.svg` files as wrapper docs with sanitized inline SVG
+- imports raster images as wrapper docs that point at `docs/<scope>/img/<filename>` R2 media
+- imports supported downloadable files as wrapper docs that point at `docs/<scope>/files/<filename>` R2 media
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
 - writes a new doc immediately when the target is free
-- asks for explicit confirmation before overwriting an existing doc
+- prompts for a replacement title when the staged filename stem matches an existing doc target
 
 ## Basic Workflow
 
 1. Open `/studio/docs-import/`.
-2. Choose the staged HTML or Markdown file.
+2. Choose the staged file.
 3. Choose the publish scope:
    - `library` for the public Library viewer
    - `analysis` for the public Analysis viewer
@@ -54,6 +61,7 @@ If the generated import target does not already exist, the importer writes the n
 The new source doc's `doc_id` and Markdown filename come from the staged source filename stem.
 HTML imports preserve the imported HTML title.
 Markdown imports use the first `# H1` as the title when present and otherwise humanize the staged filename stem.
+Text, SVG, image, and file-media imports humanize the staged filename stem unless the source format contains a better title.
 
 New `library` and `analysis` imports use the same default import behavior: they are generated and opened for review through manage-mode viewer links before becoming normal public tree items.
 
@@ -68,25 +76,65 @@ When it is disabled:
 
 - those sections are dropped when the importer can identify them clearly
 
-This option is hidden for Markdown files because staged Markdown is already the source body.
+This option is hidden for non-HTML files because those formats do not use the HTML prompt/meta detector.
 If you are unsure for HTML, start with the option off and only enable it when the prompt/meta content is part of the document you actually want to keep.
 
-## Overwrite Behavior
+## Duplicate Filename Behavior
 
 If the generated import target already matches an existing doc:
 
 - the page shows a warning naming the existing target
-- nothing is overwritten yet
-- you must explicitly confirm overwrite to replace that source doc
+- nothing is written yet
+- the page prompts for a replacement title seeded with the current imported title
+- the edited title is used to generate a new `doc_id`
+- the importer checks the new `doc_id` again before writing
 
-Overwrite keeps:
+Example:
 
-- the existing `doc_id`
-- the existing filename
-- the existing `parent_id`
-- the existing `sort_order`
+- staged file: `diagram.svg`
+- existing source doc: `diagram.md`
+- prompt value: `Diagram`
+- user edits to: `Diagram 2`
+- imported doc: `diagram-2.md`
 
-Before overwrite, the importer creates an untracked backup under:
+Low-level overwrite support remains available to the local service for explicit callers, but the Studio page treats filename collisions as a rename prompt rather than as a normal overwrite flow.
+
+## Media Imports
+
+Raster image wrappers use:
+
+- `[[media:docs/<scope>/img/<filename>]]`
+
+Downloadable file wrappers use:
+
+- `[[media:docs/<scope>/files/<filename>]]`
+
+Those tokens resolve against `_config.yml` `media_base` when docs payloads are built.
+The import result shows the expected R2 key so you can copy the source file manually to the matching R2 folder.
+
+Supported raster image extensions:
+
+- `.jpg`
+- `.jpeg`
+- `.png`
+- `.webp`
+- `.gif`
+
+Supported downloadable file extensions:
+
+- `.pdf`
+- `.zip`
+- `.csv`
+- `.tsv`
+- `.json`
+- `.jsonl`
+- `.docx`
+- `.xlsx`
+- `.pptx`
+
+## Backup Behavior
+
+Before overwriting through the low-level service, the importer creates an untracked backup under:
 
 - `var/docs/backups/`
 
@@ -100,6 +148,7 @@ After a successful import, the page reports:
 - the imported title
 - the original staged source path
 - the viewer link for the imported doc
+- the expected R2 key and media token for image and file-media imports
 - any non-routine conversion warnings
 
 ## Route Ready State
@@ -110,7 +159,7 @@ The page root `#docsHtmlImportRoot` exposes the shared Studio route-ready contra
 - `data-studio-busy` is `true` while an import or confirmed overwrite is running
 - `data-studio-mode` is `idle` before import, `confirm` when an overwrite warning is shown, and `result` after a successful import
 - `data-studio-service` reports whether the Docs Management Server is available
-- `data-studio-record-loaded` is `true` when staged HTML or Markdown files are available
+- `data-studio-record-loaded` is `true` when supported staged files are available
 
 ## Current Practical Limits
 
@@ -124,6 +173,7 @@ Expect good HTML conversion results for:
 - external links
 - plain-text `http://` and `https://` URLs, which become clickable autolinks
 - inline SVG diagrams
+- standalone SVG files, using the same SVG safety rules as HTML inline SVG
 - technical notation that needs safe inline HTML such as subscripts
 
 Expect simplified output for:
@@ -131,9 +181,9 @@ Expect simplified output for:
 - presentation-heavy layout wrappers
 - interactive disclosure UI such as `details/summary`
 - prompt/meta shells
-- image cases where the source is unclear or awkward for Markdown
+- source images or downloadable files that have not yet been copied to R2
 
-Markdown files bypass the HTML converter.
+Markdown, text, SVG, image-wrapper, and file-wrapper imports bypass the HTML converter.
 They are still validated through the current Jekyll docs renderer before write success.
 
 ## Related References

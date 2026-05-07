@@ -27,7 +27,18 @@ SCOPE_ROOTS = {
 STAGING_REL_DIR = Path("var/docs/import-staging")
 HTML_STAGED_SUFFIXES = {".html", ".htm"}
 MARKDOWN_STAGED_SUFFIXES = {".md", ".markdown"}
-SUPPORTED_STAGED_SUFFIXES = HTML_STAGED_SUFFIXES | MARKDOWN_STAGED_SUFFIXES
+TEXT_STAGED_SUFFIXES = {".txt"}
+SVG_STAGED_SUFFIXES = {".svg"}
+RASTER_IMAGE_STAGED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+FILE_MEDIA_STAGED_SUFFIXES = {".pdf", ".zip", ".csv", ".tsv", ".json", ".jsonl", ".docx", ".xlsx", ".pptx"}
+SUPPORTED_STAGED_SUFFIXES = (
+    HTML_STAGED_SUFFIXES
+    | MARKDOWN_STAGED_SUFFIXES
+    | TEXT_STAGED_SUFFIXES
+    | SVG_STAGED_SUFFIXES
+    | RASTER_IMAGE_STAGED_SUFFIXES
+    | FILE_MEDIA_STAGED_SUFFIXES
+)
 BLOCK_TAGS = {
     "body",
     "section",
@@ -60,6 +71,31 @@ PLAIN_URL_TRAILING_PUNCTUATION = ".,;:!?)]}'"
 MARKDOWN_HEADING_PATTERN = re.compile(r"^\s*#\s+(.+?)\s*#*\s*$", re.MULTILINE)
 MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+SVG_EVENT_ATTR_PATTERN = re.compile(r"\son[a-z]+\s*=", re.IGNORECASE)
+SVG_EXTERNAL_REF_ATTRS = {"href", "xlink:href", "src"}
+
+
+@dataclass(frozen=True)
+class SourceImporter:
+    source_format: str
+    suffixes: set[str]
+    include_prompt_meta: bool = False
+    creates_remote_media_plan: bool = False
+
+
+SOURCE_IMPORTERS = [
+    SourceImporter("html", HTML_STAGED_SUFFIXES, include_prompt_meta=True),
+    SourceImporter("markdown", MARKDOWN_STAGED_SUFFIXES),
+    SourceImporter("text", TEXT_STAGED_SUFFIXES),
+    SourceImporter("svg", SVG_STAGED_SUFFIXES),
+    SourceImporter("image", RASTER_IMAGE_STAGED_SUFFIXES, creates_remote_media_plan=True),
+    SourceImporter("file", FILE_MEDIA_STAGED_SUFFIXES, creates_remote_media_plan=True),
+]
+SOURCE_IMPORTER_BY_SUFFIX = {
+    suffix: importer
+    for importer in SOURCE_IMPORTERS
+    for suffix in importer.suffixes
+}
 
 
 def normalize_space(text: str) -> str:
@@ -132,14 +168,12 @@ def detect_bundle_bin() -> Optional[str]:
 
 
 def source_format_for_path(path: Path) -> str:
-    suffix = path.suffix.lower()
-    if suffix in HTML_STAGED_SUFFIXES:
-        return "html"
-    if suffix in MARKDOWN_STAGED_SUFFIXES:
-        return "markdown"
+    importer = SOURCE_IMPORTER_BY_SUFFIX.get(path.suffix.lower())
+    if importer:
+        return importer.source_format
     raise ValueError(
-        "staged file must be an HTML or Markdown source "
-        f"({', '.join(sorted(SUPPORTED_STAGED_SUFFIXES))})"
+        "staged file must use one of these extensions: "
+        f"{', '.join(sorted(SUPPORTED_STAGED_SUFFIXES))}"
     )
 
 
@@ -243,7 +277,9 @@ def serialize_node(node: Any, *, in_svg: bool = False) -> str:
     if isinstance(node, TextNode):
         return escape(node.text, quote=False)
     tag = node.tag
-    if tag in DROP_TAGS:
+    if tag == "script":
+        return ""
+    if tag in DROP_TAGS and not (in_svg and tag in {"title", "desc"}):
         return ""
     current_in_svg = in_svg or tag == "svg"
     attrs = serialize_attrs(node.attrs, for_svg=current_in_svg)
@@ -280,6 +316,37 @@ def collect_all(node: ElementNode, tag: str) -> list[ElementNode]:
         if isinstance(candidate, ElementNode) and candidate.tag == tag:
             matches.append(candidate)
     return matches
+
+
+def svg_safety_warnings(source_svg: str, svg: Optional[ElementNode]) -> list[str]:
+    warnings: list[str] = []
+    if re.search(r"<\s*script\b", source_svg or "", flags=re.IGNORECASE):
+        warnings.append("SVG contained script content; unsafe script blocks were stripped.")
+    if SVG_EVENT_ATTR_PATTERN.search(source_svg or ""):
+        warnings.append("SVG contained event-handler attributes; unsafe on* attributes were stripped.")
+    external_refs: list[str] = []
+    if svg:
+        for node in walk(svg):
+            if not isinstance(node, ElementNode):
+                continue
+            for attr_name in SVG_EXTERNAL_REF_ATTRS:
+                value = node.attr(attr_name)
+                if value.startswith(("http://", "https://", "//")):
+                    external_refs.append(value)
+    if external_refs:
+        warnings.append(f"SVG contains {len(external_refs)} external reference(s); review the rendered output.")
+    return warnings
+
+
+def sanitize_svg_source(source_svg: str) -> tuple[str, str, list[str], int]:
+    parsed = parse_with_bs4(source_svg)
+    svg = find_first(parsed.root, "svg")
+    if svg is None:
+        return "", "", ["No <svg> root was found in the staged SVG file."], 0
+    title_node = find_first(svg, "title")
+    title = normalize_space(title_node.text_content()) if title_node else ""
+    warnings = svg_safety_warnings(source_svg, svg)
+    return serialize_node(svg), title, warnings, sum(1 for node in walk(svg) if isinstance(node, ElementNode) and node.tag == "svg")
 
 
 def extract_title(root: ElementNode) -> str:
@@ -510,6 +577,7 @@ def build_summary(
             images.append(node.attr("src"))
         if node.tag == "svg":
             svg_count += 1
+            warnings.extend(svg_safety_warnings(source_html, node))
         if node.tag == "details":
             details_count += 1
         if is_prompt_meta_node(node):
@@ -651,6 +719,30 @@ def generate_import_preview(
             source_path=source_path,
             scope=scope,
         )
+    if source_format == "text":
+        return generate_text_import_preview(
+            repo_root,
+            source_path=source_path,
+            scope=scope,
+        )
+    if source_format == "svg":
+        return generate_svg_import_preview(
+            repo_root,
+            source_path=source_path,
+            scope=scope,
+        )
+    if source_format == "image":
+        return generate_image_import_preview(
+            repo_root,
+            source_path=source_path,
+            scope=scope,
+        )
+    if source_format == "file":
+        return generate_file_media_import_preview(
+            repo_root,
+            source_path=source_path,
+            scope=scope,
+        )
     return generate_html_import_preview(
         repo_root,
         source_path=source_path,
@@ -729,6 +821,113 @@ def build_markdown_summary(source_markdown: str, source_filename_stem: str) -> d
     }
 
 
+def build_text_summary(source_text: str, source_filename_stem: str) -> dict[str, Any]:
+    text = (source_text or "").lstrip("\ufeff")
+    first_line = next((normalize_space(line) for line in text.splitlines() if normalize_space(line)), "")
+    title = first_line if 0 < len(first_line) <= 90 else humanize(source_filename_stem)
+    title = title or "Imported Text"
+    body = autolink_plain_urls(text.strip())
+    warnings: list[str] = []
+    if not body:
+        body = f"# {title}"
+        warnings.append("Staged text was blank; generated a title-only body.")
+    return {
+        "title": title,
+        "title_source": "first_line" if first_line and title == first_line else "filename",
+        "proposed_doc_id": slugify(source_filename_stem or title or "Imported Text"),
+        "proposed_doc_id_source": "filename" if source_filename_stem else "title",
+        "source_stats": {
+            "chars": len(source_text or ""),
+            "links": len(PLAIN_URL_PATTERN.findall(source_text or "")),
+            "images": 0,
+            "svg": 0,
+            "details": 0,
+        },
+        "image_summary": {
+            "external": 0,
+            "data_urls": 0,
+            "repo_local_or_other": 0,
+        },
+        "warnings": warnings,
+        "markdown_preview": body,
+    }
+
+
+def media_token(scope: str, media_class: str, filename: str) -> str:
+    return f"[[media:docs/{scope}/{media_class}/{filename}]]"
+
+
+def build_media_plan(scope: str, media_class: str, source_path: Path, title: str) -> dict[str, Any]:
+    r2_key = f"docs/{scope}/{media_class}/{source_path.name}"
+    return {
+        "manual_copy_required": True,
+        "source_path": source_path.name,
+        "r2_key": r2_key,
+        "media_token": media_token(scope, media_class, source_path.name),
+        "title": title,
+    }
+
+
+def build_image_summary(source_path: Path, scope: str) -> dict[str, Any]:
+    title = humanize(source_path.stem) or "Imported Image"
+    plan = build_media_plan(scope, "img", source_path, title)
+    markdown = f"# {title}\n\n![{title}]({plan['media_token']})"
+    return {
+        "title": title,
+        "title_source": "filename",
+        "proposed_doc_id": slugify(source_path.stem or title),
+        "proposed_doc_id_source": "filename",
+        "source_stats": {
+            "chars": 0,
+            "links": 0,
+            "images": 1,
+            "svg": 0,
+            "details": 0,
+            "size_bytes": source_path.stat().st_size,
+        },
+        "image_summary": {
+            "external": 0,
+            "data_urls": 0,
+            "repo_local_or_other": 1,
+        },
+        "warnings": [
+            f"Copy {source_path.name} to R2 at {plan['r2_key']} before the rendered doc can display it."
+        ],
+        "markdown_preview": markdown,
+        "media_plan": plan,
+    }
+
+
+def build_file_media_summary(source_path: Path, scope: str) -> dict[str, Any]:
+    title = humanize(source_path.stem) or "Imported File"
+    plan = build_media_plan(scope, "files", source_path, title)
+    markdown = f"# {title}\n\n[Download {title}]({plan['media_token']})"
+    return {
+        "title": title,
+        "title_source": "filename",
+        "proposed_doc_id": slugify(source_path.stem or title),
+        "proposed_doc_id_source": "filename",
+        "source_stats": {
+            "chars": 0,
+            "links": 1,
+            "images": 0,
+            "svg": 0,
+            "details": 0,
+            "size_bytes": source_path.stat().st_size,
+        },
+        "image_summary": {
+            "external": 0,
+            "data_urls": 0,
+            "repo_local_or_other": 0,
+        },
+        "warnings": [
+            f"Copy {source_path.name} to R2 at {plan['r2_key']} before the rendered download link will work."
+        ],
+        "markdown_preview": markdown,
+        "media_plan": plan,
+    }
+
+
 def generate_markdown_import_preview(
     repo_root: Path,
     *,
@@ -742,6 +941,106 @@ def generate_markdown_import_preview(
     summary["source_format"] = "markdown"
     summary["source_path"] = relative_path(repo_root, source_path)
     summary["source_markdown"] = relative_path(repo_root, source_path)
+    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["tag_counts"] = {}
+    summary["comment_count"] = 0
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    return summary
+
+
+def generate_text_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    source_text = source_path.read_text(encoding="utf-8", errors="replace")
+    summary = build_text_summary(source_text, source_path.stem)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "text"
+    summary["source_path"] = relative_path(repo_root, source_path)
+    summary["source_text"] = relative_path(repo_root, source_path)
+    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["tag_counts"] = {}
+    summary["comment_count"] = 0
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    return summary
+
+
+def generate_svg_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    source_svg = source_path.read_text(encoding="utf-8", errors="replace")
+    sanitized_svg, svg_title, warnings, svg_count = sanitize_svg_source(source_svg)
+    title = svg_title or humanize(source_path.stem) or "Imported Diagram"
+    markdown = f"# {title}\n\n{sanitized_svg}".strip()
+    summary = {
+        "title": title,
+        "title_source": "svg_title" if svg_title else "filename",
+        "proposed_doc_id": slugify(source_path.stem or title),
+        "proposed_doc_id_source": "filename",
+        "source_stats": {
+            "chars": len(source_svg),
+            "links": len(PLAIN_URL_PATTERN.findall(source_svg)),
+            "images": source_svg.lower().count("<image"),
+            "svg": svg_count,
+            "details": 0,
+        },
+        "image_summary": {
+            "external": 0,
+            "data_urls": 0,
+            "repo_local_or_other": 0,
+        },
+        "warnings": warnings,
+        "markdown_preview": markdown,
+        "scope": normalized_scope,
+        "source_format": "svg",
+        "source_path": relative_path(repo_root, source_path),
+        "source_svg": relative_path(repo_root, source_path),
+        "staging_root": STAGING_REL_DIR.as_posix(),
+        "tag_counts": {"svg": svg_count} if svg_count else {},
+        "comment_count": 0,
+    }
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    return summary
+
+
+def generate_image_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    summary = build_image_summary(source_path, normalized_scope)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "image"
+    summary["source_path"] = relative_path(repo_root, source_path)
+    summary["source_media"] = relative_path(repo_root, source_path)
+    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["tag_counts"] = {}
+    summary["comment_count"] = 0
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    return summary
+
+
+def generate_file_media_import_preview(
+    repo_root: Path,
+    *,
+    source_path: Path,
+    scope: str,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    summary = build_file_media_summary(source_path, normalized_scope)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "file"
+    summary["source_path"] = relative_path(repo_root, source_path)
+    summary["source_media"] = relative_path(repo_root, source_path)
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
@@ -763,7 +1062,7 @@ def detect_repo_root(explicit_root: str) -> Path:
     raise SystemExit("Could not auto-detect repo root. Pass --repo-root.")
 
 
-def resolve_source_html(repo_root: Path, args: argparse.Namespace) -> Path:
+def resolve_import_source(repo_root: Path, args: argparse.Namespace) -> Path:
     if args.source_html:
         path = Path(args.source_html).expanduser().resolve()
         if not path.exists():
@@ -771,14 +1070,14 @@ def resolve_source_html(repo_root: Path, args: argparse.Namespace) -> Path:
         return path
     if args.staged_filename:
         try:
-            return resolve_staged_html(repo_root, args.staged_filename)
+            return resolve_staged_import_source(repo_root, args.staged_filename)
         except (FileNotFoundError, ValueError) as exc:
             raise SystemExit(str(exc)) from exc
     raise SystemExit("Pass either --source-html or --staged-filename.")
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Dry-run HTML import conversion for Docs Viewer source docs.")
+    parser = argparse.ArgumentParser(description="Dry-run source import conversion for Docs Viewer source docs.")
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
     parser.add_argument("--source-html", default="", help="Import directly from an HTML file path.")
     parser.add_argument("--staged-filename", default="", help="Import from var/docs/import-staging/<filename>.")
@@ -791,7 +1090,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     repo_root = detect_repo_root(args.repo_root)
-    source_path = resolve_source_html(repo_root, args)
+    source_path = resolve_import_source(repo_root, args)
     summary = generate_import_preview(
         repo_root,
         source_path=source_path,

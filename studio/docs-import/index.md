@@ -62,6 +62,12 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
       <h3 id="docsHtmlImportCollisionHeading"></h3>
       <p id="docsHtmlImportCollisionBody"></p>
       <p class="tagStudioForm__meta" id="docsHtmlImportCollisionMeta"></p>
+      <label class="tagStudioField docsHtmlImportPage__replacementField" id="docsHtmlImportReplacementTitleWrap" hidden>
+        <span class="tagStudioField__label" id="docsHtmlImportReplacementTitleLabel"></span>
+        <span class="tagStudioField__control">
+          <input class="tagStudio__input" id="docsHtmlImportReplacementTitle" type="text">
+        </span>
+      </label>
     </div>
 
     <div class="docsHtmlImportPage__result" id="docsHtmlImportResult" hidden>
@@ -90,6 +96,14 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
         <div>
           <dt id="docsHtmlImportResultBackupLabel"></dt>
           <dd id="docsHtmlImportResultBackup"></dd>
+        </div>
+        <div id="docsHtmlImportResultMediaKeyRow" hidden>
+          <dt id="docsHtmlImportResultMediaKeyLabel"></dt>
+          <dd id="docsHtmlImportResultMediaKey"></dd>
+        </div>
+        <div id="docsHtmlImportResultMediaTokenRow" hidden>
+          <dt id="docsHtmlImportResultMediaTokenLabel"></dt>
+          <dd id="docsHtmlImportResultMediaToken"></dd>
         </div>
       </dl>
       <p class="tagStudioForm__meta" id="docsHtmlImportResultCounts"></p>
