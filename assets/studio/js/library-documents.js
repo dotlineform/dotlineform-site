@@ -118,6 +118,19 @@ function docIsParent(state, doc) {
   return state.parentIds.has(docId(doc));
 }
 
+function docManageHref(doc, id) {
+  const href = normalizeText(doc && doc.viewer_url) || `/library/?doc=${encodeURIComponent(id)}`;
+  const url = new URL(href, window.location.origin);
+  url.searchParams.set("mode", "manage");
+  if (!normalizeText(url.searchParams.get("doc")) && id) {
+    url.searchParams.set("doc", id);
+  }
+  if (url.origin === window.location.origin) {
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+  return url.href;
+}
+
 function filterCounts(state) {
   return {
     viewable: state.docs.filter((doc) => docIsViewable(doc)).length,
@@ -188,7 +201,7 @@ function renderRows(state) {
     const id = docId(doc);
     const title = docTitle(doc);
     const addedDate = docAddedDate(doc);
-    const href = normalizeText(doc && doc.viewer_url) || `/library/?doc=${encodeURIComponent(id)}`;
+    const href = docManageHref(doc, id);
     const viewable = docIsViewable(doc);
     const parent = docIsParent(state, doc);
     return `

@@ -52,6 +52,8 @@ Columns:
 `doc_id`, `added_date`, and `title` are sortable columns.
 `viewable` and parent are filter-only attributes.
 
+Both the `doc_id` and `title` links open the Library viewer in manage mode for that document.
+
 ## Filters
 
 The page exposes two independent filter pills:

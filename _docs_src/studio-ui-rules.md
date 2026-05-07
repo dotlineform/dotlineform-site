@@ -84,7 +84,7 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 - issue: Library needed a compact generated-document review page without borrowing the export workflow's selection behavior or creating another page-local table style.
 - triage: shared primitive reuse
 - reasoning: this page is read-only review, so it should use the dense list primitive for scan-table presentation and keep export-specific checkbox hierarchy behavior out of the route. The viewable dot can reuse the same small green status treatment as export, while parent state is derived directly from generated `parent_id` relationships.
-- outcome: added `/studio/library-documents/`, linked it from the Library dashboard, rendered generated Library docs with `tagStudioList--dense`, added sortable `doc_id`, `added_date`, and `title` columns, and added independent `viewable` and `parent` filter pills.
+- outcome: added `/studio/library-documents/`, linked it from the Library dashboard, rendered generated Library docs with `tagStudioList--dense`, added sortable `doc_id`, `added_date`, and `title` columns, opened row links in Library manage mode, and added independent `viewable` and `parent` filter pills.
 - files changed:
   - `studio/library-documents/index.md`
   - `assets/studio/js/library-documents.js`

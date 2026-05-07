@@ -96,7 +96,7 @@ Library document review needs a compact scan table with viewable and parent stat
 
 **Impact:**
 The Library dashboard now links to a document index under the HTML Import entry.
-The page sorts by `doc_id`, `added_date`, and `title`, places parent and viewable status before the title, shows the export-style green viewable dot, marks parent docs with a tick, and filters independently by `viewable` and `parent`.
+The page sorts by `doc_id`, `added_date`, and `title`, opens document links in Library manage mode, places parent and viewable status before the title, shows the export-style green viewable dot, marks parent docs with a tick, and filters independently by `viewable` and `parent`.
 
 ## [2026-05-06] Respected root sort order in Docs Viewer metadata edits
 
