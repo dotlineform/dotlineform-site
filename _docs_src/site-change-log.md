@@ -17,6 +17,27 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Added Docs Import registry and media support request
+
+**Status:** proposed
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Added a change request for making Docs Import format-extensible and supporting standalone text, SVG, and raster image files.
+
+**Reason:**
+The current source import flow now handles HTML and body-only Markdown, but future standalone media imports need a clearer registry boundary, asset-copy plan, and SVG safety policy before implementation.
+
+**Files changed:**
+
+- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The request proposes a source importer registry, `.txt` import, standalone SVG wrapper-doc import, and raster image import that copies assets under `assets/docs/imports/<scope>/<doc_id>/` before generating wrapper Markdown.
+
 ## [2026-05-07] Enabled Markdown files in Docs Import
 
 **Status:** implemented

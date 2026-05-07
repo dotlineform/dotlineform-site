@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-92414c746f48ef0342fce8a88fd02fac",
-    "generated_at_utc": "2026-05-07T16:16:58Z",
-    "count": 194
+    "version": "blake2b-556bd3f4c5a1f6bd652ca8a149ae8470",
+    "generated_at_utc": "2026-05-07T16:51:13Z",
+    "count": 195
   },
   "entries": [
     {
@@ -4542,6 +4542,37 @@
       "search_text": "ui-status-emoji ui status emoji ui status emoji change requests change requests 2026-05-02 2026 05 02"
     },
     {
+      "id": "site-request-docs-import-source-registry-media",
+      "kind": "doc",
+      "title": "Docs Import Source Registry And Media Support Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
+      "last_updated": "2026-05-07",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-07 • Change Requests",
+      "search_terms": [
+        "site-request-docs-import-source-registry-media",
+        "site",
+        "request",
+        "docs",
+        "import",
+        "source",
+        "registry",
+        "media",
+        "docs import source registry and media support request",
+        "and",
+        "support",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-07",
+        "2026",
+        "05",
+        "07"
+      ],
+      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-07 2026 05 07"
+    },
+    {
       "id": "library-export-ui",
       "kind": "doc",
       "title": "Library Export - UI refinements",
@@ -4572,21 +4603,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
+      "display_meta": "2026-05-07",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-06 20:49",
+        "2026-05-07",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "07"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "change-requests change requests change requests 2026-05-07 2026 05 07"
     },
     {
       "id": "library-import-export-v2",
