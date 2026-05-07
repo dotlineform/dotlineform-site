@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T20:24:16Z",
+  "generated_at": "2026-05-07T20:32:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -190,6 +190,21 @@
       "viewer_url": "/library/?doc=beyond-conscious-subconscious",
       "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json",
       "content_text_length": 3423
+    },
+    {
+      "scope": "library",
+      "doc_id": "closed-vs-open-universe",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "added_date": "2026-05-07 21:29",
+      "last_updated": "2026-05-07 21:32",
+      "parent_id": "",
+      "sort_order": 120,
+      "published": true,
+      "viewable": false,
+      "source_path": "closed-vs-open-universe.md",
+      "viewer_url": "/library/?doc=closed-vs-open-universe",
+      "content_url": "/assets/data/docs/scopes/library/by-id/closed-vs-open-universe.json",
+      "content_text_length": 3077
     }
   ]
 }

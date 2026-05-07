@@ -1,0 +1,63 @@
+---
+doc_id: closed-vs-open-universe
+title: Entropy & Evolution Under Two Cosmologies
+added_date: "2026-05-07 21:29"
+last_updated: "2026-05-07 21:32"
+parent_id: ""
+sort_order: 120
+published: true
+viewable: false
+---
+# Entropy & Evolution Under Two Cosmologies — Closed vs. Open/Cyclic
+
+Does entropy doom complexity? It depends on whether the universe is effectively **closed** or admits **renewal/cycles**. Here’s how each framing reshapes evolution and culture.
+
+### Closed Universe (Heat-Death Trajectory)
+
+- **Thermo baseline:** Total entropy increases; energy gradients dissipate.
+- **ΛCDM expansion:** Accelerating expansion (dark energy) hastens dilution of usable energy.
+- **End state:** Heat death: no free energy for work; black hole evaporation leaves thin radiation.
+
+### Implications
+
+- **Evolution:** Complexity is transient; selection operates while gradients exist.
+- **Culture:** Civilisations are negentropy “flares” powered by finite gradients.
+- **Meaning:** Entropy is the final horizon; ethics may emphasise stewardship of gradients.
+
+Anchors: Second Law; supernova/Type Ia evidence for acceleration; Hawking radiation; cosmic no-hair.
+
+### Open / Cyclic / Renewal Possibilities
+
+- **Eternal inflation/multiverse:** Bubble universes bud off; “closure” is local, not global.
+- **Cyclic/ekpyrotic models:** Big-bang-like phases repeat; entropy may be diluted or reset.
+- **Conformal Cyclic Cosmology (CCC):** Successive aeons linked conformally; late-time universe maps to a new big bang.
+- **Black hole information:** If information is conserved, ultimate “loss” is subtler than naive entropy growth.
+
+### Implications
+
+- **Evolution:** Complexity may reappear in new cycles/regions.
+- **Culture:** Knowledge might be locally terminal but cosmologically recurrent.
+- **Meaning:** Entropy is a phase; cosmic reconstruction remains possible.
+
+Anchors: eternal inflation; ekpyrotic/bounce models; Penrose’s CCC; Page curves & unitarity debates.
+
+### Framework
+
+- **Select:** Cosmology (closed vs. renewal) sets the boundary conditions.
+- **Change:** Ecological & cultural inheritance accelerate local order by consuming gradients.
+- **Reconstruct:** In closed models, reconstruction ends locally; in renewal models, reconstruction may recur cosmically.
+
+In both framings, the Select → Change → Reconstruct cycle applies. What changes is whether reconstruction stops locally (closed) or recurs across aeons/regions (renewal).
+
+## References
+
+- Hawking, S. W. (1975). Particle creation by black holes. *Proceedings of the Royal Society A, 331*(1551), 45–73.
+- Khoury, J., Ovrut, B. A., Steinhardt, P. J., & Turok, N. (2001). The ekpyrotic universe. *Science, 292*(5519), 129–136.
+- Linde, A. D. (1990). *Particle physics and inflationary cosmology*. Harwood/CRC; Nature summary.
+- Page, D. N. (1993). Information in black hole radiation. *Physical Review Letters, 71*(23), 3743–3746.
+- Penrose, R. (2008). Before the big bang: CCC. *Proceedings of the Royal Society A, 464*(2098), 2713–2731.
+- Perlmutter, S., et al. (1999). Measurements of Ω and Λ from 42 high-redshift supernovae. *ApJ, 517*(2), 565–586.
+- Riess, A. G., et al. (1998). Observational evidence from supernovae for an accelerating universe. *AJ, 116*(3), 1009–1038.
+- Stanford Encyclopedia of Philosophy. (Entropy entry; latest revision current as of access date).
+- Steinhardt, P. J., & Turok, N. (2006). Why the cosmological constant is small and positive. *PNAS, 101*(1), 29–36.
+
