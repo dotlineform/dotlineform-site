@@ -1795,6 +1795,16 @@ select.docsViewer__fieldInput{
   margin-right: auto;
 }
 
+.docsViewer__content img{
+  max-width: 100%;
+  height: auto;
+}
+
+.docsViewer__content p > img:only-child{
+  display: block;
+  margin-block: 1rem;
+}
+
 .docsViewer__results{
   list-style: none;
   max-width: var(--docs-viewer-measure);

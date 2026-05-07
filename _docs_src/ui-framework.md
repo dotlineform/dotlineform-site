@@ -2,7 +2,7 @@
 doc_id: ui-framework
 title: UI Framework
 added_date: 2026-04-24
-last_updated: "2026-05-06 19:54"
+last_updated: "2026-05-07 20:41"
 parent_id: ui
 sort_order: 10
 ---
@@ -165,6 +165,7 @@ In doc-view mode, the main pane should show:
 - status line below the search field
 - ancestor path, last-updated metadata, and optional summary metadata above document content
 - one readable content column rather than full-width text
+- linked or token-resolved Markdown images constrained to the content column width, with image-only paragraphs rendered as block media
 
 The ancestor path must not repeat the current doc title, because the rendered document H1 is the title. Root-level docs should hide the path line and let the updated date occupy the top metadata line.
 

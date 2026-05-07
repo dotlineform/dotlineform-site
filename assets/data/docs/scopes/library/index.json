@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T18:13:12Z",
+  "generated_at": "2026-05-07T19:46:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -178,9 +178,9 @@
     {
       "scope": "library",
       "doc_id": "beyond-conscious-subconscious",
-      "title": "Beyond Conscious vs. Subconscious",
+      "title": "Loose Ends — Memory — Beyond Conscious vs. Subconscious — Layers Explainer",
       "added_date": "2026-05-07 19:09",
-      "last_updated": "2026-05-07 19:12",
+      "last_updated": "2026-05-07 20:31",
       "parent_id": "",
       "sort_order": 110,
       "published": true,
@@ -188,7 +188,7 @@
       "source_path": "beyond-conscious-subconscious.md",
       "viewer_url": "/library/?doc=beyond-conscious-subconscious",
       "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json",
-      "content_text_length": 4475
+      "content_text_length": 3436
     }
   ]
 }
