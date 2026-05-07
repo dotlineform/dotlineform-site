@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T17:51:12Z",
+  "generated_at": "2026-05-07T18:31:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2788,7 +2788,7 @@
       "doc_id": "site-request-docs-import-source-registry-media",
       "title": "Docs Import Source Registry And Media Support Request",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-07 19:31",
       "parent_id": "change-requests",
       "sort_order": 205,
       "published": true,
@@ -2804,7 +2804,7 @@
       "doc_id": "site-request-r2-media-upload-automation",
       "title": "R2 Media Upload Automation Request",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-07 19:06",
       "parent_id": "change-requests",
       "sort_order": 206,
       "published": true,
@@ -2813,7 +2813,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
       "content_text_length": 7807,
-      "ui_status": "proposed"
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
