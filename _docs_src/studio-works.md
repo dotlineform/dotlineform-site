@@ -2,7 +2,7 @@
 doc_id: studio-works
 title: Catalogue Works
 added_date: 2026-04-01
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-07"
 parent_id: catalogue
 sort_order: 60
 ---
@@ -55,7 +55,7 @@ Top-level structure:
 - `#worksListCopySeriesButton`
   - copies the plain-text series list to the clipboard
 - `[data-role="sort-button"]`
-  - shared sort-button hooks on the existing works header controls
+  - shared sort-button hooks on dense-list header controls
 
 ## Named UI Sections
 
@@ -68,8 +68,9 @@ User-facing name:
 DOM / CSS:
 
 - `.worksList__head`
-- `.worksList__sortBtn[data-role="sort-button"]`
-- `.worksList__sortIcon`
+- `.tagStudioList__head`
+- `.tagStudioList__sortBtn[data-role="sort-button"]`
+- `.tagStudioList__sortIndicator`
 
 JS owner:
 
@@ -78,7 +79,7 @@ JS owner:
 
 Meaning:
 
-- the existing works sort controls, now bound through the shared Studio role/state contract
+- dense-list sort controls bound through the shared Studio role/state contract
 
 ### Meta actions
 
@@ -109,8 +110,12 @@ User-facing name:
 
 DOM / CSS:
 
-- `.worksList__list`
 - `.worksList__item`
+- `.tagStudioList__rows`
+- `.tagStudioList__row`
+- `.tagStudioList__cellLink`
+- `.tagStudioList__cellTitle`
+- `.tagStudioList__cellMeta`
 
 Meaning:
 
@@ -123,15 +128,26 @@ Meaning:
 Primary CSS:
 
 - `assets/css/main.css`
+- `assets/studio/css/studio.css`
 
 Shared primitives used:
 
+- `tagStudioList`
+- `tagStudioList--dense`
+- `tagStudioList__head`
+- `tagStudioList__sortBtn`
+- `tagStudioList__sortIndicator`
+- `tagStudioList__rows`
+- `tagStudioList__row`
+- `tagStudioList__cellLink`
+- `tagStudioList__cellTitle`
+- `tagStudioList__cellMeta`
 - `data-role="sort-button"`
 - `data-state="active"`
 
 Page-specific classes retained:
 
-- `worksList__*` plus `worksList--studio` for the Studio works layout and row styling
+- `worksList--studio`, `worksList--singleSeries`, and focused `worksList__*` cell classes for column templates, route-local link behavior, and series-filter variants
 
 ## DOM Rendering and Event Wiring
 
@@ -146,7 +162,7 @@ Main event wiring:
 
 Meaning:
 
-- the page keeps its existing list rendering, but the interactive sort state no longer depends on style-class behavior hooks
+- the page renders rows with the shared dense list primitive while keeping works-specific sort/filter state in the controller
 - the page now also loads Studio config for the copy-button label
 
 ## UI Contract
@@ -164,6 +180,6 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 If a request refers to:
 
 - “sort buttons”
-  - start with `[data-role="sort-button"]` and `.worksList__sortBtn`
+  - start with `[data-role="sort-button"]` and `.tagStudioList__sortBtn`
 - “active sort state”
   - start with `updateHeaderState(...)` in `assets/studio/js/studio-works.js`

@@ -5,8 +5,10 @@ permalink: /studio/studio-works/
 section: works
 studio_page_doc: /docs/?scope=studio&doc=studio-works
 ---
+<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
+
 <div
-  class="index worksList worksList--studio"
+  class="index worksList worksList--studio tagStudioList tagStudioList--dense"
   id="worksStudioRoot"
   data-role="studio-works"
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
@@ -26,25 +28,25 @@ studio_page_doc: /docs/?scope=studio&doc=studio-works
     </div>
   </div>
 
-  <div class="worksList__head" role="group" aria-label="Sort studio works">
-    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
-      cat <span class="worksList__sortIcon" aria-hidden="true"></span>
+  <div class="tagStudioList__head worksList__head" role="group" aria-label="Sort studio works">
+    <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
+      cat <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="year">
-      year <span class="worksList__sortIcon" aria-hidden="true"></span>
+    <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="year">
+      year <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="title">
-      title <span class="worksList__sortIcon" aria-hidden="true"></span>
+    <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="title">
+      title <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="series">
-      series <span class="worksList__sortIcon" aria-hidden="true"></span>
+    <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="series">
+      series <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="storage">
-      storage <span class="worksList__sortIcon" aria-hidden="true"></span>
+    <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="storage">
+      storage <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
     </button>
   </div>
 
-  <ul class="worksList__list" id="worksList"></ul>
+  <ul class="tagStudioList__rows" id="worksList"></ul>
 
   <nav class="page__nav" id="worksIndexBackNav" hidden>
     <a

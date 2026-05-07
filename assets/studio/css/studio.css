@@ -2348,6 +2348,23 @@ button.tagStudioList__cellLink {
   font-weight: 700;
 }
 
+.worksList--studio .worksList__head {
+  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
+  margin: var(--list-section-gap) 0 4px;
+}
+
+.worksList--studio .worksList__item {
+  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
+}
+
+.worksList--studio.worksList--singleSeries .worksList__head {
+  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
+}
+
+.worksList--studio.worksList--singleSeries .worksList__item {
+  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
+}
+
 .tagRegistry__head {
   --studio-list-head-line: var(--line, var(--studio-line));
   grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
@@ -3121,6 +3138,13 @@ button.tagStudioList__cellLink {
 
   .studioUiPrimitiveListDemo__thumbHead {
     display: none;
+  }
+
+  .worksList--studio .worksList__head,
+  .worksList--studio .worksList__item,
+  .worksList--studio.worksList--singleSeries .worksList__head,
+  .worksList--studio.worksList--singleSeries .worksList__item {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .tagStudioField--inline,

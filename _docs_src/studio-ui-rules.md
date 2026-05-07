@@ -58,6 +58,25 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
   - build the Studio docs data and site
   - open `/studio/ui-catalogue/list/` on desktop and mobile and confirm the dense variant keeps sortable headers, no row dividers, `--text-xs` text, and a bold title column
 
+## UI Rule Log 2026-05-07 / UI-090
+
+- status: adopted
+- route: `/studio/studio-works/`
+- issue: after `tagStudioList--dense` became the shared primitive, the Studio works page still rendered its header, sort buttons, list rows, and title emphasis through route-local `worksList__*` presentation classes.
+- triage: route alignment with shared primitive
+- reasoning: the route still owns works-specific data loading, return-state links, and column templates, but the dense row rhythm, sortable header button styling, indicator styling, row reset, type size, and bold title treatment now belong to the shared primitive.
+- outcome: loaded `assets/studio/css/studio.css` on the route, added `tagStudioList tagStudioList--dense` to the page root, changed sort controls and generated rows to use `tagStudioList__*` classes, and moved Studio-only works column templates out of `assets/css/main.css` into the Studio stylesheet.
+- files changed:
+  - `studio/studio-works/index.md`
+  - `assets/studio/js/studio-works.js`
+  - `assets/css/main.css`
+  - `assets/studio/css/studio.css`
+  - `_docs_src/studio-works.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the Studio docs data and site
+  - smoke `/studio/studio-works/` on desktop and mobile and confirm the route remains ready, sortable, divider-free, `--text-xs`, and bold in the title column
+
 ## UI Rule Log 2026-05-06 / UI-088
 
 - status: adopted

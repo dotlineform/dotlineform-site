@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T09:15:36Z",
+  "generated_at": "2026-05-07T09:55:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1468,7 +1468,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 155300
+      "content_text_length": 156578
     },
     {
       "scope": "studio",
@@ -1536,7 +1536,7 @@
       "doc_id": "studio-works",
       "title": "Catalogue Works",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
       "parent_id": "catalogue",
       "sort_order": 60,
       "published": true,
@@ -1544,7 +1544,7 @@
       "source_path": "studio-works.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-works",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-works.json",
-      "content_text_length": 3390
+      "content_text_length": 3836
     },
     {
       "scope": "studio",
@@ -2859,7 +2859,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 43673
+      "content_text_length": 44503
     },
     {
       "scope": "studio",

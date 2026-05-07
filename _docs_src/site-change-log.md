@@ -43,6 +43,31 @@ The works list density is useful beyond the works route, but copying `worksList_
 **Impact:**
 Studio pages can now opt into a dense sortable list with `--text-xs` type, no row dividers, and a bold title column while keeping their own column templates and row semantics.
 
+## [2026-05-07] Aligned Studio Works with the dense list primitive
+
+**Status:** implemented
+
+**Area:** Studio UI / Catalogue Works
+
+**Summary:**
+Moved `/studio/studio-works/` onto `tagStudioList--dense` for its header, sortable buttons, rows, sort indicator, cell links, metadata cells, and bold title cell.
+
+**Reason:**
+Once the dense list became a shared primitive, the Studio works page no longer needed to own the same presentation through route-local `worksList__*` styling.
+
+**Files changed:**
+
+- `studio/studio-works/index.md`
+- `assets/studio/js/studio-works.js`
+- `assets/css/main.css`
+- `assets/studio/css/studio.css`
+- [Catalogue Works](/docs/?scope=studio&doc=studio-works)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The route keeps works-specific data loading, return links, and column templates while sharing the dense list type scale, row rhythm, sortable-header styling, indicator styling, and title emphasis.
+
 ## [2026-05-06] Respected root sort order in Docs Viewer metadata edits
 
 **Status:** implemented

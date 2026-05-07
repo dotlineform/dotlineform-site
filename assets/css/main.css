@@ -3390,14 +3390,6 @@ note: works tags are not currently in use on the work pages themselves.
   padding: var(--list-row-padding-compact) 0;
 }
 
-.worksList--studio .worksList__head{
-  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
-}
-
-.worksList--studio .worksList__item{
-  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
-}
-
 .worksList__cat{
   display: inline-block;
   justify-self: start;
@@ -3475,14 +3467,6 @@ note: works tags are not currently in use on the work pages themselves.
 
 .worksList--singleSeries .worksList__item{
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr);
-}
-
-.worksList--studio.worksList--singleSeries .worksList__head{
-  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
-}
-
-.worksList--studio.worksList--singleSeries .worksList__item{
-  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
 }
 
 .worksList--singleSeries .worksList__head [data-sort-key="series"],

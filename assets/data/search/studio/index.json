@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a7452e8ce12ad301680f4b979d95e86c",
-    "generated_at_utc": "2026-05-07T09:15:36Z",
+    "version": "blake2b-1e3c902ac006a788197a2fb81cb5c6ea",
+    "generated_at_utc": "2026-05-07T09:55:14Z",
     "count": 193
   },
   "entries": [
@@ -2502,24 +2502,22 @@
       "kind": "doc",
       "title": "Catalogue Works",
       "href": "/docs/?scope=studio&doc=studio-works",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-07 • Catalogue",
       "search_terms": [
         "studio-works",
         "studio",
         "works",
         "catalogue works",
         "catalogue",
-        "2026-05-06 20:49",
+        "2026-05-07",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "07"
       ],
-      "search_text": "studio-works studio works catalogue works catalogue 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "studio-works studio works catalogue works catalogue 2026-05-07 2026 05 07"
     },
     {
       "id": "css-primitives",
