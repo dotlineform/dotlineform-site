@@ -46,7 +46,7 @@ The import page:
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
 - writes a new doc immediately when the target is free
-- prompts for a replacement title when the staged filename stem matches an existing doc target
+- opens a filename-conflict modal when the staged filename stem matches an existing doc target
 
 ## Basic Workflow
 
@@ -85,18 +85,18 @@ If you are unsure for HTML, start with the option off and only enable it when th
 
 If the generated import target already matches an existing doc:
 
-- the page shows a warning naming the existing target
+- the page opens a `File already exists` modal naming the existing Markdown filename
 - nothing is written yet
-- the page prompts for a replacement title seeded with the current imported title
-- the edited title is used to generate a new `doc_id`
+- the modal's text input is seeded with the existing `doc_id`
+- the edited `doc_id` is used as the new Markdown filename stem
 - the importer checks the new `doc_id` again before writing
 
 Example:
 
 - staged file: `diagram.svg`
 - existing source doc: `diagram.md`
-- prompt value: `Diagram`
-- user edits to: `Diagram 2`
+- modal value: `diagram`
+- user edits to: `diagram-2`
 - imported doc: `diagram-2.md`
 
 Low-level overwrite support remains available to the local service for explicit callers, but the Studio page treats filename collisions as a rename prompt rather than as a normal overwrite flow.

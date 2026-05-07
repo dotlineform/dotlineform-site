@@ -9,6 +9,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { openConfirmDetailModal } from "./studio-modal.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -148,10 +149,8 @@ function syncSourceFormatControls(state) {
 
 function resetWarning(state) {
   state.pendingOverwriteDocId = "";
-  state.replacementTitleRequired = false;
   state.warningNode.hidden = true;
   setText(state.collisionMetaNode, "");
-  state.replacementTitleWrap.hidden = true;
   state.confirmButton.hidden = true;
   state.cancelButton.hidden = true;
 }
@@ -328,53 +327,75 @@ function renderOverwriteWarning(state, payload) {
   state.cancelButton.hidden = false;
 }
 
-function renderReplacementTitlePrompt(state, payload) {
+async function openReplacementDocIdModal(state, payload) {
   const collision = payload && payload.collision && typeof payload.collision === "object" ? payload.collision : {};
   const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
     ? payload.import_preview
     : {};
-  state.replacementTitleRequired = true;
-  setText(
-    state.collisionHeadingNode,
-    getStudioText(state.config, "docs_html_import.replacement_title_heading", "New title required")
-  );
-  setText(
-    state.collisionBodyNode,
-    getStudioText(
-      state.config,
-      "docs_html_import.replacement_title_body",
-      "This staged file matches an existing doc filename. Enter a new title, then run import again."
-    )
-  );
-  setText(
-    state.collisionMetaNode,
-    getStudioText(
-      state.config,
-      "docs_html_import.replacement_title_meta",
-      "Existing doc_id: {doc_id}.",
-      { doc_id: collision.doc_id || preview.proposed_doc_id || "" }
-    )
-  );
-  setText(
-    state.replacementTitleLabelNode,
-    getStudioText(state.config, "docs_html_import.replacement_title_label", "new title")
-  );
-  state.replacementTitleInput.value = normalizeText(preview.title || collision.title || preview.proposed_doc_id);
-  state.replacementTitleWrap.hidden = false;
-  state.warningNode.hidden = false;
-  state.confirmButton.hidden = true;
-  state.cancelButton.hidden = false;
+  const currentDocId = normalizeText(collision.doc_id || preview.proposed_doc_id);
+  const inputId = "docsHtmlImportReplacementDocId";
+  let replacementDocId = "";
+  const result = await openConfirmDetailModal({
+    root: state.root,
+    title: getStudioText(state.config, "docs_html_import.filename_conflict_heading", "File already exists"),
+    bodyHtml: `
+      <p class="tagStudioModal__label">${escapeHtml(getStudioText(
+        state.config,
+        "docs_html_import.filename_conflict_body",
+        "A source file named {doc_id}.md already exists. Edit the doc_id to choose a new filename.",
+        { doc_id: currentDocId }
+      ))}</p>
+      <label class="tagStudioField docsHtmlImportPage__modalField" for="${inputId}">
+        <span class="tagStudioField__label">${escapeHtml(getStudioText(state.config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
+        <span class="tagStudioField__control">
+          <input class="tagStudio__input" id="${inputId}" type="text" value="${escapeHtml(currentDocId)}">
+        </span>
+      </label>
+    `,
+    primaryLabel: getStudioText(state.config, "docs_html_import.filename_conflict_ok_button", "OK"),
+    cancelLabel: getStudioText(state.config, "docs_html_import.filename_conflict_cancel_button", "Cancel"),
+    onSubmit(api) {
+      const input = document.getElementById(inputId);
+      const value = normalizeText(input && input.value);
+      if (!value) {
+        api.setStatus(
+          "error",
+          getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
+        );
+        if (input) input.focus();
+        return false;
+      }
+      replacementDocId = value;
+      return true;
+    }
+  });
+  if (!result.confirmed) {
+    setStatus(
+      state.statusNode,
+      "",
+      getStudioText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
+    );
+    return;
+  }
+  if (replacementDocId) {
+    await runImport(state, { replacementDocId });
+  }
+}
+
+function focusReplacementDocIdModalInput() {
   window.setTimeout(() => {
     try {
-      state.replacementTitleInput.focus();
-      state.replacementTitleInput.select();
+      const input = document.getElementById("docsHtmlImportReplacementDocId");
+      if (!input) return;
+      input.focus();
+      input.select();
     } catch (_error) {
       // Focus is a convenience only.
     }
   }, 0);
 }
 
-async function runImport(state, { overwriteDocId = "", confirmOverwrite = false } = {}) {
+async function runImport(state, { overwriteDocId = "", confirmOverwrite = false, replacementDocId = "" } = {}) {
   const stagedFilename = normalizeText(state.fileSelect.value);
   if (!stagedFilename) {
     setStatus(
@@ -387,17 +408,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
 
   const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
   const scope = ["analysis", "library", "studio"].includes(selectedScope) ? selectedScope : "library";
-  const replacementTitle = state.replacementTitleRequired
-    ? normalizeText(state.replacementTitleInput.value)
-    : "";
-  if (state.replacementTitleRequired && !replacementTitle) {
-    setStatus(
-      state.statusNode,
-      "error",
-      getStudioText(state.config, "docs_html_import.replacement_title_required", "Enter a new title first.")
-    );
-    return;
-  }
+  const normalizedReplacementDocId = normalizeText(replacementDocId);
   persistSelectedScope(scope);
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
@@ -416,18 +427,19 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false 
       include_prompt_meta: selectedSourceFormat(state) === "html" ? Boolean(state.includePromptMeta.checked) : false,
       overwrite_doc_id: overwriteDocId,
       confirm_overwrite: confirmOverwrite,
-      replacement_title: replacementTitle,
+      replacement_doc_id: normalizedReplacementDocId,
       preview_only: false
     });
 
-    if (payload.preview_only && payload.replacement_title_required) {
-      renderReplacementTitlePrompt(state, payload);
+    if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
       renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
       setStatus(
         state.statusNode,
         "warn",
-        payload.summary_text || getStudioText(state.config, "docs_html_import.replacement_title_required", "Enter a new title first.")
+        payload.summary_text || getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
       );
+      focusReplacementDocIdModalInput();
+      await openReplacementDocIdModal(state, payload);
       return;
     }
 
@@ -486,9 +498,6 @@ async function init() {
     collisionHeadingNode: document.getElementById("docsHtmlImportCollisionHeading"),
     collisionBodyNode: document.getElementById("docsHtmlImportCollisionBody"),
     collisionMetaNode: document.getElementById("docsHtmlImportCollisionMeta"),
-    replacementTitleWrap: document.getElementById("docsHtmlImportReplacementTitleWrap"),
-    replacementTitleLabelNode: document.getElementById("docsHtmlImportReplacementTitleLabel"),
-    replacementTitleInput: document.getElementById("docsHtmlImportReplacementTitle"),
     resultNode: document.getElementById("docsHtmlImportResult"),
     resultTitleNode: document.getElementById("docsHtmlImportResultTitle"),
     resultScopeLabelNode: document.getElementById("docsHtmlImportResultScopeLabel"),
@@ -517,7 +526,6 @@ async function init() {
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     pendingOverwriteDocId: "",
-    replacementTitleRequired: false,
     serviceAvailable: false,
     isRunning: false,
     files: [],
@@ -542,9 +550,6 @@ async function init() {
     state.collisionHeadingNode,
     state.collisionBodyNode,
     state.collisionMetaNode,
-    state.replacementTitleWrap,
-    state.replacementTitleLabelNode,
-    state.replacementTitleInput,
     state.resultNode,
     state.resultTitleNode,
     state.resultScopeLabelNode,

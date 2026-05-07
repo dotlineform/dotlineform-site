@@ -17,6 +17,36 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Refined Docs Import filename conflict UI
+
+**Status:** implemented
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Changed Docs Import collision recovery from an inline title prompt to a shared Studio modal for editing the replacement `doc_id`.
+
+**Reason:**
+The conflict is caused by an existing Markdown filename/doc_id, not by the imported document title. The UI should ask for the exact filename stem that will change.
+
+**Files changed:**
+
+- `scripts/docs/docs_management_server.py`
+- `studio/docs-import/index.md`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `tests/python/test_docs_import_service.py`
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+When a staged source would write a filename that already exists, `/studio/docs-import/` now opens a `File already exists` modal seeded with the colliding `doc_id`.
+OK resubmits with `replacement_doc_id`, Cancel leaves the import unwritten, and the imported document title is preserved.
+The staged-file control is also constrained to half the content width on desktop so `publish into` sits beside it.
+
 ## [2026-05-07] Implemented Docs Import inline raster extraction
 
 **Status:** implemented

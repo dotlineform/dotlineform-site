@@ -703,7 +703,7 @@ def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
     assert "[[media:docs/library/files/reference-file.pdf]]" in source_text
 
 
-def test_import_collision_prompts_for_replacement_title() -> None:
+def test_import_collision_prompts_for_replacement_doc_id() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
@@ -728,7 +728,7 @@ def test_import_collision_prompts_for_replacement_title() -> None:
                 {
                     "scope": "library",
                     "staged_filename": "reference-file.pdf",
-                    "replacement_title": "Reference File 2",
+                    "replacement_doc_id": "reference-file-2",
                 },
                 dry_run=False,
             )
@@ -736,15 +736,19 @@ def test_import_collision_prompts_for_replacement_title() -> None:
             docs_management.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
-        source_exists = (root / "_docs_library_src/reference-file-2.md").exists()
+        source_path = root / "_docs_library_src/reference-file-2.md"
+        source_exists = source_path.exists()
+        source_text = source_path.read_text(encoding="utf-8")
 
     assert preview_payload["preview_only"] is True
+    assert preview_payload["replacement_doc_id_required"] is True
     assert preview_payload["replacement_title_required"] is True
     assert preview_payload["collision"]["doc_id"] == "reference-file"
     assert apply_payload["ok"] is True
     assert apply_payload["operation"] == "create"
     assert apply_payload["doc_id"] == "reference-file-2"
     assert source_exists
+    assert "title: Reference File" in source_text
 
 
 def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> None:
@@ -978,7 +982,7 @@ def main() -> None:
         test_markdown_import_extracts_inline_png_with_incremented_filename,
         test_inline_media_write_skips_invalid_data_urls_before_valid_images,
         test_file_media_import_creates_r2_file_plan_wrapper,
-        test_import_collision_prompts_for_replacement_title,
+        test_import_collision_prompts_for_replacement_doc_id,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,
         test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows,

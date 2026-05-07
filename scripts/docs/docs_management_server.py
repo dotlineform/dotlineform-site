@@ -1603,6 +1603,15 @@ def apply_replacement_title_to_preview(preview: Dict[str, Any], replacement_titl
             preview["markdown_preview"] = "\n".join(lines)
 
 
+def apply_replacement_doc_id_to_preview(preview: Dict[str, Any], replacement_doc_id: str) -> None:
+    raw_doc_id = str(replacement_doc_id or "").strip()
+    doc_id = slugify(raw_doc_id)
+    if not doc_id:
+        raise ValueError("replacement_doc_id is required when the proposed filename collides")
+    preview["proposed_doc_id"] = doc_id
+    preview["proposed_doc_id_source"] = "replacement_doc_id"
+
+
 def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
@@ -1610,6 +1619,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     overwrite_doc_id = str(body.get("overwrite_doc_id") or "").strip()
     confirm_overwrite = bool(body.get("confirm_overwrite"))
     preview_only = bool(body.get("preview_only"))
+    replacement_doc_id = str(body.get("replacement_doc_id") or "").strip()
     replacement_title = str(body.get("replacement_title") or "").strip()
     source_path = resolve_staged_import_source(repo_root, staged_filename)
     preview = generate_import_preview(
@@ -1618,7 +1628,10 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         scope=scope,
         include_prompt_meta=include_prompt_meta,
     )
-    if replacement_title:
+    if replacement_doc_id:
+        apply_replacement_doc_id_to_preview(preview, replacement_doc_id)
+        retarget_inline_raster_media_plans(repo_root, preview, scope)
+    elif replacement_title:
         apply_replacement_title_to_preview(preview, replacement_title)
         retarget_inline_raster_media_plans(repo_root, preview, scope)
 
@@ -1636,7 +1649,9 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         "stem": collision_doc.path.stem if collision_doc else "",
     }
     preview["doc_id_collision"] = collision
-    preview["replacement_title_required"] = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
+    replacement_required = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
+    preview["replacement_doc_id_required"] = replacement_required
+    preview["replacement_title_required"] = replacement_required
 
     if overwrite_doc_id and collision_doc is None:
         raise ValueError("overwrite_doc_id is only allowed when the generated import target collides with an existing doc")
@@ -1646,7 +1661,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     requires_overwrite_confirmation = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
     if requires_overwrite_confirmation:
         preview.setdefault("warnings", []).append(
-            f"Proposed doc_id {preview['proposed_doc_id']!r} already exists in {scope}; enter a replacement title before import."
+            f"Proposed filename {preview['proposed_doc_id']}.md already exists in {scope}; enter a replacement doc_id before import."
         )
 
     if dry_run or preview_only or requires_overwrite_confirmation:
@@ -1662,6 +1677,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
                 "collision": collision["exists"],
                 "inline_media_count": len(preview.get("media_plans") or []),
                 "requires_overwrite_confirmation": requires_overwrite_confirmation,
+                "replacement_doc_id_required": bool(preview.get("replacement_doc_id_required")),
                 "replacement_title_required": bool(preview.get("replacement_title_required")),
             },
         )
@@ -1672,11 +1688,12 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
             "include_prompt_meta": include_prompt_meta,
             "preview_only": True,
             "requires_overwrite_confirmation": requires_overwrite_confirmation,
+            "replacement_doc_id_required": bool(preview.get("replacement_doc_id_required")),
             "replacement_title_required": bool(preview.get("replacement_title_required")),
             "collision": collision,
             "import_preview": preview,
             "summary_text": (
-                f"Replacement title required for {preview['proposed_doc_id']}."
+                f"Replacement doc_id required for {preview['proposed_doc_id']}."
                 if requires_overwrite_confirmation
                 else f"Prepared import preview for {staged_filename}."
             ),

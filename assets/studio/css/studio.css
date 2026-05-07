@@ -1057,13 +1057,37 @@ span.tagStudio__input--readonlyDisplay {
 }
 
 .docsHtmlImportPage__controls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.55rem 0.8rem;
 }
 
 .docsHtmlImportPage__field {
   min-inline-size: 0;
+}
+
+.docsHtmlImportPage__field--file {
+  flex: 0 1 calc(50% - 0.4rem);
+}
+
+.docsHtmlImportPage__field--file .tagStudioField__control > .tagStudio__input {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.docsHtmlImportPage__field--scope {
+  flex: 0 0 auto;
+}
+
+.docsHtmlImportPage__modalField {
+  margin-top: 0.7rem;
+  width: 100%;
+}
+
+.docsHtmlImportPage__modalField .tagStudioField__control > .tagStudio__input {
+  flex: 1 1 auto;
+  width: 100%;
 }
 
 .docsHtmlImportPage__toggle {
@@ -3221,11 +3245,19 @@ button.tagStudioList__cellLink {
     gap: 0.35rem 0.7rem;
   }
 
-  .docsHtmlImportPage__controls,
   .dataImportPage__controls,
   .dataExportPage__controls,
   .docsHtmlImportPage__resultGrid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .docsHtmlImportPage__controls {
+    align-items: stretch;
+  }
+
+  .docsHtmlImportPage__field--file,
+  .docsHtmlImportPage__field--scope {
+    flex: 1 1 100%;
   }
 
   .dataImportPage__controls {

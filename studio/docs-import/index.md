@@ -19,14 +19,14 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
     <p class="docsHtmlImportPage__intro" id="docsHtmlImportIntro"></p>
 
     <div class="docsHtmlImportPage__controls">
-      <label class="tagStudioField tagStudioField--inline docsHtmlImportPage__field">
+      <label class="tagStudioField tagStudioField--inline docsHtmlImportPage__field docsHtmlImportPage__field--file">
         <span class="tagStudioField__label" id="docsHtmlImportFileLabel"></span>
         <span class="tagStudioField__control">
           <select class="tagStudio__input" id="docsHtmlImportFileSelect"></select>
         </span>
       </label>
 
-      <label class="tagStudioField tagStudioField--inline docsHtmlImportPage__field">
+      <label class="tagStudioField tagStudioField--inline docsHtmlImportPage__field docsHtmlImportPage__field--scope">
         <span class="tagStudioField__label" id="docsHtmlImportScopeLabel"></span>
         <span class="tagStudioField__control">
           <select class="tagStudio__input" id="docsHtmlImportScopeSelect"></select>
@@ -62,12 +62,6 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
       <h3 id="docsHtmlImportCollisionHeading"></h3>
       <p id="docsHtmlImportCollisionBody"></p>
       <p class="tagStudioForm__meta" id="docsHtmlImportCollisionMeta"></p>
-      <label class="tagStudioField docsHtmlImportPage__replacementField" id="docsHtmlImportReplacementTitleWrap" hidden>
-        <span class="tagStudioField__label" id="docsHtmlImportReplacementTitleLabel"></span>
-        <span class="tagStudioField__control">
-          <input class="tagStudio__input" id="docsHtmlImportReplacementTitle" type="text">
-        </span>
-      </label>
     </div>
 
     <div class="docsHtmlImportPage__result" id="docsHtmlImportResult" hidden>

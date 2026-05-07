@@ -38,6 +38,24 @@ Use these targets when promoting content out of this log:
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
 
+## UI Rule Log 2026-05-07 / UI-096
+
+- status: adopted
+- route: `/studio/docs-import/`
+- issue: the Docs Import collision flow described a title conflict even though the blocking condition is an existing Markdown source filename/doc_id, and the prompt lived as an inline warning panel below the command controls.
+- triage: route-specific workflow correction using shared modal shell
+- reasoning: filename collisions are safer when the UI asks for the exact value that will change, which is the `doc_id` and resulting filename stem. A modal keeps the blocking decision focused and lets the page keep its normal command state, while the shared modal shell owns the action-row and dialog styling.
+- outcome: changed the normal collision recovery flow to a `File already exists` modal with a `doc_id` input seeded from the colliding id, OK/Cancel actions, and a `replacement_doc_id` service payload. The staged-file control now occupies half the content width on desktop so the `publish into` field sits beside it.
+- files changed:
+  - `studio/docs-import/index.md`
+  - `assets/studio/js/docs-html-import.js`
+  - `assets/studio/css/studio.css`
+  - `assets/studio/data/studio_config.json`
+  - `scripts/docs/docs_management_server.py`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - smoke `/studio/docs-import/` on desktop and mobile and confirm filename collisions open the modal, OK submits the edited `doc_id`, Cancel closes without writing, and the desktop controls keep the staged-file field at half width with `publish into` beside it
+
 ## UI Rule Log 2026-05-07 / UI-095
 
 - status: adopted

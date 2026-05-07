@@ -161,6 +161,7 @@ Supported source formats:
   "include_prompt_meta": false,
   "overwrite_doc_id": "",
   "confirm_overwrite": false,
+  "replacement_doc_id": "",
   "replacement_title": "",
   "preview_only": false
 }
@@ -185,7 +186,8 @@ Import behavior:
 - supports the prompt/meta include toggle already defined by the import spec for HTML imports
 - derives the proposed `doc_id` and new Markdown filename stem from the staged source filename, not from the imported document title
 - derives Markdown import titles from the first `# H1` when present, then falls back to the staged filename
-- derives replacement `doc_id` values from `replacement_title` when the initial staged filename stem collides
+- derives replacement `doc_id` values from `replacement_doc_id` when the initial staged filename stem collides
+- keeps `replacement_title` as a compatibility fallback for older callers
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio imports write `published: true`, `viewable: true`
@@ -195,7 +197,7 @@ Import behavior:
 - reports `media_plan` for standalone image and file-media imports, including the expected R2 key and generated media token
 - reports `media_plans` for extracted inline raster images, including staged filenames, expected R2 keys, generated media tokens, MIME type, and decoded byte sizes
 - reports collision details when the generated import target already matches an existing `doc_id` or source filename stem
-- asks browser callers to provide `replacement_title` for normal collision recovery
+- asks browser callers to provide `replacement_doc_id` for normal collision recovery
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
 - refreshes the overwritten doc's `last_updated` to the current minute
