@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T15:36:05Z",
+  "generated_at": "2026-05-07T16:02:18Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -104,15 +104,61 @@
       "doc_id": "3d-space-to-many-dimensions",
       "title": "From 3D Space to Many Dimensions",
       "added_date": "2026-05-07 15:56",
-      "last_updated": "2026-05-07 15:56",
+      "last_updated": "2026-05-07 16:37",
       "parent_id": "",
       "sort_order": 60,
       "published": true,
-      "viewable": false,
+      "viewable": true,
       "source_path": "3d-space-to-many-dimensions.md",
       "viewer_url": "/library/?doc=3d-space-to-many-dimensions",
       "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json",
       "content_text_length": 3156
+    },
+    {
+      "scope": "library",
+      "doc_id": "abstract-thought",
+      "title": "Abstract Thought and Physical Processes",
+      "added_date": "2026-05-07 16:43",
+      "last_updated": "2026-05-07 16:43",
+      "parent_id": "",
+      "sort_order": 70,
+      "published": true,
+      "viewable": false,
+      "source_path": "abstract-thought.md",
+      "viewer_url": "/library/?doc=abstract-thought",
+      "content_url": "/assets/data/docs/scopes/library/by-id/abstract-thought.json",
+      "content_text_length": 4751,
+      "summary": "Our abstract thoughts are implemented in and constrained by physical and chemical processes in the brain, but they are organized at higher levels of description where concepts like representation, inference, and meaning become the natural explanatory tools."
+    },
+    {
+      "scope": "library",
+      "doc_id": "bayesian-reasoning",
+      "title": "Bayesian Reasoning",
+      "added_date": "2026-05-07 16:55",
+      "last_updated": "2026-05-07 16:55",
+      "parent_id": "",
+      "sort_order": 80,
+      "published": true,
+      "viewable": false,
+      "source_path": "bayesian-reasoning.md",
+      "viewer_url": "/library/?doc=bayesian-reasoning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/bayesian-reasoning.json",
+      "content_text_length": 2629
+    },
+    {
+      "scope": "library",
+      "doc_id": "beauty-memory-meaning",
+      "title": "Beauty × Memory × Meaning — Pattern, Resonance, Renewal",
+      "added_date": "2026-05-07 17:01",
+      "last_updated": "2026-05-07 17:01",
+      "parent_id": "",
+      "sort_order": 90,
+      "published": true,
+      "viewable": false,
+      "source_path": "beauty-memory-meaning.md",
+      "viewer_url": "/library/?doc=beauty-memory-meaning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/beauty-memory-meaning.json",
+      "content_text_length": 4108
     }
   ]
 }

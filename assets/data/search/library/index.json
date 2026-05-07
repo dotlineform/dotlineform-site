@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-715264912103087e4a05f819b332c7cf",
-    "generated_at_utc": "2026-05-04T21:15:32Z",
-    "count": 5
+    "version": "blake2b-b0256bfe0b867dfc1aef4b9c542a0cdc",
+    "generated_at_utc": "2026-05-07T15:37:07Z",
+    "count": 6
   },
   "entries": [
     {
@@ -109,6 +109,31 @@
         "25"
       ],
       "search_text": "can-the-brain-comprehend-how-it-works can the brain comprehend how it works can the brain comprehend how it works? 2026-04-25 2026 04 25"
+    },
+    {
+      "id": "3d-space-to-many-dimensions",
+      "kind": "doc",
+      "title": "From 3D Space to Many Dimensions",
+      "href": "/library/?doc=3d-space-to-many-dimensions",
+      "last_updated": "2026-05-07 16:37",
+      "display_meta": "2026-05-07 16:37",
+      "search_terms": [
+        "3d-space-to-many-dimensions",
+        "3d",
+        "space",
+        "to",
+        "many",
+        "dimensions",
+        "from 3d space to many dimensions",
+        "from",
+        "2026-05-07 16:37",
+        "2026",
+        "05",
+        "07",
+        "16",
+        "37"
+      ],
+      "search_text": "3d-space-to-many-dimensions 3d space to many dimensions from 3d space to many dimensions from 2026-05-07 16:37 2026 05 07 16 37"
     }
   ]
 }

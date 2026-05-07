@@ -1,12 +1,12 @@
 ---
 doc_id: 3d-space-to-many-dimensions
-title: "From 3D Space to Many Dimensions"
+title: From 3D Space to Many Dimensions
 added_date: "2026-05-07 15:56"
-last_updated: "2026-05-07 15:56"
+last_updated: "2026-05-07 16:37"
 parent_id: ""
 sort_order: 60
 published: true
-viewable: false
+viewable: true
 ---
 # From 3D Space to Many Dimensions
 
