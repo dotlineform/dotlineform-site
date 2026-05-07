@@ -2,7 +2,7 @@
 doc_id: ui-primitive-list
 title: "List Primitive"
 added_date: 2026-05-05
-last_updated: "2026-05-05"
+last_updated: "2026-05-07"
 parent_id: ui-catalogue
 sort_order: 30
 ---
@@ -20,6 +20,7 @@ The list primitive covers repeated row surfaces such as:
 
 - simple lists
 - sortable lists
+- dense scan lists
 - thumbnail lists
 - selectable review lists
 
@@ -39,10 +40,11 @@ The list primitive should:
 
 ## Direction
 
-The list primitive currently defines three baseline versions:
+The list primitive currently defines four baseline versions:
 
 - simple list: minimal row treatment, no column headers, suitable for short lists where the surrounding page already explains the row context
 - sortable list: column headers become clickable buttons on sortable columns and show the active sort direction beside the label
+- dense list: works-index density for scan tables, using `tagStudioList--dense`, `--text-xs` type, no row dividers, sortable columns, and a bold title cell
 - thumbnail list: the first column is a fixed media thumbnail; sorting may still exist, but it can be controlled by buttons or other controls outside the list
 
 The shared `tagStudioList` layer owns the optional width wrapper, row rhythm, header treatment, row-alignment modifiers, common cell text, cell links, sort indicator, and thumbnail frame.
@@ -57,6 +59,7 @@ Current implementation lives in:
 Primary classes:
 
 - `tagStudioList`
+- `tagStudioList--dense`
 - `tagStudioList__head`
 - `tagStudioList__headLabel`
 - `tagStudioList__sortBtn`
@@ -70,6 +73,14 @@ Primary classes:
 - `tagStudioList__cellMeta`
 - `tagStudioList__cellLink`
 - `tagStudioList__thumb`
+
+Dense list guidance:
+
+- add `tagStudioList--dense` to the `tagStudioList` wrapper
+- keep sortable columns as real `tagStudioList__sortBtn` buttons
+- use page-specific header and row classes for the column template
+- use `tagStudioList__cellTitle` on the title cell so the shared bold rule applies
+- do not add row dividers back locally unless the page needs a different list variant
 
 ## Lifecycle Notes
 

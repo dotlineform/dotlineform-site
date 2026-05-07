@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-07"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-07] Added a dense Studio list primitive variant
+
+**Status:** implemented
+
+**Area:** Studio UI / List Primitive
+
+**Summary:**
+Added `tagStudioList--dense` as a shared list primitive variant based on the `/studio/studio-works/` scan-table design.
+
+**Reason:**
+The works list density is useful beyond the works route, but copying `worksList__*` classes would mix page-specific semantics into unrelated Studio pages.
+
+**Files changed:**
+
+- `assets/studio/css/studio.css`
+- `studio/ui-catalogue/list/index.md`
+- `_includes/studio_ui_catalogue_list_demo.html`
+- `_includes/ui_catalogue_notes/list.md`
+- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+Studio pages can now opt into a dense sortable list with `--text-xs` type, no row dividers, and a bold title column while keeping their own column templates and row semantics.
 
 ## [2026-05-06] Respected root sort order in Docs Viewer metadata edits
 

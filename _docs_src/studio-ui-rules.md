@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: Studio UI Rules And Decision Log
 added_date: 2026-04-24
-last_updated: "2026-05-06 19:55"
+last_updated: "2026-05-07"
 parent_id: ui
 sort_order: 50
 ---
@@ -37,6 +37,26 @@ Use these targets when promoting content out of this log:
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log) for historical site changes
 
 When a rule becomes stable, move or summarize it in the relevant target doc, leave only the historical log entry here, and avoid adding new permanent guidance to this page.
+
+## UI Rule Log 2026-05-07 / UI-089
+
+- status: adopted
+- route: `/studio/ui-catalogue/list/`
+- issue: the compact works-index table treatment existed only as page-local `worksList__*` styling, so other Studio pages had no shared way to use that dense scan-table form without borrowing the works namespace.
+- triage: shared primitive variant
+- reasoning: the works list is a reusable list density, not works-specific behavior. The shared primitive should own the type scale, row rhythm, row-divider removal, sortable-header treatment, and bold title emphasis while page namespaces keep their own column templates and data semantics.
+- outcome: added `tagStudioList--dense` as the dense list variant, documented it in the list primitive contract, and added live and canonical UI catalogue examples using sortable columns, `--text-xs` type, no row dividers, and `tagStudioList__cellTitle` for the title column.
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `_includes/studio_ui_catalogue_list_demo.html`
+  - `_includes/ui_catalogue_notes/list.md`
+  - `studio/ui-catalogue/list/index.md`
+  - `_docs_src/ui-primitive-list.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+- local verification:
+  - build the Studio docs data and site
+  - open `/studio/ui-catalogue/list/` on desktop and mobile and confirm the dense variant keeps sortable headers, no row dividers, `--text-xs` text, and a bold title column
 
 ## UI Rule Log 2026-05-06 / UI-088
 

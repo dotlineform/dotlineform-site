@@ -22,7 +22,8 @@
 
 1. Simple lists omit column headers. Use them for short collections where the surrounding page already explains the row meaning, such as small file lists.
 2. Sortable lists use clickable column headers for sortable columns. The active header should show direction and expose active state through button state attributes.
-3. Thumbnail lists reserve the first column for a fixed-size thumbnail. They may still be sorted, but sorting can be driven by nearby buttons or segmented controls outside the list rather than by the headers.
+3. Dense lists use `tagStudioList--dense` for works-index style scan tables with `--text-xs` type, sortable columns, no row dividers, and a bold title cell.
+4. Thumbnail lists reserve the first column for a fixed-size thumbnail. They may still be sorted, but sorting can be driven by nearby buttons or segmented controls outside the list rather than by the headers.
 
 ### Width And Columns
 
@@ -37,8 +38,10 @@
 
 1. Studio UI primitives use the small type scale by default. In CSS this is `--font-small`, which maps to `--text-sm`.
 2. Normal page prose outside primitives should continue to use `--font-body`, which maps to `--text-md`.
-3. Any row item may be a link to another page or a button that opens a modal.
-4. Do not make the whole row clickable by default. Use explicit links or buttons in the relevant cells unless a separate row-link variation has been defined.
+3. Dense lists deliberately step down to `--text-xs`; do not apply that size to normal list variants unless the list is explicitly dense.
+4. Use `tagStudioList__cellTitle` for the primary title in dense rows so the shared bold title rule applies.
+5. Any row item may be a link to another page or a button that opens a modal.
+6. Do not make the whole row clickable by default. Use explicit links or buttons in the relevant cells unless a separate row-link variation has been defined.
 
 ### Sorting Guidance
 

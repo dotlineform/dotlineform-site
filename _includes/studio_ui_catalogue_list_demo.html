@@ -66,6 +66,47 @@
 
   <section class="studioUiPrimitiveExample">
     <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Dense List</h3>
+      <p class="studioUiPrimitiveExample__summary">Works-index density with sortable columns, no row dividers, and a bold title column.</p>
+    </header>
+    <div class="tagStudioList tagStudioList--dense studioUiPrimitiveListDemo__example studioUiPrimitiveListDemo__list studioUiPrimitiveListDemo__list--dense">
+      <div class="tagStudioList__head studioUiPrimitiveListDemo__denseHead" role="group" aria-label="Dense list sort controls">
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="cat" data-state="active" aria-pressed="true">
+          cat <span class="tagStudioList__sortIndicator" aria-hidden="true">&uarr;</span>
+        </button>
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="year" aria-pressed="false">year</button>
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="title" aria-pressed="false">title</button>
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="series" aria-pressed="false">series</button>
+        <button class="tagStudioList__sortBtn" type="button" data-sort-key="storage" aria-pressed="false">storage</button>
+      </div>
+      <ul class="tagStudioList__rows">
+        <li class="tagStudioList__row tagStudioList__row--start studioUiPrimitiveListDemo__denseRow">
+          <a class="tagStudioList__cellLink" href="#">01007</a>
+          <span class="tagStudioList__cellMeta">2024</span>
+          <a class="tagStudioList__cellLink tagStudioList__cellTitle" href="#">Soft geometry study</a>
+          <a class="tagStudioList__cellLink" href="#">drawing systems</a>
+          <span class="tagStudioList__cellMeta">flat file</span>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--start studioUiPrimitiveListDemo__denseRow">
+          <a class="tagStudioList__cellLink" href="#">01008</a>
+          <span class="tagStudioList__cellMeta">2025</span>
+          <a class="tagStudioList__cellLink tagStudioList__cellTitle" href="#">Line weight test</a>
+          <a class="tagStudioList__cellLink" href="#">draft set</a>
+          <span class="tagStudioList__cellMeta">archive box</span>
+        </li>
+        <li class="tagStudioList__row tagStudioList__row--start studioUiPrimitiveListDemo__denseRow">
+          <a class="tagStudioList__cellLink" href="#">01009</a>
+          <span class="tagStudioList__cellMeta">2025</span>
+          <a class="tagStudioList__cellLink tagStudioList__cellTitle" href="#">Surface registration</a>
+          <a class="tagStudioList__cellLink" href="#">review group</a>
+          <span class="tagStudioList__cellMeta">shelf 2</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
       <h3 class="studioUiPrimitiveExample__title">Thumbnail List</h3>
       <p class="studioUiPrimitiveExample__summary">The first column is media. Sorting, when needed, can live in controls outside the list.</p>
     </header>

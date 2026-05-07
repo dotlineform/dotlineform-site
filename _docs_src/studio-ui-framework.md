@@ -2,7 +2,7 @@
 doc_id: studio-ui-framework
 title: Studio UI Framework
 added_date: 2026-04-21
-last_updated: "2026-05-06 19:55"
+last_updated: "2026-05-07"
 parent_id: ui
 sort_order: 30
 ---
@@ -77,6 +77,7 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__popupInner`
 - `tagStudioField`, `tagStudioField--*`, `tagStudioField__*`
 - `tagStudioList__*`
+- `tagStudioList--dense`
 - `tagStudioForm__field--topAligned`
 - `tagStudioModal`, `tagStudioModal__*`
 
@@ -203,6 +204,7 @@ Baseline versions:
 
 - simple list: no header row, used for short obvious collections
 - sortable list: sortable columns use `tagStudioList__sortBtn` and show direction with `tagStudioList__sortIndicator`
+- dense list: works-index style scan table using `tagStudioList--dense`, `--text-xs` type, no row dividers, sortable columns, and `tagStudioList__cellTitle` for the bold title column
 - thumbnail list: first column uses `tagStudioList__thumb`; sorting may be controlled outside the list with separate buttons or segmented controls
 
 Alignment and width rules:

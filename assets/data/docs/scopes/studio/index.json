@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T21:53:39Z",
+  "generated_at": "2026-05-07T09:15:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -825,7 +825,7 @@
       "doc_id": "ui-primitive-list",
       "title": "List Primitive",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-07",
       "parent_id": "ui-catalogue",
       "sort_order": 30,
       "published": true,
@@ -833,7 +833,7 @@
       "source_path": "ui-primitive-list.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-list.json",
-      "content_text_length": 2513
+      "content_text_length": 3065
     },
     {
       "scope": "studio",
@@ -930,7 +930,7 @@
       "doc_id": "studio-ui-framework",
       "title": "Studio UI Framework",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-06 19:55",
+      "last_updated": "2026-05-07",
       "parent_id": "ui",
       "sort_order": 30,
       "published": true,
@@ -938,7 +938,7 @@
       "source_path": "studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
-      "content_text_length": 19167
+      "content_text_length": 19364
     },
     {
       "scope": "studio",
@@ -1460,7 +1460,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 19:55",
+      "last_updated": "2026-05-07",
       "parent_id": "ui",
       "sort_order": 50,
       "published": true,
@@ -1468,7 +1468,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 153945
+      "content_text_length": 155300
     },
     {
       "scope": "studio",
@@ -2851,7 +2851,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-07",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2859,7 +2859,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 42868
+      "content_text_length": 43673
     },
     {
       "scope": "studio",

@@ -38,6 +38,23 @@ ui_catalogue_primitive: list
   </ol>
 </div>
 {% endcapture %}
+{% capture dense_markup %}<div class="tagStudioList tagStudioList--dense exampleList__list" style="--studio-list-width: 52rem;">
+  <div class="tagStudioList__head exampleList__head">
+    <button class="tagStudioList__sortBtn" type="button" data-sort-key="cat" data-state="active" aria-pressed="true">
+      cat <span class="tagStudioList__sortIndicator" aria-hidden="true">&uarr;</span>
+    </button>
+    <button class="tagStudioList__sortBtn" type="button" data-sort-key="year" aria-pressed="false">year</button>
+    <button class="tagStudioList__sortBtn" type="button" data-sort-key="title" aria-pressed="false">title</button>
+  </div>
+  <ul class="tagStudioList__rows">
+    <li class="tagStudioList__row tagStudioList__row--start exampleList__row">
+      <a class="tagStudioList__cellLink" href="#">01007</a>
+      <span class="tagStudioList__cellMeta">2024</span>
+      <a class="tagStudioList__cellLink tagStudioList__cellTitle" href="#">Soft geometry study</a>
+    </li>
+  </ul>
+</div>
+{% endcapture %}
 {% capture thumbnail_markup %}<div class="tagStudioList exampleList__list" style="--studio-list-width: 38rem;">
   <div class="exampleList__sortControls" aria-label="Thumbnail list sort controls">
     <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Newest</button>
@@ -81,7 +98,7 @@ ui_catalogue_primitive: list
   <section class="studioUiPrimitivePage__live" aria-labelledby="studioUiPrimitiveLiveHeading">
     <div class="studioUiPrimitivePage__sectionHeader">
       <h3 class="tagStudio__heading" id="studioUiPrimitiveLiveHeading">Live Variants</h3>
-      <p class="studioUiPrimitivePage__sectionSummary">These examples show the three baseline list versions before mapping them across existing list-like Studio pages.</p>
+      <p class="studioUiPrimitivePage__sectionSummary">These examples show the four baseline list versions before mapping them across existing list-like Studio pages.</p>
     </div>
     {% include studio_ui_catalogue_list_demo.html %}
   </section>
@@ -100,6 +117,10 @@ ui_catalogue_primitive: list
       <section class="studioUiPrimitiveCodeList__item">
         <h4 class="studioUiPrimitiveCodeList__title">Sortable List</h4>
         <pre><code>{{ sortable_markup | escape }}</code></pre>
+      </section>
+      <section class="studioUiPrimitiveCodeList__item">
+        <h4 class="studioUiPrimitiveCodeList__title">Dense List</h4>
+        <pre><code>{{ dense_markup | escape }}</code></pre>
       </section>
       <section class="studioUiPrimitiveCodeList__item">
         <h4 class="studioUiPrimitiveCodeList__title">Thumbnail List With External Sort Controls</h4>
