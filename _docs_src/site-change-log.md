@@ -44,7 +44,7 @@ The conflict is caused by an existing Markdown filename/doc_id, not by the impor
 
 **Impact:**
 When a staged source would write a filename that already exists, `/studio/docs-import/` now opens a `File already exists` modal seeded with the colliding `doc_id`.
-OK resubmits with `replacement_doc_id`, Cancel leaves the import unwritten, and the imported document title is preserved.
+OK resubmits with `replacement_doc_id`, Replace explicitly overwrites the existing source file, Cancel leaves the import unwritten, and the imported document title is preserved.
 The staged-file control is also constrained to half the content width on desktop so `publish into` sits beside it.
 
 ## [2026-05-07] Implemented Docs Import inline raster extraction

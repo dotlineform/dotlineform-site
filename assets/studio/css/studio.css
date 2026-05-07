@@ -1085,6 +1085,10 @@ span.tagStudio__input--readonlyDisplay {
   width: 100%;
 }
 
+.docsHtmlImportPage__modalField .tagStudioField__control {
+  width: 100%;
+}
+
 .docsHtmlImportPage__modalField .tagStudioField__control > .tagStudio__input {
   flex: 1 1 auto;
   width: 100%;

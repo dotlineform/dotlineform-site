@@ -89,6 +89,7 @@ If the generated import target already matches an existing doc:
 - nothing is written yet
 - the modal's text input is seeded with the existing `doc_id`
 - the edited `doc_id` is used as the new Markdown filename stem
+- `Replace` overwrites the existing source file instead of creating a renamed import
 - the importer checks the new `doc_id` again before writing
 
 Example:
@@ -100,6 +101,7 @@ Example:
 - imported doc: `diagram-2.md`
 
 Low-level overwrite support remains available to the local service for explicit callers, but the Studio page treats filename collisions as a rename prompt rather than as a normal overwrite flow.
+Use `Replace` only when the staged file should intentionally replace the existing source doc at the same filename.
 
 ## Media Imports
 

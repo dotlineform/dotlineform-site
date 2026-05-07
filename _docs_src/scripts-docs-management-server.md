@@ -199,6 +199,7 @@ Import behavior:
 - reports collision details when the generated import target already matches an existing `doc_id` or source filename stem
 - asks browser callers to provide `replacement_doc_id` for normal collision recovery
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path
+- the Studio filename-conflict modal uses `overwrite_doc_id` plus `confirm_overwrite: true` for its explicit Replace action
 - preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
 - refreshes the overwritten doc's `last_updated` to the current minute
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule

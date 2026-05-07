@@ -9,7 +9,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { openConfirmDetailModal } from "./studio-modal.js";
+import { createStudioModalHost, renderStudioModalFrame } from "./studio-modal.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -334,10 +334,14 @@ async function openReplacementDocIdModal(state, payload) {
     : {};
   const currentDocId = normalizeText(collision.doc_id || preview.proposed_doc_id);
   const inputId = "docsHtmlImportReplacementDocId";
-  let replacementDocId = "";
-  const result = await openConfirmDetailModal({
-    root: state.root,
+  const statusRole = "filename-conflict-status";
+  const host = createStudioModalHost({ root: state.root });
+
+  host.innerHTML = renderStudioModalFrame({
+    hidden: false,
     title: getStudioText(state.config, "docs_html_import.filename_conflict_heading", "File already exists"),
+    modalRole: "docs-import-filename-conflict-modal",
+    backdropRole: "filename-conflict-cancel",
     bodyHtml: `
       <p class="tagStudioModal__label">${escapeHtml(getStudioText(
         state.config,
@@ -351,25 +355,74 @@ async function openReplacementDocIdModal(state, payload) {
           <input class="tagStudio__input" id="${inputId}" type="text" value="${escapeHtml(currentDocId)}">
         </span>
       </label>
+      <p class="tagStudioForm__status" data-role="${statusRole}"></p>
     `,
-    primaryLabel: getStudioText(state.config, "docs_html_import.filename_conflict_ok_button", "OK"),
-    cancelLabel: getStudioText(state.config, "docs_html_import.filename_conflict_cancel_button", "Cancel"),
-    onSubmit(api) {
-      const input = document.getElementById(inputId);
+    actions: [
+      { role: "filename-conflict-ok", label: getStudioText(state.config, "docs_html_import.filename_conflict_ok_button", "OK") },
+      { role: "filename-conflict-replace", label: getStudioText(state.config, "docs_html_import.filename_conflict_replace_button", "Replace") },
+      { role: "filename-conflict-cancel", label: getStudioText(state.config, "docs_html_import.filename_conflict_cancel_button", "Cancel") }
+    ]
+  });
+
+  const input = host.querySelector(`#${inputId}`);
+  const statusNode = host.querySelector(`[data-role="${statusRole}"]`);
+  const okButton = host.querySelector('[data-role="filename-conflict-ok"]');
+  const replaceButton = host.querySelector('[data-role="filename-conflict-replace"]');
+  const cancelNodes = host.querySelectorAll('[data-role="filename-conflict-cancel"]');
+
+  const result = await new Promise((resolve) => {
+    const cleanup = () => {
+      host.innerHTML = "";
+      document.removeEventListener("keydown", onKeydown);
+    };
+    const close = (value) => {
+      cleanup();
+      resolve(value);
+    };
+    const setModalStatus = (message) => {
+      if (!statusNode) return;
+      statusNode.textContent = message || "";
+      if (message) {
+        statusNode.dataset.state = "error";
+      } else {
+        delete statusNode.dataset.state;
+      }
+    };
+    const submitReplacement = () => {
       const value = normalizeText(input && input.value);
       if (!value) {
-        api.setStatus(
-          "error",
-          getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
-        );
+        setModalStatus(getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first."));
         if (input) input.focus();
-        return false;
+        return;
       }
-      replacementDocId = value;
-      return true;
-    }
+      close({ action: "rename", replacementDocId: value });
+    };
+    const submitReplace = () => close({ action: "replace", overwriteDocId: currentDocId });
+    const cancel = () => close({ action: "cancel" });
+    const onKeydown = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancel();
+      }
+    };
+
+    document.addEventListener("keydown", onKeydown);
+    if (okButton) okButton.addEventListener("click", submitReplacement);
+    if (replaceButton) replaceButton.addEventListener("click", submitReplace);
+    cancelNodes.forEach((node) => node.addEventListener("click", cancel));
+
+    window.setTimeout(() => {
+      try {
+        if (!input) return;
+        input.focus();
+        input.select();
+      } catch (_error) {
+        // Focus is a convenience only.
+      }
+    }, 0);
   });
-  if (!result.confirmed) {
+
+  if (!result || result.action === "cancel") {
     setStatus(
       state.statusNode,
       "",
@@ -377,22 +430,13 @@ async function openReplacementDocIdModal(state, payload) {
     );
     return;
   }
-  if (replacementDocId) {
-    await runImport(state, { replacementDocId });
+  if (result.action === "replace" && result.overwriteDocId) {
+    await runImport(state, { overwriteDocId: result.overwriteDocId, confirmOverwrite: true });
+    return;
   }
-}
-
-function focusReplacementDocIdModalInput() {
-  window.setTimeout(() => {
-    try {
-      const input = document.getElementById("docsHtmlImportReplacementDocId");
-      if (!input) return;
-      input.focus();
-      input.select();
-    } catch (_error) {
-      // Focus is a convenience only.
-    }
-  }, 0);
+  if (result.action === "rename" && result.replacementDocId) {
+    await runImport(state, { replacementDocId: result.replacementDocId });
+  }
 }
 
 async function runImport(state, { overwriteDocId = "", confirmOverwrite = false, replacementDocId = "" } = {}) {
@@ -438,7 +482,6 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
         "warn",
         payload.summary_text || getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
       );
-      focusReplacementDocIdModalInput();
       await openReplacementDocIdModal(state, payload);
       return;
     }

@@ -734,6 +734,7 @@
       "filename_conflict_heading": "File already exists",
       "filename_conflict_body": "A source file named {doc_id}.md already exists. Edit the doc_id to choose a new filename.",
       "filename_conflict_ok_button": "OK",
+      "filename_conflict_replace_button": "Replace",
       "filename_conflict_cancel_button": "Cancel",
       "filename_conflict_cancelled": "Import cancelled.",
       "replacement_doc_id_label": "doc_id",

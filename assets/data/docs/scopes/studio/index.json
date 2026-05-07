@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T19:15:52Z",
+  "generated_at": "2026-05-07T19:27:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -455,7 +455,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 7532
+      "content_text_length": 7726
     },
     {
       "scope": "studio",
@@ -1286,7 +1286,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 26913
+      "content_text_length": 27031
     },
     {
       "scope": "studio",
@@ -1483,7 +1483,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 164924
+      "content_text_length": 165014
     },
     {
       "scope": "studio",
@@ -2922,7 +2922,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 53134
+      "content_text_length": 53190
     },
     {
       "scope": "studio",
