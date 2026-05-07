@@ -17,6 +17,47 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-07] Added duplicate stem handling to Docs Import media request
+
+**Status:** proposed
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Updated the Docs Import media request so proposed `doc_id` collisions prompt for a replacement title instead of auto-appending a suffix.
+
+**Reason:**
+When a staged file stem already matches an existing Markdown source file, the user should control the new title and resulting `doc_id` while still getting the current name as an easy starting point.
+
+**Files changed:**
+
+- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The request now requires collision detection during preview, a replacement-title prompt seeded with the current name, server-side `doc_id` regeneration, and a second collision check before apply.
+
+## [2026-05-07] Refined Docs Import media request around shared SVG and R2 links
+
+**Status:** proposed
+
+**Area:** Studio / Docs Import
+
+**Summary:**
+Updated the Docs Import media request so raw SVG files and SVG embedded in HTML share one sanitizer policy, plain text URLs become autolinks, and imported media wrappers point at expected R2 docs media keys.
+
+**Reason:**
+The import model should keep SVG behavior consistent across source formats and should match the current manual R2 media workflow instead of introducing a separate repo-local image copy path.
+
+**Files changed:**
+
+- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The request now treats images and downloadable files as separate docs media classes, with image links under `docs/<scope>/img/` and file links under `docs/<scope>/files/`.
+The generated Markdown points at `[[media:...]]` tokens while the actual R2 copy remains manual.
+
 ## [2026-05-07] Added R2 media upload automation request
 
 **Status:** proposed

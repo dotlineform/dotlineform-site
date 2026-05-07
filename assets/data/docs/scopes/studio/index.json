@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T17:06:40Z",
+  "generated_at": "2026-05-07T17:41:18Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2796,7 +2796,7 @@
       "source_path": "site-request-docs-import-source-registry-media.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-import-source-registry-media.json",
-      "content_text_length": 9288,
+      "content_text_length": 13710,
       "ui_status": "proposed"
     },
     {
@@ -2906,7 +2906,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 48030
+      "content_text_length": 49697
     },
     {
       "scope": "studio",
