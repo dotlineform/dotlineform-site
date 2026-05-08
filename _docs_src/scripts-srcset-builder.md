@@ -24,8 +24,8 @@ Works example:
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_work_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/work_success_ids.txt \
 bash scripts/make_srcset_images.sh \
-  "$DOTLINEFORM_MEDIA_BASE_DIR/works/make_srcset_images" \
-  "$DOTLINEFORM_MEDIA_BASE_DIR/works/srcset_images" \
+  var/catalogue/media/works/make_srcset_images \
+  var/catalogue/media/works/srcset_images \
   4
 ```
 
@@ -35,8 +35,8 @@ Moments example:
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_moment_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/moment_success_ids.txt \
 bash scripts/make_srcset_images.sh \
-  "$DOTLINEFORM_MEDIA_BASE_DIR/moments/make_srcset_images" \
-  "$DOTLINEFORM_MEDIA_BASE_DIR/moments/srcset_images" \
+  var/catalogue/media/moments/make_srcset_images \
+  var/catalogue/media/moments/srcset_images \
   4
 ```
 
@@ -58,7 +58,6 @@ Shell entrypoint arguments:
 
 Runtime defaults are resolved from `_data/pipeline.json` plus env vars, especially:
 
-- `DOTLINEFORM_MEDIA_BASE_DIR`
 - `MAKE_SRCSET_JOBS`
 - `MAKE_SRCSET_WORK_IDS_FILE`
 - `MAKE_SRCSET_SUCCESS_IDS_FILE`
@@ -67,7 +66,7 @@ Runtime defaults are resolved from `_data/pipeline.json` plus env vars, especial
 
 Source artifacts:
 
-- staged source files under `DOTLINEFORM_MEDIA_BASE_DIR`
+- staged source files under `var/catalogue/media/`
   - `works/make_srcset_images/`
   - `work_details/make_srcset_images/`
   - `moments/make_srcset_images/`
@@ -75,7 +74,7 @@ Source artifacts:
 
 Target artifacts:
 
-- derivative image trees under `DOTLINEFORM_MEDIA_BASE_DIR`
+- derivative image trees under `var/catalogue/media/`
   - `works/srcset_images/`
   - `work_details/srcset_images/`
   - `moments/srcset_images/`

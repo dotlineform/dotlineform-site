@@ -31,7 +31,7 @@ Complete these before running the checklist:
 - confirm the site is available at `http://127.0.0.1:4000/`
 - confirm the local catalogue write server is available on `http://127.0.0.1:8788/`
 - confirm `DOTLINEFORM_PROJECTS_BASE_DIR` points to the current source tree used for work media and moment source images
-- confirm `DOTLINEFORM_MEDIA_BASE_DIR` is set if media-generation behavior is being checked
+- confirm `var/catalogue/media/` is writable if media-generation behavior is being checked
 - confirm `assets/studio/data/catalogue/` is present and current
 - confirm `data/works_bulk_import.xlsx` is present if bulk import is in scope for the run
 - confirm at least one representative source case exists for each required state:

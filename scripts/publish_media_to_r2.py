@@ -20,15 +20,11 @@ from typing import Dict, Iterable, List, Mapping, Protocol, Sequence
 
 try:
     from pipeline_config import (
-        env_var_name,
-        env_var_value,
         load_pipeline_config,
         media_mode_output_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import (
-        env_var_name,
-        env_var_value,
         load_pipeline_config,
         media_mode_output_subdir,
     )
@@ -36,7 +32,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
-MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
 PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
 PRIMARY_OUTPUT_SUBDIR = str(PIPELINE_CONFIG["variants"]["primary"]["output_subdir"])
 OUTPUT_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
@@ -162,7 +157,6 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     ap.add_argument("--delete", action="store_true", help="Delete selected remote primary variants instead of uploading")
     ap.add_argument("--report-json", help="Optional JSON report path")
     ap.add_argument("--env-file", action="append", default=[], help="Additional local env file to load")
-    ap.add_argument("--media-base-dir", help=argparse.SUPPRESS)
     ap.add_argument("--repo-root", help=argparse.SUPPRESS)
     return ap.parse_args(argv)
 
@@ -210,10 +204,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         failed = report["counts"].get("failed", 0)
         return 1 if failed else 0
 
-    media_base_dir = resolve_media_base_dir(args.media_base_dir)
     objects, missing = discover_catalogue_primary_objects(
         repo_root=repo_root,
-        media_base_dir=media_base_dir,
         kinds=[args.kind] if args.kind else sorted(CATALOGUE_KINDS),
         item_id=args.item_id,
         allow_partial=args.allow_partial,
@@ -222,7 +214,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         selected_kind = args.kind or "any catalogue kind"
         raise SystemExit(
             "Error: no matching catalogue primary derivatives found for "
-            f"{selected_kind} id {args.item_id!r} under {media_base_dir}."
+            f"{selected_kind} id {args.item_id!r} under {catalogue_media_staging_root(repo_root)}."
         )
     results = plan_and_publish(
         objects=objects,
@@ -262,13 +254,6 @@ def write_report(*, repo_root: Path, report: Mapping[str, object], report_json: 
 def validate_item_id(item_id: str) -> None:
     if item_id in {"", ".", ".."} or "/" in item_id or "\\" in item_id or "\x00" in item_id:
         raise SystemExit(f"Error: invalid id: {item_id!r}")
-
-
-def resolve_media_base_dir(override: str | None = None) -> Path:
-    raw = str(override or env_var_value(PIPELINE_CONFIG, "media_base_dir")).strip()
-    if raw == "":
-        raise SystemExit(f"Error: missing media base directory. Set {MEDIA_BASE_DIR_ENV_NAME}.")
-    return Path(raw).expanduser().resolve()
 
 
 def load_env_file(path: Path) -> Dict[str, str]:
@@ -333,7 +318,6 @@ def load_r2_credentials(
 def discover_catalogue_primary_objects(
     *,
     repo_root: Path,
-    media_base_dir: Path,
     kinds: Sequence[str],
     item_id: str | None = None,
     allow_partial: bool = False,
@@ -345,7 +329,7 @@ def discover_catalogue_primary_objects(
     for kind_name in kinds:
         kind = CATALOGUE_KINDS[kind_name]
         source_root = (
-            media_base_dir
+            repo_root
             / media_mode_output_subdir(PIPELINE_CONFIG, kind.pipeline_mode)
             / PRIMARY_OUTPUT_SUBDIR
         ).resolve()
@@ -388,6 +372,10 @@ def discover_catalogue_primary_objects(
                 )
 
     return objects, missing
+
+
+def catalogue_media_staging_root(repo_root: Path) -> Path:
+    return (repo_root / "var" / "catalogue" / "media").resolve()
 
 
 def build_catalogue_remote_objects(*, repo_root: Path, kind_name: str, item_id: str) -> List[RemoteMediaObject]:

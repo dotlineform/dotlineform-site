@@ -84,7 +84,7 @@ Layouts and client scripts should treat the stub as a route shell only.
 | series | `page.slug` | series and works indexes, plus focused series JSON where needed |
 | moment | `page.slug` | focused moment JSON |
 
-Server-rendered fallback payloads should be removed where they serialize mutable front matter. The page shell may still render stable structural attributes such as base URLs, media base paths, pipeline-derived image variant settings, and route IDs.
+Server-rendered fallback payloads should be removed where they serialize mutable front matter. The page shell may still render stable structural attributes such as base URLs, pipeline-derived image variant settings, and route IDs.
 
 Client-side loading states should handle the short gap before JSON arrives. Loading text should come from config and use:
 

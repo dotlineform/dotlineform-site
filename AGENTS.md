@@ -23,7 +23,6 @@
 - In cloud sessions, keep repo docs and examples machine-agnostic (no user-specific absolute paths).
 - Required shared env vars for media/generation flows:
   - `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - `DOTLINEFORM_MEDIA_BASE_DIR`
 - Optional shared env var:
   - `MAKE_SRCSET_JOBS`
 - Keep remote media credentials out of tracked files; use platform secret stores for values such as:

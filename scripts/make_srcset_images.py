@@ -22,18 +22,16 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 try:
     from pipeline_config import (
-        env_var_name,
         env_var_value,
-        join_base_and_subdir,
+        env_var_name,
         load_pipeline_config,
         media_mode_input_subdir,
         media_mode_output_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import (
-        env_var_name,
         env_var_value,
-        join_base_and_subdir,
+        env_var_name,
         load_pipeline_config,
         media_mode_input_subdir,
         media_mode_output_subdir,
@@ -52,12 +50,10 @@ SUPPORTED_PATTERNS: Sequence[str] = (
 HEIF_EXTENSIONS = {"heic", "heif"}
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
-MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
 SRCSET_JOBS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_jobs")
 SELECTED_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_selected_ids_file")
 SUCCESS_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_success_ids_file")
 REPO_ROOT = Path(__file__).resolve().parents[1]
-MEDIA_BASE_DIR = Path(media_base).expanduser() if (media_base := env_var_value(PIPELINE_CONFIG, "media_base_dir")) else None
 
 PRIMARY_WIDTHS = [int(v) for v in PIPELINE_CONFIG["variants"]["compatibility"]["generate_widths"]]
 THUMB_SIZES = [int(v) for v in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]]
@@ -84,9 +80,8 @@ class ProcessResult:
 
 
 def parse_args() -> argparse.Namespace:
-    media_base = env_var_value(PIPELINE_CONFIG, "media_base_dir")
-    default_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "work"))
-    default_output = join_base_and_subdir(media_base, media_mode_output_subdir(PIPELINE_CONFIG, "work"))
+    default_input = REPO_ROOT / media_mode_input_subdir(PIPELINE_CONFIG, "work")
+    default_output = REPO_ROOT / media_mode_output_subdir(PIPELINE_CONFIG, "work")
 
     ap = argparse.ArgumentParser(
         description="Build srcset derivatives from staged source images.",
@@ -98,9 +93,9 @@ def parse_args() -> argparse.Namespace:
     args = ap.parse_args()
 
     if str(args.input_dir).strip() == "":
-        raise SystemExit(f"Error: missing media base directory. Set {MEDIA_BASE_DIR_ENV_NAME} or pass INPUT_DIR.")
+        raise SystemExit("Error: missing input directory. Pass INPUT_DIR.")
     if str(args.output_dir).strip() == "":
-        raise SystemExit(f"Error: missing output directory. Set {MEDIA_BASE_DIR_ENV_NAME} or pass OUTPUT_DIR.")
+        raise SystemExit("Error: missing output directory. Pass OUTPUT_DIR.")
     try:
         args.jobs = int(str(args.jobs).strip())
     except ValueError as exc:
@@ -168,7 +163,6 @@ def display_path(path: Path | str) -> str:
     return format_display_path(
         path,
         repo_root=REPO_ROOT,
-        media_base_dir=MEDIA_BASE_DIR,
     )
 
 
@@ -446,7 +440,6 @@ if __name__ == "__main__":
             + format_display_command(
                 [str(part) for part in exc.cmd],
                 repo_root=REPO_ROOT,
-                media_base_dir=MEDIA_BASE_DIR,
             ),
             file=sys.stderr,
         )

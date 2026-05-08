@@ -47,7 +47,6 @@ The current script surface falls into four groups:
 - if `jekyll serve` or `bin/dev-studio` is already running, verify one-off builds to `/tmp/dlf-jekyll-build` rather than `_site/`
 - media and generation scripts expect:
   - `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - `DOTLINEFORM_MEDIA_BASE_DIR`
 - R2 media publishing additionally expects R2 credentials through environment variables or gitignored local env files
 - shared pipeline defaults live in `_data/pipeline.json`
 

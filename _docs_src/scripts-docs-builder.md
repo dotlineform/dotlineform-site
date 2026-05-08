@@ -173,14 +173,13 @@ Local environment variables shared with media/generation scripts:
 
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
-export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
 ```
 
 Pipeline policy config:
 
 - shared pipeline defaults live in `_data/pipeline.json`
-- that config stores env var names and relative media subpaths
-- the default env var names remain `DOTLINEFORM_PROJECTS_BASE_DIR`, `DOTLINEFORM_MEDIA_BASE_DIR`, and `MAKE_SRCSET_JOBS`
+- that config stores env var names and repo-local media staging subpaths
+- the default env var names remain `DOTLINEFORM_PROJECTS_BASE_DIR` and `MAKE_SRCSET_JOBS`
 - srcset manifest env var names also live there; defaults remain `MAKE_SRCSET_WORK_IDS_FILE` and `MAKE_SRCSET_SUCCESS_IDS_FILE`
 - CLI flags still override config-derived defaults
 

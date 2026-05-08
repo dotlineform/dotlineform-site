@@ -3939,7 +3939,7 @@ Catalogue pipeline command echoes and step logs now avoid printing machine-speci
 The previous output was noisy and leaked long local absolute paths for interpreters, repo files, canonical source media, staged media, and temporary manifest files. That made routine logs harder to scan and less portable.
 
 **Effect:**  
-`build_catalogue.py`, `copy_draft_media_files.py`, `make_srcset_images.py`, and `generate_work_pages.py` now render repo-owned paths as repo-relative, canonical source paths as `[projects]/...`, staged and derivative media paths as `[media]/...`, and temporary paths as `[tmp]/...`. Runtime behavior is unchanged; this is a display-only logging cleanup.
+`build_catalogue.py`, `copy_draft_media_files.py`, `make_srcset_images.py`, and `generate_work_pages.py` now render repo-owned paths as repo-relative, canonical source paths as `[projects]/...`, and temporary paths as `[tmp]/...`. Runtime behavior is unchanged; this is a display-only logging cleanup.
 
 **Affected files/docs:**  
 - `scripts/display_paths.py`
@@ -4082,7 +4082,7 @@ Planner state migration now rewrites earlier prose-tracking baselines to include
 **Area:** scripts
 
 **Summary:**  
-`build_catalogue.py` now removes stale local media outputs under `DOTLINEFORM_MEDIA_BASE_DIR` when workbook rows are removed.
+`build_catalogue.py` now removes stale repo-local media outputs when workbook rows are removed.
 
 **Reason:**  
 Cleaning only repo-owned route stubs and JSON still left stale staged inputs, srcset outputs, and staged downloads on the local media side. Those files are owned by the same catalogue pipeline and should be cleaned by the same removed-row pass.

@@ -1,7 +1,6 @@
 {
   "env": {
     "projects_base_dir": "DOTLINEFORM_PROJECTS_BASE_DIR",
-    "media_base_dir": "DOTLINEFORM_MEDIA_BASE_DIR",
     "srcset_jobs": "MAKE_SRCSET_JOBS",
     "srcset_selected_ids_file": "MAKE_SRCSET_WORK_IDS_FILE",
     "srcset_success_ids_file": "MAKE_SRCSET_SUCCESS_IDS_FILE"
@@ -20,18 +19,18 @@
     },
     "media": {
       "work": {
-        "input_subdir": "website/pipeline/works/make_srcset_images",
-        "output_subdir": "website/pipeline/works/srcset_images"
+        "input_subdir": "var/catalogue/media/works/make_srcset_images",
+        "output_subdir": "var/catalogue/media/works/srcset_images"
       },
       "work_details": {
-        "input_subdir": "website/pipeline/work_details/make_srcset_images",
-        "output_subdir": "website/pipeline/work_details/srcset_images"
+        "input_subdir": "var/catalogue/media/work_details/make_srcset_images",
+        "output_subdir": "var/catalogue/media/work_details/srcset_images"
       },
       "moment": {
-        "input_subdir": "website/pipeline/moments/make_srcset_images",
-        "output_subdir": "website/pipeline/moments/srcset_images"
+        "input_subdir": "var/catalogue/media/moments/make_srcset_images",
+        "output_subdir": "var/catalogue/media/moments/srcset_images"
       },
-      "work_files_subdir": "website/pipeline/works/files"
+      "work_files_subdir": "var/catalogue/media/works/files"
     }
   },
   "variants": {

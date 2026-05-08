@@ -174,7 +174,7 @@ Do not delete:
 - canonical series prose under `_docs_src_catalogue/series/`
 - canonical moment prose under `_docs_src_catalogue/moments/`
 - canonical source images under the external projects source tree
-- deprecated external staging paths under `DOTLINEFORM_MEDIA_BASE_DIR`
+- deprecated external staging paths from the pre-repo-local media workflow
 
 Do not reintroduce legacy local media staging cleanup. Current Studio media staging is repo-local under `var/catalogue/media/`.
 

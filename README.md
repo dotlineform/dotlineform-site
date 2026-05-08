@@ -31,10 +31,9 @@ Before running media/generation scripts, set local environment variables, e.g.
 
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/projects"
-export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/site-media"
 ```
 
-Shared pipeline defaults live in `_data/pipeline.json`. That file stores env var names and relative media subpaths, while absolute local paths stay in your shell environment.
+Shared pipeline defaults live in `_data/pipeline.json`. That file stores env var names and repo-local media staging subpaths.
 
 Quick audit command:
 

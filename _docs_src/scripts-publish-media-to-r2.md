@@ -50,11 +50,11 @@ When credentials are missing, the command reports the missing variable names but
 
 ## Source And Target Mapping
 
-Source files come from the configured media base:
+Source files come from repo-local staged primary derivatives:
 
-- `DOTLINEFORM_MEDIA_BASE_DIR/website/pipeline/works/srcset_images/primary/`
-- `DOTLINEFORM_MEDIA_BASE_DIR/website/pipeline/work_details/srcset_images/primary/`
-- `DOTLINEFORM_MEDIA_BASE_DIR/website/pipeline/moments/srcset_images/primary/`
+- `var/catalogue/media/works/srcset_images/primary/`
+- `var/catalogue/media/work_details/srcset_images/primary/`
+- `var/catalogue/media/moments/srcset_images/primary/`
 
 The script reads `_data/pipeline.json` for those subpaths and `_config.yml` for remote media prefixes.
 Default object-key mapping is:

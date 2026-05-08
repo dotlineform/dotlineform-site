@@ -224,7 +224,7 @@ If `Works.downloads` contains entries for a work, generation stages those files 
 - source path:
   - `[projects-base-dir]/projects/[project_folder]/[filename]`
 - destination path:
-  - `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/[work_id]-[url-safe-filename.ext]`
+  - `var/catalogue/media/works/files/[work_id]-[url-safe-filename.ext]`
   - staged filenames preserve the extension and normalize the basename for URLs
 - work page link:
   - label is `download` or `downloads`

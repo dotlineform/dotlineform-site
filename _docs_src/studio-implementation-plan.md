@@ -502,7 +502,7 @@ Scope:
 
 steer:
 
-- the old pipeline copied and renamed work (and work details) source images into a staging folder e.g. for works $DOTLINEFORM_MEDIA_BASE_DIR/works/make_srcset_images
+- the old pipeline copied and renamed work and work-detail source images into an external staging folder before repo-local media staging existed
 - then it created srcset images which were then manually copied into repo /assets/works/img.  thumbnails -> repo, primary images -> R2.
 - the srcset images were created automatically as part of the pipeline orchestration.
 - the target for the new pipeline is an automatic process as part of build.
@@ -744,7 +744,7 @@ Risks:
 Task list:
 
 1. Create one separate end-to-end checklist document rather than continuing to grow this implementation plan, so test execution has its own stable working surface.
-2. Start the checklist with explicit environment prerequisites, including local Studio services, projects/media base configuration, and any required repo-local source files or generated data that must exist before testing begins.
+2. Start the checklist with explicit environment prerequisites, including local Studio services, projects-source configuration, repo-local media staging writability, and any required repo-local source files or generated data that must exist before testing begins.
 3. Record the exact split between `manual browser testing` and `Codex-runnable verification`, so each step is clearly owned and the checklist does not drift into ambiguous partial coverage.
 4. Map every major implemented Studio surface to at least one checklist scenario, including Studio shell/navigation, Catalogue dashboard routing, status/activity pages, build activity, work editor, detail editor, series editor, work-file/work-link editors, bulk import, and moments import.
 5. Add create/edit/save scenarios for works, details, series, work files, and work links, with explicit expected source-write outcomes and expected rebuild follow-up where applicable.

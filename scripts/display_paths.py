@@ -20,7 +20,6 @@ def format_display_path(
     *,
     repo_root: Path | None = None,
     projects_base_dir: Path | None = None,
-    media_base_dir: Path | None = None,
 ) -> str:
     raw = os.fspath(value)
     path = Path(raw).expanduser()
@@ -28,10 +27,6 @@ def format_display_path(
     repo_rel = _try_relative(path, repo_root)
     if repo_rel is not None:
         return repo_rel.as_posix() or "."
-
-    media_rel = _try_relative(path, media_base_dir)
-    if media_rel is not None:
-        return f"[media]/{media_rel.as_posix()}"
 
     projects_rel = _try_relative(path, projects_base_dir)
     if projects_rel is not None:
@@ -57,7 +52,6 @@ def format_display_command(
     *,
     repo_root: Path | None = None,
     projects_base_dir: Path | None = None,
-    media_base_dir: Path | None = None,
 ) -> str:
     formatted: list[str] = []
     for part in cmd:
@@ -84,7 +78,6 @@ def format_display_command(
                     stripped,
                     repo_root=repo_root,
                     projects_base_dir=projects_base_dir,
-                    media_base_dir=media_base_dir,
                 )
             )
             continue

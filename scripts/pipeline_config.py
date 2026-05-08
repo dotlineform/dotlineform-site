@@ -15,7 +15,6 @@ CONFIG_REL_PATH = Path("_data/pipeline.json")
 DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
     "env": {
         "projects_base_dir": "DOTLINEFORM_PROJECTS_BASE_DIR",
-        "media_base_dir": "DOTLINEFORM_MEDIA_BASE_DIR",
         "srcset_jobs": "MAKE_SRCSET_JOBS",
         "srcset_selected_ids_file": "MAKE_SRCSET_WORK_IDS_FILE",
         "srcset_success_ids_file": "MAKE_SRCSET_SUCCESS_IDS_FILE",
@@ -34,18 +33,18 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
         },
         "media": {
             "work": {
-                "input_subdir": "works/make_srcset_images",
-                "output_subdir": "works/srcset_images",
+                "input_subdir": "var/catalogue/media/works/make_srcset_images",
+                "output_subdir": "var/catalogue/media/works/srcset_images",
             },
             "work_details": {
-                "input_subdir": "work_details/make_srcset_images",
-                "output_subdir": "work_details/srcset_images",
+                "input_subdir": "var/catalogue/media/work_details/make_srcset_images",
+                "output_subdir": "var/catalogue/media/work_details/srcset_images",
             },
             "moment": {
-                "input_subdir": "moments/make_srcset_images",
-                "output_subdir": "moments/srcset_images",
+                "input_subdir": "var/catalogue/media/moments/make_srcset_images",
+                "output_subdir": "var/catalogue/media/moments/srcset_images",
             },
-            "work_files_subdir": "works/files",
+            "work_files_subdir": "var/catalogue/media/works/files",
         },
     },
     "variants": {
@@ -162,10 +161,3 @@ def source_works_prose_subdir(config: Mapping[str, Any]) -> Path:
 
 def bulk_import_workbook_path(config: Mapping[str, Any]) -> Path:
     return Path(str(config["paths"]["workbooks"]["bulk_import"]))
-
-
-def join_base_and_subdir(base_dir: str, subdir: str | Path) -> str:
-    base = str(base_dir or "").strip()
-    if not base:
-        return ""
-    return str(Path(base) / Path(subdir))

@@ -197,7 +197,6 @@ Recommended shape:
 
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/absolute/path/to/dotlineform"
-export DOTLINEFORM_MEDIA_BASE_DIR="/absolute/path/to/dotlineform-icloud"
 export MAKE_SRCSET_JOBS=4
 
 export R2_ACCOUNT_ID="..."
@@ -216,8 +215,9 @@ source var/local/site.env
 What the shared variables mean:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
-- `DOTLINEFORM_MEDIA_BASE_DIR`: base directory that contains staged source images, generated srcset output, and staged work downloads
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
+
+Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
 
 R2 media publishing also requires:
 

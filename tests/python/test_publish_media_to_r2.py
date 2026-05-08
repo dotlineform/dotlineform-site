@@ -63,8 +63,8 @@ def make_repo(root: Path) -> Path:
     return repo
 
 
-def write_primary(media_root: Path, kind_subdir: str, filename: str, content: bytes = b"image") -> Path:
-    path = media_root / f"website/pipeline/{kind_subdir}/srcset_images/primary" / filename
+def write_primary(repo_root: Path, kind_subdir: str, filename: str, content: bytes = b"image") -> Path:
+    path = repo_root / f"var/catalogue/media/{kind_subdir}/srcset_images/primary" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
     return path
@@ -113,12 +113,10 @@ def test_catalogue_mapping_uses_configured_remote_prefixes_and_blocks_partial_se
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
         repo = make_repo(root)
-        media_root = root / "media"
-        source = write_primary(media_root, "works", "01007-primary-800.webp", b"small")
+        source = write_primary(repo, "works", "01007-primary-800.webp", b"small")
 
         objects, missing = publisher.discover_catalogue_primary_objects(
             repo_root=repo,
-            media_base_dir=media_root,
             kinds=["works"],
             item_id="01007",
             allow_partial=False,
@@ -157,12 +155,10 @@ def test_dry_run_marks_missing_remote_as_would_upload() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
         repo = make_repo(root)
-        media_root = root / "media"
         for width in publisher.PRIMARY_WIDTHS:
-            write_primary(media_root, "works", f"01007-primary-{width}.webp", f"image-{width}".encode("utf-8"))
+            write_primary(repo, "works", f"01007-primary-{width}.webp", f"image-{width}".encode("utf-8"))
         objects, _missing = publisher.discover_catalogue_primary_objects(
             repo_root=repo,
-            media_base_dir=media_root,
             kinds=["works"],
             item_id="01007",
         )
@@ -181,13 +177,11 @@ def test_unchanged_remote_is_skipped_and_changed_remote_requires_force() -> None
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
         repo = make_repo(root)
-        media_root = root / "media"
-        local_path = write_primary(media_root, "works", "01007-primary-800.webp", b"same")
+        local_path = write_primary(repo, "works", "01007-primary-800.webp", b"same")
         for width in [1200, 1600]:
-            write_primary(media_root, "works", f"01007-primary-{width}.webp", f"image-{width}".encode("utf-8"))
+            write_primary(repo, "works", f"01007-primary-{width}.webp", f"image-{width}".encode("utf-8"))
         objects, _missing = publisher.discover_catalogue_primary_objects(
             repo_root=repo,
-            media_base_dir=media_root,
             kinds=["works"],
             item_id="01007",
         )

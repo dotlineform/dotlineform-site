@@ -156,8 +156,9 @@ Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) to reco
 Minimum shared variables for media/generation scripts:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`
-- `DOTLINEFORM_MEDIA_BASE_DIR`
 - optional `MAKE_SRCSET_JOBS`
+
+Media staging and generated srcset output are repo-local under `var/catalogue/media/`.
 
 R2-related variables should be configured through cloud secret stores, for example:
 

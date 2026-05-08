@@ -57,7 +57,6 @@ The shared config should cover:
 
 - Environment variable names
   - `projects_base_dir_env`
-  - `media_base_dir_env`
   - `srcset_jobs_env`
 - Relative media paths per mode
   - `work`
@@ -121,7 +120,7 @@ Status: `completed`
   - `scripts/run_draft_pipeline.py`
   - `scripts/generate_work_pages.py`
 - 2026-03-20: Ran dry-run pipeline check:
-  - `DOTLINEFORM_PROJECTS_BASE_DIR=/tmp/dlf-pipeline-check DOTLINEFORM_MEDIA_BASE_DIR=/tmp/dlf-pipeline-check python3 scripts/run_draft_pipeline.py --dry-run --mode moment --moment-ids nonexistent-moment`
+  - `DOTLINEFORM_PROJECTS_BASE_DIR=/tmp/dlf-pipeline-check python3 scripts/run_draft_pipeline.py --dry-run --mode moment --moment-ids nonexistent-moment`
 - 2026-03-20: Confirmed the dry-run completed successfully with config-backed defaults and no writes.
 
 ## Phase 2: Move Srcset Builder Onto Shared Config
@@ -182,7 +181,7 @@ Reason:
   - `MAKE_SRCSET_WORK_IDS_FILE=/tmp/.../ids.txt MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/.../success.txt bash scripts/make_srcset_images.sh /tmp/.../in /tmp/.../out 2`
 - 2026-03-20: Confirmed expected derivative files were written, the success manifest was written, and the processed source image was deleted.
 - 2026-03-20: Re-ran the constrained pipeline dry-run:
-  - `DOTLINEFORM_PROJECTS_BASE_DIR=/tmp/dlf-pipeline-check DOTLINEFORM_MEDIA_BASE_DIR=/tmp/dlf-pipeline-check python3 scripts/run_draft_pipeline.py --dry-run --mode moment --moment-ids nonexistent-moment`
+  - `DOTLINEFORM_PROJECTS_BASE_DIR=/tmp/dlf-pipeline-check python3 scripts/run_draft_pipeline.py --dry-run --mode moment --moment-ids nonexistent-moment`
 - 2026-03-20: Confirmed the pipeline entrypoint still completed successfully through the shell wrapper path.
 
 ## Phase 3: Make UI and Studio Read From Shared Variant Policy

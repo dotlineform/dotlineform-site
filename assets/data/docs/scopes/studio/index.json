@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T09:52:38Z",
+  "generated_at": "2026-05-08T13:06:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -19,7 +19,7 @@
       "source_path": "site-request-route-anchor-collection-stubs.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-route-anchor-collection-stubs.json",
-      "content_text_length": 7799
+      "content_text_length": 7781
     },
     {
       "scope": "studio",
@@ -863,7 +863,7 @@
       "source_path": "local-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup.json",
-      "content_text_length": 12220
+      "content_text_length": 12124
     },
     {
       "scope": "studio",
@@ -893,7 +893,7 @@
       "source_path": "site-change-log-2026-04.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
-      "content_text_length": 191067
+      "content_text_length": 190988
     },
     {
       "scope": "studio",
@@ -1105,7 +1105,7 @@
       "source_path": "scripts-cloud-environments.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json",
-      "content_text_length": 9156
+      "content_text_length": 9215
     },
     {
       "scope": "studio",
@@ -1362,7 +1362,7 @@
       "source_path": "scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json",
-      "content_text_length": 11845
+      "content_text_length": 11837
     },
     {
       "scope": "studio",
@@ -1468,7 +1468,7 @@
       "source_path": "studio-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json",
-      "content_text_length": 52262
+      "content_text_length": 52275
     },
     {
       "scope": "studio",
@@ -1679,7 +1679,7 @@
       "source_path": "studio-e2e-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-e2e-checklist.json",
-      "content_text_length": 12331
+      "content_text_length": 12330
     },
     {
       "scope": "studio",
@@ -1980,7 +1980,7 @@
       "source_path": "site-request-catalogue-delete-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-delete-cleanup.json",
-      "content_text_length": 9630,
+      "content_text_length": 9636,
       "ui_status": "done"
     },
     {
@@ -2041,7 +2041,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 6306
+      "content_text_length": 6279
     },
     {
       "scope": "studio",
@@ -2086,7 +2086,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 8627
+      "content_text_length": 8540
     },
     {
       "scope": "studio",
@@ -2362,7 +2362,7 @@
       "source_path": "scripts-publish-media-to-r2.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
-      "content_text_length": 3373
+      "content_text_length": 3313
     },
     {
       "scope": "studio",
@@ -2423,7 +2423,7 @@
       "source_path": "scripts-srcset-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json",
-      "content_text_length": 2335
+      "content_text_length": 2248
     },
     {
       "scope": "studio",
