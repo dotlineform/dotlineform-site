@@ -17,6 +17,23 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Moved Studio Activity link to Studio resources
+
+**Status:** implemented
+
+**Area:** Studio / navigation
+
+**Summary:**
+Moved the Activity link from the Catalogue dashboard admin block into the Studio home Resources section.
+
+**Files changed:**
+
+- `studio/index.md`
+- `studio/catalogue/index.md`
+
+**Impact:**
+The Studio Activity report now sits with other cross-Studio resources on `/studio/`, and `/studio/catalogue/` no longer shows a separate Admin heading.
+
 ## [2026-05-08] Cleaned up moment lookup-refresh naming
 
 **Status:** implemented

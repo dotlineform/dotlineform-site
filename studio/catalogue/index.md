@@ -60,11 +60,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
     </section>
   </section>
 
-  <section aria-labelledby="catalogueAdminHeading">
-    <h3 id="catalogueAdminHeading">Admin</h3>
-    <p><a href="{{ '/studio/activity/' | relative_url }}">activity</a></p>
-  </section>
-
 </div>
 
 <script type="module" src="{{ '/assets/studio/js/studio-dashboard.js' | relative_url }}"></script>
