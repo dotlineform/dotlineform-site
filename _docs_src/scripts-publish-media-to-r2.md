@@ -1,0 +1,117 @@
+---
+doc_id: scripts-publish-media-to-r2
+title: Publish Media To R2
+added_date: 2026-05-08
+last_updated: "2026-05-08 00:00"
+parent_id: scripts
+sort_order: 121
+---
+# Publish Media To R2
+
+Project-local entrypoint:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+```
+
+The command publishes approved local media derivatives to Cloudflare R2.
+It defaults to dry-run mode and requires `--write` before it uploads anything.
+
+## Current Scope
+
+The first implementation supports catalogue primary-image derivatives only:
+
+- works
+- work details
+- moments
+
+Docs media publishing is reserved for a later milestone.
+
+## Credentials
+
+The script reads R2 settings from environment variables:
+
+- `R2_ACCOUNT_ID`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET`
+- `R2_ENDPOINT`
+
+It can also load local-only env files:
+
+- `.env.local`
+- `var/local/r2.env`
+- additional files passed with `--env-file`
+
+Those files are gitignored and must not be committed.
+When credentials are missing, the command reports the missing variable names but never prints configured values.
+
+## Source And Target Mapping
+
+Source files come from the configured media base:
+
+- `DOTLINEFORM_MEDIA_BASE_DIR/website/pipeline/works/srcset_images/primary/`
+- `DOTLINEFORM_MEDIA_BASE_DIR/website/pipeline/work_details/srcset_images/primary/`
+- `DOTLINEFORM_MEDIA_BASE_DIR/website/pipeline/moments/srcset_images/primary/`
+
+The script reads `_data/pipeline.json` for those subpaths and `_config.yml` for remote media prefixes.
+Default object-key mapping is:
+
+- `works/img/<work_id>-primary-<width>.webp`
+- `work_details/img/<detail_uid>-primary-<width>.webp`
+- `moments/img/<moment_id>-primary-<width>.webp`
+
+The expected catalogue primary widths are `800`, `1200`, and `1600`.
+If a selected item is missing one of those variants, the item is blocked by default.
+Use `--allow-partial` only when intentionally publishing an incomplete set.
+
+## Usage
+
+Preview one work:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+```
+
+Preview all catalogue primary derivatives:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --all
+```
+
+Upload one work:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --write
+```
+
+Write a JSON report:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind moments --id keys --report-json var/local/r2-publish-report.json
+```
+
+Overwrite changed remote objects intentionally:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --force --write
+```
+
+## Safety Behavior
+
+The publisher:
+
+- reads from allowlisted derivative roots only
+- refuses path traversal and symlink escapes
+- checks remote object size and ETag against the local MD5 digest
+- skips unchanged remote objects
+- blocks changed remote objects unless `--force` is passed
+- never deletes remote objects
+- keeps logs to ids, relative local paths, object keys, statuses, and non-secret reasons
+
+## Related References
+
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)

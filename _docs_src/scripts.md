@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-06 21:19"
+last_updated: "2026-05-08 00:00"
 parent_id: site-docs
 sort_order: 80
 ---
@@ -48,6 +48,7 @@ The current script surface falls into four groups:
 - media and generation scripts expect:
   - `DOTLINEFORM_PROJECTS_BASE_DIR`
   - `DOTLINEFORM_MEDIA_BASE_DIR`
+- R2 media publishing additionally expects R2 credentials through environment variables or gitignored local env files
 - shared pipeline defaults live in `_data/pipeline.json`
 
 ## Current Build Boundaries
@@ -125,6 +126,8 @@ Catalogue/runtime maintenance:
   Parse staged Library import data without writing source or preview files.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
+- [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2)
+  Preview or upload approved catalogue primary-image derivatives to Cloudflare R2.
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
   Preview or run the Phase 5 scoped JSON-source rebuild flow for one work.
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)

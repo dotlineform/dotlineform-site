@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: "2026-05-07"
+last_updated: "2026-05-08"
 parent_id: ""
 sort_order: 220
 ---
@@ -30,7 +30,6 @@ Those still belong in the owning reference docs and change logs.
 
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
-- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
 - [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
@@ -53,6 +52,7 @@ Those still belong in the owning reference docs and change logs.
 
 ## Completed Requests
 
+- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
 - [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)
 - [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
 - [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)

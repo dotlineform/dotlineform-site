@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T20:55:27Z",
+  "generated_at": "2026-05-08T08:33:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -855,7 +855,7 @@
       "doc_id": "local-setup",
       "title": "Local Setup",
       "added_date": "2026-04-13",
-      "last_updated": "2026-05-06 20:38",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "site-docs",
       "sort_order": 30,
       "published": true,
@@ -863,7 +863,7 @@
       "source_path": "local-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup.json",
-      "content_text_length": 10375
+      "content_text_length": 10743
     },
     {
       "scope": "studio",
@@ -1097,7 +1097,7 @@
       "doc_id": "scripts-cloud-environments",
       "title": "Cloud Environments",
       "added_date": "2026-04-14",
-      "last_updated": "2026-05-06 20:39",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "site-docs",
       "sort_order": 40,
       "published": true,
@@ -1105,7 +1105,7 @@
       "source_path": "scripts-cloud-environments.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json",
-      "content_text_length": 8826
+      "content_text_length": 9156
     },
     {
       "scope": "studio",
@@ -2033,7 +2033,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-06 21:19",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "site-docs",
       "sort_order": 80,
       "published": true,
@@ -2041,7 +2041,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 6089
+      "content_text_length": 6306
     },
     {
       "scope": "studio",
@@ -2412,6 +2412,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-publish-media-to-r2",
+      "title": "Publish Media To R2",
+      "added_date": "2026-05-08",
+      "last_updated": "2026-05-08 00:00",
+      "parent_id": "scripts",
+      "sort_order": 121,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-publish-media-to-r2.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
+      "content_text_length": 2693
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-catalogue-series-unified-editor",
       "title": "Catalogue Series Unified Editor",
       "added_date": "2026-04-29",
@@ -2587,7 +2602,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "catalogue",
       "sort_order": 150,
       "published": true,
@@ -2595,7 +2610,7 @@
       "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
-      "content_text_length": 7741
+      "content_text_length": 7775
     },
     {
       "scope": "studio",
@@ -2804,7 +2819,7 @@
       "doc_id": "site-request-r2-media-upload-automation",
       "title": "R2 Media Upload Automation Request",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-07 19:06",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "change-requests",
       "sort_order": 206,
       "published": true,
@@ -2812,7 +2827,7 @@
       "source_path": "site-request-r2-media-upload-automation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
-      "content_text_length": 7807,
+      "content_text_length": 7929,
       "ui_status": "urgent"
     },
     {
@@ -2852,7 +2867,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-08",
       "parent_id": "",
       "sort_order": 220,
       "published": true,
@@ -2914,7 +2929,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-08",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -2922,7 +2937,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 54423
+      "content_text_length": 55253
     },
     {
       "scope": "studio",

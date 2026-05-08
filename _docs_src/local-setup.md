@@ -2,7 +2,7 @@
 doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
-last_updated: "2026-05-06 20:38"
+last_updated: "2026-05-08 00:00"
 parent_id: site-docs
 sort_order: 30
 ---
@@ -197,6 +197,18 @@ What they mean:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
 - `DOTLINEFORM_MEDIA_BASE_DIR`: base directory that contains staged source images, generated srcset output, and staged work downloads
+
+R2 media publishing also requires Cloudflare R2 credentials:
+
+- `R2_ACCOUNT_ID`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET`
+- `R2_ENDPOINT`
+
+Set those in your shell, or put them in a gitignored local env file such as `.env.local` or `var/local/r2.env`.
+Do not commit R2 credential values.
+The publisher script reports missing variable names without printing configured values.
 
 Optional env var:
 

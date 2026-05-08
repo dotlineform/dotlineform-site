@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-08 00:00"
 parent_id: catalogue
 sort_order: 150
 ---
@@ -163,7 +163,8 @@ Work, work-detail, and moment image generation uses the source-image metadata in
   - `assets/work_details/img/`
   - `assets/moments/img/`
 
-The staged primary derivatives are the local handoff point for the remote media publishing step. The scoped helper does not upload or mutate remote R2 media.
+The staged primary derivatives are the local handoff point for the remote media publishing step.
+Use [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) to preview or upload those primary derivatives after local generation.
 Staged thumbnail derivatives are not retained after they have been copied into the public asset folders.
 
 ## Purpose

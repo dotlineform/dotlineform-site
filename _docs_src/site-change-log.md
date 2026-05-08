@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-07"
+last_updated: "2026-05-08"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-08] Implemented R2 media upload automation
+
+**Status:** implemented
+
+**Area:** Catalogue / media publishing
+
+**Summary:**
+Added `./scripts/publish_media_to_r2.py`, a dry-run-first Cloudflare R2 publisher for catalogue primary-image derivatives.
+
+**Files changed:**
+
+- `scripts/publish_media_to_r2.py`
+- `tests/python/test_publish_media_to_r2.py`
+- `.gitignore`
+- [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Local Setup](/docs/?scope=studio&doc=local-setup)
+- [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+
+**Impact:**
+Catalogue work, work-detail, and moment primary variants can now be previewed or uploaded to R2 from the CLI.
+The publisher loads credentials from environment variables or gitignored local env files, skips unchanged objects, blocks changed remote objects unless `--force` is explicit, and keeps docs media publishing out of scope for this milestone.
 
 ## [2026-05-07] Clarified Docs Viewer draft visibility
 

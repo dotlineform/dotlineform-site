@@ -2,7 +2,7 @@
 doc_id: scripts-cloud-environments
 title: Cloud Environments
 added_date: 2026-04-14
-last_updated: "2026-05-06 20:39"
+last_updated: "2026-05-08 00:00"
 parent_id: site-docs
 sort_order: 40
 ---
@@ -167,10 +167,14 @@ R2-related variables should be configured through cloud secret stores, for examp
 - `R2_BUCKET`
 - `R2_ENDPOINT`
 
+The R2 publisher uses those values from the process environment in cloud sessions.
+Local-only env files such as `.env.local` and `var/local/r2.env` are for local machines and should not be used as committed cloud configuration.
+
 ### 5) Keep remote-media boundary explicit
 
 - treat canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` as separate from remote media origins
 - use `_config.yml` `media_base` values for remote URL rendering
+- publish catalogue primary derivatives through [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) when the R2 handoff should be automated
 - do not couple cleanup flows to remote storage state
 
 ## Local + Cloud Compatibility Workflow
