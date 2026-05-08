@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 15:59"
+last_updated: "2026-05-08 16:29"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
@@ -264,7 +264,7 @@ The unified log should cover at least:
 - catalogue work, detail, series, and moment editor saves
 - catalogue creates, deletes, publish/unpublish, and save-published actions
 - catalogue bulk import and export/import adapter activity
-- docs import preview/apply actions that write docs or staged media
+- docs import actions that write docs or staged media
 - lookup rebuilds
 - published runtime data rebuilds
 - catalogue search rebuilds
@@ -310,6 +310,58 @@ The browser should read a curated activity feed, not parse `*.log` or `*.jsonl` 
 For later background-service coverage, watcher or server-triggered events should enter the same feed only after they can carry a meaningful source context.
 If the best available cause is "docs source file changed", the row should say that clearly rather than pretending a Studio button click happened.
 
+## Implementation Decisions
+
+No-change saves should not be reported.
+For this purpose, no-change means that no data in the core JSON source was edited, added, or deleted.
+If the core data did not change, no publishing activity should have taken place.
+
+Redundant writes are different from no-change saves.
+If a file is rewritten even though the data inside it did not change, that activity should be reported because it indicates redundant script work.
+Forced rewrites, such as a `--force` rewrite or an explicitly forced refresh, should also be reported.
+
+Preview-only commands should not be included when they genuinely do not persist data to a core JSON file or other durable generated report.
+Implementation should still document what each preview does and whether it writes anything.
+That review belongs in the implementation notes and inventory, but the activity log itself is for permanent user-initiated data changes, generated reports, and explicit forced rewrites.
+
+Confirmation flows should attribute activity to the first user command that initiated the write/delete workflow.
+Confirmation modals should confirm the action; they should not become separate user-action rows.
+If any current modal confirmation button is the control that actually calls a write/delete script, implementation should review that flow and preserve the original command context through the modal confirmation.
+
+After `/studio/activity/` is stable, it should be the only user-facing activity feed.
+Existing log files and specialized feeds may remain as debug inputs on a case-by-case basis.
+Codex and developer debugging can inspect local `var/` logs directly when needed, but the Studio user should not have to choose between competing report pages.
+
+The activity contract registry should allow optional script purposes.
+The registry describes the possible chain of events for a user action, and the activity log surfaces the rows for the downstream script purposes that were actually attempted.
+
+## Implementation Findings
+
+This request may expose problems in the current Studio workflows, service boundaries, modal behavior, logging, or build orchestration.
+Those findings should be logged carefully without turning every discovery into a blocker for the v1 activity log.
+
+Use this triage rule:
+
+| Finding type | Handling |
+|---|---|
+| Blocks v1 activity logging | Fix in the v1 implementation slice or explicitly narrow the v1 scope. |
+| Makes the activity log misleading | Fix before shipping the affected action, or exclude that action until corrected. |
+| Reveals redundant work, unclear flow, or optimisation opportunity | Log as a follow-up finding and continue with v1 unless it affects correctness. |
+| Reveals a preview/confirmation flow that writes data unexpectedly | Review the flow, preserve original command context, and decide whether it is a blocker for that action only. |
+| Reveals stale or competing report surfaces | Log as a retirement/follow-up task unless the old surface confuses v1 validation. |
+
+Findings should record:
+
+- route and control id
+- user action label
+- observed behavior
+- expected behavior
+- whether activity-log correctness is affected
+- recommended follow-up owner or document
+- proposed status: `blocker`, `v1-fix`, `follow-up`, or `noted`
+
+The aim is to keep implementation discoveries visible and actionable while protecting the activity-log delivery path from unrelated cleanup and optimisation work.
+
 ## V1 Implementation Slice
 
 First implementation should prove the model with one narrow action:
@@ -338,7 +390,8 @@ For a published work whose metadata save also updates public output, v1 should p
 | `catalogue work editor` | `save work` | `update search` |
 
 If the work is draft/unpublished, the downstream published/search rows may be absent or marked as not applicable according to the existing save response.
-If there are no changes, v1 should either write a single `no changes` row or skip writing activity, but the decision must be explicit in the registry and tests.
+If there are no core JSON changes, v1 should not write an activity row.
+If the save path rewrites files or runs publishing work despite no core data change, v1 should report that redundant or forced activity.
 
 ### V1 Tasks
 
@@ -346,6 +399,7 @@ If there are no changes, v1 should either write a single `no changes` row or ski
    - Add the catalogue work editor page.
    - Add the `save-work` action for `#catalogueWorkSave`.
    - Add script-purpose ids for canonical save, published work rebuild, lookup rebuild, and search update.
+   - Mark downstream script purposes as optional when they depend on record status or actual attempted work.
    - Add user-facing labels and detail templates for each purpose.
 
 2. Add registry validation.
@@ -362,6 +416,8 @@ If there are no changes, v1 should either write a single `no changes` row or ski
 4. Emit structured v1 activity rows in the catalogue write path.
    - Record one row for the source-record save outcome.
    - Record rows for public rebuild, lookup refresh, and search rebuild when those actions are actually attempted.
+   - Skip activity for true no-change saves where no core JSON data was changed and no files or generated artifacts were rewritten.
+   - Report forced rewrites and redundant rewrites even when serialized data content did not change.
    - Use existing save response data and build results rather than scraping UI text.
    - Preserve enough record context to show the work id and changed record family in the modal.
 

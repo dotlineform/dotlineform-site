@@ -2,9 +2,11 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 15:59"
+last_updated: "2026-05-08 16:29"
+ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
+viewable: true
 ---
 # Activity Log Coverage Inventory
 
@@ -37,6 +39,8 @@ Use these status values consistently:
 ## Coverage Rules
 
 Record actions that initiate a script, local service call, file write, build, import, export, audit, or generated report.
+Preview-only commands are excluded when they do not persist data.
+Confirmation controls are not separate activity actions; they should preserve the original command context.
 
 Do not record routine UI-only actions:
 
@@ -75,7 +79,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkSave` in bulk mode | `bulk save works` | save multiple canonical work records; rebuild affected published output; refresh lookups; update search | `planned` | Needs grouped record counts and clear modal summaries. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkPublication` `Publish` or `Unpublish` | `publish work` / `unpublish work` | publication preview; status change in canonical work record; public artifact build or cleanup; lookup refresh; search update | `planned` | Label should reflect the action selected by current status. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkDelete` `Delete` | `delete work` | delete preview; delete canonical work record; delete dependent detail records when applicable; clean public artifacts; refresh lookups; update search; local media cleanup when applicable | `planned` | Modal detail list should preserve the preview/apply consequences in user-readable terms. |
-| Catalogue work editor | `/studio/catalogue-work/` | `data-action="preview-build-impact"` `Preview update` | `preview work update` | field-aware build preview | `future` | Preview activity may be useful later, but v1 should focus on persisted write/build outcomes. |
+| Catalogue work editor | `/studio/catalogue-work/` | `data-action="preview-build-impact"` `Preview update` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Catalogue work editor | `/studio/catalogue-work/` | readiness action `data-prose-import="work"` | `import work prose` | prose import preview; prose source write; backup when overwriting | `planned` | Existing on-page result gives strong detail text for the modal. |
 | Catalogue work editor | `/studio/catalogue-work/` | readiness action `data-media-refresh="work"` | `refresh work media` | media-only build; source media checks; local derivative refresh; public thumbnail staging | `planned` | Should distinguish blocked media from successful derivative refresh. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkOpen`, `#catalogueWorkNew`, file/link row buttons, series picker buttons | none | none | `excluded` | These are navigation, form-mode changes, or unsaved local form edits unless followed by Save. |
@@ -96,10 +100,10 @@ The script-purpose label describes each downstream operation recorded as its own
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentNew` then `#catalogueMomentSave` | `create moment` | create canonical moment record through save path; refresh lookups | `planned` | Confirm whether the registry needs a separate create action once implementation starts. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentPublication` | `publish moment` / `unpublish moment` | publication preview; status change; public moment build or cleanup; lookup refresh; search update | `planned` | Label should follow active publish/unpublish state. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentDelete` | `delete moment` | delete preview; delete canonical moment; clean public artifacts; refresh lookups; update search; local media cleanup when applicable | `planned` | Include prose and image artifact notes where applicable. |
-| Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportPreview` `Preview` | `preview moment import` | staged moment import preview | `future` | Preview-only activity can wait unless it becomes necessary for import auditability. |
+| Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportPreview` `Preview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportApply` `Import` | `import moment` | staged moment import apply; canonical moment source write; media/prose source consequences when applicable | `planned` | The compatibility route redirects here, so coverage belongs to the editor page. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | readiness prose/media actions | `import moment prose` / `refresh moment media` | prose source write or media-only build; backup or blocked-media detail as applicable | `planned` | Keep separate from metadata Save. |
-| Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkPreview` `Preview` | `preview workbook import` | workbook import preview; validation counts for importable, duplicate, blocked rows | `future` | Preview may be useful but v1 should prioritize write/apply actions. |
+| Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkPreview` `Preview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkApply` `Import` | `import workbook records` | create new canonical work or work-detail records; backup; refresh lookups | `planned` | Active one-way import adapter from the configured workbook. |
 | Project state | `/studio/project-state/` | `#projectStateRunButton` `Run` | `run project-state report` | scan project folders; write project-state report | `planned` | Local report generation should be a single row with counts/details. |
 | Project state | `/studio/project-state/` | `#projectStateOpenButton` `Open file` | none | none | `excluded` | Opens documentation/source context; not a report-generating action. |
@@ -113,12 +117,12 @@ The script-purpose label describes each downstream operation recorded as its own
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
 | Docs import | `/studio/docs-import/` | `#docsHtmlImportRun` | `import docs source` | staged source conversion; validation; source doc write; backup; media source registration when applicable | `planned` | Current result panel is a strong source for activity detail text. |
-| Docs import | `/studio/docs-import/` | `#docsHtmlImportConfirm` | `confirm docs overwrite` | confirmed source overwrite; backup; generated doc metadata updates | `planned` | Should share correlation with the original import attempt if confirmation follows a preview response. |
+| Docs import | `/studio/docs-import/` | `#docsHtmlImportConfirm` | none | none | `excluded` | Confirmation should preserve the original `import docs source` context rather than creating a separate action row. |
 | Docs import | `/studio/docs-import/` | result source link | none | none | `excluded` | Opening the source file is not activity-report scope for v1. |
 | Studio data export | `/studio/export/` | `#dataExportRun` | `export data` | docs export generation; selected records; output file/report; warnings or skipped records | `planned` | Covers library, analytics, and other configured export scopes. |
-| Studio data import | `/studio/import/` | `#dataImportPreview` | `preview data import` | staged data import preview; validation counts; warnings | `future` | Preview-only coverage can wait until write/apply activity is stable. |
-| Studio data import | `/studio/import/` | `#dataImportUpdateSummary` | `update import summaries` | import apply preflight; source doc backups; summary field writes; result counts | `planned` | Confirmation preflight and apply should be correlated. |
-| Studio data import | `/studio/import/` | `#dataImportApplyHierarchy` | `update import hierarchy` | import apply preflight; source doc backups; parent-id writes; result counts | `planned` | Confirmation preflight and apply should be correlated. |
+| Studio data import | `/studio/import/` | `#dataImportPreview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
+| Studio data import | `/studio/import/` | `#dataImportUpdateSummary` | `update import summaries` | import apply preflight; source doc backups; summary field writes; result counts | `planned` | Confirmation modal activity should share this original command context. |
+| Studio data import | `/studio/import/` | `#dataImportApplyHierarchy` | `update import hierarchy` | import apply preflight; source doc backups; parent-id writes; result counts | `planned` | Confirmation modal activity should share this original command context. |
 | Docs broken links | `/studio/docs-broken-links/` | `#docsBrokenLinksRun` | `run broken-links audit` | broken-link scan; generated result list | `planned` | Audit/report action, not a source write. |
 | Library documents | `/studio/library-documents/` | sort/filter/open controls | none | none | `excluded` | Review surface only. |
 
@@ -126,7 +130,7 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
-| Series tags | `/studio/series-tags/` | import modal `preview-import` | `preview series tag import` | tag assignment import preview; conflict counts | `future` | Preview-only coverage can wait. |
+| Series tags | `/studio/series-tags/` | import modal `preview-import` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Series tags | `/studio/series-tags/` | import modal `apply-import` | `import series tag assignments` | tag assignment import apply; tag assignment writes; backup; conflict resolution summary | `planned` | Uses tag write service. |
 | Series tags | `/studio/series-tags/` | session modal copy/download/clear | none | none | `excluded` | Browser/session-local output controls unless later persisted by service. |
 | Series tag editor | `/studio/series-tag-editor/` | `data-role="add-tag"` | none | none | `excluded` | Local assignment edit until Save. |
@@ -156,14 +160,6 @@ The script-purpose label describes each downstream operation recorded as its own
 | Jekyll/site serve watchers | local filesystem changes | site rebuild | `future` | Only useful if correlated to a Studio action or explicit user command. |
 | Manual terminal scripts | direct shell command | script-specific report rows | `future` | Could be supported later with explicit run context, but v1 is page-button initiated. |
 
-## Open Implementation Questions
-
-- Should no-change saves write a `no changes` row, or should they skip activity? V1 must decide this in the registry and tests.
-- Should preview-only commands be persisted after v1, or should the activity log remain focused on writes and generated reports?
-- How should confirmation flows share correlation ids when a user clicks a first button, reviews a modal, then clicks a confirm button?
-- Which existing report feeds should remain as debug inputs after `/studio/activity/` becomes the primary report page?
-- Should the registry allow one UI action to declare optional script purposes that only appear when the service actually attempts that downstream work?
-
 ## Verification Matrix
 
 | Scope | Codex-run checks | Manual checks |
@@ -172,3 +168,4 @@ The script-purpose label describes each downstream operation recorded as its own
 | Activity report UI | route-ready audit; modal rendering smoke test; feed read error-state check | Open `/studio/activity/`, click status markers, and confirm stacked details are readable. |
 | Inventory completeness | scan Studio route files and service endpoints for unclassified buttons before each implementation slice | Compare the inventory against visible Studio pages during a light manual pass. |
 | Old report transition | link/navigation check once the new route is stable | Confirm old Build Activity and Catalogue Activity routes no longer compete with the unified report. |
+| Implementation findings | findings logged with route, control id, observed behavior, expected behavior, activity-log impact, and status | Confirm non-blocking issues are captured as follow-ups rather than folded into the v1 implementation by default. |
