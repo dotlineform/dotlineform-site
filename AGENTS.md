@@ -6,6 +6,18 @@
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
 - a ? in the prompt usually indicates that some analysis is needed on reasons for observed behaviour of code, or clarification of the best course of action.
 
+## Context and Batching
+
+- Treat the visible context window as a hard working budget; do not rely on automatic compaction succeeding.
+- Keep broad requests split into narrow, finishable slices that can be completed, verified, and summarized in one context window.
+- Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs that flood the transcript.
+- For long-running multi-batch work, leave a compact checkpoint before stopping or before context gets high:
+  - completed slice and files changed
+  - checks run and results
+  - known risks or blockers
+  - exact next slice to start
+- If a slice is growing beyond the remaining context budget, stop at a clean checkpoint rather than pushing into an interruption-prone state.
+
 ## Runtime and Paths
 
 - Use `/Users/dlf/miniconda3/bin/python3` for all Python commands.
