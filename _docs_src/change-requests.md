@@ -28,6 +28,7 @@ Those still belong in the owning reference docs and change logs.
 
 ## Current Requests
 
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a22a4846704c5a36d4419a2348a25aec",
-    "generated_at_utc": "2026-05-08T20:05:02Z",
-    "count": 200
+    "version": "blake2b-3270f6c0dbb8daed5ce3e866a0497203",
+    "generated_at_utc": "2026-05-08T20:33:43Z",
+    "count": 201
   },
   "entries": [
     {
@@ -4754,6 +4754,35 @@
         "12"
       ],
       "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "site-request-script-structural-review",
+      "kind": "doc",
+      "title": "Script Structural Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
+      "last_updated": "2026-05-08 21:33",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-08 21:33 • Change Requests",
+      "search_terms": [
+        "site-request-script-structural-review",
+        "site",
+        "request",
+        "script",
+        "structural",
+        "review",
+        "script structural review request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-08 21:33",
+        "2026",
+        "05",
+        "08",
+        "21",
+        "33"
+      ],
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 21:33 2026 05 08 21 33"
     },
     {
       "id": "change-requests",

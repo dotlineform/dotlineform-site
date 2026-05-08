@@ -17,6 +17,24 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Added script structural review request
+
+**Status:** proposed
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Added a change request for reviewing structurally confusing large scripts, led by `scripts/studio/catalogue_write_server.py`.
+
+**Files changed/docs:**
+
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+
+**Impact:**
+The new request frames modularisation as a responsibility-boundary problem rather than a file-size target.
+It identifies other review candidates, including the docs and tag write servers, `generate_work_pages.py`, and `catalogue_json_build.py`, while keeping behavior-preserving extraction and targeted tests as the default path.
+
 ## [2026-05-08] Moved Studio Activity link to Studio resources
 
 **Status:** implemented
