@@ -59,8 +59,8 @@
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
-- After changing `_docs_src/`, run `./scripts/build_docs.rb --scope studio --write` to regenerate the Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...`.
-- After changing `_docs_library_src/`, run `./scripts/build_docs.rb --scope library --write` to regenerate the library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...`.
+- After changing `_docs_src/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
+- After changing `_docs_library_src/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - When docs search output must be kept live with docs changes, rebuild the matching scope explicitly:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
@@ -124,16 +124,19 @@
 - For Studio Playwright smoke tests, follow `_docs_src/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
 - Use `_docs_src/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
 - When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
-- Always define targeted verification for both:
+- For implementation changes, define proportional targeted verification for both:
   - Codex-run checks
   - manual checks
+- For docs-only or analysis-only changes, keep manual verification lightweight and state when no separate manual check is useful.
 - Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
 - Include changed file paths (and line references when useful) in summaries.
 
 ## Security and Sanitization
 
-- Treat sanitization as a required pre-finish check for script/doc changes.
-- Scan changed files for local path leaks and sensitive terms before final response:
+- Treat sanitization as a targeted pre-finish check, not a mechanical step for every change.
+- Run a sanitization scan when a change touches credential handling, logging, local-service writes, docs/examples with paths or commands, generated docs payloads that may include local output, or any script/doc change with realistic risk of leaking local paths or sensitive values.
+- For small low-risk edits, a reasoned no-scan decision is acceptable.
+- When scanning changed files for local path leaks and sensitive terms, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 - Remove user-specific absolute paths from comments/docs/examples unless explicitly required by the user.
 - Keep script examples generic and project-local (`./scripts/...`) unless a pinned interpreter or non-default workbook path is explicitly needed.
@@ -160,10 +163,11 @@
 - The primary purpose of refactoring is to improve readability, consistency, and reliability.
 - Keep comments concise and implementation-focused.
 - use studio_config.json (ui_text section) to store UI copy such as labels. 
-- Always state the main benefits and risks associated with:
+- For material new changes, new requirements, or refactors, state the main benefits and risks associated with:
   - new changes
   - new requirements
   - refactors
+- For trivial or mechanical edits, a short summary is enough.
 
 ## Studio UI Guidance
 
@@ -194,8 +198,8 @@
 
 - Docs source is now flat under `_docs_src/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs_src/` directly.
-- After changing `_docs_src/`, run `./scripts/build_docs.rb --scope studio --write` before treating the Studio docs-viewer output as updated.
-- After changing `_docs_library_src/`, run `./scripts/build_docs.rb --scope library --write` before treating the library docs-viewer output as updated.
+- After changing `_docs_src/`, ensure Studio docs-viewer output is updated before treating it as final. If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, prefer relying on the watcher unless deterministic verification is needed.
+- After changing `_docs_library_src/`, ensure library docs-viewer output is updated before treating it as final. If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, prefer relying on the watcher unless deterministic verification is needed.
 - Prefer explicit scope for docs search rebuilds as well:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
