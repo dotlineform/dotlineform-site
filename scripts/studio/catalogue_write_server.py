@@ -48,6 +48,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import uuid
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -179,6 +180,10 @@ DELETE_APPLY_PATH = "/catalogue/delete-apply"
 PUBLICATION_PREVIEW_PATH = "/catalogue/publication-preview"
 PUBLICATION_APPLY_PATH = "/catalogue/publication-apply"
 PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
+ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK = "catalogue-work"
+ACTIVITY_CONTEXT_ACTION_SAVE_WORK = "save-work"
+ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK = "/studio/catalogue-work/"
+ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE = "catalogueWorkSave"
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -497,6 +502,65 @@ def backup_stamp_now() -> str:
 def activity_id(now_utc: str, operation: str) -> str:
     safe_operation = "".join(ch if ch.isalnum() else "-" for ch in operation.lower()).strip("-")
     return f"{now_utc}-{safe_operation or 'catalogue-event'}"
+
+
+def activity_context_value(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def activity_correlation_id(value: Any) -> str:
+    requested = activity_context_value(value)
+    if not requested:
+        return uuid.uuid4().hex
+    safe_value = "".join(ch for ch in requested if ch.isalnum() or ch in "._:-")
+    return safe_value[:120] or uuid.uuid4().hex
+
+
+def normalize_activity_context(
+    raw_context: Any,
+    *,
+    page_id: str,
+    action_id: str,
+    route: str,
+    control_id: str,
+    record_id_field: str,
+    record_id: str,
+) -> Dict[str, str]:
+    if raw_context is None:
+        return {}
+    if not isinstance(raw_context, Mapping):
+        raise ValueError("activity_context must be an object")
+
+    expected_values = {
+        "page_id": page_id,
+        "action_id": action_id,
+        "route": route,
+        "control_id": control_id,
+    }
+    for key, expected in expected_values.items():
+        value = activity_context_value(raw_context.get(key))
+        if value != expected:
+            raise ValueError(f"activity_context.{key} must be {expected!r}")
+
+    requested_record_id = slug_id(raw_context.get(record_id_field))
+    if requested_record_id and requested_record_id != record_id:
+        raise ValueError(f"activity_context.{record_id_field} must match request {record_id_field}")
+
+    context: Dict[str, str] = {
+        "correlation_id": activity_correlation_id(raw_context.get("correlation_id")),
+        "page_id": page_id,
+        "action_id": action_id,
+        "route": route,
+        "control_id": control_id,
+        "record_id_field": record_id_field,
+        record_id_field: record_id,
+    }
+    control_selector = activity_context_value(raw_context.get("control_selector"))
+    if control_selector:
+        context["control_selector"] = control_selector
+    return context
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -3049,6 +3113,15 @@ class Handler(BaseHTTPRequestHandler):
             requested_work_id = work_update.get("work_id")
         work_id = slug_id(requested_work_id)
         extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
+        activity_context = normalize_activity_context(
+            body.get("activity_context"),
+            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK,
+            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
+            record_id_field="work_id",
+            record_id=work_id,
+        )
 
         works_payload = load_works_payload(self.server.works_path)
         works = works_payload["works"]
@@ -3082,6 +3155,8 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": fields_changed,
             "record": updated_record,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
@@ -3128,6 +3203,9 @@ class Handler(BaseHTTPRequestHandler):
                 "changed_fields": fields_changed,
                 "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
                 "lookup_refresh_artifacts": lookup_refresh_payload.get("artifacts") if changed else [],
+                "activity_correlation_id": activity_context.get("correlation_id") if activity_context else "",
+                "activity_page_id": activity_context.get("page_id") if activity_context else "",
+                "activity_action_id": activity_context.get("action_id") if activity_context else "",
                 "dry_run": self.server.dry_run,
             },
         )

@@ -1728,6 +1728,17 @@ function updateFieldMessages(state, errors) {
   });
 }
 
+function buildWorkSaveActivityContext(state) {
+  return {
+    page_id: "catalogue-work",
+    action_id: "save-work",
+    route: "/studio/catalogue-work/",
+    control_id: "catalogueWorkSave",
+    control_selector: "#catalogueWorkSave",
+    work_id: state.currentWorkId
+  };
+}
+
 function buildPayload(state) {
   if (state.mode === "bulk") {
     const setFields = {};
@@ -1773,6 +1784,7 @@ function buildPayload(state) {
     expected_record_hash: state.currentRecordHash,
     apply_build: currentWorkIsPublished(state),
     extra_series_ids: state.pendingBuildExtraSeriesIds.slice(),
+    activity_context: buildWorkSaveActivityContext(state),
     record: buildWorkRecordFromDraft(draft, {
       downloadFields: DOWNLOAD_FIELDS,
       linkFields: LINK_FIELDS

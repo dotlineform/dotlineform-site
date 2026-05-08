@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:44"
+last_updated: "2026-05-08 16:47"
 ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -63,7 +63,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Define `save-work` action for `#catalogueWorkSave` | `done` | Implemented in `assets/studio/data/activity_contract.json`; user action label: `save work`; scenario: metadata edits to one existing work. |
 | Define script purposes for the v1 save path | `done` | Implemented script purposes: `save canonical data`, `rebuild published work data`, `rebuild lookups`, `update search`. |
 | Validate activity contract registry | `done` | Implemented in `scripts/verify_activity_contract.py` and `tests/python/test_activity_contract.py`; wired into the quick check profile. |
-| Pass activity context from Work editor to catalogue write server | `v1-target` | Include page id, action id, route, control id, work id, and correlation context. |
+| Pass activity context from Work editor to catalogue write server | `done` | Single-work saves now send page id, action id, route, control id, selector, and work id; the server validates the context, assigns or normalizes the correlation id, and ignores unknown fields. |
 | Emit structured rows from `/catalogue/work/save` | `v1-target` | Use existing save and build outcome data rather than scraping UI text. |
 | Generate Studio-readable activity feed | `v1-target` | Keep raw logs local-only and remove full payloads, local absolute paths, and verbose command output. |
 | Add `/studio/activity/` route | `v1-target` | Required columns: date-time, status, page, user action, script purpose. |

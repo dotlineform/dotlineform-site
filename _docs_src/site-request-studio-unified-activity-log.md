@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:44"
+last_updated: "2026-05-08 16:47"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
@@ -409,6 +409,7 @@ If the save path rewrites files or runs publishing work despite no core data cha
    - Keep validation runnable from Codex and from the normal check profile.
 
 3. Pass activity context from the work editor to the catalogue write server.
+   - Status: done for single-work metadata saves.
    - Include page id, action id, route, control id, and current work id in the save request.
    - Let the service assign or normalize a correlation id.
    - Keep the request shape narrow and ignore unknown activity context fields safely.
