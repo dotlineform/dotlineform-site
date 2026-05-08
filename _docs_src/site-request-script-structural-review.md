@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 22:30"
+last_updated: "2026-05-08 23:05"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -192,3 +192,23 @@ Risks:
 
 - delete and unpublish transactions still span the write server and cleanup module, so future transaction-helper extraction must preserve the current backup and restore ordering
 - generated JSON payload mutation now depends on `scripts/catalogue_cleanup.py`; future generated artifact schema changes should update that module and its focused test rather than adding ad hoc cleanup edits in the server
+
+### Slice 4: catalogue transaction helpers
+
+Status: implemented.
+
+The fourth implementation slice extracted timestamped backup names, transaction backup copying, best-effort restore behavior, transaction path de-duplication, and atomic multi-file JSON writes from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_transactions.py`.
+The write server still owns endpoint orchestration, delete/unpublish transaction timing, cleanup calls, lookup refreshes, search rebuilds, and response assembly, but it now calls transaction mechanics through the `transactions.*` namespace.
+`tests/python/test_catalogue_transactions.py` pins backup bundle layout, restore behavior for restored and newly-created files, and rollback after a simulated multi-file atomic write failure.
+
+Benefits:
+
+- gives backup and rollback mechanics a clear direct-testable module home
+- reduces the write server's write-path surface without changing endpoint payloads or moving delete/unpublish orchestration prematurely
+- keeps transaction backup timing visible in the write server while removing low-level file-copy and rollback mechanics from it
+- provides focused regression coverage before any later extraction of full delete/unpublish transaction orchestration
+
+Risks:
+
+- delete and unpublish orchestration still spans the write server, `scripts/catalogue_cleanup.py`, and `scripts/catalogue_transactions.py`; the next slice should avoid hiding service-specific allowlist checks inside a generic helper
+- `scripts/catalogue_transactions.py` imports cleanup only for existing-path de-duplication, so future shared-service extraction should revisit whether that helper belongs in a neutral local-service module

@@ -41,10 +41,8 @@ Security constraints:
 from __future__ import annotations
 
 import argparse
-import datetime as dt
 import json
 import os
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -145,6 +143,7 @@ from series_ids import normalize_series_id  # noqa: E402
 import catalogue_activity as activity  # noqa: E402
 import catalogue_cleanup  # noqa: E402
 import catalogue_routes as routes  # noqa: E402
+import catalogue_transactions as transactions  # noqa: E402
 
 
 BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
@@ -207,10 +206,6 @@ def load_activity_feed(repo_root: Path, rel_path: Path, schema: str) -> Dict[str
         payload = dict(payload)
         payload["entries"] = []
     return payload
-
-
-def backup_stamp_now() -> str:
-    return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -1519,49 +1514,6 @@ def load_moments_payload(path: Path) -> Dict[str, Any]:
     return payload
 
 
-def backup_transaction_paths(paths: Iterable[Path], backup_root: Path, repo_root: Path) -> Dict[Path, Path]:
-    backups: Dict[Path, Path] = {}
-    for path in catalogue_cleanup.unique_existing_paths(paths):
-        resolved = path.resolve()
-        if resolved in backups:
-            continue
-        try:
-            rel_path = Path("repo") / resolved.relative_to(repo_root.resolve())
-        except ValueError:
-            rel_path = Path("external") / path.name
-        backup_path = backup_root / rel_path
-        backup_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, backup_path)
-        backups[resolved] = backup_path
-    return backups
-
-
-def restore_transaction_paths(touched_paths: Iterable[Path], backups: Mapping[Path, Path]) -> None:
-    for path in unique_paths(touched_paths):
-        resolved = path.resolve()
-        backup_path = backups.get(resolved)
-        try:
-            if backup_path and backup_path.exists():
-                path.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(backup_path, path)
-            elif path.exists() and path.is_file():
-                path.unlink()
-        except OSError:
-            pass
-
-
-def unique_paths(paths: Iterable[Path]) -> list[Path]:
-    seen: set[Path] = set()
-    out: list[Path] = []
-    for path in paths:
-        resolved = path.resolve()
-        if resolved in seen:
-            continue
-        seen.add(resolved)
-        out.append(path)
-    return out
-
-
 def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> Dict[str, Any]:
     proc = subprocess.run(
         build_search_command(repo_root, write=write, force=False, env=os.environ.copy()),
@@ -1580,54 +1532,6 @@ def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> Dict[str, A
         detail = payload["stderr_tail"] or payload["stdout_tail"] or "catalogue search rebuild failed"
         raise RuntimeError(str(detail))
     return payload
-
-
-def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir: Path) -> list[Path]:
-    backups_dir.mkdir(parents=True, exist_ok=True)
-    stamp = backup_stamp_now()
-    bundle_dir = backups_dir / f"catalogue-save-{stamp}"
-    bundle_dir.mkdir(parents=True, exist_ok=False)
-    backups: Dict[Path, Path] = {}
-    temp_paths: Dict[Path, Path] = {}
-    replaced_paths: list[Path] = []
-
-    try:
-        for path, payload in payloads_by_path.items():
-            if path.exists():
-                backup_path = bundle_dir / path.name
-                shutil.copy2(path, backup_path)
-                backups[path] = backup_path
-
-            fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
-            temp_path = Path(temp_name)
-            with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=False)
-                handle.write("\n")
-            temp_paths[path] = temp_path
-
-        for path, temp_path in temp_paths.items():
-            os.replace(temp_path, path)
-            replaced_paths.append(path)
-    except Exception:
-        for path in reversed(replaced_paths):
-            backup_path = backups.get(path)
-            try:
-                if backup_path and backup_path.exists():
-                    shutil.copy2(backup_path, path)
-                elif path.exists():
-                    path.unlink()
-            except Exception:
-                pass
-        raise
-    finally:
-        for temp_path in temp_paths.values():
-            if temp_path.exists():
-                try:
-                    temp_path.unlink()
-                except OSError:
-                    pass
-
-    return list(backups.values())
 
 
 class CatalogueWriteServer(ThreadingHTTPServer):
@@ -1968,7 +1872,7 @@ class Handler(BaseHTTPRequestHandler):
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -2191,7 +2095,7 @@ class Handler(BaseHTTPRequestHandler):
                 if target_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
                 if not self.server.dry_run:
-                    backup_paths = atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
+                    backup_paths = transactions.atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
 
             response_payload: Dict[str, Any] = {
                 "ok": True,
@@ -2277,7 +2181,7 @@ class Handler(BaseHTTPRequestHandler):
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
 
         response_payload = {
             "ok": True,
@@ -2376,7 +2280,7 @@ class Handler(BaseHTTPRequestHandler):
                 "id": record_id,
                 "summary": "Dry-run publication apply would run the scoped public update after the source write.",
             }
-        generated_backup_root = self.server.backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{backup_stamp_now()}"
+        generated_backup_root = self.server.backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{transactions.backup_stamp_now()}"
         affected = publication_affected_for_record(self.server.source_dir, kind, record_id)
         if kind == "moment":
             cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
@@ -2393,7 +2297,7 @@ class Handler(BaseHTTPRequestHandler):
                 *cleanup["studio_json_updates"],
                 self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
             ]
-        generated_backups = backup_transaction_paths(backup_candidates, generated_backup_root, self.server.repo_root)
+        generated_backups = transactions.backup_transaction_paths(backup_candidates, generated_backup_root, self.server.repo_root)
         if kind == "work":
             success, payload = self._run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
         elif kind == "work_detail":
@@ -2438,9 +2342,9 @@ class Handler(BaseHTTPRequestHandler):
         search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
         transaction_backup_root: Path | None = None
         if not self.server.dry_run:
-            transaction_backup_root = self.server.backups_dir / f"catalogue-unpublish-moment-{backup_stamp_now()}"
-            touched_paths = unique_paths([source_path, moments_index_path, search_index_path, *cleanup["delete_paths"]])
-            transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+            transaction_backup_root = self.server.backups_dir / f"catalogue-unpublish-moment-{transactions.backup_stamp_now()}"
+            touched_paths = transactions.unique_paths([source_path, moments_index_path, search_index_path, *cleanup["delete_paths"]])
+            transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
             try:
                 payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
                 if moments_index_path.exists():
@@ -2450,11 +2354,11 @@ class Handler(BaseHTTPRequestHandler):
                         raise ValueError("moments_index.json must include a moments object")
                     moments_map.pop(record_id, None)
                     payloads[moments_index_path] = catalogue_cleanup.finalize_moments_index_payload(moments_index_payload)
-                atomic_write_many(payloads, self.server.backups_dir)
+                transactions.atomic_write_many(payloads, self.server.backups_dir)
                 deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup["delete_paths"])
                 search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
             except Exception:
-                restore_transaction_paths(touched_paths, transaction_backups)
+                transactions.restore_transaction_paths(touched_paths, transaction_backups)
                 raise
 
         return {
@@ -2511,7 +2415,7 @@ class Handler(BaseHTTPRequestHandler):
                 if blocked_paths:
                     raise ValueError("write target not allowlisted")
                 if not self.server.dry_run:
-                    source_backups = atomic_write_many(source_payloads, self.server.backups_dir)
+                    source_backups = transactions.atomic_write_many(source_payloads, self.server.backups_dir)
                     if kind != "moment":
                         self._refresh_lookup_payloads()
             public_update_ok, public_update = self._run_publication_build(
@@ -2656,24 +2560,24 @@ class Handler(BaseHTTPRequestHandler):
         backup_paths: list[Path] = []
 
         if not self.server.dry_run:
-            transaction_backup_root = self.server.backups_dir / f"{backup_label}-{backup_stamp_now()}"
-            touched_paths = unique_paths(
+            transaction_backup_root = self.server.backups_dir / f"{backup_label}-{transactions.backup_stamp_now()}"
+            touched_paths = transactions.unique_paths(
                 [
                     *payloads.keys(),
                     *(cleanup.get("delete_paths") or []),
                     *([search_index_path] if rebuild_search else []),
                 ]
             )
-            transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+            transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
             try:
-                backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many(payloads, self.server.backups_dir)
                 backup_paths.extend(transaction_backups.values())
                 deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
                 if rebuild_search:
                     search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
                 self._refresh_lookup_payloads()
             except Exception:
-                restore_transaction_paths(touched_paths, transaction_backups)
+                transactions.restore_transaction_paths(touched_paths, transaction_backups)
                 raise
 
         return {
@@ -2848,8 +2752,8 @@ class Handler(BaseHTTPRequestHandler):
                 metadata_path = self.server.moments_path.resolve()
                 if metadata_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-                transaction_backup_root = self.server.backups_dir / f"catalogue-delete-moment-{backup_stamp_now()}"
-                touched_paths = unique_paths(
+                transaction_backup_root = self.server.backups_dir / f"catalogue-delete-moment-{transactions.backup_stamp_now()}"
+                touched_paths = transactions.unique_paths(
                     [
                         metadata_path,
                         moments_index_path,
@@ -2857,7 +2761,7 @@ class Handler(BaseHTTPRequestHandler):
                         *cleanup["delete_paths"],
                     ]
                 )
-                transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+                transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
                 try:
                     payloads: Dict[Path, Dict[str, Any]] = {
                         metadata_path: moment_metadata_payload(updated_moments),
@@ -2869,12 +2773,12 @@ class Handler(BaseHTTPRequestHandler):
                             raise ValueError("moments_index.json must include a moments object")
                         moments_map.pop(record_id, None)
                         payloads[moments_index_path] = catalogue_cleanup.finalize_moments_index_payload(moments_index_payload)
-                    backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+                    backup_paths = transactions.atomic_write_many(payloads, self.server.backups_dir)
                     backup_paths.extend(transaction_backups.values())
                     deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup["delete_paths"])
                     search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
                 except Exception:
-                    restore_transaction_paths(touched_paths, transaction_backups)
+                    transactions.restore_transaction_paths(touched_paths, transaction_backups)
                     raise
             response_payload = {
                 "ok": True,
@@ -2968,7 +2872,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             updated_works = dict(works)
             updated_works[work_id] = created_record
-            backup_paths = atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3087,7 +2991,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             updated_details = dict(work_details)
             updated_details[detail_uid] = created_record
-            backup_paths = atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3199,7 +3103,7 @@ class Handler(BaseHTTPRequestHandler):
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3434,7 +3338,7 @@ class Handler(BaseHTTPRequestHandler):
                 if target_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
 
         for work_id in changed_work_ids:
             response_work_records.append({"work_id": work_id, "record": pending_work_updates[work_id]})
@@ -3668,7 +3572,7 @@ class Handler(BaseHTTPRequestHandler):
 
         backup_paths: list[Path] = []
         if not self.server.dry_run:
-            backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
 
         for work_id in changed_work_ids:
             response_work_records.append({"work_id": work_id, "record": pending_work_updates[work_id]})
@@ -3790,7 +3694,7 @@ class Handler(BaseHTTPRequestHandler):
             for path in payloads_by_path:
                 if path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-            backup_paths = atomic_write_many(payloads_by_path, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many(payloads_by_path, self.server.backups_dir)
             self._refresh_lookup_payloads()
 
         response_payload: Dict[str, Any] = {
@@ -4128,7 +4032,7 @@ class Handler(BaseHTTPRequestHandler):
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = atomic_write_many({target_path: moment_metadata_payload(updated_moments)}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: moment_metadata_payload(updated_moments)}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -4353,7 +4257,7 @@ class Handler(BaseHTTPRequestHandler):
         backup_paths: list[Path] = []
         if not self.server.dry_run:
             atomic_write_text_no_backup(target_path, text)
-            backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
 
         payload: Dict[str, Any] = {
             "ok": True,
