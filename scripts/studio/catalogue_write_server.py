@@ -270,11 +270,196 @@ ACTIVITY_PROFILE_SAVE_MOMENT = ActivityActionProfile(
     published_script_purpose_id="rebuild-published-moment-data",
     lookup_script_purpose_id="",
 )
+ACTIVITY_PROFILE_CREATE_WORK = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+    action_id="create-work",
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
+    control_selector="#catalogueWorkSave",
+    endpoint=WORK_CREATE_PATH,
+    record_family="work",
+    record_id_field="work_id",
+    script_purpose_ids=("save-canonical-data", "rebuild-lookups"),
+)
+ACTIVITY_PROFILE_CREATE_WORK_DETAIL = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
+    action_id="create-work-detail",
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
+    control_selector="#catalogueWorkDetailSave",
+    endpoint=DETAIL_CREATE_PATH,
+    record_family="work_detail",
+    record_id_field="detail_uid",
+    script_purpose_ids=("save-canonical-data", "rebuild-lookups"),
+)
+ACTIVITY_PROFILE_CREATE_SERIES = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+    action_id="create-series",
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
+    control_selector="#catalogueSeriesSave",
+    endpoint=SERIES_CREATE_PATH,
+    record_family="series",
+    record_id_field="series_id",
+    script_purpose_ids=("save-canonical-data", "rebuild-lookups"),
+)
+ACTIVITY_PUBLICATION_PROFILES: dict[tuple[str, str], ActivityActionProfile] = {
+    ("work", "publish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+        action_id="publish-work",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+        control_id="catalogueWorkPublication",
+        control_selector="#catalogueWorkPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="work",
+        record_id_field="work_id",
+        script_purpose_ids=("save-canonical-data", "rebuild-published-work-data", "rebuild-lookups", "update-search"),
+        published_step_label="Generate Work Pages",
+        published_script_purpose_id="rebuild-published-work-data",
+    ),
+    ("work", "unpublish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+        action_id="unpublish-work",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+        control_id="catalogueWorkPublication",
+        control_selector="#catalogueWorkPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="work",
+        record_id_field="work_id",
+        script_purpose_ids=("save-canonical-data", "rebuild-lookups", "clean-generated-artifacts", "update-search"),
+    ),
+    ("work_detail", "publish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
+        action_id="publish-work-detail",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
+        control_id="catalogueWorkDetailPublication",
+        control_selector="#catalogueWorkDetailPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="work_detail",
+        record_id_field="detail_uid",
+        script_purpose_ids=("save-canonical-data", "rebuild-published-work-data", "rebuild-lookups", "update-search"),
+        published_step_label="Generate Work Pages",
+        published_script_purpose_id="rebuild-published-work-data",
+    ),
+    ("work_detail", "unpublish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
+        action_id="unpublish-work-detail",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
+        control_id="catalogueWorkDetailPublication",
+        control_selector="#catalogueWorkDetailPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="work_detail",
+        record_id_field="detail_uid",
+        script_purpose_ids=("save-canonical-data", "rebuild-lookups", "clean-generated-artifacts", "update-search"),
+    ),
+    ("series", "publish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+        action_id="publish-series",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+        control_id="catalogueSeriesPublication",
+        control_selector="#catalogueSeriesPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="series",
+        record_id_field="series_id",
+        script_purpose_ids=("save-canonical-data", "rebuild-published-series-data", "rebuild-lookups", "update-search"),
+        published_step_label="Generate Work Pages",
+        published_script_purpose_id="rebuild-published-series-data",
+    ),
+    ("series", "unpublish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+        action_id="unpublish-series",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+        control_id="catalogueSeriesPublication",
+        control_selector="#catalogueSeriesPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="series",
+        record_id_field="series_id",
+        script_purpose_ids=("save-canonical-data", "rebuild-lookups", "clean-generated-artifacts", "update-search"),
+    ),
+    ("moment", "publish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
+        action_id="publish-moment",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
+        control_id="catalogueMomentPublication",
+        control_selector="#catalogueMomentPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="moment",
+        record_id_field="moment_id",
+        script_purpose_ids=("save-canonical-data", "rebuild-published-moment-data", "update-search"),
+        published_step_label="Generate Moment Pages",
+        published_script_purpose_id="rebuild-published-moment-data",
+        lookup_script_purpose_id="",
+    ),
+    ("moment", "unpublish"): ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
+        action_id="unpublish-moment",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
+        control_id="catalogueMomentPublication",
+        control_selector="#catalogueMomentPublication",
+        endpoint=PUBLICATION_APPLY_PATH,
+        record_family="moment",
+        record_id_field="moment_id",
+        script_purpose_ids=("save-canonical-data", "clean-generated-artifacts", "update-search"),
+        lookup_script_purpose_id="",
+    ),
+}
+ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
+    "work": ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+        action_id="delete-work",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+        control_id="catalogueWorkDelete",
+        control_selector="#catalogueWorkDelete",
+        endpoint=DELETE_APPLY_PATH,
+        record_family="work",
+        record_id_field="work_id",
+        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
+    ),
+    "work_detail": ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
+        action_id="delete-work-detail",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
+        control_id="catalogueWorkDetailDelete",
+        control_selector="#catalogueWorkDetailDelete",
+        endpoint=DELETE_APPLY_PATH,
+        record_family="work_detail",
+        record_id_field="detail_uid",
+        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
+    ),
+    "series": ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+        action_id="delete-series",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+        control_id="catalogueSeriesDelete",
+        control_selector="#catalogueSeriesDelete",
+        endpoint=DELETE_APPLY_PATH,
+        record_family="series",
+        record_id_field="series_id",
+        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
+    ),
+    "moment": ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
+        action_id="delete-moment",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
+        control_id="catalogueMomentDelete",
+        control_selector="#catalogueMomentDelete",
+        endpoint=DELETE_APPLY_PATH,
+        record_family="moment",
+        record_id_field="moment_id",
+        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "update-search"),
+        lookup_script_purpose_id="",
+    ),
+}
 ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_SAVE_WORK,
     ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
     ACTIVITY_PROFILE_SAVE_SERIES,
     ACTIVITY_PROFILE_SAVE_MOMENT,
+    ACTIVITY_PROFILE_CREATE_WORK,
+    ACTIVITY_PROFILE_CREATE_WORK_DETAIL,
+    ACTIVITY_PROFILE_CREATE_SERIES,
+    *ACTIVITY_PUBLICATION_PROFILES.values(),
+    *ACTIVITY_DELETE_PROFILES.values(),
 )
 
 BULK_WORK_EDITABLE_FIELDS = {
@@ -694,6 +879,47 @@ def normalize_activity_context_for_profile(
     )
 
 
+def activity_profile_for_publication(kind: str, action: str) -> ActivityActionProfile:
+    profile = ACTIVITY_PUBLICATION_PROFILES.get((kind, action))
+    if profile is None:
+        raise ValueError(f"unsupported publication activity profile: {kind}.{action}")
+    return profile
+
+
+def activity_profile_for_delete(kind: str) -> ActivityActionProfile:
+    profile = ACTIVITY_DELETE_PROFILES.get(kind)
+    if profile is None:
+        raise ValueError(f"unsupported delete activity profile: {kind}")
+    return profile
+
+
+def activity_record_groups(
+    *,
+    works: Iterable[str] = (),
+    series: Iterable[str] = (),
+    work_details: Iterable[str] = (),
+    moments: Iterable[str] = (),
+    search: Iterable[str] = (),
+) -> Dict[str, list[str]]:
+    return {
+        "works": sorted({str(value) for value in works if str(value).strip()}),
+        "series": sorted({str(value) for value in series if str(value).strip()}),
+        "work_details": sorted({str(value) for value in work_details if str(value).strip()}),
+        "moments": sorted({str(value) for value in moments if str(value).strip()}),
+        "search": sorted({str(value) for value in search if str(value).strip()}),
+    }
+
+
+def activity_record_groups_from_affected(affected: Any) -> Dict[str, list[str]]:
+    data = affected if isinstance(affected, Mapping) else {}
+    return activity_record_groups(
+        works=data.get("works") or [],
+        series=data.get("series") or [],
+        work_details=data.get("work_details") or [],
+        moments=data.get("moments") or [],
+    )
+
+
 def studio_activity_entry(
     activity_context: Mapping[str, str],
     *,
@@ -802,6 +1028,119 @@ def catalogue_build_activity_rows(
                 source_refs=catalogue_log_source_ref(),
             )
         )
+    return rows
+
+
+def catalogue_source_write_activity_rows(
+    profile: ActivityActionProfile,
+    activity_context: Mapping[str, str],
+    *,
+    now_utc: str,
+    script_purpose_id: str,
+    record_groups: Mapping[str, list[str]],
+    detail_items: list[str],
+) -> list[Dict[str, Any]]:
+    return [
+        studio_activity_entry(
+            activity_context,
+            now_utc=now_utc,
+            script_purpose_id=script_purpose_id,
+            status="completed",
+            record_groups=record_groups,
+            detail_items=detail_items,
+            source_refs=catalogue_log_source_ref(),
+        )
+    ]
+
+
+def catalogue_lookup_activity_row(
+    activity_context: Mapping[str, str],
+    *,
+    now_utc: str,
+    record_groups: Mapping[str, list[str]],
+    detail_items: list[str],
+) -> Dict[str, Any]:
+    return studio_activity_entry(
+        activity_context,
+        now_utc=now_utc,
+        script_purpose_id="rebuild-lookups",
+        status="completed",
+        record_groups=record_groups,
+        detail_items=detail_items,
+        source_refs=catalogue_log_source_ref(),
+    )
+
+
+def catalogue_cleanup_activity_rows(
+    activity_context: Mapping[str, str],
+    cleanup_result: Mapping[str, Any],
+    *,
+    now_utc: str,
+    record_groups: Mapping[str, list[str]],
+    detail_items: list[str],
+) -> list[Dict[str, Any]]:
+    rows = [
+        studio_activity_entry(
+            activity_context,
+            now_utc=now_utc,
+            script_purpose_id="clean-generated-artifacts",
+            status="completed",
+            record_groups=record_groups,
+            detail_items=detail_items,
+            source_refs=catalogue_log_source_ref(),
+        )
+    ]
+    if cleanup_result.get("catalogue_search_rebuilt") or cleanup_result.get("would_rebuild_catalogue_search"):
+        rows.append(
+            studio_activity_entry(
+                activity_context,
+                now_utc=now_utc,
+                script_purpose_id="update-search",
+                status="completed" if int(cleanup_result.get("search_exit_code") or 0) == 0 else "warning",
+                record_groups={**dict(record_groups), "search": ["catalogue"]},
+                detail_items=["Rebuilt catalogue search after generated artifact cleanup"],
+                source_refs=catalogue_log_source_ref(),
+            )
+        )
+    return rows
+
+
+def catalogue_delete_activity_rows(
+    profile: ActivityActionProfile,
+    activity_context: Mapping[str, str],
+    cleanup_result: Mapping[str, Any],
+    *,
+    now_utc: str,
+    record_groups: Mapping[str, list[str]],
+    source_detail_items: list[str],
+    cleanup_detail_items: list[str],
+) -> list[Dict[str, Any]]:
+    rows = catalogue_source_write_activity_rows(
+        profile,
+        activity_context,
+        now_utc=now_utc,
+        script_purpose_id="delete-canonical-data",
+        record_groups=record_groups,
+        detail_items=source_detail_items,
+    )
+    cleanup_rows = catalogue_cleanup_activity_rows(
+        activity_context,
+        cleanup_result,
+        now_utc=now_utc,
+        record_groups=record_groups,
+        detail_items=cleanup_detail_items,
+    )
+    rows.append(cleanup_rows[0])
+    if profile.lookup_script_purpose_id:
+        rows.append(
+            catalogue_lookup_activity_row(
+                activity_context,
+                now_utc=now_utc,
+                record_groups=record_groups,
+                detail_items=[f"Refreshed catalogue lookup data after deleting {profile.record_family.replace('_', ' ')}"],
+            )
+        )
+    rows.extend(cleanup_rows[1:])
     return rows
 
 
@@ -3947,6 +4286,16 @@ class Handler(BaseHTTPRequestHandler):
         kind = str(request["kind"])
         action = str(request["action"])
         record_id = str(request["id"])
+        activity_profile = activity_profile_for_publication(kind, action) if action in {"publish", "unpublish"} else None
+        activity_context = (
+            normalize_activity_context_for_profile(
+                body.get("activity_context"),
+                activity_profile,
+                record_id=record_id,
+            )
+            if activity_profile is not None
+            else {}
+        )
         target_record = dict(preview["target_record"])
         changed = bool(preview.get("changed"))
         source_changed = bool(preview.get("source_changed", changed))
@@ -3989,6 +4338,8 @@ class Handler(BaseHTTPRequestHandler):
             "source_saved": bool(source_changed and not self.server.dry_run) or bool(action == "unpublish" and not self.server.dry_run),
             "public_update": public_update,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = source_changed or action == "unpublish"
@@ -3996,6 +4347,58 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["backups"] = [self.server.rel_path(path) for path in source_backups]
         if not self.server.dry_run:
             now_utc = utc_now()
+            if activity_context and activity_profile is not None:
+                record_groups = activity_record_groups_from_affected(preview.get("affected"))
+                activity_rows: list[Dict[str, Any]] = []
+                if response_payload["source_saved"]:
+                    activity_rows.extend(
+                        catalogue_source_write_activity_rows(
+                            activity_profile,
+                            activity_context,
+                            now_utc=now_utc,
+                            script_purpose_id="save-canonical-data",
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"{action.replace('_', ' ').title()} {kind.replace('_', ' ')} {record_id}",
+                                f"Changed fields: {', '.join(preview.get('changed_fields') or [])}",
+                            ],
+                        )
+                    )
+                if activity_profile.lookup_script_purpose_id and response_payload["source_saved"]:
+                    activity_rows.append(
+                        catalogue_lookup_activity_row(
+                            activity_context,
+                            now_utc=now_utc,
+                            record_groups=record_groups,
+                            detail_items=[f"Refreshed catalogue lookup data after {action.replace('_', ' ')} {kind.replace('_', ' ')} {record_id}"],
+                        )
+                    )
+                if action == "publish":
+                    activity_rows.extend(
+                        catalogue_build_activity_rows(
+                            activity_profile,
+                            activity_context,
+                            public_update,
+                            published_detail=f"Updated published {kind.replace('_', ' ')} data for {record_id}",
+                            search_detail=f"Rebuilt catalogue search for {kind.replace('_', ' ')} {record_id}",
+                            fallback_record_groups=record_groups,
+                        )
+                    )
+                elif action == "unpublish":
+                    activity_rows.extend(
+                        catalogue_cleanup_activity_rows(
+                            activity_context,
+                            public_update,
+                            now_utc=now_utc,
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Cleaned generated artifacts for {kind.replace('_', ' ')} {record_id}",
+                                f"Deleted {public_update.get('deleted_files', 0)} generated/local file(s)",
+                                f"Updated {public_update.get('updated_json_files', 0)} generated JSON file(s)",
+                            ],
+                        )
+                    )
+                append_studio_activity_rows(self.server, response_payload, activity_rows)
             operation = f"{kind}.{action}"
             self.server.append_activity(
                 {
@@ -4120,6 +4523,13 @@ class Handler(BaseHTTPRequestHandler):
 
         backup_paths: list[Path] = []
         response_payload: Dict[str, Any]
+        activity_profile = activity_profile_for_delete(kind)
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            activity_profile,
+            record_id=record_id,
+        )
+        activity_affected = preview["affected"]
 
         if kind == "work":
             works_payload = load_works_payload(self.server.works_path)
@@ -4158,6 +4568,10 @@ class Handler(BaseHTTPRequestHandler):
                 "deleted": True,
                 "preview": preview,
                 "cleanup": cleanup_result,
+            }
+            activity_affected = {
+                **preview["affected"],
+                "series": sorted(set([*preview["affected"].get("series", []), *changed_series_ids])),
             }
             if not self.server.dry_run:
                 now_utc = utc_now()
@@ -4359,6 +4773,32 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["saved_at_utc"] = utc_now()
             if backup_paths:
                 response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        if activity_context:
+            response_payload["activity_context"] = activity_context
+        if activity_context and not self.server.dry_run:
+            now_utc = utc_now()
+            cleanup_result = response_payload.get("cleanup") if isinstance(response_payload.get("cleanup"), Mapping) else {}
+            updated_json_files = cleanup_result.get("updated_json_files")
+            if updated_json_files is None and cleanup_result.get("moments_index_updated"):
+                updated_json_files = 1
+            record_groups = activity_record_groups_from_affected(activity_affected)
+            append_studio_activity_rows(
+                self.server,
+                response_payload,
+                catalogue_delete_activity_rows(
+                    activity_profile,
+                    activity_context,
+                    cleanup_result,
+                    now_utc=now_utc,
+                    record_groups=record_groups,
+                    source_detail_items=[f"Deleted canonical {kind.replace('_', ' ')} source record {record_id}"],
+                    cleanup_detail_items=[
+                        f"Cleaned generated artifacts for deleted {kind.replace('_', ' ')} {record_id}",
+                        f"Deleted {cleanup_result.get('deleted_files', 0)} generated/local file(s)",
+                        f"Updated {updated_json_files or 0} generated JSON file(s)",
+                    ],
+                ),
+            )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_create(self, allowed: Optional[str]) -> None:
@@ -4368,6 +4808,11 @@ class Handler(BaseHTTPRequestHandler):
         if requested_work_id is None:
             requested_work_id = work_update.get("work_id")
         work_id = slug_id(requested_work_id)
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            ACTIVITY_PROFILE_CREATE_WORK,
+            record_id=work_id,
+        )
 
         works_payload = load_works_payload(self.server.works_path)
         works = works_payload["works"]
@@ -4406,6 +4851,8 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": changed_fields(blank_work_record, created_record),
             "record": created_record,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = True
@@ -4423,8 +4870,37 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         if not self.server.dry_run:
-            self._refresh_lookup_payloads()
+            refresh_result = self._refresh_lookup_payloads()
+            response_payload["lookup_refresh"] = refresh_result
             now_utc = utc_now()
+            if activity_context:
+                record_groups = activity_record_groups(works=[work_id])
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    [
+                        *catalogue_source_write_activity_rows(
+                            ACTIVITY_PROFILE_CREATE_WORK,
+                            activity_context,
+                            now_utc=now_utc,
+                            script_purpose_id="save-canonical-data",
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Created canonical draft work record {work_id}",
+                                f"Changed fields: {', '.join(response_payload['changed_fields'])}",
+                            ],
+                        ),
+                        catalogue_lookup_activity_row(
+                            activity_context,
+                            now_utc=now_utc,
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Refreshed catalogue lookup data after creating work {work_id}",
+                                f"Wrote {refresh_result['written_count']} lookup file(s)",
+                            ],
+                        ),
+                    ],
+                )
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "work.create"),
@@ -4448,6 +4924,11 @@ class Handler(BaseHTTPRequestHandler):
         work_id = slug_id(requested_work_id)
         detail_id = slug_id(requested_detail_id, width=3)
         detail_uid = normalize_detail_uid_value(requested_detail_uid or f"{work_id}-{detail_id}")
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            ACTIVITY_PROFILE_CREATE_WORK_DETAIL,
+            record_id=detail_uid,
+        )
 
         details_payload = load_work_details_payload(self.server.work_details_path)
         work_details = details_payload["work_details"]
@@ -4502,6 +4983,8 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": changed_fields(blank_detail_record, created_record),
             "record": created_record,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = True
@@ -4520,8 +5003,37 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         if not self.server.dry_run:
-            self._refresh_lookup_payloads()
+            refresh_result = self._refresh_lookup_payloads()
+            response_payload["lookup_refresh"] = refresh_result
             now_utc = utc_now()
+            if activity_context:
+                record_groups = activity_record_groups(works=[work_id], work_details=[detail_uid])
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    [
+                        *catalogue_source_write_activity_rows(
+                            ACTIVITY_PROFILE_CREATE_WORK_DETAIL,
+                            activity_context,
+                            now_utc=now_utc,
+                            script_purpose_id="save-canonical-data",
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Created canonical draft work detail record {detail_uid}",
+                                f"Changed fields: {', '.join(response_payload['changed_fields'])}",
+                            ],
+                        ),
+                        catalogue_lookup_activity_row(
+                            activity_context,
+                            now_utc=now_utc,
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Refreshed catalogue lookup data after creating work detail {detail_uid}",
+                                f"Wrote {refresh_result['written_count']} lookup file(s)",
+                            ],
+                        ),
+                    ],
+                )
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "work-detail.create"),
@@ -5013,6 +5525,11 @@ class Handler(BaseHTTPRequestHandler):
         if requested_series_id is None:
             requested_series_id = series_update.get("series_id")
         series_id = normalize_series_id(requested_series_id)
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            ACTIVITY_PROFILE_CREATE_SERIES,
+            record_id=series_id,
+        )
         work_updates_request = extract_series_work_updates(body)
 
         series_payload = load_series_payload(self.server.series_path)
@@ -5087,6 +5604,8 @@ class Handler(BaseHTTPRequestHandler):
             "record": created_series_record,
             "work_records": response_work_records,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = True
@@ -5105,8 +5624,40 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         if not self.server.dry_run:
-            self._refresh_lookup_payloads()
+            refresh_result = self._refresh_lookup_payloads()
+            response_payload["lookup_refresh"] = refresh_result
             now_utc = utc_now()
+            if activity_context:
+                record_groups = activity_record_groups(works=changed_work_ids, series=[series_id])
+                detail_items = [
+                    f"Created canonical draft series record {series_id}",
+                    f"Changed fields: {', '.join(response_payload['changed_fields'])}",
+                ]
+                if changed_work_ids:
+                    detail_items.append(f"Saved {len(changed_work_ids)} member work record(s)")
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    [
+                        *catalogue_source_write_activity_rows(
+                            ACTIVITY_PROFILE_CREATE_SERIES,
+                            activity_context,
+                            now_utc=now_utc,
+                            script_purpose_id="save-canonical-data",
+                            record_groups=record_groups,
+                            detail_items=detail_items,
+                        ),
+                        catalogue_lookup_activity_row(
+                            activity_context,
+                            now_utc=now_utc,
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Refreshed catalogue lookup data after creating series {series_id}",
+                                f"Wrote {refresh_result['written_count']} lookup file(s)",
+                            ],
+                        ),
+                    ],
+                )
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "series.create"),

@@ -512,20 +512,34 @@ Batch B should extend these profiles for create/delete/publication actions befor
 
 ### Batch B: Catalogue Create, Delete, And Publication Paths
 
+Status: implemented.
+
 Scope:
 
-- create work/detail/series/moment
+- create work/detail/series
 - delete work/detail/series/moment
 - publish and unpublish work/detail/series/moment
-- readiness prose/media actions where they write persistent data
+
+Moment creation is intentionally excluded from this batch. The current moment workflow creates draft moments through the staged import/apply path, not through a normal Save-in-new-mode create action, so it belongs with the import coverage in Batch C.
+
+Readiness prose/media actions also remain in Batch C because their write boundaries are closer to import, report, and utility actions than to catalogue metadata create/delete/publication.
 
 Tasks:
 
-- preserve initiating action context through preview and confirmation flows
-- emit rows for source writes, generated/public artifacts, cleanup, lookup refresh, search update, and local media cleanup
-- log confirmation-flow findings where the confirm button currently owns the write call
-- fix only those confirmation-flow issues that would misattribute activity
-- add delete/publication-focused detail modal coverage
+- `done`: preserve initiating action context through publication and delete preview/confirmation flows
+- `done`: emit rows for source writes, generated/public artifacts, cleanup, lookup refresh, search update, and local media cleanup
+- `done`: extend `assets/studio/data/activity_contract.json` for create work/detail/series, delete work/detail/series/moment, and publish/unpublish work/detail/series/moment
+- `done`: keep confirmation buttons as confirmation-only UI while passing the original route/control/action context to the apply endpoints
+- `done`: add contract/profile tests for Batch B actions and delete row ordering
+- `deferred`: moment import/create coverage moves to Batch C
+- `deferred`: readiness prose/media actions move to Batch C
+
+Batch B findings:
+
+| Route/control | User action | Observed behavior | Activity-log impact | Handling |
+|---|---|---|---|---|
+| `/studio/catalogue-moment/` `#catalogueMomentNew` / `#catalogueMomentImportApply` | `create moment` | The page creates new moments from staged body-only Markdown through import preview/apply, not through normal Save-in-new-mode metadata creation. | Treating it like work/detail/series create would give the wrong action boundary and endpoint. | `deferred`: record moment import/create with import actions in Batch C. |
+| publication and delete confirmation modals | publish/unpublish/delete | The durable write happens after a modal confirmation, but the initiating route button remains the meaningful user action. | The confirm button should not become a separate page/action in the activity log. | `done`: frontend sends one activity context through preview/apply request objects; the service normalizes it at apply time. |
 
 ### Batch C: Import, Export, Report, Audit, And Utility Actions
 

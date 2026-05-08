@@ -5,6 +5,47 @@
   },
   "entries": [
     {
+      "id": "2026-05-08T17:16:07Z-work-detail-save",
+      "time_utc": "2026-05-08T17:16:07Z",
+      "kind": "source_save",
+      "operation": "work-detail.save",
+      "status": "completed",
+      "summary": "Saved 1 work detail source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work_detail",
+      "scope_label": "work detail 00001-001",
+      "scope_id": "00001-001",
+      "affected": {
+        "works": {
+          "count": 1,
+          "sample_ids": [
+            "00001"
+          ],
+          "truncated": 0
+        },
+        "series": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_details": {
+          "count": 1,
+          "sample_ids": [
+            "00001-001"
+          ],
+          "truncated": 0
+        },
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
       "id": "2026-05-08T17:06:39Z-work-detail-save",
       "time_utc": "2026-05-08T17:06:39Z",
       "kind": "source_save",
@@ -1908,45 +1949,6 @@
           "sample_ids": [
             "009"
           ],
-          "truncated": 0
-        },
-        "work_details": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        },
-        "moments": {
-          "count": 0,
-          "sample_ids": [],
-          "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-22T21:20:48Z-work-save",
-      "time_utc": "2026-04-22T21:20:48Z",
-      "kind": "source_save",
-      "operation": "work.save",
-      "status": "completed",
-      "summary": "Saved 1 work source record.",
-      "event_label": "Saved",
-      "attention_label": "rebuild pending",
-      "needs_attention": true,
-      "scope_kind": "work",
-      "scope_label": "work 00001",
-      "scope_id": "00001",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00001"
-          ],
-          "truncated": 0
-        },
-        "series": {
-          "count": 0,
-          "sample_ids": [],
           "truncated": 0
         },
         "work_details": {

@@ -17,6 +17,33 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extended Studio activity logging to catalogue create, delete, and publication actions
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Completed Batch B for unified Studio activity logging by wiring catalogue work/detail/series create actions, work/detail/series/moment delete actions, and work/detail/series/moment publish/unpublish actions into the structured activity contract and feed.
+
+**Files changed:**
+
+- `assets/studio/data/activity_contract.json`
+- `scripts/studio/catalogue_write_server.py`
+- `assets/studio/js/studio-activity-context.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `tests/python/test_catalogue_activity_context.py`
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+Create, delete, publish, and unpublish flows now preserve the original Studio route/control context through confirmation flows and emit unified activity rows for source writes, lookup refreshes where applicable, public builds, cleanup, and search updates.
+Moment creation remains with import/apply coverage because the current workflow is staged import rather than normal create mode.
+
 ## [2026-05-08] Added Studio activity action profiles
 
 **Status:** implemented

@@ -44,6 +44,136 @@
               "when": "catalogue search rebuild is attempted"
             }
           ]
+        },
+        "create-work": {
+          "label": "create work",
+          "status": "v1-target",
+          "control_id": "catalogueWorkSave",
+          "control_selector": "#catalogueWorkSave",
+          "control_label": "Save",
+          "endpoint": "/catalogue/work/create",
+          "record_family": "work",
+          "record_id_field": "work_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers source-only draft work creation from work-editor new mode. Moment creation is excluded from this create pattern because it is currently an import/apply workflow.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "new draft work source JSON is written"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted after create"
+            }
+          ]
+        },
+        "publish-work": {
+          "label": "publish work",
+          "status": "v1-target",
+          "control_id": "catalogueWorkPublication",
+          "control_selector": "#catalogueWorkPublication",
+          "control_label": "Publish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "work",
+          "record_id_field": "work_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers publication apply after the preview/confirmation flow for one work.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "work status or related publication source data changes"
+            },
+            {
+              "id": "rebuild-published-work-data",
+              "optional": true,
+              "when": "published work output is attempted"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "unpublish-work": {
+          "label": "unpublish work",
+          "status": "v1-target",
+          "control_id": "catalogueWorkPublication",
+          "control_selector": "#catalogueWorkPublication",
+          "control_label": "Unpublish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "work",
+          "record_id_field": "work_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers unpublication apply after the preview/confirmation flow for one work.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "work status source data changes"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published work artifacts or related generated records are cleaned"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "delete-work": {
+          "label": "delete work",
+          "status": "v1-target",
+          "control_id": "catalogueWorkDelete",
+          "control_selector": "#catalogueWorkDelete",
+          "control_label": "Delete",
+          "endpoint": "/catalogue/delete-apply",
+          "record_family": "work",
+          "record_id_field": "work_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers delete apply after the preview/confirmation flow, including dependent details and generated cleanup.",
+          "script_purposes": [
+            {
+              "id": "delete-canonical-data",
+              "optional": false,
+              "when": "work source JSON and dependent source records are removed"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published artifacts, generated index records, or local media are cleaned"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
         }
       }
     },
@@ -73,6 +203,136 @@
               "id": "rebuild-published-work-data",
               "optional": true,
               "when": "published parent work output is attempted"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "create-work-detail": {
+          "label": "create work detail",
+          "status": "v1-target",
+          "control_id": "catalogueWorkDetailSave",
+          "control_selector": "#catalogueWorkDetailSave",
+          "control_label": "Save",
+          "endpoint": "/catalogue/work-detail/create",
+          "record_family": "work_detail",
+          "record_id_field": "detail_uid",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers source-only draft work-detail creation from parent-scoped new mode.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "new draft work-detail source JSON is written"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted after create"
+            }
+          ]
+        },
+        "publish-work-detail": {
+          "label": "publish work detail",
+          "status": "v1-target",
+          "control_id": "catalogueWorkDetailPublication",
+          "control_selector": "#catalogueWorkDetailPublication",
+          "control_label": "Publish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "work_detail",
+          "record_id_field": "detail_uid",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers publication apply for one work detail. Public output is parent-work scoped.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "work-detail status source data changes"
+            },
+            {
+              "id": "rebuild-published-work-data",
+              "optional": true,
+              "when": "published parent work output is attempted"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "unpublish-work-detail": {
+          "label": "unpublish work detail",
+          "status": "v1-target",
+          "control_id": "catalogueWorkDetailPublication",
+          "control_selector": "#catalogueWorkDetailPublication",
+          "control_label": "Unpublish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "work_detail",
+          "record_id_field": "detail_uid",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers unpublication apply for one work detail. Cleanup and public output are parent-work scoped.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "work-detail status source data changes"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published detail or parent-work artifacts are cleaned"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "delete-work-detail": {
+          "label": "delete work detail",
+          "status": "v1-target",
+          "control_id": "catalogueWorkDetailDelete",
+          "control_selector": "#catalogueWorkDetailDelete",
+          "control_label": "Delete",
+          "endpoint": "/catalogue/delete-apply",
+          "record_family": "work_detail",
+          "record_id_field": "detail_uid",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers delete apply for one work detail after confirmation.",
+          "script_purposes": [
+            {
+              "id": "delete-canonical-data",
+              "optional": false,
+              "when": "work-detail source JSON is removed"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published detail artifacts, generated records, or local media are cleaned"
             },
             {
               "id": "rebuild-lookups",
@@ -126,6 +386,136 @@
               "when": "catalogue search rebuild is attempted"
             }
           ]
+        },
+        "create-series": {
+          "label": "create series",
+          "status": "v1-target",
+          "control_id": "catalogueSeriesSave",
+          "control_selector": "#catalogueSeriesSave",
+          "control_label": "Save",
+          "endpoint": "/catalogue/series/create",
+          "record_family": "series",
+          "record_id_field": "series_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers source-only draft series creation from series-editor new mode.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "new draft series source JSON or member work source JSON is written"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted after create"
+            }
+          ]
+        },
+        "publish-series": {
+          "label": "publish series",
+          "status": "v1-target",
+          "control_id": "catalogueSeriesPublication",
+          "control_selector": "#catalogueSeriesPublication",
+          "control_label": "Publish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "series",
+          "record_id_field": "series_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers publication apply for one series, including any bootstrap-published member works.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "series status or related publication source data changes"
+            },
+            {
+              "id": "rebuild-published-series-data",
+              "optional": true,
+              "when": "published series/work output is attempted"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "unpublish-series": {
+          "label": "unpublish series",
+          "status": "v1-target",
+          "control_id": "catalogueSeriesPublication",
+          "control_selector": "#catalogueSeriesPublication",
+          "control_label": "Unpublish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "series",
+          "record_id_field": "series_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers unpublication apply for one series.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "series status source data changes"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published series artifacts or related generated records are cleaned"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "delete-series": {
+          "label": "delete series",
+          "status": "v1-target",
+          "control_id": "catalogueSeriesDelete",
+          "control_selector": "#catalogueSeriesDelete",
+          "control_label": "Delete",
+          "endpoint": "/catalogue/delete-apply",
+          "record_family": "series",
+          "record_id_field": "series_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers delete apply for one series and affected work membership records.",
+          "script_purposes": [
+            {
+              "id": "delete-canonical-data",
+              "optional": false,
+              "when": "series source JSON is removed or related work source JSON is updated"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published series artifacts or related generated records are cleaned"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
         }
       }
     },
@@ -162,6 +552,96 @@
               "when": "catalogue search rebuild is attempted"
             }
           ]
+        },
+        "publish-moment": {
+          "label": "publish moment",
+          "status": "v1-target",
+          "control_id": "catalogueMomentPublication",
+          "control_selector": "#catalogueMomentPublication",
+          "control_label": "Publish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "moment",
+          "record_id_field": "moment_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers publication apply for one existing moment. Moment import/create remains a separate import action.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "moment status source data changes"
+            },
+            {
+              "id": "rebuild-published-moment-data",
+              "optional": true,
+              "when": "published moment output is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "unpublish-moment": {
+          "label": "unpublish moment",
+          "status": "v1-target",
+          "control_id": "catalogueMomentPublication",
+          "control_selector": "#catalogueMomentPublication",
+          "control_label": "Unpublish",
+          "endpoint": "/catalogue/publication-apply",
+          "record_family": "moment",
+          "record_id_field": "moment_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers unpublication apply for one existing moment.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "moment status source data changes"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published moment artifacts or generated index records are cleaned"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        },
+        "delete-moment": {
+          "label": "delete moment",
+          "status": "v1-target",
+          "control_id": "catalogueMomentDelete",
+          "control_selector": "#catalogueMomentDelete",
+          "control_label": "Delete",
+          "endpoint": "/catalogue/delete-apply",
+          "record_family": "moment",
+          "record_id_field": "moment_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers delete apply for one moment after confirmation.",
+          "script_purposes": [
+            {
+              "id": "delete-canonical-data",
+              "optional": false,
+              "when": "moment source JSON is removed"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published moment artifacts, generated index records, or local media are cleaned"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
         }
       }
     }
@@ -173,6 +653,22 @@
       "artifact_families": ["source-json"],
       "detail_templates": [
         "Saved canonical work record {work_id}"
+      ]
+    },
+    "delete-canonical-data": {
+      "label": "delete canonical data",
+      "status": "v1-target",
+      "artifact_families": ["source-json"],
+      "detail_templates": [
+        "Deleted canonical source record {record_id}"
+      ]
+    },
+    "clean-generated-artifacts": {
+      "label": "clean generated artifacts",
+      "status": "v1-target",
+      "artifact_families": ["work-json", "series-json", "moment-json", "index-json", "local-media"],
+      "detail_templates": [
+        "Cleaned generated artifacts for {record_id}"
       ]
     },
     "rebuild-published-work-data": {

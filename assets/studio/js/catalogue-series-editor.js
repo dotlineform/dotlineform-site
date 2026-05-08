@@ -18,6 +18,7 @@ import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
   SERIES_READONLY_FIELDS as READONLY_FIELDS,
@@ -443,15 +444,20 @@ function buildPayload(state, workUpdates) {
   return {
     ...buildSaveSeriesPayload(state, workUpdates),
     apply_build: currentSeriesIsPublished(state),
-    activity_context: {
-      page_id: "catalogue-series",
-      action_id: "save-series",
-      route: "/studio/catalogue-series/",
-      control_id: "catalogueSeriesSave",
-      control_selector: "#catalogueSeriesSave",
-      series_id: state.currentSeriesId
-    }
+    activity_context: buildSeriesActivityContext("save-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.currentSeriesId)
   };
+}
+
+function buildSeriesActivityContext(actionId, controlId, controlSelector, seriesId) {
+  return buildStudioActivityContext({
+    pageId: "catalogue-series",
+    actionId,
+    route: "/studio/catalogue-series/",
+    controlId,
+    controlSelector,
+    recordIdField: "series_id",
+    recordId: seriesId
+  });
 }
 
 function currentSeriesIsPublished(state) {
@@ -1118,7 +1124,10 @@ async function createCurrentSeries(state) {
   setTextWithState(state.resultNode, "");
 
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createSeries, buildCreateSeriesPayload(state.draft));
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createSeries, {
+      ...buildCreateSeriesPayload(state.draft),
+      activity_context: buildSeriesActivityContext("create-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.draft.series_id)
+    });
     const seriesId = normalizeSeriesId(response && response.series_id);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!seriesId) {
@@ -1212,7 +1221,8 @@ async function applyPublicationChange(state) {
       kind: "series",
       action,
       series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash
+      expected_record_hash: state.currentRecordHash,
+      activity_context: buildSeriesActivityContext(`${action}-series`, "catalogueSeriesPublication", "#catalogueSeriesPublication", state.currentSeriesId)
     };
     const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
@@ -1291,11 +1301,13 @@ async function deleteCurrentSeries(state) {
   setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview…"));
   setTextWithState(state.resultNode, "");
   try {
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, {
+    const request = {
       kind: "series",
       series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash
-    });
+      expected_record_hash: state.currentRecordHash,
+      activity_context: buildSeriesActivityContext("delete-series", "catalogueSeriesDelete", "#catalogueSeriesDelete", state.currentSeriesId)
+    };
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
@@ -1314,11 +1326,7 @@ async function deleteCurrentSeries(state) {
       return;
     }
     setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
-    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, {
-      kind: "series",
-      series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash
-    });
+    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, request);
     const route = getStudioRoute(state.config, "catalogue_status");
     window.location.assign(route);
   } catch (error) {

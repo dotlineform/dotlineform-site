@@ -127,6 +127,41 @@ def test_batch_a_save_contexts_are_normalized() -> None:
         assert_equal(context[profile.record_id_field], record_id, f"{profile.action_id} record id")
 
 
+def test_batch_b_contexts_are_normalized() -> None:
+    scenarios = [
+        (server.ACTIVITY_PROFILE_CREATE_WORK, "09999"),
+        (server.ACTIVITY_PROFILE_CREATE_WORK_DETAIL, "00001-099"),
+        (server.ACTIVITY_PROFILE_CREATE_SERIES, "099"),
+        (server.activity_profile_for_publication("work", "publish"), "00001"),
+        (server.activity_profile_for_publication("work_detail", "unpublish"), "00001-001"),
+        (server.activity_profile_for_publication("series", "publish"), "009"),
+        (server.activity_profile_for_publication("moment", "unpublish"), "studio-test"),
+        (server.activity_profile_for_delete("work"), "00001"),
+        (server.activity_profile_for_delete("work_detail"), "00001-001"),
+        (server.activity_profile_for_delete("series"), "009"),
+        (server.activity_profile_for_delete("moment"), "studio-test"),
+    ]
+    for profile, record_id in scenarios:
+        context = normalize_for_profile(
+            {
+                "page_id": profile.page_id,
+                "action_id": profile.action_id,
+                "route": profile.route,
+                "control_id": profile.control_id,
+                "control_selector": profile.control_selector,
+                profile.record_id_field: record_id,
+                "correlation_id": f"{profile.action_id}:{record_id}",
+            },
+            profile,
+            record_id,
+        )
+        assert_equal(context["page_id"], profile.page_id, f"{profile.action_id} page_id")
+        assert_equal(context["action_id"], profile.action_id, f"{profile.action_id} action_id")
+        assert_equal(context["route"], profile.route, f"{profile.action_id} route")
+        assert_equal(context["control_id"], profile.control_id, f"{profile.action_id} control_id")
+        assert_equal(context[profile.record_id_field], record_id, f"{profile.action_id} record id")
+
+
 def test_activity_profiles_match_registry() -> None:
     contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
     pages = contract["pages"]
@@ -213,14 +248,61 @@ def test_catalogue_build_activity_rows_follow_attempted_steps() -> None:
     assert_equal(rows[1]["record_groups"]["search"], ["catalogue"], "search scope")
 
 
+def test_delete_activity_rows_follow_profile_order() -> None:
+    profile = server.activity_profile_for_delete("work")
+    context = normalize_for_profile(
+        {
+            "page_id": profile.page_id,
+            "action_id": profile.action_id,
+            "route": profile.route,
+            "control_id": profile.control_id,
+            "work_id": "00001",
+            "correlation_id": "delete-work:00001",
+        },
+        profile,
+        "00001",
+    )
+    rows = server.catalogue_delete_activity_rows(
+        profile,
+        context,
+        {
+            "deleted_files": 2,
+            "updated_json_files": 3,
+            "catalogue_search_rebuilt": True,
+            "search_exit_code": 0,
+        },
+        now_utc="2026-05-08T12:00:00Z",
+        record_groups={"works": ["00001"], "series": [], "work_details": [], "moments": [], "search": []},
+        source_detail_items=["Deleted canonical work source record 00001"],
+        cleanup_detail_items=["Cleaned generated artifacts for deleted work 00001"],
+    )
+    assert_equal(
+        [row["script_purpose_id"] for row in rows],
+        ["delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"],
+        "delete row purpose order",
+    )
+    assert_equal([row["status"] for row in rows], ["completed", "completed", "completed", "completed"], "delete row statuses")
+    assert_equal(rows[3]["record_groups"]["search"], ["catalogue"], "delete search scope")
+
+
+def test_moment_create_stays_out_of_batch_b_contract() -> None:
+    contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
+    moment_actions = contract["pages"]["catalogue-moment"]["actions"]
+    if "create-moment" in moment_actions:
+        raise AssertionError("moment creation belongs to import/apply coverage, not Batch B create-mode coverage")
+
+
 def main() -> None:
     test_missing_context_is_optional()
     test_save_work_context_is_normalized()
     test_server_assigns_missing_correlation_id()
     test_batch_a_save_contexts_are_normalized()
+    test_batch_b_contexts_are_normalized()
     test_activity_profiles_match_registry()
     test_context_must_match_expected_action_and_record()
     test_catalogue_build_activity_rows_follow_attempted_steps()
+    test_delete_activity_rows_follow_profile_order()
+    test_moment_create_stays_out_of_batch_b_contract()
     print("Catalogue activity context tests OK")
 
 

@@ -15,6 +15,7 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import { buildSaveModeText, utcTimestamp } from "./tag-studio-save.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 const EDITABLE_FIELDS = [
   { key: "title", label: "title", type: "text" },
@@ -111,6 +112,18 @@ function markRouteReady(state, ready) {
 
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_moment_editor.${key}`, fallback, tokens);
+}
+
+function buildMomentActivityContext(actionId, controlId, controlSelector, momentId) {
+  return buildStudioActivityContext({
+    pageId: "catalogue-moment",
+    actionId,
+    route: "/studio/catalogue-moment/",
+    controlId,
+    controlSelector,
+    recordIdField: "moment_id",
+    recordId: momentId
+  });
 }
 
 function stableStringify(value) {
@@ -940,14 +953,7 @@ async function saveMoment(state) {
       expected_record_hash: state.expectedRecordHash,
       record: validation.draft,
       apply_build: applyBuild,
-      activity_context: {
-        page_id: "catalogue-moment",
-        action_id: "save-moment",
-        route: "/studio/catalogue-moment/",
-        control_id: "catalogueMomentSave",
-        control_selector: "#catalogueMomentSave",
-        moment_id: state.currentMomentId
-      }
+      activity_context: buildMomentActivityContext("save-moment", "catalogueMomentSave", "#catalogueMomentSave", state.currentMomentId)
     });
     state.currentRecord = payload.record || validation.draft;
     state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
@@ -1011,7 +1017,8 @@ async function applyPublicationChange(state) {
       kind: "moment",
       action,
       moment_id: state.currentMomentId,
-      expected_record_hash: state.expectedRecordHash
+      expected_record_hash: state.expectedRecordHash,
+      activity_context: buildMomentActivityContext(`${action}-moment`, "catalogueMomentPublication", "#catalogueMomentPublication", state.currentMomentId)
     };
     const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
@@ -1174,11 +1181,13 @@ async function deleteMoment(state) {
   setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview..."), "pending");
   setTextWithState(state.resultNode, "");
   try {
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, {
+    const request = {
       kind: "moment",
       moment_id: state.currentMomentId,
-      expected_record_hash: state.expectedRecordHash
-    });
+      expected_record_hash: state.expectedRecordHash,
+      activity_context: buildMomentActivityContext("delete-moment", "catalogueMomentDelete", "#catalogueMomentDelete", state.currentMomentId)
+    };
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
@@ -1197,11 +1206,7 @@ async function deleteMoment(state) {
       return;
     }
     setTextWithState(state.statusNode, t(state, "delete_status_deleting", "Deleting source record..."), "pending");
-    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, {
-      kind: "moment",
-      moment_id: state.currentMomentId,
-      expected_record_hash: state.expectedRecordHash
-    });
+    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, request);
     const route = getStudioRoute(state.config, "catalogue_status");
     window.location.assign(route);
   } catch (error) {

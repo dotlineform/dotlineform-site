@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-75900522abde8ab1b081efa64ee1ad36",
-    "generated_at_utc": "2026-05-08T17:06:39Z",
+    "version": "blake2b-05de5eedeb79c078b23c6b446883907c",
+    "generated_at_utc": "2026-05-08T17:16:07Z",
     "work_id": "00001",
     "count": 17
   },
@@ -31,7 +31,7 @@
           "work_id": "00001",
           "detail_id": "001",
           "detail_uid": "00001-001",
-          "title": "a poem divided into 4 parts - end (1)",
+          "title": "a poem divided into 4 parts - end 1",
           "width_px": 4032,
           "height_px": 2268
         },
