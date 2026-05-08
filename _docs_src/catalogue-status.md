@@ -92,6 +92,6 @@ What it is not for:
 ## Related References
 
 - **[Studio](/docs/?scope=studio&doc=studio)**
-- **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
+- **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
 - **[Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)**
 - **[Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)**

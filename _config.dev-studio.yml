@@ -9,8 +9,6 @@ exclude:
   - tests
   - var
   - logs
-  - assets/studio/data/build_activity.json
-  - assets/studio/data/catalogue_activity.json
   - assets/studio/data/catalogue/
   - assets/studio/data/catalogue_lookup/
   - assets/data/docs/scopes/

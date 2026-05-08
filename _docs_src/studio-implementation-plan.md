@@ -13,17 +13,17 @@ Archived: current Studio behavior now lives in [Studio](/docs/?scope=studio&doc=
 
 This document defines the next phased implementation pass after Phases 0-15 of the JSON-led catalogue pipeline.
 
-[Phase 1. Studio Shell And Navigation Foundation](#phase-1-studio-shell-and-navigation-foundation)  
-[Phase 2. Moments Create And Import Workflow](#phase-2-moments-create-and-import-workflow)  
-[Phase 3. Catalogue Workflow And UI Consistency](#phase-3-catalogue-workflow-and-ui-consistency)  
-[Phase 4. Catalogue Activity And Build Reporting](#phase-4-catalogue-activity-and-build-reporting)  
-[Phase 5. Media And Prose Readiness](#phase-5-media-and-prose-readiness)  
-[Phase 6. Preview Media In Studio](#phase-6-preview-media-in-studio)  
-[Phase 7. Optional Canonical Prose Management](#phase-7-optional-canonical-prose-management)  
+[Phase 1. Studio Shell And Navigation Foundation](#phase-1-studio-shell-and-navigation-foundation)
+[Phase 2. Moments Create And Import Workflow](#phase-2-moments-create-and-import-workflow)
+[Phase 3. Catalogue Workflow And UI Consistency](#phase-3-catalogue-workflow-and-ui-consistency)
+[Phase 4. Studio Activity And Build Reporting](#phase-4-activity-and-build-reporting)
+[Phase 5. Media And Prose Readiness](#phase-5-media-and-prose-readiness)
+[Phase 6. Preview Media In Studio](#phase-6-preview-media-in-studio)
+[Phase 7. Optional Canonical Prose Management](#phase-7-optional-canonical-prose-management)
 [Phase 8. Media Local Action Surfaces](#phase-8-media-local-action-surfaces)
-[Phase 9. Internal Generator Refactor](#phase-9-internal-generator-refactor)  
-[Phase 10. Generator Cleanup And Simplification](#phase-10-generator-cleanup-and-simplification)   
-[Phase 11. End-To-End Testing Checklist And Execution Prep](#phase-11-end-to-end-testing-checklist-and-execution-prep)  
+[Phase 9. Internal Generator Refactor](#phase-9-internal-generator-refactor)
+[Phase 10. Generator Cleanup And Simplification](#phase-10-generator-cleanup-and-simplification)
+[Phase 11. End-To-End Testing Checklist And Execution Prep](#phase-11-end-to-end-testing-checklist-and-execution-prep)
 [Phase 12. Cloud-Native Media Target](#phase-12-cloud-native-media-target)
 
 It is now a wider Studio roadmap rather than a catalogue-only refinement note. Catalogue remains the main delivery thread, but Studio shell, navigation, and adjacent domain planning now need to move in parallel so work can continue across the product without waiting for catalogue to become fully complete or fully tested first.
@@ -190,7 +190,7 @@ Delivered:
 4. Added targeted rebuild support in `catalogue_json_build.py` for `--moment-file`.
 5. Later source-model cleanup moved moment metadata ownership to `assets/studio/data/catalogue/moments.json`; publish state and `published_date` are now canonical source metadata rather than prose front matter.
 6. Kept missing source images non-blocking and left srcset generation out of scope.
-7. Added first-pass build and catalogue activity reporting for moment imports.
+7. Added first-pass Studio Activity reporting for moment imports.
 8. Updated Studio/docs references so the single Moment editor is now the documented entry flow.
 
 Verification:
@@ -266,7 +266,7 @@ UI elements should mirror existing site pages rather than introduce new patterns
 Task list:
 
 1. Rework the Catalogue dashboard entry area from card panels into grouped directional link lists, with labels such as `Work Editor`, `Series Editor`, and `Import Moment`.
-2. Audit all current Catalogue routes and make sure every live page is reachable from the dashboard, including direct signposts to routes such as `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-status/`, `/studio/catalogue-activity/`, `/studio/build-activity/`, `/studio/bulk-add-work/`, and `/studio/catalogue-moment-import/`.
+2. Audit all current Catalogue routes and make sure every live page is reachable from the dashboard, including direct signposts to routes such as `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-status/`, `/studio/activity/`, `/studio/activity/`, `/studio/bulk-add-work/`, and `/studio/catalogue-moment-import/`.
 3. Define one shared pattern for Catalogue page headers so each page consistently shows the page title, current context, status/result messaging, and directional links back to the dashboard or next likely action.
 4. Normalize action wording across Catalogue pages so create, save, rebuild, import, preview, delete, and navigation actions use one consistent verb set and button hierarchy.
 5. Refactor metadata forms to a single-column vertical stack, with labels aligned on the left and input controls using shared widths, heights, and spacing.
@@ -288,7 +288,7 @@ Risks:
 
 - a subjective polish pass can consume time without improving workflow clarity
 
-### Phase 4. Catalogue Activity And Build Reporting
+### Phase 4. Studio Activity And Build Reporting
 
 Status:
 
@@ -297,7 +297,7 @@ Status:
 Scope:
 
 - improve operational visibility for save, create, import, delete, bulk-edit, and rebuild flows
-- clarify the separation between Catalogue Activity and Build Activity
+- clarify the separation between source-side and build-side activity before the unified Studio Activity replacement
 - strengthen links back to affected records and next actions
 
 Out of scope:
@@ -311,16 +311,16 @@ Deliverables:
 - clearer surfaced rebuild consequences after scoped runs
 - more direct links from activity and build rows into affected records or follow-on actions
 - cleaner list UI, more consistent with other Studio lists with sortable column headers, split 'Scoped rebuild' and 'Saved' into a status column, separate column for the actual scope (work detail xxx, works xxx...)
-- stronger conventions for what belongs in Catalogue Activity versus Build Activity
+- stronger conventions for what belongs in Studio Activity versus Studio Activity
 
 Delivered:
 
-1. Separated the two activity feeds more cleanly so `Catalogue Activity` now tracks source-side events while `Build Activity` carries rebuild/run outcomes.
+1. Separated the two activity feeds more cleanly so `Studio Activity` now tracks source-side events while `Studio Activity` carries rebuild/run outcomes.
 2. Reworked both pages from expandable narrative cards into sortable operational lists with separate columns for type, status, scope, result or follow-up, and next action.
 3. Added explicit scope labels to both feeds so rows now identify concrete targets such as `work 00460`, `work detail 00460-005`, or `moment keys`.
 4. Added direct row-level links from activity rows into the relevant editor or follow-on route where a practical next step exists.
-5. Tightened `Catalogue Activity` so source saves, imports, deletes, and validation failures remain visible without mixing in `build.apply` rows.
-6. Tightened `Build Activity` so scoped rebuild rows surface their scope and search-rebuild outcome more directly.
+5. Tightened `Studio Activity` so source saves, imports, deletes, and validation failures remain visible without mixing in `build.apply` rows.
+6. Tightened `Studio Activity` so scoped rebuild rows surface their scope and search-rebuild outcome more directly.
 7. Extended source-activity feed shaping so work-file and work-link events can identify their own record scope rather than only the parent work.
 
 Verification:
@@ -338,18 +338,18 @@ Risks:
 
 Task list:
 
-1. Review the current `catalogue_activity.json` and `build_activity.json` entry shapes and define one clear responsibility boundary for each page, so source-write events stay on Catalogue Activity and rebuild/run outcomes stay on Build Activity.
-2. Decide which event families should appear in Catalogue Activity by default, covering save, create, import, delete, bulk-edit, validation failure, and any source-side no-op or conflict outcomes that materially affect operator follow-up.
-3. Decide which run families should appear in Build Activity by default, covering scoped rebuilds, wider catalogue builds, no-op runs, failed runs, and any planner/build modes that still need to remain visible during the transition from older labels.
+1. Review the current `activity_log.json` and `activity_log.json` entry shapes and define one clear responsibility boundary for each page, so source-write events stay on Studio Activity and rebuild/run outcomes stay on Studio Activity.
+2. Decide which event families should appear in Studio Activity by default, covering save, create, import, delete, bulk-edit, validation failure, and any source-side no-op or conflict outcomes that materially affect operator follow-up.
+3. Decide which run families should appear in Studio Activity by default, covering scoped rebuilds, wider catalogue builds, no-op runs, failed runs, and any planner/build modes that still need to remain visible during the transition from older labels.
 4. Replace any overly prose-heavy row summaries with clearer structured columns so the main list surfaces answer `when`, `what happened`, `what scope`, and `what next` at a glance.
 5. Rework both activity pages onto the shared minimal full-width Studio list pattern, with sortable column headers and column naming that matches the rest of the Catalogue UI.
 6. Split current mixed status text into clearer columns, so labels such as `Saved` and `Scoped rebuild` are treated as event/run type or status rather than bundled into one ambiguous summary field.
 7. Add a dedicated scope column that explicitly shows what the action targeted, for example `work 01234`, `work detail 01234-002`, `series 009`, `moment keys`, or `bulk import`.
 8. Define one compact convention for showing affected ids: keep counts visible by default, sample ids only where useful, and avoid expanding either page into an unbounded record dump.
-9. Add direct row-level links back into the relevant Catalogue routes, including focused editor pages, Catalogue Status, Build Activity, or other next-step destinations where the event naturally leads the user onward.
+9. Add direct row-level links back into the relevant Catalogue routes, including focused editor pages, Catalogue Status, Studio Activity, or other next-step destinations where the event naturally leads the user onward.
 10. Make sure activity rows surface whether further action is still needed, for example rebuild pending after a source save, validation follow-up after a failed write, or record review after a targeted import.
-11. Tighten Build Activity so scoped JSON rebuild consequences are easier to read, including which records rebuilt, whether search regenerated, and whether the run was effectively a no-op.
-12. Tighten Catalogue Activity so bulk add and moment import activity stays aggregated by counts and summaries, not as a long list of per-record write rows.
+11. Tighten Studio Activity so scoped JSON rebuild consequences are easier to read, including which records rebuilt, whether search regenerated, and whether the run was effectively a no-op.
+12. Tighten Studio Activity so bulk add and moment import activity stays aggregated by counts and summaries, not as a long list of per-record write rows.
 13. Review whether any current event data needs small backend feed changes to support the new columns and links, and document those schema additions before changing the page UI.
 14. Run a final consistency pass across both activity pages so they feel like paired operational surfaces rather than two unrelated report pages with overlapping language.
 
@@ -542,13 +542,13 @@ Task list:
 5. Review the current derivative conventions already assumed by the public site and Studio previews, including thumb sizes, srcset variants, suffixes, and work-detail handling, and treat those as the initial compatibility target.
 6. Define how work, detail, and moment records signal media-generation eligibility, including what minimum metadata and source-file conditions must be present before automatic derivative generation should run.
 7. Extend the backend build path so local derivative generation can be invoked as a bounded sub-step of the existing rebuild flow rather than as a separate opaque orchestration layer.
-8. Add explicit result reporting for that media-generation sub-step, including generated outputs, no-op outcomes, missing-source cases, and failures, so Build Activity can report media work clearly.
+8. Add explicit result reporting for that media-generation sub-step, including generated outputs, no-op outcomes, missing-source cases, and failures, so Studio Activity can report media work clearly.
 9. Update media readiness logic so it can distinguish between `ready because derivatives exist`, `pending because generation has not yet run`, and `blocked because required source inputs are missing`.
 10. Decide whether any lightweight Studio action is still needed for exceptional cases, such as a manual rerun of local derivative generation for one work or one detail, without making that the default path.
 11. Confirm that derivative generation for works, work details, and moments follows the same operational pattern where possible, while still allowing kind-specific output paths and naming.
 12. Review whether generated thumbnails and other local derivatives should be written directly into their final repo locations during build, with no extra staging area or post-build copy step.
 13. Add verification coverage for media generation outcomes, including a normal generated case, a no-op rebuild where assets are already current, and a blocked case where source media is missing.
-14. Run a final UX pass across Build Activity and readiness surfaces so automatic local media generation is visible and understandable without reintroducing the hidden complexity of the old pipeline.
+14. Run a final UX pass across Studio Activity and readiness surfaces so automatic local media generation is visible and understandable without reintroducing the hidden complexity of the old pipeline.
 
 Implemented:
 
@@ -559,7 +559,7 @@ Implemented:
 5. Extended build preview so work, detail, and series editors now surface whether local media is current, pending generation, blocked by missing source input, or unavailable because local source roots are not configured.
 6. Reworked work and detail media readiness so `ready` now means both source media and local thumbnails are current, while `pending_generation` means source media exists but local thumbnails still need to be generated or refreshed.
 7. Updated detail rebuild apply calls so focused detail rebuilds can trigger detail-local thumbnail generation rather than only the parent work page rebuild.
-8. Extended scoped build results and Build Activity entries so local media generation now reports affected work, work-detail, and moment ids alongside the page/search rebuild outcome.
+8. Extended scoped build results and Studio Activity entries so local media generation now reports affected work, work-detail, and moment ids alongside the page/search rebuild outcome.
 
 ### Phase 9. Internal Generator Refactor
 
@@ -610,7 +610,7 @@ Task list:
 8. Add before/after comparison coverage for key generated artifacts, including work pages, series pages, per-work JSON payloads, aggregate indexes, and any other outputs touched by the scoped rebuild flow.
 9. Define what differences are acceptable in those comparisons, for example timestamps or deliberately normalized metadata ordering, and treat any other drift as a refactor failure until explained.
 10. Make sure the refactored JSON-native path still respects scoped rebuild boundaries, so focused work or series rebuilds do not accidentally widen back into unnecessary generator output.
-11. Review how the refactor interacts with the newly added local media/build-preview phases, and confirm that the generator change does not silently break readiness, preview assumptions, or Build Activity reporting.
+11. Review how the refactor interacts with the newly added local media/build-preview phases, and confirm that the generator change does not silently break readiness, preview assumptions, or Studio Activity reporting.
 12. Keep explicit notes on any remaining workbook-shaped compatibility code after the refactor lands, so Phase 10 starts with a known cleanup list rather than another discovery pass.
 13. Run a final artifact-equivalence pass on representative work, series, detail, and moment scopes before calling the phase complete.
 14. Update the plan/docs trail so the repository clearly states that the live JSON rebuild path is now generator-native and no longer depends on materializing a temporary workbook.
@@ -746,12 +746,12 @@ Task list:
 1. Create one separate end-to-end checklist document rather than continuing to grow this implementation plan, so test execution has its own stable working surface.
 2. Start the checklist with explicit environment prerequisites, including local Studio services, projects-source configuration, repo-local media staging writability, and any required repo-local source files or generated data that must exist before testing begins.
 3. Record the exact split between `manual browser testing` and `Codex-runnable verification`, so each step is clearly owned and the checklist does not drift into ambiguous partial coverage.
-4. Map every major implemented Studio surface to at least one checklist scenario, including Studio shell/navigation, Catalogue dashboard routing, status/activity pages, build activity, work editor, detail editor, series editor, work-file/work-link editors, bulk import, and moments import.
+4. Map every major implemented Studio surface to at least one checklist scenario, including Studio shell/navigation, Catalogue dashboard routing, status/activity pages, Studio Activity, work editor, detail editor, series editor, work-file/work-link editors, bulk import, and moments import.
 5. Add create/edit/save scenarios for works, details, series, work files, and work links, with explicit expected source-write outcomes and expected rebuild follow-up where applicable.
 6. Add a moments-specific scenario that covers explicit staged prose preview, metadata entry, import/apply, missing-image tolerance, and the expected public/runtime follow-through for one moment.
 7. Add bulk-import scenarios for both `works` and `work_details` modes, including duplicate handling, blocked-row handling, and the expected one-way JSON import behavior.
 8. Add delete-flow scenarios for the implemented delete preview/apply surfaces, including validation blocking where source integrity would be broken and the expected rebuild scope after deletion.
-9. Add build/reporting scenarios that confirm scoped rebuild preview/apply behavior, Build Activity logging, Catalogue Activity logging, and the visibility of local media generation and readiness state.
+9. Add build/reporting scenarios that confirm scoped rebuild preview/apply behavior, Studio Activity logging, and the visibility of local media generation and readiness state.
 10. Add readiness and preview checks for prose/media on work, series, and detail pages, including at least one `ready`, one `missing file`, and one `missing metadata` or `pending generation` case where practical.
 11. Include explicit public-site verification points after key Studio actions, for example opening the public work page, series page, moment page, or related runtime JSON-backed surface to confirm the expected output actually changed.
 12. Add a lightweight responsive pass covering the key Studio pages on both desktop and mobile widths, focusing on navigation, action buttons, form layout, current-record panels, and operational tables.

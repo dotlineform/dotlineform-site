@@ -56,8 +56,7 @@ Current route inventory:
 - `studio/analytics/index.md`
 - `studio/search/index.md`
 - `studio/catalogue-status/index.md`
-- `studio/catalogue-activity/index.md`
-- `studio/build-activity/index.md`
+- `studio/activity/index.md`
 - `studio/docs-broken-links/index.md`
 - `studio/docs-import/index.md`
 - `studio/bulk-add-work/index.md`
@@ -76,7 +75,7 @@ Current route inventory:
 Current page-level doc links:
 
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
-- Build Activity -> `/docs/?scope=studio&doc=build-activity`
+- Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
 - Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
 - Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
 - Docs Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
@@ -117,14 +116,13 @@ Shared Studio runtime and wiring currently live in:
 
 Current page controllers:
 
-- `assets/studio/js/build-activity.js`
+- `assets/studio/js/activity-log.js`
 - `assets/studio/js/docs-broken-links.js`
 - `assets/studio/js/studio-audits.js`
 - `assets/studio/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-status.js`
-- `assets/studio/js/catalogue-activity.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
@@ -176,7 +174,7 @@ Optional route detail attributes:
 - `data-studio-service`
 - `data-studio-record-loaded`
 
-`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work, work-detail, series, and moment editors plus Build Activity, Bulk Add Work, Catalogue Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, Project State, Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, Tag Registry, Studio landing, domain dashboards, and UI catalogue reference pages have adopted the contract.
+`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work, work-detail, series, and moment editors plus Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, Project State, Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, Tag Registry, Studio landing, domain dashboards, and UI catalogue reference pages have adopted the contract.
 
 Dashboard routes use `assets/studio/js/studio-dashboard.js` to set `data-studio-busy="true"` while metric hydration runs, then mark the route ready after the metric reads settle. Static landing and reference routes use `assets/studio/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
 
@@ -220,14 +218,13 @@ What it does not start:
 
 Current local generated Studio feeds surfaced through this runtime:
 
-- build activity via `GET /catalogue/read?key=build_activity`
-- catalogue activity via `GET /catalogue/read?key=catalogue_activity`
+- unified Studio activity via `GET /catalogue/read?key=activity_log`
 
 Current mutable catalogue data surfaced through this runtime:
 
 - catalogue source records and catalogue lookup/search records are read from `scripts/studio/catalogue_write_server.py`
-- Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, the two activity feed JSON files, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
-- catalogue editors, Catalogue Drafts, and the activity pages show their existing unavailable/load-failed states instead of falling back to stale static source JSON
+- Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `assets/studio/data/activity_log.json`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
+- catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of falling back to stale static source JSON
 
 Current localhost docs-maintenance integration surfaced through this runtime:
 
@@ -254,8 +251,6 @@ After Phase 3, the current Catalogue shell conventions are:
 - Catalogue Drafts is a sortable draft-record list and links directly into work, series, detail, and moment editors
 - work-owned downloads and links are edited from the work editor rather than standalone child-record pages
 
-After Phase 4, the current operational reporting conventions are:
+Current operational reporting conventions are:
 
-- `Catalogue Activity` is the source-side activity surface for saves, creates, deletes, imports, and validation failures
-- `Build Activity` is the rebuild/run surface for scoped and wider catalogue builds
-- both pages now use sortable operational lists rather than expandable narrative cards
+- `Studio Activity` is the unified surface for covered Studio save, create, delete, publication, import, report, audit, tag, docs, lookup, search, and build effects

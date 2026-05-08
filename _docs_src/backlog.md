@@ -30,7 +30,7 @@ Detailed search architecture proposals stay in:
 - Decide CI policy for warnings vs errors (`--strict` currently errors-only).
 - Add a short contributor checklist for when to run scoped vs full audit checks.
 - Add a local front-end for selected repo scripts so common dry-run/write flows can be run without dropping to the terminal.
-- Derive a public-facing recent-updates feed from the new build-activity journal, with separate filtering rules from the curator-facing Studio activity page.
+- Derive a public-facing recent-updates feed from the new activity journal, with separate filtering rules from the curator-facing Studio activity page.
 - Add automated tests for audit script behaviors (fixtures plus expected findings).
 - Extend orphan checks to additional optional media or content domains as needed.
 - Review whether route-level shared values such as Studio `studio_page_doc` links should move out of page front matter if more shared route metadata is added.

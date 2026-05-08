@@ -28,4 +28,4 @@ Current references:
 
 - [Build Catalogue JSON](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
-- [Catalogue Build Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)

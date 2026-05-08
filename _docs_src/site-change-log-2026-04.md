@@ -12,30 +12,28 @@ This archive contains April 2026 site and non-search Studio change-log entries.
 
 Return to [Site Change Log](/docs/?scope=studio&doc=site-change-log).
 
-## [2026-04-30] Moved Studio activity feeds behind the local read service
+## [2026-04-30] Moved Studio activity reads behind the local read service
 
 **Status:** implemented
 
 **Area:** Studio / local catalogue runtime
 
 **Summary:**
-Build Activity and Catalogue Activity now read their generated feed JSON through `GET /catalogue/read` instead of fetching the files directly from Jekyll-served assets.
+The Studio activity surface reads its generated JSON through `GET /catalogue/read` instead of fetching the file directly from Jekyll-served assets.
 
 **Reason:**
-Routine source saves and scoped builds update `assets/studio/data/catalogue_activity.json`, `assets/studio/data/build_activity.json`, and local generator logs. Those writes are useful Studio runtime state, but they should not wake Jekyll for an extra regeneration pass.
+Routine source saves and scoped builds update `assets/studio/data/activity_log.json` and local generator logs. Those writes are useful Studio runtime state, but they should not wake Jekyll for an extra regeneration pass.
 
 **Effect:**
-The Catalogue Write Server now serves allowlisted `build_activity` and `catalogue_activity` read keys. Jekyll excludes the two activity feed files and `logs/`, so save/build activity updates remain visible in Studio while avoiding watcher churn. The tradeoff matches other mutable Studio reads: these activity pages expect the local Studio runtime rather than a stale static fallback.
+The Catalogue Write Server now serves the allowlisted `activity_log` read key. Jekyll excludes the mutable activity file and `logs/`, so save and build updates remain visible in Studio while avoiding watcher churn. The tradeoff matches other mutable Studio reads: the activity page expects the local Studio runtime rather than a stale static fallback.
 
 **Affected files/docs:**
 
 - `_config.yml`
-- `assets/studio/js/build-activity.js`
-- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/activity.js`
 - `assets/studio/js/studio-data.js`
 - `scripts/studio/catalogue_write_server.py`
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
-- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Studio Data Models](/docs/?scope=studio&doc=data-models-studio)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
@@ -343,7 +341,7 @@ Reduced `/studio/catalogue/` to catalogue counts, compact Edit and Review route 
 The Catalogue dashboard had accumulated explanatory text, guidance links, and workflow summary cards that slowed down routine navigation.
 
 **Effect:**
-The dashboard no longer shows descriptive intro, route descriptions, guidance, or workflow summary cards. It now shows series, works, work-detail, and moment counts; two fixed-width route columns for `Edit` and `Review`; and an `Admin` section with stacked links to Catalogue Activity and Build Activity.
+The dashboard no longer shows descriptive intro, route descriptions, guidance, or workflow summary cards. It now shows series, works, work-detail, and moment counts; two fixed-width route columns for `Edit` and `Review`; and an `Admin` section with stacked activity-report links.
 
 **Affected files/docs:**
 
@@ -373,8 +371,8 @@ The Moment editor now has a `New` command beside `Open`. `New` switches the shar
 - `studio/catalogue-moment-import/index.md`
 - `studio/catalogue/index.md`
 - `assets/studio/js/catalogue-moment-editor.js`
-- `assets/studio/js/catalogue-activity.js`
-- `assets/studio/js/build-activity.js`
+- `assets/studio/js/activity.js`
+- `assets/studio/js/activity.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
@@ -3539,16 +3537,16 @@ Refined the catalogue admin UI with more consistent navigation, layout, and repo
 As more Studio routes were added, the catalogue domain needed a clearer internal navigation model and better operational visibility.
 
 **Effect:**
-The Catalogue dashboard now uses grouped directional links, catalogue-domain pages share a cross-linked page nav, metadata editors use the left-label single-column layout, Catalogue Status sorts by header, work-file and work-link editors can be opened from dashboard search, `Catalogue Activity` remains source-side, `Build Activity` now records rebuild outcomes, and both pages use sortable operational lists with explicit scope/result columns and links back into the relevant workflow routes.
+The Catalogue dashboard now uses grouped directional links, catalogue-domain pages share a cross-linked page nav, metadata editors use the left-label single-column layout, Catalogue Status sorts by header, work-file and work-link editors can be opened from dashboard search, `Studio Activity` remains source-side, `Studio Activity` now records rebuild outcomes, and both pages use sortable operational lists with explicit scope/result columns and links back into the relevant workflow routes.
 
 **Affected files/docs:**
 - `/studio/catalogue/`
 - `/studio/catalogue-status/`
-- `/studio/catalogue-activity/`
-- `/studio/build-activity/`
+- `/studio/activity/`
+- `/studio/activity/`
 - [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
-- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 
 **Notes:**
 This covers the Phase 3 and Phase 4 UI/reporting refinements in the Studio plan.
@@ -3566,14 +3564,14 @@ Extended Studio to report source readiness, show focused preview media, and surf
 Editing metadata alone was not enough once Studio started coordinating source prose, source media, generated previews, and local derivative generation.
 
 **Effect:**
-Work, series, and detail editors now surface source readiness in the summary rail, work and series offer narrow `Import prose + rebuild` actions, detail preview resolves its own source media path, work and detail editors show compact current-record previews, work-detail rows on the work editor use thumbnail-led navigation, scoped rebuilds run a bounded local thumbnail-generation step for works, work details, and moments, and Build Activity records generated local media alongside rebuild outcomes.
+Work, series, and detail editors now surface source readiness in the summary rail, work and series offer narrow `Import prose + rebuild` actions, detail preview resolves its own source media path, work and detail editors show compact current-record previews, work-detail rows on the work editor use thumbnail-led navigation, scoped rebuilds run a bounded local thumbnail-generation step for works, work details, and moments, and Studio Activity records generated local media alongside rebuild outcomes.
 
 **Affected files/docs:**
 - `/studio/catalogue-work/`
 - `/studio/catalogue-work-detail/`
 - `/studio/catalogue-series/`
 - [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 
 **Notes:**
 This entry covers the later media/readiness refinements that followed the first editor surfaces.
@@ -3703,24 +3701,24 @@ This was the first end-to-end canonical JSON editor in the Studio catalogue work
 **Area:** Studio catalogue pipeline
 
 **Summary:**
-Added early Studio surfaces for JSON-led catalogue maintenance: Catalogue Status and Catalogue Activity.
+Added early Studio surfaces for JSON-led catalogue maintenance: Catalogue Status and Studio Activity.
 
 **Reason:**
 The new catalogue source workflow needs useful visibility before full editing UI exists. Non-published records should be discoverable without opening Excel, and local JSON-source saves or validation failures should be visible without reading raw server logs.
 
 **Effect:**
-`/studio/catalogue-status/` reads canonical catalogue source JSON and lists records where `status` is not `published`. `/studio/catalogue-activity/` reads `assets/studio/data/catalogue_activity.json`, a small feed updated by the Catalogue Write Server for source-save and validation-failure events. Studio config now exposes the source and activity data paths used by those pages.
+`/studio/catalogue-status/` reads canonical catalogue source JSON and lists records where `status` is not `published`. `/studio/activity/` reads `assets/studio/data/activity_log.json`, a small feed updated by the Catalogue Write Server for source-save and validation-failure events. Studio config now exposes the source and activity data paths used by those pages.
 
 **Affected files/docs:**
 - `studio/catalogue-status/index.md`
-- `studio/catalogue-activity/index.md`
+- `studio/activity/index.md`
 - `assets/studio/js/catalogue-status.js`
-- `assets/studio/js/catalogue-activity.js`
-- `assets/studio/data/catalogue_activity.json`
-- `scripts/catalogue_activity.py`
+- `assets/studio/js/activity.js`
+- `assets/studio/data/activity_log.json`
+- `scripts/activity_log.py`
 - `scripts/studio/catalogue_write_server.py`
 - [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
-- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 
 **Notes:**
 The UI intentionally follows established Studio list and activity patterns. Refinement can happen after the first implementation is in use.
@@ -4144,29 +4142,29 @@ Planner state now includes `schema`, `planner_version`, and `migration_note`. Ol
 **Notes:**  
 This does not change canonical site data. It only makes the local planner-state contract more explicit.
 
-## [2026-04-01] Added a curator-facing Studio build activity feed
+## [2026-04-01] Added a curator-facing Studio activity journal
 
 **Status:** implemented
 
 **Area:** studio
 
 **Summary:**  
-Added a curated build-activity journal and a Studio page at `/studio/build-activity/` so recent catalogue build runs can be reviewed without reading raw script logs.
+Added a curated activity journal and a Studio page at `/studio/activity/` so recent catalogue runs can be reviewed without reading raw script logs.
 
 **Reason:**  
 The catalogue planner now has enough context to explain what changed and what it rebuilt. A lightweight recent-activity surface makes that information useful to the curator and creates a cleaner base for any later public “recent updates” work.
 
 **Effect:**  
-Successful non-dry-run `build_catalogue.py` runs now append a local journal under `var/build_activity/`, regenerate `assets/studio/data/build_activity.json`, and the new Studio page renders the latest entries with changed workbook/media groups plus action summaries.
+Successful non-dry-run `build_catalogue.py` runs now append a local journal and refresh the Studio-facing activity page; the new Studio page renders the latest entries with changed workbook/media groups plus action summaries.
 
 **Affected files/docs:**  
-- `scripts/build_activity.py`
+- `scripts/activity_log.py`
 - `scripts/build_catalogue.py`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- `assets/studio/js/build-activity.js`
-- `studio/build-activity/index.md`
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- `assets/studio/js/activity.js`
+- `studio/activity/index.md`
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 
 **Notes:**  

@@ -23,19 +23,17 @@ For example, one `Save` click on `/studio/catalogue-work/` could produce separat
 
 ## Current Inputs
 
-The current activity surfaces summarize overlapping parts of these logs and generated feeds:
+The unified activity surface now summarizes covered Studio activity from these logs and generated feeds:
 
 - `var/studio/catalogue/logs/catalogue_write_server.log`
-- `assets/studio/data/catalogue_activity.json`
-- `assets/studio/data/build_activity.json`
-- `var/build_activity/build_catalogue.jsonl`
+- `assets/studio/data/activity_log.json`
+- `var/studio/activity/activity_log.jsonl`
 
-Current report routes:
+Current report route:
 
-- `/studio/build-activity/`
-- `/studio/catalogue-activity/`
+- `/studio/activity/`
 
-Those pages are useful, but they separate source-side activity from build activity in a way that makes causality harder to understand.
+The previous split source-side and build-side report pages have been removed.
 
 Another useful implementation input is the existing Studio page behavior after a user clicks a command button.
 Many pages already display immediate status messages, result summaries, warning text, and modal details after actions such as save, delete, rebuild, export, import, or docs import.
@@ -63,7 +61,7 @@ The important question is "what happened after I clicked this button, and did ea
 
 Build a single activity log that:
 
-- replaces `/studio/build-activity/` and `/studio/catalogue-activity/` as the primary Studio activity report surface
+- replaces `/studio/activity/` and `/studio/activity/` as the primary Studio activity report surface
 - includes activity from catalogue editors, catalogue import/export flows, docs import, and other Studio pages that perform writes or build actions
 - records the initiating Studio page and user action for every row
 - records one row for each distinct downstream action, such as saving canonical data, saving published data, rebuilding lookups, updating search, deleting media, or importing docs
@@ -91,7 +89,7 @@ Preferred route:
 
 Retirement behavior:
 
-- `/studio/build-activity/` and `/studio/catalogue-activity/` should no longer be the primary report pages
+- `/studio/activity/` and `/studio/activity/` should no longer be the primary report pages
 - they may redirect to `/studio/activity/`, show a deprecation notice, or be removed from Studio navigation after the unified page is stable
 
 ## Activity Row Model
@@ -441,10 +439,9 @@ If the save path rewrites files or runs publishing work despite no core data cha
    - The current `Save` result messages should still appear on `/studio/catalogue-work/`.
    - The activity log should persist equivalent meaning, not move immediate feedback away from the editing page.
 
-8. Retain old report pages during v1.
-   - Do not remove `/studio/build-activity/` or `/studio/catalogue-activity/` in the first slice.
-   - Add the new page alongside them until v1 reporting is trusted.
-   - Defer redirect/removal decisions to a later slice.
+8. Retire old report pages after v1 coverage.
+   - Batch D removed the old split activity report pages rather than redirecting them.
+   - The unified `/studio/activity/` route is now the only active Studio activity report surface.
 
 ### V1 Detail Modal Examples
 
@@ -498,7 +495,7 @@ Batch A findings:
 
 Status: implemented.
 
-Before adding create, delete, and publication coverage, Batch B0 introduced a small server-side action-profile layer for catalogue activity logging.
+Before adding create, delete, and publication coverage, Batch B0 introduced a small server-side action-profile layer for catalogue-side Studio Activity logging.
 The profile records the page id, action id, route, control id, selector, endpoint, record family, record id field, declared script-purpose ids, and published-build step mapping for each covered action.
 
 The profile layer should remain narrow:
@@ -582,17 +579,15 @@ Batch C findings:
 
 Scope:
 
-- `/studio/catalogue-activity/`
-- `/studio/build-activity/`
-- old catalogue/build activity feed hooks
+- old split activity report routes
+  - old split activity feed hooks
 - old report navigation
 
 Tasks:
 
-- keep the old pages visible while old hooks remain live, so they act as cleanup reminders
-- after `/studio/activity/` has enough coverage, decide whether the old pages redirect, show a retirement note, or are removed
-- remove old hooks and generated feeds only when their covered actions have equivalent unified activity rows
-- keep local `var/` logs available for debugging where useful
+- remove old pages rather than redirecting them
+- remove old hooks and generated feeds now that covered actions have equivalent unified activity rows
+- keep unrelated local service logs available for debugging
 
 ## Documentation Requirements
 
@@ -604,7 +599,7 @@ Implementation should update:
 - catalogue write server docs
 - scoped catalogue build docs
 - docs import docs if docs activity is included in the first slice
-- existing Build Activity and Catalogue Activity docs to describe their retirement or replacement
+- Studio Activity docs to describe the unified-only report surface
 - Studio UI rules if the status-modal list pattern becomes a reusable operational pattern
 
 ## Acceptance Criteria
@@ -628,7 +623,7 @@ Manual checks should include:
 - compare representative on-page save/delete/import result messages with the persistent activity rows and modal details
 - click a delete action and confirm the detail modal lists deleted source records, generated artifacts, local media, and search/index updates
 - perform a docs import apply and confirm it appears with page `docs import`
-- confirm old Build Activity and Catalogue Activity navigation no longer leads users to competing report surfaces
+- confirm old split activity navigation, routes, feed readers, feed files, and emitters are gone
 
 ## Benefits
 

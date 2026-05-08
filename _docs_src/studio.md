@@ -51,9 +51,8 @@ Read this section in this order:
 3. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 4. **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 5. Technical route and workflow docs:
-   - **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
-   - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
-   - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
+	   - **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
+	   - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
@@ -61,9 +60,8 @@ Read this section in this order:
    - **[Studio Data Import](/docs/?scope=studio&doc=studio-data-import)**
    - **[Library Export v1](/docs/?scope=studio&doc=library-export)**
    - **[Library Import v1](/docs/?scope=studio&doc=library-import)**
-   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
-   - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
-   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
+	   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
+	   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
    - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
    - **[Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)** compatibility route note
@@ -87,7 +85,6 @@ Current Studio landing routes:
 
 Current workflow/detail routes:
 
-- `/studio/build-activity/`
 - `/studio/activity/`
 - `/studio/audits/`
 - `/studio/catalogue-field-registry/`
@@ -97,7 +94,6 @@ Current workflow/detail routes:
 - `/studio/export/`
 - `/studio/import/`
 - `/studio/catalogue-status/`
-- `/studio/catalogue-activity/`
 - `/studio/project-state/`
 - `/studio/bulk-add-work/`
 - `/studio/catalogue-moment/`

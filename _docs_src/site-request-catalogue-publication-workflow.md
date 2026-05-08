@@ -121,7 +121,7 @@ Across catalogue editors:
 - public artifact cleanup is deterministic and id-scoped
 - public index, recent index, lookup, and catalogue search follow-through are internal command outcomes
 - stale public artifacts must not remain discoverable after unpublish
-- Build Activity and Catalogue Activity should record save, publish, and unpublish outcomes distinctly
+- Studio Activity should record save, publish, and unpublish outcomes distinctly
 
 The UI may show confirmation or impact text where useful, but should not require the user to understand generated artifact paths or a separate rebuild action.
 

@@ -136,7 +136,7 @@ Mitigation:
 
 Goal:
 
-- make non-published records and local catalogue activity visible early in Studio
+- make non-published records and local Studio activity visible early in Studio
 
 Work:
 
@@ -144,11 +144,11 @@ Work:
 - group status rows by works, work details, series, work files, and work links
 - link each status row to its focused editor when that editor exists
 - add counts by record family
-- add a catalogue activity page modelled on `/studio/build-activity/`
-- write a small Studio-facing activity summary artifact such as `assets/studio/data/catalogue_activity.json`
+- use the unified activity page at `/studio/activity/`
+- write a small Studio-facing activity summary artifact such as `assets/studio/data/activity_log.json`
 - surface local write events, validation failures, imports, and build runs as those capabilities become available
 - provide easy access to underlying log references even before a complete field-level change UI exists
-- implemented first increment as `/studio/catalogue-status/`, `/studio/catalogue-activity/`, `assets/studio/data/catalogue_activity.json`, and `scripts/catalogue_activity.py`
+- implemented first increment as `/studio/catalogue-status/`, `/studio/activity/`, `assets/studio/data/activity_log.json`, and `scripts/activity_log.py`
 
 Acceptance:
 
@@ -227,7 +227,7 @@ Work:
 - add a build preview that reports affected work IDs, series IDs, and search rebuild need
 - add a local endpoint or documented command for `Save and rebuild`
 - rebuild catalogue search after scoped generation
-- update build activity logging to support JSON-source builds
+- update Studio Activity logging to support JSON-source builds
 - implemented first increment as `scripts/catalogue_json_build.py`, `POST /catalogue/build-preview`, `POST /catalogue/build-apply`, and `Save + Rebuild` on `/studio/catalogue-work/`
 
 Acceptance:
@@ -515,7 +515,7 @@ Work:
 - preview reports importable rows, duplicates, blocked rows, and blocked reasons
 - duplicate existing records are reported and skipped, not updated
 - apply is blocked while invalid workbook rows remain
-- write aggregated import counts into Catalogue Activity, not one entry per imported record
+- write aggregated import counts into Studio Activity, not one entry per imported record
 
 Acceptance:
 

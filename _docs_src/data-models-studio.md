@@ -21,12 +21,11 @@ Current checked-in Studio data artifacts:
 
 - Studio route data:
   - `assets/studio/data/tag_registry.json`
-  - `assets/studio/data/tag_aliases.json`
-  - `assets/studio/data/tag_assignments.json`
-  - `assets/studio/data/tag_groups.json`
-  - `assets/studio/data/build_activity.json`
-  - `assets/studio/data/catalogue_activity.json`
-  - `assets/studio/data/work_storage_index.json`
+	  - `assets/studio/data/tag_aliases.json`
+	  - `assets/studio/data/tag_assignments.json`
+	  - `assets/studio/data/tag_groups.json`
+	  - `assets/studio/data/activity_log.json`
+	  - `assets/studio/data/work_storage_index.json`
 - Studio docs source:
   - `_docs_src/*.md`
 - generated Studio docs data:
@@ -62,61 +61,6 @@ Why it is separate:
 
 - `storage` is useful to the curator but does not belong in the current public works summary index
 - the Studio works page needs one lightweight bulk lookup, not one per-work JSON fetch per row
-
-### `build_activity.json`
-
-Purpose:
-
-- lightweight Studio-facing feed of recent catalogue build runs
-
-Current content families:
-
-- feed header metadata
-- recent run entries with:
-  - time
-  - status
-  - short summary
-  - source change groups for JSON-source scoped rebuilds
-  - media change groups
-  - action counts
-  - result flags
-
-Why it is separate:
-
-- the curator-facing feed should stay smaller and more stable than raw script logs
-- the Studio page only needs the latest small slice of recent activity
-
-Current consumers:
-
-- `/studio/build-activity/`, through `GET /catalogue/read?key=build_activity`
-
-### `catalogue_activity.json`
-
-Purpose:
-
-- lightweight Studio-facing feed of recent catalogue source activity
-
-Current content families:
-
-- feed header metadata
-- recent entries with:
-  - time
-  - kind
-  - operation
-  - status
-  - short summary
-  - affected work, series, and work-detail id groups
-  - log reference
-
-Why it is separate:
-
-- the browser should not parse raw local JSONL logs
-- the activity surface should remain small while the JSON pipeline gains capabilities
-- canonical source JSON should avoid volatile activity timestamps
-
-Current consumers:
-
-- `/studio/catalogue-activity/`, through `GET /catalogue/read?key=catalogue_activity`
 
 ### `tag_registry.json`
 

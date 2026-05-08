@@ -16,7 +16,7 @@ The page is the v1 unified activity report for Studio actions.
 It lists script-level activity rows while preserving the page and button action that initiated them.
 
 Current coverage includes catalogue editor save/create/delete/publication actions plus Batch C import/export/report/audit/utility actions: workbook import apply, moment import apply, project-state report generation, docs source import, data export/import apply, docs broken-links audit, Studio audits, series tag saves/imports, tag registry writes, and tag alias writes.
-Older Build Activity and Catalogue Activity pages remain available during validation.
+The retired split source-side and build-side report pages have been removed; this is the only active Studio activity report.
 
 ## Route Ready State
 
@@ -69,7 +69,7 @@ What this page is for:
 
 - correlated Studio activity reporting
 - reviewing the downstream effects of a button click
-- replacing the old split activity surfaces after the new report is trusted
+- serving as the unified replacement for the retired split activity surfaces
 
 What it is not for:
 
@@ -82,5 +82,3 @@ What it is not for:
 
 - **[Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)**
 - **[Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)**
-- **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
-- **[Build Activity](/docs/?scope=studio&doc=build-activity)**

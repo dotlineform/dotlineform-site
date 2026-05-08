@@ -955,7 +955,7 @@ These routes perform async config, service, file-list, workbook, audit, import, 
 **Area:** Studio runtime / smoke testing
 
 **Summary:**
-Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on Build Activity, Catalogue Activity, Catalogue Drafts, and Catalogue Field Registry.
+Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on Studio Activity, Studio Activity, Catalogue Drafts, and Catalogue Field Registry.
 
 **Reason:**
 These read/reporting routes load service-backed feeds, source-family data, or registry JSON before they are stable for smoke-test interaction. They should expose the same route-root readiness signal as the catalogue editors.
@@ -965,16 +965,16 @@ These read/reporting routes load service-backed feeds, source-family data, or re
 
 **Affected files/docs:**
 
-- `assets/studio/js/build-activity.js`
-- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/activity.js`
+- `assets/studio/js/activity.js`
 - `assets/studio/js/catalogue-status.js`
 - `assets/studio/js/catalogue-field-registry-review.js`
-- `studio/build-activity/index.md`
-- `studio/catalogue-activity/index.md`
+- `studio/activity/index.md`
+- `studio/activity/index.md`
 - `studio/catalogue-status/index.md`
 - `studio/catalogue-field-registry/index.md`
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
-- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)
 - [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
@@ -1258,11 +1258,11 @@ Workbook-specific parsing now lives beside `scripts/catalogue_workbook_import.py
 - `scripts/catalogue_source.py`
 - `scripts/generate_work_pages.py`
 - `scripts/catalogue_json_build.py`
-- `scripts/build_activity.py`
-- `assets/studio/js/build-activity.js`
+- `scripts/activity_log.py`
+- `assets/studio/js/activity.js`
 - `AGENTS.md`
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
 - [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
 - [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
@@ -1502,7 +1502,7 @@ The scripts already returned early in some cases, but still carried retired impl
 - `AGENTS.md`
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
-- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
 - [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -1554,11 +1554,11 @@ Files and links are now work-owned metadata in `works.json` as `downloads` and `
 
 - `scripts/catalogue_source.py`
 - `scripts/studio/catalogue_write_server.py`
-- `scripts/catalogue_activity.py`
-- `assets/studio/js/catalogue-activity.js`
+- `scripts/activity_log.py`
+- `assets/studio/js/activity.js`
 - `assets/studio/js/studio-transport.js`
 - [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
-- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
 - [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)
 - [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)

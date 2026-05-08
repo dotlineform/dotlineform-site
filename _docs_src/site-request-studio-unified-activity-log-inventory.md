@@ -15,7 +15,7 @@ Status:
 - initial v1 planning inventory
 - v1 implementation target selected
 - Batch C complete
-- Batch D retirement and hook cleanup still pending
+- Batch D retirement and hook cleanup complete
 
 ## Purpose
 
@@ -34,9 +34,9 @@ Use these status values consistently:
 | `v1-target` | In scope for the first implementation slice. |
 | `in-progress` | Partially implemented across the current batch. |
 | `planned` | Should be covered after v1 proves the contract. |
-| `future` | Worth supporting later, but not needed for the initial catalogue activity report. |
+| `future` | Worth supporting later, but not needed for the initial Studio Activity report. |
 | `excluded` | Not an activity-log source because it is navigation, read-only filtering, sorting, or local-only form editing. |
-| `retire` | Existing report surface that should be replaced by `/studio/activity/` after the unified page is trusted. |
+| `retired` | Former report surface replaced by `/studio/activity/` and removed from active routes, config, feeds, and hooks. |
 | `done` | Implemented for the current slice. |
 
 ## Coverage Rules
@@ -71,7 +71,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Add `/studio/activity/` route | `done` | Implemented with required columns: date-time, status, page, user action, script purpose. |
 | Add status detail modal | `done` | Status buttons open a modal with stacked detail items for the selected row. |
 | Keep Work editor save messages unchanged | `v1-target` | The activity log persists the same kind of feedback; it does not replace page feedback. |
-| Keep old activity report pages during v1 | `v1-target` | Defer redirect/removal until the new report is trusted. |
+| Remove old activity report pages after v1 coverage | `done` | Batch D removed the old split report pages, feeds, read keys, emitters, and dashboard links. |
 
 ## Batch Implementation Checklist
 
@@ -81,7 +81,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Batch B0: activity action profiles | `done` | shared profile layer for covered activity actions | Keeps runtime page/action/control/endpoint/record-family ids aligned with the structured registry before adding more action types. The profile does not own mutation behavior. |
 | Batch B: catalogue create/delete/publication paths | `done` | create work/detail/series; delete work/detail/series/moment; publish/unpublish work/detail/series/moment | Preserves initiating context through preview/confirmation flows. Moment import/create and readiness prose/media writes move to Batch C because their write boundaries are import/utility-shaped rather than normal create/delete/publication metadata actions. |
 | Batch C: import/export/report/audit/utility actions | `done` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | Covered workbook import apply, moment import apply, project-state report generation, docs source import, data export/import apply, docs broken-links audit, Studio audits, series tag saves/imports, registry writes, and alias writes. Preview-only commands remain excluded unless they persist data. |
-| Batch D: old report retirement and hook cleanup | `planned` | old activity routes, feeds, hooks, navigation | Keep old pages visible while old hooks remain live; remove or redirect only after unified rows cover equivalent activity. |
+| Batch D: old report retirement and hook cleanup | `done` | old activity routes, feeds, hooks, navigation | Removed the old split report pages rather than redirecting them, and removed their feed files, read keys, writer modules, emitters, dashboard links, and config entries. |
 
 ## Catalogue Pages
 
@@ -122,8 +122,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Project state | `/studio/project-state/` | `#projectStateOpenButton` `Open file` | none | none | `excluded` | Opens documentation/source context; not a report-generating action. |
 | Catalogue status | `/studio/catalogue-status/` | filters/sort/open links | none | none | `excluded` | Review surface only. |
 | Studio works | `/studio/studio-works/` | sort/copy/filter controls | none | none | `excluded` | Review/navigation surface only. |
-| Catalogue activity | `/studio/catalogue-activity/` | report page | none | none | `retire` | Replaced as a primary report surface by `/studio/activity/`. |
-| Build activity | `/studio/build-activity/` | report page | none | none | `retire` | Replaced as a primary report surface by `/studio/activity/`. |
+| Retired split activity reports | removed | report pages | none | none | `retired` | Former source-side and build-side report surfaces were removed; `/studio/activity/` is the only active activity report. |
 
 ## Docs And Library Pages
 
@@ -180,5 +179,5 @@ The script-purpose label describes each downstream operation recorded as its own
 | V1 catalogue editor saves | registry validation; structured event unit tests; save endpoint tests producing correlated rows; activity feed generation test | Save metadata edits for one existing work, detail, series, and moment; confirm `/studio/activity/` shows the expected page/action labels and downstream script-purpose rows. |
 | Activity report UI | route-ready audit; modal rendering smoke test; feed read error-state check | Open `/studio/activity/`, click status markers, and confirm stacked details are readable. |
 | Inventory completeness | scan Studio route files and service endpoints for unclassified buttons before each implementation slice | Compare the inventory against visible Studio pages during a light manual pass. |
-| Old report transition | link/navigation check once the new route is stable | Confirm old Build Activity and Catalogue Activity routes no longer compete with the unified report. |
+| Old report transition | route/link/feed scan after cleanup | Confirm no retired split activity routes, read keys, feed files, emitters, or dashboard links remain. |
 | Implementation findings | findings logged with route, control id, observed behavior, expected behavior, activity-log impact, and status | Confirm non-blocking issues are captured as follow-ups rather than folded into the v1 implementation by default. |

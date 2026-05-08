@@ -733,7 +733,7 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 - verification:
   - open `/studio/catalogue/` on desktop and mobile and confirm the counts load
   - confirm `Edit` and `Review` render as two equal-width pill columns on desktop and stack on mobile
-  - confirm the only lower text header is `Admin` with links to Catalogue Activity and Build Activity
+  - confirm the only lower text header is `Admin` with a link to Studio Activity
 
 ## UI Rule Log 2026-04-29 / UI-063
 

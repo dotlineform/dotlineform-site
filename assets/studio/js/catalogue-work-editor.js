@@ -2533,7 +2533,7 @@ async function buildCurrentWork(state) {
       const completedAt = utcTimestamp();
       setTextWithState(
         state.resultNode,
-        t(state, "bulk_build_result_success", "Updated {count} work scopes at {completed_at}. Build Activity updated.", {
+        t(state, "bulk_build_result_success", "Updated {count} work scopes at {completed_at}. Studio Activity updated.", {
           count: String(buildTargets.length),
           completed_at: completedAt
         }),
@@ -2553,7 +2553,7 @@ async function buildCurrentWork(state) {
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
     setTextWithState(
       state.resultNode,
-      t(state, "build_result_success", "Public catalogue updated at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
+      t(state, "build_result_success", "Public catalogue updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
       "success"
     );
     setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");

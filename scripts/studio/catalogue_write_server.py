@@ -83,7 +83,6 @@ from catalogue_source import (  # noqa: E402
     validate_work_detail_media_section_record,
     validate_work_detail_section_metadata_consistency,
 )
-from catalogue_activity import append_catalogue_activity  # noqa: E402
 from studio_activity import append_studio_activity  # noqa: E402
 from catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
@@ -149,8 +148,6 @@ BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
-BUILD_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/build_activity.json")
-CATALOGUE_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/catalogue_activity.json")
 STUDIO_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/activity_log.json")
 MAX_BODY_BYTES = 1024 * 1024
 MAX_PROSE_MARKDOWN_BYTES = 1024 * 1024
@@ -1028,7 +1025,7 @@ def catalogue_build_record_groups(build_payload: Mapping[str, Any], fallback: Ma
     }
 
 
-def catalogue_build_activity_rows(
+def catalogue_build_studio_activity_rows(
     profile: ActivityActionProfile,
     activity_context: Mapping[str, str],
     build_payload: Mapping[str, Any],
@@ -3454,12 +3451,6 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         except Exception:
             pass
 
-    def append_activity(self, entry: Dict[str, Any]) -> None:
-        try:
-            append_catalogue_activity(self.repo_root, entry)
-        except Exception:
-            pass
-
     def append_studio_activity(self, entries: Mapping[str, Any] | Iterable[Mapping[str, Any]]) -> None:
         try:
             append_studio_activity(self.repo_root, entries)
@@ -3653,20 +3644,6 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
             self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "validation"})
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "request.validation_failed"),
-                        "time_utc": now_utc,
-                        "kind": "validation",
-                        "operation": request_path.strip("/") or "request",
-                        "status": "failed",
-                        "summary": "Catalogue request failed validation.",
-                        "affected": {"works": [], "series": [], "work_details": [], "moments": []},
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
         except Exception as exc:  # noqa: BLE001
             self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "internal"})
@@ -3680,10 +3657,6 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _catalogue_read_payload(self, key: str, record_id: str = "") -> Dict[str, Any]:
-        if key == "build_activity":
-            return load_activity_feed(self.server.repo_root, BUILD_ACTIVITY_FEED_REL_PATH, "studio_build_activity_v2")
-        if key == "catalogue_activity":
-            return load_activity_feed(self.server.repo_root, CATALOGUE_ACTIVITY_FEED_REL_PATH, "catalogue_activity_v2")
         if key == "activity_log":
             return load_activity_feed(self.server.repo_root, STUDIO_ACTIVITY_FEED_REL_PATH, "studio_activity_log_v1")
 
@@ -3879,18 +3852,6 @@ class Handler(BaseHTTPRequestHandler):
                     ),
                 ]
                 append_studio_activity_rows(self.server, response_payload, activity_rows)
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "work.save"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "work.save",
-                    "status": "completed",
-                    "summary": "Saved 1 work source record.",
-                    "affected": {"works": [work_id], "series": [], "work_details": []},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
         response_payload["build_requested"] = bool(apply_build and changed)
         if requested_apply_build and changed and not apply_build:
             response_payload["build_skipped"] = {
@@ -3921,7 +3882,7 @@ class Handler(BaseHTTPRequestHandler):
                 append_studio_activity_rows(
                     self.server,
                     response_payload,
-                    catalogue_build_activity_rows(
+                    catalogue_build_studio_activity_rows(
                         ACTIVITY_PROFILE_SAVE_WORK,
                         activity_context,
                         build_payload,
@@ -4038,19 +3999,6 @@ class Handler(BaseHTTPRequestHandler):
             )
             if changed and not self.server.dry_run:
                 self._refresh_lookup_payloads()
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "bulk-save.works"),
-                        "time_utc": now_utc,
-                        "kind": "source_save",
-                        "operation": "bulk-save.works",
-                        "status": "completed",
-                        "summary": f"Bulk-saved {len(changed_ids)} work source record(s).",
-                        "affected": {"works": changed_ids, "series": sorted(affected_series_ids), "work_details": []},
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                        }
-                    )
             response_payload["build_requested"] = bool(apply_build and changed and build_targets)
             if apply_build and changed and build_targets:
                 response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
@@ -4140,19 +4088,6 @@ class Handler(BaseHTTPRequestHandler):
         )
         if changed and not self.server.dry_run:
             self._refresh_lookup_payloads()
-            now_utc = utc_now()
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "bulk-save.work-details"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "bulk-save.work-details",
-                    "status": "completed",
-                    "summary": f"Bulk-saved {len(changed_ids)} work detail source record(s).",
-                    "affected": {"works": sorted(set(affected_work_ids)), "series": [], "work_details": changed_ids},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         response_payload["build_requested"] = bool(apply_build and changed)
         if apply_build and changed:
             response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
@@ -4411,7 +4346,7 @@ class Handler(BaseHTTPRequestHandler):
                     )
                 if action == "publish":
                     activity_rows.extend(
-                        catalogue_build_activity_rows(
+                        catalogue_build_studio_activity_rows(
                             activity_profile,
                             activity_context,
                             public_update,
@@ -4435,19 +4370,6 @@ class Handler(BaseHTTPRequestHandler):
                         )
                     )
                 append_studio_activity_rows(self.server, response_payload, activity_rows)
-            operation = f"{kind}.{action}"
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, operation),
-                    "time_utc": now_utc,
-                    "kind": "publication",
-                    "operation": operation,
-                    "status": "completed" if public_update_ok else "failed",
-                    "summary": f"{action.replace('_', ' ').title()} {kind} {record_id}.",
-                    "affected": preview.get("affected", {}),
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         self._send_json(HTTPStatus.OK if public_update_ok else HTTPStatus.INTERNAL_SERVER_ERROR, response_payload, allowed)
 
     def _handle_delete_preview(self, allowed: Optional[str]) -> None:
@@ -4609,23 +4531,6 @@ class Handler(BaseHTTPRequestHandler):
                 **preview["affected"],
                 "series": sorted(set([*preview["affected"].get("series", []), *changed_series_ids])),
             }
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "work.delete"),
-                        "time_utc": now_utc,
-                        "kind": "source_save",
-                        "operation": "work.delete",
-                        "status": "completed",
-                        "summary": f"Deleted work {record_id}, dependent source records, generated artifacts, local media, and catalogue search record.",
-                        "affected": {
-                            **preview["affected"],
-                            "series": sorted(set([*preview["affected"].get("series", []), *changed_series_ids])),
-                        },
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
         elif kind == "work_detail":
             details_payload = load_work_details_payload(self.server.work_details_path)
             current_record = details_payload["work_details"].get(record_id)
@@ -4653,20 +4558,6 @@ class Handler(BaseHTTPRequestHandler):
                 "preview": preview,
                 "cleanup": cleanup_result,
             }
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "work-detail.delete"),
-                        "time_utc": now_utc,
-                        "kind": "source_save",
-                        "operation": "work-detail.delete",
-                        "status": "completed",
-                        "summary": f"Deleted work detail {record_id}, generated artifacts, and local media.",
-                        "affected": preview["affected"],
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
         elif kind == "series":
             series_payload = load_series_payload(self.server.series_path)
             works_payload = load_works_payload(self.server.works_path)
@@ -4703,20 +4594,6 @@ class Handler(BaseHTTPRequestHandler):
                 "preview": preview,
                 "cleanup": cleanup_result,
             }
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "series.delete"),
-                        "time_utc": now_utc,
-                        "kind": "source_save",
-                        "operation": "series.delete",
-                        "status": "completed",
-                        "summary": f"Deleted series {record_id}, generated artifacts, related index records, and catalogue search record.",
-                        "affected": preview["affected"],
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
         else:
             moments_payload = load_moments_payload(self.server.moments_path)
             current_record = moments_payload["moments"].get(record_id)
@@ -4787,21 +4664,6 @@ class Handler(BaseHTTPRequestHandler):
                     "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
                 },
             }
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "moment.delete"),
-                        "time_utc": now_utc,
-                        "kind": "source_save",
-                        "operation": "moment.delete",
-                        "status": "completed",
-                        "summary": f"Deleted moment {record_id}, generated artifacts, local media, and catalogue search record.",
-                        "affected": preview["affected"],
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
-
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = True
@@ -4937,18 +4799,6 @@ class Handler(BaseHTTPRequestHandler):
                         ),
                     ],
                 )
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "work.create"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "work.create",
-                    "status": "completed",
-                    "summary": f"Created draft work {work_id}.",
-                    "affected": {"works": [work_id], "series": [], "work_details": []},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_detail_create(self, allowed: Optional[str]) -> None:
@@ -5070,18 +4920,6 @@ class Handler(BaseHTTPRequestHandler):
                         ),
                     ],
                 )
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "work-detail.create"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "work-detail.create",
-                    "status": "completed",
-                    "summary": f"Created draft work detail {detail_uid}.",
-                    "affected": {"works": [work_id], "series": [], "work_details": [detail_uid]},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_detail_save(self, allowed: Optional[str]) -> None:
@@ -5235,18 +5073,6 @@ class Handler(BaseHTTPRequestHandler):
                     ),
                 ]
                 append_studio_activity_rows(self.server, response_payload, activity_rows)
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "work-detail.save"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "work-detail.save",
-                    "status": "completed",
-                    "summary": "Saved 1 work detail source record.",
-                    "affected": {"works": [work_id], "series": [], "work_details": [detail_uid]},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         response_payload["build_requested"] = bool(apply_build and changed)
         if apply_build and changed and not build_plan.get("build_required", True):
             response_payload["build_requested"] = False
@@ -5269,7 +5095,7 @@ class Handler(BaseHTTPRequestHandler):
                 append_studio_activity_rows(
                     self.server,
                     response_payload,
-                    catalogue_build_activity_rows(
+                    catalogue_build_studio_activity_rows(
                         ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
                         activity_context,
                         build_payload,
@@ -5504,18 +5330,6 @@ class Handler(BaseHTTPRequestHandler):
                     ),
                 ]
                 append_studio_activity_rows(self.server, response_payload, activity_rows)
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "series.save"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "series.save",
-                    "status": "completed",
-                    "summary": f"Saved series {series_id} and {len(changed_work_ids)} member work records.",
-                    "affected": {"works": changed_work_ids, "series": [series_id], "work_details": []},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         response_payload["build_requested"] = bool(apply_build and changed)
         if requested_apply_build and changed and not apply_build:
             response_payload["build_skipped"] = {
@@ -5543,7 +5357,7 @@ class Handler(BaseHTTPRequestHandler):
                 append_studio_activity_rows(
                     self.server,
                     response_payload,
-                    catalogue_build_activity_rows(
+                    catalogue_build_studio_activity_rows(
                         ACTIVITY_PROFILE_SAVE_SERIES,
                         activity_context,
                         build_payload,
@@ -5694,18 +5508,6 @@ class Handler(BaseHTTPRequestHandler):
                         ),
                     ],
                 )
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "series.create"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "series.create",
-                    "status": "completed",
-                    "summary": f"Created draft series {series_id} and {len(changed_work_ids)} member work records.",
-                    "affected": {"works": changed_work_ids, "series": [series_id], "work_details": []},
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_import_preview(self, allowed: Optional[str]) -> None:
@@ -5793,25 +5595,6 @@ class Handler(BaseHTTPRequestHandler):
         )
         if not self.server.dry_run:
             now_utc = utc_now()
-            operation = "import.works" if mode == IMPORT_MODE_WORKS else "import.work-details"
-            summary_label = "work" if mode == IMPORT_MODE_WORKS else "work detail"
-            duplicate_suffix = f"; {plan.duplicate_count} duplicate record(s) already existed" if plan.duplicate_count else ""
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, operation),
-                    "time_utc": now_utc,
-                    "kind": "source_import",
-                    "operation": operation,
-                    "status": "completed",
-                    "summary": f"Imported {plan.importable_count} {summary_label} record(s) from workbook{duplicate_suffix}.",
-                    "affected": {
-                        "works": {"count": plan.importable_count} if mode == IMPORT_MODE_WORKS else {"count": 0},
-                        "series": [],
-                        "work_details": {"count": plan.importable_count} if mode == IMPORT_MODE_WORK_DETAILS else {"count": 0},
-                    },
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
             if activity_context:
                 imported_ids = sorted(plan.importable_records.keys())
                 record_groups = activity_record_groups(
@@ -5891,7 +5674,6 @@ class Handler(BaseHTTPRequestHandler):
                 write=not self.server.dry_run,
                 force=force,
                 media_only=media_only,
-                log_activity=not self.server.dry_run,
             )
         elif series_id:
             scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
@@ -5903,7 +5685,6 @@ class Handler(BaseHTTPRequestHandler):
                 write=not self.server.dry_run,
                 force=force,
                 media_only=media_only,
-                log_activity=not self.server.dry_run,
             )
         else:
             scope = build_scope_for_moment(self.server.repo_root, f"{moment_id}.md", force=force)
@@ -5915,7 +5696,6 @@ class Handler(BaseHTTPRequestHandler):
                 write=not self.server.dry_run,
                 force=force,
                 media_only=media_only,
-                log_activity=not self.server.dry_run,
             )
 
         payload: Dict[str, Any] = {
@@ -5935,48 +5715,12 @@ class Handler(BaseHTTPRequestHandler):
             payload["dry_run"] = True
 
         if result.get("status") != "completed":
-            if not self.server.dry_run:
-                now_utc = utc_now()
-                self.server.append_activity(
-                    {
-                        "id": activity_id(now_utc, "build.apply_failed"),
-                        "time_utc": now_utc,
-                        "kind": "build",
-                        "operation": "media.refresh" if media_only else "build.apply",
-                        "status": "failed",
-                        "summary": f"{'Media refresh' if media_only else 'Scoped rebuild'} failed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
-                        "affected": {
-                            "works": list((result.get("scope") or {}).get("work_ids", [])),
-                            "series": list((result.get("scope") or {}).get("series_ids", [])),
-                            "work_details": [],
-                            "moments": list((result.get("scope") or {}).get("moment_ids", [])),
-                        },
-                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                    }
-                )
             payload["error"] = str(result.get("error") or "Scoped JSON build failed.")
             payload["failed_step"] = result.get("failed_step")
             return False, payload
 
         if not self.server.dry_run:
             payload["completed_at_utc"] = utc_now()
-            self.server.append_activity(
-                {
-                    "id": activity_id(payload["completed_at_utc"], "build.apply"),
-                    "time_utc": payload["completed_at_utc"],
-                    "kind": "build",
-                    "operation": "media.refresh" if media_only else "build.apply",
-                    "status": "completed",
-                    "summary": f"{'Media refresh' if media_only else 'Scoped rebuild'} completed for {('work ' + work_id) if work_id else ('series ' + series_id) if series_id else ('moment ' + moment_id)}.",
-                    "affected": {
-                        "works": list((result.get("scope") or {}).get("work_ids", [])),
-                        "series": list((result.get("scope") or {}).get("series_ids", [])),
-                        "work_details": [],
-                        "moments": list((result.get("scope") or {}).get("moment_ids", [])),
-                    },
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         return True, payload
 
     def _run_build_targets(self, build_targets: list[Dict[str, Any]]) -> Dict[str, Any]:
@@ -6227,23 +5971,6 @@ class Handler(BaseHTTPRequestHandler):
                         )
                     ],
                 )
-            self.server.append_activity(
-                {
-                    "id": activity_id(now_utc, "moment.save"),
-                    "time_utc": now_utc,
-                    "kind": "source_save",
-                    "operation": "moment.save",
-                    "status": "completed",
-                    "summary": f"Saved moment source metadata for {moment_id}.",
-                    "affected": {
-                        "works": [],
-                        "series": [],
-                        "work_details": [],
-                        "moments": [moment_id],
-                    },
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         response_payload["build_requested"] = bool(apply_build and changed)
         if requested_apply_build and changed and not apply_build:
             response_payload["build_skipped"] = {
@@ -6272,7 +5999,7 @@ class Handler(BaseHTTPRequestHandler):
                 append_studio_activity_rows(
                     self.server,
                     response_payload,
-                    catalogue_build_activity_rows(
+                    catalogue_build_studio_activity_rows(
                         ACTIVITY_PROFILE_SAVE_MOMENT,
                         activity_context,
                         build_payload,
@@ -6333,23 +6060,6 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["imported_at_utc"] = utc_now()
-            self.server.append_activity(
-                {
-                    "id": activity_id(response_payload["imported_at_utc"], "prose.import"),
-                    "time_utc": response_payload["imported_at_utc"],
-                    "kind": "source_import",
-                    "operation": "prose.import",
-                    "status": "completed",
-                    "summary": f"Imported {target_kind} prose source for {target_id}.",
-                    "affected": {
-                        "works": [target_id] if target_kind == "work" else [],
-                        "series": [target_id] if target_kind == "series" else [],
-                        "work_details": [],
-                        "moments": [target_id] if target_kind == "moment" else [],
-                    },
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
         self.server.log_event(
             "catalogue_prose_import_apply",
             {
@@ -6437,23 +6147,6 @@ class Handler(BaseHTTPRequestHandler):
             payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
         if not self.server.dry_run:
             payload["completed_at_utc"] = utc_now()
-            self.server.append_activity(
-                {
-                    "id": activity_id(payload["completed_at_utc"], "moment.import"),
-                    "time_utc": payload["completed_at_utc"],
-                    "kind": "moment",
-                    "operation": "moment.import",
-                    "status": "completed",
-                    "summary": f"Moment import completed for {moment_id}.",
-                    "affected": {
-                        "works": [],
-                        "series": [],
-                        "work_details": [],
-                        "moments": [moment_id] if moment_id else [],
-                    },
-                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
-                }
-            )
             if activity_context:
                 append_studio_activity_rows(
                     self.server,

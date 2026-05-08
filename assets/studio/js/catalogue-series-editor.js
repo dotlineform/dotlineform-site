@@ -1174,7 +1174,7 @@ async function buildCurrentSeries(state) {
     state.pendingBuildExtraWorkIds = [];
     await refreshBuildPreview(state);
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(state.resultNode, t(state, "build_result_success", "Public catalogue updated at {completed_at}. Build Activity updated.", { completed_at: completedAt }), "success");
+    setTextWithState(state.resultNode, t(state, "build_result_success", "Public catalogue updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }), "success");
     setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
   } catch (error) {
     setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");

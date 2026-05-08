@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b34276d9352600188622a3b96264462c",
-    "generated_at_utc": "2026-05-08T18:30:50Z",
-    "count": 201
+    "version": "blake2b-125ca3904259982e789e360624761ae6",
+    "generated_at_utc": "2026-05-08T19:33:25Z",
+    "count": 199
   },
   "entries": [
     {
@@ -1750,29 +1750,6 @@
         "03"
       ],
       "search_text": "site-request-studio-audits-page site request studio audits page studio audits page request change requests change requests 2026-05-03 2026 05 03"
-    },
-    {
-      "id": "catalogue-activity",
-      "kind": "doc",
-      "title": "Catalogue Activity",
-      "href": "/docs/?scope=studio&doc=catalogue-activity",
-      "last_updated": "2026-05-06 20:49",
-      "parent_id": "catalogue",
-      "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
-      "search_terms": [
-        "catalogue-activity",
-        "catalogue",
-        "activity",
-        "catalogue activity",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "catalogue-activity catalogue activity catalogue activity 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "scripts-catalogue-write-server",
@@ -3600,30 +3577,6 @@
         "25"
       ],
       "search_text": "search-catalogue-targeted-plan search catalogue targeted plan catalogue targeted search plan 2026-04-25 2026 04 25"
-    },
-    {
-      "id": "build-activity",
-      "kind": "doc",
-      "title": "Build Activity",
-      "href": "/docs/?scope=studio&doc=build-activity",
-      "last_updated": "2026-05-06 20:49",
-      "parent_id": "catalogue",
-      "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
-      "search_terms": [
-        "build-activity",
-        "build",
-        "activity",
-        "build activity",
-        "catalogue",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "build-activity build activity build activity catalogue 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "site-request-field-aware-build-scoping",

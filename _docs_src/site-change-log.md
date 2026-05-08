@@ -17,6 +17,34 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Retired split Studio activity reports
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Completed Batch D of the unified Studio activity log by removing the old split activity report pages and feeds.
+
+**Files changed:**
+
+- retired split activity route files
+- retired split activity page controllers
+- retired split activity feed writer modules
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_json_build.py`
+- retired split activity feed artifacts
+- `tests/python/test_studio_activity_context.py`
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio Data Models](/docs/?scope=studio&doc=data-models-studio)
+
+**Impact:**
+`/studio/activity/` is now the only active Studio activity report.
+The retired routes, dashboard links, config keys, read keys, feed readers, feed writer modules, and old feed artifacts were removed rather than redirected.
+
 ## [2026-05-08] Completed Batch C Studio activity logging
 
 **Status:** implemented
@@ -76,7 +104,7 @@ Started Batch C by wiring workbook import apply, moment import apply, and projec
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
-- `tests/python/test_catalogue_activity_context.py`
+- `tests/python/test_studio_activity_context.py`
 - [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
 - [Studio Activity](/docs/?scope=studio&doc=studio-activity)
@@ -109,7 +137,7 @@ Completed Batch B for unified Studio activity logging by wiring catalogue work/d
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/js/catalogue-moment-editor.js`
-- `tests/python/test_catalogue_activity_context.py`
+- `tests/python/test_studio_activity_context.py`
 - [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -125,12 +153,12 @@ Moment creation remains with import/apply coverage because the current workflow 
 **Area:** Studio / activity reporting
 
 **Summary:**
-Added a thin server-side action-profile layer for catalogue activity logging before expanding into create, delete, and publication actions.
+Added a thin server-side action-profile layer for catalogue-side Studio Activity logging before expanding into create, delete, and publication actions.
 
 **Files changed:**
 
 - `scripts/studio/catalogue_write_server.py`
-- `tests/python/test_catalogue_activity_context.py`
+- `tests/python/test_studio_activity_context.py`
 - [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -181,7 +209,7 @@ Status markers open a detail modal with the row's persisted activity description
 - [Studio](/docs/?scope=studio&doc=studio)
 
 **Impact:**
-The v1 correlated activity feed now has a user-facing Studio route while the older Build Activity and Catalogue Activity pages remain available during validation.
+The v1 correlated activity feed now has a user-facing Studio route alongside the then-existing split activity reports during validation.
 
 ## [2026-05-08] Added unified Studio activity log request
 
@@ -190,7 +218,7 @@ The v1 correlated activity feed now has a user-facing Studio route while the old
 **Area:** Studio / activity reporting
 
 **Summary:**
-Added a change request for replacing Build Activity and Catalogue Activity with a single Studio activity log that groups script-level rows by the initiating Studio page action.
+Added a change request for replacing split activity reports with a single Studio activity log that groups script-level rows by the initiating Studio page action.
 
 **Files changed:**
 

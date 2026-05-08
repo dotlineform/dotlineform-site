@@ -13,7 +13,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
-from build_activity import append_build_activity
 from catalogue_field_registry import apply_field_build_plan_to_scope, field_aware_build_plan, load_catalogue_field_registry
 from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
 from moment_sources import (
@@ -1472,7 +1471,6 @@ def run_scoped_build_scope(
     write: bool,
     force: bool = False,
     media_only: bool = False,
-    log_activity: bool = True,
 ) -> Dict[str, Any]:
     env = os.environ.copy()
     scope_kind = str(scope.get("kind") or "work").strip().lower()
@@ -1592,37 +1590,6 @@ def run_scoped_build_scope(
         response["failed_step"] = failed_step
         response["error"] = failure_message
 
-    if write and log_activity and not media_only:
-        if scope_kind == "moment":
-            append_build_activity(
-                repo_root,
-                build_activity_entry_for_scoped_moment_build(
-                    time_utc=utc_now(),
-                    status=status,
-                    moment_ids=scope.get("moment_ids", []),
-                    generated_moment_ids=(response.get("media") or {}).get("generated", {}).get("moment", []),
-                    failed_step=failed_step,
-                    force=effective_force,
-                    refresh_published=refresh_published,
-                    rebuild_search=rebuild_search,
-                ),
-            )
-        else:
-            append_build_activity(
-                repo_root,
-                build_activity_entry_for_scoped_json_build(
-                    time_utc=utc_now(),
-                    status=status,
-                    work_ids=scope["work_ids"],
-                    series_ids=scope["series_ids"],
-                    generated_work_ids=(response.get("media") or {}).get("generated", {}).get("work", []),
-                    generated_detail_uids=(response.get("media") or {}).get("generated", {}).get("work_details", []),
-                    failed_step=failed_step,
-                    force=effective_force,
-                    refresh_published=refresh_published,
-                    rebuild_search=rebuild_search,
-                ),
-            )
     return response
 
 
@@ -1636,10 +1603,9 @@ def run_scoped_build(
     write: bool,
     force: bool = False,
     media_only: bool = False,
-    log_activity: bool = True,
 ) -> Dict[str, Any]:
     scope = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids, detail_uid=detail_uid)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only, log_activity=log_activity)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only)
 
 
 def run_series_scoped_build(
@@ -1651,10 +1617,9 @@ def run_series_scoped_build(
     write: bool,
     force: bool = False,
     media_only: bool = False,
-    log_activity: bool = True,
 ) -> Dict[str, Any]:
     scope = build_scope_for_series(source_dir, series_id, extra_work_ids=extra_work_ids)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only, log_activity=log_activity)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only)
 
 
 def run_moment_scoped_build(
@@ -1665,130 +1630,10 @@ def run_moment_scoped_build(
     write: bool,
     force: bool = False,
     media_only: bool = False,
-    log_activity: bool = True,
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
     scope = build_scope_for_moment(repo_root, moment_file, metadata=metadata, force=force, env=env)
-    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only, log_activity=log_activity)
-
-
-def build_activity_entry_for_scoped_json_build(
-    *,
-    time_utc: str,
-    status: str,
-    work_ids: Sequence[str],
-    series_ids: Sequence[str],
-    generated_work_ids: Sequence[str] = (),
-    generated_detail_uids: Sequence[str] = (),
-    failed_step: str = "",
-    force: bool = False,
-    refresh_published: bool = False,
-    rebuild_search: bool = True,
-) -> Dict[str, Any]:
-    work_ids_list = list(work_ids)
-    series_ids_list = list(series_ids)
-    generated_work_ids_list = sorted(str(value) for value in generated_work_ids if str(value).strip())
-    generated_detail_uids_list = sorted(str(value) for value in generated_detail_uids if str(value).strip())
-    media_generated_count = len(generated_work_ids_list) + len(generated_detail_uids_list)
-    search_text = "rebuilt catalogue search" if rebuild_search else "skipped catalogue search"
-    summary = (
-        f"Scoped JSON build updated {len(work_ids_list)} work records, {len(series_ids_list)} series, {search_text}, and generated local media for {media_generated_count} record(s)."
-        if status == "completed"
-        else f"Scoped JSON build failed for {len(work_ids_list)} work records."
-    )
-    return {
-        "id": f"{time_utc}-build_catalogue_json-{work_ids_list[0] if work_ids_list else 'none'}",
-        "time_utc": time_utc,
-        "script": "build_catalogue_json",
-        "status": status,
-        "dry_run": False,
-        "planner_mode": "json-source-scoped",
-        "summary": summary,
-        "changes": {
-            "source": {
-                "works": sorted(work_ids_list),
-                "series": sorted(series_ids_list),
-                "work_details": [],
-            },
-            "media": {
-                "work": generated_work_ids_list,
-                "work_details": generated_detail_uids_list,
-                "moment": [],
-            },
-        },
-        "actions": {
-            "generate_work_ids": len(work_ids_list),
-            "generate_series_ids": len(series_ids_list),
-            "generate_local_media": media_generated_count > 0,
-            "rebuild_search": bool(rebuild_search),
-            "force_generate": bool(force),
-            "refresh_published": bool(refresh_published),
-        },
-        "results": {
-            "source_mode": "json",
-            "work_ids": sorted(work_ids_list),
-            "generated_work_media_ids": generated_work_ids_list,
-            "generated_detail_media_ids": generated_detail_uids_list,
-            "failed_step": failed_step,
-        },
-    }
-
-
-def build_activity_entry_for_scoped_moment_build(
-    *,
-    time_utc: str,
-    status: str,
-    moment_ids: Sequence[str],
-    generated_moment_ids: Sequence[str] = (),
-    failed_step: str = "",
-    force: bool = False,
-    refresh_published: bool = False,
-    rebuild_search: bool = True,
-) -> Dict[str, Any]:
-    moment_ids_list = sorted(str(moment_id) for moment_id in moment_ids if str(moment_id).strip())
-    generated_moment_ids_list = sorted(str(moment_id) for moment_id in generated_moment_ids if str(moment_id).strip())
-    search_text = "rebuilt catalogue search" if rebuild_search else "skipped catalogue search"
-    summary = (
-        f"Scoped moment build updated {len(moment_ids_list)} moment records, {search_text}, and generated local media for {len(generated_moment_ids_list)} moment record(s)."
-        if status == "completed"
-        else f"Scoped moment build failed for {len(moment_ids_list)} moment records."
-    )
-    first_id = moment_ids_list[0] if moment_ids_list else "none"
-    return {
-        "id": f"{time_utc}-build_catalogue_moment-{first_id}",
-        "time_utc": time_utc,
-        "script": "build_catalogue_moment",
-        "status": status,
-        "dry_run": False,
-        "planner_mode": "moment-source-scoped",
-        "summary": summary,
-        "changes": {
-            "source": {
-                "works": [],
-                "series": [],
-                "work_details": [],
-                "moments": moment_ids_list,
-            },
-            "media": {
-                "work": [],
-                "work_details": [],
-                "moment": generated_moment_ids_list,
-            },
-        },
-        "actions": {
-            "generate_moment_ids": len(moment_ids_list),
-            "generate_local_media": bool(generated_moment_ids_list),
-            "rebuild_search": bool(rebuild_search),
-            "force_generate": bool(force),
-            "refresh_published": bool(refresh_published),
-        },
-        "results": {
-            "source_mode": "moment-source",
-            "moment_ids": moment_ids_list,
-            "generated_moment_media_ids": generated_moment_ids_list,
-            "failed_step": failed_step,
-        },
-    }
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, media_only=media_only)
 
 
 def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, force: bool, media_only: bool) -> None:
@@ -1917,7 +1762,6 @@ def main() -> None:
         write=True,
         force=args.force,
         media_only=args.media_only,
-        log_activity=True,
     )
     if result["status"] != "completed":
         raise SystemExit(str(result.get("error") or "Scoped JSON build failed."))

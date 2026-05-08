@@ -63,11 +63,9 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `catalogue_lookup_work_base` with `record_id=<work_id>`
 - `catalogue_lookup_work_detail_base` with `record_id=<detail_uid>`
 - `catalogue_lookup_series_base` with `record_id=<series_id>`
-- `build_activity`
-- `catalogue_activity`
 - `activity_log`
 
-Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed files. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `assets/studio/data/build_activity.json`, `assets/studio/data/catalogue_activity.json`, and `assets/studio/data/activity_log.json` from its served source tree.
+Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, and `assets/studio/data/activity_log.json` from its served source tree.
 
 `POST /catalogue/project-state-report` accepts:
 
@@ -166,7 +164,7 @@ Request behavior:
 - for moment deletes, removes generated moment page/json artifacts, published thumbnails, and repo-local staged media
 - for moment deletes, removes the moment from `assets/data/moments_index.json` and rebuilds catalogue search so the search record disappears
 - refreshes derived lookup payloads after non-dry-run writes
-- records one aggregated Catalogue Activity entry for the delete operation
+- records one aggregated Studio Activity entry for the delete operation
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 
@@ -204,7 +202,7 @@ Preview behavior:
 - runs the scoped public update for `publish` and `save_published`
 - runs deterministic generated-artifact cleanup for `unpublish`
 - returns `status: "public_update_failed"` when a source write succeeds but the internal public update fails
-- records Catalogue Activity with `publication` operation names such as `series.publish`, `series.unpublish`, and `series.save_published`
+- records Studio Activity with `publication` operation names such as `series.publish`, `series.unpublish`, and `series.save_published`
 - moment `unpublish` also removes generated moment page/json artifacts, published thumbnails, repo-local staged media, the `assets/data/moments_index.json` entry, and the catalogue search record
 
 Standalone work publish remains stricter than series bootstrap publish: `work.publish` is blocked unless the work already belongs to at least one published series. Publishing a series is the bootstrap path for a new draft series with draft member works.
@@ -287,7 +285,7 @@ Apply behavior:
 - writes series prose to `_docs_src_catalogue/series/<series_id>.md`
 - refuses to overwrite different existing permanent prose content unless `confirm_overwrite` is true
 - intentionally does not create backup files for this prose import flow
-- records Catalogue Activity when a non-dry-run import writes changed prose
+- records Studio Activity when a non-dry-run import writes changed prose
 
 ## Scoped Build Media
 
@@ -345,7 +343,7 @@ Apply behavior:
 - writes canonical draft moment metadata to `assets/studio/data/catalogue/moments.json`
 - creates the normal catalogue JSON backup bundle for the metadata write
 - does not run local media generation, the scoped moment generator, or the catalogue search rebuild
-- records Catalogue Activity when a non-dry-run import writes source
+- records Studio Activity when a non-dry-run import writes source
 - when the request includes valid Studio activity context from `/studio/catalogue-moment/`, writes one unified Studio activity row for `import-source-data`
 
 ## Derived Lookup Refresh
@@ -520,7 +518,7 @@ Request behavior:
 - rejects apply when blocked workbook rows remain
 - writes only importable new records into canonical source JSON
 - refreshes derived lookup payloads after non-dry-run writes
-- writes one aggregated Catalogue Activity entry that records import counts rather than one entry per imported record
+- writes one aggregated Studio Activity entry that records import counts rather than one entry per imported record
 - when the request includes valid Studio activity context from `/studio/bulk-add-work/`, writes unified Studio activity rows for `import-source-data` and `rebuild-lookups`
 
 Work-owned files and links are saved through `POST /catalogue/work/save` as the work record's `downloads` and `links` arrays. The standalone work-file and work-link write endpoints are retired and return `410 Gone`.
@@ -658,8 +656,6 @@ The direct `POST /catalogue/build-apply` endpoint still uses the explicit broad 
 
 The apply endpoint updates:
 
-- `assets/studio/data/build_activity.json`
-- `assets/studio/data/catalogue_activity.json`
 - `assets/studio/data/activity_log.json` when valid Studio activity context is supplied for a covered action
 
 ## Validation
@@ -676,7 +672,6 @@ The server validates the proposed update through the shared catalogue source loa
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
-- source-save, source-import, report, and validation-failure events also update `assets/studio/data/catalogue_activity.json` for the Studio Catalogue Activity page where those legacy hooks still apply
 - covered save, create, delete, publication, import, and report actions also update `assets/studio/data/activity_log.json` when valid Studio activity context is supplied
 
 ## Dev Studio
@@ -705,9 +700,8 @@ Source JSON:
 - `assets/studio/data/catalogue/moments.json`
 - `assets/studio/data/catalogue/meta.json`
 
-Studio activity feeds:
+Studio activity feed:
 
-- `assets/studio/data/catalogue_activity.json`
 - `assets/studio/data/activity_log.json`
 
 Backup target:

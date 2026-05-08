@@ -151,8 +151,8 @@ Checks:
   - `/studio/catalogue-status/?family=works`
   - `/studio/catalogue-status/?family=work_details`
   - `/studio/catalogue-status/?family=moments`
-  - `/studio/catalogue-activity/`
-  - `/studio/build-activity/`
+  - `/studio/activity/`
+  - `/studio/activity/`
   - `/studio/bulk-add-work/`
 
 Expected results:
@@ -183,7 +183,7 @@ Checks:
 Expected results:
 
 - source save succeeds without leaving the editor unexpectedly
-- scoped rebuild completes and updates Build Activity
+- scoped rebuild completes and updates Studio Activity
 - the public work page reflects the expected runtime state after rebuild
 
 ## 5. Work Bulk Edit
@@ -364,12 +364,12 @@ Expected results:
 - moment import writes body-only prose plus canonical draft metadata
 - publishing or saving an already published moment updates activity/build reporting and public runtime as expected
 
-## 12. Catalogue Activity And Build Activity
+## 12. Studio Activity And Studio Activity
 
 Route:
 
-- `/studio/catalogue-activity/`
-- `/studio/build-activity/`
+- `/studio/activity/`
+- `/studio/activity/`
 
 Owner:
 
@@ -377,8 +377,8 @@ Owner:
 
 Checks:
 
-- confirm a source save or import produces a Catalogue Activity entry
-- confirm a rebuild produces a Build Activity entry
+- confirm a source save or import produces a Studio Activity entry
+- confirm a rebuild produces a Studio Activity entry
 - sort by multiple headers on each page
 - follow links from activity rows back into relevant editors or next-step routes
 - confirm local media generation results are visible where expected

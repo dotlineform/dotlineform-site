@@ -55,7 +55,7 @@ Current flow:
    - blocked reasons and sample rows
 3. if the preview has blocked rows, apply is disabled
 4. `POST /catalogue/import-apply` re-runs the same plan and writes only new records into canonical source JSON
-5. successful apply refreshes derived lookup payloads, writes an aggregated Catalogue Activity entry, and appends unified Studio activity rows for import and lookup refresh
+5. successful apply refreshes derived lookup payloads, writes an aggregated Studio Activity entry, and appends unified Studio activity rows for import and lookup refresh
 
 This page does not upload workbook files, edit workbook rows, or write anything back into Excel.
 

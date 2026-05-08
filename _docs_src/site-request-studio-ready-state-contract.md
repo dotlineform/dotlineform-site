@@ -63,9 +63,9 @@ Adopted routes:
 - `/studio/catalogue-work-detail/`
 - `/studio/catalogue-series/`
 - `/studio/catalogue-moment/`
-- `/studio/build-activity/`
+- `/studio/activity/`
 - `/studio/bulk-add-work/`
-- `/studio/catalogue-activity/`
+- `/studio/activity/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
@@ -96,7 +96,7 @@ Enforcement helper:
 
 The page also exposes:
 
-- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|build-activity|bulk-add-work|catalogue-activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|data-import|studio-audits|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
+- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|activity|bulk-add-work|activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|data-import|studio-audits|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
 - `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary|session|edit|dashboard|landing|reference"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
@@ -107,9 +107,9 @@ Primary async, service-backed, dashboard, landing, and reference Studio routes h
 
 Primary async or service-backed Studio routes:
 
-- [x] `/studio/build-activity/` root `#buildActivityRoot`
+- [x] `/studio/activity/` root `#buildActivityRoot`
 - [x] `/studio/bulk-add-work/` root `#bulkAddWorkRoot`
-- [x] `/studio/catalogue-activity/` root `#catalogueActivityRoot`
+- [x] `/studio/activity/` root `#catalogueActivityRoot`
 - [x] `/studio/catalogue-field-registry/` root `#fieldRegistryReviewRoot`
 - [x] `/studio/catalogue-moment/` root `#catalogueMomentRoot`
 - [x] `/studio/catalogue-series/` root `#catalogueSeriesRoot`
@@ -183,7 +183,7 @@ Route-specific status-text waits should become fallback checks rather than the n
 2. Adopt the attributes on one catalogue editor route first.
 3. Update the smoke-test harness guidance in [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing).
 4. Roll the contract across the remaining catalogue editors. Completed for work-detail, series, and moment.
-5. Extend the contract across operational catalogue and docs-maintenance routes. Current pass completed Build Activity, Bulk Add Work, Catalogue Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, and Project State.
+5. Extend the contract across operational catalogue and docs-maintenance routes. Current pass completed Studio Activity, Bulk Add Work, Studio Activity, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, and Project State.
 6. Extend the contract across tag tools and Studio Works. Current pass completed Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry.
 7. Extend to lower-priority dashboard, landing, and reference Studio pages. Current pass completed the Studio home, domain dashboards, and UI catalogue reference pages with static or lightweight dashboard ready state.
 

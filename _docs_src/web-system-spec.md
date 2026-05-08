@@ -61,9 +61,8 @@ Recommended route progression:
   - records needing attention
   - lists source records where `status` is not `published`
   - links each row to the relevant editor
-- `/studio/catalogue/activity/`
-  - catalogue source and build activity
-  - modelled on `/studio/build-activity/`
+- `/studio/activity/`
+  - unified Studio activity
   - provides quick access to data-change logs, validation results, imports, and build output summaries
 - `/studio/catalogue/work/?work=<work_id>`
   - work metadata editor
@@ -481,7 +480,7 @@ The live user-facing generator path is the scoped JSON build CLI:
 
 ## Build Flow
 
-The retired `build_catalogue.py` coupled source-change planning, media copy/srcset, generation, stale cleanup, search rebuild, and build activity.
+The retired `build_catalogue.py` coupled source-change planning, media copy/srcset, generation, stale cleanup, search rebuild, and activity summaries.
 
 New target flow:
 
@@ -537,9 +536,9 @@ Log event fields:
 
 Do not log full record payloads unless a temporary debug mode is explicitly enabled.
 
-## Catalogue Activity Page
+## Studio Activity Page
 
-Studio should add a catalogue activity page modelled on `/studio/build-activity/`.
+Studio should use the unified activity page at `/studio/activity/`.
 
 Purpose:
 
@@ -547,15 +546,15 @@ Purpose:
 - replace the useful parts of CLI script output with an easy local UI entry point
 - provide links or summaries for logs without requiring a complete diff viewer in the first pass
 
-Recommended route:
+Route:
 
-- `/studio/catalogue/activity/`
+- `/studio/activity/`
 
 Initial data sources:
 
 - `var/studio/catalogue/logs/catalogue_write_server.log`
 - `var/studio/catalogue/logs/catalogue_build.log`, if a separate build command/service is added
-- a Studio-facing summary JSON such as `assets/studio/data/catalogue_activity.json`
+- a Studio-facing summary JSON such as `assets/studio/data/activity_log.json`
 
 Initial UI:
 

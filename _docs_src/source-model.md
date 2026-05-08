@@ -278,7 +278,7 @@ Avoid storing mutable counters unless needed. For work IDs and detail IDs, deriv
 Studio should have a small activity summary artifact for catalogue source and build events:
 
 ```text
-assets/studio/data/catalogue_activity.json
+assets/studio/data/activity_log.json
 ```
 
 Recommended shape:
@@ -286,7 +286,7 @@ Recommended shape:
 ```json
 {
   "header": {
-    "schema": "catalogue_activity_v1",
+    "schema": "activity_log_v1",
     "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 1
   },

@@ -196,7 +196,7 @@ The script should:
 
 The first implementation can be CLI-only.
 
-A later Studio integration could expose a local-only command from catalogue editors or build activity, but browser-side code must never receive raw R2 credentials.
+A later Studio integration could expose a local-only command from catalogue editors or unified Studio Activity, but browser-side code must never receive raw R2 credentials.
 If Studio triggers uploads, the local write service should own credential reads and upload execution.
 
 ## Documentation Requirements

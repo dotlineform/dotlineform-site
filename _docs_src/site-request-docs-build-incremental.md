@@ -74,7 +74,7 @@ Original implementation facts at request start:
 Current effect:
 
 - Jekyll sees a large change set in `assets/data/docs/scopes/...` even when only a few source docs changed
-- local rebuild activity looks broader than the underlying source change
+- local rebuild reporting looks broader than the underlying source change
 - no-op or near-no-op docs edits still trigger wide watcher churn
 
 Important boundary:

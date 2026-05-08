@@ -47,7 +47,7 @@ Before this request was implemented, `work`, `work_detail`, and `series` deletes
 - cascade work deletes to dependent detail records and work-owned file/link metadata
 - remove a deleted series id from affected work source records
 - refresh Studio catalogue lookup payloads
-- write a Catalogue Activity entry
+- write a Studio Activity entry
 
 The gap was:
 

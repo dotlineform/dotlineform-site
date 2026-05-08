@@ -22,8 +22,8 @@ Current responsibilities include:
 - JSON data paths used by Studio and search loaders
 - shared Docs Viewer settings used by `/docs/` and `/library/`
 - scope-specific Docs Viewer UI status emoji definitions
-- the route and feed path for the current Studio build-activity page
-- route and data paths for catalogue status, catalogue activity, project-state reporting, and catalogue editor pages
+- the route and feed path for the current Studio activity page
+- route and data paths for catalogue status, unified activity, project-state reporting, and catalogue editor pages
 - route and data paths for the shared Studio data export/import pages
 - the Studio Audits route path and UI text
 - catalogue UI options such as the Studio series-type dropdown values
@@ -43,9 +43,9 @@ Current direct consumers of that loader include:
 - `assets/studio/js/series-tags.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
-- `assets/studio/js/build-activity.js`
+- `assets/studio/js/activity.js`
 - `assets/studio/js/catalogue-status.js`
-- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/js/activity.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/studio-audits.js`

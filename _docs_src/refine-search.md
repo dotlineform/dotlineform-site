@@ -56,4 +56,4 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 
 - what are the first Search workflows that need Studio entry points
 - which search checks should surface as dashboard status versus deeper drill-down tools
-- where should Search operational reporting meet or stay separate from Catalogue and Build Activity
+- where should Search operational reporting meet or stay separate from Catalogue and Studio Activity

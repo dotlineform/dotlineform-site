@@ -37,7 +37,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `project_state`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
+- catalogue route lookup such as `catalogue_status`, `activity_log`, `project_state`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_moment_editor`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -141,7 +141,7 @@ Catalogue editor local save behavior:
 - writes are constrained to allowlisted canonical catalogue source JSON
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - backup bundles are written under `var/studio/catalogue/backups/`
-- activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
+- activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/activity_log.json`
 - backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 - bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
@@ -205,7 +205,7 @@ Catalogue scoped rebuild behavior:
 - the series editor requests a series-scoped preview from the same endpoint, including any removed member works that still need rebuild
 - `POST /catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
 - the apply step then rebuilds `assets/data/search/catalogue/index.json`
-- Studio build activity records these JSON-source scoped rebuilds in the current build feed
+- unified Studio Activity records these JSON-source scoped rebuilds
 
 ### Offline Session Mode
 

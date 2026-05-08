@@ -4,8 +4,6 @@ let studioConfigModulePromise = null;
 
 const CATALOGUE_SERVER_READ_KEYS = new Set([
   "activity_log",
-  "build_activity",
-  "catalogue_activity",
   "catalogue_works",
   "catalogue_work_details",
   "catalogue_series",

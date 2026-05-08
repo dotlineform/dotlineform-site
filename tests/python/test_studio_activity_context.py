@@ -237,7 +237,7 @@ def test_context_must_match_expected_action_and_record() -> None:
     )
 
 
-def test_catalogue_build_activity_rows_follow_attempted_steps() -> None:
+def test_catalogue_build_studio_activity_rows_follow_attempted_steps() -> None:
     context = normalize(
         {
             "page_id": "catalogue-series",
@@ -254,7 +254,7 @@ def test_catalogue_build_activity_rows_follow_attempted_steps() -> None:
         record_id_field="series_id",
         record_id="009",
     )
-    rows = server.catalogue_build_activity_rows(
+    rows = server.catalogue_build_studio_activity_rows(
         server.ACTIVITY_PROFILE_SAVE_SERIES,
         context,
         {
@@ -329,10 +329,10 @@ def main() -> None:
     test_batch_c_catalogue_service_contexts_are_normalized()
     test_activity_profiles_match_registry()
     test_context_must_match_expected_action_and_record()
-    test_catalogue_build_activity_rows_follow_attempted_steps()
+    test_catalogue_build_studio_activity_rows_follow_attempted_steps()
     test_delete_activity_rows_follow_profile_order()
     test_moment_create_stays_out_of_batch_b_contract()
-    print("Catalogue activity context tests OK")
+    print("Studio activity context tests OK")
 
 
 if __name__ == "__main__":
