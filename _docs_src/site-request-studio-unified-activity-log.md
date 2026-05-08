@@ -543,6 +543,8 @@ Batch B findings:
 
 ### Batch C: Import, Export, Report, Audit, And Utility Actions
 
+Status: in progress.
+
 Scope:
 
 - bulk add import apply
@@ -560,6 +562,21 @@ Tasks:
 - emit summary rows with counts, warnings, output files, and affected record groups
 - record findings for any command whose UI wording or persistence boundary is unclear
 - keep service-specific result panels in place while adding persistent activity rows
+
+Batch C progress:
+
+- `done`: bulk add workbook import apply now records imported source-data and lookup-refresh rows for the initiating `/studio/bulk-add-work/` Import action.
+- `done`: moment staged import apply now records imported source-data rows for the initiating `/studio/catalogue-moment/` Import action.
+- `done`: project-state report generation now records a generated-report row for the initiating `/studio/project-state/` Run action.
+- `remaining`: docs import apply, Studio data export/import apply, docs broken-links audit, Studio audits, and tag registry/alias/assignment write actions.
+
+Batch C findings:
+
+| Route/control | User action | Observed behavior | Activity-log impact | Handling |
+|---|---|---|---|---|
+| `/studio/catalogue-moment/` `#catalogueMomentImportApply` | `import moment` | Moment creation is a staged source import that writes body-only prose and canonical metadata, then opens the draft in the editor. | The truthful row is import-shaped, not create-shaped, and should not imply a normal metadata Save path. | `done`: Batch C records it as `import moment` with `import source data`. |
+| `/studio/bulk-add-work/` `#bulkAddWorkApply` | `import workbook records` | Workbook apply can import works or work details depending on the selected mode, and preview-only commands do not persist. | The mode is the meaningful activity target; record ids belong in detail/record groups rather than separate actions. | `done`: Batch C uses one action with mode-specific record groups and duplicate/count detail. |
+| `/studio/project-state/` `#projectStateRunButton` | `run project-state report` | The command writes a generated Markdown report rather than catalogue source data. | The row needs a report purpose rather than source-save/import wording. | `done`: Batch C records it as `generate report` with summary counts and the report path. |
 
 ### Batch D: Old Report Retirement And Hook Cleanup
 

@@ -65,8 +65,9 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `catalogue_lookup_series_base` with `record_id=<series_id>`
 - `build_activity`
 - `catalogue_activity`
+- `activity_log`
 
-Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed files. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `assets/studio/data/build_activity.json`, and `assets/studio/data/catalogue_activity.json` from its served source tree.
+Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed files. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `assets/studio/data/build_activity.json`, `assets/studio/data/catalogue_activity.json`, and `assets/studio/data/activity_log.json` from its served source tree.
 
 `POST /catalogue/project-state-report` accepts:
 
@@ -77,6 +78,7 @@ Reads are allowlisted by key. They do not expose arbitrary repository paths. The
 ```
 
 It runs `./scripts/project_state_report.py` through its shared Python entrypoint. It writes `_docs_src/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path. `include_subfolders` defaults to `false`; default mode counts every direct `/projects/<project_folder>` folder. When true, the report also includes `/projects/<project_folder>/<sub-folder>` directories while still skipping detail folders.
+When the request includes valid Studio activity context from `/studio/project-state/`, a non-dry-run write also appends one unified Studio activity row with script purpose `generate-report`, summary counts, and the report path.
 
 `POST /catalogue/bulk-save` expects:
 
@@ -344,6 +346,7 @@ Apply behavior:
 - creates the normal catalogue JSON backup bundle for the metadata write
 - does not run local media generation, the scoped moment generator, or the catalogue search rebuild
 - records Catalogue Activity when a non-dry-run import writes source
+- when the request includes valid Studio activity context from `/studio/catalogue-moment/`, writes one unified Studio activity row for `import-source-data`
 
 ## Derived Lookup Refresh
 
@@ -518,6 +521,7 @@ Request behavior:
 - writes only importable new records into canonical source JSON
 - refreshes derived lookup payloads after non-dry-run writes
 - writes one aggregated Catalogue Activity entry that records import counts rather than one entry per imported record
+- when the request includes valid Studio activity context from `/studio/bulk-add-work/`, writes unified Studio activity rows for `import-source-data` and `rebuild-lookups`
 
 Work-owned files and links are saved through `POST /catalogue/work/save` as the work record's `downloads` and `links` arrays. The standalone work-file and work-link write endpoints are retired and return `410 Gone`.
 
@@ -656,6 +660,7 @@ The apply endpoint updates:
 
 - `assets/studio/data/build_activity.json`
 - `assets/studio/data/catalogue_activity.json`
+- `assets/studio/data/activity_log.json` when valid Studio activity context is supplied for a covered action
 
 ## Validation
 
@@ -671,8 +676,8 @@ The server validates the proposed update through the shared catalogue source loa
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
-- source-save and validation-failure events also update `assets/studio/data/catalogue_activity.json` for the Studio Catalogue Activity page
-- scoped rebuild apply events also update both Studio activity feeds
+- source-save, source-import, report, and validation-failure events also update `assets/studio/data/catalogue_activity.json` for the Studio Catalogue Activity page where those legacy hooks still apply
+- covered save, create, delete, publication, import, and report actions also update `assets/studio/data/activity_log.json` when valid Studio activity context is supplied
 
 ## Dev Studio
 
@@ -700,9 +705,10 @@ Source JSON:
 - `assets/studio/data/catalogue/moments.json`
 - `assets/studio/data/catalogue/meta.json`
 
-Studio activity feed:
+Studio activity feeds:
 
 - `assets/studio/data/catalogue_activity.json`
+- `assets/studio/data/activity_log.json`
 
 Backup target:
 

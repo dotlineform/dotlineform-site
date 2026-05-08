@@ -2,7 +2,7 @@
 doc_id: project-state-page
 title: Project State Page
 added_date: 2026-04-27
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-08 18:20"
 parent_id: catalogue
 sort_order: 90
 ---
@@ -31,6 +31,7 @@ The report currently includes:
 - work records missing `project_folder` or `project_filename`
 
 The page shows the output path and summary counts after a successful run. The Markdown file is intentionally `published: false`; use the page's file-open command to inspect the source document locally.
+Successful report generation also appends one unified Studio activity row for `run project-state report` with the output path and summary counts.
 
 The `include sub-folders` checkbox is off by default. When unchecked, the report scans every direct `/projects/<project_folder>` directory. Image mismatch sections still inspect only direct image files inside those folders. When checked, the report also includes `/projects/<project_folder>/<sub-folder>` directories, while still skipping detail folders.
 

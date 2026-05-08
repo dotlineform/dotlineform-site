@@ -734,27 +734,37 @@ async function applyMomentImport(state) {
   setTextWithState(state.importResultNode, "");
   try {
     const metadata = readImportMetadata(state);
+    const momentId = normalizeMomentId(normalizeMomentFilename(momentFile).replace(/\.md$/i, ""));
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, {
       moment_file: momentFile,
-      metadata
+      metadata,
+      activity_context: buildStudioActivityContext({
+        pageId: "catalogue-moment",
+        actionId: "import-moment",
+        route: "/studio/catalogue-moment/",
+        controlId: "catalogueMomentImportApply",
+        controlSelector: "#catalogueMomentImportApply",
+        recordIdField: "moment_id",
+        recordId: momentId
+      })
     });
     state.importPreview = response && response.preview ? response.preview : state.importPreview;
     state.importBuild = response && response.build ? response.build : state.importBuild;
     state.importSteps = Array.isArray(response && response.steps) ? response.steps : [];
-    const momentId = normalizeMomentId(response && response.moment_id ? response.moment_id : state.importPreview && state.importPreview.moment_id);
-    const importedRecord = normalizeRecord(momentId, {
+    const importedMomentId = normalizeMomentId(response && response.moment_id ? response.moment_id : state.importPreview && state.importPreview.moment_id);
+    const importedRecord = normalizeRecord(importedMomentId, {
       ...metadata,
-      moment_id: momentId,
+      moment_id: importedMomentId,
       status: "draft"
     });
-    upsertMomentRow(state, momentId, importedRecord);
-    state.searchNode.value = momentId;
+    upsertMomentRow(state, importedMomentId, importedRecord);
+    state.searchNode.value = importedMomentId;
     clearRequestedImportFile();
-    await openMoment(state, momentId);
+    await openMoment(state, importedMomentId);
     setTextWithState(state.statusNode, t(state, "import_status_success", "Moment import completed."), "success");
     setTextWithState(
       state.resultNode,
-      t(state, "import_result_success", "Imported draft moment {moment_id}.", { moment_id }),
+      t(state, "import_result_success", "Imported draft moment {moment_id}.", { moment_id: importedMomentId }),
       "success"
     );
   } catch (error) {

@@ -13,6 +13,7 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -219,7 +220,18 @@ async function applyImport(state) {
   setTextWithState(state.statusNode, t(state, "apply_status_running", "Applying workbook import…"));
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.importApply, { mode: state.mode });
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.importApply, {
+      mode: state.mode,
+      activity_context: buildStudioActivityContext({
+        pageId: "bulk-add-work",
+        actionId: "import-workbook-records",
+        route: "/studio/bulk-add-work/",
+        controlId: "bulkAddWorkApply",
+        controlSelector: "#bulkAddWorkApply",
+        recordIdField: "import_mode",
+        recordId: state.mode
+      })
+    });
     state.preview = response && response.preview ? response.preview : state.preview;
     setTextWithState(
       state.statusNode,

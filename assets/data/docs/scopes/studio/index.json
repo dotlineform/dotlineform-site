@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T17:36:06Z",
+  "generated_at": "2026-05-08T18:01:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -41,7 +41,7 @@
       "doc_id": "site-request-studio-unified-activity-log-inventory",
       "title": "Activity Log Coverage Inventory",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 17:40",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "site-request-studio-unified-activity-log",
       "sort_order": 10,
       "published": true,
@@ -49,7 +49,7 @@
       "source_path": "site-request-studio-unified-activity-log-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log-inventory.json",
-      "content_text_length": 21007,
+      "content_text_length": 21158,
       "ui_status": "in-progress"
     },
     {
@@ -1106,7 +1106,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 28372
+      "content_text_length": 29269
     },
     {
       "scope": "studio",
@@ -1521,7 +1521,7 @@
       "doc_id": "studio-activity",
       "title": "Studio Activity",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 17:08",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "studio",
       "sort_order": 53,
       "published": true,
@@ -1529,7 +1529,7 @@
       "source_path": "studio-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-activity.json",
-      "content_text_length": 1910
+      "content_text_length": 2027
     },
     {
       "scope": "studio",
@@ -2169,7 +2169,7 @@
       "doc_id": "project-state-page",
       "title": "Project State Page",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "catalogue",
       "sort_order": 90,
       "published": true,
@@ -2177,7 +2177,7 @@
       "source_path": "project-state-page.md",
       "viewer_url": "/docs/?scope=studio&doc=project-state-page",
       "content_url": "/assets/data/docs/scopes/studio/by-id/project-state-page.json",
-      "content_text_length": 2094
+      "content_text_length": 2238
     },
     {
       "scope": "studio",
@@ -2756,7 +2756,7 @@
       "doc_id": "catalogue-moment-editor",
       "title": "Catalogue Moment Editor",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "user-guide",
       "sort_order": 182,
       "published": true,
@@ -2764,7 +2764,7 @@
       "source_path": "catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json",
-      "content_text_length": 6036
+      "content_text_length": 6166
     },
     {
       "scope": "studio",
@@ -2787,7 +2787,7 @@
       "doc_id": "bulk-add-work",
       "title": "Bulk Add Work",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-06 20:50",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "user-guide",
       "sort_order": 192,
       "published": true,
@@ -2795,7 +2795,7 @@
       "source_path": "bulk-add-work.md",
       "viewer_url": "/docs/?scope=studio&doc=bulk-add-work",
       "content_url": "/assets/data/docs/scopes/studio/by-id/bulk-add-work.json",
-      "content_text_length": 2530
+      "content_text_length": 2599
     },
     {
       "scope": "studio",
@@ -2890,7 +2890,7 @@
       "source_path": "site-request-studio-unified-activity-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log.json",
-      "content_text_length": 29908,
+      "content_text_length": 31679,
       "ui_status": "in-progress"
     },
     {
@@ -2984,7 +2984,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 59558
+      "content_text_length": 60655
     },
     {
       "scope": "studio",

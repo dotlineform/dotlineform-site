@@ -15,6 +15,7 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -96,7 +97,16 @@ async function runReport(state) {
   setTextWithState(state.resultNode, "");
   try {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.projectStateReport, {
-      include_subfolders: Boolean(state.includeSubfoldersNode.checked)
+      include_subfolders: Boolean(state.includeSubfoldersNode.checked),
+      activity_context: buildStudioActivityContext({
+        pageId: "project-state",
+        actionId: "run-project-state-report",
+        route: "/studio/project-state/",
+        controlId: "projectStateRunButton",
+        controlSelector: "#projectStateRunButton",
+        recordIdField: "activity_target",
+        recordId: "project-state"
+      })
     });
     state.summary = response && response.summary ? response.summary : {};
     state.outputPath = normalizeText(response && response.output_path) || state.outputPath;

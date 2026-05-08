@@ -450,6 +450,39 @@ ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
         lookup_script_purpose_id="",
     ),
 }
+ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS = ActivityActionProfile(
+    page_id="bulk-add-work",
+    action_id="import-workbook-records",
+    route="/studio/bulk-add-work/",
+    control_id="bulkAddWorkApply",
+    control_selector="#bulkAddWorkApply",
+    endpoint=IMPORT_APPLY_PATH,
+    record_family="workbook_import",
+    record_id_field="import_mode",
+    script_purpose_ids=("import-source-data", "rebuild-lookups"),
+)
+ACTIVITY_PROFILE_IMPORT_MOMENT = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
+    action_id="import-moment",
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
+    control_id="catalogueMomentImportApply",
+    control_selector="#catalogueMomentImportApply",
+    endpoint=MOMENT_IMPORT_APPLY_PATH,
+    record_family="moment",
+    record_id_field="moment_id",
+    script_purpose_ids=("import-source-data",),
+)
+ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
+    page_id="project-state",
+    action_id="run-project-state-report",
+    route="/studio/project-state/",
+    control_id="projectStateRunButton",
+    control_selector="#projectStateRunButton",
+    endpoint=PROJECT_STATE_REPORT_PATH,
+    record_family="report",
+    record_id_field="activity_target",
+    script_purpose_ids=("generate-report",),
+)
 ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_SAVE_WORK,
     ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
@@ -460,6 +493,9 @@ ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_CREATE_SERIES,
     *ACTIVITY_PUBLICATION_PROFILES.values(),
     *ACTIVITY_DELETE_PROFILES.values(),
+    ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS,
+    ACTIVITY_PROFILE_IMPORT_MOMENT,
+    ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT,
 )
 
 BULK_WORK_EDITABLE_FIELDS = {
@@ -5687,6 +5723,11 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_import_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         mode = extract_import_mode(body)
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS,
+            record_id=mode,
+        )
         workbook_path = (self.server.repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve()
         plan = build_workbook_import_plan(self.server.source_dir, workbook_path, mode)
         preview_payload = plan_to_response(plan, repo_root=self.server.repo_root)
@@ -5730,6 +5771,8 @@ class Handler(BaseHTTPRequestHandler):
             "target_kind": target_kind,
             "preview": preview_payload,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -5769,6 +5812,41 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+            if activity_context:
+                imported_ids = sorted(plan.importable_records.keys())
+                record_groups = activity_record_groups(
+                    works=imported_ids if mode == IMPORT_MODE_WORKS else [],
+                    work_details=imported_ids if mode == IMPORT_MODE_WORK_DETAILS else [],
+                )
+                detail_label = "work" if mode == IMPORT_MODE_WORKS else "work detail"
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    [
+                        studio_activity_entry(
+                            activity_context,
+                            now_utc=now_utc,
+                            script_purpose_id="import-source-data",
+                            status="completed",
+                            record_groups=record_groups,
+                            detail_items=[
+                                f"Imported {plan.importable_count} {detail_label} record(s) from workbook",
+                                f"{plan.duplicate_count} duplicate record(s) already existed",
+                                f"Candidate rows reviewed: {plan.total_candidate_rows}",
+                            ],
+                            source_refs=[
+                                {"kind": "source", "path": str(DEFAULT_IMPORT_WORKBOOK_PATH)},
+                                *catalogue_log_source_ref(),
+                            ],
+                        ),
+                        catalogue_lookup_activity_row(
+                            activity_context,
+                            now_utc=now_utc,
+                            record_groups=record_groups,
+                            detail_items=[f"Refreshed catalogue lookup data after workbook {detail_label} import"],
+                        ),
+                    ],
+                )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _read_json_body(self) -> Dict[str, Any]:
@@ -6327,12 +6405,17 @@ class Handler(BaseHTTPRequestHandler):
         target_payloads: Dict[Path, Dict[str, Any]] = {
             metadata_path: moment_metadata_payload(metadata_records),
         }
+        moment_id = str(preview.get("moment_id") or moment_id_for_write).strip().lower()
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            ACTIVITY_PROFILE_IMPORT_MOMENT,
+            record_id=moment_id,
+        )
         backup_paths: list[Path] = []
         if not self.server.dry_run:
             atomic_write_text_no_backup(target_path, text)
             backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
 
-        moment_id = str(preview.get("moment_id") or moment_id_for_write).strip().lower()
         payload: Dict[str, Any] = {
             "ok": True,
             "moment_file": preview.get("moment_file") or moment_file,
@@ -6346,6 +6429,8 @@ class Handler(BaseHTTPRequestHandler):
             "metadata_path": str(preview.get("metadata_path") or ""),
             "target_path": str(preview.get("target_path") or ""),
         }
+        if activity_context:
+            payload["activity_context"] = activity_context
         if self.server.dry_run:
             payload["dry_run"] = True
         if backup_paths:
@@ -6369,11 +6454,36 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+            if activity_context:
+                append_studio_activity_rows(
+                    self.server,
+                    payload,
+                    [
+                        studio_activity_entry(
+                            activity_context,
+                            now_utc=payload["completed_at_utc"],
+                            script_purpose_id="import-source-data",
+                            status="completed",
+                            record_groups=activity_record_groups(moments=[moment_id]),
+                            detail_items=[
+                                f"Imported draft moment source {moment_id}",
+                                f"Wrote body-only moment prose to {self.server.rel_path(target_path)}",
+                                f"Saved canonical moment metadata for {moment_id}",
+                            ],
+                            source_refs=catalogue_log_source_ref(),
+                        )
+                    ],
+                )
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _handle_project_state_report(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         include_subfolders = bool(body.get("include_subfolders"))
+        activity_context = normalize_activity_context_for_profile(
+            body.get("activity_context"),
+            ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT,
+            record_id="project-state",
+        )
         projects_base_dir = resolve_projects_base_dir()
         result = build_project_state_report(
             repo_root=self.server.repo_root,
@@ -6393,6 +6503,8 @@ class Handler(BaseHTTPRequestHandler):
             "written": result["written"],
             "dry_run": self.server.dry_run,
         }
+        if activity_context:
+            payload["activity_context"] = activity_context
         self.server.log_event(
             "project_state_report",
             {
@@ -6404,6 +6516,38 @@ class Handler(BaseHTTPRequestHandler):
                 "summary": result["summary"],
             },
         )
+        if activity_context and not self.server.dry_run and result["written"]:
+            summary = result["summary"] if isinstance(result.get("summary"), Mapping) else {}
+            append_studio_activity_rows(
+                self.server,
+                payload,
+                [
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=str(result["generated_at_utc"]),
+                        script_purpose_id="generate-report",
+                        status="completed",
+                        record_groups={
+                            "works": [],
+                            "series": [],
+                            "work_details": [],
+                            "moments": [],
+                            "files": [str(result["output_path"])],
+                        },
+                        detail_items=[
+                            f"Wrote project-state report to {result['output_path']}",
+                            f"Source folders: {int(summary.get('source_folder_count') or 0)}",
+                            f"Source images: {int(summary.get('source_image_count') or 0)}",
+                            f"Unrepresented folders: {int(summary.get('unrepresented_folder_count') or 0)}",
+                            f"Unrepresented images: {int(summary.get('unrepresented_image_count') or 0)}",
+                        ],
+                        source_refs=[
+                            {"kind": "report", "path": str(result["output_path"])},
+                            *catalogue_log_source_ref(),
+                        ],
+                    )
+                ],
+            )
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _send_json(self, status: HTTPStatus, payload: Dict[str, Any], allowed: Optional[str] = None) -> None:

@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 17:40"
+last_updated: "2026-05-08 18:20"
 ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -14,7 +14,8 @@ Status:
 
 - initial v1 planning inventory
 - v1 implementation target selected
-- broader Studio surface area not yet implemented
+- Batch C catalogue-service slice in progress
+- broader docs/tag/audit surface area not yet implemented
 
 ## Purpose
 
@@ -31,6 +32,7 @@ Use these status values consistently:
 | Status | Meaning |
 |---|---|
 | `v1-target` | In scope for the first implementation slice. |
+| `in-progress` | Partially implemented across the current batch. |
 | `planned` | Should be covered after v1 proves the contract. |
 | `future` | Worth supporting later, but not needed for the initial catalogue activity report. |
 | `excluded` | Not an activity-log source because it is navigation, read-only filtering, sorting, or local-only form editing. |
@@ -78,7 +80,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Batch A: catalogue editor save paths | `done` | work save; work-detail save; series save; moment save | Single-record metadata saves now emit unified activity rows. Bulk/create/delete/publication paths stay in later batches. Moment save intentionally excludes lookup rows because it does not currently write Studio lookup payloads. |
 | Batch B0: activity action profiles | `done` | shared profile layer for covered activity actions | Keeps runtime page/action/control/endpoint/record-family ids aligned with the structured registry before adding more action types. The profile does not own mutation behavior. |
 | Batch B: catalogue create/delete/publication paths | `done` | create work/detail/series; delete work/detail/series/moment; publish/unpublish work/detail/series/moment | Preserves initiating context through preview/confirmation flows. Moment import/create and readiness prose/media writes move to Batch C because their write boundaries are import/utility-shaped rather than normal create/delete/publication metadata actions. |
-| Batch C: import/export/report/audit/utility actions | `planned` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | Cover durable writes and generated reports. Keep preview-only commands excluded unless they persist data. |
+| Batch C: import/export/report/audit/utility actions | `in-progress` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | First catalogue-service slice covers workbook import apply, moment import apply, and project-state report generation. Keep preview-only commands excluded unless they persist data. |
 | Batch D: old report retirement and hook cleanup | `planned` | old activity routes, feeds, hooks, navigation | Keep old pages visible while old hooks remain live; remove or redirect only after unified rows cover equivalent activity. |
 
 ## Catalogue Pages
@@ -108,15 +110,15 @@ The script-purpose label describes each downstream operation recorded as its own
 | Catalogue series editor | `/studio/catalogue-series/` | readiness action `data-prose-import="series"` | `import series prose` | prose import preview; prose source write; backup when overwriting | `planned` | Similar to work prose import. |
 | Catalogue series editor | `/studio/catalogue-series/` | member add/remove/primary buttons | none | none | `excluded` | Local form edits until series Save. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentSave` `Save` | `save moment` | save canonical moment record; rebuild public moment when applicable; update search | `done` | Moment saves do not currently write Studio catalogue lookup payloads, so Batch A does not emit a lookup row for this action. |
-| Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentNew` then `#catalogueMomentSave` | `create moment` | create canonical moment record through import/apply path | `deferred` | Current creation is staged import, not Save-in-new-mode metadata creation, so coverage belongs with import actions in Batch C. |
+| Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentNew` then `#catalogueMomentSave` | `create moment` | create canonical moment record through import/apply path | `done` | Implemented as `import moment`; current creation is staged import, not Save-in-new-mode metadata creation. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentPublication` | `publish moment` / `unpublish moment` | publication preview; status change; public moment build or cleanup; search update | `done` | Batch B coverage. Moment publication does not currently write Studio catalogue lookup payloads. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentDelete` | `delete moment` | delete preview; delete canonical moment; clean public artifacts; update search; local media cleanup when applicable | `done` | Batch B coverage. Moment delete does not currently write Studio catalogue lookup payloads. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportPreview` `Preview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
-| Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportApply` `Import` | `import moment` | staged moment import apply; canonical moment source write; media/prose source consequences when applicable | `planned` | The compatibility route redirects here, so coverage belongs to the editor page. |
+| Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportApply` `Import` | `import moment` | staged moment import apply; canonical moment metadata write; body-only prose source write | `done` | The compatibility route redirects here, so coverage belongs to the editor page. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | readiness prose/media actions | `import moment prose` / `refresh moment media` | prose source write or media-only build; backup or blocked-media detail as applicable | `planned` | Keep separate from metadata Save. |
 | Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkPreview` `Preview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
-| Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkApply` `Import` | `import workbook records` | create new canonical work or work-detail records; backup; refresh lookups | `planned` | Active one-way import adapter from the configured workbook. |
-| Project state | `/studio/project-state/` | `#projectStateRunButton` `Run` | `run project-state report` | scan project folders; write project-state report | `planned` | Local report generation should be a single row with counts/details. |
+| Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkApply` `Import` | `import workbook records` | create new canonical work or work-detail records; backup; refresh lookups | `done` | Active one-way import adapter from the configured workbook. |
+| Project state | `/studio/project-state/` | `#projectStateRunButton` `Run` | `run project-state report` | scan project folders; write project-state report | `done` | Local report generation records one report row with counts and the output path. |
 | Project state | `/studio/project-state/` | `#projectStateOpenButton` `Open file` | none | none | `excluded` | Opens documentation/source context; not a report-generating action. |
 | Catalogue status | `/studio/catalogue-status/` | filters/sort/open links | none | none | `excluded` | Review surface only. |
 | Studio works | `/studio/studio-works/` | sort/copy/filter controls | none | none | `excluded` | Review/navigation surface only. |

@@ -642,6 +642,83 @@
               "when": "catalogue search rebuild is attempted"
             }
           ]
+        },
+        "import-moment": {
+          "label": "import moment",
+          "status": "v1-target",
+          "control_id": "catalogueMomentImportApply",
+          "control_selector": "#catalogueMomentImportApply",
+          "control_label": "Import",
+          "endpoint": "/catalogue/moment/import-apply",
+          "record_family": "moment",
+          "record_id_field": "moment_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers moment draft creation through the staged import/apply path on the Moment editor.",
+          "script_purposes": [
+            {
+              "id": "import-source-data",
+              "optional": false,
+              "when": "staged moment prose and canonical moment metadata are written"
+            }
+          ]
+        }
+      }
+    },
+    "bulk-add-work": {
+      "label": "bulk add work",
+      "route": "/studio/bulk-add-work/",
+      "actions": {
+        "import-workbook-records": {
+          "label": "import workbook records",
+          "status": "v1-target",
+          "control_id": "bulkAddWorkApply",
+          "control_selector": "#bulkAddWorkApply",
+          "control_label": "Import",
+          "endpoint": "/catalogue/import-apply",
+          "record_family": "workbook_import",
+          "record_id_field": "import_mode",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers applying the configured bulk-import workbook for new works or new work details. Preview remains excluded.",
+          "script_purposes": [
+            {
+              "id": "import-source-data",
+              "optional": false,
+              "when": "new canonical work or work-detail records are imported from the workbook"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted after import"
+            }
+          ]
+        }
+      }
+    },
+    "project-state": {
+      "label": "project state",
+      "route": "/studio/project-state/",
+      "actions": {
+        "run-project-state-report": {
+          "label": "run project-state report",
+          "status": "v1-target",
+          "control_id": "projectStateRunButton",
+          "control_selector": "#projectStateRunButton",
+          "control_label": "Run",
+          "endpoint": "/catalogue/project-state-report",
+          "record_family": "report",
+          "record_id_field": "activity_target",
+          "no_change_activity": "report",
+          "report_forced_rewrites": true,
+          "notes": "Covers generating the local project-state Markdown report. Opening the report source remains excluded.",
+          "script_purposes": [
+            {
+              "id": "generate-report",
+              "optional": false,
+              "when": "the project-state Markdown report is written"
+            }
+          ]
         }
       }
     }
@@ -709,6 +786,22 @@
       "artifact_families": ["catalogue-search"],
       "detail_templates": [
         "Rebuilt catalogue search for work {work_id}"
+      ]
+    },
+    "import-source-data": {
+      "label": "import source data",
+      "status": "v1-target",
+      "artifact_families": ["source-json", "source-markdown"],
+      "detail_templates": [
+        "Imported source records for {record_id}"
+      ]
+    },
+    "generate-report": {
+      "label": "generate report",
+      "status": "v1-target",
+      "artifact_families": ["report-markdown"],
+      "detail_templates": [
+        "Generated report {path}"
       ]
     }
   }

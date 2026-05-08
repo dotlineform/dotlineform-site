@@ -162,6 +162,34 @@ def test_batch_b_contexts_are_normalized() -> None:
         assert_equal(context[profile.record_id_field], record_id, f"{profile.action_id} record id")
 
 
+def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
+    scenarios = [
+        (server.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "works"),
+        (server.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "work_details"),
+        (server.ACTIVITY_PROFILE_IMPORT_MOMENT, "studio-test"),
+        (server.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT, "project-state"),
+    ]
+    for profile, record_id in scenarios:
+        context = normalize_for_profile(
+            {
+                "page_id": profile.page_id,
+                "action_id": profile.action_id,
+                "route": profile.route,
+                "control_id": profile.control_id,
+                "control_selector": profile.control_selector,
+                profile.record_id_field: record_id,
+                "correlation_id": f"{profile.action_id}:{record_id}",
+            },
+            profile,
+            record_id,
+        )
+        assert_equal(context["page_id"], profile.page_id, f"{profile.action_id} page_id")
+        assert_equal(context["action_id"], profile.action_id, f"{profile.action_id} action_id")
+        assert_equal(context["route"], profile.route, f"{profile.action_id} route")
+        assert_equal(context["control_id"], profile.control_id, f"{profile.action_id} control_id")
+        assert_equal(context[profile.record_id_field], record_id, f"{profile.action_id} record id")
+
+
 def test_activity_profiles_match_registry() -> None:
     contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
     pages = contract["pages"]
@@ -298,6 +326,7 @@ def main() -> None:
     test_server_assigns_missing_correlation_id()
     test_batch_a_save_contexts_are_normalized()
     test_batch_b_contexts_are_normalized()
+    test_batch_c_catalogue_service_contexts_are_normalized()
     test_activity_profiles_match_registry()
     test_context_must_match_expected_action_and_record()
     test_catalogue_build_activity_rows_follow_attempted_steps()

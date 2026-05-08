@@ -2,7 +2,7 @@
 doc_id: studio-activity
 title: Studio Activity
 added_date: 2026-05-08
-last_updated: "2026-05-08 17:08"
+last_updated: "2026-05-08 18:20"
 parent_id: studio
 sort_order: 53
 ---
@@ -15,7 +15,7 @@ This document describes the Studio page at `/studio/activity/`.
 The page is the v1 unified activity report for Studio actions.
 It lists script-level activity rows while preserving the page and button action that initiated them.
 
-For v1, the populated action path is a single-work metadata save from `/studio/catalogue-work/`.
+Current coverage includes catalogue editor save/create/delete/publication actions plus the first Batch C catalogue-service actions: workbook import apply, moment import apply, and project-state report generation.
 Older Build Activity and Catalogue Activity pages remain available during validation.
 
 ## Route Ready State

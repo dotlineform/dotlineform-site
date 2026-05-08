@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b388c63547658f01f9e0b12ffbbff35e",
-    "generated_at_utc": "2026-05-08T16:40:36Z",
+    "version": "blake2b-9185adb977f56a2281e21250ee1a362f",
+    "generated_at_utc": "2026-05-08T18:01:24Z",
     "count": 201
   },
   "entries": [
@@ -76,10 +76,10 @@
       "kind": "doc",
       "title": "Activity Log Coverage Inventory",
       "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
-      "last_updated": "2026-05-08 17:40",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "site-request-studio-unified-activity-log",
       "parent_title": "Studio Unified Activity Log Request",
-      "display_meta": "2026-05-08 17:40 • Studio Unified Activity Log Request",
+      "display_meta": "2026-05-08 18:20 • Studio Unified Activity Log Request",
       "search_terms": [
         "site-request-studio-unified-activity-log-inventory",
         "site",
@@ -92,14 +92,14 @@
         "activity log coverage inventory",
         "coverage",
         "studio unified activity log request",
-        "2026-05-08 17:40",
+        "2026-05-08 18:20",
         "2026",
         "05",
         "08",
-        "17",
-        "40"
+        "18",
+        "20"
       ],
-      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-08 17:40 2026 05 08 17 40"
+      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-08 18:20 2026 05 08 18 20"
     },
     {
       "id": "data-models-analysis",
@@ -2472,22 +2472,23 @@
       "kind": "doc",
       "title": "Studio Activity",
       "href": "/docs/?scope=studio&doc=studio-activity",
-      "last_updated": "2026-05-08 17:08",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-08 17:08 • Studio",
+      "display_meta": "2026-05-08 18:20 • Studio",
       "search_terms": [
         "studio-activity",
         "studio",
         "activity",
         "studio activity",
-        "2026-05-08 17:08",
+        "2026-05-08 18:20",
         "2026",
         "05",
         "08",
-        "17"
+        "18",
+        "20"
       ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-08 17:08 2026 05 08 17"
+      "search_text": "studio-activity studio activity studio activity 2026-05-08 18:20 2026 05 08 18 20"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -3504,10 +3505,10 @@
       "kind": "doc",
       "title": "Project State Page",
       "href": "/docs/?scope=studio&doc=project-state-page",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-08 18:20 • Catalogue",
       "search_terms": [
         "project-state-page",
         "project",
@@ -3515,14 +3516,14 @@
         "page",
         "project state page",
         "catalogue",
-        "2026-05-06 20:49",
+        "2026-05-08 18:20",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "08",
+        "18",
+        "20"
       ],
-      "search_text": "project-state-page project state page project state page catalogue 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "project-state-page project state page project state page catalogue 2026-05-08 18:20 2026 05 08 18 20"
     },
     {
       "id": "config-studio-config-json",
@@ -4498,10 +4499,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-03 • User Guide",
+      "display_meta": "2026-05-08 18:20 • User Guide",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -4511,12 +4512,14 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-03",
+        "2026-05-08 18:20",
         "2026",
         "05",
-        "03"
+        "08",
+        "18",
+        "20"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-03 2026 05 03"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-08 18:20 2026 05 08 18 20"
     },
     {
       "id": "library-export",
@@ -4548,10 +4551,10 @@
       "kind": "doc",
       "title": "Bulk Add Work",
       "href": "/docs/?scope=studio&doc=bulk-add-work",
-      "last_updated": "2026-05-06 20:50",
+      "last_updated": "2026-05-08 18:20",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-06 20:50 • User Guide",
+      "display_meta": "2026-05-08 18:20 • User Guide",
       "search_terms": [
         "bulk-add-work",
         "bulk",
@@ -4561,14 +4564,14 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-06 20:50",
+        "2026-05-08 18:20",
         "2026",
         "05",
-        "06",
-        "20",
-        "50"
+        "08",
+        "18",
+        "20"
       ],
-      "search_text": "bulk-add-work bulk add work bulk add work user guide user guide 2026-05-06 20:50 2026 05 06 20 50"
+      "search_text": "bulk-add-work bulk add work bulk add work user guide user guide 2026-05-08 18:20 2026 05 08 18 20"
     },
     {
       "id": "library-import",
