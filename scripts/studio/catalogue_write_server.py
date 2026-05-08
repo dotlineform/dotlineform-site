@@ -83,6 +83,7 @@ from catalogue_source import (  # noqa: E402
     validate_work_detail_section_metadata_consistency,
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
+from studio_activity import append_studio_activity  # noqa: E402
 from catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_and_write_catalogue_lookup,
@@ -149,6 +150,7 @@ CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
 BUILD_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/build_activity.json")
 CATALOGUE_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/catalogue_activity.json")
+STUDIO_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/activity_log.json")
 MAX_BODY_BYTES = 1024 * 1024
 MAX_PROSE_MARKDOWN_BYTES = 1024 * 1024
 WORK_SAVE_PATH = "/catalogue/work/save"
@@ -504,6 +506,16 @@ def activity_id(now_utc: str, operation: str) -> str:
     return f"{now_utc}-{safe_operation or 'catalogue-event'}"
 
 
+def activity_id_component(value: Any) -> str:
+    text = activity_context_value(value)
+    safe_value = "".join(ch if ch.isalnum() else "-" for ch in text.lower()).strip("-")
+    return safe_value or "activity"
+
+
+def studio_activity_id(now_utc: str, correlation_id: str, script_purpose_id: str) -> str:
+    return f"{now_utc}-{activity_id_component(correlation_id)}-{activity_id_component(script_purpose_id)}"
+
+
 def activity_context_value(value: Any) -> str:
     if value is None:
         return ""
@@ -561,6 +573,53 @@ def normalize_activity_context(
     if control_selector:
         context["control_selector"] = control_selector
     return context
+
+
+def studio_activity_entry(
+    activity_context: Mapping[str, str],
+    *,
+    now_utc: str,
+    script_purpose_id: str,
+    status: str,
+    record_groups: Mapping[str, list[str]],
+    detail_items: list[str],
+    source_refs: list[Mapping[str, str]],
+) -> Dict[str, Any]:
+    correlation_id = activity_context_value(activity_context.get("correlation_id"))
+    return {
+        "id": studio_activity_id(now_utc, correlation_id, script_purpose_id),
+        "activity_id": studio_activity_id(now_utc, correlation_id, script_purpose_id),
+        "correlation_id": correlation_id,
+        "timestamp": now_utc,
+        "time_utc": now_utc,
+        "status": status,
+        "page_id": activity_context_value(activity_context.get("page_id")),
+        "user_action_id": activity_context_value(activity_context.get("action_id")),
+        "script_purpose_id": script_purpose_id,
+        "record_groups": dict(record_groups),
+        "detail_items": list(detail_items),
+        "source_refs": [dict(ref) for ref in source_refs],
+    }
+
+
+def catalogue_log_source_ref() -> list[Mapping[str, str]]:
+    return [{"kind": "log", "path": str(LOGS_REL_DIR / "catalogue_write_server.log")}]
+
+
+def build_step_status(build_payload: Mapping[str, Any], label: str) -> str:
+    steps = build_payload.get("steps") if isinstance(build_payload.get("steps"), list) else []
+    for step in steps:
+        if not isinstance(step, Mapping):
+            continue
+        if str(step.get("label") or "").strip() != label:
+            continue
+        return "completed" if int(step.get("exit_code") or 0) == 0 else "warning"
+    return "completed" if build_payload.get("ok") else "warning"
+
+
+def build_step_attempted(build_payload: Mapping[str, Any], label: str) -> bool:
+    steps = build_payload.get("steps") if isinstance(build_payload.get("steps"), list) else []
+    return any(isinstance(step, Mapping) and str(step.get("label") or "").strip() == label for step in steps)
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -2843,6 +2902,12 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         except Exception:
             pass
 
+    def append_studio_activity(self, entries: Mapping[str, Any] | Iterable[Mapping[str, Any]]) -> None:
+        try:
+            append_studio_activity(self.repo_root, entries)
+        except Exception:
+            pass
+
 
 class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
@@ -3061,6 +3126,8 @@ class Handler(BaseHTTPRequestHandler):
             return load_activity_feed(self.server.repo_root, BUILD_ACTIVITY_FEED_REL_PATH, "studio_build_activity_v2")
         if key == "catalogue_activity":
             return load_activity_feed(self.server.repo_root, CATALOGUE_ACTIVITY_FEED_REL_PATH, "catalogue_activity_v2")
+        if key == "activity_log":
+            return load_activity_feed(self.server.repo_root, STUDIO_ACTIVITY_FEED_REL_PATH, "studio_activity_log_v1")
 
         if key == "catalogue_works":
             return load_works_payload(self.server.works_path)
@@ -3224,6 +3291,41 @@ class Handler(BaseHTTPRequestHandler):
                 "written_count": refresh_result["written_count"],
             }
             now_utc = utc_now()
+            if activity_context:
+                related_series_ids = sorted(
+                    {
+                        *normalize_series_ids_value(current_record.get("series_ids")),
+                        *normalize_series_ids_value(updated_record.get("series_ids")),
+                    }
+                )
+                activity_rows = [
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="save-canonical-data",
+                        status="completed",
+                        record_groups={"works": [work_id], "series": [], "work_details": [], "moments": []},
+                        detail_items=[
+                            f"Saved canonical work record {work_id}",
+                            f"Changed fields: {', '.join(fields_changed)}",
+                        ],
+                        source_refs=catalogue_log_source_ref(),
+                    ),
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="rebuild-lookups",
+                        status="completed",
+                        record_groups={"works": [work_id], "series": related_series_ids, "work_details": [], "moments": []},
+                        detail_items=[
+                            f"Refreshed catalogue lookup data for work {work_id}",
+                            f"Wrote {refresh_result['written_count']} lookup file(s)",
+                        ],
+                        source_refs=catalogue_log_source_ref(),
+                    ),
+                ]
+                self.server.append_studio_activity(activity_rows)
+                response_payload["activity_log"] = {"written_count": len(activity_rows)}
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "work.save"),
@@ -3262,6 +3364,44 @@ class Handler(BaseHTTPRequestHandler):
                 build_plan=build_plan,
             )
             response_payload["build"] = build_payload
+            if activity_context:
+                build_scope = build_payload.get("build") if isinstance(build_payload.get("build"), Mapping) else {}
+                build_record_groups = {
+                    "works": list(build_scope.get("work_ids") or [work_id]),
+                    "series": list(build_scope.get("series_ids") or []),
+                    "work_details": [],
+                    "moments": list(build_scope.get("moment_ids") or []),
+                    "search": ["catalogue"] if build_step_attempted(build_payload, "Build Catalogue Search Index") else [],
+                }
+                build_activity_rows: list[Dict[str, Any]] = []
+                if build_step_attempted(build_payload, "Generate Work Pages"):
+                    build_activity_rows.append(
+                        studio_activity_entry(
+                            activity_context,
+                            now_utc=activity_context_value(build_payload.get("completed_at_utc")) or utc_now(),
+                            script_purpose_id="rebuild-published-work-data",
+                            status=build_step_status(build_payload, "Generate Work Pages"),
+                            record_groups=build_record_groups,
+                            detail_items=[f"Updated published work JSON for {work_id}"],
+                            source_refs=catalogue_log_source_ref(),
+                        )
+                    )
+                if build_step_attempted(build_payload, "Build Catalogue Search Index"):
+                    build_activity_rows.append(
+                        studio_activity_entry(
+                            activity_context,
+                            now_utc=activity_context_value(build_payload.get("completed_at_utc")) or utc_now(),
+                            script_purpose_id="update-search",
+                            status=build_step_status(build_payload, "Build Catalogue Search Index"),
+                            record_groups=build_record_groups,
+                            detail_items=[f"Rebuilt catalogue search for work {work_id}"],
+                            source_refs=catalogue_log_source_ref(),
+                        )
+                    )
+                if build_activity_rows:
+                    self.server.append_studio_activity(build_activity_rows)
+                    activity_log_payload = response_payload.setdefault("activity_log", {"written_count": 0})
+                    activity_log_payload["written_count"] = int(activity_log_payload.get("written_count") or 0) + len(build_activity_rows)
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_bulk_save(self, allowed: Optional[str]) -> None:

@@ -47,9 +47,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio_backup_retention.py",
                 "scripts/audit_studio_ready_state.py",
                 "scripts/verify_activity_contract.py",
+                "scripts/studio_activity.py",
                 "scripts/studio/audit_service.py",
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_catalogue_activity_context.py",
+                "tests/python/test_studio_activity_feed.py",
                 "tests/python/test_catalogue_field_registry.py",
                 "tests/python/test_studio_backup_retention.py",
             ),
@@ -64,6 +66,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "catalogue-activity-context-tests",
             (sys.executable, "tests/python/test_catalogue_activity_context.py"),
             "Verify Studio save-work activity context normalization.",
+        ),
+        CheckCommand(
+            "studio-activity-feed-tests",
+            (sys.executable, "tests/python/test_studio_activity_feed.py"),
+            "Verify unified Studio activity feed writing and registry label hydration.",
         ),
         CheckCommand(
             "studio-backup-retention-tests",

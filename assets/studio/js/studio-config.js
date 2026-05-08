@@ -40,6 +40,7 @@ const DEFAULT_STUDIO_CONFIG = {
         tag_aliases: "/assets/studio/data/tag_aliases.json",
         tag_assignments: "/assets/studio/data/tag_assignments.json",
         tag_groups: "/assets/studio/data/tag_groups.json",
+        activity_log: "/assets/studio/data/activity_log.json",
         build_activity: "/assets/studio/data/build_activity.json",
         catalogue_activity: "/assets/studio/data/catalogue_activity.json",
         catalogue_works: "/assets/studio/data/catalogue/works.json",

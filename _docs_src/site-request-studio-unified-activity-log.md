@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:47"
+last_updated: "2026-05-08 16:59"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
@@ -415,6 +415,7 @@ If the save path rewrites files or runs publishing work despite no core data cha
    - Keep the request shape narrow and ignore unknown activity context fields safely.
 
 4. Emit structured v1 activity rows in the catalogue write path.
+   - Status: done for single-work metadata saves from `/studio/catalogue-work/`.
    - Record one row for the source-record save outcome.
    - Record rows for public rebuild, lookup refresh, and search rebuild when those actions are actually attempted.
    - Skip activity for true no-change saves where no core JSON data was changed and no files or generated artifacts were rewritten.
@@ -423,6 +424,7 @@ If the save path rewrites files or runs publishing work despite no core data cha
    - Preserve enough record context to show the work id and changed record family in the modal.
 
 5. Generate a capped activity feed for the new page.
+   - Status: done for the v1 feed source.
    - Store raw local activity in a local-only journal.
    - Generate a Studio-readable feed with enough rows for the report.
    - Keep local-only paths, payloads, and full log lines out of the feed.
