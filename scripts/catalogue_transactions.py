@@ -10,7 +10,7 @@ import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, Mapping
+from typing import Any, Callable, Dict, Iterable, Mapping
 
 import catalogue_cleanup
 
@@ -19,6 +19,12 @@ import catalogue_cleanup
 class SourceJsonWriteResult:
     backup_paths: list[Path]
     backups: list[str]
+
+
+@dataclass(frozen=True)
+class CleanupTransactionResult:
+    payload: Dict[str, Any]
+    backup_paths: list[Path]
 
 
 def backup_stamp_now() -> str:
@@ -159,6 +165,165 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir:
                     pass
 
     return list(backups.values())
+
+
+def ensure_catalogue_delete_payload_scope(
+    repo_root: Path,
+    allowed_write_paths: Iterable[Path],
+    payloads: Mapping[Path, Dict[str, Any]],
+) -> None:
+    generated_roots = [
+        repo_root / "assets" / "works" / "index",
+        repo_root / "assets" / "series" / "index",
+    ]
+    generated_paths = {
+        (repo_root / "assets" / "data" / "works_index.json").resolve(),
+        (repo_root / "assets" / "data" / "series_index.json").resolve(),
+        (repo_root / "assets" / "data" / "recent_index.json").resolve(),
+        (repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
+        (repo_root / "assets" / "studio" / "data" / "tag_assignments.json").resolve(),
+    }
+    allowed = {path.resolve() for path in allowed_write_paths}
+    for target_path in payloads:
+        resolved = target_path.resolve()
+        if resolved in allowed:
+            continue
+        if resolved in generated_paths:
+            continue
+        if any(catalogue_cleanup.path_is_under(resolved, root) for root in generated_roots):
+            continue
+        raise ValueError("write target not allowlisted")
+
+
+def execute_catalogue_cleanup_transaction(
+    *,
+    repo_root: Path,
+    backups_dir: Path,
+    dry_run: bool,
+    allowed_write_paths: Iterable[Path],
+    backup_label: str,
+    payloads: Dict[Path, Dict[str, Any]],
+    cleanup: Mapping[str, Any],
+    rebuild_catalogue_search: Callable[[Path], Dict[str, Any]],
+    refresh_lookup_payloads: Callable[[], Any] | None = None,
+) -> CleanupTransactionResult:
+    catalogue_cleanup.ensure_catalogue_delete_cleanup_scope(repo_root, cleanup)
+    ensure_catalogue_delete_payload_scope(repo_root, allowed_write_paths, payloads)
+    search_index_path = (repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+    rebuild_search = bool(cleanup.get("catalogue_search"))
+    transaction_backup_root: Path | None = None
+    deleted_file_count = 0
+    search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
+    backup_paths: list[Path] = []
+
+    if not dry_run:
+        transaction_backup_root = backups_dir / f"{backup_label}-{backup_stamp_now()}"
+        touched_paths = unique_paths(
+            [
+                *payloads.keys(),
+                *(cleanup.get("delete_paths") or []),
+                *([search_index_path] if rebuild_search else []),
+            ]
+        )
+        transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, repo_root)
+        try:
+            backup_paths = atomic_write_many(payloads, backups_dir)
+            backup_paths.extend(transaction_backups.values())
+            deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
+            if rebuild_search:
+                search_rebuild = rebuild_catalogue_search(repo_root)
+            if refresh_lookup_payloads is not None:
+                refresh_lookup_payloads()
+        except Exception:
+            restore_transaction_paths(touched_paths, transaction_backups)
+            raise
+
+    return CleanupTransactionResult(
+        payload={
+            "deleted_files": deleted_file_count,
+            "would_delete_files": len(cleanup.get("delete_paths") or []),
+            "updated_json_files": 0 if dry_run else len(payloads),
+            "would_update_json_files": len(payloads),
+            "catalogue_search_rebuilt": bool(not dry_run and rebuild_search and search_rebuild.get("ok")),
+            "would_rebuild_catalogue_search": rebuild_search,
+            "search_exit_code": search_rebuild.get("exit_code"),
+            "backup_root": rel_response_path(transaction_backup_root, repo_root) if transaction_backup_root else "",
+        },
+        backup_paths=backup_paths,
+    )
+
+
+def execute_moment_cleanup_transaction(
+    *,
+    repo_root: Path,
+    backups_dir: Path,
+    dry_run: bool,
+    allowed_write_paths: Iterable[Path],
+    backup_label: str,
+    metadata_path: Path,
+    metadata_payload: Dict[str, Any],
+    cleanup: Mapping[str, Any],
+    moment_id: str,
+    rebuild_catalogue_search: Callable[[Path], Dict[str, Any]],
+) -> CleanupTransactionResult:
+    catalogue_cleanup.ensure_moment_delete_cleanup_scope(repo_root, cleanup)
+    metadata_path = metadata_path.resolve()
+    moments_index_path = (repo_root / "assets" / "data" / "moments_index.json").resolve()
+    search_index_path = (repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+    allowed = {path.resolve() for path in allowed_write_paths}
+    if metadata_path not in allowed:
+        raise ValueError("write target not allowlisted")
+
+    allowed_generated_paths = {moments_index_path, search_index_path}
+    generated_payloads: Dict[Path, Dict[str, Any]] = {}
+    if not dry_run:
+        generated_payloads = catalogue_cleanup.build_moment_delete_generated_payloads(repo_root, moment_id)
+        for target_path in generated_payloads:
+            if target_path.resolve() not in allowed_generated_paths:
+                raise ValueError("generated write target not allowlisted")
+
+    payloads: Dict[Path, Dict[str, Any]] = {
+        metadata_path: metadata_payload,
+        **generated_payloads,
+    }
+    deleted_file_count = 0
+    search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
+    transaction_backup_root: Path | None = None
+    backup_paths: list[Path] = []
+
+    if not dry_run:
+        transaction_backup_root = backups_dir / f"{backup_label}-{backup_stamp_now()}"
+        touched_paths = unique_paths(
+            [
+                *payloads.keys(),
+                search_index_path,
+                *(cleanup.get("delete_paths") or []),
+            ]
+        )
+        transaction_backups = backup_transaction_paths(touched_paths, transaction_backup_root, repo_root)
+        try:
+            backup_paths = atomic_write_many(payloads, backups_dir)
+            backup_paths.extend(transaction_backups.values())
+            deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
+            search_rebuild = rebuild_catalogue_search(repo_root)
+        except Exception:
+            restore_transaction_paths(touched_paths, transaction_backups)
+            raise
+
+    moments_index_will_update = moments_index_path.exists()
+    return CleanupTransactionResult(
+        payload={
+            "deleted_files": deleted_file_count,
+            "would_delete_files": len(cleanup.get("delete_paths") or []),
+            "moments_index_updated": bool(not dry_run and moments_index_will_update),
+            "would_update_moments_index": moments_index_will_update,
+            "catalogue_search_rebuilt": bool(not dry_run and search_rebuild.get("ok")),
+            "would_rebuild_catalogue_search": True,
+            "search_exit_code": search_rebuild.get("exit_code"),
+            "backup_root": rel_response_path(transaction_backup_root, repo_root) if transaction_backup_root else "",
+        },
+        backup_paths=backup_paths,
+    )
 
 
 def atomic_write_text_no_backup(target_path: Path, text: str) -> None:

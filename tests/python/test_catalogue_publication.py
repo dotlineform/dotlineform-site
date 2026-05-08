@@ -236,12 +236,67 @@ def test_save_published_rejects_status_change() -> None:
         )
 
 
+def test_publication_source_payloads_include_series_bootstrap_work_write() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        source_dir = root / "assets/studio/data/catalogue"
+        write_source_fixture(source_dir)
+
+        preview = catalogue_publication.build_publication_preview(
+            source_dir,
+            root,
+            {"kind": "series", "action": "publish", "id": "010"},
+        )
+        payloads = catalogue_publication.publication_source_payloads(
+            source_dir,
+            "series",
+            "010",
+            preview["target_record"],
+            preview,
+        )
+
+    assert_equal(sorted(path.name for path in payloads), ["series.json", "works.json"], "source payload files")
+    assert_equal(payloads[(source_dir / "series.json").resolve()]["series"]["010"]["status"], "published", "series target status")
+    assert_equal(payloads[(source_dir / "works.json").resolve()]["works"]["00002"]["status"], "published", "bootstrap work status")
+
+
+def test_publication_build_transaction_dry_run_preserves_payload_shape() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        source_dir = root / "assets/studio/data/catalogue"
+        write_source_fixture(source_dir)
+        called = False
+
+        success, payload = catalogue_publication.run_publication_build_transaction(
+            repo_root=root,
+            source_dir=source_dir,
+            backups_dir=root / "var/studio/catalogue/backups",
+            dry_run=True,
+            kind="work",
+            record_id="00001",
+            target_record={"work_id": "00001"},
+            extra_series_ids=[],
+            extra_work_ids=[],
+            force=False,
+            run_build_operation=lambda **kwargs: (_ for _ in ()).throw(AssertionError("build should not run")),
+            rel_path=lambda path: str(path.relative_to(root)),
+        )
+
+    assert_false(called, "build operation called")
+    assert_true(success, "dry-run build success")
+    assert_equal(payload["dry_run"], True, "dry-run flag")
+    assert_equal(payload["would_run"], True, "would-run flag")
+    assert_equal(payload["kind"], "work", "payload kind")
+
+
 def main() -> None:
     test_work_publish_requires_published_series()
     test_series_publish_bootstraps_draft_member_work()
     test_detail_publish_requires_published_parent_work()
     test_unpublish_preview_attaches_cleanup_impact()
     test_save_published_rejects_status_change()
+    test_publication_source_payloads_include_series_bootstrap_work_write()
+    test_publication_build_transaction_dry_run_preserves_payload_shape()
     print("Catalogue publication tests OK")
 
 

@@ -108,7 +108,6 @@ from catalogue_field_registry import (  # noqa: E402
 from moment_sources import (  # noqa: E402
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
-    moment_metadata_payload,
     normalize_moment_filename,
     normalize_moment_metadata_record,
 )
@@ -130,7 +129,6 @@ from project_state_report import (  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id  # noqa: E402
 import catalogue_activity as activity  # noqa: E402
-import catalogue_cleanup  # noqa: E402
 import catalogue_delete_plans  # noqa: E402
 import catalogue_prose_import as prose_import  # noqa: E402
 import catalogue_publication  # noqa: E402
@@ -1250,126 +1248,6 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["build"] = self._run_build_targets(response_payload["build_targets"])
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
-    def _publication_source_payload(self, kind: str, record_id: str, target_record: Mapping[str, Any]) -> tuple[Path, Dict[str, Any]]:
-        if kind == "work":
-            payload = load_works_payload(self.server.works_path)
-            records = dict(payload["works"])
-            records[record_id] = dict(target_record)
-            return self.server.works_path.resolve(), payload_for_map("works", records)
-        if kind == "work_detail":
-            payload = load_work_details_payload(self.server.work_details_path)
-            records = dict(payload["work_details"])
-            records[record_id] = dict(target_record)
-            return self.server.work_details_path.resolve(), payload_for_map("work_details", records)
-        if kind == "series":
-            payload = load_series_payload(self.server.series_path)
-            records = dict(payload["series"])
-            records[record_id] = dict(target_record)
-            return self.server.series_path.resolve(), payload_for_map("series", records)
-        payload = load_moments_payload(self.server.moments_path)
-        records = dict(payload["moments"])
-        records[record_id] = dict(target_record)
-        return self.server.moments_path.resolve(), moment_metadata_payload(records)
-
-    def _publication_source_payloads(self, kind: str, record_id: str, target_record: Mapping[str, Any], preview: Mapping[str, Any]) -> Dict[Path, Dict[str, Any]]:
-        source_path, source_payload = self._publication_source_payload(kind, record_id, target_record)
-        payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
-        bootstrap_work_ids = [str(work_id) for work_id in preview.get("bootstrap_publish_work_ids") or []]
-        if kind == "series" and bootstrap_work_ids:
-            promoted = catalogue_publication.series_publish_bootstrap_work_records(self.server.source_dir, record_id)
-            works_payload = load_works_payload(self.server.works_path)
-            work_records = dict(works_payload["works"])
-            for work_id in bootstrap_work_ids:
-                if work_id not in promoted:
-                    raise ValueError(f"bootstrap work {work_id} is no longer draft")
-                work_records[work_id] = promoted[work_id]
-            payloads[self.server.works_path.resolve()] = payload_for_map("works", work_records)
-        return payloads
-
-    def _run_publication_build(
-        self,
-        *,
-        kind: str,
-        record_id: str,
-        target_record: Mapping[str, Any],
-        extra_series_ids: list[str],
-        extra_work_ids: list[str],
-        force: bool,
-    ) -> tuple[bool, Dict[str, Any]]:
-        if self.server.dry_run:
-            return True, {
-                "ok": True,
-                "dry_run": True,
-                "would_run": True,
-                "kind": kind,
-                "id": record_id,
-                "summary": "Dry-run publication apply would run the scoped public update after the source write.",
-            }
-        generated_backup_root = self.server.backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{transactions.backup_stamp_now()}"
-        affected = catalogue_publication.publication_affected_for_record(self.server.source_dir, kind, record_id)
-        if kind == "moment":
-            cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
-            backup_candidates = [
-                *cleanup["delete_paths"],
-                self.server.repo_root / "assets" / "data" / "moments_index.json",
-                self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
-            ]
-        else:
-            cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, affected)
-            backup_candidates = [
-                *cleanup["delete_paths"],
-                *cleanup["public_json_updates"],
-                *cleanup["studio_json_updates"],
-                self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
-            ]
-        generated_backups = transactions.backup_transaction_paths(backup_candidates, generated_backup_root, self.server.repo_root)
-        if kind == "work":
-            success, payload = self._run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
-        elif kind == "work_detail":
-            success, payload = self._run_build_operation(work_id=slug_id(target_record.get("work_id")), series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid=record_id, force=force)
-        elif kind == "series":
-            success, payload = self._run_build_operation(work_id="", series_id=record_id, moment_id="", extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
-        else:
-            success, payload = self._run_build_operation(work_id="", series_id="", moment_id=record_id, extra_series_ids=[], extra_work_ids=[], detail_uid="", force=force)
-        payload["generated_backup_root"] = self.server.rel_path(generated_backup_root) if generated_backups else ""
-        payload["generated_backups"] = [self.server.rel_path(path) for path in generated_backups.values()]
-        return success, payload
-
-    def _apply_publication_unpublish_cleanup(
-        self,
-        *,
-        kind: str,
-        record_id: str,
-        target_record: Mapping[str, Any],
-        preview: Mapping[str, Any],
-    ) -> Dict[str, Any]:
-        source_path, source_payload = self._publication_source_payload(kind, record_id, target_record)
-        if source_path not in self.server.allowed_write_paths:
-            raise ValueError("write target not allowlisted")
-
-        if kind != "moment":
-            affected = preview["affected"]
-            cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, affected)
-            generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, affected)
-            cleanup_result = self._apply_catalogue_delete_transaction(
-                backup_label=f"catalogue-unpublish-{kind.replace('_', '-')}",
-                payloads={source_path: source_payload, **generated_payloads},
-                cleanup=cleanup,
-            )
-            cleanup_result.pop("backup_paths", None)
-            return cleanup_result
-
-        cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
-        cleanup_result = self._apply_moment_delete_transaction(
-            backup_label="catalogue-unpublish-moment",
-            metadata_path=source_path,
-            metadata_payload=source_payload,
-            cleanup=cleanup,
-            moment_id=record_id,
-        )
-        cleanup_result.pop("backup_paths", None)
-        return cleanup_result
-
     def _handle_publication_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_publication_request(body)
@@ -1405,24 +1283,49 @@ class Handler(BaseHTTPRequestHandler):
         public_update_ok = True
 
         if action == "unpublish":
-            public_update = self._apply_publication_unpublish_cleanup(kind=kind, record_id=record_id, target_record=target_record, preview=preview)
+            cleanup_result = catalogue_publication.apply_publication_unpublish_cleanup(
+                repo_root=self.server.repo_root,
+                source_dir=self.server.source_dir,
+                backups_dir=self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                allowed_write_paths=self.server.allowed_write_paths,
+                kind=kind,
+                record_id=record_id,
+                target_record=target_record,
+                preview=preview,
+                rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
+                refresh_lookup_payloads=self._refresh_lookup_payloads if kind != "moment" else None,
+            )
+            public_update = cleanup_result.payload
         else:
             if source_changed:
-                source_payloads = self._publication_source_payloads(kind, record_id, target_record, preview)
+                source_payloads = catalogue_publication.publication_source_payloads(self.server.source_dir, kind, record_id, target_record, preview)
                 blocked_paths = [path for path in source_payloads if path not in self.server.allowed_write_paths]
                 if blocked_paths:
                     raise ValueError("write target not allowlisted")
+                write_result = transactions.execute_source_json_write(
+                    source_payloads,
+                    self.server.backups_dir,
+                    dry_run=self.server.dry_run,
+                    repo_root=self.server.repo_root,
+                )
+                source_backups = write_result.backup_paths
                 if not self.server.dry_run:
-                    source_backups = transactions.atomic_write_many(source_payloads, self.server.backups_dir)
                     if kind != "moment":
                         self._refresh_lookup_payloads()
-            public_update_ok, public_update = self._run_publication_build(
+            public_update_ok, public_update = catalogue_publication.run_publication_build_transaction(
+                repo_root=self.server.repo_root,
+                source_dir=self.server.source_dir,
+                backups_dir=self.server.backups_dir,
+                dry_run=self.server.dry_run,
                 kind=kind,
                 record_id=record_id,
                 target_record=target_record,
                 extra_series_ids=list(request.get("extra_series_ids") or []),
                 extra_work_ids=list(request.get("extra_work_ids") or []),
                 force=bool(request.get("force")),
+                run_build_operation=self._run_build_operation,
+                rel_path=self.server.rel_path,
             )
 
         response_payload: Dict[str, Any] = {
@@ -1518,145 +1421,6 @@ class Handler(BaseHTTPRequestHandler):
             allowed,
         )
 
-    def _ensure_delete_payload_scope(self, payloads: Mapping[Path, Dict[str, Any]]) -> None:
-        generated_roots = [
-            self.server.repo_root / "assets" / "works" / "index",
-            self.server.repo_root / "assets" / "series" / "index",
-        ]
-        generated_paths = {
-            (self.server.repo_root / "assets" / "data" / "works_index.json").resolve(),
-            (self.server.repo_root / "assets" / "data" / "series_index.json").resolve(),
-            (self.server.repo_root / "assets" / "data" / "recent_index.json").resolve(),
-            (self.server.repo_root / "assets" / "studio" / "data" / "work_storage_index.json").resolve(),
-            (self.server.repo_root / "assets" / "studio" / "data" / "tag_assignments.json").resolve(),
-        }
-        for target_path in payloads:
-            resolved = target_path.resolve()
-            if resolved in self.server.allowed_write_paths:
-                continue
-            if resolved in generated_paths:
-                continue
-            if any(catalogue_cleanup.path_is_under(resolved, root) for root in generated_roots):
-                continue
-            raise ValueError("write target not allowlisted")
-
-    def _apply_catalogue_delete_transaction(
-        self,
-        *,
-        backup_label: str,
-        payloads: Dict[Path, Dict[str, Any]],
-        cleanup: Mapping[str, Any],
-    ) -> Dict[str, Any]:
-        catalogue_cleanup.ensure_catalogue_delete_cleanup_scope(self.server.repo_root, cleanup)
-        self._ensure_delete_payload_scope(payloads)
-        search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
-        rebuild_search = bool(cleanup.get("catalogue_search"))
-        transaction_backup_root: Path | None = None
-        deleted_file_count = 0
-        search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
-        transaction_backups: Dict[Path, Path] = {}
-        backup_paths: list[Path] = []
-
-        if not self.server.dry_run:
-            transaction_backup_root = self.server.backups_dir / f"{backup_label}-{transactions.backup_stamp_now()}"
-            touched_paths = transactions.unique_paths(
-                [
-                    *payloads.keys(),
-                    *(cleanup.get("delete_paths") or []),
-                    *([search_index_path] if rebuild_search else []),
-                ]
-            )
-            transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
-            try:
-                backup_paths = transactions.atomic_write_many(payloads, self.server.backups_dir)
-                backup_paths.extend(transaction_backups.values())
-                deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
-                if rebuild_search:
-                    search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
-                self._refresh_lookup_payloads()
-            except Exception:
-                transactions.restore_transaction_paths(touched_paths, transaction_backups)
-                raise
-
-        return {
-            "deleted_files": deleted_file_count,
-            "would_delete_files": len(cleanup.get("delete_paths") or []),
-            "updated_json_files": 0 if self.server.dry_run else len(payloads),
-            "would_update_json_files": len(payloads),
-            "catalogue_search_rebuilt": bool(not self.server.dry_run and rebuild_search and search_rebuild.get("ok")),
-            "would_rebuild_catalogue_search": rebuild_search,
-            "search_exit_code": search_rebuild.get("exit_code"),
-            "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
-            "backup_paths": backup_paths,
-        }
-
-    def _apply_moment_delete_transaction(
-        self,
-        *,
-        backup_label: str,
-        metadata_path: Path,
-        metadata_payload: Dict[str, Any],
-        cleanup: Mapping[str, Any],
-        moment_id: str,
-    ) -> Dict[str, Any]:
-        catalogue_cleanup.ensure_moment_delete_cleanup_scope(self.server.repo_root, cleanup)
-        metadata_path = metadata_path.resolve()
-        moments_index_path = (self.server.repo_root / "assets" / "data" / "moments_index.json").resolve()
-        search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
-
-        # Keep these allowlists local to the write service because they are part of
-        # the endpoint write contract, not generic cleanup mechanics.
-        if metadata_path not in self.server.allowed_write_paths:
-            raise ValueError("write target not allowlisted")
-        allowed_generated_paths = {moments_index_path, search_index_path}
-        generated_payloads: Dict[Path, Dict[str, Any]] = {}
-        if not self.server.dry_run:
-            generated_payloads = catalogue_cleanup.build_moment_delete_generated_payloads(self.server.repo_root, moment_id)
-            for target_path in generated_payloads:
-                if target_path.resolve() not in allowed_generated_paths:
-                    raise ValueError("generated write target not allowlisted")
-
-        payloads: Dict[Path, Dict[str, Any]] = {
-            metadata_path: metadata_payload,
-            **generated_payloads,
-        }
-        deleted_file_count = 0
-        search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
-        transaction_backup_root: Path | None = None
-        backup_paths: list[Path] = []
-
-        if not self.server.dry_run:
-            transaction_backup_root = self.server.backups_dir / f"{backup_label}-{transactions.backup_stamp_now()}"
-            touched_paths = transactions.unique_paths(
-                [
-                    *payloads.keys(),
-                    search_index_path,
-                    *(cleanup.get("delete_paths") or []),
-                ]
-            )
-            transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
-            try:
-                backup_paths = transactions.atomic_write_many(payloads, self.server.backups_dir)
-                backup_paths.extend(transaction_backups.values())
-                deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
-                search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
-            except Exception:
-                transactions.restore_transaction_paths(touched_paths, transaction_backups)
-                raise
-
-        moments_index_will_update = moments_index_path.exists()
-        return {
-            "deleted_files": deleted_file_count,
-            "would_delete_files": len(cleanup.get("delete_paths") or []),
-            "moments_index_updated": bool(not self.server.dry_run and moments_index_will_update),
-            "would_update_moments_index": moments_index_will_update,
-            "catalogue_search_rebuilt": bool(not self.server.dry_run and search_rebuild.get("ok")),
-            "would_rebuild_catalogue_search": True,
-            "search_exit_code": search_rebuild.get("exit_code"),
-            "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
-            "backup_paths": backup_paths,
-        }
-
     def _handle_delete_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_delete_request(body)
@@ -1677,145 +1441,50 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
 
-        backup_paths: list[Path] = []
-        response_payload: Dict[str, Any]
         activity_profile = activity.activity_profile_for_delete(kind)
         activity_context = activity.normalize_activity_context_for_profile(
             body.get("activity_context"),
             activity_profile,
             record_id=record_id,
         )
-        activity_affected = preview["affected"]
-
-        if kind == "work":
-            works_payload = load_works_payload(self.server.works_path)
-            details_payload = load_work_details_payload(self.server.work_details_path)
-            series_payload = load_series_payload(self.server.series_path)
-            current_record = works_payload["works"].get(record_id)
-            if not isinstance(current_record, dict):
-                raise ValueError(f"work_id not found: {record_id}")
-            updated_works = dict(works_payload["works"])
-            del updated_works[record_id]
-            updated_details = {
-                detail_uid: detail_record
-                for detail_uid, detail_record in details_payload["work_details"].items()
-                if str(detail_record.get("work_id") or "") != record_id
-            }
-            updated_series, changed_series_ids = catalogue_delete_plans.series_records_with_draft_primary_cleared(series_payload["series"], record_id)
-            cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
-            generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
-            payloads = {
-                self.server.works_path.resolve(): payload_for_map("works", updated_works),
-                self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
-                **generated_payloads,
-            }
-            if changed_series_ids:
-                payloads[self.server.series_path.resolve()] = payload_for_map("series", updated_series)
-            cleanup_result = self._apply_catalogue_delete_transaction(
-                backup_label="catalogue-delete-work",
-                payloads=payloads,
-                cleanup=cleanup,
+        plan = catalogue_delete_plans.build_delete_apply_plan(self.server.source_dir, self.server.repo_root, kind, record_id, preview)
+        if kind == "moment":
+            metadata_path, metadata_payload = next(iter(plan.payloads.items()))
+            transaction_result = transactions.execute_moment_cleanup_transaction(
+                repo_root=self.server.repo_root,
+                backups_dir=self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                allowed_write_paths=self.server.allowed_write_paths,
+                backup_label=plan.backup_label,
+                metadata_path=metadata_path,
+                metadata_payload=metadata_payload,
+                cleanup=plan.cleanup,
+                moment_id=plan.moment_id,
+                rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
             )
-            backup_paths = cleanup_result.pop("backup_paths")
-            response_payload = {
-                "ok": True,
-                "kind": kind,
-                "id": record_id,
-                "deleted": True,
-                "preview": preview,
-                "cleanup": cleanup_result,
-            }
-            activity_affected = {
-                **preview["affected"],
-                "series": sorted(set([*preview["affected"].get("series", []), *changed_series_ids])),
-            }
-        elif kind == "work_detail":
-            details_payload = load_work_details_payload(self.server.work_details_path)
-            current_record = details_payload["work_details"].get(record_id)
-            if not isinstance(current_record, dict):
-                raise ValueError(f"detail_uid not found: {record_id}")
-            updated_details = dict(details_payload["work_details"])
-            del updated_details[record_id]
-            cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
-            generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
-            payloads = {
-                self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
-                **generated_payloads,
-            }
-            cleanup_result = self._apply_catalogue_delete_transaction(
-                backup_label="catalogue-delete-work-detail",
-                payloads=payloads,
-                cleanup=cleanup,
-            )
-            backup_paths = cleanup_result.pop("backup_paths")
-            response_payload = {
-                "ok": True,
-                "kind": kind,
-                "id": record_id,
-                "deleted": True,
-                "preview": preview,
-                "cleanup": cleanup_result,
-            }
-        elif kind == "series":
-            series_payload = load_series_payload(self.server.series_path)
-            works_payload = load_works_payload(self.server.works_path)
-            current_record = series_payload["series"].get(record_id)
-            if not isinstance(current_record, dict):
-                raise ValueError(f"series_id not found: {record_id}")
-            updated_series = dict(series_payload["series"])
-            del updated_series[record_id]
-            updated_works = dict(works_payload["works"])
-            for work_id in preview["affected"]["works"]:
-                work_record = updated_works.get(work_id)
-                if not isinstance(work_record, dict):
-                    continue
-                next_series_ids = [value for value in normalize_series_ids_value(work_record.get("series_ids")) if value != record_id]
-                updated_works[work_id] = source_mutation.normalize_work_update(work_id, work_record, {"series_ids": next_series_ids})
-            cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
-            generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
-            payloads = {
-                self.server.series_path.resolve(): payload_for_map("series", updated_series),
-                self.server.works_path.resolve(): payload_for_map("works", updated_works),
-                **generated_payloads,
-            }
-            cleanup_result = self._apply_catalogue_delete_transaction(
-                backup_label="catalogue-delete-series",
-                payloads=payloads,
-                cleanup=cleanup,
-            )
-            backup_paths = cleanup_result.pop("backup_paths")
-            response_payload = {
-                "ok": True,
-                "kind": kind,
-                "id": record_id,
-                "deleted": True,
-                "preview": preview,
-                "cleanup": cleanup_result,
-            }
         else:
-            moments_payload = load_moments_payload(self.server.moments_path)
-            current_record = moments_payload["moments"].get(record_id)
-            if not isinstance(current_record, dict):
-                raise ValueError(f"moment_id not found: {record_id}")
-            updated_moments = dict(moments_payload["moments"])
-            del updated_moments[record_id]
-            cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
-            cleanup_result = self._apply_moment_delete_transaction(
-                backup_label="catalogue-delete-moment",
-                metadata_path=self.server.moments_path,
-                metadata_payload=moment_metadata_payload(updated_moments),
-                cleanup=cleanup,
-                moment_id=record_id,
+            transaction_result = transactions.execute_catalogue_cleanup_transaction(
+                repo_root=self.server.repo_root,
+                backups_dir=self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                allowed_write_paths=self.server.allowed_write_paths,
+                backup_label=plan.backup_label,
+                payloads=plan.payloads,
+                cleanup=plan.cleanup,
+                rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
+                refresh_lookup_payloads=self._refresh_lookup_payloads,
             )
-            backup_paths = cleanup_result.pop("backup_paths")
-            response_payload = {
-                "ok": True,
-                "kind": kind,
-                "id": record_id,
-                "deleted": True,
-                "preview": preview,
-                "cleanup": cleanup_result,
-            }
+        cleanup_result = transaction_result.payload
+        backup_paths = transaction_result.backup_paths
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "kind": kind,
+            "id": record_id,
+            "deleted": True,
+            "preview": preview,
+            "cleanup": cleanup_result,
+        }
+        activity_affected = plan.activity_affected
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = True

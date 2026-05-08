@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, Mapping, Optional
+from typing import Any, Callable, Dict, Mapping, Optional
 
 import catalogue_cleanup
 import catalogue_source_mutation as source_mutation
+import catalogue_transactions as transactions
 from catalogue_json_build import (
     build_local_media_plan,
     build_scope_for_moment,
@@ -17,12 +18,14 @@ from catalogue_json_build import (
 from catalogue_source import (
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
+    load_json_file,
     normalize_status,
     normalize_series_ids_value,
+    payload_for_map,
     records_from_json_source,
     slug_id,
 )
-from moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, normalize_moment_metadata_record
+from moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload, normalize_moment_metadata_record
 
 
 def publication_source_path_key(kind: str) -> str:
@@ -33,6 +36,14 @@ def publication_source_path_key(kind: str) -> str:
     if kind == "series":
         return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["series"])
     return str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME)
+
+
+def _source_payload(source_dir: Path, filename: str, map_key: str) -> Dict[str, Any]:
+    payload = load_json_file(source_dir / filename)
+    records = payload.get(map_key)
+    if not isinstance(records, dict):
+        raise ValueError(f"{filename} source file must include a {map_key} object")
+    return payload
 
 
 def publication_affected_for_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, list[str]]:
@@ -103,6 +114,50 @@ def publication_bootstrap_work_records(
     if normalize_status(target_record.get("status")) != "published":
         return {}
     return series_publish_bootstrap_work_records(source_dir, record_id)
+
+
+def publication_source_payload(source_dir: Path, kind: str, record_id: str, target_record: Mapping[str, Any]) -> tuple[Path, Dict[str, Any]]:
+    if kind == "work":
+        payload = _source_payload(source_dir, SOURCE_FILES["works"], "works")
+        records = dict(payload["works"])
+        records[record_id] = dict(target_record)
+        return (source_dir / SOURCE_FILES["works"]).resolve(), payload_for_map("works", records)
+    if kind == "work_detail":
+        payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
+        records = dict(payload["work_details"])
+        records[record_id] = dict(target_record)
+        return (source_dir / SOURCE_FILES["work_details"]).resolve(), payload_for_map("work_details", records)
+    if kind == "series":
+        payload = _source_payload(source_dir, SOURCE_FILES["series"], "series")
+        records = dict(payload["series"])
+        records[record_id] = dict(target_record)
+        return (source_dir / SOURCE_FILES["series"]).resolve(), payload_for_map("series", records)
+    payload = _source_payload(source_dir, MOMENT_METADATA_FILENAME, "moments")
+    records = dict(payload["moments"])
+    records[record_id] = dict(target_record)
+    return (source_dir / MOMENT_METADATA_FILENAME).resolve(), moment_metadata_payload(records)
+
+
+def publication_source_payloads(
+    source_dir: Path,
+    kind: str,
+    record_id: str,
+    target_record: Mapping[str, Any],
+    preview: Mapping[str, Any],
+) -> Dict[Path, Dict[str, Any]]:
+    source_path, source_payload = publication_source_payload(source_dir, kind, record_id, target_record)
+    payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
+    bootstrap_work_ids = [str(work_id) for work_id in preview.get("bootstrap_publish_work_ids") or []]
+    if kind == "series" and bootstrap_work_ids:
+        promoted = series_publish_bootstrap_work_records(source_dir, record_id)
+        works_payload = _source_payload(source_dir, SOURCE_FILES["works"], "works")
+        work_records = dict(works_payload["works"])
+        for work_id in bootstrap_work_ids:
+            if work_id not in promoted:
+                raise ValueError(f"bootstrap work {work_id} is no longer draft")
+            work_records[work_id] = promoted[work_id]
+        payloads[(source_dir / SOURCE_FILES["works"]).resolve()] = payload_for_map("works", work_records)
+    return payloads
 
 
 def current_publication_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
@@ -290,6 +345,108 @@ def build_publication_build_impact(
         else:
             payload["error"] = str(exc)
         return payload
+
+
+def apply_publication_unpublish_cleanup(
+    *,
+    repo_root: Path,
+    source_dir: Path,
+    backups_dir: Path,
+    dry_run: bool,
+    allowed_write_paths: set[Path],
+    kind: str,
+    record_id: str,
+    target_record: Mapping[str, Any],
+    preview: Mapping[str, Any],
+    rebuild_catalogue_search: Callable[[Path], Dict[str, Any]],
+    refresh_lookup_payloads: Callable[[], Any] | None = None,
+) -> transactions.CleanupTransactionResult:
+    source_path, source_payload = publication_source_payload(source_dir, kind, record_id, target_record)
+    if kind != "moment":
+        affected = preview["affected"]
+        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
+        return transactions.execute_catalogue_cleanup_transaction(
+            repo_root=repo_root,
+            backups_dir=backups_dir,
+            dry_run=dry_run,
+            allowed_write_paths=allowed_write_paths,
+            backup_label=f"catalogue-unpublish-{kind.replace('_', '-')}",
+            payloads={source_path: source_payload, **generated_payloads},
+            cleanup=cleanup,
+            rebuild_catalogue_search=rebuild_catalogue_search,
+            refresh_lookup_payloads=refresh_lookup_payloads,
+        )
+
+    cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
+    return transactions.execute_moment_cleanup_transaction(
+        repo_root=repo_root,
+        backups_dir=backups_dir,
+        dry_run=dry_run,
+        allowed_write_paths=allowed_write_paths,
+        backup_label="catalogue-unpublish-moment",
+        metadata_path=source_path,
+        metadata_payload=source_payload,
+        cleanup=cleanup,
+        moment_id=record_id,
+        rebuild_catalogue_search=rebuild_catalogue_search,
+    )
+
+
+def run_publication_build_transaction(
+    *,
+    repo_root: Path,
+    source_dir: Path,
+    backups_dir: Path,
+    dry_run: bool,
+    kind: str,
+    record_id: str,
+    target_record: Mapping[str, Any],
+    extra_series_ids: list[str],
+    extra_work_ids: list[str],
+    force: bool,
+    run_build_operation: Callable[..., tuple[bool, Dict[str, Any]]],
+    rel_path: Callable[[Path], str],
+) -> tuple[bool, Dict[str, Any]]:
+    if dry_run:
+        return True, {
+            "ok": True,
+            "dry_run": True,
+            "would_run": True,
+            "kind": kind,
+            "id": record_id,
+            "summary": "Dry-run publication apply would run the scoped public update after the source write.",
+        }
+
+    generated_backup_root = backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{transactions.backup_stamp_now()}"
+    affected = publication_affected_for_record(source_dir, kind, record_id)
+    if kind == "moment":
+        cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
+        backup_candidates = [
+            *cleanup["delete_paths"],
+            repo_root / "assets" / "data" / "moments_index.json",
+            repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
+        ]
+    else:
+        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+        backup_candidates = [
+            *cleanup["delete_paths"],
+            *cleanup["public_json_updates"],
+            *cleanup["studio_json_updates"],
+            repo_root / "assets" / "data" / "search" / "catalogue" / "index.json",
+        ]
+    generated_backups = transactions.backup_transaction_paths(backup_candidates, generated_backup_root, repo_root)
+    if kind == "work":
+        success, payload = run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
+    elif kind == "work_detail":
+        success, payload = run_build_operation(work_id=slug_id(target_record.get("work_id")), series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid=record_id, force=force)
+    elif kind == "series":
+        success, payload = run_build_operation(work_id="", series_id=record_id, moment_id="", extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
+    else:
+        success, payload = run_build_operation(work_id="", series_id="", moment_id=record_id, extra_series_ids=[], extra_work_ids=[], detail_uid="", force=force)
+    payload["generated_backup_root"] = rel_path(generated_backup_root) if generated_backups else ""
+    payload["generated_backups"] = [rel_path(path) for path in generated_backups.values()]
+    return success, payload
 
 
 def build_publication_preview(source_dir: Path, repo_root: Path, request: Mapping[str, Any]) -> Dict[str, Any]:

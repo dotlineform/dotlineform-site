@@ -178,10 +178,27 @@ def test_draft_series_primary_reference_is_cleared_for_work_delete_validation() 
     assert_equal(preview["affected"]["series"], ["010"], "draft primary affected series")
 
 
+def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        source_dir = root / "assets/studio/data/catalogue"
+        write_source_fixture(source_dir)
+
+        preview = catalogue_delete_plans.build_delete_preview(source_dir, "work", "00002", repo_root=root)
+        plan = catalogue_delete_plans.build_delete_apply_plan(source_dir, root, "work", "00002", preview)
+
+    assert_equal(plan.backup_label, "catalogue-delete-work", "backup label")
+    assert_equal(sorted(path.name for path in plan.payloads), ["series.json", "work_details.json", "works.json"], "payload files")
+    assert_equal(plan.payloads[(source_dir / "works.json").resolve()]["works"].get("00002"), None, "deleted work payload")
+    assert_equal(plan.payloads[(source_dir / "series.json").resolve()]["series"]["010"].get("primary_work_id"), None, "draft primary cleared")
+    assert_equal(plan.activity_affected["series"], ["010"], "activity affected series")
+
+
 def main() -> None:
     test_work_delete_preview_reports_dependents_and_primary_blocker()
     test_detail_series_and_moment_delete_preview_shapes()
     test_draft_series_primary_reference_is_cleared_for_work_delete_validation()
+    test_delete_apply_plan_builds_source_payloads_and_activity_affected()
     print("Catalogue delete plan tests OK")
 
 

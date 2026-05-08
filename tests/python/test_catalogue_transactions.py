@@ -189,6 +189,98 @@ def test_execute_source_json_write_rejects_empty_payload_map() -> None:
             raise AssertionError("expected empty payload map to be rejected")
 
 
+def test_catalogue_cleanup_transaction_writes_deletes_and_reports_backups() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        backups_dir = root / "var/studio/catalogue/backups"
+        source = root / "assets/studio/data/catalogue/works.json"
+        artifact = root / "_works/00001.md"
+        search_index = root / "assets/data/search/catalogue/index.json"
+        write_text(source, json.dumps({"before": 1}) + "\n")
+        write_text(artifact, "generated")
+        write_text(search_index, json.dumps({"search": []}) + "\n")
+        calls: list[str] = []
+
+        result = transactions.execute_catalogue_cleanup_transaction(
+            repo_root=root,
+            backups_dir=backups_dir,
+            dry_run=False,
+            allowed_write_paths={source},
+            backup_label="catalogue-delete-work",
+            payloads={source: {"after": 1}},
+            cleanup={"delete_paths": [artifact], "catalogue_search": True},
+            rebuild_catalogue_search=lambda repo_root: calls.append(str(repo_root)) or {"ok": True, "exit_code": 0},
+            refresh_lookup_payloads=lambda: calls.append("lookup"),
+        )
+
+        assert json.loads(source.read_text(encoding="utf-8")) == {"after": 1}
+        assert not artifact.exists()
+        assert result.payload["deleted_files"] == 1
+        assert result.payload["updated_json_files"] == 1
+        assert result.payload["catalogue_search_rebuilt"] is True
+        assert result.payload["backup_root"].startswith("var/studio/catalogue/backups/catalogue-delete-work-")
+        assert calls == [str(root), "lookup"]
+        assert result.backup_paths[0].name == "works.json"
+
+
+def test_catalogue_cleanup_transaction_restores_deleted_files_on_failure() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        backups_dir = root / "var/studio/catalogue/backups"
+        source = root / "assets/studio/data/catalogue/works.json"
+        artifact = root / "_works/00001.md"
+        search_index = root / "assets/data/search/catalogue/index.json"
+        write_text(source, json.dumps({"before": 1}) + "\n")
+        write_text(artifact, "generated")
+        write_text(search_index, json.dumps({"search": []}) + "\n")
+
+        try:
+            transactions.execute_catalogue_cleanup_transaction(
+                repo_root=root,
+                backups_dir=backups_dir,
+                dry_run=False,
+                allowed_write_paths={source},
+                backup_label="catalogue-delete-work",
+                payloads={source: {"after": 1}},
+                cleanup={"delete_paths": [artifact], "catalogue_search": True},
+                rebuild_catalogue_search=lambda repo_root: (_ for _ in ()).throw(RuntimeError("search failed")),
+            )
+        except RuntimeError as exc:
+            assert "search failed" in str(exc)
+        else:
+            raise AssertionError("expected transaction failure")
+
+        assert json.loads(source.read_text(encoding="utf-8")) == {"before": 1}
+        assert artifact.read_text(encoding="utf-8") == "generated"
+
+
+def test_moment_cleanup_transaction_dry_run_reports_moment_keys() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        metadata = root / "assets/studio/data/catalogue/moments.json"
+        moments_index = root / "assets/data/moments_index.json"
+        write_text(metadata, json.dumps({"moments": {"keys": {"title": "Keys"}}}) + "\n")
+        write_text(moments_index, json.dumps({"moments": {"keys": {}}}) + "\n")
+
+        result = transactions.execute_moment_cleanup_transaction(
+            repo_root=root,
+            backups_dir=root / "var/studio/catalogue/backups",
+            dry_run=True,
+            allowed_write_paths={metadata},
+            backup_label="catalogue-delete-moment",
+            metadata_path=metadata,
+            metadata_payload={"moments": {}},
+            cleanup={"delete_paths": []},
+            moment_id="keys",
+            rebuild_catalogue_search=lambda repo_root: {"ok": True, "exit_code": 0},
+        )
+
+        assert result.payload["moments_index_updated"] is False
+        assert result.payload["would_update_moments_index"] is True
+        assert result.payload["would_rebuild_catalogue_search"] is True
+        assert result.backup_paths == []
+
+
 def test_atomic_write_text_no_backup_replaces_text_without_backup() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -208,5 +300,8 @@ if __name__ == "__main__":
     test_execute_source_json_write_reports_relative_backup_paths()
     test_execute_source_json_write_rolls_back_replaced_files_on_failure()
     test_execute_source_json_write_rejects_empty_payload_map()
+    test_catalogue_cleanup_transaction_writes_deletes_and_reports_backups()
+    test_catalogue_cleanup_transaction_restores_deleted_files_on_failure()
+    test_moment_cleanup_transaction_dry_run_reports_moment_keys()
     test_atomic_write_text_no_backup_replaces_text_without_backup()
     print("catalogue transaction tests passed")

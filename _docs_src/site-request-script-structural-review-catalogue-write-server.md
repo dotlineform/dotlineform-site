@@ -352,9 +352,15 @@ Risks:
 
 ### Slice 13: delete/publication apply transaction orchestration
 
-Status: planned.
+Status: implemented.
 
-Extract the riskiest remaining apply transaction orchestration only after preview planners have focused coverage.
+The thirteenth implementation slice extracted the riskiest remaining delete/publication apply orchestration after preview planners had focused coverage.
+`scripts/catalogue_delete_plans.py` now builds delete apply plans for work, work-detail, series, and moment deletes.
+`scripts/catalogue_publication.py` now owns publication source payload construction, unpublish cleanup orchestration, and publication build backup orchestration.
+`scripts/catalogue_transactions.py` now executes catalogue and moment cleanup transactions with ordered backups, source/generated writes, cleanup deletes, search rebuild hooks, lookup refresh hooks, and restore behavior.
+
+The write server keeps endpoint request parsing, endpoint allowlist checks before source publication writes, final response assembly, and Studio Activity append orchestration.
+`tests/python/test_catalogue_transactions.py`, `tests/python/test_catalogue_delete_plans.py`, and `tests/python/test_catalogue_publication.py` pin the new transaction seams.
 
 Target ownership:
 

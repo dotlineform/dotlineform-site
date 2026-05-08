@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
@@ -9,13 +10,27 @@ import catalogue_cleanup
 import catalogue_source_mutation as source_mutation
 from catalogue_source import (
     CatalogueSourceRecords,
+    SOURCE_FILES,
+    load_json_file,
     normalize_status,
     normalize_series_ids_value,
+    payload_for_map,
     records_from_json_source,
     sort_record_map,
     validate_source_records,
 )
-from moment_sources import load_moment_metadata_records
+from moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload
+
+
+@dataclass(frozen=True)
+class DeleteApplyPlan:
+    kind: str
+    record_id: str
+    backup_label: str
+    payloads: Dict[Path, Dict[str, Any]]
+    cleanup: Dict[str, Any]
+    activity_affected: Dict[str, list[str]]
+    moment_id: str = ""
 
 
 def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
@@ -244,3 +259,131 @@ def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_ro
     preview["blockers"] = blockers
     preview["blocked"] = bool(blockers or validation_errors)
     return preview
+
+
+def _source_payload(source_dir: Path, filename: str, map_key: str) -> Dict[str, Any]:
+    payload = load_json_file(source_dir / filename)
+    records = payload.get(map_key)
+    if not isinstance(records, dict):
+        raise ValueError(f"{filename} source file must include a {map_key} object")
+    return payload
+
+
+def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record_id: str, preview: Mapping[str, Any]) -> DeleteApplyPlan:
+    affected = {
+        "works": [str(value) for value in (preview.get("affected") or {}).get("works") or []],
+        "series": [str(value) for value in (preview.get("affected") or {}).get("series") or []],
+        "work_details": [str(value) for value in (preview.get("affected") or {}).get("work_details") or []],
+        "moments": [str(value) for value in (preview.get("affected") or {}).get("moments") or []],
+    }
+
+    if kind == "work":
+        works_path = (source_dir / SOURCE_FILES["works"]).resolve()
+        details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
+        series_path = (source_dir / SOURCE_FILES["series"]).resolve()
+        works_payload = _source_payload(source_dir, SOURCE_FILES["works"], "works")
+        details_payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
+        series_payload = _source_payload(source_dir, SOURCE_FILES["series"], "series")
+        current_record = works_payload["works"].get(record_id)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"work_id not found: {record_id}")
+        updated_works = dict(works_payload["works"])
+        del updated_works[record_id]
+        updated_details = {
+            detail_uid: detail_record
+            for detail_uid, detail_record in details_payload["work_details"].items()
+            if str(detail_record.get("work_id") or "") != record_id
+        }
+        updated_series, changed_series_ids = series_records_with_draft_primary_cleared(series_payload["series"], record_id)
+        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
+        payloads = {
+            works_path: payload_for_map("works", updated_works),
+            details_path: payload_for_map("work_details", updated_details),
+            **generated_payloads,
+        }
+        if changed_series_ids:
+            payloads[series_path] = payload_for_map("series", updated_series)
+        return DeleteApplyPlan(
+            kind=kind,
+            record_id=record_id,
+            backup_label="catalogue-delete-work",
+            payloads=payloads,
+            cleanup=cleanup,
+            activity_affected={
+                **affected,
+                "series": sorted(set([*affected.get("series", []), *changed_series_ids])),
+            },
+        )
+
+    if kind == "work_detail":
+        details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
+        details_payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
+        current_record = details_payload["work_details"].get(record_id)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"detail_uid not found: {record_id}")
+        updated_details = dict(details_payload["work_details"])
+        del updated_details[record_id]
+        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
+        return DeleteApplyPlan(
+            kind=kind,
+            record_id=record_id,
+            backup_label="catalogue-delete-work-detail",
+            payloads={
+                details_path: payload_for_map("work_details", updated_details),
+                **generated_payloads,
+            },
+            cleanup=cleanup,
+            activity_affected=affected,
+        )
+
+    if kind == "series":
+        series_path = (source_dir / SOURCE_FILES["series"]).resolve()
+        works_path = (source_dir / SOURCE_FILES["works"]).resolve()
+        series_payload = _source_payload(source_dir, SOURCE_FILES["series"], "series")
+        works_payload = _source_payload(source_dir, SOURCE_FILES["works"], "works")
+        current_record = series_payload["series"].get(record_id)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"series_id not found: {record_id}")
+        updated_series = dict(series_payload["series"])
+        del updated_series[record_id]
+        updated_works = dict(works_payload["works"])
+        for work_id in affected["works"]:
+            work_record = updated_works.get(work_id)
+            if not isinstance(work_record, dict):
+                continue
+            next_series_ids = [value for value in normalize_series_ids_value(work_record.get("series_ids")) if value != record_id]
+            updated_works[work_id] = source_mutation.normalize_work_update(work_id, work_record, {"series_ids": next_series_ids})
+        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
+        return DeleteApplyPlan(
+            kind=kind,
+            record_id=record_id,
+            backup_label="catalogue-delete-series",
+            payloads={
+                series_path: payload_for_map("series", updated_series),
+                works_path: payload_for_map("works", updated_works),
+                **generated_payloads,
+            },
+            cleanup=cleanup,
+            activity_affected=affected,
+        )
+
+    moments_path = (source_dir / MOMENT_METADATA_FILENAME).resolve()
+    moments_payload = _source_payload(source_dir, MOMENT_METADATA_FILENAME, "moments")
+    current_record = moments_payload["moments"].get(record_id)
+    if not isinstance(current_record, dict):
+        raise ValueError(f"moment_id not found: {record_id}")
+    updated_moments = dict(moments_payload["moments"])
+    del updated_moments[record_id]
+    cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
+    return DeleteApplyPlan(
+        kind=kind,
+        record_id=record_id,
+        backup_label="catalogue-delete-moment",
+        payloads={moments_path: moment_metadata_payload(updated_moments)},
+        cleanup=cleanup,
+        activity_affected=affected,
+        moment_id=record_id,
+    )

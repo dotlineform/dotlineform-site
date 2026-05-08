@@ -17,6 +17,31 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Extracted catalogue delete and publication apply orchestration
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the thirteenth implementation slice of the script structural review by moving delete apply planning, publication source/build orchestration, and cleanup transaction execution out of `scripts/studio/catalogue_write_server.py`.
+The write server still owns endpoint request parsing, final response assembly, and Studio Activity append timing.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_delete_plans.py`
+- `scripts/catalogue_publication.py`
+- `scripts/catalogue_transactions.py`
+- `scripts/studio/catalogue_write_server.py`
+- `tests/python/test_catalogue_delete_plans.py`
+- `tests/python/test_catalogue_publication.py`
+- `tests/python/test_catalogue_transactions.py`
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+Delete and publication apply paths now have direct-module coverage for payload planning, cleanup transaction backups, rollback behavior, search rebuild hooks, and moment-specific response keys.
+Destructive endpoint response contracts and activity logging remain visible in the local write server.
+
 ## [2026-05-09] Extracted catalogue delete and publication preview planners
 
 **Status:** implemented
