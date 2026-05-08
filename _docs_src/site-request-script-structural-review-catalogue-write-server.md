@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-write-server
 title: Catalogue Write Server Slices
 added_date: 2026-05-08
-last_updated: "2026-05-08 23:45"
+last_updated: "2026-05-08 23:56"
 parent_id: site-request-script-structural-review
 sort_order: 10
 ---
@@ -10,8 +10,8 @@ sort_order: 10
 
 Status:
 
-- Slices 1-9 implemented
-- Slice 10 is the next planned implementation slice
+- Slices 1-10 implemented
+- Slice 11 is the next planned implementation slice
 
 ## Purpose
 
@@ -238,13 +238,14 @@ Risks:
 - build response payloads are visible to Studio save flows, so the helper should stay covered by direct payload-shape tests
 - moving too much build orchestration could blur the boundary with `scripts/catalogue_json_build.py`
 
-## Planned Slices
-
 ### Slice 10: source mutation planners for save/create paths
 
-Status: planned.
+Status: implemented.
 
-Extract pure planning for work, work-detail, series, and moment source changes into a focused source-update module.
+The tenth implementation slice extracted pure source mutation planning for work, work-detail, series, and moment save/create paths into `scripts/catalogue_source_mutation.py`.
+The new module owns source record normalization, changed-field calculation, validation against already-loaded source records, generated section-id planning for new details, series member-work update planning, and source JSON payload construction.
+The write server still owns request body extraction, source payload reads, existence/conflict checks before planner calls, endpoint-specific write allowlist checks, actual transaction writes/backups, lookup/build/activity orchestration, and response assembly.
+`tests/python/test_catalogue_source_mutation.py` pins representative work, detail, series, and moment planner behavior directly against the extracted module.
 
 Target ownership:
 
@@ -267,11 +268,15 @@ Benefits:
 - moves pure source-record logic out of HTTP handlers
 - makes source mutation behavior testable without running the local service
 - prepares for a later transaction-executor slice without changing write timing yet
+- keeps save/create write allowlist checks and transaction calls visible in the write server
 
 Risks:
 
 - canonical source record shape is high-value behavior; planner extraction can silently change omitted fields, field ordering, or validation
 - keep this slice planner-only to avoid combining source-shape changes with transaction behavior changes
+- lower-level normalization helpers still have legacy server call sites in bulk, delete, and publication flows; later planner/executor slices should continue migrating those paths without broad compatibility aliases
+
+## Planned Slices
 
 ### Slice 11: save/create transaction executor
 

@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: Catalogue Write Server
 added_date: 2026-04-22
-last_updated: "2026-05-08 23:45"
+last_updated: "2026-05-08 23:56"
 parent_id: servers
 sort_order: 40
 ---
@@ -62,6 +62,7 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `scripts/catalogue_lookup_refresh.py` owns full and focused Studio catalogue lookup refresh execution, result payload shape, artifact labels, written counts, and written path reporting.
 - `scripts/catalogue_prose_import.py` owns staged catalogue prose import target normalization, Markdown validation, preview payloads, and draft moment source import application helpers.
 - `scripts/catalogue_save_build.py` owns common save-time public-build response decisions for work, work-detail, series, and moment saves, including `build_requested`, `build_skipped`, no-public-artifact skip payloads, and the build runner call.
+- `scripts/catalogue_source_mutation.py` owns pure source mutation planning for save/create paths: source record normalization, changed-field calculation, source validation against already-loaded records, generated detail section-id planning, series member-work update planning, and source JSON payload construction without file writes.
 - `scripts/catalogue_transactions.py` owns timestamped backup names, transaction backup copying, best-effort restore behavior, path de-duplication for transaction paths, atomic multi-file JSON writes with rollback, and the no-backup atomic text write primitive used by prose imports.
 - `scripts/catalogue_lookup.py` owns construction and writing of derived Studio catalogue lookup payloads.
 - `scripts/catalogue_json_build.py` owns scoped public catalogue build planning and execution used by publication and build endpoints.

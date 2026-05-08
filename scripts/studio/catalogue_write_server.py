@@ -93,6 +93,7 @@ from catalogue_lookup import (  # noqa: E402
 import catalogue_invalidation as invalidation  # noqa: E402
 import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 import catalogue_save_build as save_build  # noqa: E402
+import catalogue_source_mutation as source_mutation  # noqa: E402
 from catalogue_json_build import (  # noqa: E402
     build_search_command,
     build_local_media_plan,
@@ -1641,24 +1642,29 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(current_record, dict):
             raise ValueError(f"work_id not found: {work_id}")
 
-        updated_record = normalize_work_update(work_id, current_record, work_update)
+        source_records = records_from_json_source(self.server.source_dir)
+        mutation_plan = source_mutation.plan_work_save(
+            source_records,
+            works,
+            work_id,
+            current_record,
+            work_update,
+        )
+        updated_record = mutation_plan.updated_record
         apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
-        fields_changed = changed_fields(current_record, updated_record)
-        validation_errors = validate_updated_records(self.server.source_dir, work_id, updated_record)
+        fields_changed = mutation_plan.changed_fields
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
-        changed = bool(fields_changed)
+        changed = mutation_plan.changed
         backup_paths: list[Path] = []
         if changed:
-            updated_works = dict(works)
-            updated_works[work_id] = updated_record
-            updated_payload = payload_for_map("works", updated_works)
             target_path = self.server.works_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -1693,7 +1699,7 @@ class Handler(BaseHTTPRequestHandler):
                 operation="metadata_update",
                 changed_field_names=fields_changed,
                 context={
-                    "source_records": records_from_json_source(self.server.source_dir),
+                    "source_records": source_records,
                     "current_record": current_record,
                     "updated_record": updated_record,
                 },
@@ -2626,18 +2632,14 @@ class Handler(BaseHTTPRequestHandler):
         if isinstance(works.get(work_id), dict):
             raise ValueError(f"work_id already exists: {work_id}")
 
-        blank_work_record = {field: None for field in WORK_FIELDS}
-        blank_work_record["work_id"] = work_id
-        work_update = dict(work_update)
-        if not normalize_status(work_update.get("status")):
-            work_update["status"] = "draft"
-        if "series_ids" not in work_update:
-            work_update["series_ids"] = []
-        created_record = normalize_work_update(work_id, blank_work_record, work_update)
-        if not str(created_record.get("title") or "").strip():
-            raise ValueError("work title is required")
-
-        validation_errors = validate_created_work_records(self.server.source_dir, work_id, created_record)
+        mutation_plan = source_mutation.plan_work_create(
+            records_from_json_source(self.server.source_dir),
+            works,
+            work_id,
+            work_update,
+        )
+        created_record = mutation_plan.updated_record
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
@@ -2646,16 +2648,14 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("write target not allowlisted")
         backup_paths: list[Path] = []
         if not self.server.dry_run:
-            updated_works = dict(works)
-            updated_works[work_id] = created_record
-            backup_paths = transactions.atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
             "work_id": work_id,
             "created": True,
             "changed": True,
-            "changed_fields": changed_fields(blank_work_record, created_record),
+            "changed_fields": mutation_plan.changed_fields,
             "record": created_record,
         }
         if activity_context:
@@ -2731,32 +2731,16 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError(f"detail_uid already exists: {detail_uid}")
 
         source_records = records_from_json_source(self.server.source_dir)
-        parent_work = source_records.works.get(work_id)
-        if not isinstance(parent_work, dict):
-            raise ValueError(f"parent work_id not found: {work_id}")
-        if normalize_status(parent_work.get("status")) != "published":
-            raise ValueError(f"parent work {work_id} must be published before adding work details")
-
-        blank_detail_record = {field: None for field in DETAIL_FIELDS}
-        blank_detail_record["detail_uid"] = detail_uid
-        blank_detail_record["work_id"] = work_id
-        blank_detail_record["detail_id"] = detail_id
-        detail_update = dict(detail_update)
-        detail_update["detail_uid"] = detail_uid
-        detail_update["work_id"] = work_id
-        detail_update["detail_id"] = detail_id
-        if normalize_text(detail_update.get("section_id")):
-            raise ValueError("record.section_id is generated by the server")
-        if not normalize_text(detail_update.get("section_title")):
-            raise ValueError("work detail section_title is required")
-        detail_update["section_id"] = next_detail_section_id(work_id, work_details.values())
-        if not normalize_status(detail_update.get("status")):
-            detail_update["status"] = "draft"
-        created_record = normalize_work_detail_update(detail_uid, blank_detail_record, detail_update)
-        if not str(created_record.get("title") or "").strip():
-            raise ValueError("work detail title is required")
-
-        validation_errors = validate_created_detail_records(self.server.source_dir, detail_uid, created_record)
+        mutation_plan = source_mutation.plan_work_detail_create(
+            source_records,
+            work_details,
+            detail_uid,
+            work_id,
+            detail_id,
+            detail_update,
+        )
+        created_record = mutation_plan.updated_record
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
@@ -2765,9 +2749,7 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("write target not allowlisted")
         backup_paths: list[Path] = []
         if not self.server.dry_run:
-            updated_details = dict(work_details)
-            updated_details[detail_uid] = created_record
-            backup_paths = transactions.atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+            backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -2775,7 +2757,7 @@ class Handler(BaseHTTPRequestHandler):
             "work_id": work_id,
             "created": True,
             "changed": True,
-            "changed_fields": changed_fields(blank_detail_record, created_record),
+            "changed_fields": mutation_plan.changed_fields,
             "record": created_record,
         }
         if activity_context:
@@ -2850,36 +2832,30 @@ class Handler(BaseHTTPRequestHandler):
         current_record = work_details.get(detail_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"detail_uid not found: {detail_uid}")
-        current_section_id = normalize_text(current_record.get("section_id"))
-        requested_section_id = normalize_text(detail_update.get("section_id"))
-        if requested_section_id and current_section_id and requested_section_id != current_section_id:
-            raise ValueError("record.section_id is read-only")
-
-        updated_record = normalize_work_detail_update(detail_uid, current_record, detail_update)
-        work_id = str(updated_record.get("work_id") or "")
-        if not work_id:
-            raise ValueError("work detail missing work_id")
 
         source_records = records_from_json_source(self.server.source_dir)
-        if work_id not in source_records.works:
-            raise ValueError(f"parent work_id not found: {work_id}")
-
-        fields_changed = changed_fields(current_record, updated_record)
-        validation_errors = validate_updated_detail_records(self.server.source_dir, detail_uid, updated_record)
+        mutation_plan = source_mutation.plan_work_detail_save(
+            source_records,
+            work_details,
+            detail_uid,
+            current_record,
+            detail_update,
+        )
+        updated_record = mutation_plan.updated_record
+        work_id = mutation_plan.work_id
+        fields_changed = mutation_plan.changed_fields
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
-        changed = bool(fields_changed)
+        changed = mutation_plan.changed
         backup_paths: list[Path] = []
         if changed:
-            updated_details = dict(work_details)
-            updated_details[detail_uid] = updated_record
-            updated_payload = payload_for_map("work_details", updated_details)
             target_path = self.server.work_details_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3066,57 +3042,39 @@ class Handler(BaseHTTPRequestHandler):
 
         works_payload = load_works_payload(self.server.works_path)
         works_map = works_payload["works"]
-        updated_series_record = normalize_series_update(series_id, current_series_record, series_update)
-        save_validation_errors = validate_series_save_record(updated_series_record)
-        if save_validation_errors:
-            raise ValueError("source validation failed: " + "; ".join(save_validation_errors))
-        apply_build = requested_apply_build and normalize_status(updated_series_record.get("status")) == "published"
-        pending_work_updates: Dict[str, Dict[str, Any]] = {}
-        changed_work_ids: list[str] = []
-
-        for update in work_updates_request:
-            work_id = update["work_id"]
-            current_work_record = works_map.get(work_id)
-            if not isinstance(current_work_record, dict):
-                raise ValueError(f"work_id not found: {work_id}")
-            updated_work_record = normalize_work_update(work_id, current_work_record, {"series_ids": update["series_ids"]})
-            pending_work_updates[work_id] = updated_work_record
-            if changed_fields(current_work_record, updated_work_record):
-                changed_work_ids.append(work_id)
-
-        validation_errors = validate_updated_series_records(
-            self.server.source_dir,
+        source_records = records_from_json_source(self.server.source_dir)
+        mutation_plan = source_mutation.plan_series_save(
+            source_records,
+            series_map,
+            works_map,
             series_id,
-            updated_series_record,
-            pending_work_updates,
+            current_series_record,
+            series_update,
+            work_updates_request,
         )
+        updated_series_record = mutation_plan.updated_record
+        apply_build = requested_apply_build and normalize_status(updated_series_record.get("status")) == "published"
+        pending_work_updates = mutation_plan.work_updates
+        changed_work_ids = mutation_plan.changed_work_ids
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
-        series_changed_fields = changed_fields(current_series_record, updated_series_record)
-        changed = bool(series_changed_fields or changed_work_ids)
+        series_changed_fields = mutation_plan.changed_fields
+        changed = mutation_plan.changed
         backup_paths: list[Path] = []
-        response_work_records = []
 
         if changed:
             target_payloads: Dict[Path, Dict[str, Any]] = {}
             if series_changed_fields:
-                updated_series = dict(series_map)
-                updated_series[series_id] = updated_series_record
-                target_payloads[self.server.series_path.resolve()] = payload_for_map("series", updated_series)
-            if changed_work_ids:
-                updated_works = dict(works_map)
-                for work_id in changed_work_ids:
-                    updated_works[work_id] = pending_work_updates[work_id]
-                target_payloads[self.server.works_path.resolve()] = payload_for_map("works", updated_works)
+                target_payloads[self.server.series_path.resolve()] = mutation_plan.payload
+            if changed_work_ids and mutation_plan.works_payload is not None:
+                target_payloads[self.server.works_path.resolve()] = mutation_plan.works_payload
             for target_path in target_payloads:
                 if target_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
                 backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
-
-        for work_id in changed_work_ids:
-            response_work_records.append({"work_id": work_id, "record": pending_work_updates[work_id]})
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3125,7 +3083,7 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": series_changed_fields,
             "changed_work_ids": changed_work_ids,
             "record": updated_series_record,
-            "work_records": response_work_records,
+            "work_records": mutation_plan.work_records,
         }
         if activity_context:
             response_payload["activity_context"] = activity_context
@@ -3163,7 +3121,7 @@ class Handler(BaseHTTPRequestHandler):
                     operation="metadata_update",
                     changed_field_names=series_changed_fields,
                     context={
-                        "source_records": records_from_json_source(self.server.source_dir),
+                        "source_records": source_records,
                         "current_record": current_series_record,
                         "updated_record": updated_series_record,
                     },
@@ -3294,49 +3252,24 @@ class Handler(BaseHTTPRequestHandler):
         works_payload = load_works_payload(self.server.works_path)
         works_map = works_payload["works"]
 
-        blank_series_record = {field: None for field in SERIES_FIELDS}
-        blank_series_record["series_id"] = series_id
-        if not normalize_status(series_update.get("status")):
-            series_update = dict(series_update)
-            series_update["status"] = "draft"
-        created_series_record = normalize_series_update(series_id, blank_series_record, series_update)
-        if not str(created_series_record.get("title") or "").strip():
-            raise ValueError("series title is required")
-        save_validation_errors = validate_series_save_record(created_series_record)
-        if save_validation_errors:
-            raise ValueError("source validation failed: " + "; ".join(save_validation_errors))
-
-        pending_work_updates: Dict[str, Dict[str, Any]] = {}
-        changed_work_ids: list[str] = []
-        response_work_records = []
-        for update in work_updates_request:
-            work_id = update["work_id"]
-            current_work_record = works_map.get(work_id)
-            if not isinstance(current_work_record, dict):
-                raise ValueError(f"work_id not found: {work_id}")
-            updated_work_record = normalize_work_update(work_id, current_work_record, {"series_ids": update["series_ids"]})
-            pending_work_updates[work_id] = updated_work_record
-            if changed_fields(current_work_record, updated_work_record):
-                changed_work_ids.append(work_id)
-
-        validation_errors = validate_created_series_records(
-            self.server.source_dir,
+        mutation_plan = source_mutation.plan_series_create(
+            records_from_json_source(self.server.source_dir),
+            series_map,
+            works_map,
             series_id,
-            created_series_record,
-            pending_work_updates,
+            series_update,
+            work_updates_request,
         )
+        created_series_record = mutation_plan.updated_record
+        changed_work_ids = mutation_plan.changed_work_ids
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
         target_payloads: Dict[Path, Dict[str, Any]] = {}
-        updated_series = dict(series_map)
-        updated_series[series_id] = created_series_record
-        target_payloads[self.server.series_path.resolve()] = payload_for_map("series", updated_series)
-        if changed_work_ids:
-            updated_works = dict(works_map)
-            for work_id in changed_work_ids:
-                updated_works[work_id] = pending_work_updates[work_id]
-            target_payloads[self.server.works_path.resolve()] = payload_for_map("works", updated_works)
+        target_payloads[self.server.series_path.resolve()] = mutation_plan.payload
+        if changed_work_ids and mutation_plan.works_payload is not None:
+            target_payloads[self.server.works_path.resolve()] = mutation_plan.works_payload
         for target_path in target_payloads:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
@@ -3345,18 +3278,15 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
 
-        for work_id in changed_work_ids:
-            response_work_records.append({"work_id": work_id, "record": pending_work_updates[work_id]})
-
         response_payload: Dict[str, Any] = {
             "ok": True,
             "series_id": series_id,
             "created": True,
             "changed": True,
-            "changed_fields": changed_fields(blank_series_record, created_series_record),
+            "changed_fields": mutation_plan.changed_fields,
             "changed_work_ids": changed_work_ids,
             "record": created_series_record,
-            "work_records": response_work_records,
+            "work_records": mutation_plan.work_records,
         }
         if activity_context:
             response_payload["activity_context"] = activity_context
@@ -3786,24 +3716,23 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(current_record, dict):
             raise ValueError(f"moment_id not found: {moment_id}")
 
-        normalized_current = normalize_moment_metadata_record(moment_id, current_record)
-        updated_record = normalize_moment_update(moment_id, normalized_current, moment_update)
-        fields_changed = changed_fields(normalized_current, updated_record)
-        validation_errors = validate_updated_moment_record(moment_id, updated_record)
+        mutation_plan = source_mutation.plan_moment_save(moments, moment_id, current_record, moment_update)
+        normalized_current = mutation_plan.baseline_record
+        updated_record = mutation_plan.updated_record
+        fields_changed = mutation_plan.changed_fields
+        validation_errors = mutation_plan.validation_errors
         if validation_errors:
             raise ValueError("moment source validation failed: " + "; ".join(validation_errors[:20]))
 
-        changed = bool(fields_changed)
+        changed = mutation_plan.changed
         apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
         backup_paths: list[Path] = []
         if changed:
-            updated_moments = dict(moments)
-            updated_moments[moment_id] = updated_record
             target_path = self.server.moments_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
             if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: moment_metadata_payload(updated_moments)}, self.server.backups_dir)
+                backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
 
         response_payload: Dict[str, Any] = {
             "ok": True,

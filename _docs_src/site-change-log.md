@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue source mutation planners
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the tenth implementation slice of the script structural review by moving pure save/create source mutation planning into `scripts/catalogue_source_mutation.py`.
+The write server still owns file reads, allowlist checks, transaction writes/backups, lookup/build/activity orchestration, and response assembly, while the new module owns source record normalization, changed-field calculation, validation against loaded source records, generated detail section-id planning, series member-work update planning, and source JSON payload construction.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_source_mutation.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_source_mutation.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+Work, work-detail, series, and moment save/create source-shape behavior now has direct-module coverage without running the local HTTP service.
+Endpoint write timing and response contracts remain unchanged.
+
 ## [2026-05-08] Extracted catalogue save-build follow-through helper
 
 **Status:** implemented
