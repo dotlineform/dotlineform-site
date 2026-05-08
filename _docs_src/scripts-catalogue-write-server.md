@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: Catalogue Write Server
 added_date: 2026-04-22
-last_updated: "2026-05-06 20:45"
+last_updated: "2026-05-08 21:44"
 parent_id: servers
 sort_order: 40
 ---
@@ -50,6 +50,13 @@ Exposed endpoints:
 - `POST /catalogue/project-state-report`
 
 The current implementation can serve allowlisted catalogue source and lookup payloads for Studio, can create draft work, work-detail, and series records, can import new work/work-detail records from the configured bulk-import workbook, can import staged work/series/moment prose Markdown into repo-local catalogue prose source files, can bulk-save existing work/work-detail records, saves existing work/work-detail/series/moment records in canonical catalogue source JSON, can run a scoped JSON-source rebuild for one work, one series, or one moment scope, can apply shared publication preview/apply actions for works, work details, series, and moments, and can write the local project-state report. It does not write back into Excel.
+
+## Module Ownership
+
+- `scripts/studio/catalogue_write_server.py` owns HTTP routing, request validation, canonical source writes, backups, refresh execution, activity-row orchestration, and response payload assembly.
+- `scripts/catalogue_invalidation.py` owns catalogue lookup invalidation and moment-build invalidation constants, registries, and pure field-to-artifact helper functions.
+- `scripts/catalogue_lookup.py` owns construction and writing of derived Studio catalogue lookup payloads.
+- `scripts/catalogue_json_build.py` owns scoped public catalogue build planning and execution used by publication and build endpoints.
 
 `GET /catalogue/read` is the server-backed read path for mutable catalogue editor data. It accepts the same logical keys used by `studio_config.json`, including:
 
@@ -380,8 +387,8 @@ Follow-on direction:
 
 - keep full lookup refresh as the fallback for complex cases
 - add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
-- the canonical invalidation registry currently lives in the write-server code by design
-- keep that registry in code unless a second consumer appears that justifies a shared JSON/config contract
+- the canonical invalidation registry lives in `scripts/catalogue_invalidation.py`
+- keep that registry in Python code unless a second consumer appears that justifies a shared JSON/config contract
 - the current dependency mapping now also explicitly includes moment build invalidation, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
 - the current registry maps detail and series fields to their actual derived outputs:
   - detail fields can affect `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records

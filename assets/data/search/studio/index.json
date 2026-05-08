@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-efec41d086b2ed05e1dffcadf0111380",
-    "generated_at_utc": "2026-05-08T20:36:42Z",
+    "version": "blake2b-ab7ec8cc37aa3fa5644fb8e2004013d1",
+    "generated_at_utc": "2026-05-08T20:45:10Z",
     "count": 201
   },
   "entries": [
@@ -1755,10 +1755,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-05-06 20:45",
+      "last_updated": "2026-05-08 21:44",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-06 20:45 • Servers",
+      "display_meta": "2026-05-08 21:44 • Servers",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -1767,14 +1767,14 @@
         "server",
         "catalogue write server",
         "servers",
-        "2026-05-06 20:45",
+        "2026-05-08 21:44",
         "2026",
         "05",
-        "06",
-        "20",
-        "45"
+        "08",
+        "21",
+        "44"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-06 20:45 2026 05 06 20 45"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 21:44 2026 05 08 21 44"
     },
     {
       "id": "scripts-cloud-environments",
@@ -4760,10 +4760,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-08 21:33",
+      "last_updated": "2026-05-08 21:44",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 21:33 • Change Requests",
+      "display_meta": "2026-05-08 21:44 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4775,14 +4775,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 21:33",
+        "2026-05-08 21:44",
         "2026",
         "05",
         "08",
         "21",
-        "33"
+        "44"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 21:33 2026 05 08 21 33"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 21:44 2026 05 08 21 44"
     },
     {
       "id": "change-requests",

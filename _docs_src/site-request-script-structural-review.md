@@ -2,8 +2,8 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 21:33"
-ui_status: proposed
+last_updated: "2026-05-08 21:44"
+ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- proposed
+- in progress
 
 ## Summary
 
@@ -113,3 +113,24 @@ The risk is over-generalizing too early; shared code should be introduced only w
 Start with a read-only review of `scripts/studio/catalogue_write_server.py` and produce a concrete extraction map.
 
 The first implementation slice should probably move only activity helpers or lookup invalidation helpers, because those are already relatively cohesive and have targeted tests.
+
+## Implementation Notes
+
+### Slice 1: catalogue invalidation rules
+
+Status: implemented.
+
+The first implementation slice extracted lookup and moment-build invalidation constants, registries, and helper functions from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_invalidation.py`.
+The write server still imports and re-exports those names for existing call sites and tests, so endpoint behavior and response payloads remain unchanged.
+`tests/python/test_catalogue_invalidation.py` pins representative work, detail, series, and moment invalidation outcomes directly against the extracted module.
+
+Benefits:
+
+- gives field-to-derived-artifact invalidation rules a single obvious module home
+- reduces the write server's mixed responsibility surface without touching write, backup, HTTP, or refresh execution behavior
+- keeps the existing Studio activity context tests able to pin the moment invalidation contract during the move
+
+Risks:
+
+- the new module is still catalogue-specific, so it should not become a shared local-service utility
+- future changes must keep lookup rule ownership in `scripts/catalogue_invalidation.py` rather than reintroducing registry edits in the HTTP server

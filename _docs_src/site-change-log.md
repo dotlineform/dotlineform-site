@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue invalidation rules
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the first implementation slice of the script structural review by moving catalogue lookup and moment-build invalidation rules out of the catalogue write server.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_invalidation.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_invalidation.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+**Impact:**
+`scripts/catalogue_invalidation.py` now owns the field-to-derived-artifact registries and pure invalidation helpers.
+The write server still imports those symbols for existing call sites, so endpoint behavior and response payloads remain stable while the module boundary becomes clearer.
+
 ## [2026-05-08] Added script structural review request
 
 **Status:** proposed

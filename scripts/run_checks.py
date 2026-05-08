@@ -48,8 +48,10 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/audit_studio_ready_state.py",
                 "scripts/verify_activity_contract.py",
                 "scripts/studio_activity.py",
+                "scripts/catalogue_invalidation.py",
                 "scripts/studio/audit_service.py",
                 "tests/python/test_activity_contract.py",
+                "tests/python/test_catalogue_invalidation.py",
                 "tests/python/test_studio_activity_context.py",
                 "tests/python/test_studio_activity_feed.py",
                 "tests/python/test_catalogue_field_registry.py",
@@ -61,6 +63,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "activity-contract-tests",
             (sys.executable, "tests/python/test_activity_contract.py"),
             "Verify Studio activity contract registry shape and v1 save-work coverage.",
+        ),
+        CheckCommand(
+            "catalogue-invalidation-tests",
+            (sys.executable, "tests/python/test_catalogue_invalidation.py"),
+            "Verify catalogue lookup and moment-build invalidation rules.",
         ),
         CheckCommand(
             "studio-activity-context-tests",
