@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T23:06:19Z",
+  "generated_at": "2026-05-08T23:26:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -87,7 +87,7 @@
       "doc_id": "site-request-script-structural-review-catalogue-write-server",
       "title": "Catalogue Write Server Slices",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 00:05",
+      "last_updated": "2026-05-09 00:35",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 10,
       "published": true,
@@ -95,7 +95,7 @@
       "source_path": "site-request-script-structural-review-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-write-server.json",
-      "content_text_length": 24170
+      "content_text_length": 24960
     },
     {
       "scope": "studio",
@@ -1106,7 +1106,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 32793
+      "content_text_length": 33229
     },
     {
       "scope": "studio",
@@ -1650,7 +1650,7 @@
       "source_path": "scripts-run-checks.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json",
-      "content_text_length": 1824
+      "content_text_length": 1850
     },
     {
       "scope": "studio",
@@ -3001,7 +3001,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 77201
+      "content_text_length": 78239
     },
     {
       "scope": "studio",

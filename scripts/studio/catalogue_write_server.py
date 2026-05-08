@@ -58,20 +58,14 @@ if str(SCRIPTS_DIR) not in sys.path:
 from catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     DETAIL_FIELDS,
-    DETAIL_TEXT_FIELDS,
     SERIES_FIELDS,
-    SERIES_TEXT_FIELDS,
     SOURCE_FILES,
     WORK_FIELDS,
-    WORK_TEXT_FIELDS,
     CatalogueSourceRecords,
     load_json_file,
-    next_detail_section_id,
-    normalize_detail_uid_value,
-    normalize_source_record,
     normalize_status,
+    normalize_detail_uid_value,
     normalize_series_ids_value,
-    normalize_text,
     payload_for_map,
     records_from_json_source,
     slug_id,
@@ -114,11 +108,9 @@ from catalogue_field_registry import (  # noqa: E402
 from moment_sources import (  # noqa: E402
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
-    load_moment_metadata_records,
     moment_metadata_payload,
     normalize_moment_filename,
     normalize_moment_metadata_record,
-    validate_moment_metadata_record,
 )
 from catalogue_workbook_import import (  # noqa: E402
     DEFAULT_IMPORT_WORKBOOK_PATH,
@@ -139,7 +131,9 @@ from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id  # noqa: E402
 import catalogue_activity as activity  # noqa: E402
 import catalogue_cleanup  # noqa: E402
+import catalogue_delete_plans  # noqa: E402
 import catalogue_prose_import as prose_import  # noqa: E402
+import catalogue_publication  # noqa: E402
 import catalogue_routes as routes  # noqa: E402
 import catalogue_transactions as transactions  # noqa: E402
 
@@ -526,95 +520,6 @@ def extract_moment_update(body: Mapping[str, Any]) -> Dict[str, Any]:
     return dict(raw_record)
 
 
-def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
-    merged = dict(current_record)
-    merged.update(update)
-    merged["work_id"] = slug_id(merged.get("work_id") or work_id)
-    if merged["work_id"] != work_id:
-        raise ValueError("record.work_id must match work_id")
-
-    if "status" in update:
-        merged["status"] = normalize_status(update.get("status")) or None
-    if "series_ids" in update:
-        merged["series_ids"] = normalize_series_ids_value(update.get("series_ids"))
-
-    return normalize_source_record(merged, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
-
-
-def normalize_work_detail_update(
-    detail_uid: str,
-    current_record: Mapping[str, Any],
-    update: Mapping[str, Any],
-) -> Dict[str, Any]:
-    merged = dict(current_record)
-    merged.update(update)
-    merged["detail_uid"] = str(merged.get("detail_uid") or detail_uid).strip()
-    if merged["detail_uid"] != detail_uid:
-        raise ValueError("record.detail_uid must match detail_uid")
-
-    work_id = slug_id(merged.get("work_id"))
-    detail_id = slug_id(merged.get("detail_id"), width=3)
-    normalized_uid = f"{work_id}-{detail_id}"
-    if normalized_uid != detail_uid:
-        raise ValueError("record.work_id/detail_id do not match detail_uid")
-
-    if "status" in update:
-        merged["status"] = normalize_status(update.get("status")) or None
-    merged["work_id"] = work_id
-    merged["detail_id"] = detail_id
-    merged["detail_uid"] = normalized_uid
-    return normalize_source_record(merged, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
-
-
-def normalize_series_update(
-    series_id: str,
-    current_record: Mapping[str, Any],
-    update: Mapping[str, Any],
-) -> Dict[str, Any]:
-    merged = dict(current_record)
-    merged.update(update)
-    merged["series_id"] = normalize_series_id(merged.get("series_id") or series_id)
-    if merged["series_id"] != series_id:
-        raise ValueError("record.series_id must match series_id")
-    if "status" in update:
-        merged["status"] = normalize_status(update.get("status")) or None
-    if "primary_work_id" in update:
-        primary_work_id = update.get("primary_work_id")
-        merged["primary_work_id"] = slug_id(primary_work_id) if primary_work_id not in {None, ""} else None
-    return normalize_source_record(merged, SERIES_FIELDS, text_fields=SERIES_TEXT_FIELDS)
-
-
-def validate_series_save_record(record: Mapping[str, Any]) -> list[str]:
-    errors: list[str] = []
-    if not normalize_text(record.get("year")):
-        errors.append("series year is required")
-    else:
-        try:
-            int(normalize_text(record.get("year")))
-        except ValueError:
-            errors.append("series year must be a whole number")
-    if not normalize_text(record.get("year_display")):
-        errors.append("series year_display is required")
-    return errors
-
-
-def normalize_moment_update(
-    moment_id: str,
-    current_record: Mapping[str, Any],
-    update: Mapping[str, Any],
-) -> Dict[str, Any]:
-    merged = dict(current_record)
-    merged.update(update)
-    merged["moment_id"] = normalize_moment_id_value(merged.get("moment_id") or moment_id)
-    if merged["moment_id"] != moment_id:
-        raise ValueError("record.moment_id must match moment_id")
-    return normalize_moment_metadata_record(moment_id, merged)
-
-
-def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
-    return [field for field in sorted(set(before.keys()) | set(after.keys())) if before.get(field) != after.get(field)]
-
-
 def validate_bulk_records(
     source_dir: Path,
     *,
@@ -662,689 +567,6 @@ def apply_work_bulk_series_operation(
         seen.add(series_id)
         next_series_ids.append(series_id)
     return next_series_ids
-
-
-def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
-    source_records = records_from_json_source(source_dir)
-    work_record = source_records.works.get(work_id)
-    if not isinstance(work_record, dict):
-        raise ValueError(f"work_id not found: {work_id}")
-
-    dependent_detail_ids = sorted(
-        detail_uid
-        for detail_uid, detail_record in source_records.work_details.items()
-        if str(detail_record.get("work_id") or "") == work_id
-    )
-    primary_series_ids = sorted(
-        series_id
-        for series_id, series_record in source_records.series.items()
-        if str(series_record.get("primary_work_id") or "") == work_id
-        and normalize_status(series_record.get("status")) == "published"
-    )
-    blockers: list[str] = []
-    if primary_series_ids:
-        blockers.append(
-            "Work is primary_work_id for series: " + ", ".join(primary_series_ids) + ". Reassign those series before deleting the work."
-        )
-    affected = {
-        "works": [work_id],
-        "series": normalize_series_ids_value(work_record.get("series_ids")),
-        "work_details": dependent_detail_ids,
-    }
-    cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, "work", work_id, affected) if repo_root is not None else {}
-    cleanup_count = sum(
-        int(cleanup.get(key, 0) or 0)
-        for key in ("repo_artifacts", "repo_media", "staged_media")
-    )
-    return {
-        "kind": "work",
-        "id": work_id,
-        "record": work_record,
-        "blockers": blockers,
-        "affected": affected,
-        "cleanup": cleanup,
-        "summary": f"Delete work {work_id}, {len(dependent_detail_ids)} detail record(s), and remove {cleanup_count} generated/media file(s).",
-    }
-
-
-def series_records_with_draft_primary_cleared(
-    series_records: Mapping[str, Dict[str, Any]],
-    work_id: str,
-) -> tuple[Dict[str, Dict[str, Any]], list[str]]:
-    updated_series: Dict[str, Dict[str, Any]] = {}
-    changed_series_ids: list[str] = []
-    for series_id, series_record in series_records.items():
-        next_record = dict(series_record)
-        if (
-            str(next_record.get("primary_work_id") or "") == work_id
-            and normalize_status(next_record.get("status")) != "published"
-        ):
-            next_record["primary_work_id"] = None
-            changed_series_ids.append(series_id)
-        updated_series[series_id] = next_record
-    return updated_series, sorted(changed_series_ids)
-
-
-def preview_work_detail_delete(source_dir: Path, detail_uid: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
-    source_records = records_from_json_source(source_dir)
-    detail_record = source_records.work_details.get(detail_uid)
-    if not isinstance(detail_record, dict):
-        raise ValueError(f"detail_uid not found: {detail_uid}")
-    work_id = str(detail_record.get("work_id") or "")
-    affected = {
-        "works": [work_id] if work_id else [],
-        "series": [],
-        "work_details": [detail_uid],
-    }
-    cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, "work_detail", detail_uid, affected) if repo_root is not None else {}
-    cleanup_count = sum(
-        int(cleanup.get(key, 0) or 0)
-        for key in ("repo_artifacts", "repo_media", "staged_media")
-    )
-    return {
-        "kind": "work_detail",
-        "id": detail_uid,
-        "record": detail_record,
-        "blockers": [],
-        "affected": affected,
-        "cleanup": cleanup,
-        "summary": f"Delete work detail {detail_uid} and remove {cleanup_count} generated/media file(s).",
-    }
-
-
-def preview_series_delete(source_dir: Path, series_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
-    source_records = records_from_json_source(source_dir)
-    series_record = source_records.series.get(series_id)
-    if not isinstance(series_record, dict):
-        raise ValueError(f"series_id not found: {series_id}")
-    member_work_ids = sorted(
-        work_id
-        for work_id, work_record in source_records.works.items()
-        if series_id in normalize_series_ids_value(work_record.get("series_ids"))
-    )
-    affected = {
-        "works": member_work_ids,
-        "series": [series_id],
-        "work_details": [],
-    }
-    cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, "series", series_id, affected) if repo_root is not None else {}
-    cleanup_count = sum(
-        int(cleanup.get(key, 0) or 0)
-        for key in ("repo_artifacts", "repo_media", "staged_media")
-    )
-    return {
-        "kind": "series",
-        "id": series_id,
-        "record": series_record,
-        "blockers": [],
-        "affected": affected,
-        "cleanup": cleanup,
-        "summary": f"Delete series {series_id}, remove it from {len(member_work_ids)} member work record(s), and remove {cleanup_count} generated/media file(s).",
-    }
-
-
-def preview_moment_delete(source_dir: Path, moment_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
-    moment_records = load_moment_metadata_records(source_dir)
-    moment_record = moment_records.get(moment_id)
-    if not isinstance(moment_record, dict):
-        raise ValueError(f"moment_id not found: {moment_id}")
-    cleanup = catalogue_cleanup.moment_delete_preview_cleanup(repo_root, moment_id) if repo_root is not None else {}
-    cleanup_count = sum(
-        int(cleanup.get(key, 0) or 0)
-        for key in ("repo_artifacts", "repo_media", "staged_media")
-    )
-    return {
-        "kind": "moment",
-        "id": moment_id,
-        "record": moment_record,
-        "blockers": [],
-        "affected": {
-            "works": [],
-            "series": [],
-            "work_details": [],
-            "moments": [moment_id],
-        },
-        "cleanup": cleanup,
-        "summary": f"Delete moment {moment_id}, remove {cleanup_count} generated/media file(s), update the moments index, and rebuild catalogue search.",
-    }
-
-
-def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    updated_works = dict(source_records.works)
-    updated_works.pop(work_id, None)
-    updated_series, _changed_series_ids = series_records_with_draft_primary_cleared(source_records.series, work_id)
-    updated_work_details = {
-        detail_uid: detail_record
-        for detail_uid, detail_record in source_records.work_details.items()
-        if str(detail_record.get("work_id") or "") != work_id
-    }
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(updated_works),
-        work_details=sort_record_map(updated_work_details),
-        series=sort_record_map(updated_series),
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_work_detail_delete_records(source_dir: Path, detail_uid: str) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    source_records.work_details.pop(detail_uid, None)
-    normalized_records = CatalogueSourceRecords(
-        works=source_records.works,
-        work_details=sort_record_map(source_records.work_details),
-        series=source_records.series,
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_series_delete_records(source_dir: Path, series_id: str) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    source_records.series.pop(series_id, None)
-    updated_works: Dict[str, Dict[str, Any]] = {}
-    for work_id, work_record in source_records.works.items():
-        current_series_ids = normalize_series_ids_value(work_record.get("series_ids"))
-        if series_id not in current_series_ids:
-            continue
-        updated_works[work_id] = normalize_work_update(
-            work_id,
-            work_record,
-            {"series_ids": [value for value in current_series_ids if value != series_id]},
-        )
-    source_records.works.update(updated_works)
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(source_records.works),
-        work_details=source_records.work_details,
-        series=sort_record_map(source_records.series),
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_moment_delete_records(source_dir: Path, moment_id: str) -> list[str]:
-    moment_records = load_moment_metadata_records(source_dir)
-    moment_records.pop(moment_id, None)
-    errors: list[str] = []
-    for remaining_moment_id, moment_record in sorted(moment_records.items()):
-        errors.extend(
-            f"{remaining_moment_id}: {error}"
-            for error in validate_updated_moment_record(remaining_moment_id, moment_record)
-        )
-    return errors
-
-
-def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
-    if kind == "work":
-        preview = preview_work_delete(source_dir, record_id, repo_root=repo_root)
-        preview["validation_errors"] = validate_work_delete_records(source_dir, record_id)
-    elif kind == "work_detail":
-        preview = preview_work_detail_delete(source_dir, record_id, repo_root=repo_root)
-        preview["validation_errors"] = validate_work_detail_delete_records(source_dir, record_id)
-    elif kind == "series":
-        preview = preview_series_delete(source_dir, record_id, repo_root=repo_root)
-        preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
-    else:
-        preview = preview_moment_delete(source_dir, record_id, repo_root=repo_root)
-        preview["validation_errors"] = validate_moment_delete_records(source_dir, record_id)
-    blockers = list(preview.get("blockers") or [])
-    validation_errors = list(preview.get("validation_errors") or [])
-    preview["blockers"] = blockers
-    preview["blocked"] = bool(blockers or validation_errors)
-    return preview
-
-
-def publication_source_path_key(kind: str) -> str:
-    if kind == "work":
-        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["works"])
-    if kind == "work_detail":
-        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["work_details"])
-    if kind == "series":
-        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["series"])
-    return str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME)
-
-
-def publication_affected_for_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, list[str]]:
-    source_records = records_from_json_source(source_dir)
-    affected: Dict[str, list[str]] = {
-        "works": [],
-        "series": [],
-        "work_details": [],
-        "moments": [],
-    }
-    if kind == "work":
-        work_record = source_records.works.get(record_id)
-        if not isinstance(work_record, dict):
-            raise ValueError(f"work_id not found: {record_id}")
-        affected["works"] = [record_id]
-        affected["series"] = normalize_series_ids_value(work_record.get("series_ids"))
-        affected["work_details"] = sorted(
-            detail_uid
-            for detail_uid, detail_record in source_records.work_details.items()
-            if str(detail_record.get("work_id") or "") == record_id
-        )
-    elif kind == "work_detail":
-        detail_record = source_records.work_details.get(record_id)
-        if not isinstance(detail_record, dict):
-            raise ValueError(f"detail_uid not found: {record_id}")
-        work_id = str(detail_record.get("work_id") or "")
-        affected["works"] = [work_id] if work_id else []
-        affected["work_details"] = [record_id]
-    elif kind == "series":
-        series_record = source_records.series.get(record_id)
-        if not isinstance(series_record, dict):
-            raise ValueError(f"series_id not found: {record_id}")
-        affected["series"] = [record_id]
-        affected["works"] = sorted(
-            work_id
-            for work_id, work_record in source_records.works.items()
-            if record_id in normalize_series_ids_value(work_record.get("series_ids"))
-        )
-    else:
-        moment_records = load_moment_metadata_records(source_dir)
-        if record_id not in moment_records:
-            raise ValueError(f"moment_id not found: {record_id}")
-        affected["moments"] = [record_id]
-    return affected
-
-
-def series_publish_bootstrap_work_records(source_dir: Path, series_id: str) -> Dict[str, Dict[str, Any]]:
-    records = records_from_json_source(source_dir)
-    promoted: Dict[str, Dict[str, Any]] = {}
-    for work_id, work_record in records.works.items():
-        if series_id not in normalize_series_ids_value(work_record.get("series_ids")):
-            continue
-        if normalize_status(work_record.get("status")) != "draft":
-            continue
-        promoted[work_id] = normalize_work_update(work_id, work_record, {"status": "published"})
-    return promoted
-
-
-def publication_bootstrap_work_records(
-    source_dir: Path,
-    kind: str,
-    action: str,
-    record_id: str,
-    target_record: Mapping[str, Any],
-) -> Dict[str, Dict[str, Any]]:
-    if kind != "series" or action != "publish":
-        return {}
-    if normalize_status(target_record.get("status")) != "published":
-        return {}
-    return series_publish_bootstrap_work_records(source_dir, record_id)
-
-
-def current_publication_record(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
-    if kind == "work":
-        record = records_from_json_source(source_dir).works.get(record_id)
-        if not isinstance(record, dict):
-            raise ValueError(f"work_id not found: {record_id}")
-        return dict(record)
-    if kind == "work_detail":
-        record = records_from_json_source(source_dir).work_details.get(record_id)
-        if not isinstance(record, dict):
-            raise ValueError(f"detail_uid not found: {record_id}")
-        return dict(record)
-    if kind == "series":
-        record = records_from_json_source(source_dir).series.get(record_id)
-        if not isinstance(record, dict):
-            raise ValueError(f"series_id not found: {record_id}")
-        return dict(record)
-    record = load_moment_metadata_records(source_dir).get(record_id)
-    if not isinstance(record, dict):
-        raise ValueError(f"moment_id not found: {record_id}")
-    return normalize_moment_metadata_record(record_id, record)
-
-
-def normalize_publication_record(
-    source_dir: Path,
-    kind: str,
-    record_id: str,
-    current_record: Mapping[str, Any],
-    action: str,
-    record_update: Mapping[str, Any],
-) -> Dict[str, Any]:
-    if action == "publish":
-        update = {"status": "published"}
-    elif action == "unpublish":
-        update = {"status": "draft"}
-    else:
-        update = dict(record_update)
-        requested_status = normalize_status(update.get("status")) if "status" in update else normalize_status(current_record.get("status"))
-        current_status = normalize_status(current_record.get("status"))
-        if requested_status != current_status:
-            raise ValueError("save_published must not change publication status")
-
-    if kind == "work":
-        return normalize_work_update(record_id, current_record, update)
-    if kind == "work_detail":
-        return normalize_work_detail_update(record_id, current_record, update)
-    if kind == "series":
-        return normalize_series_update(record_id, current_record, update)
-    return normalize_moment_update(record_id, current_record, update)
-
-
-def validate_publication_target(
-    source_dir: Path,
-    kind: str,
-    record_id: str,
-    target_record: Dict[str, Any],
-    *,
-    work_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
-) -> list[str]:
-    if kind == "work":
-        return validate_updated_records(source_dir, record_id, target_record)
-    if kind == "work_detail":
-        return validate_updated_detail_records(source_dir, record_id, target_record)
-    if kind == "series":
-        errors = validate_series_save_record(target_record)
-        errors.extend(validate_updated_series_records(source_dir, record_id, target_record, work_updates or {}))
-        return errors
-    return validate_updated_moment_record(record_id, target_record)
-
-
-def publication_specific_blockers(
-    source_dir: Path,
-    repo_root: Path,
-    kind: str,
-    record_id: str,
-    target_record: Mapping[str, Any],
-    *,
-    work_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
-) -> list[str]:
-    if normalize_status(target_record.get("status")) != "published":
-        return []
-
-    records = records_from_json_source(source_dir)
-    effective_works = dict(records.works)
-    if work_updates:
-        effective_works.update({work_id: dict(record) for work_id, record in work_updates.items()})
-    if kind == "work":
-        published_series_ids = [
-            series_id
-            for series_id in normalize_series_ids_value(target_record.get("series_ids"))
-            if isinstance(records.series.get(series_id), dict)
-            and normalize_status(records.series[series_id].get("status")) == "published"
-        ]
-        if not published_series_ids:
-            return [f"work {record_id} must belong to a published series before publishing"]
-        return []
-
-    if kind == "work_detail":
-        work_id = slug_id(target_record.get("work_id"))
-        parent = effective_works.get(work_id)
-        if not isinstance(parent, dict):
-            return [f"parent work_id not found: {work_id}"]
-        if normalize_status(parent.get("status")) != "published":
-            return [f"parent work {work_id} must be published before publishing detail {record_id}"]
-        return []
-
-    if kind == "series":
-        primary_work_id = str(target_record.get("primary_work_id") or "").strip()
-        blockers: list[str] = []
-        if not primary_work_id:
-            blockers.append("series primary_work_id is required before publishing")
-        primary = effective_works.get(primary_work_id)
-        if primary_work_id and not isinstance(primary, dict):
-            blockers.append(f"primary work_id not found: {primary_work_id}")
-        elif isinstance(primary, dict):
-            if normalize_status(primary.get("status")) != "published":
-                blockers.append(f"primary work {primary_work_id} must be published before publishing series {record_id}")
-            if record_id not in normalize_series_ids_value(primary.get("series_ids")):
-                blockers.append(f"primary work {primary_work_id} must belong to series {record_id}")
-        member_work_ids = [
-            work_id
-            for work_id, work_record in effective_works.items()
-            if record_id in normalize_series_ids_value(work_record.get("series_ids"))
-            and normalize_status(work_record.get("status")) == "published"
-        ]
-        if not member_work_ids:
-            blockers.append("series must have at least one published member work before publishing")
-        return blockers
-
-    if kind == "moment":
-        preview = preview_moment_source(repo_root, f"{record_id}.md", metadata=dict(target_record))
-        if not preview.get("valid"):
-            return [str(error) for error in preview.get("errors") or []] or ["moment source preview failed"]
-    return []
-
-
-def build_publication_build_impact(
-    source_dir: Path,
-    repo_root: Path,
-    kind: str,
-    record_id: str,
-    target_record: Mapping[str, Any],
-    *,
-    action: str,
-    extra_series_ids: list[str],
-    extra_work_ids: list[str],
-    force: bool,
-) -> Dict[str, Any]:
-    try:
-        if kind == "work":
-            build = build_scope_for_work(source_dir, record_id, extra_series_ids=extra_series_ids)
-            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
-        elif kind == "work_detail":
-            work_id = slug_id(target_record.get("work_id"))
-            build = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids, detail_uid=record_id)
-            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
-        elif kind == "series":
-            build = build_scope_for_series(source_dir, record_id, extra_work_ids=extra_work_ids)
-            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
-        else:
-            build = build_scope_for_moment(repo_root, f"{record_id}.md", metadata=dict(target_record), force=force)
-            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
-        return {
-            "type": "scoped_public_update",
-            "available": True,
-            "build": build,
-        }
-    except Exception as exc:  # noqa: BLE001
-        payload = {
-            "type": "scoped_public_update",
-            "available": action == "publish",
-            "build": {
-                "work_ids": [record_id] if kind == "work" else [slug_id(target_record.get("work_id"))] if kind == "work_detail" else [],
-                "series_ids": [record_id] if kind == "series" else [],
-                "moment_ids": [record_id] if kind == "moment" else [],
-                "rebuild_search": True,
-                "search_scope": "catalogue",
-                "refresh_published": True,
-            },
-        }
-        if action == "publish":
-            payload["pending_source_write"] = True
-            payload["summary"] = "Scoped public update will be resolved after the source status is written."
-        else:
-            payload["error"] = str(exc)
-        return payload
-
-
-def build_publication_preview(source_dir: Path, repo_root: Path, request: Mapping[str, Any]) -> Dict[str, Any]:
-    kind = str(request.get("kind") or "")
-    action = str(request.get("action") or "")
-    record_id = str(request.get("id") or "")
-    current_record = current_publication_record(source_dir, kind, record_id)
-    current_status = normalize_status(current_record.get("status")) or "draft"
-    record_update = request.get("record_update") if isinstance(request.get("record_update"), Mapping) else {}
-    blockers: list[str] = []
-
-    if action == "publish" and current_status == "published":
-        blockers.append("record is already published")
-    elif action == "unpublish" and current_status != "published":
-        blockers.append("record is not published")
-    elif action == "save_published" and current_status != "published":
-        blockers.append("save_published requires a published record")
-
-    target_record = normalize_publication_record(source_dir, kind, record_id, current_record, action, record_update)
-    target_status = normalize_status(target_record.get("status")) or "draft"
-    changed = current_record != target_record
-    changed_field_names = changed_fields(current_record, target_record)
-    bootstrap_work_records = publication_bootstrap_work_records(source_dir, kind, action, record_id, target_record)
-    bootstrap_work_ids = sorted(bootstrap_work_records)
-    source_changed = changed or bool(bootstrap_work_records)
-    validation_errors = validate_publication_target(source_dir, kind, record_id, target_record, work_updates=bootstrap_work_records)
-    blockers.extend(validation_errors)
-    blockers.extend(publication_specific_blockers(source_dir, repo_root, kind, record_id, target_record, work_updates=bootstrap_work_records))
-    affected = publication_affected_for_record(source_dir, kind, record_id)
-    impact: Dict[str, Any] = {
-        "source": {
-            "path": publication_source_path_key(kind),
-            "will_write": source_changed,
-            "changed_fields": changed_field_names,
-            "bootstrap_publish_work_ids": bootstrap_work_ids,
-        },
-        "public": {},
-    }
-    if bootstrap_work_records:
-        impact["source"]["additional_paths"] = [
-            {
-                "path": str(DEFAULT_SOURCE_DIR / SOURCE_FILES["works"]),
-                "will_write": True,
-                "changed_record_ids": bootstrap_work_ids,
-            }
-        ]
-
-    if action == "unpublish":
-        if kind == "moment":
-            cleanup = catalogue_cleanup.moment_delete_preview_cleanup(repo_root, record_id)
-        else:
-            cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, kind, record_id, affected)
-        impact["public"] = {
-            "type": "public_cleanup",
-            "cleanup": cleanup,
-        }
-    else:
-        impact["public"] = build_publication_build_impact(
-            source_dir,
-            repo_root,
-            kind,
-            record_id,
-            target_record,
-            action=action,
-            extra_series_ids=list(request.get("extra_series_ids") or []),
-            extra_work_ids=list(request.get("extra_work_ids") or []),
-            force=bool(request.get("force")),
-        )
-
-    if action in {"publish", "save_published"} and not impact["public"].get("available", True):
-        blockers.append(str(impact["public"].get("error") or "public update preview failed"))
-
-    blocked = bool(blockers)
-    return {
-        "ok": True,
-        "kind": kind,
-        "id": record_id,
-        "action": action,
-        "allowed": not blocked,
-        "blocked": blocked,
-        "blockers": blockers,
-        "validation_errors": validation_errors,
-        "current_status": current_status,
-        "target_status": target_status,
-        "record": current_record,
-        "target_record": target_record,
-        "changed": changed,
-        "source_changed": source_changed,
-        "changed_fields": changed_field_names,
-        "bootstrap_publish_work_ids": bootstrap_work_ids,
-        "affected": affected,
-        "impact": impact,
-        "summary": f"{action.replace('_', ' ')} {kind} {record_id}: {current_status} -> {target_status}.",
-    }
-
-
-def validate_updated_records(source_dir: Path, work_id: str, work_record: Dict[str, Any]) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    source_records.works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(source_records.works),
-        work_details=source_records.work_details,
-        series=source_records.series,
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_created_work_records(source_dir: Path, work_id: str, work_record: Dict[str, Any]) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    source_records.works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(source_records.works),
-        work_details=source_records.work_details,
-        series=source_records.series,
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_updated_detail_records(source_dir: Path, detail_uid: str, detail_record: Dict[str, Any]) -> list[str]:
-    errors = validate_work_detail_media_section_record(detail_uid, detail_record)
-    source_records = records_from_json_source(source_dir)
-    source_records.work_details[detail_uid] = detail_record
-    errors.extend(validate_work_detail_section_metadata_consistency(source_records.work_details))
-    normalized_records = CatalogueSourceRecords(
-        works=source_records.works,
-        work_details=sort_record_map(source_records.work_details),
-        series=source_records.series,
-    )
-    errors.extend(validate_source_records(normalized_records))
-    return sorted(dict.fromkeys(errors))
-
-
-def validate_created_detail_records(source_dir: Path, detail_uid: str, detail_record: Dict[str, Any]) -> list[str]:
-    errors = validate_work_detail_media_section_record(detail_uid, detail_record)
-    source_records = records_from_json_source(source_dir)
-    source_records.work_details[detail_uid] = detail_record
-    errors.extend(validate_work_detail_section_metadata_consistency(source_records.work_details))
-    normalized_records = CatalogueSourceRecords(
-        works=source_records.works,
-        work_details=sort_record_map(source_records.work_details),
-        series=source_records.series,
-    )
-    errors.extend(validate_source_records(normalized_records))
-    return sorted(dict.fromkeys(errors))
-
-
-def validate_updated_series_records(
-    source_dir: Path,
-    series_id: str,
-    series_record: Dict[str, Any],
-    work_updates: Mapping[str, Dict[str, Any]],
-) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    source_records.series[series_id] = series_record
-    for work_id, work_record in work_updates.items():
-        source_records.works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(source_records.works),
-        work_details=source_records.work_details,
-        series=sort_record_map(source_records.series),
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_created_series_records(
-    source_dir: Path,
-    series_id: str,
-    series_record: Dict[str, Any],
-    work_updates: Mapping[str, Dict[str, Any]],
-) -> list[str]:
-    source_records = records_from_json_source(source_dir)
-    source_records.series[series_id] = series_record
-    for work_id, work_record in work_updates.items():
-        source_records.works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(source_records.works),
-        work_details=source_records.work_details,
-        series=sort_record_map(source_records.series),
-    )
-    return validate_source_records(normalized_records)
-
-
-def validate_updated_moment_record(moment_id: str, moment_record: Dict[str, Any]) -> list[str]:
-    errors = validate_moment_metadata_record(moment_record)
-    normalized_id = normalize_moment_id_value(moment_record.get("moment_id") or moment_id)
-    if normalized_id != moment_id:
-        errors.append("record.moment_id must match moment_id")
-    return errors
 
 
 def load_works_payload(path: Path) -> Dict[str, Any]:
@@ -1849,7 +1071,7 @@ class Handler(BaseHTTPRequestHandler):
                         normalize_series_ids_value(current_record.get("series_ids")),
                         series_operation,
                     )
-                updated_record = normalize_work_update(work_id, current_record, update)
+                updated_record = source_mutation.normalize_work_update(work_id, current_record, update)
                 pending_updates[work_id] = updated_record
 
             validation_errors = validate_bulk_records(self.server.source_dir, work_updates=pending_updates)
@@ -1860,7 +1082,7 @@ class Handler(BaseHTTPRequestHandler):
             for work_id in selected_ids:
                 current_record = works_map[work_id]
                 updated_record = pending_updates[work_id]
-                fields_changed = changed_fields(current_record, updated_record)
+                fields_changed = source_mutation.changed_fields(current_record, updated_record)
                 if not fields_changed:
                     continue
                 changed_ids.append(work_id)
@@ -1942,7 +1164,7 @@ class Handler(BaseHTTPRequestHandler):
             current_record = detail_map.get(detail_uid)
             if not isinstance(current_record, dict):
                 raise ValueError(f"detail_uid not found: {detail_uid}")
-            updated_record = normalize_work_detail_update(detail_uid, current_record, set_fields)
+            updated_record = source_mutation.normalize_work_detail_update(detail_uid, current_record, set_fields)
             work_id = str(updated_record.get("work_id") or "")
             if work_id not in source_records.works:
                 raise ValueError(f"parent work_id not found: {work_id}")
@@ -1956,7 +1178,7 @@ class Handler(BaseHTTPRequestHandler):
         for detail_uid in selected_ids:
             current_record = detail_map[detail_uid]
             updated_record = pending_updates[detail_uid]
-            fields_changed = changed_fields(current_record, updated_record)
+            fields_changed = source_mutation.changed_fields(current_record, updated_record)
             if not fields_changed:
                 continue
             changed_ids.append(detail_uid)
@@ -2054,7 +1276,7 @@ class Handler(BaseHTTPRequestHandler):
         payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
         bootstrap_work_ids = [str(work_id) for work_id in preview.get("bootstrap_publish_work_ids") or []]
         if kind == "series" and bootstrap_work_ids:
-            promoted = series_publish_bootstrap_work_records(self.server.source_dir, record_id)
+            promoted = catalogue_publication.series_publish_bootstrap_work_records(self.server.source_dir, record_id)
             works_payload = load_works_payload(self.server.works_path)
             work_records = dict(works_payload["works"])
             for work_id in bootstrap_work_ids:
@@ -2084,7 +1306,7 @@ class Handler(BaseHTTPRequestHandler):
                 "summary": "Dry-run publication apply would run the scoped public update after the source write.",
             }
         generated_backup_root = self.server.backups_dir / f"catalogue-public-update-{kind.replace('_', '-')}-{transactions.backup_stamp_now()}"
-        affected = publication_affected_for_record(self.server.source_dir, kind, record_id)
+        affected = catalogue_publication.publication_affected_for_record(self.server.source_dir, kind, record_id)
         if kind == "moment":
             cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
             backup_candidates = [
@@ -2151,13 +1373,13 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_publication_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_publication_request(body)
-        preview = build_publication_preview(self.server.source_dir, self.server.repo_root, request)
+        preview = catalogue_publication.build_publication_preview(self.server.source_dir, self.server.repo_root, request)
         self._send_json(HTTPStatus.OK, {"ok": True, "preview": preview}, allowed)
 
     def _handle_publication_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_publication_request(body)
-        preview = build_publication_preview(self.server.source_dir, self.server.repo_root, request)
+        preview = catalogue_publication.build_publication_preview(self.server.source_dir, self.server.repo_root, request)
         if preview.get("blocked"):
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "publication preview contains blockers", "preview": preview}, allowed)
             return
@@ -2284,7 +1506,7 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_delete_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_delete_request(body)
-        preview = build_delete_preview(self.server.source_dir, request["kind"], request["id"], repo_root=self.server.repo_root)
+        preview = catalogue_delete_plans.build_delete_preview(self.server.source_dir, request["kind"], request["id"], repo_root=self.server.repo_root)
         self._send_json(
             HTTPStatus.OK,
             {
@@ -2440,7 +1662,7 @@ class Handler(BaseHTTPRequestHandler):
         request = extract_delete_request(body)
         kind = request["kind"]
         record_id = request["id"]
-        preview = build_delete_preview(self.server.source_dir, kind, record_id, repo_root=self.server.repo_root)
+        preview = catalogue_delete_plans.build_delete_preview(self.server.source_dir, kind, record_id, repo_root=self.server.repo_root)
         if preview.get("blocked"):
             self._send_json(
                 HTTPStatus.BAD_REQUEST,
@@ -2479,7 +1701,7 @@ class Handler(BaseHTTPRequestHandler):
                 for detail_uid, detail_record in details_payload["work_details"].items()
                 if str(detail_record.get("work_id") or "") != record_id
             }
-            updated_series, changed_series_ids = series_records_with_draft_primary_cleared(series_payload["series"], record_id)
+            updated_series, changed_series_ids = catalogue_delete_plans.series_records_with_draft_primary_cleared(series_payload["series"], record_id)
             cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
             generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
             payloads = {
@@ -2548,7 +1770,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not isinstance(work_record, dict):
                     continue
                 next_series_ids = [value for value in normalize_series_ids_value(work_record.get("series_ids")) if value != record_id]
-                updated_works[work_id] = normalize_work_update(work_id, work_record, {"series_ids": next_series_ids})
+                updated_works[work_id] = source_mutation.normalize_work_update(work_id, work_record, {"series_ids": next_series_ids})
             cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(self.server.repo_root, kind, record_id, preview["affected"])
             generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(self.server.repo_root, kind, record_id, preview["affected"])
             payloads = {

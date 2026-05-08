@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-write-server
 title: Catalogue Write Server Slices
 added_date: 2026-05-08
-last_updated: "2026-05-09 00:05"
+last_updated: "2026-05-09 00:35"
 parent_id: site-request-script-structural-review
 sort_order: 10
 ---
@@ -10,8 +10,8 @@ sort_order: 10
 
 Status:
 
-- Slices 1-11 implemented
-- Slice 12 is the next planned implementation slice
+- Slices 1-12 implemented
+- Slice 13 is the next planned implementation slice
 
 ## Purpose
 
@@ -314,9 +314,12 @@ Risks:
 
 ### Slice 12: delete/publication preview planners
 
-Status: planned.
+Status: implemented.
 
-Extract preview-side delete and publication planning into dedicated modules, likely `scripts/catalogue_delete_plans.py` and `scripts/catalogue_publication.py`, if that split remains clearer than one combined module.
+The twelfth implementation slice extracted preview-side delete and publication planning into `scripts/catalogue_delete_plans.py` and `scripts/catalogue_publication.py`.
+The write server now calls those modules for delete preview/apply preflight and publication preview/apply preflight, while keeping HTTP request extraction, apply transaction execution, endpoint-specific allowlist checks, response assembly, and Studio Activity timing in `scripts/studio/catalogue_write_server.py`.
+`tests/python/test_catalogue_delete_plans.py` pins representative work, work-detail, series, and moment delete preview payloads.
+`tests/python/test_catalogue_publication.py` pins representative publication blockers, unpublish cleanup attachment, series publish bootstrap behavior, and `save_published` status-change rejection.
 
 Target ownership:
 
@@ -339,11 +342,13 @@ Benefits:
 
 - moves a large pure planning block out before touching apply transactions
 - gives publication/delete rules a clearer home than the HTTP server
+- lets apply-transaction extraction start from direct-tested preflight contracts
 
 Risks:
 
 - preview payloads are used to gate destructive UI actions
 - publication blockers combine source metadata, generated readiness, and build impact, so ownership must stay explicit
+- apply execution still spans the write server, cleanup, publication, delete-plan, and transaction modules until Slice 13
 
 ### Slice 13: delete/publication apply transaction orchestration
 

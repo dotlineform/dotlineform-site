@@ -17,6 +17,32 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Extracted catalogue delete and publication preview planners
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the twelfth implementation slice of the script structural review by moving delete preview planning into `scripts/catalogue_delete_plans.py` and publication preview planning into `scripts/catalogue_publication.py`.
+The write server still owns HTTP request handling, apply transaction execution, endpoint-specific allowlist checks, response assembly, and Studio Activity timing.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_delete_plans.py`
+- `scripts/catalogue_publication.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_delete_plans.py`
+- `tests/python/test_catalogue_publication.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+Delete and publication preflight behavior now has direct-module coverage before the later apply-transaction extraction.
+Destructive apply ordering and write allowlists remain in the local write server.
+
 ## [2026-05-09] Extracted catalogue source write executor
 
 **Status:** implemented
