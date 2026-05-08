@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-delete-cleanup
 title: Catalogue Delete Cleanup Request
 added_date: 2026-04-27
-last_updated: 2026-05-02
+last_updated: "2026-05-08 00:00"
 ui_status: done
 parent_id: change-requests
 sort_order: 80
@@ -36,7 +36,7 @@ The implementation should preserve the current safety posture:
 - record-hash conflict protection
 - explicit write allowlists
 - transaction-style backups for generated/index/media cleanup
-- no remote media deletion
+- remote media deletion handled through the explicit R2 publisher delete action, not implicit browser-side Studio code
 - no canonical source-image or prose deletion unless a future request explicitly adds it
 
 ## Previous Behavior
@@ -174,10 +174,13 @@ Do not delete:
 - canonical series prose under `_docs_src_catalogue/series/`
 - canonical moment prose under `_docs_src_catalogue/moments/`
 - canonical source images under the external projects source tree
-- remote uploaded media or R2 objects
 - deprecated external staging paths under `DOTLINEFORM_MEDIA_BASE_DIR`
 
 Do not reintroduce legacy local media staging cleanup. Current Studio media staging is repo-local under `var/catalogue/media/`.
+
+Remote R2 primary variants are no longer treated as a separate manual cleanup category.
+Use [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) with `--delete` for exact-id catalogue media cleanup after deleting a work, work detail, or moment.
+The R2 delete path remains dry-run by default and requires `--write`.
 
 ## Acceptance Checks
 

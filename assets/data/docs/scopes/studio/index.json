@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T08:33:29Z",
+  "generated_at": "2026-05-08T08:56:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1972,7 +1972,7 @@
       "doc_id": "site-request-catalogue-delete-cleanup",
       "title": "Catalogue Delete Cleanup Request",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "change-requests",
       "sort_order": 80,
       "published": true,
@@ -1980,7 +1980,7 @@
       "source_path": "site-request-catalogue-delete-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-delete-cleanup.json",
-      "content_text_length": 9295,
+      "content_text_length": 9630,
       "ui_status": "done"
     },
     {
@@ -2423,7 +2423,7 @@
       "source_path": "scripts-publish-media-to-r2.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
-      "content_text_length": 2693
+      "content_text_length": 3373
     },
     {
       "scope": "studio",
@@ -2827,7 +2827,7 @@
       "source_path": "site-request-r2-media-upload-automation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
-      "content_text_length": 7929,
+      "content_text_length": 8121,
       "ui_status": "urgent"
     },
     {
@@ -2937,7 +2937,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 55253
+      "content_text_length": 55319
     },
     {
       "scope": "studio",

@@ -15,7 +15,8 @@ Project-local entrypoint:
 ```
 
 The command publishes approved local media derivatives to Cloudflare R2.
-It defaults to dry-run mode and requires `--write` before it uploads anything.
+It also provides an exact-id remote delete path for catalogue records that have been deleted locally.
+It defaults to dry-run mode and requires `--write` before it uploads or deletes anything.
 
 ## Current Scope
 
@@ -85,6 +86,18 @@ Upload one work:
 ./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --write
 ```
 
+Preview remote primary-variant deletion for one deleted work:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete
+```
+
+Delete remote primary variants for one deleted work:
+
+```bash
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete --write
+```
+
 Write a JSON report:
 
 ```bash
@@ -106,8 +119,11 @@ The publisher:
 - checks remote object size and ETag against the local MD5 digest
 - skips unchanged remote objects
 - blocks changed remote objects unless `--force` is passed
-- never deletes remote objects
+- deletes remote objects only when `--delete --write` is passed with an exact `--kind` and `--id`
 - keeps logs to ids, relative local paths, object keys, statuses, and non-secret reasons
+
+Remote deletion is intentionally narrower than upload discovery.
+It does not support `--all` because deleted local files may no longer exist for discovery, and broad remote cleanup should stay a deliberate operation.
 
 ## Related References
 

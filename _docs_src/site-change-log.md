@@ -41,7 +41,7 @@ Added `./scripts/publish_media_to_r2.py`, a dry-run-first Cloudflare R2 publishe
 
 **Impact:**
 Catalogue work, work-detail, and moment primary variants can now be previewed or uploaded to R2 from the CLI.
-The publisher loads credentials from environment variables or gitignored local env files, skips unchanged objects, blocks changed remote objects unless `--force` is explicit, and keeps docs media publishing out of scope for this milestone.
+The publisher loads credentials from environment variables or gitignored local env files, skips unchanged objects, blocks changed remote objects unless `--force` is explicit, supports exact-id remote primary deletion with `--delete --write`, and keeps docs media publishing out of scope for this milestone.
 
 ## [2026-05-07] Clarified Docs Viewer draft visibility
 

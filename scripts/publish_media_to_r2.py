@@ -119,6 +119,15 @@ class PublishResult:
     remote_etag: str = ""
 
 
+@dataclass(frozen=True)
+class RemoteMediaObject:
+    scope: str
+    kind: str
+    item_id: str
+    width: int
+    object_key: str
+
+
 @dataclass
 class MissingVariant:
     kind: str
@@ -134,6 +143,9 @@ class RemoteClient(Protocol):
     def put_object(self, key: str, path: Path, content_type: str) -> None:
         ...
 
+    def delete_object(self, key: str) -> None:
+        ...
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     ap = argparse.ArgumentParser(
@@ -147,6 +159,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     ap.add_argument("--force", action="store_true", help="Overwrite changed remote objects")
     ap.add_argument("--allow-partial", action="store_true", help="Allow uploads when an item is missing size variants")
     ap.add_argument("--write", action="store_true", help="Upload objects; without this flag the command is a dry-run")
+    ap.add_argument("--delete", action="store_true", help="Delete selected remote primary variants instead of uploading")
     ap.add_argument("--report-json", help="Optional JSON report path")
     ap.add_argument("--env-file", action="append", default=[], help="Additional local env file to load")
     ap.add_argument("--media-base-dir", help=argparse.SUPPRESS)
@@ -159,6 +172,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     repo_root = Path(args.repo_root).expanduser().resolve() if args.repo_root else REPO_ROOT
     if args.scope == "docs":
         raise SystemExit("Error: docs media publishing is not implemented in this milestone.")
+    if args.delete and not args.item_id:
+        raise SystemExit("Error: remote delete requires --kind and --id.")
+    if args.delete and not args.kind:
+        raise SystemExit("Error: remote delete requires --kind.")
+    if args.delete and args.all:
+        raise SystemExit("Error: remote delete does not support --all.")
+    if args.delete and args.allow_partial:
+        raise SystemExit("Error: --allow-partial is only valid for upload planning.")
+    if args.delete and args.changed_only:
+        raise SystemExit("Error: --changed-only is only valid for upload planning.")
     if not args.all and not args.item_id:
         raise SystemExit("Error: choose --all or pass --id <id>.")
     if args.all and args.item_id:
@@ -170,6 +193,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     env_files.extend(Path(path).expanduser() for path in args.env_file)
     credentials = load_r2_credentials(env_files=env_files)
     client = R2Client(credentials)
+
+    if args.delete:
+        objects = build_catalogue_remote_objects(repo_root=repo_root, kind_name=args.kind, item_id=args.item_id)
+        results = plan_and_delete(objects=objects, client=client, write=args.write)
+        report = build_report(
+            results=results,
+            missing=[],
+            write=args.write,
+            force=False,
+            changed_only=False,
+            action="delete",
+        )
+        print_report(report)
+        write_report(repo_root=repo_root, report=report, report_json=args.report_json)
+        failed = report["counts"].get("failed", 0)
+        return 1 if failed else 0
 
     media_base_dir = resolve_media_base_dir(args.media_base_dir)
     objects, missing = discover_catalogue_primary_objects(
@@ -199,20 +238,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         write=args.write,
         force=args.force,
         changed_only=args.changed_only,
+        action="upload",
     )
     print_report(report)
-
-    if args.report_json:
-        report_path = Path(args.report_json).expanduser()
-        if not report_path.is_absolute():
-            report_path = repo_root / report_path
-        report_path.parent.mkdir(parents=True, exist_ok=True)
-        report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print(f"Report written: {report_path.relative_to(repo_root) if is_relative_to(report_path, repo_root) else report_path}")
+    write_report(repo_root=repo_root, report=report, report_json=args.report_json)
 
     failed = report["counts"].get("failed", 0)
     blocked = sum(count for status, count in report["counts"].items() if status.startswith("blocked"))
     return 1 if failed or blocked else 0
+
+
+def write_report(*, repo_root: Path, report: Mapping[str, object], report_json: str | None) -> None:
+    if not report_json:
+        return
+    report_path = Path(report_json).expanduser()
+    if not report_path.is_absolute():
+        report_path = repo_root / report_path
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Report written: {report_path.relative_to(repo_root) if is_relative_to(report_path, repo_root) else report_path}")
 
 
 def validate_item_id(item_id: str) -> None:
@@ -344,6 +388,22 @@ def discover_catalogue_primary_objects(
                 )
 
     return objects, missing
+
+
+def build_catalogue_remote_objects(*, repo_root: Path, kind_name: str, item_id: str) -> List[RemoteMediaObject]:
+    kind = CATALOGUE_KINDS[kind_name]
+    prefixes = load_media_prefixes(repo_root)
+    remote_prefix = prefixes[kind.config_prefix_key]
+    return [
+        RemoteMediaObject(
+            scope="catalogue",
+            kind=kind_name,
+            item_id=item_id,
+            width=width,
+            object_key=f"{remote_prefix}/{item_id}-{PRIMARY_SUFFIX}-{width}.{OUTPUT_FORMAT}",
+        )
+        for width in PRIMARY_WIDTHS
+    ]
 
 
 def collect_primary_groups(source_root: Path, item_id: str | None = None) -> Dict[str, Dict[int, Path]]:
@@ -513,6 +573,36 @@ def plan_and_publish(
     return results
 
 
+def plan_and_delete(
+    *,
+    objects: Sequence[RemoteMediaObject],
+    client: RemoteClient,
+    write: bool,
+) -> List[PublishResult]:
+    results: List[PublishResult] = []
+    for obj in objects:
+        try:
+            remote = client.head_object(obj.object_key)
+        except Exception as exc:  # pragma: no cover - defensive CLI boundary
+            results.append(delete_result_for(obj, status="failed", reason=f"remote check failed: {exc}"))
+            continue
+
+        if remote is None:
+            results.append(delete_result_for(obj, status="missing", reason="remote object not found"))
+            continue
+
+        if not write:
+            results.append(delete_result_for(obj, status="would_delete", remote=remote, reason="dry-run"))
+            continue
+
+        try:
+            client.delete_object(obj.object_key)
+            results.append(delete_result_for(obj, status="deleted", remote=remote))
+        except Exception as exc:  # pragma: no cover - defensive CLI boundary
+            results.append(delete_result_for(obj, status="failed", remote=remote, reason=f"delete failed: {exc}"))
+    return results
+
+
 def remote_matches(obj: LocalMediaObject, remote: RemoteObject) -> bool:
     etag = remote.etag.strip().strip('"').lower()
     return remote.size == obj.size and etag == obj.md5
@@ -541,6 +631,29 @@ def result_for(
     )
 
 
+def delete_result_for(
+    obj: RemoteMediaObject,
+    *,
+    status: str,
+    reason: str = "",
+    remote: RemoteObject | None = None,
+) -> PublishResult:
+    return PublishResult(
+        scope=obj.scope,
+        kind=obj.kind,
+        item_id=obj.item_id,
+        width=obj.width,
+        local_path="",
+        object_key=obj.object_key,
+        size=0,
+        md5="",
+        status=status,
+        reason=reason,
+        remote_size=remote.size if remote else None,
+        remote_etag=remote.etag if remote else "",
+    )
+
+
 def content_type_for(path: Path) -> str:
     content_type, _encoding = mimetypes.guess_type(path.name)
     return content_type or "application/octet-stream"
@@ -553,6 +666,7 @@ def build_report(
     write: bool,
     force: bool,
     changed_only: bool,
+    action: str,
 ) -> Dict[str, object]:
     counts: Dict[str, int] = {}
     for result in results:
@@ -560,6 +674,7 @@ def build_report(
     return {
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "scope": "catalogue",
+        "action": action,
         "mode": "write" if write else "dry-run",
         "force": force,
         "changed_only": changed_only,
@@ -630,6 +745,15 @@ class R2Client:
                     raise RuntimeError(f"PUT {key} failed with HTTP {response.status}")
         except urllib.error.HTTPError as exc:
             raise RuntimeError(f"PUT {key} failed with HTTP {exc.code}") from exc
+
+    def delete_object(self, key: str) -> None:
+        request = self._request("DELETE", key, body=b"")
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                if response.status not in {200, 202, 204}:
+                    raise RuntimeError(f"DELETE {key} failed with HTTP {response.status}")
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(f"DELETE {key} failed with HTTP {exc.code}") from exc
 
     def _request(
         self,

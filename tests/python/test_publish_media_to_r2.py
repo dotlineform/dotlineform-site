@@ -34,12 +34,16 @@ class FakeR2Client:
     def __init__(self, remote=None):
         self.remote = remote or {}
         self.puts = []
+        self.deletes = []
 
     def head_object(self, key: str):
         return self.remote.get(key)
 
     def put_object(self, key: str, path: Path, content_type: str) -> None:
         self.puts.append((key, path.name, content_type))
+
+    def delete_object(self, key: str) -> None:
+        self.deletes.append(key)
 
 
 def make_repo(root: Path) -> Path:
@@ -219,6 +223,42 @@ def test_unchanged_remote_is_skipped_and_changed_remote_requires_force() -> None
     ]
 
 
+def test_delete_plan_uses_deterministic_remote_keys_and_requires_write() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        repo = make_repo(root)
+        objects = publisher.build_catalogue_remote_objects(repo_root=repo, kind_name="works", item_id="01007")
+        remote = {
+            "works/img/01007-primary-800.webp": publisher.RemoteObject(size=10, etag='"a"'),
+            "works/img/01007-primary-1200.webp": publisher.RemoteObject(size=20, etag='"b"'),
+        }
+        dry_client = FakeR2Client(remote)
+        dry_results = publisher.plan_and_delete(objects=objects, client=dry_client, write=False)
+        write_client = FakeR2Client(remote)
+        write_results = publisher.plan_and_delete(objects=objects, client=write_client, write=True)
+
+    assert [obj.object_key for obj in objects] == [
+        "works/img/01007-primary-800.webp",
+        "works/img/01007-primary-1200.webp",
+        "works/img/01007-primary-1600.webp",
+    ]
+    assert {result.object_key: result.status for result in dry_results} == {
+        "works/img/01007-primary-800.webp": "would_delete",
+        "works/img/01007-primary-1200.webp": "would_delete",
+        "works/img/01007-primary-1600.webp": "missing",
+    }
+    assert dry_client.deletes == []
+    assert {result.object_key: result.status for result in write_results} == {
+        "works/img/01007-primary-800.webp": "deleted",
+        "works/img/01007-primary-1200.webp": "deleted",
+        "works/img/01007-primary-1600.webp": "missing",
+    }
+    assert write_client.deletes == [
+        "works/img/01007-primary-800.webp",
+        "works/img/01007-primary-1200.webp",
+    ]
+
+
 if __name__ == "__main__":
     test_credentials_load_from_env_file_without_printing_values()
     test_missing_credentials_error_names_missing_vars_only()
@@ -226,4 +266,5 @@ if __name__ == "__main__":
     test_symlink_escape_is_refused()
     test_dry_run_marks_missing_remote_as_would_upload()
     test_unchanged_remote_is_skipped_and_changed_remote_requires_force()
+    test_delete_plan_uses_deterministic_remote_keys_and_requires_write()
     print("publish media to R2 checks passed")

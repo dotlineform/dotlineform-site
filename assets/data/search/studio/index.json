@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d9c1b31c00a7172e676b07764591de49",
-    "generated_at_utc": "2026-05-08T08:33:30Z",
+    "version": "blake2b-e8964777dc9b9503191fd84154b32fa5",
+    "generated_at_utc": "2026-05-08T08:55:19Z",
     "count": 198
   },
   "entries": [
@@ -3185,10 +3185,10 @@
       "kind": "doc",
       "title": "Catalogue Delete Cleanup Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-08 00:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
+      "display_meta": "2026-05-08 00:00 • Change Requests",
       "search_terms": [
         "site-request-catalogue-delete-cleanup",
         "site",
@@ -3200,12 +3200,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-02",
+        "2026-05-08 00:00",
         "2026",
         "05",
-        "02"
+        "08",
+        "00"
       ],
-      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request change requests change requests 2026-05-08 00:00 2026 05 08 00"
     },
     {
       "id": "scripts-verify-catalogue-field-registry",

@@ -60,7 +60,7 @@ The workflow should:
 The first implementation should not:
 
 - upload canonical source images
-- delete remote R2 objects
+- delete remote R2 objects broadly or implicitly; exact-id primary-variant deletion is supported through `--delete`
 - expose R2 credentials to browser-side Studio code
 - require credentials in generated docs, public JSON, or tracked config
 - replace the existing local thumbnail copy behavior
@@ -90,7 +90,7 @@ Preferred permissions:
 - object read/write for the target bucket
 - object list for preview and unchanged checks
 - no account-wide permissions beyond what R2 S3-compatible access requires
-- no delete permission for the first milestone unless remote cleanup is later designed deliberately
+- delete permission only when exact-id remote cleanup is intentionally used
 
 ## Proposed Architecture
 
@@ -217,6 +217,7 @@ The first catalogue milestone is implemented:
 
 - dry-run lists catalogue primary derivatives that would upload to R2
 - write mode uploads selected catalogue primary derivatives only when `--write` is passed
+- remote delete mode removes selected catalogue primary derivatives only when `--delete --write` is passed with an exact kind and id
 - missing credentials fail with a clear non-secret error
 - unchanged remote files are skipped by default
 - changed remote files require `--force`
