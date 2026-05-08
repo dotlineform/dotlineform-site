@@ -54,6 +54,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue_lookup_refresh.py",
                 "scripts/catalogue_prose_import.py",
                 "scripts/catalogue_routes.py",
+                "scripts/catalogue_save_build.py",
                 "scripts/catalogue_transactions.py",
                 "scripts/studio/audit_service.py",
                 "tests/python/test_activity_contract.py",
@@ -62,6 +63,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_catalogue_lookup_refresh.py",
                 "tests/python/test_catalogue_prose_import.py",
                 "tests/python/test_catalogue_routes.py",
+                "tests/python/test_catalogue_save_build.py",
                 "tests/python/test_catalogue_transactions.py",
                 "tests/python/test_studio_activity_context.py",
                 "tests/python/test_studio_activity_feed.py",
@@ -104,6 +106,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "catalogue-route-tests",
             (sys.executable, "tests/python/test_catalogue_routes.py"),
             "Verify catalogue route inventory and write-server POST dispatch coverage.",
+        ),
+        CheckCommand(
+            "catalogue-save-build-tests",
+            (sys.executable, "tests/python/test_catalogue_save_build.py"),
+            "Verify save-time catalogue build follow-through helpers.",
         ),
         CheckCommand(
             "studio-activity-context-tests",

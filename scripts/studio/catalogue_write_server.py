@@ -92,6 +92,7 @@ from catalogue_lookup import (  # noqa: E402
 )
 import catalogue_invalidation as invalidation  # noqa: E402
 import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
+import catalogue_save_build as save_build  # noqa: E402
 from catalogue_json_build import (  # noqa: E402
     build_search_command,
     build_local_media_plan,
@@ -1769,23 +1770,18 @@ class Handler(BaseHTTPRequestHandler):
                     ),
                 ]
                 activity.append_studio_activity_rows(self.server, response_payload, activity_rows)
-        response_payload["build_requested"] = bool(apply_build and changed)
-        if requested_apply_build and changed and not apply_build:
-            response_payload["build_skipped"] = {
-                "reason": "work_not_published",
-                "summary": "Work must be published before a public update can run.",
-            }
-        if apply_build and changed and not build_plan.get("build_required", True):
-            response_payload["build_requested"] = False
-            response_payload["build_skipped"] = {
-                "reason": "no_public_build_artifacts",
-                "summary": "Changed fields do not require public build artifacts.",
-            }
-        if apply_build and changed and build_plan.get("build_required", True):
-            previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
-            next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
-            removed_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
-            _build_success, build_payload = self._run_build_operation(
+        previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
+        next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
+        removed_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
+        build_payload = save_build.apply_save_build_follow_through(
+            response_payload,
+            requested_apply_build=requested_apply_build,
+            apply_build=apply_build,
+            changed=changed,
+            build_plan=build_plan,
+            unpublished_reason="work_not_published",
+            unpublished_message="Work must be published before a public update can run.",
+            run_build=lambda: self._run_build_operation(
                 work_id=work_id,
                 series_id="",
                 extra_series_ids=normalize_series_ids_value([*extra_series_ids, *removed_series_ids]),
@@ -1793,8 +1789,9 @@ class Handler(BaseHTTPRequestHandler):
                 detail_uid="",
                 force=False,
                 build_plan=build_plan,
-            )
-            response_payload["build"] = build_payload
+            ),
+        )
+        if build_payload is not None:
             if activity_context:
                 activity.append_studio_activity_rows(
                     self.server,
@@ -2985,15 +2982,13 @@ class Handler(BaseHTTPRequestHandler):
                     ),
                 ]
                 activity.append_studio_activity_rows(self.server, response_payload, activity_rows)
-        response_payload["build_requested"] = bool(apply_build and changed)
-        if apply_build and changed and not build_plan.get("build_required", True):
-            response_payload["build_requested"] = False
-            response_payload["build_skipped"] = {
-                "reason": "no_public_build_artifacts",
-                "summary": "Changed fields do not require public build artifacts.",
-            }
-        if apply_build and changed and build_plan.get("build_required", True):
-            _build_success, build_payload = self._run_build_operation(
+        build_payload = save_build.apply_save_build_follow_through(
+            response_payload,
+            requested_apply_build=apply_build,
+            apply_build=apply_build,
+            changed=changed,
+            build_plan=build_plan,
+            run_build=lambda: self._run_build_operation(
                 work_id=work_id,
                 series_id="",
                 extra_series_ids=[],
@@ -3001,8 +2996,9 @@ class Handler(BaseHTTPRequestHandler):
                 detail_uid=detail_uid,
                 force=False,
                 build_plan=build_plan,
-            )
-            response_payload["build"] = build_payload
+            ),
+        )
+        if build_payload is not None:
             if activity_context:
                 activity.append_studio_activity_rows(
                     self.server,
@@ -3242,20 +3238,15 @@ class Handler(BaseHTTPRequestHandler):
                     ),
                 ]
                 activity.append_studio_activity_rows(self.server, response_payload, activity_rows)
-        response_payload["build_requested"] = bool(apply_build and changed)
-        if requested_apply_build and changed and not apply_build:
-            response_payload["build_skipped"] = {
-                "reason": "series_not_published",
-                "summary": "Series must be published before a public update can run.",
-            }
-        if apply_build and changed and not build_plan.get("build_required", True):
-            response_payload["build_requested"] = False
-            response_payload["build_skipped"] = {
-                "reason": "no_public_build_artifacts",
-                "summary": "Changed fields do not require public build artifacts.",
-            }
-        if apply_build and changed and build_plan.get("build_required", True):
-            _build_success, build_payload = self._run_build_operation(
+        build_payload = save_build.apply_save_build_follow_through(
+            response_payload,
+            requested_apply_build=requested_apply_build,
+            apply_build=apply_build,
+            changed=changed,
+            build_plan=build_plan,
+            unpublished_reason="series_not_published",
+            unpublished_message="Series must be published before a public update can run.",
+            run_build=lambda: self._run_build_operation(
                 work_id="",
                 series_id=series_id,
                 extra_series_ids=[],
@@ -3263,8 +3254,9 @@ class Handler(BaseHTTPRequestHandler):
                 detail_uid="",
                 force=False,
                 build_plan=build_plan,
-            )
-            response_payload["build"] = build_payload
+            ),
+        )
+        if build_payload is not None:
             if activity_context:
                 activity.append_studio_activity_rows(
                     self.server,
@@ -3883,20 +3875,17 @@ class Handler(BaseHTTPRequestHandler):
                         )
                     ],
                 )
-        response_payload["build_requested"] = bool(apply_build and changed)
-        if requested_apply_build and changed and not apply_build:
-            response_payload["build_skipped"] = {
-                "reason": "moment_not_published",
-                "message": "Public moment update skipped because the saved moment is not published.",
-            }
-        if apply_build and changed and not build_plan.get("build_required", True):
-            response_payload["build_requested"] = False
-            response_payload["build_skipped"] = {
-                "reason": "no_public_build_artifacts",
-                "message": "Changed fields do not require public build artifacts.",
-            }
-        if apply_build and changed and build_plan.get("build_required", True):
-            _build_success, build_payload = self._run_build_operation(
+        build_payload = save_build.apply_save_build_follow_through(
+            response_payload,
+            requested_apply_build=requested_apply_build,
+            apply_build=apply_build,
+            changed=changed,
+            build_plan=build_plan,
+            unpublished_reason="moment_not_published",
+            unpublished_message="Public moment update skipped because the saved moment is not published.",
+            unpublished_message_key="message",
+            no_artifacts_message_key="message",
+            run_build=lambda: self._run_build_operation(
                 work_id="",
                 series_id="",
                 moment_id=moment_id,
@@ -3905,8 +3894,9 @@ class Handler(BaseHTTPRequestHandler):
                 detail_uid="",
                 force=False,
                 build_plan=build_plan,
-            )
-            response_payload["build"] = build_payload
+            ),
+        )
+        if build_payload is not None:
             if activity_context:
                 activity.append_studio_activity_rows(
                     self.server,

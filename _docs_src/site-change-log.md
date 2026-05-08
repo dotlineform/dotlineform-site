@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue save-build follow-through helper
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the ninth implementation slice of the script structural review by moving common save-time public-build follow-through logic for work, work-detail, series, and moment saves into `scripts/catalogue_save_build.py`.
+The write server still chooses endpoint-specific build targets and appends Studio Activity rows, while the helper owns `build_requested`, `build_skipped`, no-public-artifact skips, and the common build runner call.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_save_build.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_save_build.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+Save-time build response decisions now have direct-module coverage for published saves, draft skips, no-public-artifact skips, moment message-key payloads, and build-failure payload preservation.
+Endpoint response contracts remain unchanged.
+
 ## [2026-05-08] Extracted catalogue lookup refresh helpers
 
 **Status:** implemented

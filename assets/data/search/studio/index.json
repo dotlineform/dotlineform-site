@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ae0390b2f698ef23b3829e48762bf01e",
-    "generated_at_utc": "2026-05-08T22:22:10Z",
+    "version": "blake2b-a95070a4b130cbaea4053a9e0a2f41ed",
+    "generated_at_utc": "2026-05-08T22:45:54Z",
     "count": 202
   },
   "entries": [
@@ -1786,10 +1786,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-05-08 23:30",
+      "last_updated": "2026-05-08 23:45",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-08 23:30 • Servers",
+      "display_meta": "2026-05-08 23:45 • Servers",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -1798,14 +1798,14 @@
         "server",
         "catalogue write server",
         "servers",
-        "2026-05-08 23:30",
+        "2026-05-08 23:45",
         "2026",
         "05",
         "08",
         "23",
-        "30"
+        "45"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 23:30 2026 05 08 23 30"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 23:45 2026 05 08 23 45"
     },
     {
       "id": "scripts-cloud-environments",
@@ -2673,10 +2673,10 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-08 23:30",
+      "last_updated": "2026-05-08 23:45",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-08 23:30 • Site Docs",
+      "display_meta": "2026-05-08 23:45 • Site Docs",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
@@ -2686,14 +2686,14 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-08 23:30",
+        "2026-05-08 23:45",
         "2026",
         "05",
         "08",
         "23",
-        "30"
+        "45"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-08 23:30 2026 05 08 23 30"
+      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-08 23:45 2026 05 08 23 45"
     },
     {
       "id": "search-ui-behaviour",

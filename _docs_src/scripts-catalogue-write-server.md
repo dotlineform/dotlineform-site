@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: Catalogue Write Server
 added_date: 2026-04-22
-last_updated: "2026-05-08 23:30"
+last_updated: "2026-05-08 23:45"
 parent_id: servers
 sort_order: 40
 ---
@@ -61,6 +61,7 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `scripts/catalogue_invalidation.py` owns catalogue lookup invalidation and moment-build invalidation constants, registries, and pure field-to-artifact helper functions.
 - `scripts/catalogue_lookup_refresh.py` owns full and focused Studio catalogue lookup refresh execution, result payload shape, artifact labels, written counts, and written path reporting.
 - `scripts/catalogue_prose_import.py` owns staged catalogue prose import target normalization, Markdown validation, preview payloads, and draft moment source import application helpers.
+- `scripts/catalogue_save_build.py` owns common save-time public-build response decisions for work, work-detail, series, and moment saves, including `build_requested`, `build_skipped`, no-public-artifact skip payloads, and the build runner call.
 - `scripts/catalogue_transactions.py` owns timestamped backup names, transaction backup copying, best-effort restore behavior, path de-duplication for transaction paths, atomic multi-file JSON writes with rollback, and the no-backup atomic text write primitive used by prose imports.
 - `scripts/catalogue_lookup.py` owns construction and writing of derived Studio catalogue lookup payloads.
 - `scripts/catalogue_json_build.py` owns scoped public catalogue build planning and execution used by publication and build endpoints.
@@ -680,6 +681,7 @@ Build preview and save-time `apply_build` for single work, work-detail, series, 
 - unknown fields, mixed rule classes, bulk saves, create/delete operations, imports, publication actions, and series saves that also alter member work records keep conservative fallback
 
 The direct `POST /catalogue/build-apply` endpoint still uses the explicit broad request shape unless called through save-time `apply_build`.
+The save-time follow-through logic for work, work-detail, series, and moment saves is shared through `scripts/catalogue_save_build.py`; the endpoint handlers still choose the target work, detail, series, or moment build scope and append any Studio Activity build rows.
 
 The apply endpoint updates:
 

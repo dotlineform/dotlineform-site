@@ -10,8 +10,8 @@ sort_order: 10
 
 Status:
 
-- Slices 1-8 implemented
-- Slice 9 is the next planned implementation slice
+- Slices 1-9 implemented
+- Slice 10 is the next planned implementation slice
 
 ## Purpose
 
@@ -202,19 +202,21 @@ Risks:
 - focused refresh paths depend on invalidation classifications; avoid re-encoding invalidation rules in the refresh module
 - the write server still computes invalidation decisions before and after save writes, so later save-flow cleanup should avoid diverging those two paths
 
-## Planned Slices
-
 ### Slice 9: save/build follow-through helper
 
-Status: planned.
+Status: implemented.
 
-Extract the repeated post-save build decision and execution wrapper used by work, work-detail, series, and moment saves.
+The ninth implementation slice extracted the repeated post-save build decision and execution wrapper used by work, work-detail, series, and moment saves into `scripts/catalogue_save_build.py`.
+The new module owns `build_requested` and `build_skipped` response decisions, no-public-artifact skip payloads, and the common save-time build runner call.
+The write server still owns source mutation, backup/write timing, changed-state detection, endpoint-specific build target selection, response assembly outside build keys, and Studio Activity append timing.
+`tests/python/test_catalogue_save_build.py` pins representative published, draft, no-public-artifact, moment-message-key, and build-failure payload behavior directly against the extracted module.
+The focused save-build test is included in the `quick` run-checks profile.
 
 Target ownership:
 
 - `build_requested` and `build_skipped` response decisions
 - no-public-artifact skip handling
-- common scoped build execution payload wrapping, if that boundary remains clean
+- common scoped build execution payload wrapping
 - build activity row construction should stay in `scripts/catalogue_activity.py` unless a clearer owner emerges
 
 The write server should keep source mutation, backup/write timing, changed-state detection, endpoint-specific response assembly, and the endpoint decision to request a build.
@@ -229,11 +231,14 @@ Benefits:
 
 - starts reducing the larger save handler bodies after the route cleanup
 - centralizes a repeated build follow-through pattern without taking over source writes
+- keeps build activity rows and endpoint-specific target selection visible in the write server
 
 Risks:
 
-- build response payloads are visible to Studio save flows
+- build response payloads are visible to Studio save flows, so the helper should stay covered by direct payload-shape tests
 - moving too much build orchestration could blur the boundary with `scripts/catalogue_json_build.py`
+
+## Planned Slices
 
 ### Slice 10: source mutation planners for save/create paths
 
