@@ -2,10 +2,11 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08"
-ui_status: proposed
+last_updated: "2026-05-08 15:59"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
+viewable: true
 ---
 # Studio Unified Activity Log Request
 
@@ -43,6 +44,9 @@ Those messages are good evidence for what the persistent activity log should say
 The activity log should not replace on-page messages or result panels.
 The page should still give immediate feedback in the workflow where the user clicked.
 The log gives those same kinds of messages a persistent home so the user can review what happened later and connect related downstream script actions.
+
+The page and action coverage checklist lives in [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory).
+That inventory should be updated alongside the structured activity contract registry as implementation expands.
 
 ## Problem
 
@@ -319,6 +323,8 @@ First implementation should prove the model with one narrow action:
 
 The v1 slice should not try to cover bulk save, new work creation, delete, publish/unpublish, docs import, export/import, or background watcher events.
 Those should remain later expansions after the correlation model is working for one common catalogue action.
+
+The full v1 checklist and future surface-area notes are tracked in [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory).
 
 ### V1 Expected Rows
 

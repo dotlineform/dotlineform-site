@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-44cae474cb69f76c984cf38fb9f1b21c",
-    "generated_at_utc": "2026-05-08T14:24:22Z",
-    "count": 199
+    "version": "blake2b-2e4606d7a89c872867f45ed46702f8e7",
+    "generated_at_utc": "2026-05-08T15:01:09Z",
+    "count": 200
   },
   "entries": [
     {
@@ -70,6 +70,36 @@
         "30"
       ],
       "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
+    },
+    {
+      "id": "site-request-studio-unified-activity-log-inventory",
+      "kind": "doc",
+      "title": "Activity Log Coverage Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
+      "last_updated": "2026-05-08 15:59",
+      "parent_id": "site-request-studio-unified-activity-log",
+      "parent_title": "Studio Unified Activity Log Request",
+      "display_meta": "2026-05-08 15:59 • Studio Unified Activity Log Request",
+      "search_terms": [
+        "site-request-studio-unified-activity-log-inventory",
+        "site",
+        "request",
+        "studio",
+        "unified",
+        "activity",
+        "log",
+        "inventory",
+        "activity log coverage inventory",
+        "coverage",
+        "studio unified activity log request",
+        "2026-05-08 15:59",
+        "2026",
+        "05",
+        "08",
+        "15",
+        "59"
+      ],
+      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-08 15:59 2026 05 08 15 59"
     },
     {
       "id": "data-models-analysis",
@@ -4668,10 +4698,10 @@
       "kind": "doc",
       "title": "Studio Unified Activity Log Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
-      "last_updated": "2026-05-08",
+      "last_updated": "2026-05-08 15:59",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 • Change Requests",
+      "display_meta": "2026-05-08 15:59 • Change Requests",
       "search_terms": [
         "site-request-studio-unified-activity-log",
         "site",
@@ -4684,12 +4714,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08",
+        "2026-05-08 15:59",
         "2026",
         "05",
-        "08"
+        "08",
+        "15",
+        "59"
       ],
-      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request change requests change requests 2026-05-08 2026 05 08"
+      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request change requests change requests 2026-05-08 15:59 2026 05 08 15 59"
     },
     {
       "id": "library-export-ui",
