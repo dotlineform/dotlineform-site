@@ -8,27 +8,7 @@ Run:
   ./scripts/studio/catalogue_write_server.py --repo-root /path/to/dotlineform-site
   ./scripts/studio/catalogue_write_server.py --dry-run
 
-Endpoints:
-  GET /health
-  POST /catalogue/bulk-save
-  POST /catalogue/delete-preview
-  POST /catalogue/delete-apply
-  POST /catalogue/publication-preview
-  POST /catalogue/publication-apply
-  POST /catalogue/work/create
-  POST /catalogue/work/save
-  POST /catalogue/work-detail/create
-  POST /catalogue/work-detail/save
-  POST /catalogue/import-preview
-  POST /catalogue/import-apply
-  POST /catalogue/series/create
-  POST /catalogue/series/save
-  POST /catalogue/moment/preview
-  POST /catalogue/moment/save
-  POST /catalogue/build-preview
-  POST /catalogue/build-apply
-  POST /catalogue/project-state-report
-  GET /catalogue/read?key=<studio_config_data_key>[&record_id=<id>]
+Endpoint paths are owned by scripts/catalogue_routes.py.
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -257,13 +237,6 @@ def locked_first_pass_work_fields() -> set[str]:
         "provenance",
         "artist",
     }
-
-
-def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool]:
-    work_id = slug_id(body.get("work_id"))
-    extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
-    force = bool(body.get("force"))
-    return work_id, extra_series_ids, force
 
 
 def normalize_moment_id_value(value: Any) -> str:

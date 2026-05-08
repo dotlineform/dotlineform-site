@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-write-server
 title: Catalogue Write Server Slices
 added_date: 2026-05-08
-last_updated: "2026-05-09 00:35"
+last_updated: "2026-05-09 00:40"
 parent_id: site-request-script-structural-review
 sort_order: 10
 ---
@@ -11,7 +11,8 @@ sort_order: 10
 Status:
 
 - Slices 1-12 implemented
-- Slice 13 is the next planned implementation slice
+- Slices 13-14 implemented
+- Priority 1 catalogue write-server restructuring is complete
 
 ## Purpose
 
@@ -310,7 +311,7 @@ Risks:
 - backup timing, dry-run behavior, and rollback behavior are safety contracts
 - do not hide service-specific write allowlists inside a generic executor
 
-## Planned Slices
+## Completed Final Slices
 
 ### Slice 12: delete/publication preview planners
 
@@ -389,24 +390,26 @@ Risks:
 
 ### Slice 14: handler body cleanup and closeout
 
-Status: planned.
+Status: implemented.
 
-Clean up the remaining write-server surface after the extracted modules own their domains.
+The fourteenth implementation slice closed out the catalogue write-server restructuring after the extracted modules owned their domains.
+`scripts/studio/catalogue_write_server.py` no longer carries a duplicated endpoint inventory in its script docstring, and the stale local `extract_build_request(...)` helper was removed.
+The closeout also refreshed module-ownership docs so the delete/publication apply transaction work from Slice 13 is recorded as the final ownership boundary rather than an in-progress extraction.
 
 Target ownership:
 
-- remove dead local helpers
-- remove duplicated constants
-- verify explicit module namespaces
-- update `scripts-catalogue-write-server.md`
-- update this slice plan and the parent request with final status
+- removed dead local helpers
+- removed duplicated endpoint/path documentation from the server module
+- verified explicit module namespaces for route, activity, invalidation, lookup refresh, source mutation, cleanup, publication/delete, prose import, save-build, and transaction owners
+- updated `scripts-catalogue-write-server.md`
+- updated this slice plan and the parent request with final status
 
 Completion checks:
 
 - endpoint handlers no longer contain large blocks of pure domain planning
 - source mutation, lookup refresh, cleanup, publication/delete planning, transactions, activity, and routes each have clear module owners
 - endpoint-specific allowlist checks remain visible before writes
-- no broad compatibility aliases or duplicated endpoint/path constants remain
+- no broad compatibility aliases or duplicated endpoint/path constants remain in the write-server slice boundary
 - focused direct-module tests cover each extracted owner
 - the smallest relevant checks pass, including syntax checks for moved Python modules and the relevant `quick` checks
 

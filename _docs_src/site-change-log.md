@@ -17,6 +17,26 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Closed catalogue write-server structural review slices
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the fourteenth and final catalogue write-server slice of the script structural review.
+The closeout removed stale local server surface, kept endpoint paths owned by `scripts/catalogue_routes.py`, and refreshed the module ownership docs after the delete/publication transaction extractions.
+
+**Files changed/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+The write server remains the local HTTP orchestration layer, while source mutation, lookup refresh, cleanup, delete/publication planning, transactions, activity, routes, prose import, and save-build follow-through now have explicit module owners and focused test coverage.
+
 ## [2026-05-09] Extracted catalogue delete and publication apply orchestration
 
 **Status:** implemented

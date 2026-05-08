@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 23:45"
+last_updated: "2026-05-09 00:40"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -13,6 +13,7 @@ viewable: true
 Status:
 
 - in progress
+- Priority 1 catalogue write-server slice sequence complete
 
 ## Summary
 
@@ -42,7 +43,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 
 | Priority | Script | Current size | Review focus | Likely extraction direction |
 |---|---:|---:|---|---|
-| 1 | `scripts/studio/catalogue_write_server.py` | 5648 lines | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | split request/domain planners, transaction helpers, refresh helpers, and keep the HTTP handler as orchestration |
+| 1 | `scripts/studio/catalogue_write_server.py` | 3148 lines | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | slice sequence complete; server now keeps HTTP transport, endpoint orchestration, allowlist checks, final response assembly, local logging, and activity append timing |
 | 2 | `scripts/docs/docs_management_server.py` | 3076 lines | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | separate docs source model helpers, import/apply flows, activity helpers, and handler routing |
 | 3 | `scripts/studio/tag_write_server.py` | 2972 lines | tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | separate tag domain mutations from transport and shared local-service write helpers |
 | 4 | `scripts/generate_work_pages.py` | 2891 lines | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
@@ -55,10 +56,14 @@ Files lower on the list should remain untouched unless a concrete maintenance pa
 
 ## Priority 1 Review: Catalogue Write Server
 
-`scripts/studio/catalogue_write_server.py` should be reviewed around responsibility boundaries.
-The detailed implementation record and remaining slice plan live in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
+`scripts/studio/catalogue_write_server.py` was reviewed around responsibility boundaries.
+The detailed implementation record lives in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
 
-Recommended review questions:
+Status: the catalogue write-server priority sequence is complete through Slice 14.
+The server is still intentionally an orchestration layer rather than a tiny wrapper: endpoint request parsing, endpoint-specific allowlist checks, final response assembly, local logging, and Studio Activity append timing remain there.
+Pure source mutation, lookup refresh execution, cleanup planning, delete/publication planning, transaction mechanics, activity row construction, prose import logic, route inventories, and save-build follow-through now have explicit module owners and focused tests.
+
+Review questions used for the completed catalogue write-server sequence:
 
 - Which functions are pure domain logic and can be tested without an HTTP server?
 - Which helpers are local-service infrastructure that should be shared with docs or tag write services?
@@ -67,7 +72,7 @@ Recommended review questions:
 - Which activity-row helpers are catalogue-specific, and which are shared Studio activity infrastructure?
 - Which logic belongs with catalogue source models, lookup payloads, field-aware build planning, or generated artifact cleanup?
 
-Likely safe extraction sequence:
+Completed extraction sequence:
 
 1. Activity profile/context/row helpers.
 2. Lookup and moment-build invalidation registries and refresh helpers.
@@ -75,8 +80,9 @@ Likely safe extraction sequence:
 4. Atomic write, backup, restore, and transaction helpers.
 5. Prose and moment import preview/apply helpers.
 6. Handler routing cleanup after the extracted helpers are stable.
+7. Save/build follow-through, save/create source mutation planning, source JSON write execution, delete/publication preview and apply planning, and final handler-body closeout.
 
-Each step should be behavior-preserving and small enough to review independently.
+Each step was kept behavior-preserving and small enough to review independently.
 
 Slice discipline:
 
@@ -131,4 +137,4 @@ The first implementation slice should probably move only activity helpers or loo
 ## Implementation Notes
 
 Priority 1 catalogue write-server slices are tracked in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
-That child doc records implemented Slices 1-7 and the planned Slice 8-14 path for finishing the `scripts/studio/catalogue_write_server.py` restructuring.
+That child doc records implemented Slices 1-14 and the final module ownership boundary for `scripts/studio/catalogue_write_server.py`.

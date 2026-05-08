@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e0fa6b0c402636beb337d91e344fefa5",
-    "generated_at_utc": "2026-05-08T23:06:20Z",
+    "version": "blake2b-0bdef97f15b39bced434c7dd8d360afd",
+    "generated_at_utc": "2026-05-08T23:43:10Z",
     "count": 202
   },
   "entries": [
@@ -154,10 +154,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server",
-      "last_updated": "2026-05-09 00:05",
+      "last_updated": "2026-05-09 00:40",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 00:05 • Script Structural Review Request",
+      "display_meta": "2026-05-09 00:40 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-catalogue-write-server",
         "site",
@@ -171,13 +171,14 @@
         "catalogue write server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 00:05",
+        "2026-05-09 00:40",
         "2026",
         "05",
         "09",
-        "00"
+        "00",
+        "40"
       ],
-      "search_text": "site-request-script-structural-review-catalogue-write-server site request script structural review catalogue write server catalogue write server slices slices script structural review request 2026-05-09 00:05 2026 05 09 00"
+      "search_text": "site-request-script-structural-review-catalogue-write-server site request script structural review catalogue write server catalogue write server slices slices script structural review request 2026-05-09 00:40 2026 05 09 00 40"
     },
     {
       "id": "new-pipeline-current-pipeline-map",
@@ -1785,10 +1786,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-05-09 00:05",
+      "last_updated": "2026-05-09 00:40",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 00:05 • Servers",
+      "display_meta": "2026-05-09 00:40 • Servers",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -1797,13 +1798,14 @@
         "server",
         "catalogue write server",
         "servers",
-        "2026-05-09 00:05",
+        "2026-05-09 00:40",
         "2026",
         "05",
         "09",
-        "00"
+        "00",
+        "40"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-09 00:05 2026 05 09 00"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-09 00:40 2026 05 09 00 40"
     },
     {
       "id": "scripts-cloud-environments",
@@ -4789,10 +4791,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-08 23:45",
+      "last_updated": "2026-05-09 00:40",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 23:45 • Change Requests",
+      "display_meta": "2026-05-09 00:40 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4804,14 +4806,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 23:45",
+        "2026-05-09 00:40",
         "2026",
         "05",
-        "08",
-        "23",
-        "45"
+        "09",
+        "00",
+        "40"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 23:45 2026 05 08 23 45"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 00:40 2026 05 09 00 40"
     },
     {
       "id": "change-requests",
