@@ -731,11 +731,11 @@ SERIES_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# Canonical invalidation registry for moment-source fields.
+# Canonical build invalidation registry for moment-source fields.
 # Moments are part of the catalogue surface, but their current derived artifacts are
 # `assets/moments/index/<moment_id>.json`, `assets/data/moments_index.json`, and
 # catalogue search entries built from `moments_index.json`, not Studio catalogue lookup payloads.
-MOMENT_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
+MOMENT_BUILD_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
     "status": {
         "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
         "artifacts": ["moment_record"],
@@ -1306,8 +1306,8 @@ def series_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dic
     return lookup_invalidation_for_fields(changed_field_names, SERIES_LOOKUP_INVALIDATION_REGISTRY)
 
 
-def moment_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
-    return lookup_invalidation_for_fields(changed_field_names, MOMENT_LOOKUP_INVALIDATION_REGISTRY)
+def moment_build_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    return lookup_invalidation_for_fields(changed_field_names, MOMENT_BUILD_INVALIDATION_REGISTRY)
 
 
 def locked_first_pass_work_fields() -> set[str]:
@@ -4284,7 +4284,8 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("write target not allowlisted")
                 if not self.server.dry_run:
                     source_backups = atomic_write_many(source_payloads, self.server.backups_dir)
-                    self._refresh_lookup_payloads()
+                    if kind != "moment":
+                        self._refresh_lookup_payloads()
             public_update_ok, public_update = self._run_publication_build(
                 kind=kind,
                 record_id=record_id,
@@ -5912,8 +5913,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["activity_context"] = activity_context
         build_plan: Dict[str, Any] = {}
         if changed:
-            invalidation = moment_lookup_invalidation_for_fields(fields_changed)
-            response_payload["lookup_refresh"] = {
+            invalidation = moment_build_invalidation_for_fields(fields_changed)
+            response_payload["moment_build_invalidation"] = {
                 "mode": "moment-scoped-build",
                 "invalidation_class": invalidation["class"],
                 "artifacts": invalidation["artifacts"],

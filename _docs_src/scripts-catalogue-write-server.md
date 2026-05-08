@@ -306,7 +306,7 @@ The write server reports generated/current/blocked media ids in the nested build
 
 ## Moment Import
 
-`POST /catalogue/moment/save` saves existing moment metadata in `assets/studio/data/catalogue/moments.json`. Optional `apply_build: true` requests the same-scope public update only when the saved moment status is `published`; draft moment saves remain source-only and return a `build_skipped` reason if a public update was requested.
+`POST /catalogue/moment/save` saves existing moment metadata in `assets/studio/data/catalogue/moments.json`. Optional `apply_build: true` requests the same-scope public update only when the saved moment status is `published`; draft moment saves remain source-only and return a `build_skipped` reason if a public update was requested. Changed moment-save responses report `moment_build_invalidation` for moment runtime/search build planning; they do not use `lookup_refresh` because moments do not write Studio catalogue lookup payloads.
 
 `POST /catalogue/moment/import-preview` expects:
 
@@ -382,7 +382,7 @@ Follow-on direction:
 - add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
 - the canonical invalidation registry currently lives in the write-server code by design
 - keep that registry in code unless a second consumer appears that justifies a shared JSON/config contract
-- the current dependency mapping now also explicitly includes moments, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
+- the current dependency mapping now also explicitly includes moment build invalidation, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
 - the current registry maps detail and series fields to their actual derived outputs:
   - detail fields can affect `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records
   - series fields can affect `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the series title
@@ -392,9 +392,10 @@ Follow-on direction:
   - allow incremental writes only for work fields currently classified as `single-record`
   - work `title`, `year_display`, `status`, and `series_ids` now use the targeted-multi-record path rather than `full`
   - detail and series saves now also use targeted incremental refresh where their dependency set is explicit
-  - keep parent/id move-style cases and moment writes on `full` fallback until later tasks
+  - keep parent/id move-style cases on `full` fallback until later tasks
 - changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record`, `targeted-multi-record`, or `full`
 - changed detail/series save responses now include the same `lookup_refresh` metadata
+- changed moment-save responses include `moment_build_invalidation` instead of `lookup_refresh`; moment publication and delete flows do not emit or perform Studio lookup refresh work
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:

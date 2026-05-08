@@ -17,6 +17,26 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Cleaned up moment lookup-refresh naming
+
+**Status:** implemented
+
+**Area:** Studio / catalogue write server / activity reporting
+
+**Summary:**
+Completed the Studio Activity Follow-Ups `lookup_refresh` naming cleanup for moment writes.
+
+**Files changed/docs:**
+
+- `scripts/studio/catalogue_write_server.py`
+- `assets/studio/data/activity_contract.json`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups)
+
+**Impact:**
+Moment save responses now expose `moment_build_invalidation` instead of a misleading `lookup_refresh` object, and moment publication no longer runs the shared Studio lookup refresh path.
+Work, work-detail, and series responses still use `lookup_refresh` for actual Studio lookup payload writes.
+
 ## [2026-05-08] Closed Studio unified activity request
 
 **Status:** implemented

@@ -564,7 +564,7 @@
           "record_id_field": "moment_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers publication apply for one existing moment. Moment import/create remains a separate import action.",
+          "notes": "Covers publication apply for one existing moment. Moment publish updates moment runtime data and search, not Studio catalogue lookup payloads. Moment import/create remains a separate import action.",
           "script_purposes": [
             {
               "id": "save-canonical-data",
@@ -594,7 +594,7 @@
           "record_id_field": "moment_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers unpublication apply for one existing moment.",
+          "notes": "Covers unpublication apply for one existing moment. Moment unpublish updates generated moment artifacts and search, not Studio catalogue lookup payloads.",
           "script_purposes": [
             {
               "id": "save-canonical-data",
@@ -624,7 +624,7 @@
           "record_id_field": "moment_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers delete apply for one moment after confirmation.",
+          "notes": "Covers delete apply for one moment after confirmation. Moment delete updates generated moment artifacts and search, not Studio catalogue lookup payloads.",
           "script_purposes": [
             {
               "id": "delete-canonical-data",

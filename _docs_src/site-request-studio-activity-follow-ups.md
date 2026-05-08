@@ -2,7 +2,7 @@
 doc_id: site-request-studio-activity-follow-ups
 title: Studio Activity Follow-Ups
 added_date: 2026-05-08
-last_updated: "2026-05-08 20:20"
+last_updated: "2026-05-08 21:04"
 ui_status: proposed
 parent_id: change-requests
 sort_order: 209
@@ -49,7 +49,7 @@ This request covers activity-report improvements that are useful but not require
 | Manual terminal script context | direct shell command | future | Could emit activity rows later if scripts accept an explicit run context and avoid local path or payload leakage. |
 | R2 media publish/delete activity | future Studio-triggered media publishing | future | Add when a Studio workflow can trigger R2 publish/delete through the local service without exposing credentials to browser code. |
 | Future writable review surfaces | tag groups, catalogue field registry, or similar pages | future | Keep excluded while the pages are read-only; add activity rows if write actions are introduced. |
-| `lookup_refresh` naming cleanup | catalogue write responses | follow-up | Moment save/publication/delete do not currently write Studio lookup payloads. Consider renaming response fields so activity rows and response payloads do not imply a lookup action that did not occur. |
+| `lookup_refresh` naming cleanup | catalogue write responses | done | Moment save responses now report `moment_build_invalidation` instead of `lookup_refresh`, and moment publication skips the shared Studio lookup refresh path. Moment save/publication/delete activity contracts explicitly describe moment runtime/search work without implying Studio lookup payload writes. |
 
 ## Acceptance Criteria
 

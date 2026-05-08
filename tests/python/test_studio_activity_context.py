@@ -320,6 +320,25 @@ def test_moment_create_stays_out_of_batch_b_contract() -> None:
         raise AssertionError("moment creation belongs to import/apply coverage, not Batch B create-mode coverage")
 
 
+def test_moment_profiles_do_not_emit_lookup_rows() -> None:
+    profiles = [
+        server.ACTIVITY_PROFILE_SAVE_MOMENT,
+        server.activity_profile_for_publication("moment", "publish"),
+        server.activity_profile_for_publication("moment", "unpublish"),
+        server.activity_profile_for_delete("moment"),
+    ]
+    for profile in profiles:
+        if "rebuild-lookups" in profile.script_purpose_ids:
+            raise AssertionError(f"{profile.action_id} should not advertise Studio lookup refresh activity")
+        assert_equal(profile.lookup_script_purpose_id, "", f"{profile.action_id} lookup purpose")
+
+
+def test_moment_build_invalidation_uses_moment_artifacts() -> None:
+    invalidation = server.moment_build_invalidation_for_fields(["title"])
+    assert_equal(invalidation["class"], server.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD, "moment invalidation class")
+    assert_equal(invalidation["artifacts"], ["catalogue_search", "moment_record", "moments_index"], "moment invalidation artifacts")
+
+
 def main() -> None:
     test_missing_context_is_optional()
     test_save_work_context_is_normalized()
@@ -332,6 +351,8 @@ def main() -> None:
     test_catalogue_build_studio_activity_rows_follow_attempted_steps()
     test_delete_activity_rows_follow_profile_order()
     test_moment_create_stays_out_of_batch_b_contract()
+    test_moment_profiles_do_not_emit_lookup_rows()
+    test_moment_build_invalidation_uses_moment_artifacts()
     print("Studio activity context tests OK")
 
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T19:56:37Z",
+  "generated_at": "2026-05-08T20:06:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1091,7 +1091,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 28810
+      "content_text_length": 29187
     },
     {
       "scope": "studio",
@@ -2860,7 +2860,7 @@
       "source_path": "site-request-studio-unified-activity-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log.json",
-      "content_text_length": 31661,
+      "content_text_length": 31665,
       "ui_status": "done"
     },
     {
@@ -2868,7 +2868,7 @@
       "doc_id": "site-request-studio-activity-follow-ups",
       "title": "Studio Activity Follow-Ups",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 20:20",
+      "last_updated": "2026-05-08 21:04",
       "parent_id": "change-requests",
       "sort_order": 209,
       "published": true,
@@ -2876,7 +2876,7 @@
       "source_path": "site-request-studio-activity-follow-ups.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-activity-follow-ups",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-activity-follow-ups.json",
-      "content_text_length": 4309,
+      "content_text_length": 4403,
       "ui_status": "proposed"
     },
     {
@@ -2970,7 +2970,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 63571
+      "content_text_length": 64252
     },
     {
       "scope": "studio",
