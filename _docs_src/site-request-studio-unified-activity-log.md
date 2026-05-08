@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 17:08"
+last_updated: "2026-05-08 17:40"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
@@ -456,6 +456,88 @@ For a successful published work metadata save, the modal details might include:
 - Rebuilt catalogue search for work `00001`
 
 For a partial failure, the modal should preserve the same structure while marking the failed or warning step clearly.
+
+## Batch Implementation Plan
+
+After the first v1 proof, implementation should move in wider batches rather than repeating the same small slice for each button.
+Each batch should include registry updates, page context wiring, service/feed emission, tests, docs, and a focused workflow-findings review.
+
+Workflow findings are part of every batch, but optimization and script-flow cleanup are not automatically part of the batch scope.
+Fix findings only when they affect truthful activity attribution, produce misleading rows, or block the covered action.
+Otherwise, log them as follow-up findings using the Implementation Findings rules above.
+
+### Batch A: Catalogue Editor Save Paths
+
+Scope:
+
+- catalogue work save
+- catalogue work detail save
+- catalogue series save
+- catalogue moment save
+
+Tasks:
+
+- extend the activity contract registry for the four save actions
+- share context-normalization and row-building helpers where the handlers have the same shape
+- preserve current on-page save messages
+- emit rows for canonical source saves, lookup refreshes, published data rebuilds, search rebuilds, and attempted media/script work where applicable
+- skip true no-change saves
+- add representative tests for each record family
+- run one `/studio/activity/` browser smoke test for the batch
+- record workflow findings for save flows, especially modal or confirmation behavior that could affect attribution
+
+### Batch B: Catalogue Create, Delete, And Publication Paths
+
+Scope:
+
+- create work/detail/series/moment
+- delete work/detail/series/moment
+- publish and unpublish work/detail/series/moment
+- readiness prose/media actions where they write persistent data
+
+Tasks:
+
+- preserve initiating action context through preview and confirmation flows
+- emit rows for source writes, generated/public artifacts, cleanup, lookup refresh, search update, and local media cleanup
+- log confirmation-flow findings where the confirm button currently owns the write call
+- fix only those confirmation-flow issues that would misattribute activity
+- add delete/publication-focused detail modal coverage
+
+### Batch C: Import, Export, Report, Audit, And Utility Actions
+
+Scope:
+
+- bulk add import apply
+- project-state report
+- docs import apply
+- Studio data export/import apply actions
+- docs broken-links audit
+- Studio audits
+- tag registry, alias, and assignment write actions
+
+Tasks:
+
+- add action registry coverage for durable writes and generated reports
+- exclude preview-only commands unless implementation proves they persist data
+- emit summary rows with counts, warnings, output files, and affected record groups
+- record findings for any command whose UI wording or persistence boundary is unclear
+- keep service-specific result panels in place while adding persistent activity rows
+
+### Batch D: Old Report Retirement And Hook Cleanup
+
+Scope:
+
+- `/studio/catalogue-activity/`
+- `/studio/build-activity/`
+- old catalogue/build activity feed hooks
+- old report navigation
+
+Tasks:
+
+- keep the old pages visible while old hooks remain live, so they act as cleanup reminders
+- after `/studio/activity/` has enough coverage, decide whether the old pages redirect, show a retirement note, or are removed
+- remove old hooks and generated feeds only when their covered actions have equivalent unified activity rows
+- keep local `var/` logs available for debugging where useful
 
 ## Documentation Requirements
 

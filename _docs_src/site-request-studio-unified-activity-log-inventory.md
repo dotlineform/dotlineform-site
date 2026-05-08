@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 17:08"
+last_updated: "2026-05-08 17:40"
 ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -70,6 +70,15 @@ The script-purpose label describes each downstream operation recorded as its own
 | Add status detail modal | `done` | Status buttons open a modal with stacked detail items for the selected row. |
 | Keep Work editor save messages unchanged | `v1-target` | The activity log persists the same kind of feedback; it does not replace page feedback. |
 | Keep old activity report pages during v1 | `v1-target` | Defer redirect/removal until the new report is trusted. |
+
+## Batch Implementation Checklist
+
+| Batch | Status | Scope | Notes |
+|---|---|---|---|
+| Batch A: catalogue editor save paths | `next` | work save; work-detail save; series save; moment save | Extend the proven save pattern across core catalogue editors. Include a workflow-findings pass for each save flow, but only fix findings that affect attribution or truthful rows. |
+| Batch B: catalogue create/delete/publication paths | `planned` | create, delete, publish/unpublish, durable readiness prose/media actions | Preserve initiating context through preview/confirmation flows. Log modal/write ownership findings and fix only blockers. |
+| Batch C: import/export/report/audit/utility actions | `planned` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | Cover durable writes and generated reports. Keep preview-only commands excluded unless they persist data. |
+| Batch D: old report retirement and hook cleanup | `planned` | old activity routes, feeds, hooks, navigation | Keep old pages visible while old hooks remain live; remove or redirect only after unified rows cover equivalent activity. |
 
 ## Catalogue Pages
 
