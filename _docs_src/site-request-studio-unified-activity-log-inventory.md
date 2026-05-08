@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:59"
+last_updated: "2026-05-08 17:08"
 ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -66,8 +66,8 @@ The script-purpose label describes each downstream operation recorded as its own
 | Pass activity context from Work editor to catalogue write server | `done` | Single-work saves now send page id, action id, route, control id, selector, and work id; the server validates the context, assigns or normalizes the correlation id, and ignores unknown fields. |
 | Emit structured rows from `/catalogue/work/save` | `done` | Single-work saves now write unified activity rows for canonical save, lookup refresh, published work rebuild, and search rebuild when those actions are actually attempted. |
 | Generate Studio-readable activity feed | `done` | Implemented `var/studio/activity/activity_log.jsonl` plus capped `assets/studio/data/activity_log.json`; labels hydrate from the activity contract registry. |
-| Add `/studio/activity/` route | `v1-target` | Required columns: date-time, status, page, user action, script purpose. |
-| Add status detail modal | `v1-target` | Modal details should be a stacked list of concise activity descriptions. |
+| Add `/studio/activity/` route | `done` | Implemented with required columns: date-time, status, page, user action, script purpose. |
+| Add status detail modal | `done` | Status buttons open a modal with stacked detail items for the selected row. |
 | Keep Work editor save messages unchanged | `v1-target` | The activity log persists the same kind of feedback; it does not replace page feedback. |
 | Keep old activity report pages during v1 | `v1-target` | Defer redirect/removal until the new report is trusted. |
 

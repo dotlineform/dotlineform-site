@@ -2437,6 +2437,88 @@ button.tagStudioList__cellLink {
   font-weight: 700;
 }
 
+.activityReport__head--unified,
+.activityReport__row--unified {
+  grid-template-columns: minmax(9rem, 0.95fr) 3.25rem minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
+}
+
+.activityReport__cell {
+  min-width: 0;
+  display: grid;
+  gap: 0.16rem;
+}
+
+.activityReport__title,
+.activityReport__meta,
+.activityReport__link {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.activityReport__meta {
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-small);
+}
+
+.activityReport__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.activityReport__statusButton {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line, var(--studio-line));
+  border-radius: var(--studio-radius-sm);
+  background: var(--surface, var(--studio-surface));
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.activityReport__statusButton:hover,
+.activityReport__statusButton:focus-visible {
+  border-color: var(--studio-accent);
+}
+
+@media (max-width: 760px) {
+  .activityReport__head--unified {
+    display: none;
+  }
+
+  .activityReport__row--unified {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-areas:
+      "status time"
+      "status page"
+      "status action"
+      "status purpose";
+  }
+
+  .activityReport__row--unified .activityReport__cell--status {
+    grid-area: status;
+  }
+
+  .activityReport__row--unified .activityReport__cell--time {
+    grid-area: time;
+  }
+
+  .activityReport__row--unified .activityReport__cell--page {
+    grid-area: page;
+  }
+
+  .activityReport__row--unified .activityReport__cell--action {
+    grid-area: action;
+  }
+
+  .activityReport__row--unified .activityReport__cell--purpose {
+    grid-area: purpose;
+  }
+}
+
 .worksList--studio .worksList__head {
   grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
   margin: var(--list-section-gap) 0 4px;

@@ -12,7 +12,7 @@
     {%- assign studio_domain = 'analytics' -%}
   {%- elsif studio_url == '/studio/search/' -%}
     {%- assign studio_domain = 'search' -%}
-  {%- elsif studio_url == '/studio/bulk-add-work/' or studio_url == '/studio/build-activity/' or studio_url == '/studio/studio-works/' -%}
+  {%- elsif studio_url == '/studio/activity/' or studio_url == '/studio/bulk-add-work/' or studio_url == '/studio/build-activity/' or studio_url == '/studio/studio-works/' -%}
     {%- assign studio_domain = 'catalogue' -%}
   {%- elsif studio_url == '/studio/catalogue/' or studio_url contains '/studio/catalogue-' -%}
     {%- assign studio_domain = 'catalogue' -%}

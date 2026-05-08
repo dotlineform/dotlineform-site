@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-07"
+last_updated: "2026-05-08"
 parent_id: ""
 sort_order: 20
 ---
@@ -51,6 +51,7 @@ Read this section in this order:
 3. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 4. **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 5. Technical route and workflow docs:
+   - **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
@@ -87,6 +88,7 @@ Current Studio landing routes:
 Current workflow/detail routes:
 
 - `/studio/build-activity/`
+- `/studio/activity/`
 - `/studio/audits/`
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`

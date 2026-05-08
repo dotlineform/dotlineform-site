@@ -17,6 +17,26 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Implemented v1 Studio activity report route
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Added `/studio/activity/`, backed by the unified activity feed, with columns for date-time, status, page, user action, and script purpose.
+Status markers open a detail modal with the row's persisted activity descriptions.
+
+**Files changed:**
+
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Studio](/docs/?scope=studio&doc=studio)
+
+**Impact:**
+The v1 correlated activity feed now has a user-facing Studio route while the older Build Activity and Catalogue Activity pages remain available during validation.
+
 ## [2026-05-08] Added unified Studio activity log request
 
 **Status:** proposed

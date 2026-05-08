@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T15:59:46Z",
+  "generated_at": "2026-05-08T16:10:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -41,7 +41,7 @@
       "doc_id": "site-request-studio-unified-activity-log-inventory",
       "title": "Activity Log Coverage Inventory",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 16:59",
+      "last_updated": "2026-05-08 17:08",
       "parent_id": "site-request-studio-unified-activity-log",
       "sort_order": 10,
       "published": true,
@@ -49,7 +49,7 @@
       "source_path": "site-request-studio-unified-activity-log-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log-inventory.json",
-      "content_text_length": 19710,
+      "content_text_length": 19720,
       "ui_status": "in-progress"
     },
     {
@@ -628,7 +628,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-08",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -636,7 +636,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4991
+      "content_text_length": 5025
     },
     {
       "scope": "studio",
@@ -1515,6 +1515,21 @@
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-aliases.json",
       "content_text_length": 7912
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-activity",
+      "title": "Studio Activity",
+      "added_date": "2026-05-08",
+      "last_updated": "2026-05-08 17:08",
+      "parent_id": "studio",
+      "sort_order": 53,
+      "published": true,
+      "viewable": true,
+      "source_path": "studio-activity.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-activity",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-activity.json",
+      "content_text_length": 1910
     },
     {
       "scope": "studio",
@@ -2867,7 +2882,7 @@
       "doc_id": "site-request-studio-unified-activity-log",
       "title": "Studio Unified Activity Log Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 16:59",
+      "last_updated": "2026-05-08 17:08",
       "parent_id": "change-requests",
       "sort_order": 208,
       "published": true,
@@ -2875,7 +2890,7 @@
       "source_path": "site-request-studio-unified-activity-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log.json",
-      "content_text_length": 22730,
+      "content_text_length": 22767,
       "ui_status": "in-progress"
     },
     {
@@ -2969,7 +2984,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 55873
+      "content_text_length": 56491
     },
     {
       "scope": "studio",

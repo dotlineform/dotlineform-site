@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-06T11:15:00Z",
+  "updated_at_utc": "2026-05-08T16:08:10Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -17,6 +17,7 @@
       "data_export": "/studio/export/",
       "data_import": "/studio/import/",
       "catalogue_status": "/studio/catalogue-status/",
+      "activity": "/studio/activity/",
       "catalogue_activity": "/studio/catalogue-activity/",
       "bulk_add_work": "/studio/bulk-add-work/",
       "catalogue_moment_import": "/studio/catalogue-moment/",
@@ -543,6 +544,29 @@
       "detail_actions": "actions",
       "detail_results": "results",
       "none": "none"
+    },
+    "activity_log": {
+      "load_failed_error": "Failed to load Studio activity.",
+      "empty_state": "No Studio activity yet.",
+      "meta_summary": "{count} recent activity rows",
+      "meta_summary_one": "1 recent activity row",
+      "column_time": "date-time",
+      "column_status": "status",
+      "column_page": "page",
+      "column_user_action": "user action",
+      "column_script_purpose": "script purpose",
+      "status_completed": "completed",
+      "status_warning": "warning",
+      "status_failed": "failed",
+      "status_other": "status unknown",
+      "record_group_works": "works",
+      "record_group_series": "series",
+      "record_group_details": "details",
+      "record_group_moments": "moments",
+      "record_group_search": "search",
+      "modal_title": "Activity details",
+      "modal_close_button": "Close",
+      "modal_empty_detail": "No detail items recorded."
     },
     "docs_broken_links": {
       "intro": "Run a docs-viewer broken-link audit for Studio or Library docs.",

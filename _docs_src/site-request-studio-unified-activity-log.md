@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:59"
+last_updated: "2026-05-08 17:08"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
@@ -430,6 +430,7 @@ If the save path rewrites files or runs publishing work despite no core data cha
    - Keep local-only paths, payloads, and full log lines out of the feed.
 
 6. Build the first `/studio/activity/` route.
+   - Status: done for the v1 report page.
    - Render the required list columns.
    - Load the generated feed through a local service read.
    - Use status as the modal trigger.
