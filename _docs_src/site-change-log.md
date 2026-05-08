@@ -27,6 +27,7 @@ Archives:
 Completed the second implementation slice of the script structural review by moving catalogue-specific Studio Activity profiles, context normalization, and row builders out of the catalogue write server.
 Added a small shared route-constant module so activity profiles and route dispatch no longer duplicate endpoint strings.
 Switched the write server to namespaced `activity.*`, `invalidation.*`, and `routes.*` references so extracted helpers are not re-presented as server-owned names.
+Updated the structural-review request to make that the required slice discipline: conservative slices should still close with clean ownership, not deferred cleanup.
 
 **Files changed/docs:**
 

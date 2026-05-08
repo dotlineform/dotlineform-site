@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2ee52f4e83fe5fe7152b111a09b5e944",
-    "generated_at_utc": "2026-05-08T21:10:54Z",
+    "version": "blake2b-d2c13bf526bc118e3d6b9e5b067bc07b",
+    "generated_at_utc": "2026-05-08T21:17:28Z",
     "count": 201
   },
   "entries": [
@@ -4760,10 +4760,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-08 22:10",
+      "last_updated": "2026-05-08 22:17",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 22:10 • Change Requests",
+      "display_meta": "2026-05-08 22:17 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4775,14 +4775,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 22:10",
+        "2026-05-08 22:17",
         "2026",
         "05",
         "08",
         "22",
-        "10"
+        "17"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 22:10 2026 05 08 22 10"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 22:17 2026 05 08 22 17"
     },
     {
       "id": "change-requests",

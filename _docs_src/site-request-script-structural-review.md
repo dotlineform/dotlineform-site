@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 22:10"
+last_updated: "2026-05-08 22:17"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -26,6 +26,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 - identify scripts where mixed responsibilities make maintenance harder than necessary
 - split only where the boundary is clear and useful
 - keep behavior and response payload contracts stable during extraction
+- finish each implementation slice with clean module ownership, not temporary compatibility aliases or duplicate constants
 - add or improve focused tests before moving risky logic
 - document module ownership so future changes have an obvious home
 
@@ -35,6 +36,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 - do not redesign the Studio local-service architecture as part of this request
 - do not change endpoint URLs, request payloads, response payloads, backup behavior, or generated artifact semantics unless a later implementation task explicitly calls that out
 - do not move dependency registries from code to JSON/config unless there is a second real consumer
+- do not leave extracted helpers re-exported through the old module as a long-term compatibility layer
 
 ## Candidate Scripts
 
@@ -75,6 +77,15 @@ Likely safe extraction sequence:
 
 Each step should be behavior-preserving and small enough to review independently.
 
+Slice discipline:
+
+- Define the target ownership boundary before editing.
+- Keep slices conservative by scope, not by leaving cleanup for later.
+- After moving logic, update call sites to use the owning module explicitly, such as `activity.*`, `invalidation.*`, or a domain-specific namespace.
+- If two modules need the same constants, move those constants to one intentionally named owner in the same slice instead of duplicating them.
+- Do not treat broad re-exports, duplicate endpoint strings, or compatibility aliases as an acceptable slice end state unless an external caller outside this repo truly requires a deprecation window.
+- Tests should exercise the owning extracted module directly where practical; the old module should not remain the test access path for moved behavior.
+
 ## Shared-Service Review
 
 The catalogue, docs, and tag write servers share several local-service concerns:
@@ -95,6 +106,8 @@ The risk is over-generalizing too early; shared code should be introduced only w
 - inventory the candidate scripts and mark each as `extract`, `leave`, or `defer`
 - define target module boundaries before moving code
 - add focused tests around the behavior being moved before or during each extraction
+- remove temporary bridge code, compatibility aliases, and duplicated constants before closing a slice
+- keep call sites explicit about the owning module for extracted behavior
 - keep endpoint/request/response contracts stable unless a separate request approves a contract change
 - keep backups, restore behavior, dry-run behavior, and allowlists at least as strict as before
 - update the relevant script docs when module ownership or command behavior changes
