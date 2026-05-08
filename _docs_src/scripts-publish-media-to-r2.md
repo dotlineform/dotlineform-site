@@ -2,9 +2,10 @@
 doc_id: scripts-publish-media-to-r2
 title: Publish Media To R2
 added_date: 2026-05-08
-last_updated: "2026-05-08 00:00"
-parent_id: scripts
-sort_order: 121
+last_updated: "2026-05-08 10:03"
+parent_id: studio
+sort_order: 110
+viewable: true
 ---
 # Publish Media To R2
 

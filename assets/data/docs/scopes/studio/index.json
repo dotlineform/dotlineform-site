@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T08:56:41Z",
+  "generated_at": "2026-05-08T09:03:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2351,6 +2351,21 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-publish-media-to-r2",
+      "title": "Publish Media To R2",
+      "added_date": "2026-05-08",
+      "last_updated": "2026-05-08 10:03",
+      "parent_id": "studio",
+      "sort_order": 110,
+      "published": true,
+      "viewable": true,
+      "source_path": "scripts-publish-media-to-r2.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
+      "content_text_length": 3373
+    },
+    {
+      "scope": "studio",
       "doc_id": "ui-pattern-reopenable-command-result",
       "title": "Reopenable Command Result Pattern",
       "added_date": "2026-05-05",
@@ -2409,21 +2424,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json",
       "content_text_length": 2335
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-publish-media-to-r2",
-      "title": "Publish Media To R2",
-      "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 00:00",
-      "parent_id": "scripts",
-      "sort_order": 121,
-      "published": true,
-      "viewable": true,
-      "source_path": "scripts-publish-media-to-r2.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
-      "content_text_length": 3373
     },
     {
       "scope": "studio",

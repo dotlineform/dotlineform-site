@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e8964777dc9b9503191fd84154b32fa5",
-    "generated_at_utc": "2026-05-08T08:55:19Z",
+    "version": "blake2b-a0414f5a7116614741e6f770ae32e31b",
+    "generated_at_utc": "2026-05-08T09:03:18Z",
     "count": 198
   },
   "entries": [
@@ -3819,6 +3819,33 @@
       "search_text": "data-flow data flow data flow catalogue 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
+      "id": "scripts-publish-media-to-r2",
+      "kind": "doc",
+      "title": "Publish Media To R2",
+      "href": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
+      "last_updated": "2026-05-08 10:03",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-08 10:03 • Studio",
+      "search_terms": [
+        "scripts-publish-media-to-r2",
+        "scripts",
+        "publish",
+        "media",
+        "to",
+        "r2",
+        "publish media to r2",
+        "studio",
+        "2026-05-08 10:03",
+        "2026",
+        "05",
+        "08",
+        "10",
+        "03"
+      ],
+      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-05-08 10:03 2026 05 08 10 03"
+    },
+    {
       "id": "ui-pattern-reopenable-command-result",
       "kind": "doc",
       "title": "Reopenable Command Result Pattern",
@@ -3920,31 +3947,6 @@
         "49"
       ],
       "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "scripts-publish-media-to-r2",
-      "kind": "doc",
-      "title": "Publish Media To R2",
-      "href": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
-      "last_updated": "2026-05-08 00:00",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-08 00:00 • Scripts",
-      "search_terms": [
-        "scripts-publish-media-to-r2",
-        "scripts",
-        "publish",
-        "media",
-        "to",
-        "r2",
-        "publish media to r2",
-        "2026-05-08 00:00",
-        "2026",
-        "05",
-        "08",
-        "00"
-      ],
-      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 2026-05-08 00:00 2026 05 08 00"
     },
     {
       "id": "site-request-catalogue-series-unified-editor",
