@@ -10,6 +10,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
 import {
   workflowDomainForKey,
@@ -773,7 +774,16 @@ async function runSummaryApply(state) {
       operation: "summary_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
-      confirm: true
+      confirm: true,
+      activity_context: buildStudioActivityContext({
+        pageId: "data-import",
+        actionId: "update-import-summaries",
+        route: "/studio/import/",
+        controlId: "dataImportUpdateSummary",
+        controlSelector: "#dataImportUpdateSummary",
+        recordIdField: "staged_filename",
+        recordId: stagedFilename
+      })
     });
     renderSummaryApplyResult(state, applied);
     setStatus(
@@ -866,7 +876,16 @@ async function runHierarchyApply(state) {
       operation: "hierarchy_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
-      confirm: true
+      confirm: true,
+      activity_context: buildStudioActivityContext({
+        pageId: "data-import",
+        actionId: "update-import-hierarchy",
+        route: "/studio/import/",
+        controlId: "dataImportApplyHierarchy",
+        controlSelector: "#dataImportApplyHierarchy",
+        recordIdField: "staged_filename",
+        recordId: stagedFilename
+      })
     });
     renderHierarchyApplyResult(state, applied);
     setStatus(

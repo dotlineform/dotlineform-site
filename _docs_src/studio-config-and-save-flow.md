@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: Studio Config and Save Flow
 added_date: 2026-04-22
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-08 19:25"
 parent_id: studio
 sort_order: 30
 ---
@@ -129,6 +129,7 @@ Current write-service implementation notes:
 - writes are constrained to Studio-owned JSON files
 - server writes create timestamped backups in `var/studio/backups/`
 - write activity is logged to `var/studio/logs/tag_write_server.log`
+- covered local-server writes also append unified Studio activity rows when the browser supplies valid activity context
 - backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 
 Catalogue editor local save behavior:

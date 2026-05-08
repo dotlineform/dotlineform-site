@@ -2,7 +2,7 @@
 doc_id: studio-data-export
 title: Studio Data Export
 added_date: 2026-05-06
-last_updated: "2026-05-06 20:14"
+last_updated: "2026-05-08 19:25"
 parent_id: import-export
 sort_order: 30
 ---
@@ -38,6 +38,7 @@ The page shell loads:
 
 Exports run through the docs-management endpoint `POST /docs/export`.
 The browser sends `data_domain` so the local service can dispatch through the configured adapter boundary.
+Successful output-writing exports also send Studio activity context and append one unified activity row with script purpose `export data`.
 
 ## Current Domains
 

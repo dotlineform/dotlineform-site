@@ -40,6 +40,11 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from script_logging import append_script_log  # noqa: E402
+from studio_activity import (  # noqa: E402
+    append_studio_activity,
+    normalize_activity_context_from_contract,
+    studio_activity_entry,
+)
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -150,6 +155,9 @@ class AuditServiceServer(ThreadingHTTPServer):
             )
         except Exception:
             pass
+
+    def append_activity(self, entry: Dict[str, Any]) -> None:
+        append_studio_activity(self.repo_root, entry)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -281,6 +289,36 @@ class Handler(BaseHTTPRequestHandler):
             "stdout": result.stdout,
             "stderr": result.stderr,
         }
+        try:
+            activity_context = normalize_activity_context_from_contract(
+                self.server.repo_root,
+                body.get("activity_context"),
+                endpoint=RUN_AUDIT_PATH,
+                record_id=audit.audit_id,
+            )
+            if activity_context:
+                errors = response_payload["summary"]["errors"]
+                warnings = response_payload["summary"]["warnings"]
+                status = "failed" if response_payload["status"] == "failed" or errors else ("warning" if warnings else "completed")
+                response_payload["activity_context"] = activity_context
+                self.server.append_activity(
+                    studio_activity_entry(
+                        activity_context,
+                        script_purpose_id="run-audit",
+                        now_utc=finished_at,
+                        status=status,
+                        record_groups={"docs": [audit.audit_id]},
+                        detail_items=[
+                            f"Ran Studio audit: {audit.label}.",
+                            f"Status: {response_payload['status']}; errors: {errors}; warnings: {warnings}.",
+                            f"Duration: {response_payload['duration_seconds']} seconds.",
+                        ],
+                        source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "audit_service.log")}],
+                    )
+                )
+                response_payload["activity_log"] = {"written_count": 1}
+        except Exception as exc:  # noqa: BLE001
+            response_payload["activity_log"] = {"written_count": 0, "error": str(exc)}
         self.server.log_event(
             "audit_run",
             {

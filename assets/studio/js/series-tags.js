@@ -41,6 +41,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   seriesTagsUi
 } from "./studio-ui.js";
@@ -703,7 +704,16 @@ async function handleApplyImport(state) {
       import_assignments: state.importPayload,
       import_filename: state.importFile && state.importFile.name ? state.importFile.name : "",
       resolutions: state.importResolutions,
-      client_time_utc: new Date().toISOString()
+      client_time_utc: new Date().toISOString(),
+      activity_context: buildStudioActivityContext({
+        pageId: "series-tags",
+        actionId: "import-series-tag-assignments",
+        route: "/studio/series-tags/",
+        controlId: "apply-import",
+        controlSelector: "[data-import-action=\"apply-import\"]",
+        recordIdField: "import_filename",
+        recordId: state.importFile && state.importFile.name ? state.importFile.name : "series-tags-import"
+      })
     });
     clearAppliedLocalSessionEntries(state);
     state.importPreview = null;

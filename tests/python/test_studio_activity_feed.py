@@ -44,6 +44,38 @@ def write_contract(repo_root: Path) -> None:
     )
 
 
+def write_context_contract(repo_root: Path) -> None:
+    contract_path = repo_root / studio_activity.ACTIVITY_CONTRACT_REL_PATH
+    contract_path.parent.mkdir(parents=True, exist_ok=True)
+    contract_path.write_text(
+        json.dumps(
+            {
+                "pages": {
+                    "data-export": {
+                        "label": "data export",
+                        "route": "/studio/export/",
+                        "actions": {
+                            "export-data": {
+                                "label": "export data",
+                                "control_id": "dataExportRun",
+                                "control_selector": "#dataExportRun",
+                                "endpoint": "/docs/export",
+                                "record_id_field": "export_id",
+                            }
+                        },
+                    }
+                },
+                "script_purposes": {
+                    "export-data": {
+                        "label": "export data",
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_append_hydrates_registry_labels_and_writes_feed() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root = Path(tmp)
@@ -102,9 +134,82 @@ def test_required_fields_are_validated() -> None:
         raise AssertionError("expected missing correlation_id to fail")
 
 
+def test_context_normalizer_validates_contract_action() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        repo_root = Path(tmp)
+        write_context_contract(repo_root)
+        context = studio_activity.normalize_activity_context_from_contract(
+            repo_root,
+            {
+                "page_id": "data-export",
+                "action_id": "export-data",
+                "route": "/studio/export/",
+                "control_id": "dataExportRun",
+                "control_selector": "#dataExportRun",
+                "correlation_id": "export:test",
+                "export_id": "library:missing-summary",
+            },
+            endpoint="/docs/export",
+            record_id="library:missing-summary",
+        )
+        if context["action_id"] != "export-data":
+            raise AssertionError("action id was not preserved")
+        if context["export_id"] != "library:missing-summary":
+            raise AssertionError("record id was not preserved")
+
+        try:
+            studio_activity.normalize_activity_context_from_contract(
+                repo_root,
+                {
+                    "page_id": "data-export",
+                    "action_id": "export-data",
+                    "route": "/studio/export/",
+                    "control_id": "dataExportRun",
+                    "control_selector": "#dataExportRun",
+                    "correlation_id": "export:test",
+                    "export_id": "library:missing-summary",
+                },
+                endpoint="/docs/import/apply",
+                record_id="library:missing-summary",
+            )
+        except ValueError as exc:
+            if "endpoint" not in str(exc):
+                raise AssertionError(f"unexpected validation error: {exc}") from exc
+            return
+        raise AssertionError("expected endpoint mismatch to fail")
+
+
+def test_activity_entry_suffix_keeps_shared_action_rows_distinct() -> None:
+    context = {
+        "correlation_id": "save-series-tags:009",
+        "page_id": "series-tag-editor",
+        "action_id": "save-series-tags",
+    }
+    first = studio_activity.studio_activity_entry(
+        context,
+        script_purpose_id="save-tag-data",
+        now_utc="2026-05-08T16:50:00Z",
+        activity_id_suffix="series:009",
+    )
+    second = studio_activity.studio_activity_entry(
+        context,
+        script_purpose_id="save-tag-data",
+        now_utc="2026-05-08T16:50:00Z",
+        activity_id_suffix="work:00001",
+    )
+    if first["activity_id"] == second["activity_id"]:
+        raise AssertionError("activity id suffix did not distinguish shared-action rows")
+    if not first["activity_id"].endswith("-series:009"):
+        raise AssertionError("series activity id suffix was not preserved")
+    if not second["activity_id"].endswith("-work:00001"):
+        raise AssertionError("work activity id suffix was not preserved")
+
+
 def main() -> None:
     test_append_hydrates_registry_labels_and_writes_feed()
     test_required_fields_are_validated()
+    test_context_normalizer_validates_contract_action()
+    test_activity_entry_suffix_keeps_shared_action_rows_distinct()
     print("Studio activity feed tests OK")
 
 

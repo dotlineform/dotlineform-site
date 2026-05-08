@@ -5,6 +5,7 @@ import {
   postJson,
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   buildImportSummary,
   buildManualPatchForAliasCreate,
@@ -20,6 +21,18 @@ function aliasesText(config, key, fallback, tokens) {
   return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
 }
 
+function aliasesActivityContext(actionId, controlId, controlSelector, recordIdField, recordId) {
+  return buildStudioActivityContext({
+    pageId: "tag-aliases",
+    actionId,
+    route: "/studio/tag-aliases/",
+    controlId,
+    controlSelector,
+    recordIdField,
+    recordId
+  });
+}
+
 export async function submitAliasesImport(options) {
   const { saveMode, importMode, importAliases, filename, config, state } = options || {};
   if (saveMode === "post") {
@@ -28,7 +41,8 @@ export async function submitAliasesImport(options) {
         mode: importMode,
         import_aliases: importAliases,
         import_filename: filename || "",
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: aliasesActivityContext("import-tag-aliases", "import-btn", "[data-role=\"import-btn\"]", "import_filename", filename || "tag-aliases-import")
       });
       return {
         ok: true,
@@ -65,7 +79,8 @@ export async function submitAliasDelete(options) {
     try {
       const response = await postJson(STUDIO_WRITE_ENDPOINTS.deleteTagAlias, {
         alias: aliasKey,
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: aliasesActivityContext("delete-tag-alias", "delete-alias", "[data-delete-alias]", "alias", aliasKey)
       });
       const summary = String(response.summary_text || "").trim() || aliasesText(
         config,
@@ -125,7 +140,8 @@ export async function submitAliasEdit(options) {
             }
           },
           import_filename: "",
-          client_time_utc: utcTimestamp()
+          client_time_utc: utcTimestamp(),
+          activity_context: aliasesActivityContext("create-tag-alias", "save-edit-alias", "[data-role=\"save-edit-alias\"]", "alias", validation.alias)
         });
         return {
           ok: true,
@@ -171,7 +187,8 @@ export async function submitAliasEdit(options) {
         new_alias: validation.alias,
         description: validation.description,
         tags: validation.tags,
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: aliasesActivityContext("edit-tag-alias", "save-edit-alias", "[data-role=\"save-edit-alias\"]", "alias", originalAlias)
       });
       return {
         ok: true,
@@ -239,7 +256,8 @@ export async function submitAliasPromote(options) {
       const response = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAlias, {
         alias: aliasKey,
         group,
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: aliasesActivityContext("promote-tag-alias", "confirm-promotion", "[data-role=\"confirm-promotion\"]", "alias", aliasKey)
       });
       return {
         ok: true,
@@ -291,7 +309,8 @@ export async function submitTagDemoteFromAliases(options) {
       const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, {
         tag_id: canonicalTagId,
         alias_targets: aliasTargets,
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: aliasesActivityContext("demote-aliases-tag", "confirm-demote", "[data-role=\"confirm-demote\"]", "tag_id", canonicalTagId)
       });
       return {
         ok: true,

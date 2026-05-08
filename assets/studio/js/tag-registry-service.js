@@ -5,6 +5,7 @@ import {
   postJson,
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   buildDeletePreviewPayload,
   buildImportSummary,
@@ -18,6 +19,18 @@ import {
 
 function registryText(config, key, fallback, tokens) {
   return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+}
+
+function registryActivityContext(actionId, controlId, controlSelector, recordIdField, recordId) {
+  return buildStudioActivityContext({
+    pageId: "tag-registry",
+    actionId,
+    route: "/studio/tag-registry/",
+    controlId,
+    controlSelector,
+    recordIdField,
+    recordId
+  });
 }
 
 export async function previewDeleteImpact(options) {
@@ -86,7 +99,8 @@ export async function submitTagEdit(options) {
       tag_id: tag.tagId,
       description,
       allow_canonical_rename: false,
-      client_time_utc: utcTimestamp()
+      client_time_utc: utcTimestamp(),
+      activity_context: registryActivityContext("edit-tag", "save-edit", "[data-role=\"save-edit\"]", "tag_id", tag.tagId)
     });
     return {
       ok: true,
@@ -113,7 +127,8 @@ export async function submitCreateTag(options) {
           tags: [newTagRow]
         },
         import_filename: "",
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: registryActivityContext("create-tag", "create-tag", "[data-role=\"create-tag\"]", "tag_id", newTagRow && newTagRow.tag_id)
       });
       return {
         ok: true,
@@ -166,7 +181,8 @@ export async function submitDeleteTag(options) {
     const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
       action: "delete",
       tag_id: tag.tagId,
-      client_time_utc: utcTimestamp()
+      client_time_utc: utcTimestamp(),
+      activity_context: registryActivityContext("delete-tag", "confirm-delete-tag", "[data-role=\"confirm-delete-tag\"]", "tag_id", tag.tagId)
     });
     return {
       ok: true,
@@ -210,7 +226,8 @@ export async function submitTagDemote(options) {
       const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, {
         tag_id: tagId,
         alias_targets: aliasTargets,
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: registryActivityContext("demote-registry-tag", "confirm-demote", "[data-role=\"confirm-demote\"]", "tag_id", tagId)
       });
       return {
         ok: true,
@@ -242,7 +259,8 @@ export async function submitRegistryImport(options) {
         mode: importMode,
         import_registry: importRegistry,
         import_filename: filename || "",
-        client_time_utc: utcTimestamp()
+        client_time_utc: utcTimestamp(),
+        activity_context: registryActivityContext("import-tag-registry", "import-btn", "[data-role=\"import-btn\"]", "import_filename", filename || "tag-registry-import")
       });
       return {
         ok: true,

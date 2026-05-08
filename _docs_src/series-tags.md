@@ -2,7 +2,7 @@
 doc_id: series-tags
 title: Series Tags
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:54"
+last_updated: "2026-05-08 19:25"
 parent_id: analytics
 sort_order: 60
 ---
@@ -128,6 +128,7 @@ Meaning:
 
 - modal flow for assignment import preview/apply
 - includes per-series overwrite/skip review plus `Close`
+- successful apply sends Studio activity context and appends a unified activity row with script purpose `save tag data`
 
 ### Table shell
 

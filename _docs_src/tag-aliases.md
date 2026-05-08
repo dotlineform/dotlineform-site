@@ -2,7 +2,7 @@
 doc_id: tag-aliases
 title: Tag Aliases
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:54"
+last_updated: "2026-05-08 19:25"
 parent_id: analytics
 sort_order: 50
 ---
@@ -25,6 +25,9 @@ The page root `#tag-aliases` exposes the shared Studio route-ready contract:
 - `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
 - `data-studio-service` reports whether the local tag write server is available for direct writes
 - `data-studio-record-loaded` is `true` when aliases are loaded
+
+Successful local-server alias writes send Studio activity context and append unified activity rows with script purpose `save tag data`.
+Covered write actions include alias import, create alias, edit alias, delete alias, promote alias, and demote tag.
 
 ## Page / Template Structure
 

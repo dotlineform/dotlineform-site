@@ -721,6 +721,440 @@
           ]
         }
       }
+    },
+    "docs-import": {
+      "label": "docs import",
+      "route": "/studio/docs-import/",
+      "actions": {
+        "import-docs-source": {
+          "label": "import docs source",
+          "status": "v1-target",
+          "control_id": "docsHtmlImportRun",
+          "control_selector": "#docsHtmlImportRun",
+          "control_label": "Run",
+          "endpoint": "/docs/import-source",
+          "record_family": "docs_import",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers HTML/source import writes after replacement or overwrite confirmation. Preview and confirmation-only states remain excluded.",
+          "script_purposes": [
+            {
+              "id": "import-source-data",
+              "optional": false,
+              "when": "a staged docs source file is converted into source Markdown or overwrites an existing source doc"
+            }
+          ]
+        }
+      }
+    },
+    "data-export": {
+      "label": "data export",
+      "route": "/studio/export/",
+      "actions": {
+        "export-data": {
+          "label": "export data",
+          "status": "v1-target",
+          "control_id": "dataExportRun",
+          "control_selector": "#dataExportRun",
+          "control_label": "Run export",
+          "endpoint": "/docs/export",
+          "record_family": "data_export",
+          "record_id_field": "export_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers writing configured docs export artifacts. Selection/filter changes remain excluded.",
+          "script_purposes": [
+            {
+              "id": "export-data",
+              "optional": false,
+              "when": "the export service writes an output artifact"
+            }
+          ]
+        }
+      }
+    },
+    "data-import": {
+      "label": "data import",
+      "route": "/studio/import/",
+      "actions": {
+        "update-import-summaries": {
+          "label": "update import summaries",
+          "status": "v1-target",
+          "control_id": "dataImportUpdateSummary",
+          "control_selector": "#dataImportUpdateSummary",
+          "control_label": "Update summaries",
+          "endpoint": "/docs/import/apply",
+          "record_family": "docs_import",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed summary-field writes from the data import workflow. Preflight remains excluded.",
+          "script_purposes": [
+            {
+              "id": "update-docs-source",
+              "optional": false,
+              "when": "selected source docs receive imported summary values"
+            }
+          ]
+        },
+        "update-import-hierarchy": {
+          "label": "update import hierarchy",
+          "status": "v1-target",
+          "control_id": "dataImportApplyHierarchy",
+          "control_selector": "#dataImportApplyHierarchy",
+          "control_label": "Update hierarchy",
+          "endpoint": "/docs/import/apply",
+          "record_family": "docs_import",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed parent-id writes from the data import workflow. Preflight remains excluded.",
+          "script_purposes": [
+            {
+              "id": "update-docs-source",
+              "optional": false,
+              "when": "selected source docs receive imported hierarchy changes"
+            }
+          ]
+        }
+      }
+    },
+    "docs-broken-links": {
+      "label": "docs broken links",
+      "route": "/studio/docs-broken-links/",
+      "actions": {
+        "run-broken-links-audit": {
+          "label": "run broken-links audit",
+          "status": "v1-target",
+          "control_id": "docsBrokenLinksRun",
+          "control_selector": "#docsBrokenLinksRun",
+          "control_label": "Run",
+          "endpoint": "/docs/broken-links",
+          "record_family": "audit",
+          "record_id_field": "scope",
+          "no_change_activity": "report",
+          "report_forced_rewrites": true,
+          "notes": "Covers user-triggered docs broken-link report runs.",
+          "script_purposes": [
+            {
+              "id": "run-audit",
+              "optional": false,
+              "when": "the docs broken-links audit completes"
+            }
+          ]
+        }
+      }
+    },
+    "studio-audits": {
+      "label": "studio audits",
+      "route": "/studio/audits/",
+      "actions": {
+        "run-studio-audit": {
+          "label": "run studio audit",
+          "status": "v1-target",
+          "control_id": "runAudit",
+          "control_selector": "[data-run-audit]",
+          "control_label": "Run",
+          "endpoint": "/audits/run",
+          "record_family": "audit",
+          "record_id_field": "audit_id",
+          "no_change_activity": "report",
+          "report_forced_rewrites": true,
+          "notes": "Covers allowlisted Studio audit service runs.",
+          "script_purposes": [
+            {
+              "id": "run-audit",
+              "optional": false,
+              "when": "an allowlisted Studio audit completes"
+            }
+          ]
+        }
+      }
+    },
+    "series-tags": {
+      "label": "series tags",
+      "route": "/studio/series-tags/",
+      "actions": {
+        "import-series-tag-assignments": {
+          "label": "import series tag assignments",
+          "status": "v1-target",
+          "control_id": "apply-import",
+          "control_selector": "[data-import-action=\"apply-import\"]",
+          "control_label": "Import",
+          "endpoint": "/import-tag-assignments",
+          "record_family": "tag_assignments",
+          "record_id_field": "import_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers applying staged series-tag assignment imports. Preview remains excluded.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "tag assignment import writes assignment data"
+            }
+          ]
+        }
+      }
+    },
+    "series-tag-editor": {
+      "label": "series tag editor",
+      "route": "/studio/series-tag-editor/",
+      "actions": {
+        "save-series-tags": {
+          "label": "save series tags",
+          "status": "v1-target",
+          "control_id": "save",
+          "control_selector": "[data-role=\"save\"]",
+          "control_label": "Save",
+          "endpoint": "/save-tags",
+          "record_family": "tag_assignments",
+          "record_id_field": "series_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers series and work tag assignment saves issued by the editor Save button.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "tag assignment data is written for the selected series or one of its works"
+            }
+          ]
+        }
+      }
+    },
+    "tag-registry": {
+      "label": "tag registry",
+      "route": "/studio/tag-registry/",
+      "actions": {
+        "import-tag-registry": {
+          "label": "import tag registry",
+          "status": "v1-target",
+          "control_id": "import-btn",
+          "control_selector": "[data-role=\"import-btn\"]",
+          "control_label": "Import",
+          "endpoint": "/import-tag-registry",
+          "record_family": "tag_registry",
+          "record_id_field": "import_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers registry import writes. Preview and patch-mode output remain excluded.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "tag registry import writes registry data"
+            }
+          ]
+        },
+        "create-tag": {
+          "label": "create tag",
+          "status": "v1-target",
+          "control_id": "create-tag",
+          "control_selector": "[data-role=\"create-tag\"]",
+          "control_label": "Create",
+          "endpoint": "/import-tag-registry",
+          "record_family": "tag_registry",
+          "record_id_field": "tag_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers creating one canonical tag through the registry import service.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "a new canonical tag is written"
+            }
+          ]
+        },
+        "edit-tag": {
+          "label": "edit tag",
+          "status": "v1-target",
+          "control_id": "save-edit",
+          "control_selector": "[data-role=\"save-edit\"]",
+          "control_label": "Save",
+          "endpoint": "/mutate-tag",
+          "record_family": "tag_registry",
+          "record_id_field": "tag_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers canonical tag description edits.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "canonical tag registry data changes"
+            }
+          ]
+        },
+        "delete-tag": {
+          "label": "delete tag",
+          "status": "v1-target",
+          "control_id": "confirm-delete-tag",
+          "control_selector": "[data-role=\"confirm-delete-tag\"]",
+          "control_label": "Delete",
+          "endpoint": "/mutate-tag",
+          "record_family": "tag_registry",
+          "record_id_field": "tag_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers deleting a canonical tag and related assignment or alias rewrites.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "canonical tag data or dependent tag references change"
+            }
+          ]
+        },
+        "demote-registry-tag": {
+          "label": "demote tag",
+          "status": "v1-target",
+          "control_id": "confirm-demote",
+          "control_selector": "[data-role=\"confirm-demote\"]",
+          "control_label": "Demote",
+          "endpoint": "/demote-tag",
+          "record_family": "tag_registry",
+          "record_id_field": "tag_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers demoting a canonical tag to an alias from the registry page.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "registry, alias, or assignment data changes during tag demotion"
+            }
+          ]
+        }
+      }
+    },
+    "tag-aliases": {
+      "label": "tag aliases",
+      "route": "/studio/tag-aliases/",
+      "actions": {
+        "import-tag-aliases": {
+          "label": "import tag aliases",
+          "status": "v1-target",
+          "control_id": "import-btn",
+          "control_selector": "[data-role=\"import-btn\"]",
+          "control_label": "Import",
+          "endpoint": "/import-tag-aliases",
+          "record_family": "tag_aliases",
+          "record_id_field": "import_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers alias import writes. Patch-mode output remains excluded.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "tag alias import writes alias data"
+            }
+          ]
+        },
+        "create-tag-alias": {
+          "label": "create tag alias",
+          "status": "v1-target",
+          "control_id": "save-edit-alias",
+          "control_selector": "[data-role=\"save-edit-alias\"]",
+          "control_label": "Save",
+          "endpoint": "/import-tag-aliases",
+          "record_family": "tag_aliases",
+          "record_id_field": "alias",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": false,
+          "notes": "Covers creating one alias through the alias import service.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "a new tag alias is written"
+            }
+          ]
+        },
+        "edit-tag-alias": {
+          "label": "edit tag alias",
+          "status": "v1-target",
+          "control_id": "save-edit-alias",
+          "control_selector": "[data-role=\"save-edit-alias\"]",
+          "control_label": "Save",
+          "endpoint": "/mutate-tag-alias",
+          "record_family": "tag_aliases",
+          "record_id_field": "alias",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers alias description, key, or target tag edits.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "tag alias data changes"
+            }
+          ]
+        },
+        "delete-tag-alias": {
+          "label": "delete tag alias",
+          "status": "v1-target",
+          "control_id": "delete-alias",
+          "control_selector": "[data-delete-alias]",
+          "control_label": "Delete",
+          "endpoint": "/delete-tag-alias",
+          "record_family": "tag_aliases",
+          "record_id_field": "alias",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers deleting one tag alias after confirmation.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "a tag alias is removed"
+            }
+          ]
+        },
+        "promote-tag-alias": {
+          "label": "promote tag alias",
+          "status": "v1-target",
+          "control_id": "confirm-promotion",
+          "control_selector": "[data-role=\"confirm-promotion\"]",
+          "control_label": "Promote",
+          "endpoint": "/promote-tag-alias",
+          "record_family": "tag_aliases",
+          "record_id_field": "alias",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers promoting one alias to a canonical tag.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "alias and registry data changes during alias promotion"
+            }
+          ]
+        },
+        "demote-aliases-tag": {
+          "label": "demote tag",
+          "status": "v1-target",
+          "control_id": "confirm-demote",
+          "control_selector": "[data-role=\"confirm-demote\"]",
+          "control_label": "Demote",
+          "endpoint": "/demote-tag",
+          "record_family": "tag_registry",
+          "record_id_field": "tag_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers demoting a canonical tag from the aliases page.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "registry, alias, or assignment data changes during tag demotion"
+            }
+          ]
+        }
+      }
     }
   },
   "script_purposes": {
@@ -794,6 +1228,38 @@
       "artifact_families": ["source-json", "source-markdown"],
       "detail_templates": [
         "Imported source records for {record_id}"
+      ]
+    },
+    "update-docs-source": {
+      "label": "update docs source",
+      "status": "v1-target",
+      "artifact_families": ["source-markdown", "docs-json", "docs-search"],
+      "detail_templates": [
+        "Updated docs source records for {record_id}"
+      ]
+    },
+    "export-data": {
+      "label": "export data",
+      "status": "v1-target",
+      "artifact_families": ["export-file"],
+      "detail_templates": [
+        "Exported data to {path}"
+      ]
+    },
+    "run-audit": {
+      "label": "run audit",
+      "status": "v1-target",
+      "artifact_families": ["report"],
+      "detail_templates": [
+        "Ran audit {record_id}"
+      ]
+    },
+    "save-tag-data": {
+      "label": "save tag data",
+      "status": "v1-target",
+      "artifact_families": ["tag-json"],
+      "detail_templates": [
+        "Saved tag data for {record_id}"
       ]
     },
     "generate-report": {

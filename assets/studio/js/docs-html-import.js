@@ -9,6 +9,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { createStudioModalHost, renderStudioModalFrame } from "./studio-modal.js";
 
 function normalizeText(value) {
@@ -472,7 +473,16 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
       overwrite_doc_id: overwriteDocId,
       confirm_overwrite: confirmOverwrite,
       replacement_doc_id: normalizedReplacementDocId,
-      preview_only: false
+      preview_only: false,
+      activity_context: buildStudioActivityContext({
+        pageId: "docs-import",
+        actionId: "import-docs-source",
+        route: "/studio/docs-import/",
+        controlId: "docsHtmlImportRun",
+        controlSelector: "#docsHtmlImportRun",
+        recordIdField: "staged_filename",
+        recordId: stagedFilename
+      })
     });
 
     if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {

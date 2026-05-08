@@ -10,6 +10,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 const FALLBACK_AUDITS = Object.freeze([
   {
@@ -185,7 +186,18 @@ async function runAudit(state, auditId) {
   );
 
   try {
-    const result = await postJson(AUDIT_SERVICE_ENDPOINTS.run, { audit_id: auditId });
+    const result = await postJson(AUDIT_SERVICE_ENDPOINTS.run, {
+      audit_id: auditId,
+      activity_context: buildStudioActivityContext({
+        pageId: "studio-audits",
+        actionId: "run-studio-audit",
+        route: "/studio/audits/",
+        controlId: "runAudit",
+        controlSelector: "[data-run-audit]",
+        recordIdField: "audit_id",
+        recordId: auditId
+      })
+    });
     state.lastResults.set(auditId, result);
     const stateName = resultState(result);
     setStatus(

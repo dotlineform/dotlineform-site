@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-07 21:52"
+last_updated: "2026-05-08 19:25"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -60,6 +60,7 @@ Current behavior:
 - also used by `/studio/docs-import/` for staged-file listing and source import writes
 - also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
 - also used by `/studio/import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
+- appends unified Studio activity rows for covered docs import/export/import-apply and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
@@ -69,6 +70,13 @@ Current behavior:
 - rebuilds scope-owned docs payloads after successful writes
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
 - coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
+
+Unified activity coverage:
+
+- `POST /docs/import-source` writes `import source data` rows after a source doc is created or overwritten; preview, replacement-required, and confirmation-only responses are excluded
+- `POST /docs/export` writes `export data` rows only when an export artifact is written
+- `POST /docs/import/apply` writes `update docs source` rows only for confirmed summary or hierarchy apply writes
+- `POST /docs/broken-links` writes `run audit` rows with checked and broken-link counts
 
 Search update behavior:
 

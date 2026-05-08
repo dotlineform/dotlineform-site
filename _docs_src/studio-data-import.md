@@ -2,7 +2,7 @@
 doc_id: studio-data-import
 title: Studio Data Import
 added_date: 2026-05-06
-last_updated: "2026-05-06 20:14"
+last_updated: "2026-05-08 19:25"
 parent_id: import-export
 sort_order: 40
 ---
@@ -43,6 +43,8 @@ Import file discovery, preview generation, and apply actions run through the doc
 - `POST /docs/import/apply`
 
 The browser sends `data_domain` so the local service can dispatch through the configured adapter boundary.
+Confirmed summary and hierarchy apply requests also send Studio activity context and append unified activity rows with script purpose `update docs source`.
+Preflight and cancelled confirmation flows remain excluded.
 
 ## Current Domains
 

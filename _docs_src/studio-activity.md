@@ -2,7 +2,7 @@
 doc_id: studio-activity
 title: Studio Activity
 added_date: 2026-05-08
-last_updated: "2026-05-08 18:20"
+last_updated: "2026-05-08 19:25"
 parent_id: studio
 sort_order: 53
 ---
@@ -15,7 +15,7 @@ This document describes the Studio page at `/studio/activity/`.
 The page is the v1 unified activity report for Studio actions.
 It lists script-level activity rows while preserving the page and button action that initiated them.
 
-Current coverage includes catalogue editor save/create/delete/publication actions plus the first Batch C catalogue-service actions: workbook import apply, moment import apply, and project-state report generation.
+Current coverage includes catalogue editor save/create/delete/publication actions plus Batch C import/export/report/audit/utility actions: workbook import apply, moment import apply, project-state report generation, docs source import, data export/import apply, docs broken-links audit, Studio audits, series tag saves/imports, tag registry writes, and tag alias writes.
 Older Build Activity and Catalogue Activity pages remain available during validation.
 
 ## Route Ready State
@@ -58,6 +58,8 @@ Each feed row includes:
 - script purpose label
 - affected record groups
 - detail items for the modal
+
+Affected record group summaries include catalogue records plus docs, files, tags, aliases, and search rows when the emitting service supplies those groups.
 
 Clicking the status marker opens the detail modal for that row.
 

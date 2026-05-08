@@ -17,6 +17,49 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Completed Batch C Studio activity logging
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Completed the remaining Batch C unified activity coverage for docs import/export/import apply, docs broken-links audits, Studio audits, and tag write actions.
+
+**Files changed:**
+
+- `assets/studio/data/activity_contract.json`
+- `scripts/studio_activity.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/studio/audit_service.py`
+- `scripts/studio/tag_write_server.py`
+- `assets/studio/js/activity-log.js`
+- `assets/studio/js/data-export.js`
+- `assets/studio/js/data-import.js`
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/js/studio-audits.js`
+- `assets/studio/js/series-tags.js`
+- `assets/studio/js/tag-studio.js`
+- `assets/studio/js/tag-studio-save.js`
+- `assets/studio/js/tag-registry-service.js`
+- `assets/studio/js/tag-aliases-service.js`
+- `tests/python/test_studio_activity_feed.py`
+- [Studio Activity](/docs/?scope=studio&doc=studio-activity)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
+- [Studio Data Export](/docs/?scope=studio&doc=studio-data-export)
+- [Studio Data Import](/docs/?scope=studio&doc=studio-data-import)
+- [Series Tags](/docs/?scope=studio&doc=series-tags)
+- [Tag Editor](/docs/?scope=studio&doc=tag-editor)
+- [Tag Registry](/docs/?scope=studio&doc=tag-registry)
+- [Tag Aliases](/docs/?scope=studio&doc=tag-aliases)
+
+**Impact:**
+The unified activity log now records covered Batch C utility writes and report runs with contract-backed page/action context.
+Preview-only and cancelled confirmation flows stay excluded, while confirmed writes and output-generating actions emit concise modal details and affected record groups.
+
 ## [2026-05-08] Started Batch C Studio activity logging for catalogue-service actions
 
 **Status:** implemented

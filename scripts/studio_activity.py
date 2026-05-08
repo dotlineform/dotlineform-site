@@ -3,8 +3,10 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import os
+import re
 import tempfile
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping
@@ -16,6 +18,11 @@ FEED_REL_PATH = Path("assets/studio/data/activity_log.json")
 JOURNAL_LIMIT = 1000
 FEED_LIMIT = 100
 FEED_SCHEMA = "studio_activity_log_v1"
+ACTIVITY_ID_SAFE_PATTERN = re.compile(r"[^A-Za-z0-9_.:-]+")
+
+
+def utc_now() -> str:
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _coerce_json_value(value: Any) -> Any:
@@ -40,6 +47,100 @@ def _read_json(path: Path) -> Dict[str, Any]:
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}
+
+
+def activity_context_value(value: Any) -> str:
+    return str(value or "").strip()
+
+
+def activity_id_component(value: Any) -> str:
+    text = activity_context_value(value)
+    safe_value = ACTIVITY_ID_SAFE_PATTERN.sub("-", text).strip("-")
+    return safe_value or "activity"
+
+
+def studio_activity_id(now_utc: str, correlation_id: str, script_purpose_id: str) -> str:
+    return f"{now_utc}-{activity_id_component(correlation_id)}-{activity_id_component(script_purpose_id)}"
+
+
+def activity_correlation_id(value: Any) -> str:
+    requested = activity_context_value(value)
+    if requested:
+        return requested
+    return f"activity:{utc_now()}:{os.getpid()}"
+
+
+def _contract_action(contract: Mapping[str, Any], page_id: str, action_id: str) -> Mapping[str, Any]:
+    pages = contract.get("pages") if isinstance(contract.get("pages"), Mapping) else {}
+    page = pages.get(page_id) if isinstance(pages, Mapping) else None
+    if not isinstance(page, Mapping):
+        raise ValueError(f"activity_context.page_id is not covered by the activity contract: {page_id}")
+    actions = page.get("actions") if isinstance(page.get("actions"), Mapping) else {}
+    action = actions.get(action_id) if isinstance(actions, Mapping) else None
+    if not isinstance(action, Mapping):
+        raise ValueError(f"activity_context.action_id is not covered by the activity contract: {action_id}")
+    return action
+
+
+def normalize_activity_context_from_contract(
+    repo_root: str | Path,
+    raw_context: Any,
+    *,
+    endpoint: str = "",
+    record_id: Any = None,
+    record_id_field: str = "",
+) -> Dict[str, str]:
+    if raw_context is None or raw_context == "":
+        return {}
+    if not isinstance(raw_context, Mapping):
+        raise ValueError("activity_context must be an object")
+
+    resolved_repo_root = Path(repo_root).expanduser().resolve()
+    contract = _read_json(resolved_repo_root / ACTIVITY_CONTRACT_REL_PATH)
+    page_id = activity_context_value(raw_context.get("page_id"))
+    action_id = activity_context_value(raw_context.get("action_id"))
+    action = _contract_action(contract, page_id, action_id)
+
+    expected_endpoint = activity_context_value(action.get("endpoint"))
+    if endpoint and expected_endpoint and endpoint != expected_endpoint:
+        raise ValueError(f"activity_context.action_id {action_id!r} is not valid for endpoint {endpoint}")
+
+    expected_values = {
+        "route": activity_context_value(action.get("route") or _contract_page_route(contract, page_id)),
+        "control_id": activity_context_value(action.get("control_id")),
+        "control_selector": activity_context_value(action.get("control_selector")),
+    }
+    for key, expected in expected_values.items():
+        if not expected:
+            continue
+        value = activity_context_value(raw_context.get(key))
+        if value != expected:
+            raise ValueError(f"activity_context.{key} must be {expected!r}")
+
+    resolved_record_id_field = record_id_field or activity_context_value(action.get("record_id_field"))
+    resolved_record_id = activity_context_value(record_id)
+    requested_record_id = activity_context_value(raw_context.get(resolved_record_id_field)) if resolved_record_id_field else ""
+    if resolved_record_id and requested_record_id != resolved_record_id:
+        raise ValueError(f"activity_context.{resolved_record_id_field} must match request {resolved_record_id_field}")
+
+    context = {
+        "correlation_id": activity_correlation_id(raw_context.get("correlation_id")),
+        "page_id": page_id,
+        "action_id": action_id,
+        "route": expected_values["route"],
+        "control_id": expected_values["control_id"],
+    }
+    if expected_values["control_selector"]:
+        context["control_selector"] = expected_values["control_selector"]
+    if resolved_record_id_field:
+        context[resolved_record_id_field] = requested_record_id or resolved_record_id
+    return context
+
+
+def _contract_page_route(contract: Mapping[str, Any], page_id: str) -> str:
+    pages = contract.get("pages") if isinstance(contract.get("pages"), Mapping) else {}
+    page = pages.get(page_id) if isinstance(pages, Mapping) else None
+    return activity_context_value(page.get("route")) if isinstance(page, Mapping) else ""
 
 
 def _read_jsonl(path: Path) -> List[Dict[str, Any]]:
@@ -94,6 +195,8 @@ def _compact_record_groups(groups: Any) -> Dict[str, Any]:
         "moments": _compact_ids(raw_groups.get("moments")),
         "docs": _compact_ids(raw_groups.get("docs")),
         "files": _compact_ids(raw_groups.get("files")),
+        "tags": _compact_ids(raw_groups.get("tags")),
+        "aliases": _compact_ids(raw_groups.get("aliases")),
         "search": _compact_ids(raw_groups.get("search")),
     }
 
@@ -131,6 +234,40 @@ def _normalize_source_refs(refs: Any) -> list[Dict[str, str]]:
         if kind and path:
             normalized.append({"kind": kind, "path": path})
     return normalized
+
+
+def studio_activity_entry(
+    activity_context: Mapping[str, str],
+    *,
+    script_purpose_id: str,
+    now_utc: str = "",
+    status: str = "completed",
+    record_groups: Mapping[str, Any] | None = None,
+    detail_items: Iterable[Any] | None = None,
+    source_refs: Iterable[Mapping[str, Any]] | None = None,
+    activity_id_suffix: Any = "",
+) -> Dict[str, Any]:
+    resolved_now = activity_context_value(now_utc) or utc_now()
+    correlation_id = activity_context_value(activity_context.get("correlation_id"))
+    resolved_purpose = activity_context_value(script_purpose_id)
+    row_id = studio_activity_id(resolved_now, correlation_id, resolved_purpose)
+    suffix = activity_context_value(activity_id_suffix)
+    if suffix:
+        row_id = f"{row_id}-{activity_id_component(suffix)}"
+    return {
+        "id": row_id,
+        "activity_id": row_id,
+        "correlation_id": correlation_id,
+        "timestamp": resolved_now,
+        "time_utc": resolved_now,
+        "status": activity_context_value(status) or "completed",
+        "page_id": activity_context_value(activity_context.get("page_id")),
+        "user_action_id": activity_context_value(activity_context.get("action_id")),
+        "script_purpose_id": resolved_purpose,
+        "record_groups": dict(record_groups or {}),
+        "detail_items": [activity_context_value(item) for item in (detail_items or []) if activity_context_value(item)],
+        "source_refs": [dict(ref) for ref in (source_refs or []) if isinstance(ref, Mapping)],
+    }
 
 
 def _normalize_entry(entry: Mapping[str, Any], contract: Mapping[str, Any]) -> Dict[str, Any]:

@@ -2,7 +2,7 @@
 doc_id: tag-editor
 title: Tag Editor
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:54"
+last_updated: "2026-05-08 19:25"
 parent_id: analytics
 sort_order: 30
 ---
@@ -28,6 +28,9 @@ The page root `#seriesTagEditorRoot` exposes the shared Studio route-ready contr
 - `data-studio-mode` is `single` when a work is selected, `edit` for the series-level editor state, and `empty` for missing or failed series loads
 - `data-studio-service` reports whether the local tag write server is available for direct saves
 - `data-studio-record-loaded` is `true` after a valid series id is loaded
+
+Successful local-server saves send Studio activity context and append unified activity rows with script purpose `save tag data`.
+Multiple row writes from one Save click share the same initiating action context.
 
 ## Page / Template Structure
 

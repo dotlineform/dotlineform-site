@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9185adb977f56a2281e21250ee1a362f",
-    "generated_at_utc": "2026-05-08T18:01:24Z",
+    "version": "blake2b-b34276d9352600188622a3b96264462c",
+    "generated_at_utc": "2026-05-08T18:30:50Z",
     "count": 201
   },
   "entries": [
@@ -76,10 +76,10 @@
       "kind": "doc",
       "title": "Activity Log Coverage Inventory",
       "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "site-request-studio-unified-activity-log",
       "parent_title": "Studio Unified Activity Log Request",
-      "display_meta": "2026-05-08 18:20 • Studio Unified Activity Log Request",
+      "display_meta": "2026-05-08 19:25 • Studio Unified Activity Log Request",
       "search_terms": [
         "site-request-studio-unified-activity-log-inventory",
         "site",
@@ -92,14 +92,14 @@
         "activity log coverage inventory",
         "coverage",
         "studio unified activity log request",
-        "2026-05-08 18:20",
+        "2026-05-08 19:25",
         "2026",
         "05",
         "08",
-        "18",
-        "20"
+        "19",
+        "25"
       ],
-      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-08 18:20 2026 05 08 18 20"
+      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "data-models-analysis",
@@ -1505,10 +1505,10 @@
       "kind": "doc",
       "title": "Studio Config and Save Flow",
       "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-06 20:51 • Studio",
+      "display_meta": "2026-05-08 19:25 • Studio",
       "search_terms": [
         "studio-config-and-save-flow",
         "studio",
@@ -1517,24 +1517,24 @@
         "save",
         "flow",
         "studio config and save flow",
-        "2026-05-06 20:51",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "51"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "studio-data-export",
       "kind": "doc",
       "title": "Studio Data Export",
       "href": "/docs/?scope=studio&doc=studio-data-export",
-      "last_updated": "2026-05-06 20:14",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "import-export",
       "parent_title": "Import/Export",
-      "display_meta": "2026-05-06 20:14 • Import/Export",
+      "display_meta": "2026-05-08 19:25 • Import/Export",
       "search_terms": [
         "studio-data-export",
         "studio",
@@ -1543,14 +1543,14 @@
         "studio data export",
         "import/export",
         "import",
-        "2026-05-06 20:14",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "14"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "studio-data-export studio data export studio data export import/export import 2026-05-06 20:14 2026 05 06 20 14"
+      "search_text": "studio-data-export studio data export studio data export import/export import 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "studio-ui-framework",
@@ -1579,34 +1579,34 @@
       "kind": "doc",
       "title": "Tag Editor",
       "href": "/docs/?scope=studio&doc=tag-editor",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
+      "display_meta": "2026-05-08 19:25 • Analytics",
       "search_terms": [
         "tag-editor",
         "tag",
         "editor",
         "tag editor",
         "analytics",
-        "2026-05-06 20:54",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "54"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "tag-editor tag editor tag editor analytics 2026-05-06 20:54 2026 05 06 20 54"
+      "search_text": "tag-editor tag editor tag editor analytics 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "scripts-tag-write-server",
       "kind": "doc",
       "title": "Tag Write Server",
       "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "last_updated": "2026-05-06 20:40",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-06 20:40 • Servers",
+      "display_meta": "2026-05-08 19:25 • Servers",
       "search_terms": [
         "scripts-tag-write-server",
         "scripts",
@@ -1615,14 +1615,14 @@
         "server",
         "tag write server",
         "servers",
-        "2026-05-06 20:40",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "40"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-06 20:40 2026 05 06 20 40"
+      "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -1973,10 +1973,10 @@
       "kind": "doc",
       "title": "Studio Data Import",
       "href": "/docs/?scope=studio&doc=studio-data-import",
-      "last_updated": "2026-05-06 20:14",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "import-export",
       "parent_title": "Import/Export",
-      "display_meta": "2026-05-06 20:14 • Import/Export",
+      "display_meta": "2026-05-08 19:25 • Import/Export",
       "search_terms": [
         "studio-data-import",
         "studio",
@@ -1985,14 +1985,14 @@
         "studio data import",
         "import/export",
         "export",
-        "2026-05-06 20:14",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "14"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "studio-data-import studio data import studio data import import/export export 2026-05-06 20:14 2026 05 06 20 14"
+      "search_text": "studio-data-import studio data import studio data import import/export export 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "studio-smoke-testing",
@@ -2048,24 +2048,24 @@
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=tag-registry",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
+      "display_meta": "2026-05-08 19:25 • Analytics",
       "search_terms": [
         "tag-registry",
         "tag",
         "registry",
         "tag registry",
         "analytics",
-        "2026-05-06 20:54",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "54"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "tag-registry tag registry tag registry analytics 2026-05-06 20:54 2026 05 06 20 54"
+      "search_text": "tag-registry tag registry tag registry analytics 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "site-request-work-series-prose-source-model",
@@ -2102,10 +2102,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-07 21:52 • Docs",
+      "display_meta": "2026-05-08 19:25 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2113,14 +2113,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-07 21:52",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "07",
-        "21",
-        "52"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-07 21:52 2026 05 07 21 52"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "site-request-json-schema-adoption",
@@ -2448,47 +2448,47 @@
       "kind": "doc",
       "title": "Tag Aliases",
       "href": "/docs/?scope=studio&doc=tag-aliases",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
+      "display_meta": "2026-05-08 19:25 • Analytics",
       "search_terms": [
         "tag-aliases",
         "tag",
         "aliases",
         "tag aliases",
         "analytics",
-        "2026-05-06 20:54",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "54"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-06 20:54 2026 05 06 20 54"
+      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "studio-activity",
       "kind": "doc",
       "title": "Studio Activity",
       "href": "/docs/?scope=studio&doc=studio-activity",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-08 18:20 • Studio",
+      "display_meta": "2026-05-08 19:25 • Studio",
       "search_terms": [
         "studio-activity",
         "studio",
         "activity",
         "studio activity",
-        "2026-05-08 18:20",
+        "2026-05-08 19:25",
         "2026",
         "05",
         "08",
-        "18",
-        "20"
+        "19",
+        "25"
       ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-08 18:20 2026 05 08 18 20"
+      "search_text": "studio-activity studio activity studio activity 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -2714,34 +2714,34 @@
       "kind": "doc",
       "title": "Series Tags",
       "href": "/docs/?scope=studio&doc=series-tags",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
+      "display_meta": "2026-05-08 19:25 • Analytics",
       "search_terms": [
         "series-tags",
         "series",
         "tags",
         "series tags",
         "analytics",
-        "2026-05-06 20:54",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "54"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "series-tags series tags series tags analytics 2026-05-06 20:54 2026 05 06 20 54"
+      "search_text": "series-tags series tags series tags analytics 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "scripts-studio-audit-service",
       "kind": "doc",
       "title": "Studio Audit Service",
       "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-06 20:51 • Studio",
+      "display_meta": "2026-05-08 19:25 • Studio",
       "search_terms": [
         "scripts-studio-audit-service",
         "scripts",
@@ -2749,14 +2749,14 @@
         "audit",
         "service",
         "studio audit service",
-        "2026-05-06 20:51",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "51"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "new-pipeline-studio-e2e-checklist",

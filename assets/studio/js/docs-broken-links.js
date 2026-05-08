@@ -9,6 +9,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 const DEFAULT_SORT_KEY = "fromPage";
 const DEFAULT_SORT_DIR = "asc";
@@ -225,7 +226,18 @@ async function runAudit(state) {
   );
 
   try {
-    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.brokenLinks, { scope });
+    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.brokenLinks, {
+      scope,
+      activity_context: buildStudioActivityContext({
+        pageId: "docs-broken-links",
+        actionId: "run-broken-links-audit",
+        route: "/studio/docs-broken-links/",
+        controlId: "docsBrokenLinksRun",
+        controlSelector: "#docsBrokenLinksRun",
+        recordIdField: "scope",
+        recordId: scope
+      })
+    });
     const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
     state.entries = entries;
     state.sortKey = DEFAULT_SORT_KEY;

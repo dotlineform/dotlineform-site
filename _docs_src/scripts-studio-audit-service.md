@@ -2,7 +2,7 @@
 doc_id: scripts-studio-audit-service
 title: Studio Audit Service
 added_date: 2026-05-03
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-08 19:25"
 parent_id: studio
 sort_order: 60
 ---
@@ -44,6 +44,8 @@ The response includes `status`, `exit_code`, `summary`, `totals`, `findings`, ti
 
 Audit failures are returned as successful service responses with `status: "failed"` and a non-zero `exit_code`. Invalid audit IDs return a request error.
 
+When the request includes valid Studio activity context from `/studio/audits/`, the service appends one unified Studio activity row with script purpose `run audit`. The detail items include the audit label, pass/warn/fail status, error and warning counts, and duration.
+
 ## Security Boundary
 
 - binds only to `127.0.0.1`
@@ -53,6 +55,7 @@ Audit failures are returned as successful service responses with `status: "faile
 - does not accept browser-controlled paths, flags, environment, or working directories
 - runs commands without a shell
 - writes only minimal local logs under `var/studio/audits/logs/`
+- writes unified activity rows only through the fixed local activity feed paths owned by `scripts/studio_activity.py`
 
 ## Related References
 

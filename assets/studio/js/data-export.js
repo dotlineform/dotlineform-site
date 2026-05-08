@@ -18,6 +18,7 @@ import {
   createStudioModalHost,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   workflowDomainForKey,
   workflowDomainFromUrl,
@@ -661,7 +662,16 @@ async function runExport(state) {
       target_format: targetFormat,
       doc_ids: docIds,
       select_all: selectAll,
-      missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked)
+      missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked),
+      activity_context: buildStudioActivityContext({
+        pageId: "data-export",
+        actionId: "export-data",
+        route: "/studio/export/",
+        controlId: "dataExportRun",
+        controlSelector: "#dataExportRun",
+        recordIdField: "export_id",
+        recordId: `${state.scope}:${configId}`
+      })
     });
     showResultModal(state, payload);
     setStatus(

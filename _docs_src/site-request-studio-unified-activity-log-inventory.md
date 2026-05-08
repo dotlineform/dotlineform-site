@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 18:20"
+last_updated: "2026-05-08 19:25"
 ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -14,8 +14,8 @@ Status:
 
 - initial v1 planning inventory
 - v1 implementation target selected
-- Batch C catalogue-service slice in progress
-- broader docs/tag/audit surface area not yet implemented
+- Batch C complete
+- Batch D retirement and hook cleanup still pending
 
 ## Purpose
 
@@ -80,7 +80,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Batch A: catalogue editor save paths | `done` | work save; work-detail save; series save; moment save | Single-record metadata saves now emit unified activity rows. Bulk/create/delete/publication paths stay in later batches. Moment save intentionally excludes lookup rows because it does not currently write Studio lookup payloads. |
 | Batch B0: activity action profiles | `done` | shared profile layer for covered activity actions | Keeps runtime page/action/control/endpoint/record-family ids aligned with the structured registry before adding more action types. The profile does not own mutation behavior. |
 | Batch B: catalogue create/delete/publication paths | `done` | create work/detail/series; delete work/detail/series/moment; publish/unpublish work/detail/series/moment | Preserves initiating context through preview/confirmation flows. Moment import/create and readiness prose/media writes move to Batch C because their write boundaries are import/utility-shaped rather than normal create/delete/publication metadata actions. |
-| Batch C: import/export/report/audit/utility actions | `in-progress` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | First catalogue-service slice covers workbook import apply, moment import apply, and project-state report generation. Keep preview-only commands excluded unless they persist data. |
+| Batch C: import/export/report/audit/utility actions | `done` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | Covered workbook import apply, moment import apply, project-state report generation, docs source import, data export/import apply, docs broken-links audit, Studio audits, series tag saves/imports, registry writes, and alias writes. Preview-only commands remain excluded unless they persist data. |
 | Batch D: old report retirement and hook cleanup | `planned` | old activity routes, feeds, hooks, navigation | Keep old pages visible while old hooks remain live; remove or redirect only after unified rows cover equivalent activity. |
 
 ## Catalogue Pages
@@ -129,14 +129,14 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
-| Docs import | `/studio/docs-import/` | `#docsHtmlImportRun` | `import docs source` | staged source conversion; validation; source doc write; backup; media source registration when applicable | `planned` | Current result panel is a strong source for activity detail text. |
+| Docs import | `/studio/docs-import/` | `#docsHtmlImportRun` | `import docs source` | staged source conversion; validation; source doc write; backup; media source registration when applicable | `done` | Batch C coverage. Preview/replacement-required states stay excluded until the import writes source files. |
 | Docs import | `/studio/docs-import/` | `#docsHtmlImportConfirm` | none | none | `excluded` | Confirmation should preserve the original `import docs source` context rather than creating a separate action row. |
 | Docs import | `/studio/docs-import/` | result source link | none | none | `excluded` | Opening the source file is not activity-report scope for v1. |
-| Studio data export | `/studio/export/` | `#dataExportRun` | `export data` | docs export generation; selected records; output file/report; warnings or skipped records | `planned` | Covers library, analytics, and other configured export scopes. |
+| Studio data export | `/studio/export/` | `#dataExportRun` | `export data` | docs export generation; selected records; output file/report; warnings or skipped records | `done` | Batch C coverage for output-writing exports. |
 | Studio data import | `/studio/import/` | `#dataImportPreview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
-| Studio data import | `/studio/import/` | `#dataImportUpdateSummary` | `update import summaries` | import apply preflight; source doc backups; summary field writes; result counts | `planned` | Confirmation modal activity should share this original command context. |
-| Studio data import | `/studio/import/` | `#dataImportApplyHierarchy` | `update import hierarchy` | import apply preflight; source doc backups; parent-id writes; result counts | `planned` | Confirmation modal activity should share this original command context. |
-| Docs broken links | `/studio/docs-broken-links/` | `#docsBrokenLinksRun` | `run broken-links audit` | broken-link scan; generated result list | `planned` | Audit/report action, not a source write. |
+| Studio data import | `/studio/import/` | `#dataImportUpdateSummary` | `update import summaries` | import apply preflight; source doc backups; summary field writes; result counts | `done` | Batch C coverage for confirmed apply writes; preflight remains excluded. |
+| Studio data import | `/studio/import/` | `#dataImportApplyHierarchy` | `update import hierarchy` | import apply preflight; source doc backups; parent-id writes; result counts | `done` | Batch C coverage for confirmed apply writes; preflight remains excluded. |
+| Docs broken links | `/studio/docs-broken-links/` | `#docsBrokenLinksRun` | `run broken-links audit` | broken-link scan; generated result list | `done` | Batch C report coverage. |
 | Library documents | `/studio/library-documents/` | sort/filter/open controls | none | none | `excluded` | Review surface only. |
 
 ## Tag Pages
@@ -144,23 +144,23 @@ The script-purpose label describes each downstream operation recorded as its own
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
 | Series tags | `/studio/series-tags/` | import modal `preview-import` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
-| Series tags | `/studio/series-tags/` | import modal `apply-import` | `import series tag assignments` | tag assignment import apply; tag assignment writes; backup; conflict resolution summary | `planned` | Uses tag write service. |
+| Series tags | `/studio/series-tags/` | import modal `apply-import` | `import series tag assignments` | tag assignment import apply; tag assignment writes; backup; conflict resolution summary | `done` | Batch C coverage through the tag write service. |
 | Series tags | `/studio/series-tags/` | session modal copy/download/clear | none | none | `excluded` | Browser/session-local output controls unless later persisted by service. |
 | Series tag editor | `/studio/series-tag-editor/` | `data-role="add-tag"` | none | none | `excluded` | Local assignment edit until Save. |
-| Series tag editor | `/studio/series-tag-editor/` | `data-role="save"` | `save series tags` | save tag assignments; backup; generated tag assignment data update | `planned` | Uses shared tag save flow. |
-| Tag registry | `/studio/tag-registry/` | `data-role="open-import-modal"` then import action | `import tag registry` | registry import preview/apply; registry writes; backups; validation results | `planned` | Split preview/apply in implementation if the UI exposes both as distinct commands. |
-| Tag registry | `/studio/tag-registry/` | `data-role="open-new-tag"` / row edit actions | `create tag` / `edit tag` | mutate tag preview/apply; registry writes; backups; validation results | `planned` | Registry mutation should report affected tag ids. |
-| Tag registry | `/studio/tag-registry/` | demote/delete-like actions | `demote tag` | demote preview/apply; registry updates; assignment or alias consequences | `planned` | Label should match current UI text once captured in registry. |
-| Tag aliases | `/studio/tag-aliases/` | `data-role="open-import-modal"` then import action | `import tag aliases` | alias import preview/apply; alias writes; backups; validation results | `planned` | Uses tag write service. |
-| Tag aliases | `/studio/tag-aliases/` | `data-role="open-new-alias"` / row edit actions | `create tag alias` / `edit tag alias` | alias mutation; alias writes; backups | `planned` | Report alias key and target tag. |
-| Tag aliases | `/studio/tag-aliases/` | promote/demote/delete actions | `promote tag alias` / `delete tag alias` | preview/apply where applicable; alias registry writes; tag registry effects when promoting | `planned` | Preserve current confirmation/result wording in modal details. |
+| Series tag editor | `/studio/series-tag-editor/` | `data-role="save"` | `save series tags` | save tag assignments; backup; generated tag assignment data update | `done` | Batch C coverage through the shared tag save flow. |
+| Tag registry | `/studio/tag-registry/` | `data-role="open-import-modal"` then import action | `import tag registry` | registry import preview/apply; registry writes; backups; validation results | `done` | Batch C coverage for import apply; patch-mode output remains excluded. |
+| Tag registry | `/studio/tag-registry/` | `data-role="open-new-tag"` / row edit actions | `create tag` / `edit tag` | mutate tag preview/apply; registry writes; backups; validation results | `done` | Batch C coverage; affected tag ids are carried in activity details/groups. |
+| Tag registry | `/studio/tag-registry/` | demote/delete-like actions | `demote tag` / `delete tag` | demote/delete apply; registry updates; assignment or alias consequences | `done` | Batch C coverage for confirmed write actions. |
+| Tag aliases | `/studio/tag-aliases/` | `data-role="open-import-modal"` then import action | `import tag aliases` | alias import preview/apply; alias writes; backups; validation results | `done` | Batch C coverage through the tag write service. |
+| Tag aliases | `/studio/tag-aliases/` | `data-role="open-new-alias"` / row edit actions | `create tag alias` / `edit tag alias` | alias mutation; alias writes; backups | `done` | Batch C coverage; affected alias keys are carried in activity details/groups. |
+| Tag aliases | `/studio/tag-aliases/` | promote/demote/delete actions | `promote tag alias` / `delete tag alias` / `demote tag` | preview/apply where applicable; alias registry writes; tag registry effects when promoting or demoting | `done` | Batch C coverage for confirmed write actions. |
 | Tag groups | `/studio/tag-groups/` | filters/sort/open controls | none | none | `excluded` | Review surface unless future group editing is added. |
 
 ## Audit And Utility Pages
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
-| Studio audits | `/studio/audits/` | `data-run-audit="<audit_id>"` | `run studio audit` | audit service run; pass/warn/fail result; report path or summary | `planned` | The row should include the specific audit label in details. |
+| Studio audits | `/studio/audits/` | `data-run-audit="<audit_id>"` | `run studio audit` | audit service run; pass/warn/fail result; report path or summary | `done` | Batch C coverage; details include audit label, status, error/warning counts, and duration. |
 | Catalogue field registry | `/studio/catalogue-field-registry/` | review controls | none | none | `excluded` | Review/config surface unless a future write action is added. |
 | Studio dashboards | `/studio/`, `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, `/studio/search/` | dashboard links and hydration | none | none | `excluded` | Navigation and read-only metric hydration should not appear in the activity log. |
 | Docs Viewer | `/docs/` | view/search/navigation controls | none | none | `excluded` | Not a Studio write/build action. |

@@ -2,7 +2,7 @@
 doc_id: scripts-tag-write-server
 title: Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:40"
+last_updated: "2026-05-08 19:25"
 parent_id: servers
 sort_order: 30
 ---
@@ -59,6 +59,7 @@ Tag Studio save behavior:
 - offline-session staging stores full normalized series rows in browser `localStorage`, including optional historical `alias`
 - the Series Tags page can export that session as JSON or preview and apply it through the local server
 - assignment import preview and apply compares full normalized rows, including `alias`, and resolves conflicts per series via `overwrite` or `skip`
+- covered local-server save and import-apply requests append unified Studio activity rows when valid activity context is supplied
 
 Tag Registry behavior:
 
@@ -78,6 +79,7 @@ Registry import and mutation behavior:
   - `replace`
 - successful imports include `summary_text`
 - import requests may include `import_filename`; server logs basename only
+- covered import, create, edit, delete, and demote writes append unified Studio activity rows when valid activity context is supplied
 - `POST /mutate-tag`
   - `action: edit` updates canonical tag description
   - `action: delete` removes the tag
@@ -114,6 +116,7 @@ Tag Aliases behavior:
   - `merge`
   - `replace`
 - successful alias imports include `summary_text` and `import_filename` basename only
+- covered import, create, edit, delete, promote, and demote writes append unified Studio activity rows when valid activity context is supplied
 
 ## Security Constraints
 
@@ -123,6 +126,7 @@ Tag Aliases behavior:
   - `assets/studio/data/tag_assignments.json`
   - `assets/studio/data/tag_registry.json`
   - `assets/studio/data/tag_aliases.json`
+- unified activity rows are written only through fixed local feed paths owned by `scripts/studio_activity.py`
 - timestamped backups are created in `var/studio/backups/`
   - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
   - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
@@ -143,6 +147,11 @@ Backup target:
 Operational log target:
 
 - `var/studio/logs/tag_write_server.log`
+
+Unified activity targets:
+
+- `var/studio/activity/activity_log.jsonl`
+- `assets/studio/data/activity_log.json`
 
 ## Related References
 

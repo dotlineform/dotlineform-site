@@ -60,6 +60,7 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   seriesTagEditorUi
 } from "./studio-ui.js";
@@ -1682,13 +1683,22 @@ async function handleSaveInner(state) {
   if (state.saveMode === "post") {
     try {
       const results = [];
+      const activityContext = buildStudioActivityContext({
+        pageId: "series-tag-editor",
+        actionId: "save-series-tags",
+        route: "/studio/series-tag-editor/",
+        controlId: "save",
+        controlSelector: "[data-role=\"save\"]",
+        recordIdField: "series_id",
+        recordId: state.seriesId
+      });
       if (diff.seriesChanged) {
-        results.push(await postTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp));
+        results.push(await postTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp, undefined, activityContext));
       }
       for (const workId of diff.changedWorkIds) {
         const nextTags = diff.nextWorkStateById.get(workId) || [];
         const keepWork = diff.nextWorkStateById.has(workId);
-        results.push(await postTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp));
+        results.push(await postTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp, undefined, activityContext));
       }
       const lastResult = results[results.length - 1] || {};
       const savedAt = String(lastResult.updated_at_utc || utcTimestamp());
