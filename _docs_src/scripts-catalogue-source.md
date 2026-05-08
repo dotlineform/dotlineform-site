@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-source
 title: Catalogue Source Utilities
 added_date: 2026-04-18
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-08 22:35"
 parent_id: catalogue
 sort_order: 130
 ---
@@ -88,7 +88,7 @@ This module is the shared source-data helper for current JSON source records. Wo
 
 ## Source Field Ownership
 
-`scripts/catalogue_source.py` owns source field order, source normalization, and omit-empty serialization for work, work-detail, and series records.
+`scripts/catalogue_source.py` owns source field order, shared catalogue id-list and detail-uid normalization, source normalization, and omit-empty serialization for work, work-detail, and series records.
 
 The field registry at `assets/studio/data/catalogue_field_registry.json` owns build dependency planning only. It does not drive source serialization.
 

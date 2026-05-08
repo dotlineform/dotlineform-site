@@ -276,6 +276,38 @@ def slug_id(raw: Any, width: int = 5) -> str:
     return text.zfill(width)
 
 
+def normalize_series_ids_value(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        out: list[str] = []
+        seen: set[str] = set()
+        for raw in value:
+            series_id = normalize_series_id(raw)
+            if series_id in seen:
+                continue
+            seen.add(series_id)
+            out.append(series_id)
+        return out
+    return parse_series_ids(value)
+
+
+def normalize_detail_uid_value(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        raise ValueError("detail_uid is required")
+    if "-" in text:
+        raw_work_id, raw_detail_id = text.split("-", 1)
+    else:
+        digits = "".join(ch for ch in text if ch.isdigit())
+        if len(digits) != 8:
+            raise ValueError(f"invalid detail_uid: {value!r}")
+        raw_work_id, raw_detail_id = digits[:5], digits[5:]
+    work_id = slug_id(raw_work_id)
+    detail_id = slug_id(raw_detail_id, width=3)
+    return f"{work_id}-{detail_id}"
+
+
 def normalize_json_value(value: Any) -> Any:
     if value is None:
         return None

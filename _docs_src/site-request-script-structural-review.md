@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 22:17"
+last_updated: "2026-05-08 22:30"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -169,3 +169,26 @@ Risks:
 
 - context normalization for catalogue record ids now has its own local normalizers in `scripts/catalogue_activity.py`; keep behavior aligned with request extraction helpers when id formats evolve
 - `scripts/catalogue_routes.py` is intentionally small, but future endpoint additions should go there first so route dispatch and activity profiles do not drift
+
+### Slice 3: generated cleanup helpers
+
+Status: implemented.
+
+The third implementation slice extracted generated public-artifact cleanup planning from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_cleanup.py`.
+The new module owns cleanup path collection for works, work details, series, and moments; cleanup allowlist checks; generated JSON cleanup payload mutation/finalization; and the small file-deletion helper used by delete and unpublish flows.
+The write server now references those helpers as `catalogue_cleanup.*`, keeping HTTP orchestration, source writes, transaction backup timing, and response assembly in the server.
+Shared catalogue id-list and detail-uid normalization moved into `scripts/catalogue_source.py` so the cleanup module and write server use one owner for source identity normalization.
+`tests/python/test_catalogue_cleanup.py` exercises cleanup preview counts, cleanup scope rejection, and generated payload mutation directly against the extracted module.
+
+Benefits:
+
+- gives generated cleanup behavior a clear module home separate from canonical source writes and HTTP routing
+- keeps delete and unpublish response payloads stable while making cleanup path ownership explicit
+- avoids duplicating catalogue id normalization between the server and the extracted cleanup module
+- pins the cleanup allowlist and generated payload mutation behavior in a focused direct-module test
+- reduces the write server's delete/publication surface without moving transaction backup and restore behavior before that boundary is reviewed separately
+
+Risks:
+
+- delete and unpublish transactions still span the write server and cleanup module, so future transaction-helper extraction must preserve the current backup and restore ordering
+- generated JSON payload mutation now depends on `scripts/catalogue_cleanup.py`; future generated artifact schema changes should update that module and its focused test rather than adding ad hoc cleanup edits in the server

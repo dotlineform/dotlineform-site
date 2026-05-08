@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d2c13bf526bc118e3d6b9e5b067bc07b",
-    "generated_at_utc": "2026-05-08T21:17:28Z",
+    "version": "blake2b-8d7991f61e59153e60f8313918f7979e",
+    "generated_at_utc": "2026-05-08T21:30:59Z",
     "count": 201
   },
   "entries": [
@@ -1755,10 +1755,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-05-08 22:10",
+      "last_updated": "2026-05-08 22:30",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-08 22:10 • Servers",
+      "display_meta": "2026-05-08 22:30 • Servers",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -1767,14 +1767,14 @@
         "server",
         "catalogue write server",
         "servers",
-        "2026-05-08 22:10",
+        "2026-05-08 22:30",
         "2026",
         "05",
         "08",
         "22",
-        "10"
+        "30"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 22:10 2026 05 08 22 10"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 22:30 2026 05 08 22 30"
     },
     {
       "id": "scripts-cloud-environments",
@@ -2642,10 +2642,10 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-08 21:44",
+      "last_updated": "2026-05-08 22:30",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-08 21:44 • Site Docs",
+      "display_meta": "2026-05-08 22:30 • Site Docs",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
@@ -2655,14 +2655,14 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-08 21:44",
+        "2026-05-08 22:30",
         "2026",
         "05",
         "08",
-        "21",
-        "44"
+        "22",
+        "30"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-08 21:44 2026 05 08 21 44"
+      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-08 22:30 2026 05 08 22 30"
     },
     {
       "id": "search-ui-behaviour",
@@ -3985,10 +3985,10 @@
       "kind": "doc",
       "title": "Catalogue Source Utilities",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-source",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-08 22:35",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-08 22:35 • Catalogue",
       "search_terms": [
         "scripts-catalogue-source",
         "scripts",
@@ -3996,14 +3996,14 @@
         "source",
         "catalogue source utilities",
         "utilities",
-        "2026-05-06 20:49",
+        "2026-05-08 22:35",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "08",
+        "22",
+        "35"
       ],
-      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-08 22:35 2026 05 08 22 35"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -4760,10 +4760,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-08 22:17",
+      "last_updated": "2026-05-08 22:30",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 22:17 • Change Requests",
+      "display_meta": "2026-05-08 22:30 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4775,14 +4775,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 22:17",
+        "2026-05-08 22:30",
         "2026",
         "05",
         "08",
         "22",
-        "17"
+        "30"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 22:17 2026 05 08 22 17"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 22:30 2026 05 08 22 30"
     },
     {
       "id": "change-requests",

@@ -17,6 +17,33 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue cleanup helpers
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the third implementation slice of the script structural review by moving generated public-artifact cleanup discovery, allowlist checks, generated JSON cleanup payload mutation, and cleanup file deletion helpers out of the catalogue write server.
+The write server now calls those helpers through the explicit `catalogue_cleanup.*` namespace while keeping HTTP handlers, source writes, transaction backup timing, and response assembly in place.
+Shared catalogue id-list and detail-uid normalization now lives in `scripts/catalogue_source.py` so the extraction does not duplicate request/source identity helpers.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_cleanup.py`
+- `scripts/catalogue_source.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_cleanup.py`
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+**Impact:**
+Generated cleanup behavior now has a direct module owner and focused coverage for preview counts, allowlist rejection, and generated payload mutation.
+Delete and unpublish endpoint contracts remain unchanged; transaction-helper extraction remains a later slice.
+
 ## [2026-05-08] Extracted catalogue activity helpers
 
 **Status:** implemented
