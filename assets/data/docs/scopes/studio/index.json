@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T16:58:33Z",
+  "generated_at": "2026-05-08T17:11:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -49,7 +49,7 @@
       "source_path": "site-request-studio-unified-activity-log-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log-inventory.json",
-      "content_text_length": 20893,
+      "content_text_length": 21158,
       "ui_status": "in-progress"
     },
     {
@@ -2890,7 +2890,7 @@
       "source_path": "site-request-studio-unified-activity-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log.json",
-      "content_text_length": 27430,
+      "content_text_length": 28314,
       "ui_status": "in-progress"
     },
     {
@@ -2984,7 +2984,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 57523
+      "content_text_length": 58295
     },
     {
       "scope": "studio",

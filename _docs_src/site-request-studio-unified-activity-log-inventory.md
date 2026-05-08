@@ -76,6 +76,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Batch | Status | Scope | Notes |
 |---|---|---|---|
 | Batch A: catalogue editor save paths | `done` | work save; work-detail save; series save; moment save | Single-record metadata saves now emit unified activity rows. Bulk/create/delete/publication paths stay in later batches. Moment save intentionally excludes lookup rows because it does not currently write Studio lookup payloads. |
+| Batch B0: activity action profiles | `done` | shared profile layer for covered activity actions | Keeps runtime page/action/control/endpoint/record-family ids aligned with the structured registry before adding more action types. The profile does not own mutation behavior. |
 | Batch B: catalogue create/delete/publication paths | `planned` | create, delete, publish/unpublish, durable readiness prose/media actions | Preserve initiating context through preview/confirmation flows. Log modal/write ownership findings and fix only blockers. |
 | Batch C: import/export/report/audit/utility actions | `planned` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | Cover durable writes and generated reports. Keep preview-only commands excluded unless they persist data. |
 | Batch D: old report retirement and hook cleanup | `planned` | old activity routes, feeds, hooks, navigation | Keep old pages visible while old hooks remain live; remove or redirect only after unified rows cover equivalent activity. |

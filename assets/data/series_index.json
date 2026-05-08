@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-17b441ac637a20616f1ea23a5ccbfdaa",
-    "generated_at_utc": "2026-04-29T10:59:58Z",
+    "version": "blake2b-614d3e82a2de8108682a33fe7e57d37a",
+    "generated_at_utc": "2026-05-08T17:05:42Z",
     "count": 139
   },
   "series": {
@@ -17,6 +17,7 @@
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00635",
+      "notes": "test",
       "project_folders": [
         "10000"
       ],

@@ -17,6 +17,27 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Added Studio activity action profiles
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Added a thin server-side action-profile layer for catalogue activity logging before expanding into create, delete, and publication actions.
+
+**Files changed:**
+
+- `scripts/studio/catalogue_write_server.py`
+- `tests/python/test_catalogue_activity_context.py`
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The Batch A save paths now share profile-driven context normalization and build-row mapping while keeping source writes, lookup refreshes, builds, and future cleanup decisions in the owning handlers.
+Tests compare the runtime profiles with the visible activity contract registry so later batches are less likely to drift.
+
 ## [2026-05-08] Extended Studio activity logging to catalogue editor saves
 
 **Status:** implemented

@@ -49,6 +49,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
+from dataclasses import dataclass
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -198,6 +199,83 @@ ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT = "catalogue-moment"
 ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT = "save-moment"
 ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT = "/studio/catalogue-moment/"
 ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE = "catalogueMomentSave"
+
+
+@dataclass(frozen=True)
+class ActivityActionProfile:
+    page_id: str
+    action_id: str
+    route: str
+    control_id: str
+    control_selector: str
+    endpoint: str
+    record_family: str
+    record_id_field: str
+    script_purpose_ids: tuple[str, ...]
+    published_step_label: str = ""
+    published_script_purpose_id: str = ""
+    lookup_script_purpose_id: str = "rebuild-lookups"
+
+
+ACTIVITY_PROFILE_SAVE_WORK = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+    action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK,
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
+    control_selector="#catalogueWorkSave",
+    endpoint=WORK_SAVE_PATH,
+    record_family="work",
+    record_id_field="work_id",
+    script_purpose_ids=("save-canonical-data", "rebuild-published-work-data", "rebuild-lookups", "update-search"),
+    published_step_label="Generate Work Pages",
+    published_script_purpose_id="rebuild-published-work-data",
+)
+ACTIVITY_PROFILE_SAVE_WORK_DETAIL = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
+    action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL,
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
+    control_selector="#catalogueWorkDetailSave",
+    endpoint=DETAIL_SAVE_PATH,
+    record_family="work_detail",
+    record_id_field="detail_uid",
+    script_purpose_ids=("save-canonical-data", "rebuild-published-work-data", "rebuild-lookups", "update-search"),
+    published_step_label="Generate Work Pages",
+    published_script_purpose_id="rebuild-published-work-data",
+)
+ACTIVITY_PROFILE_SAVE_SERIES = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+    action_id=ACTIVITY_CONTEXT_ACTION_SAVE_SERIES,
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
+    control_selector="#catalogueSeriesSave",
+    endpoint=SERIES_SAVE_PATH,
+    record_family="series",
+    record_id_field="series_id",
+    script_purpose_ids=("save-canonical-data", "rebuild-published-series-data", "rebuild-lookups", "update-search"),
+    published_step_label="Generate Work Pages",
+    published_script_purpose_id="rebuild-published-series-data",
+)
+ACTIVITY_PROFILE_SAVE_MOMENT = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
+    action_id=ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT,
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE,
+    control_selector="#catalogueMomentSave",
+    endpoint=MOMENT_SAVE_PATH,
+    record_family="moment",
+    record_id_field="moment_id",
+    script_purpose_ids=("save-canonical-data", "rebuild-published-moment-data", "update-search"),
+    published_step_label="Generate Moment Pages",
+    published_script_purpose_id="rebuild-published-moment-data",
+    lookup_script_purpose_id="",
+)
+ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
+    ACTIVITY_PROFILE_SAVE_WORK,
+    ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
+    ACTIVITY_PROFILE_SAVE_SERIES,
+    ACTIVITY_PROFILE_SAVE_MOMENT,
+)
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -599,6 +677,23 @@ def normalize_activity_context(
     return context
 
 
+def normalize_activity_context_for_profile(
+    raw_context: Any,
+    profile: ActivityActionProfile,
+    *,
+    record_id: str,
+) -> Dict[str, str]:
+    return normalize_activity_context(
+        raw_context,
+        page_id=profile.page_id,
+        action_id=profile.action_id,
+        route=profile.route,
+        control_id=profile.control_id,
+        record_id_field=profile.record_id_field,
+        record_id=record_id,
+    )
+
+
 def studio_activity_entry(
     activity_context: Mapping[str, str],
     *,
@@ -672,11 +767,10 @@ def catalogue_build_record_groups(build_payload: Mapping[str, Any], fallback: Ma
 
 
 def catalogue_build_activity_rows(
+    profile: ActivityActionProfile,
     activity_context: Mapping[str, str],
     build_payload: Mapping[str, Any],
     *,
-    published_step_label: str,
-    published_script_purpose_id: str,
     published_detail: str,
     search_detail: str,
     fallback_record_groups: Mapping[str, list[str]],
@@ -684,13 +778,13 @@ def catalogue_build_activity_rows(
     now_utc = activity_context_value(build_payload.get("completed_at_utc")) or utc_now()
     record_groups = catalogue_build_record_groups(build_payload, fallback_record_groups)
     rows: list[Dict[str, Any]] = []
-    if build_step_attempted(build_payload, published_step_label):
+    if profile.published_step_label and profile.published_script_purpose_id and build_step_attempted(build_payload, profile.published_step_label):
         rows.append(
             studio_activity_entry(
                 activity_context,
                 now_utc=now_utc,
-                script_purpose_id=published_script_purpose_id,
-                status=build_step_status(build_payload, published_step_label),
+                script_purpose_id=profile.published_script_purpose_id,
+                status=build_step_status(build_payload, profile.published_step_label),
                 record_groups=record_groups,
                 detail_items=[published_detail],
                 source_refs=catalogue_log_source_ref(),
@@ -3269,13 +3363,9 @@ class Handler(BaseHTTPRequestHandler):
             requested_work_id = work_update.get("work_id")
         work_id = slug_id(requested_work_id)
         extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
-        activity_context = normalize_activity_context(
+        activity_context = normalize_activity_context_for_profile(
             body.get("activity_context"),
-            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
-            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK,
-            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
-            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
-            record_id_field="work_id",
+            ACTIVITY_PROFILE_SAVE_WORK,
             record_id=work_id,
         )
 
@@ -3457,10 +3547,9 @@ class Handler(BaseHTTPRequestHandler):
                     self.server,
                     response_payload,
                     catalogue_build_activity_rows(
+                        ACTIVITY_PROFILE_SAVE_WORK,
                         activity_context,
                         build_payload,
-                        published_step_label="Generate Work Pages",
-                        published_script_purpose_id="rebuild-published-work-data",
                         published_detail=f"Updated published work JSON for {work_id}",
                         search_detail=f"Rebuilt catalogue search for work {work_id}",
                         fallback_record_groups={"works": [work_id], "series": [], "work_details": [], "moments": []},
@@ -4455,13 +4544,9 @@ class Handler(BaseHTTPRequestHandler):
         if not requested_detail_uid:
             requested_detail_uid = detail_update.get("detail_uid")
         detail_uid = normalize_detail_uid_value(requested_detail_uid)
-        activity_context = normalize_activity_context(
+        activity_context = normalize_activity_context_for_profile(
             body.get("activity_context"),
-            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
-            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL,
-            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
-            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
-            record_id_field="detail_uid",
+            ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
             record_id=detail_uid,
         )
 
@@ -4637,10 +4722,9 @@ class Handler(BaseHTTPRequestHandler):
                     self.server,
                     response_payload,
                     catalogue_build_activity_rows(
+                        ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
                         activity_context,
                         build_payload,
-                        published_step_label="Generate Work Pages",
-                        published_script_purpose_id="rebuild-published-work-data",
                         published_detail=f"Updated published parent work JSON for detail {detail_uid}",
                         search_detail=f"Rebuilt catalogue search for work detail {detail_uid}",
                         fallback_record_groups={"works": [work_id], "series": [], "work_details": [detail_uid], "moments": []},
@@ -4684,13 +4768,9 @@ class Handler(BaseHTTPRequestHandler):
         if requested_series_id is None:
             requested_series_id = series_update.get("series_id")
         series_id = normalize_series_id(requested_series_id)
-        activity_context = normalize_activity_context(
+        activity_context = normalize_activity_context_for_profile(
             body.get("activity_context"),
-            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
-            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_SERIES,
-            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
-            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
-            record_id_field="series_id",
+            ACTIVITY_PROFILE_SAVE_SERIES,
             record_id=series_id,
         )
         work_updates_request = extract_series_work_updates(body)
@@ -4916,10 +4996,9 @@ class Handler(BaseHTTPRequestHandler):
                     self.server,
                     response_payload,
                     catalogue_build_activity_rows(
+                        ACTIVITY_PROFILE_SAVE_SERIES,
                         activity_context,
                         build_payload,
-                        published_step_label="Generate Work Pages",
-                        published_script_purpose_id="rebuild-published-series-data",
                         published_detail=f"Updated published series/work JSON for series {series_id}",
                         search_detail=f"Rebuilt catalogue search for series {series_id}",
                         fallback_record_groups={"works": changed_work_ids, "series": [series_id], "work_details": [], "moments": []},
@@ -5418,13 +5497,9 @@ class Handler(BaseHTTPRequestHandler):
         if requested_moment_id is None:
             requested_moment_id = moment_update.get("moment_id")
         moment_id = normalize_moment_id_value(requested_moment_id)
-        activity_context = normalize_activity_context(
+        activity_context = normalize_activity_context_for_profile(
             body.get("activity_context"),
-            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT,
-            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE,
-            record_id_field="moment_id",
+            ACTIVITY_PROFILE_SAVE_MOMENT,
             record_id=moment_id,
         )
 
@@ -5569,10 +5644,9 @@ class Handler(BaseHTTPRequestHandler):
                     self.server,
                     response_payload,
                     catalogue_build_activity_rows(
+                        ACTIVITY_PROFILE_SAVE_MOMENT,
                         activity_context,
                         build_payload,
-                        published_step_label="Generate Moment Pages",
-                        published_script_purpose_id="rebuild-published-moment-data",
                         published_detail=f"Updated published moment JSON for {moment_id}",
                         search_detail=f"Rebuilt catalogue search for moment {moment_id}",
                         fallback_record_groups={"works": [], "series": [], "work_details": [], "moments": [moment_id]},

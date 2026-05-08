@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -51,6 +52,10 @@ def normalize(
     )
 
 
+def normalize_for_profile(raw_context, profile: server.ActivityActionProfile, record_id: str) -> dict[str, str]:
+    return server.normalize_activity_context_for_profile(raw_context, profile, record_id=record_id)
+
+
 def test_missing_context_is_optional() -> None:
     assert_equal(normalize(None), {}, "missing context")
 
@@ -97,49 +102,49 @@ def test_server_assigns_missing_correlation_id() -> None:
 
 def test_batch_a_save_contexts_are_normalized() -> None:
     scenarios = [
-        {
-            "page_id": server.ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
-            "action_id": server.ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL,
-            "route": server.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
-            "control_id": server.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
-            "record_id_field": "detail_uid",
-            "record_id": "00001-001",
-        },
-        {
-            "page_id": server.ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
-            "action_id": server.ACTIVITY_CONTEXT_ACTION_SAVE_SERIES,
-            "route": server.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
-            "control_id": server.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
-            "record_id_field": "series_id",
-            "record_id": "009",
-        },
-        {
-            "page_id": server.ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-            "action_id": server.ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT,
-            "route": server.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-            "control_id": server.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE,
-            "record_id_field": "moment_id",
-            "record_id": "studio-test",
-        },
+        (server.ACTIVITY_PROFILE_SAVE_WORK_DETAIL, "00001-001"),
+        (server.ACTIVITY_PROFILE_SAVE_SERIES, "009"),
+        (server.ACTIVITY_PROFILE_SAVE_MOMENT, "studio-test"),
     ]
-    for scenario in scenarios:
-        context = normalize(
+    for profile, record_id in scenarios:
+        context = normalize_for_profile(
             {
-                "page_id": scenario["page_id"],
-                "action_id": scenario["action_id"],
-                "route": scenario["route"],
-                "control_id": scenario["control_id"],
-                "control_selector": f"#{scenario['control_id']}",
-                scenario["record_id_field"]: scenario["record_id"],
-                "correlation_id": f"{scenario['action_id']}:abc",
+                "page_id": profile.page_id,
+                "action_id": profile.action_id,
+                "route": profile.route,
+                "control_id": profile.control_id,
+                "control_selector": profile.control_selector,
+                profile.record_id_field: record_id,
+                "correlation_id": f"{profile.action_id}:abc",
             },
-            **scenario,
+            profile,
+            record_id,
         )
-        assert_equal(context["page_id"], scenario["page_id"], f"{scenario['action_id']} page_id")
-        assert_equal(context["action_id"], scenario["action_id"], f"{scenario['action_id']} action_id")
-        assert_equal(context["route"], scenario["route"], f"{scenario['action_id']} route")
-        assert_equal(context["control_id"], scenario["control_id"], f"{scenario['action_id']} control_id")
-        assert_equal(context[scenario["record_id_field"]], scenario["record_id"], f"{scenario['action_id']} record id")
+        assert_equal(context["page_id"], profile.page_id, f"{profile.action_id} page_id")
+        assert_equal(context["action_id"], profile.action_id, f"{profile.action_id} action_id")
+        assert_equal(context["route"], profile.route, f"{profile.action_id} route")
+        assert_equal(context["control_id"], profile.control_id, f"{profile.action_id} control_id")
+        assert_equal(context[profile.record_id_field], record_id, f"{profile.action_id} record id")
+
+
+def test_activity_profiles_match_registry() -> None:
+    contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
+    pages = contract["pages"]
+    for profile in server.ACTIVITY_ACTION_PROFILES:
+        page = pages.get(profile.page_id)
+        if not isinstance(page, dict):
+            raise AssertionError(f"profile page missing from registry: {profile.page_id}")
+        action = (page.get("actions") or {}).get(profile.action_id)
+        if not isinstance(action, dict):
+            raise AssertionError(f"profile action missing from registry: {profile.action_id}")
+        assert_equal(page.get("route"), profile.route, f"{profile.action_id} route")
+        assert_equal(action.get("control_id"), profile.control_id, f"{profile.action_id} control_id")
+        assert_equal(action.get("control_selector"), profile.control_selector, f"{profile.action_id} control_selector")
+        assert_equal(action.get("endpoint"), profile.endpoint, f"{profile.action_id} endpoint")
+        assert_equal(action.get("record_family"), profile.record_family, f"{profile.action_id} record_family")
+        assert_equal(action.get("record_id_field"), profile.record_id_field, f"{profile.action_id} record_id_field")
+        purpose_ids = tuple(str(row.get("id") or "").strip() for row in action.get("script_purposes") or [])
+        assert_equal(purpose_ids, profile.script_purpose_ids, f"{profile.action_id} purpose ids")
 
 
 def test_context_must_match_expected_action_and_record() -> None:
@@ -187,6 +192,7 @@ def test_catalogue_build_activity_rows_follow_attempted_steps() -> None:
         record_id="009",
     )
     rows = server.catalogue_build_activity_rows(
+        server.ACTIVITY_PROFILE_SAVE_SERIES,
         context,
         {
             "ok": False,
@@ -197,8 +203,6 @@ def test_catalogue_build_activity_rows_follow_attempted_steps() -> None:
                 {"label": "Build Catalogue Search Index", "exit_code": 1},
             ],
         },
-        published_step_label="Generate Work Pages",
-        published_script_purpose_id="rebuild-published-series-data",
         published_detail="Updated published series/work JSON for series 009",
         search_detail="Rebuilt catalogue search for series 009",
         fallback_record_groups={"works": [], "series": ["009"], "work_details": [], "moments": []},
@@ -214,6 +218,7 @@ def main() -> None:
     test_save_work_context_is_normalized()
     test_server_assigns_missing_correlation_id()
     test_batch_a_save_contexts_are_normalized()
+    test_activity_profiles_match_registry()
     test_context_must_match_expected_action_and_record()
     test_catalogue_build_activity_rows_follow_attempted_steps()
     print("Catalogue activity context tests OK")

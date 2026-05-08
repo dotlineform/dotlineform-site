@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-5c4297c48585fb15b151392f44eadf4b",
-    "generated_at_utc": "2026-04-29T21:18:14Z",
+    "version": "blake2b-e7ff70884f01bb4eb2cedf740e3b5b55",
+    "generated_at_utc": "2026-05-08T17:05:42Z",
     "series_id": "001",
     "count": 3
   },
@@ -15,6 +15,7 @@
     "series_type": "primary",
     "year": 2009,
     "year_display": "2009",
+    "notes": "test",
     "project_folders": [
       "10000"
     ]

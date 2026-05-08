@@ -492,7 +492,23 @@ Batch A findings:
 |---|---|---|---|---|
 | `/studio/catalogue-work-detail/` `#catalogueWorkDetailSave`; `/studio/catalogue-moment/` `#catalogueMomentSave` | `save work detail`; `save moment` | The first activity-context normalizer was work-id specific and used numeric work-id normalization for every record id. | Would reject valid detail and moment activity contexts before those actions could write unified rows. | `v1-fix`: the normalizer now dispatches by record id field. |
 | `/studio/catalogue-moment/` `#catalogueMomentSave` | `save moment` | Moment metadata saves describe a lookup-style invalidation plan, but the current durable downstream work is published moment data and catalogue search, not Studio catalogue lookup payloads. | A `rebuild lookups` row for moment save would be misleading. | `v1-fix`: moment save registry and rows exclude `rebuild-lookups`; follow up later on whether the response field should be renamed away from `lookup_refresh`. |
-| catalogue save handlers | save work/detail/series/moment | The source-save, lookup-refresh, and scoped-build orchestration is similar across handlers but still spread through separate methods. | Current rows can be correct, but later batches could duplicate mistakes if each action is hand-shaped. | `follow-up`: Batch B should either extend the helper profile introduced here or create an action-profile abstraction before adding create/delete/publication coverage. |
+| catalogue save handlers | save work/detail/series/moment | The source-save, lookup-refresh, and scoped-build orchestration is similar across handlers but still spread through separate methods. | Current rows can be correct, but later batches could duplicate mistakes if each action is hand-shaped. | `done`: Batch B0 introduced a thin action-profile layer for the shared UI-action contract and downstream build row mapping. |
+
+### Batch B0: Activity Action Profiles
+
+Status: implemented.
+
+Before adding create, delete, and publication coverage, Batch B0 introduced a small server-side action-profile layer for catalogue activity logging.
+The profile records the page id, action id, route, control id, selector, endpoint, record family, record id field, declared script-purpose ids, and published-build step mapping for each covered action.
+
+The profile layer should remain narrow:
+
+- it validates and normalizes activity context
+- it keeps runtime action ids aligned with `assets/studio/data/activity_contract.json`
+- it supplies common build-row mapping for published-data and search rows
+- it does not decide whether source files are written, lookups refresh, builds run, or deletes clean artifacts
+
+Batch B should extend these profiles for create/delete/publication actions before wiring activity rows, then keep action-specific mutation logic in the existing handlers.
 
 ### Batch B: Catalogue Create, Delete, And Publication Paths
 
