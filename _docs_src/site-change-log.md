@@ -17,6 +17,28 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Consolidated moment cleanup transaction path
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the fifth implementation slice of the script structural review by consolidating the duplicated moment delete/unpublish cleanup transaction path in the catalogue write server.
+Moment index cleanup payload mutation now lives in `scripts/catalogue_cleanup.py`, while the write server keeps endpoint-specific source and generated write allowlist checks visible before any writes occur.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_cleanup.py`
+- `scripts/studio/catalogue_write_server.py`
+- `tests/python/test_catalogue_cleanup.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+**Impact:**
+Moment delete and moment unpublish now share one server-side transaction helper for metadata writes, generated moment cleanup, moments-index updates, file deletion, search rebuild, backup, and restore behavior.
+The cleanup module owns the moment index payload mutation directly, and targeted cleanup tests pin that behavior.
+
 ## [2026-05-08] Extracted catalogue cleanup helpers
 
 **Status:** implemented

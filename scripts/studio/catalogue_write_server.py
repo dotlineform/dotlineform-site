@@ -2335,42 +2335,15 @@ class Handler(BaseHTTPRequestHandler):
             return cleanup_result
 
         cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
-        catalogue_cleanup.ensure_moment_delete_cleanup_scope(self.server.repo_root, cleanup)
-        moments_index_path = (self.server.repo_root / "assets" / "data" / "moments_index.json").resolve()
-        search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
-        deleted_file_count = 0
-        search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
-        transaction_backup_root: Path | None = None
-        if not self.server.dry_run:
-            transaction_backup_root = self.server.backups_dir / f"catalogue-unpublish-moment-{transactions.backup_stamp_now()}"
-            touched_paths = transactions.unique_paths([source_path, moments_index_path, search_index_path, *cleanup["delete_paths"]])
-            transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
-            try:
-                payloads: Dict[Path, Dict[str, Any]] = {source_path: source_payload}
-                if moments_index_path.exists():
-                    moments_index_payload = load_json_file(moments_index_path)
-                    moments_map = moments_index_payload.get("moments")
-                    if not isinstance(moments_map, dict):
-                        raise ValueError("moments_index.json must include a moments object")
-                    moments_map.pop(record_id, None)
-                    payloads[moments_index_path] = catalogue_cleanup.finalize_moments_index_payload(moments_index_payload)
-                transactions.atomic_write_many(payloads, self.server.backups_dir)
-                deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup["delete_paths"])
-                search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
-            except Exception:
-                transactions.restore_transaction_paths(touched_paths, transaction_backups)
-                raise
-
-        return {
-            "deleted_files": deleted_file_count,
-            "would_delete_files": len(cleanup["delete_paths"]),
-            "moments_index_updated": bool(not self.server.dry_run and moments_index_path.exists()),
-            "would_update_moments_index": moments_index_path.exists(),
-            "catalogue_search_rebuilt": bool(not self.server.dry_run and search_rebuild.get("ok")),
-            "would_rebuild_catalogue_search": True,
-            "search_exit_code": search_rebuild.get("exit_code"),
-            "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
-        }
+        cleanup_result = self._apply_moment_delete_transaction(
+            backup_label="catalogue-unpublish-moment",
+            metadata_path=source_path,
+            metadata_payload=source_payload,
+            cleanup=cleanup,
+            moment_id=record_id,
+        )
+        cleanup_result.pop("backup_paths", None)
+        return cleanup_result
 
     def _handle_publication_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
@@ -2592,6 +2565,73 @@ class Handler(BaseHTTPRequestHandler):
             "backup_paths": backup_paths,
         }
 
+    def _apply_moment_delete_transaction(
+        self,
+        *,
+        backup_label: str,
+        metadata_path: Path,
+        metadata_payload: Dict[str, Any],
+        cleanup: Mapping[str, Any],
+        moment_id: str,
+    ) -> Dict[str, Any]:
+        catalogue_cleanup.ensure_moment_delete_cleanup_scope(self.server.repo_root, cleanup)
+        metadata_path = metadata_path.resolve()
+        moments_index_path = (self.server.repo_root / "assets" / "data" / "moments_index.json").resolve()
+        search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
+
+        # Keep these allowlists local to the write service because they are part of
+        # the endpoint write contract, not generic cleanup mechanics.
+        if metadata_path not in self.server.allowed_write_paths:
+            raise ValueError("write target not allowlisted")
+        allowed_generated_paths = {moments_index_path, search_index_path}
+        generated_payloads: Dict[Path, Dict[str, Any]] = {}
+        if not self.server.dry_run:
+            generated_payloads = catalogue_cleanup.build_moment_delete_generated_payloads(self.server.repo_root, moment_id)
+            for target_path in generated_payloads:
+                if target_path.resolve() not in allowed_generated_paths:
+                    raise ValueError("generated write target not allowlisted")
+
+        payloads: Dict[Path, Dict[str, Any]] = {
+            metadata_path: metadata_payload,
+            **generated_payloads,
+        }
+        deleted_file_count = 0
+        search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
+        transaction_backup_root: Path | None = None
+        backup_paths: list[Path] = []
+
+        if not self.server.dry_run:
+            transaction_backup_root = self.server.backups_dir / f"{backup_label}-{transactions.backup_stamp_now()}"
+            touched_paths = transactions.unique_paths(
+                [
+                    *payloads.keys(),
+                    search_index_path,
+                    *(cleanup.get("delete_paths") or []),
+                ]
+            )
+            transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
+            try:
+                backup_paths = transactions.atomic_write_many(payloads, self.server.backups_dir)
+                backup_paths.extend(transaction_backups.values())
+                deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
+                search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
+            except Exception:
+                transactions.restore_transaction_paths(touched_paths, transaction_backups)
+                raise
+
+        moments_index_will_update = moments_index_path.exists()
+        return {
+            "deleted_files": deleted_file_count,
+            "would_delete_files": len(cleanup.get("delete_paths") or []),
+            "moments_index_updated": bool(not self.server.dry_run and moments_index_will_update),
+            "would_update_moments_index": moments_index_will_update,
+            "catalogue_search_rebuilt": bool(not self.server.dry_run and search_rebuild.get("ok")),
+            "would_rebuild_catalogue_search": True,
+            "search_exit_code": search_rebuild.get("exit_code"),
+            "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
+            "backup_paths": backup_paths,
+        }
+
     def _handle_delete_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         request = extract_delete_request(body)
@@ -2732,70 +2772,24 @@ class Handler(BaseHTTPRequestHandler):
             current_record = moments_payload["moments"].get(record_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"moment_id not found: {record_id}")
-            normalized_current = normalize_moment_metadata_record(record_id, current_record)
             updated_moments = dict(moments_payload["moments"])
             del updated_moments[record_id]
             cleanup = catalogue_cleanup.collect_moment_delete_cleanup(self.server.repo_root, record_id)
-            catalogue_cleanup.ensure_moment_delete_cleanup_scope(self.server.repo_root, cleanup)
-            moments_index_path = (self.server.repo_root / "assets" / "data" / "moments_index.json").resolve()
-            search_index_path = (self.server.repo_root / "assets" / "data" / "search" / "catalogue" / "index.json").resolve()
-            allowed_generated_paths = {
-                moments_index_path,
-                search_index_path,
-            }
-            if moments_index_path not in allowed_generated_paths or search_index_path not in allowed_generated_paths:
-                raise ValueError("generated write target not allowlisted")
-            deleted_file_count = 0
-            search_rebuild: Dict[str, Any] = {"ok": True, "exit_code": 0}
-            transaction_backup_root: Path | None = None
-            if not self.server.dry_run:
-                metadata_path = self.server.moments_path.resolve()
-                if metadata_path not in self.server.allowed_write_paths:
-                    raise ValueError("write target not allowlisted")
-                transaction_backup_root = self.server.backups_dir / f"catalogue-delete-moment-{transactions.backup_stamp_now()}"
-                touched_paths = transactions.unique_paths(
-                    [
-                        metadata_path,
-                        moments_index_path,
-                        search_index_path,
-                        *cleanup["delete_paths"],
-                    ]
-                )
-                transaction_backups = transactions.backup_transaction_paths(touched_paths, transaction_backup_root, self.server.repo_root)
-                try:
-                    payloads: Dict[Path, Dict[str, Any]] = {
-                        metadata_path: moment_metadata_payload(updated_moments),
-                    }
-                    if moments_index_path.exists():
-                        moments_index_payload = load_json_file(moments_index_path)
-                        moments_map = moments_index_payload.get("moments")
-                        if not isinstance(moments_map, dict):
-                            raise ValueError("moments_index.json must include a moments object")
-                        moments_map.pop(record_id, None)
-                        payloads[moments_index_path] = catalogue_cleanup.finalize_moments_index_payload(moments_index_payload)
-                    backup_paths = transactions.atomic_write_many(payloads, self.server.backups_dir)
-                    backup_paths.extend(transaction_backups.values())
-                    deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup["delete_paths"])
-                    search_rebuild = run_catalogue_search_rebuild(self.server.repo_root, write=True)
-                except Exception:
-                    transactions.restore_transaction_paths(touched_paths, transaction_backups)
-                    raise
+            cleanup_result = self._apply_moment_delete_transaction(
+                backup_label="catalogue-delete-moment",
+                metadata_path=self.server.moments_path,
+                metadata_payload=moment_metadata_payload(updated_moments),
+                cleanup=cleanup,
+                moment_id=record_id,
+            )
+            backup_paths = cleanup_result.pop("backup_paths")
             response_payload = {
                 "ok": True,
                 "kind": kind,
                 "id": record_id,
                 "deleted": True,
                 "preview": preview,
-                "cleanup": {
-                    "deleted_files": deleted_file_count,
-                    "would_delete_files": len(cleanup["delete_paths"]),
-                    "moments_index_updated": bool(not self.server.dry_run and moments_index_path.exists()),
-                    "would_update_moments_index": moments_index_path.exists(),
-                    "catalogue_search_rebuilt": bool(not self.server.dry_run and search_rebuild.get("ok")),
-                    "would_rebuild_catalogue_search": True,
-                    "search_exit_code": search_rebuild.get("exit_code"),
-                    "backup_root": self.server.rel_path(transaction_backup_root) if transaction_backup_root else "",
-                },
+                "cleanup": cleanup_result,
             }
         if self.server.dry_run:
             response_payload["dry_run"] = True

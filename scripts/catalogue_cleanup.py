@@ -714,6 +714,21 @@ def build_catalogue_delete_generated_payloads(
     return payloads
 
 
+def build_moment_delete_generated_payloads(repo_root: Path, moment_id: str) -> Dict[Path, Dict[str, Any]]:
+    payloads: Dict[Path, Dict[str, Any]] = {}
+    moments_index_path = (repo_root / "assets" / "data" / "moments_index.json").resolve()
+    if not moments_index_path.exists():
+        return payloads
+
+    moments_index_payload = load_json_file(moments_index_path)
+    moments_map = moments_index_payload.get("moments")
+    if not isinstance(moments_map, dict):
+        raise ValueError("moments_index.json must include a moments object")
+    moments_map.pop(moment_id, None)
+    payloads[moments_index_path] = finalize_moments_index_payload(moments_index_payload)
+    return payloads
+
+
 def moment_delete_preview_cleanup(repo_root: Path, moment_id: str) -> Dict[str, Any]:
     cleanup = collect_moment_delete_cleanup(repo_root, moment_id)
     return {

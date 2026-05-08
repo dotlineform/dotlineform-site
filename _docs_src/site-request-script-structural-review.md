@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 23:05"
+last_updated: "2026-05-08 23:15"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -212,3 +212,23 @@ Risks:
 
 - delete and unpublish orchestration still spans the write server, `scripts/catalogue_cleanup.py`, and `scripts/catalogue_transactions.py`; the next slice should avoid hiding service-specific allowlist checks inside a generic helper
 - `scripts/catalogue_transactions.py` imports cleanup only for existing-path de-duplication, so future shared-service extraction should revisit whether that helper belongs in a neutral local-service module
+
+### Slice 5: moment cleanup transaction consolidation
+
+Status: implemented.
+
+The fifth implementation slice consolidated the duplicated moment delete/unpublish public-cleanup transaction path inside `scripts/studio/catalogue_write_server.py` and moved moment index cleanup payload mutation into `scripts/catalogue_cleanup.py`.
+The write server still performs the source metadata allowlist check, generated payload allowlist check, cleanup-scope check, backup timing, search rebuild call, lookup/activity orchestration, and response assembly.
+`scripts/catalogue_cleanup.py` now owns `build_moment_delete_generated_payloads(...)`, matching its existing ownership of catalogue generated JSON cleanup payload mutation.
+
+Benefits:
+
+- removes duplicated moment index mutation and backup/delete/search transaction scaffolding from the delete and unpublish branches
+- keeps the endpoint-specific allowlist checks visible in the write server instead of hiding them behind a generic transaction helper
+- keeps moment cleanup payload mutation covered directly alongside other cleanup payload tests
+- narrows the next delete/publication cleanup slice because catalogue and moment cleanup now use more similar server-side transaction shapes
+
+Risks:
+
+- the write server still owns delete/unpublish orchestration, so future slices must preserve the current source-write, generated-write, cleanup, search, lookup, activity, and response ordering
+- moment cleanup response keys are still intentionally different from catalogue cleanup response keys because existing Studio contracts distinguish `moments_index_updated` from generic generated JSON update counts
