@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Verify catalogue local-service route ownership and handler dispatch."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+STUDIO_SCRIPTS_DIR = SCRIPTS_DIR / "studio"
+for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+
+import catalogue_activity as activity  # noqa: E402
+import catalogue_routes as routes  # noqa: E402
+import catalogue_write_server  # noqa: E402
+
+
+def assert_equal(actual, expected, label: str) -> None:
+    if actual != expected:
+        raise AssertionError(f"{label}: expected {expected!r}, got {actual!r}")
+
+
+def assert_no_duplicates(values: tuple[str, ...], label: str) -> None:
+    duplicates = sorted({value for value in values if values.count(value) > 1})
+    if duplicates:
+        raise AssertionError(f"{label} contains duplicate routes: {duplicates!r}")
+
+
+def test_post_routes_are_unique() -> None:
+    assert_no_duplicates(routes.POST_PATHS, "POST_PATHS")
+
+
+def test_options_routes_are_post_routes_plus_catalogue_read() -> None:
+    assert_no_duplicates(routes.OPTIONS_PATHS, "OPTIONS_PATHS")
+    assert_equal(set(routes.OPTIONS_PATHS), {*routes.POST_PATHS, routes.CATALOGUE_READ_PATH}, "OPTIONS_PATHS")
+    if routes.HEALTH_PATH in routes.OPTIONS_PATHS:
+        raise AssertionError("health route should not gain CORS preflight handling implicitly")
+
+
+def test_handler_dispatch_covers_each_post_route() -> None:
+    dispatch = catalogue_write_server.Handler.POST_HANDLERS
+    assert_equal(set(dispatch), set(routes.POST_PATHS), "POST_HANDLERS route keys")
+    for route_path, handler_name in dispatch.items():
+        handler = getattr(catalogue_write_server.Handler, handler_name, None)
+        if handler is None:
+            raise AssertionError(f"{route_path} dispatches to missing handler {handler_name!r}")
+
+
+def test_activity_profile_endpoints_are_known_post_routes() -> None:
+    unknown_endpoints = sorted(
+        {
+            profile.endpoint
+            for profile in activity.ACTIVITY_ACTION_PROFILES
+            if profile.endpoint not in routes.POST_PATHS
+        }
+    )
+    assert_equal(unknown_endpoints, [], "activity profile endpoints")
+
+
+def main() -> None:
+    test_post_routes_are_unique()
+    test_options_routes_are_post_routes_plus_catalogue_read()
+    test_handler_dispatch_covers_each_post_route()
+    test_activity_profile_endpoints_are_known_post_routes()
+    print("Catalogue route tests OK")
+
+
+if __name__ == "__main__":
+    main()

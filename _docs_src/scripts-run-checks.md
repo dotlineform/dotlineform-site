@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: "2026-05-08 22:30"
+last_updated: "2026-05-08 23:30"
 parent_id: site-docs
 sort_order: 60
 ---
@@ -41,7 +41,7 @@ Run the broad profile:
 ## Profiles
 
 - `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, catalogue cleanup, invalidation, prose-import, and transaction tests, Studio activity tests, Studio backup-retention tests, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Studio audit service script, and core lightweight test modules.
+  Runs diff whitespace checks, lightweight Python syntax checks, catalogue cleanup, invalidation, prose-import, route, and transaction tests, Studio activity tests, Studio backup-retention tests, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Studio audit service script, and core lightweight test modules.
 - `catalogue`
   Runs catalogue field-registry verification and a representative field-aware build preview.
 - `docs`

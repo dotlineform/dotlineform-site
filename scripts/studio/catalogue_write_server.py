@@ -1460,42 +1460,43 @@ class CatalogueWriteServer(ThreadingHTTPServer):
 class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
 
+    POST_HANDLERS: Mapping[str, str] = {
+        routes.WORK_CREATE_PATH: "_handle_work_create",
+        routes.BULK_SAVE_PATH: "_handle_bulk_save",
+        routes.DELETE_PREVIEW_PATH: "_handle_delete_preview",
+        routes.DELETE_APPLY_PATH: "_handle_delete_apply",
+        routes.PUBLICATION_PREVIEW_PATH: "_handle_publication_preview",
+        routes.PUBLICATION_APPLY_PATH: "_handle_publication_apply",
+        routes.WORK_SAVE_PATH: "_handle_work_save",
+        routes.DETAIL_CREATE_PATH: "_handle_work_detail_create",
+        routes.DETAIL_SAVE_PATH: "_handle_work_detail_save",
+        routes.WORK_FILE_CREATE_PATH: "_handle_work_file_create",
+        routes.WORK_FILE_SAVE_PATH: "_handle_work_file_save",
+        routes.WORK_FILE_DELETE_PATH: "_handle_work_file_delete",
+        routes.WORK_LINK_CREATE_PATH: "_handle_work_link_create",
+        routes.WORK_LINK_SAVE_PATH: "_handle_work_link_save",
+        routes.WORK_LINK_DELETE_PATH: "_handle_work_link_delete",
+        routes.IMPORT_PREVIEW_PATH: "_handle_import_preview",
+        routes.IMPORT_APPLY_PATH: "_handle_import_apply",
+        routes.SERIES_SAVE_PATH: "_handle_series_save",
+        routes.SERIES_CREATE_PATH: "_handle_series_create",
+        routes.BUILD_PREVIEW_PATH: "_handle_build_preview",
+        routes.BUILD_APPLY_PATH: "_handle_build_apply",
+        routes.PROSE_IMPORT_PREVIEW_PATH: "_handle_prose_import_preview",
+        routes.PROSE_IMPORT_APPLY_PATH: "_handle_prose_import_apply",
+        routes.MOMENT_IMPORT_PREVIEW_PATH: "_handle_moment_import_preview",
+        routes.MOMENT_IMPORT_APPLY_PATH: "_handle_moment_import_apply",
+        routes.MOMENT_PREVIEW_PATH: "_handle_moment_preview",
+        routes.MOMENT_SAVE_PATH: "_handle_moment_save",
+        routes.PROJECT_STATE_REPORT_PATH: "_handle_project_state_report",
+    }
+
     def _request_path(self) -> str:
         return urlparse(self.path).path
 
     def do_OPTIONS(self) -> None:  # noqa: N802
         request_path = self._request_path()
-        if request_path not in {
-            routes.BULK_SAVE_PATH,
-            routes.DELETE_PREVIEW_PATH,
-            routes.DELETE_APPLY_PATH,
-            routes.PUBLICATION_PREVIEW_PATH,
-            routes.PUBLICATION_APPLY_PATH,
-            routes.WORK_CREATE_PATH,
-            routes.WORK_SAVE_PATH,
-            routes.DETAIL_CREATE_PATH,
-            routes.DETAIL_SAVE_PATH,
-            routes.WORK_FILE_CREATE_PATH,
-            routes.WORK_FILE_SAVE_PATH,
-            routes.WORK_FILE_DELETE_PATH,
-            routes.WORK_LINK_CREATE_PATH,
-            routes.WORK_LINK_SAVE_PATH,
-            routes.WORK_LINK_DELETE_PATH,
-            routes.CATALOGUE_READ_PATH,
-            routes.IMPORT_PREVIEW_PATH,
-            routes.IMPORT_APPLY_PATH,
-            routes.SERIES_SAVE_PATH,
-            routes.SERIES_CREATE_PATH,
-            routes.BUILD_PREVIEW_PATH,
-            routes.BUILD_APPLY_PATH,
-            routes.PROSE_IMPORT_PREVIEW_PATH,
-            routes.PROSE_IMPORT_APPLY_PATH,
-            routes.MOMENT_IMPORT_PREVIEW_PATH,
-            routes.MOMENT_IMPORT_APPLY_PATH,
-            routes.MOMENT_PREVIEW_PATH,
-            routes.MOMENT_SAVE_PATH,
-            routes.PROJECT_STATE_REPORT_PATH,
-        }:
+        if request_path not in routes.OPTIONS_PATHS:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -1528,7 +1529,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"internal error: {exc}"}, allowed)
             return
 
-        if request_path != "/health":
+        if request_path != routes.HEALTH_PATH:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
             return
 
@@ -1555,92 +1556,13 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         request_path = self._request_path()
-        try:
-            if request_path == routes.WORK_CREATE_PATH:
-                self._handle_work_create(allowed)
-                return
-            if request_path == routes.BULK_SAVE_PATH:
-                self._handle_bulk_save(allowed)
-                return
-            if request_path == routes.DELETE_PREVIEW_PATH:
-                self._handle_delete_preview(allowed)
-                return
-            if request_path == routes.DELETE_APPLY_PATH:
-                self._handle_delete_apply(allowed)
-                return
-            if request_path == routes.PUBLICATION_PREVIEW_PATH:
-                self._handle_publication_preview(allowed)
-                return
-            if request_path == routes.PUBLICATION_APPLY_PATH:
-                self._handle_publication_apply(allowed)
-                return
-            if request_path == routes.WORK_SAVE_PATH:
-                self._handle_work_save(allowed)
-                return
-            if request_path == routes.DETAIL_CREATE_PATH:
-                self._handle_work_detail_create(allowed)
-                return
-            if request_path == routes.DETAIL_SAVE_PATH:
-                self._handle_work_detail_save(allowed)
-                return
-            if request_path == routes.WORK_FILE_CREATE_PATH:
-                self._handle_work_file_create(allowed)
-                return
-            if request_path == routes.WORK_FILE_SAVE_PATH:
-                self._handle_work_file_save(allowed)
-                return
-            if request_path == routes.WORK_FILE_DELETE_PATH:
-                self._handle_work_file_delete(allowed)
-                return
-            if request_path == routes.WORK_LINK_CREATE_PATH:
-                self._handle_work_link_create(allowed)
-                return
-            if request_path == routes.WORK_LINK_SAVE_PATH:
-                self._handle_work_link_save(allowed)
-                return
-            if request_path == routes.WORK_LINK_DELETE_PATH:
-                self._handle_work_link_delete(allowed)
-                return
-            if request_path == routes.IMPORT_PREVIEW_PATH:
-                self._handle_import_preview(allowed)
-                return
-            if request_path == routes.IMPORT_APPLY_PATH:
-                self._handle_import_apply(allowed)
-                return
-            if request_path == routes.SERIES_SAVE_PATH:
-                self._handle_series_save(allowed)
-                return
-            if request_path == routes.SERIES_CREATE_PATH:
-                self._handle_series_create(allowed)
-                return
-            if request_path == routes.BUILD_PREVIEW_PATH:
-                self._handle_build_preview(allowed)
-                return
-            if request_path == routes.BUILD_APPLY_PATH:
-                self._handle_build_apply(allowed)
-                return
-            if request_path == routes.PROSE_IMPORT_PREVIEW_PATH:
-                self._handle_prose_import_preview(allowed)
-                return
-            if request_path == routes.PROSE_IMPORT_APPLY_PATH:
-                self._handle_prose_import_apply(allowed)
-                return
-            if request_path == routes.MOMENT_IMPORT_PREVIEW_PATH:
-                self._handle_moment_import_preview(allowed)
-                return
-            if request_path == routes.MOMENT_IMPORT_APPLY_PATH:
-                self._handle_moment_import_apply(allowed)
-                return
-            if request_path == routes.MOMENT_PREVIEW_PATH:
-                self._handle_moment_preview(allowed)
-                return
-            if request_path == routes.MOMENT_SAVE_PATH:
-                self._handle_moment_save(allowed)
-                return
-            if request_path == routes.PROJECT_STATE_REPORT_PATH:
-                self._handle_project_state_report(allowed)
-                return
+        handler_name = self.POST_HANDLERS.get(request_path)
+        if handler_name is None:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
+            return
+
+        try:
+            getattr(self, handler_name)(allowed)
         except ValueError as exc:
             self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "validation"})
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)

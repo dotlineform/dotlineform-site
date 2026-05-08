@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Cleaned catalogue write-server route dispatch
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the seventh implementation slice of the script structural review by moving catalogue write-service POST and OPTIONS route inventory into `scripts/catalogue_routes.py` and replacing the write server's long POST route cascade with a single handler dispatch table.
+Endpoint URLs, request parsing, handler bodies, and response payload contracts remain unchanged.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_routes.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_routes.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+**Impact:**
+The route inventory is now direct-testable, activity profile endpoints are checked against known POST routes, and the write server keeps only the method-name dispatch table that points to its local handler methods.
+
 ## [2026-05-08] Extracted catalogue prose import helpers
 
 **Status:** implemented

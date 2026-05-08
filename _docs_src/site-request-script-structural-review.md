@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 23:15"
+last_updated: "2026-05-08 23:30"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -255,3 +255,24 @@ Risks:
 
 - prose import apply still intentionally has no backup bundle, so future changes should not accidentally make it look equivalent to source JSON transactions
 - draft moment import still writes prose before metadata as before; any later transaction-level change should be deliberate and covered by endpoint tests
+
+### Slice 7: handler route dispatch cleanup
+
+Status: implemented.
+
+The seventh implementation slice cleaned up catalogue write-server route dispatch without changing endpoint URLs or handler bodies.
+`scripts/catalogue_routes.py` now owns the route inventory for POST endpoints and CORS preflight handling through `POST_PATHS` and `OPTIONS_PATHS`.
+`scripts/studio/catalogue_write_server.py` now uses a single `Handler.POST_HANDLERS` dispatch table instead of repeating the same endpoint inventory as a long `if` cascade.
+`tests/python/test_catalogue_routes.py` pins route uniqueness, OPTIONS coverage, activity-profile endpoint coverage, and write-server POST dispatch coverage directly against the route owner and handler table.
+The focused route test is included in the `quick` run-checks profile.
+
+Benefits:
+
+- makes the route inventory reviewable in one module instead of splitting it between CORS preflight, POST dispatch, and activity profiles
+- keeps endpoint behavior stable while making missing handler coverage easier to catch
+- keeps handler orchestration in the write server rather than introducing a broader local-service framework too early
+
+Risks:
+
+- `Handler.POST_HANDLERS` still lives in the write server because it points to server-local handler methods; future endpoint additions must update both `routes.POST_PATHS` and the dispatch table
+- this slice only cleans routing structure; it does not reduce the larger endpoint method bodies or extract source-write orchestration
