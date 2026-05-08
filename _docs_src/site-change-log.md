@@ -17,6 +17,24 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Added unified Studio activity log request
+
+**Status:** proposed
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Added a change request for replacing Build Activity and Catalogue Activity with a single Studio activity log that groups script-level rows by the initiating Studio page action.
+
+**Files changed:**
+
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The request defines the desired row columns, status modal behavior, user-action correlation model, source-log coverage, and acceptance checks for a future implementation.
+
 ## [2026-05-08] Implemented R2 media upload automation
 
 **Status:** implemented

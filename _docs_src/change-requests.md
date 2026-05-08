@@ -33,6 +33,7 @@ Those still belong in the owning reference docs and change logs.
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
 - [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
 - [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
 - [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)

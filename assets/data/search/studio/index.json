@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-78341f91f1918c1a61f4f382bc99a21e",
-    "generated_at_utc": "2026-05-08T09:52:38Z",
-    "count": 198
+    "version": "blake2b-44cae474cb69f76c984cf38fb9f1b21c",
+    "generated_at_utc": "2026-05-08T14:24:22Z",
+    "count": 199
   },
   "entries": [
     {
@@ -4662,6 +4662,34 @@
         "55"
       ],
       "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request change requests change requests 2026-05-07 19:55 2026 05 07 19 55"
+    },
+    {
+      "id": "site-request-studio-unified-activity-log",
+      "kind": "doc",
+      "title": "Studio Unified Activity Log Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
+      "last_updated": "2026-05-08",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-08 • Change Requests",
+      "search_terms": [
+        "site-request-studio-unified-activity-log",
+        "site",
+        "request",
+        "studio",
+        "unified",
+        "activity",
+        "log",
+        "studio unified activity log request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-08",
+        "2026",
+        "05",
+        "08"
+      ],
+      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request change requests change requests 2026-05-08 2026 05 08"
     },
     {
       "id": "library-export-ui",
