@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 21:44"
+last_updated: "2026-05-08 22:10"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 210
@@ -40,7 +40,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 
 | Priority | Script | Current size | Review focus | Likely extraction direction |
 |---|---:|---:|---|---|
-| 1 | `scripts/studio/catalogue_write_server.py` | 6655 lines | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | split activity helpers, request/domain planners, transaction helpers, lookup refresh helpers, and keep the HTTP handler as orchestration |
+| 1 | `scripts/studio/catalogue_write_server.py` | 5648 lines | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | split request/domain planners, transaction helpers, refresh helpers, and keep the HTTP handler as orchestration |
 | 2 | `scripts/docs/docs_management_server.py` | 3076 lines | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | separate docs source model helpers, import/apply flows, activity helpers, and handler routing |
 | 3 | `scripts/studio/tag_write_server.py` | 2972 lines | tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | separate tag domain mutations from transport and shared local-service write helpers |
 | 4 | `scripts/generate_work_pages.py` | 2891 lines | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
@@ -121,7 +121,7 @@ The first implementation slice should probably move only activity helpers or loo
 Status: implemented.
 
 The first implementation slice extracted lookup and moment-build invalidation constants, registries, and helper functions from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_invalidation.py`.
-The write server still imports and re-exports those names for existing call sites and tests, so endpoint behavior and response payloads remain unchanged.
+The write server now references those helpers through the `invalidation.*` namespace, so endpoint behavior and response payloads remain unchanged while helper ownership stays visible.
 `tests/python/test_catalogue_invalidation.py` pins representative work, detail, series, and moment invalidation outcomes directly against the extracted module.
 
 Benefits:
@@ -134,3 +134,25 @@ Risks:
 
 - the new module is still catalogue-specific, so it should not become a shared local-service utility
 - future changes must keep lookup rule ownership in `scripts/catalogue_invalidation.py` rather than reintroducing registry edits in the HTTP server
+
+### Slice 2: catalogue activity helpers
+
+Status: implemented.
+
+The second implementation slice extracted catalogue-specific Studio Activity profiles, context normalization, row builders, and response-count bookkeeping from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_activity.py`.
+It also introduced `scripts/catalogue_routes.py` as the single endpoint-path source used by both the write server and activity profiles.
+The write server now references activity helpers as `activity.*`, invalidation helpers as `invalidation.*`, and route paths as `routes.*`, so moved helper ownership stays visible instead of being re-exported through the server module.
+`tests/python/test_studio_activity_context.py` now exercises `scripts/catalogue_activity.py` and `scripts/catalogue_invalidation.py` directly.
+
+Benefits:
+
+- gives catalogue activity contracts a clear module home separate from HTTP routing and source writes
+- gives catalogue endpoint constants a single module home shared by route dispatch and activity profiles
+- makes the earlier invalidation extraction explicit at call sites through the `invalidation.*` namespace
+- keeps catalogue-specific page/action/profile knowledge out of a generic shared utility until a real shared boundary is clear
+- reduces the write server's mixed activity/build/delete helper surface without touching backup, write, or endpoint orchestration behavior
+
+Risks:
+
+- context normalization for catalogue record ids now has its own local normalizers in `scripts/catalogue_activity.py`; keep behavior aligned with request extraction helpers when id formats evolve
+- `scripts/catalogue_routes.py` is intentionally small, but future endpoint additions should go there first so route dispatch and activity profiles do not drift

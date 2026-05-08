@@ -9,11 +9,12 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-STUDIO_SCRIPTS_DIR = REPO_ROOT / "scripts" / "studio"
-if str(STUDIO_SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(STUDIO_SCRIPTS_DIR))
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_write_server as server  # noqa: E402
+import catalogue_activity as activity  # noqa: E402
+import catalogue_invalidation as invalidation_rules  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -34,14 +35,14 @@ def assert_raises_value_error(callback, expected_message: str) -> None:
 def normalize(
     raw_context,
     *,
-    page_id: str = server.ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
-    action_id: str = server.ACTIVITY_CONTEXT_ACTION_SAVE_WORK,
-    route: str = server.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
-    control_id: str = server.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
+    page_id: str = activity.ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+    action_id: str = activity.ACTIVITY_CONTEXT_ACTION_SAVE_WORK,
+    route: str = activity.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+    control_id: str = activity.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
     record_id_field: str = "work_id",
     record_id: str = "00001",
 ) -> dict[str, str]:
-    return server.normalize_activity_context(
+    return activity.normalize_activity_context(
         raw_context,
         page_id=page_id,
         action_id=action_id,
@@ -52,8 +53,8 @@ def normalize(
     )
 
 
-def normalize_for_profile(raw_context, profile: server.ActivityActionProfile, record_id: str) -> dict[str, str]:
-    return server.normalize_activity_context_for_profile(raw_context, profile, record_id=record_id)
+def normalize_for_profile(raw_context, profile: activity.ActivityActionProfile, record_id: str) -> dict[str, str]:
+    return activity.normalize_activity_context_for_profile(raw_context, profile, record_id=record_id)
 
 
 def test_missing_context_is_optional() -> None:
@@ -102,9 +103,9 @@ def test_server_assigns_missing_correlation_id() -> None:
 
 def test_batch_a_save_contexts_are_normalized() -> None:
     scenarios = [
-        (server.ACTIVITY_PROFILE_SAVE_WORK_DETAIL, "00001-001"),
-        (server.ACTIVITY_PROFILE_SAVE_SERIES, "009"),
-        (server.ACTIVITY_PROFILE_SAVE_MOMENT, "studio-test"),
+        (activity.ACTIVITY_PROFILE_SAVE_WORK_DETAIL, "00001-001"),
+        (activity.ACTIVITY_PROFILE_SAVE_SERIES, "009"),
+        (activity.ACTIVITY_PROFILE_SAVE_MOMENT, "studio-test"),
     ]
     for profile, record_id in scenarios:
         context = normalize_for_profile(
@@ -129,17 +130,17 @@ def test_batch_a_save_contexts_are_normalized() -> None:
 
 def test_batch_b_contexts_are_normalized() -> None:
     scenarios = [
-        (server.ACTIVITY_PROFILE_CREATE_WORK, "09999"),
-        (server.ACTIVITY_PROFILE_CREATE_WORK_DETAIL, "00001-099"),
-        (server.ACTIVITY_PROFILE_CREATE_SERIES, "099"),
-        (server.activity_profile_for_publication("work", "publish"), "00001"),
-        (server.activity_profile_for_publication("work_detail", "unpublish"), "00001-001"),
-        (server.activity_profile_for_publication("series", "publish"), "009"),
-        (server.activity_profile_for_publication("moment", "unpublish"), "studio-test"),
-        (server.activity_profile_for_delete("work"), "00001"),
-        (server.activity_profile_for_delete("work_detail"), "00001-001"),
-        (server.activity_profile_for_delete("series"), "009"),
-        (server.activity_profile_for_delete("moment"), "studio-test"),
+        (activity.ACTIVITY_PROFILE_CREATE_WORK, "09999"),
+        (activity.ACTIVITY_PROFILE_CREATE_WORK_DETAIL, "00001-099"),
+        (activity.ACTIVITY_PROFILE_CREATE_SERIES, "099"),
+        (activity.activity_profile_for_publication("work", "publish"), "00001"),
+        (activity.activity_profile_for_publication("work_detail", "unpublish"), "00001-001"),
+        (activity.activity_profile_for_publication("series", "publish"), "009"),
+        (activity.activity_profile_for_publication("moment", "unpublish"), "studio-test"),
+        (activity.activity_profile_for_delete("work"), "00001"),
+        (activity.activity_profile_for_delete("work_detail"), "00001-001"),
+        (activity.activity_profile_for_delete("series"), "009"),
+        (activity.activity_profile_for_delete("moment"), "studio-test"),
     ]
     for profile, record_id in scenarios:
         context = normalize_for_profile(
@@ -164,10 +165,10 @@ def test_batch_b_contexts_are_normalized() -> None:
 
 def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
     scenarios = [
-        (server.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "works"),
-        (server.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "work_details"),
-        (server.ACTIVITY_PROFILE_IMPORT_MOMENT, "studio-test"),
-        (server.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT, "project-state"),
+        (activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "works"),
+        (activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "work_details"),
+        (activity.ACTIVITY_PROFILE_IMPORT_MOMENT, "studio-test"),
+        (activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT, "project-state"),
     ]
     for profile, record_id in scenarios:
         context = normalize_for_profile(
@@ -193,7 +194,7 @@ def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
 def test_activity_profiles_match_registry() -> None:
     contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
     pages = contract["pages"]
-    for profile in server.ACTIVITY_ACTION_PROFILES:
+    for profile in activity.ACTIVITY_ACTION_PROFILES:
         page = pages.get(profile.page_id)
         if not isinstance(page, dict):
             raise AssertionError(f"profile page missing from registry: {profile.page_id}")
@@ -247,15 +248,15 @@ def test_catalogue_build_studio_activity_rows_follow_attempted_steps() -> None:
             "series_id": "009",
             "correlation_id": "save-series:009",
         },
-        page_id=server.ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
-        action_id=server.ACTIVITY_CONTEXT_ACTION_SAVE_SERIES,
-        route=server.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
-        control_id=server.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
+        page_id=activity.ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+        action_id=activity.ACTIVITY_CONTEXT_ACTION_SAVE_SERIES,
+        route=activity.ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+        control_id=activity.ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
         record_id_field="series_id",
         record_id="009",
     )
-    rows = server.catalogue_build_studio_activity_rows(
-        server.ACTIVITY_PROFILE_SAVE_SERIES,
+    rows = activity.catalogue_build_studio_activity_rows(
+        activity.ACTIVITY_PROFILE_SAVE_SERIES,
         context,
         {
             "ok": False,
@@ -277,7 +278,7 @@ def test_catalogue_build_studio_activity_rows_follow_attempted_steps() -> None:
 
 
 def test_delete_activity_rows_follow_profile_order() -> None:
-    profile = server.activity_profile_for_delete("work")
+    profile = activity.activity_profile_for_delete("work")
     context = normalize_for_profile(
         {
             "page_id": profile.page_id,
@@ -290,7 +291,7 @@ def test_delete_activity_rows_follow_profile_order() -> None:
         profile,
         "00001",
     )
-    rows = server.catalogue_delete_activity_rows(
+    rows = activity.catalogue_delete_activity_rows(
         profile,
         context,
         {
@@ -322,10 +323,10 @@ def test_moment_create_stays_out_of_batch_b_contract() -> None:
 
 def test_moment_profiles_do_not_emit_lookup_rows() -> None:
     profiles = [
-        server.ACTIVITY_PROFILE_SAVE_MOMENT,
-        server.activity_profile_for_publication("moment", "publish"),
-        server.activity_profile_for_publication("moment", "unpublish"),
-        server.activity_profile_for_delete("moment"),
+        activity.ACTIVITY_PROFILE_SAVE_MOMENT,
+        activity.activity_profile_for_publication("moment", "publish"),
+        activity.activity_profile_for_publication("moment", "unpublish"),
+        activity.activity_profile_for_delete("moment"),
     ]
     for profile in profiles:
         if "rebuild-lookups" in profile.script_purpose_ids:
@@ -334,8 +335,8 @@ def test_moment_profiles_do_not_emit_lookup_rows() -> None:
 
 
 def test_moment_build_invalidation_uses_moment_artifacts() -> None:
-    invalidation = server.moment_build_invalidation_for_fields(["title"])
-    assert_equal(invalidation["class"], server.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD, "moment invalidation class")
+    invalidation = invalidation_rules.moment_build_invalidation_for_fields(["title"])
+    assert_equal(invalidation["class"], invalidation_rules.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD, "moment invalidation class")
     assert_equal(invalidation["artifacts"], ["catalogue_search", "moment_record", "moments_index"], "moment invalidation artifacts")
 
 

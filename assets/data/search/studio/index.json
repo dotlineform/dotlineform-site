@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ab7ec8cc37aa3fa5644fb8e2004013d1",
-    "generated_at_utc": "2026-05-08T20:45:10Z",
+    "version": "blake2b-2ee52f4e83fe5fe7152b111a09b5e944",
+    "generated_at_utc": "2026-05-08T21:10:54Z",
     "count": 201
   },
   "entries": [
@@ -1755,10 +1755,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-05-08 21:44",
+      "last_updated": "2026-05-08 22:10",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-08 21:44 • Servers",
+      "display_meta": "2026-05-08 22:10 • Servers",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -1767,14 +1767,14 @@
         "server",
         "catalogue write server",
         "servers",
-        "2026-05-08 21:44",
+        "2026-05-08 22:10",
         "2026",
         "05",
         "08",
-        "21",
-        "44"
+        "22",
+        "10"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 21:44 2026 05 08 21 44"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-08 22:10 2026 05 08 22 10"
     },
     {
       "id": "scripts-cloud-environments",
@@ -2642,10 +2642,10 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-06 21:18",
+      "last_updated": "2026-05-08 21:44",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-06 21:18 • Site Docs",
+      "display_meta": "2026-05-08 21:44 • Site Docs",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
@@ -2655,14 +2655,14 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-06 21:18",
+        "2026-05-08 21:44",
         "2026",
         "05",
-        "06",
+        "08",
         "21",
-        "18"
+        "44"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-06 21:18 2026 05 06 21 18"
+      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-08 21:44 2026 05 08 21 44"
     },
     {
       "id": "search-ui-behaviour",
@@ -4760,10 +4760,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-08 21:44",
+      "last_updated": "2026-05-08 22:10",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 21:44 • Change Requests",
+      "display_meta": "2026-05-08 22:10 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4775,14 +4775,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 21:44",
+        "2026-05-08 22:10",
         "2026",
         "05",
         "08",
-        "21",
-        "44"
+        "22",
+        "10"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 21:44 2026 05 08 21 44"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-08 22:10 2026 05 08 22 10"
     },
     {
       "id": "change-requests",

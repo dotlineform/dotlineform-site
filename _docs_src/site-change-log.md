@@ -17,6 +17,31 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue activity helpers
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the second implementation slice of the script structural review by moving catalogue-specific Studio Activity profiles, context normalization, and row builders out of the catalogue write server.
+Added a small shared route-constant module so activity profiles and route dispatch no longer duplicate endpoint strings.
+Switched the write server to namespaced `activity.*`, `invalidation.*`, and `routes.*` references so extracted helpers are not re-presented as server-owned names.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_activity.py`
+- `scripts/catalogue_routes.py`
+- `scripts/studio/catalogue_write_server.py`
+- `tests/python/test_studio_activity_context.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+**Impact:**
+`scripts/catalogue_activity.py` now owns the catalogue activity contract helpers while the write server keeps endpoint orchestration and append timing.
+`scripts/catalogue_routes.py` is the single endpoint path source, and the write server now uses explicit module-qualified references instead of re-exporting moved helper names.
+The focused activity test now exercises the extracted activity and invalidation modules directly.
+
 ## [2026-05-08] Extracted catalogue invalidation rules
 
 **Status:** implemented
@@ -38,7 +63,7 @@ Completed the first implementation slice of the script structural review by movi
 
 **Impact:**
 `scripts/catalogue_invalidation.py` now owns the field-to-derived-artifact registries and pure invalidation helpers.
-The write server still imports those symbols for existing call sites, so endpoint behavior and response payloads remain stable while the module boundary becomes clearer.
+The write server now calls those helpers through the `invalidation.*` namespace, so endpoint behavior and response payloads remain stable while the module boundary becomes clearer.
 
 ## [2026-05-08] Added script structural review request
 
