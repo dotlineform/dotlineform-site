@@ -45,7 +45,6 @@ import json
 import os
 import subprocess
 import sys
-import tempfile
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -142,17 +141,15 @@ from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id  # noqa: E402
 import catalogue_activity as activity  # noqa: E402
 import catalogue_cleanup  # noqa: E402
+import catalogue_prose_import as prose_import  # noqa: E402
 import catalogue_routes as routes  # noqa: E402
 import catalogue_transactions as transactions  # noqa: E402
 
 
 BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
-CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
-CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
 STUDIO_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/activity_log.json")
 MAX_BODY_BYTES = 1024 * 1024
-MAX_PROSE_MARKDOWN_BYTES = 1024 * 1024
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -301,136 +298,6 @@ def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, st
         extra_work_ids.append(slug_id(raw))
     force = bool(body.get("force"))
     return normalized_work_id, normalized_series_id, normalized_moment_id, extra_series_ids, extra_work_ids, force
-
-
-def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, Dict[str, Any], bool]:
-    moment_file = str(body.get("moment_file") or body.get("file") or "").strip()
-    if not moment_file:
-        raise ValueError("moment_file is required")
-    metadata_value = body.get("metadata")
-    metadata: Dict[str, Any] = dict(metadata_value) if isinstance(metadata_value, Mapping) else {}
-    for key in ["title", "status", "published_date", "date", "date_display", "source_image_file", "image_file", "image_alt"]:
-        if key in body and key not in metadata:
-            metadata[key] = body.get(key)
-    metadata["status"] = "draft"
-    force = bool(body.get("force"))
-    return moment_file, metadata, force
-
-
-def normalize_prose_import_target(body: Mapping[str, Any]) -> tuple[str, str, str]:
-    target_kind = str(body.get("target_kind") or body.get("kind") or "").strip().lower()
-    if target_kind not in {"work", "series", "moment"}:
-        raise ValueError("target_kind must be work, series, or moment")
-    raw_id = body.get("target_id")
-    if raw_id is None:
-        raw_id = body.get("work_id") if target_kind == "work" else body.get("series_id") if target_kind == "series" else body.get("moment_id")
-    target_id = slug_id(raw_id) if target_kind == "work" else normalize_series_id(raw_id) if target_kind == "series" else normalize_moment_id_value(raw_id)
-    collection = "works" if target_kind == "work" else "series" if target_kind == "series" else "moments"
-    return target_kind, target_id, collection
-
-
-def ensure_direct_child(path: Path, allowed_parent: Path) -> None:
-    if path.resolve().parent != allowed_parent.resolve():
-        raise ValueError("write target is outside the allowlisted prose source root")
-
-
-def validate_prose_import_target_exists(source_dir: Path, target_kind: str, target_id: str) -> None:
-    records = records_from_json_source(source_dir)
-    if target_kind == "work" and target_id not in records.works:
-        raise ValueError(f"work_id not found: {target_id}")
-    if target_kind == "series" and target_id not in records.series:
-        raise ValueError(f"series_id not found: {target_id}")
-    if target_kind == "moment":
-        moments = load_moment_metadata_records(source_dir)
-        if target_id not in moments:
-            raise ValueError(f"moment_id not found: {target_id}")
-
-
-def read_staged_prose_markdown(staging_path: Path) -> tuple[str, list[str], list[str]]:
-    errors: list[str] = []
-    warnings: list[str] = []
-    if not staging_path.exists():
-        return "", [f"Missing staged Markdown file: {staging_path.name}"], warnings
-    if not staging_path.is_file():
-        return "", [f"Staged Markdown path is not a file: {staging_path.name}"], warnings
-    try:
-        size = staging_path.stat().st_size
-    except OSError as exc:
-        return "", [f"Could not stat staged Markdown file: {exc}"], warnings
-    if size > MAX_PROSE_MARKDOWN_BYTES:
-        errors.append(f"Staged Markdown file is larger than {MAX_PROSE_MARKDOWN_BYTES} bytes.")
-    try:
-        text = staging_path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        return "", ["Staged Markdown file must be UTF-8 text."], warnings
-    except OSError as exc:
-        return "", [f"Could not read staged Markdown file: {exc}"], warnings
-    if "\x00" in text:
-        errors.append("Staged Markdown file contains a null byte.")
-    if not text.strip():
-        warnings.append("Staged Markdown file is blank; importing it will publish blank optional prose after the generator lookup is updated.")
-    return text, errors, warnings
-
-
-def build_prose_import_preview(
-    repo_root: Path,
-    source_dir: Path,
-    body: Mapping[str, Any],
-) -> Dict[str, Any]:
-    target_kind, target_id, collection = normalize_prose_import_target(body)
-    validate_prose_import_target_exists(source_dir, target_kind, target_id)
-    staging_path = repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / collection / f"{target_id}.md"
-    target_path = repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / collection / f"{target_id}.md"
-    text, errors, warnings = read_staged_prose_markdown(staging_path)
-    target_exists = target_path.exists()
-    target_text = ""
-    if target_exists:
-        try:
-            target_text = target_path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, OSError):
-            warnings.append("Existing permanent prose file could not be read for content comparison.")
-    content_hash = hashlib.sha256(text.encode("utf-8")).hexdigest() if not errors else ""
-    target_hash = hashlib.sha256(target_text.encode("utf-8")).hexdigest() if target_text else ""
-    changed = not target_exists or text != target_text
-    return {
-        "ok": True,
-        "valid": not errors,
-        "target_kind": target_kind,
-        "target_id": target_id,
-        "staging_path": str((CATALOGUE_PROSE_STAGING_REL_DIR / collection / f"{target_id}.md")).replace(os.sep, "/"),
-        "target_path": str((CATALOGUE_PROSE_SOURCE_REL_DIR / collection / f"{target_id}.md")).replace(os.sep, "/"),
-        "staging_exists": staging_path.exists(),
-        "target_exists": target_exists,
-        "overwrite_required": bool(target_exists and changed),
-        "changed": changed,
-        "byte_count": len(text.encode("utf-8")) if not errors else 0,
-        "line_count": len(text.splitlines()) if not errors else 0,
-        "content_sha256": content_hash,
-        "target_sha256": target_hash,
-        "errors": errors,
-        "warnings": warnings,
-    }
-
-
-def atomic_write_text_no_backup(target_path: Path, text: str) -> None:
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temp_name = tempfile.mkstemp(
-        prefix=f".{target_path.name}.",
-        suffix=".tmp",
-        dir=str(target_path.parent),
-        text=True,
-    )
-    temp_path = Path(temp_name)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
-            handle.write(text)
-        os.replace(temp_path, target_path)
-    finally:
-        if temp_path.exists():
-            try:
-                temp_path.unlink()
-            except OSError:
-                pass
 
 
 def extract_import_mode(body: Mapping[str, Any]) -> str:
@@ -4139,12 +4006,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_prose_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        preview = build_prose_import_preview(self.server.repo_root, self.server.source_dir, body)
+        preview = prose_import.build_prose_import_preview(self.server.repo_root, self.server.source_dir, body)
         self._send_json(HTTPStatus.OK, preview, allowed)
 
     def _handle_prose_import_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        preview = build_prose_import_preview(self.server.repo_root, self.server.source_dir, body)
+        preview = prose_import.build_prose_import_preview(self.server.repo_root, self.server.source_dir, body)
         if not preview.get("valid"):
             errors = preview.get("errors") if isinstance(preview.get("errors"), list) else []
             raise ValueError("; ".join(str(error) for error in errors) or "prose import preview failed")
@@ -4156,43 +4023,38 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
 
-        target_kind, target_id, collection = normalize_prose_import_target(body)
-        staging_path = self.server.repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / collection / f"{target_id}.md"
-        target_path = self.server.repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / collection / f"{target_id}.md"
-        target_root = (self.server.repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / collection).resolve()
-        if target_root not in self.server.allowed_write_roots:
-            raise ValueError("prose source root is not allowlisted")
-        ensure_direct_child(target_path, target_root)
-        text, errors, _warnings = read_staged_prose_markdown(staging_path)
-        if errors:
-            raise ValueError("; ".join(errors))
-
-        changed = bool(preview.get("changed"))
-        if changed and not self.server.dry_run:
-            atomic_write_text_no_backup(target_path, text)
+        result = prose_import.apply_prose_import(
+            self.server.repo_root,
+            self.server.source_dir,
+            body,
+            allowed_write_roots=self.server.allowed_write_roots,
+            dry_run=self.server.dry_run,
+            preview=preview,
+        )
+        target = result.target
 
         response_payload: Dict[str, Any] = {
             "ok": True,
-            "target_kind": target_kind,
-            "target_id": target_id,
-            "changed": changed,
-            "staging_path": preview.get("staging_path"),
-            "target_path": preview.get("target_path"),
-            "target_exists": preview.get("target_exists"),
-            "content_sha256": preview.get("content_sha256"),
-            "warnings": preview.get("warnings", []),
+            "target_kind": target.target_kind,
+            "target_id": target.target_id,
+            "changed": result.changed,
+            "staging_path": result.preview.get("staging_path"),
+            "target_path": result.preview.get("target_path"),
+            "target_exists": result.preview.get("target_exists"),
+            "content_sha256": result.preview.get("content_sha256"),
+            "warnings": result.preview.get("warnings", []),
         }
         if self.server.dry_run:
             response_payload["dry_run"] = True
-            response_payload["would_write"] = changed
-        elif changed:
+            response_payload["would_write"] = result.changed
+        elif result.changed:
             response_payload["imported_at_utc"] = activity.utc_now()
         self.server.log_event(
             "catalogue_prose_import_apply",
             {
-                "target_kind": target_kind,
-                "target_id": target_id,
-                "changed": changed,
+                "target_kind": target.target_kind,
+                "target_id": target.target_id,
+                "changed": result.changed,
                 "dry_run": self.server.dry_run,
             },
         )
@@ -4200,78 +4062,44 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_moment_import_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        moment_file, metadata, _force = extract_moment_import_request(body)
-        preview = preview_moment_source(self.server.repo_root, moment_file, metadata=metadata, staged=True)
-        payload: Dict[str, Any] = {
-            "ok": True,
-            "moment_file": preview.get("moment_file") or moment_file,
-            "preview": preview,
-            "build": {},
-            "steps": [],
-            "published": False,
-        }
-        self._send_json(HTTPStatus.OK, payload, allowed)
+        self._send_json(HTTPStatus.OK, prose_import.build_moment_import_preview(self.server.repo_root, body), allowed)
 
     def _handle_moment_import_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        moment_file, metadata, _force = extract_moment_import_request(body)
-        preview = preview_moment_source(self.server.repo_root, moment_file, metadata=metadata, staged=True)
-        if not preview.get("valid"):
-            errors = preview.get("errors") or []
-            raise ValueError("; ".join(str(error) for error in errors) or "moment import preview failed")
-
-        moment_filename = normalize_moment_filename(moment_file)
-        moment_id_for_write = moment_filename[:-3]
-        staging_path = self.server.repo_root / CATALOGUE_PROSE_STAGING_REL_DIR / "moments" / moment_filename
-        target_path = self.server.repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR / moment_filename
-        target_root = (self.server.repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve()
-        if target_root not in self.server.allowed_write_roots:
-            raise ValueError("moment prose source root is not allowlisted")
-        ensure_direct_child(target_path, target_root)
-        text = staging_path.read_text(encoding="utf-8")
-        if not text.endswith("\n"):
-            text += "\n"
-
-        metadata_records = load_moment_metadata_records(self.server.source_dir)
-        merged_metadata = normalize_moment_metadata_record(
-            moment_id_for_write,
-            {**metadata_records.get(moment_id_for_write, {}), **metadata, "moment_id": moment_id_for_write},
+        result = prose_import.apply_moment_import(
+            self.server.repo_root,
+            self.server.source_dir,
+            body,
+            allowed_write_roots=self.server.allowed_write_roots,
+            backups_dir=self.server.backups_dir,
+            dry_run=self.server.dry_run,
         )
-        metadata_records[moment_id_for_write] = merged_metadata
-        metadata_path = self.server.source_dir / MOMENT_METADATA_FILENAME
-        target_payloads: Dict[Path, Dict[str, Any]] = {
-            metadata_path: moment_metadata_payload(metadata_records),
-        }
-        moment_id = str(preview.get("moment_id") or moment_id_for_write).strip().lower()
+        moment_id = result.moment_id
         activity_context = activity.normalize_activity_context_for_profile(
             body.get("activity_context"),
             activity.ACTIVITY_PROFILE_IMPORT_MOMENT,
             record_id=moment_id,
         )
-        backup_paths: list[Path] = []
-        if not self.server.dry_run:
-            atomic_write_text_no_backup(target_path, text)
-            backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
 
         payload: Dict[str, Any] = {
             "ok": True,
-            "moment_file": preview.get("moment_file") or moment_file,
+            "moment_file": result.moment_file,
             "moment_id": moment_id,
             "status": "draft",
             "published": False,
-            "preview": preview,
+            "preview": result.preview,
             "build": {},
             "steps": [],
             "public_url": "",
-            "metadata_path": str(preview.get("metadata_path") or ""),
-            "target_path": str(preview.get("target_path") or ""),
+            "metadata_path": str(result.preview.get("metadata_path") or ""),
+            "target_path": str(result.preview.get("target_path") or ""),
         }
         if activity_context:
             payload["activity_context"] = activity_context
         if self.server.dry_run:
             payload["dry_run"] = True
-        if backup_paths:
-            payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        if result.backup_paths:
+            payload["backups"] = [self.server.rel_path(path) for path in result.backup_paths]
         if not self.server.dry_run:
             payload["completed_at_utc"] = activity.utc_now()
             if activity_context:
@@ -4287,7 +4115,7 @@ class Handler(BaseHTTPRequestHandler):
                             record_groups=activity.activity_record_groups(moments=[moment_id]),
                             detail_items=[
                                 f"Imported draft moment source {moment_id}",
-                                f"Wrote body-only moment prose to {self.server.rel_path(target_path)}",
+                                f"Wrote body-only moment prose to {self.server.rel_path(result.target_path)}",
                                 f"Saved canonical moment metadata for {moment_id}",
                             ],
                             source_refs=activity.catalogue_log_source_ref(),
@@ -4733,8 +4561,8 @@ def main() -> None:
     }
     allowed_paths.add((source_dir / MOMENT_METADATA_FILENAME).resolve())
     allowed_write_roots = {
-        (repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
-        (repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
+        (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
+        (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
         (repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
     }
 

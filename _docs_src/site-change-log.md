@@ -17,6 +17,33 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue prose import helpers
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the sixth implementation slice of the script structural review by moving staged prose import and draft moment source import helpers out of the catalogue write server.
+`scripts/catalogue_prose_import.py` now owns prose import target normalization, staged Markdown validation, preview payloads, no-backup prose writes, and draft moment import metadata/prose application.
+The write server keeps endpoint conflict handling, allowlist set ownership, local logging, moment-import Studio Activity append timing, and response assembly.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_prose_import.py`
+- `scripts/catalogue_transactions.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_prose_import.py`
+- `tests/python/test_catalogue_transactions.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+**Impact:**
+Staged prose preview/apply behavior and draft moment import application now have focused direct-module coverage.
+The endpoint payloads remain server-assembled, and no-backup prose writes now use the same transaction helper module that owns other catalogue write mechanics.
+
 ## [2026-05-08] Consolidated moment cleanup transaction path
 
 **Status:** implemented

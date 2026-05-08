@@ -59,7 +59,8 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `scripts/catalogue_activity.py` owns catalogue-specific Studio Activity profiles, activity context normalization, activity row construction, and activity response-count bookkeeping.
 - `scripts/catalogue_cleanup.py` owns generated public-artifact cleanup discovery, cleanup-scope allowlist checks, generated JSON cleanup payload mutation including moment index cleanup, and cleanup file deletion helpers used by delete and unpublish flows.
 - `scripts/catalogue_invalidation.py` owns catalogue lookup invalidation and moment-build invalidation constants, registries, and pure field-to-artifact helper functions.
-- `scripts/catalogue_transactions.py` owns timestamped backup names, transaction backup copying, best-effort restore behavior, path de-duplication for transaction paths, and atomic multi-file JSON writes with rollback.
+- `scripts/catalogue_prose_import.py` owns staged catalogue prose import target normalization, Markdown validation, preview payloads, and draft moment source import application helpers.
+- `scripts/catalogue_transactions.py` owns timestamped backup names, transaction backup copying, best-effort restore behavior, path de-duplication for transaction paths, atomic multi-file JSON writes with rollback, and the no-backup atomic text write primitive used by prose imports.
 - `scripts/catalogue_lookup.py` owns construction and writing of derived Studio catalogue lookup payloads.
 - `scripts/catalogue_json_build.py` owns scoped public catalogue build planning and execution used by publication and build endpoints.
 
@@ -272,13 +273,23 @@ or:
 }
 ```
 
+or:
+
+```json
+{
+  "target_kind": "moment",
+  "moment_id": "keys"
+}
+```
+
 Request behavior:
 
-- `target_kind` must be `work` or `series`
-- work ids normalize to five digits and series ids normalize to three digits
-- the target work or series must exist in the canonical catalogue source JSON
+- `target_kind` must be `work`, `series`, or `moment`
+- work ids normalize to five digits, series ids normalize to three digits, and moment ids normalize through slug-safe moment filename rules
+- the target work, series, or moment must exist in the canonical catalogue source JSON
 - work prose is staged at `var/docs/catalogue/import-staging/works/<work_id>.md`
 - series prose is staged at `var/docs/catalogue/import-staging/series/<series_id>.md`
+- moment prose is staged at `var/docs/catalogue/import-staging/moments/<moment_id>.md`
 - the preview validates UTF-8 Markdown
 - the preview reports whether the permanent target already exists and whether overwrite confirmation is required
 
@@ -295,9 +306,10 @@ Apply behavior:
 - re-runs the same preview validation before writing
 - writes work prose to `_docs_src_catalogue/works/<work_id>.md`
 - writes series prose to `_docs_src_catalogue/series/<series_id>.md`
+- writes moment prose to `_docs_src_catalogue/moments/<moment_id>.md`
 - refuses to overwrite different existing permanent prose content unless `confirm_overwrite` is true
 - intentionally does not create backup files for this prose import flow
-- records Studio Activity when a non-dry-run import writes changed prose
+- logs a local catalogue event when a non-dry-run import writes changed prose
 
 ## Scoped Build Media
 

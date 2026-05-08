@@ -107,3 +107,24 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir:
                     pass
 
     return list(backups.values())
+
+
+def atomic_write_text_no_backup(target_path: Path, text: str) -> None:
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(
+        prefix=f".{target_path.name}.",
+        suffix=".tmp",
+        dir=str(target_path.parent),
+        text=True,
+    )
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
+            handle.write(text)
+        os.replace(temp_path, target_path)
+    finally:
+        if temp_path.exists():
+            try:
+                temp_path.unlink()
+            except OSError:
+                pass

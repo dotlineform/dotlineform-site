@@ -232,3 +232,26 @@ Risks:
 
 - the write server still owns delete/unpublish orchestration, so future slices must preserve the current source-write, generated-write, cleanup, search, lookup, activity, and response ordering
 - moment cleanup response keys are still intentionally different from catalogue cleanup response keys because existing Studio contracts distinguish `moments_index_updated` from generic generated JSON update counts
+
+### Slice 6: catalogue prose import helpers
+
+Status: implemented.
+
+The sixth implementation slice extracted staged catalogue prose import and draft moment source import helpers from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_prose_import.py`.
+The new module owns prose import target normalization, staged Markdown validation, preview payload construction, no-backup prose writes, and the draft moment import metadata/prose apply helper.
+The write server still owns endpoint conflict responses, endpoint-specific allowlist sets, local log events, Studio Activity append timing for moment imports, and response payload assembly.
+The no-backup atomic text write primitive moved into `scripts/catalogue_transactions.py` so write mechanics have one module owner.
+`tests/python/test_catalogue_prose_import.py` pins staged prose preview/apply behavior, allowlist rejection, and draft moment metadata/prose application directly against the extracted module.
+The new focused prose-import and transaction tests are included in the `quick` run-checks profile.
+
+Benefits:
+
+- gives staged catalogue prose imports a direct-testable module home separate from HTTP handlers
+- keeps moment import application behavior explicit without moving Studio Activity response assembly out of the write server
+- keeps no-backup text writes owned by the transaction helper module instead of the HTTP server
+- documents that the shared prose import endpoint also handles existing moment prose imports, not only work and series prose
+
+Risks:
+
+- prose import apply still intentionally has no backup bundle, so future changes should not accidentally make it look equivalent to source JSON transactions
+- draft moment import still writes prose before metadata as before; any later transaction-level change should be deliberate and covered by endpoint tests

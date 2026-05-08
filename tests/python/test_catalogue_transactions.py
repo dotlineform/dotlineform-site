@@ -91,8 +91,20 @@ def test_atomic_write_many_rolls_back_replaced_files_on_failure() -> None:
         assert not list(root.glob("*.tmp"))
 
 
+def test_atomic_write_text_no_backup_replaces_text_without_backup() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        target = root / "source/prose.md"
+
+        transactions.atomic_write_text_no_backup(target, "new prose\n")
+
+        assert target.read_text(encoding="utf-8") == "new prose\n"
+        assert not list(target.parent.glob("*.tmp"))
+
+
 if __name__ == "__main__":
     test_transaction_backups_preserve_repo_and_external_layout()
     test_restore_transaction_paths_restores_backups_and_removes_created_files()
     test_atomic_write_many_rolls_back_replaced_files_on_failure()
+    test_atomic_write_text_no_backup_replaces_text_without_backup()
     print("catalogue transaction tests passed")
