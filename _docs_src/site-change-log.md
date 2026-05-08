@@ -17,6 +17,25 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Closed Studio unified activity request
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting / docs
+
+**Summary:**
+Closed the unified Studio activity log request and inventory after Batch D cleanup, and moved remaining optional expansion work into a separate follow-up request.
+
+**Files changed/docs:**
+
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups)
+
+**Impact:**
+The original request now reads as a completed implementation record.
+Bulk-save activity, readiness prose/media rows, background watcher attribution, terminal-script context, future writable review surfaces, R2 Studio-triggered media activity, and the `lookup_refresh` naming cleanup are tracked outside the closed request.
+
 ## [2026-05-08] Retired split Studio activity reports
 
 **Status:** implemented

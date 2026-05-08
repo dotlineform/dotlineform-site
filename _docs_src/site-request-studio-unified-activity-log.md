@@ -2,8 +2,8 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 17:40"
-ui_status: in-progress
+last_updated: "2026-05-08 20:20"
+ui_status: done
 parent_id: change-requests
 sort_order: 208
 viewable: true
@@ -12,14 +12,23 @@ viewable: true
 
 Status:
 
-- proposed
+- implemented
+- closed
 
 ## Summary
 
-Replace the separate Studio activity report pages with one unified activity log that explains Studio work from the curator's point of view.
+Replaced the separate Studio activity report pages with one unified activity log that explains Studio work from the curator's point of view.
 
-The new surface should show a row for each distinct script-level activity, while making clear which single Studio page button click initiated it.
+The implemented surface shows a row for each distinct script-level activity, while making clear which single Studio page button click initiated it.
 For example, one `Save` click on `/studio/catalogue-work/` could produce separate rows for source save, published-data rebuild, lookup refresh, and search rebuild, all grouped by the same initiating action label such as `save work`.
+
+## Closeout
+
+The unified `/studio/activity/` surface is implemented, covered by the activity contract registry, and is now the only active Studio activity report.
+The former split report routes, feed readers, feed writer modules, read keys, config entries, and generated feed artifacts were removed rather than redirected.
+
+The completed coverage inventory remains in [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory).
+Remaining optional expansion work has moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups).
 
 ## Current Inputs
 
@@ -44,11 +53,12 @@ The page should still give immediate feedback in the workflow where the user cli
 The log gives those same kinds of messages a persistent home so the user can review what happened later and connect related downstream script actions.
 
 The page and action coverage checklist lives in [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory).
-That inventory should be updated alongside the structured activity contract registry as implementation expands.
+That inventory records the closed milestone.
+Future activity coverage should be tracked in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups) and update the structured activity contract registry when implemented.
 
 ## Problem
 
-The current activity reporting has three practical gaps:
+This request addressed three practical gaps:
 
 - it is difficult to tell what user action caused a script action
 - it is difficult to see which records changed across canonical source data, published runtime data, lookup data, and search data
@@ -59,9 +69,9 @@ The important question is "what happened after I clicked this button, and did ea
 
 ## Goals
 
-Build a single activity log that:
+Implemented a single activity log that:
 
-- replaces `/studio/activity/` and `/studio/activity/` as the primary Studio activity report surface
+- replaces the former split report pages as the primary Studio activity report surface
 - includes activity from catalogue editors, catalogue import/export flows, docs import, and other Studio pages that perform writes or build actions
 - records the initiating Studio page and user action for every row
 - records one row for each distinct downstream action, such as saving canonical data, saving published data, rebuilding lookups, updating search, deleting media, or importing docs
@@ -81,16 +91,16 @@ The first implementation should not:
 - expose secrets, credentials, local absolute paths, or full payload dumps
 - include server-generated background activity that is not yet correlated to a Studio page action
 
-## Proposed Route
+## Implemented Route
 
-Preferred route:
+Route:
 
 - `/studio/activity/`
 
 Retirement behavior:
 
-- `/studio/activity/` and `/studio/activity/` should no longer be the primary report pages
-- they may redirect to `/studio/activity/`, show a deprecation notice, or be removed from Studio navigation after the unified page is stable
+- the former split report pages were removed from active routes and Studio navigation
+- no redirects were kept
 
 ## Activity Row Model
 
@@ -257,7 +267,7 @@ Activity log messages are a persistent summary of the same action and its downst
 
 ## Source Coverage
 
-The unified log should cover at least:
+Implemented closeout coverage includes:
 
 - catalogue work, detail, series, and moment editor saves
 - catalogue creates, deletes, publish/unpublish, and save-published actions
@@ -266,12 +276,12 @@ The unified log should cover at least:
 - lookup rebuilds
 - published runtime data rebuilds
 - catalogue search rebuilds
-- local media generation and cleanup
-- R2 media publish/delete activity when triggered through Studio or attached to a Studio workflow
+- local media cleanup where covered delete/publication flows perform it
 
-Initial source coverage should exclude background server-generated activity such as docs-watcher events unless the event can be clearly correlated to a Studio page action.
-That exclusion is a first-slice boundary, not a permanent design decision.
-Docs-watcher is still often responding to user edits, so a later milestone should be able to include watcher-triggered activity once the initiating user action or source edit can be represented clearly.
+Bulk metadata saves, readiness prose/media refresh actions, R2 media publish/delete activity, and background-service attribution moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups).
+
+Background server-generated activity such as docs-watcher events remains excluded unless the event can be clearly correlated to a Studio page action or source context.
+That optional expansion now belongs in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups).
 
 ## UI Requirements
 
@@ -326,8 +336,8 @@ Confirmation flows should attribute activity to the first user command that init
 Confirmation modals should confirm the action; they should not become separate user-action rows.
 If any current modal confirmation button is the control that actually calls a write/delete script, implementation should review that flow and preserve the original command context through the modal confirmation.
 
-After `/studio/activity/` is stable, it should be the only user-facing activity feed.
-Existing log files and specialized feeds may remain as debug inputs on a case-by-case basis.
+`/studio/activity/` is now the only user-facing activity feed.
+Existing log files may remain as debug inputs on a case-by-case basis.
 Codex and developer debugging can inspect local `var/` logs directly when needed, but the Studio user should not have to choose between competing report pages.
 
 The activity contract registry should allow optional script purposes.
@@ -371,10 +381,10 @@ First implementation should prove the model with one narrow action:
 - user action label: `save work`
 - scenario: save metadata edits to a single existing work
 
-The v1 slice should not try to cover bulk save, new work creation, delete, publish/unpublish, docs import, export/import, or background watcher events.
-Those should remain later expansions after the correlation model is working for one common catalogue action.
+The v1 slice did not try to cover bulk save, new work creation, delete, publish/unpublish, docs import, export/import, or background watcher events.
+Create, delete, publication, import, export, report, audit, utility actions, and old-report retirement were completed in later batches; bulk save, readiness prose/media actions, and background watcher events moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups).
 
-The full v1 checklist and future surface-area notes are tracked in [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory).
+The full closeout inventory is tracked in [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory).
 
 ### V1 Expected Rows
 
@@ -488,7 +498,7 @@ Batch A findings:
 | Route/control | User action | Observed behavior | Activity-log impact | Handling |
 |---|---|---|---|---|
 | `/studio/catalogue-work-detail/` `#catalogueWorkDetailSave`; `/studio/catalogue-moment/` `#catalogueMomentSave` | `save work detail`; `save moment` | The first activity-context normalizer was work-id specific and used numeric work-id normalization for every record id. | Would reject valid detail and moment activity contexts before those actions could write unified rows. | `v1-fix`: the normalizer now dispatches by record id field. |
-| `/studio/catalogue-moment/` `#catalogueMomentSave` | `save moment` | Moment metadata saves describe a lookup-style invalidation plan, but the current durable downstream work is published moment data and catalogue search, not Studio catalogue lookup payloads. | A `rebuild lookups` row for moment save would be misleading. | `v1-fix`: moment save registry and rows exclude `rebuild-lookups`; follow up later on whether the response field should be renamed away from `lookup_refresh`. |
+| `/studio/catalogue-moment/` `#catalogueMomentSave` | `save moment` | Moment metadata saves describe a lookup-style invalidation plan, but the current durable downstream work is published moment data and catalogue search, not Studio catalogue lookup payloads. | A `rebuild lookups` row for moment save would be misleading. | `v1-fix`: the normalizer now excludes `rebuild-lookups`; response-field naming cleanup moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 | catalogue save handlers | save work/detail/series/moment | The source-save, lookup-refresh, and scoped-build orchestration is similar across handlers but still spread through separate methods. | Current rows can be correct, but later batches could duplicate mistakes if each action is hand-shaped. | `done`: Batch B0 introduced a thin action-profile layer for the shared UI-action contract and downstream build row mapping. |
 
 ### Batch B0: Activity Action Profiles
@@ -505,7 +515,7 @@ The profile layer should remain narrow:
 - it supplies common build-row mapping for published-data and search rows
 - it does not decide whether source files are written, lookups refresh, builds run, or deletes clean artifacts
 
-Batch B should extend these profiles for create/delete/publication actions before wiring activity rows, then keep action-specific mutation logic in the existing handlers.
+Batch B extended these profiles for create/delete/publication actions while keeping action-specific mutation logic in the existing handlers.
 
 ### Batch B: Catalogue Create, Delete, And Publication Paths
 
@@ -528,19 +538,19 @@ Tasks:
 - `done`: extend `assets/studio/data/activity_contract.json` for create work/detail/series, delete work/detail/series/moment, and publish/unpublish work/detail/series/moment
 - `done`: keep confirmation buttons as confirmation-only UI while passing the original route/control/action context to the apply endpoints
 - `done`: add contract/profile tests for Batch B actions and delete row ordering
-- `deferred`: moment import/create coverage moves to Batch C
-- `deferred`: readiness prose/media actions move to Batch C
+- `done`: moment import/create coverage moved to Batch C and was implemented as `import moment`
+- `follow-up`: readiness prose/media actions moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups)
 
 Batch B findings:
 
 | Route/control | User action | Observed behavior | Activity-log impact | Handling |
 |---|---|---|---|---|
-| `/studio/catalogue-moment/` `#catalogueMomentNew` / `#catalogueMomentImportApply` | `create moment` | The page creates new moments from staged body-only Markdown through import preview/apply, not through normal Save-in-new-mode metadata creation. | Treating it like work/detail/series create would give the wrong action boundary and endpoint. | `deferred`: record moment import/create with import actions in Batch C. |
+| `/studio/catalogue-moment/` `#catalogueMomentNew` / `#catalogueMomentImportApply` | `create moment` | The page creates new moments from staged body-only Markdown through import preview/apply, not through normal Save-in-new-mode metadata creation. | Treating it like work/detail/series create would give the wrong action boundary and endpoint. | `done`: recorded as `import moment` with import actions in Batch C. |
 | publication and delete confirmation modals | publish/unpublish/delete | The durable write happens after a modal confirmation, but the initiating route button remains the meaningful user action. | The confirm button should not become a separate page/action in the activity log. | `done`: frontend sends one activity context through preview/apply request objects; the service normalizes it at apply time. |
 
 ### Batch C: Import, Export, Report, Audit, And Utility Actions
 
-Status: in progress.
+Status: implemented.
 
 Scope:
 
@@ -565,7 +575,7 @@ Batch C progress:
 - `done`: bulk add workbook import apply now records imported source-data and lookup-refresh rows for the initiating `/studio/bulk-add-work/` Import action.
 - `done`: moment staged import apply now records imported source-data rows for the initiating `/studio/catalogue-moment/` Import action.
 - `done`: project-state report generation now records a generated-report row for the initiating `/studio/project-state/` Run action.
-- `remaining`: docs import apply, Studio data export/import apply, docs broken-links audit, Studio audits, and tag registry/alias/assignment write actions.
+- `done`: docs import apply, Studio data export/import apply, docs broken-links audit, Studio audits, and tag registry/alias/assignment write actions.
 
 Batch C findings:
 
@@ -577,17 +587,19 @@ Batch C findings:
 
 ### Batch D: Old Report Retirement And Hook Cleanup
 
+Status: implemented.
+
 Scope:
 
 - old split activity report routes
-  - old split activity feed hooks
+- old split activity feed hooks
 - old report navigation
 
 Tasks:
 
-- remove old pages rather than redirecting them
-- remove old hooks and generated feeds now that covered actions have equivalent unified activity rows
-- keep unrelated local service logs available for debugging
+- `done`: remove old pages rather than redirecting them
+- `done`: remove old hooks and generated feeds now that covered actions have equivalent unified activity rows
+- `done`: keep unrelated local service logs available for debugging
 
 ## Documentation Requirements
 

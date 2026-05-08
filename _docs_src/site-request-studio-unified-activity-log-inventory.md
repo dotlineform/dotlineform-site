@@ -2,8 +2,8 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 19:25"
-ui_status: in-progress
+last_updated: "2026-05-08 20:20"
+ui_status: done
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
 viewable: true
@@ -12,16 +12,19 @@ viewable: true
 
 Status:
 
-- initial v1 planning inventory
-- v1 implementation target selected
+- completed closeout inventory
+- v1 implementation target completed
+- Batch A complete
+- Batch B complete
 - Batch C complete
 - Batch D retirement and hook cleanup complete
 
 ## Purpose
 
-This document is the implementation inventory for [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log).
+This document is the completed implementation inventory for [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log).
 
-Use it to track which Studio pages and user actions should eventually produce structured activity rows, which script purposes should appear in the report, and which actions have been implemented.
+Use it to review which Studio pages and user actions now produce structured activity rows, which script purposes appear in the report, and which actions are excluded or retired.
+Remaining optional expansion work has moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups).
 
 The inventory should stay close to the visible Studio UI. If a page button changes label, route, id, or behavior, update this inventory and the activity contract registry together.
 
@@ -31,10 +34,7 @@ Use these status values consistently:
 
 | Status | Meaning |
 |---|---|
-| `v1-target` | In scope for the first implementation slice. |
-| `in-progress` | Partially implemented across the current batch. |
-| `planned` | Should be covered after v1 proves the contract. |
-| `future` | Worth supporting later, but not needed for the initial Studio Activity report. |
+| `follow-up` | Moved out of this closed request and into [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 | `excluded` | Not an activity-log source because it is navigation, read-only filtering, sorting, or local-only form editing. |
 | `retired` | Former report surface replaced by `/studio/activity/` and removed from active routes, config, feeds, and hooks. |
 | `done` | Implemented for the current slice. |
@@ -70,14 +70,14 @@ The script-purpose label describes each downstream operation recorded as its own
 | Generate Studio-readable activity feed | `done` | Implemented `var/studio/activity/activity_log.jsonl` plus capped `assets/studio/data/activity_log.json`; labels hydrate from the activity contract registry. |
 | Add `/studio/activity/` route | `done` | Implemented with required columns: date-time, status, page, user action, script purpose. |
 | Add status detail modal | `done` | Status buttons open a modal with stacked detail items for the selected row. |
-| Keep Work editor save messages unchanged | `v1-target` | The activity log persists the same kind of feedback; it does not replace page feedback. |
+| Keep Work editor save messages unchanged | `done` | The activity log persists the same kind of feedback; it does not replace page feedback. |
 | Remove old activity report pages after v1 coverage | `done` | Batch D removed the old split report pages, feeds, read keys, emitters, and dashboard links. |
 
 ## Batch Implementation Checklist
 
 | Batch | Status | Scope | Notes |
 |---|---|---|---|
-| Batch A: catalogue editor save paths | `done` | work save; work-detail save; series save; moment save | Single-record metadata saves now emit unified activity rows. Bulk/create/delete/publication paths stay in later batches. Moment save intentionally excludes lookup rows because it does not currently write Studio lookup payloads. |
+| Batch A: catalogue editor save paths | `done` | work save; work-detail save; series save; moment save | Single-record metadata saves now emit unified activity rows. Moment save intentionally excludes lookup rows because it does not currently write Studio lookup payloads. |
 | Batch B0: activity action profiles | `done` | shared profile layer for covered activity actions | Keeps runtime page/action/control/endpoint/record-family ids aligned with the structured registry before adding more action types. The profile does not own mutation behavior. |
 | Batch B: catalogue create/delete/publication paths | `done` | create work/detail/series; delete work/detail/series/moment; publish/unpublish work/detail/series/moment | Preserves initiating context through preview/confirmation flows. Moment import/create and readiness prose/media writes move to Batch C because their write boundaries are import/utility-shaped rather than normal create/delete/publication metadata actions. |
 | Batch C: import/export/report/audit/utility actions | `done` | bulk add apply, project-state, docs import, data export/import, audits, tag writes | Covered workbook import apply, moment import apply, project-state report generation, docs source import, data export/import apply, docs broken-links audit, Studio audits, series tag saves/imports, registry writes, and alias writes. Preview-only commands remain excluded unless they persist data. |
@@ -89,25 +89,25 @@ The script-purpose label describes each downstream operation recorded as its own
 |---|---|---|---|---|---|---|
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkSave` `Save` | `save work` | save canonical work record; rebuild published work data when applicable; rebuild catalogue lookups; update catalogue search | `done` | First implementation proves correlation for one button click and multiple downstream rows. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkSave` in new mode | `create work` | create draft canonical work record; refresh lookups | `done` | Batch B coverage. |
-| Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkSave` in bulk mode | `bulk save works` | save multiple canonical work records; rebuild affected published output; refresh lookups; update search | `planned` | Needs grouped record counts and clear modal summaries. |
+| Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkSave` in bulk mode | `bulk save works` | save multiple canonical work records; rebuild affected published output; refresh lookups; update search | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); needs grouped record counts and clear modal summaries. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkPublication` `Publish` or `Unpublish` | `publish work` / `unpublish work` | publication preview; status change in canonical work record; public artifact build or cleanup; lookup refresh; search update | `done` | Batch B coverage. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkDelete` `Delete` | `delete work` | delete preview; delete canonical work record; delete dependent detail records when applicable; clean public artifacts; refresh lookups; update search; local media cleanup when applicable | `done` | Batch B coverage. |
 | Catalogue work editor | `/studio/catalogue-work/` | `data-action="preview-build-impact"` `Preview update` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
-| Catalogue work editor | `/studio/catalogue-work/` | readiness action `data-prose-import="work"` | `import work prose` | prose import preview; prose source write; backup when overwriting | `planned` | Existing on-page result gives strong detail text for the modal. |
-| Catalogue work editor | `/studio/catalogue-work/` | readiness action `data-media-refresh="work"` | `refresh work media` | media-only build; source media checks; local derivative refresh; public thumbnail staging | `planned` | Should distinguish blocked media from successful derivative refresh. |
+| Catalogue work editor | `/studio/catalogue-work/` | readiness action `data-prose-import="work"` | `import work prose` | prose import preview; prose source write; backup when overwriting | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
+| Catalogue work editor | `/studio/catalogue-work/` | readiness action `data-media-refresh="work"` | `refresh work media` | media-only build; source media checks; local derivative refresh; public thumbnail staging | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); should distinguish blocked media from successful derivative refresh. |
 | Catalogue work editor | `/studio/catalogue-work/` | `#catalogueWorkOpen`, `#catalogueWorkNew`, file/link row buttons, series picker buttons | none | none | `excluded` | These are navigation, form-mode changes, or unsaved local form edits unless followed by Save. |
 | Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailSave` `Save` | `save work detail` | save canonical detail record; rebuild parent work output when applicable; refresh lookups; update search | `done` | Mirrors work save, but public output is parent-work scoped. |
 | Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailSave` in new mode | `create work detail` | create draft canonical detail record; refresh lookups | `done` | Batch B coverage. |
-| Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailSave` in bulk mode | `bulk save work details` | save multiple canonical detail records; rebuild parent work output for affected published details; refresh lookups; update search | `planned` | Needs parent-work grouping. |
+| Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailSave` in bulk mode | `bulk save work details` | save multiple canonical detail records; rebuild parent work output for affected published details; refresh lookups; update search | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); needs parent-work grouping. |
 | Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailPublication` | `publish work detail` / `unpublish work detail` | publication preview; status change; parent work output build or cleanup; lookup refresh; search update | `done` | Batch B coverage. |
 | Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailDelete` | `delete work detail` | delete preview; delete canonical detail; clean detail artifacts; rebuild parent work output; refresh lookups; update search; local media cleanup when applicable | `done` | Batch B coverage. |
-| Catalogue work detail editor | `/studio/catalogue-work-detail/` | readiness action `data-media-refresh="detail"` | `refresh detail media` | media-only build; detail derivative refresh; public thumbnail staging | `planned` | Should report blocked media distinctly. |
+| Catalogue work detail editor | `/studio/catalogue-work-detail/` | readiness action `data-media-refresh="detail"` | `refresh detail media` | media-only build; detail derivative refresh; public thumbnail staging | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); should report blocked media distinctly. |
 | Catalogue work detail editor | `/studio/catalogue-work-detail/` | `#catalogueWorkDetailOpen` | none | none | `excluded` | Record navigation only. |
 | Catalogue series editor | `/studio/catalogue-series/` | `#catalogueSeriesSave` `Save` | `save series` | save canonical series record; save affected work membership records; rebuild published series/work output; refresh lookups; update search | `done` | Membership edits are local until Save. |
 | Catalogue series editor | `/studio/catalogue-series/` | `#catalogueSeriesSave` in new mode | `create series` | create draft canonical series record; refresh lookups | `done` | Batch B coverage. |
 | Catalogue series editor | `/studio/catalogue-series/` | `#catalogueSeriesPublication` | `publish series` / `unpublish series` | publication preview; status change; attached draft work status changes when applicable; public artifact build or cleanup; lookup refresh; search update | `done` | Batch B coverage. |
 | Catalogue series editor | `/studio/catalogue-series/` | `#catalogueSeriesDelete` | `delete series` | delete preview; delete canonical series; update affected work membership; clean public series artifacts; refresh lookups; update search | `done` | Batch B coverage. |
-| Catalogue series editor | `/studio/catalogue-series/` | readiness action `data-prose-import="series"` | `import series prose` | prose import preview; prose source write; backup when overwriting | `planned` | Similar to work prose import. |
+| Catalogue series editor | `/studio/catalogue-series/` | readiness action `data-prose-import="series"` | `import series prose` | prose import preview; prose source write; backup when overwriting | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 | Catalogue series editor | `/studio/catalogue-series/` | member add/remove/primary buttons | none | none | `excluded` | Local form edits until series Save. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentSave` `Save` | `save moment` | save canonical moment record; rebuild public moment when applicable; update search | `done` | Moment saves do not currently write Studio catalogue lookup payloads, so Batch A does not emit a lookup row for this action. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentNew` then `#catalogueMomentSave` | `create moment` | create canonical moment record through import/apply path | `done` | Implemented as `import moment`; current creation is staged import, not Save-in-new-mode metadata creation. |
@@ -115,7 +115,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentDelete` | `delete moment` | delete preview; delete canonical moment; clean public artifacts; update search; local media cleanup when applicable | `done` | Batch B coverage. Moment delete does not currently write Studio catalogue lookup payloads. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportPreview` `Preview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Catalogue moment editor | `/studio/catalogue-moment/` | `#catalogueMomentImportApply` `Import` | `import moment` | staged moment import apply; canonical moment metadata write; body-only prose source write | `done` | The compatibility route redirects here, so coverage belongs to the editor page. |
-| Catalogue moment editor | `/studio/catalogue-moment/` | readiness prose/media actions | `import moment prose` / `refresh moment media` | prose source write or media-only build; backup or blocked-media detail as applicable | `planned` | Keep separate from metadata Save. |
+| Catalogue moment editor | `/studio/catalogue-moment/` | readiness prose/media actions | `import moment prose` / `refresh moment media` | prose source write or media-only build; backup or blocked-media detail as applicable | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); keep separate from metadata Save. |
 | Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkPreview` `Preview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Bulk add work | `/studio/bulk-add-work/` | `#bulkAddWorkApply` `Import` | `import workbook records` | create new canonical work or work-detail records; backup; refresh lookups | `done` | Active one-way import adapter from the configured workbook. |
 | Project state | `/studio/project-state/` | `#projectStateRunButton` `Run` | `run project-state report` | scan project folders; write project-state report | `done` | Local report generation records one report row with counts and the output path. |
@@ -144,7 +144,7 @@ The script-purpose label describes each downstream operation recorded as its own
 |---|---|---|---|---|---|---|
 | Series tags | `/studio/series-tags/` | import modal `preview-import` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Series tags | `/studio/series-tags/` | import modal `apply-import` | `import series tag assignments` | tag assignment import apply; tag assignment writes; backup; conflict resolution summary | `done` | Batch C coverage through the tag write service. |
-| Series tags | `/studio/series-tags/` | session modal copy/download/clear | none | none | `excluded` | Browser/session-local output controls unless later persisted by service. |
+| Series tags | `/studio/series-tags/` | session modal copy/download/clear | none | none | `excluded` | Browser/session-local output controls unless a later follow-up persists them by service. |
 | Series tag editor | `/studio/series-tag-editor/` | `data-role="add-tag"` | none | none | `excluded` | Local assignment edit until Save. |
 | Series tag editor | `/studio/series-tag-editor/` | `data-role="save"` | `save series tags` | save tag assignments; backup; generated tag assignment data update | `done` | Batch C coverage through the shared tag save flow. |
 | Tag registry | `/studio/tag-registry/` | `data-role="open-import-modal"` then import action | `import tag registry` | registry import preview/apply; registry writes; backups; validation results | `done` | Batch C coverage for import apply; patch-mode output remains excluded. |
@@ -153,14 +153,14 @@ The script-purpose label describes each downstream operation recorded as its own
 | Tag aliases | `/studio/tag-aliases/` | `data-role="open-import-modal"` then import action | `import tag aliases` | alias import preview/apply; alias writes; backups; validation results | `done` | Batch C coverage through the tag write service. |
 | Tag aliases | `/studio/tag-aliases/` | `data-role="open-new-alias"` / row edit actions | `create tag alias` / `edit tag alias` | alias mutation; alias writes; backups | `done` | Batch C coverage; affected alias keys are carried in activity details/groups. |
 | Tag aliases | `/studio/tag-aliases/` | promote/demote/delete actions | `promote tag alias` / `delete tag alias` / `demote tag` | preview/apply where applicable; alias registry writes; tag registry effects when promoting or demoting | `done` | Batch C coverage for confirmed write actions. |
-| Tag groups | `/studio/tag-groups/` | filters/sort/open controls | none | none | `excluded` | Review surface unless future group editing is added. |
+| Tag groups | `/studio/tag-groups/` | filters/sort/open controls | none | none | `excluded` | Review surface; future writable behavior belongs in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 
 ## Audit And Utility Pages
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
 | Studio audits | `/studio/audits/` | `data-run-audit="<audit_id>"` | `run studio audit` | audit service run; pass/warn/fail result; report path or summary | `done` | Batch C coverage; details include audit label, status, error/warning counts, and duration. |
-| Catalogue field registry | `/studio/catalogue-field-registry/` | review controls | none | none | `excluded` | Review/config surface unless a future write action is added. |
+| Catalogue field registry | `/studio/catalogue-field-registry/` | review controls | none | none | `excluded` | Review/config surface; future writable behavior belongs in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 | Studio dashboards | `/studio/`, `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, `/studio/search/` | dashboard links and hydration | none | none | `excluded` | Navigation and read-only metric hydration should not appear in the activity log. |
 | Docs Viewer | `/docs/` | view/search/navigation controls | none | none | `excluded` | Not a Studio write/build action. |
 
@@ -168,9 +168,9 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Source | Trigger | Expected script coverage | Status | Notes |
 |---|---|---|---|---|
-| Docs live rebuild watcher | source file changes after user editing | docs rebuild; docs search rebuild; generated payload changes | `future` | Excluded from the initial report unless it can carry meaningful source context. It is still responding to user actions, so it should be considered later. |
-| Jekyll/site serve watchers | local filesystem changes | site rebuild | `future` | Only useful if correlated to a Studio action or explicit user command. |
-| Manual terminal scripts | direct shell command | script-specific report rows | `future` | Could be supported later with explicit run context, but v1 is page-button initiated. |
+| Docs live rebuild watcher | source file changes after user editing | docs rebuild; docs search rebuild; generated payload changes | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); only useful with meaningful source context. |
+| Jekyll/site serve watchers | local filesystem changes | site rebuild | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); only useful if correlated to a Studio action or explicit user command. |
+| Manual terminal scripts | direct shell command | script-specific report rows | `follow-up` | Moved to [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups); would need explicit run context and sanitization. |
 
 ## Verification Matrix
 
