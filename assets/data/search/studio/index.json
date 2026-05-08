@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3270f6c0dbb8daed5ce3e866a0497203",
-    "generated_at_utc": "2026-05-08T20:33:43Z",
+    "version": "blake2b-efec41d086b2ed05e1dffcadf0111380",
+    "generated_at_utc": "2026-05-08T20:36:42Z",
     "count": 201
   },
   "entries": [
@@ -4704,10 +4704,10 @@
       "kind": "doc",
       "title": "Studio Activity Follow-Ups",
       "href": "/docs/?scope=studio&doc=site-request-studio-activity-follow-ups",
-      "last_updated": "2026-05-08 21:04",
+      "last_updated": "2026-05-08 21:36",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 21:04 • Change Requests",
+      "display_meta": "2026-05-08 21:36 • Change Requests",
       "search_terms": [
         "site-request-studio-activity-follow-ups",
         "site",
@@ -4720,14 +4720,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 21:04",
+        "2026-05-08 21:36",
         "2026",
         "05",
         "08",
         "21",
-        "04"
+        "36"
       ],
-      "search_text": "site-request-studio-activity-follow-ups site request studio activity follow ups studio activity follow-ups change requests change requests 2026-05-08 21:04 2026 05 08 21 04"
+      "search_text": "site-request-studio-activity-follow-ups site request studio activity follow ups studio activity follow-ups change requests change requests 2026-05-08 21:36 2026 05 08 21 36"
     },
     {
       "id": "library-export-ui",

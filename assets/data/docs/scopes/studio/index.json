@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T20:33:56Z",
+  "generated_at": "2026-05-08T20:36:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2868,7 +2868,7 @@
       "doc_id": "site-request-studio-activity-follow-ups",
       "title": "Studio Activity Follow-Ups",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 21:04",
+      "last_updated": "2026-05-08 21:36",
       "parent_id": "change-requests",
       "sort_order": 209,
       "published": true,
@@ -2876,8 +2876,8 @@
       "source_path": "site-request-studio-activity-follow-ups.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-activity-follow-ups",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-activity-follow-ups.json",
-      "content_text_length": 4403,
-      "ui_status": "proposed"
+      "content_text_length": 4406,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",

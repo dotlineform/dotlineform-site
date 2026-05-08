@@ -2,8 +2,8 @@
 doc_id: site-request-studio-activity-follow-ups
 title: Studio Activity Follow-Ups
 added_date: 2026-05-08
-last_updated: "2026-05-08 21:04"
-ui_status: proposed
+last_updated: "2026-05-08 21:36"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 209
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- proposed
+- In progress
 
 ## Summary
 
