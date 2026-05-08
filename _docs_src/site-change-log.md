@@ -17,6 +17,25 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Split catalogue write-server slice plan
+
+**Status:** documented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Moved the detailed `scripts/studio/catalogue_write_server.py` restructuring notes out of the high-level script structural review request into a dedicated child doc.
+The new slice doc records implemented Slices 1-7 and adds the foreseeable Slice 8-14 path for lookup refresh execution, save/build follow-through, source mutation planners, save/create transaction execution, delete/publication planners, delete/publication apply orchestration, and final handler cleanup.
+
+**Files changed/docs:**
+
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+The parent request stays readable as a broad structural-review brief, while the catalogue write-server work now has an explicit completion plan and risk sequence.
+
 ## [2026-05-08] Cleaned catalogue write-server route dispatch
 
 **Status:** implemented

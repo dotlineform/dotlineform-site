@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T22:06:32Z",
+  "generated_at": "2026-05-08T22:22:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -81,6 +81,21 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
       "content_text_length": 1504
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-script-structural-review-catalogue-write-server",
+      "title": "Catalogue Write Server Slices",
+      "added_date": "2026-05-08",
+      "last_updated": "2026-05-08 23:45",
+      "parent_id": "site-request-script-structural-review",
+      "sort_order": 10,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-script-structural-review-catalogue-write-server.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-write-server.json",
+      "content_text_length": 21464
     },
     {
       "scope": "studio",
@@ -2900,7 +2915,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 23:30",
+      "last_updated": "2026-05-08 23:45",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2908,7 +2923,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 19164,
+      "content_text_length": 8081,
       "ui_status": "in_progress"
     },
     {
@@ -2986,7 +3001,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 72075
+      "content_text_length": 72934
     },
     {
       "scope": "studio",
