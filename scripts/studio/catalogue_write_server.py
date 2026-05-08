@@ -1658,13 +1658,18 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
         changed = mutation_plan.changed
-        backup_paths: list[Path] = []
+        backup_response_paths: list[str] = []
         if changed:
             target_path = self.server.works_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
+            write_result = transactions.execute_source_json_write(
+                {target_path: mutation_plan.payload},
+                self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                repo_root=self.server.repo_root,
+            )
+            backup_response_paths = write_result.backups
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -1710,8 +1715,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if backup_response_paths:
+                response_payload["backups"] = backup_response_paths
 
         self.server.log_event(
             "catalogue_work_save",
@@ -1877,13 +1882,18 @@ class Handler(BaseHTTPRequestHandler):
                 updated_works[work_id] = updated_record
 
             changed = bool(changed_ids)
-            backup_paths: list[Path] = []
+            backup_response_paths: list[str] = []
             if changed:
                 target_path = self.server.works_path.resolve()
                 if target_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-                if not self.server.dry_run:
-                    backup_paths = transactions.atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
+                write_result = transactions.execute_source_json_write(
+                    {target_path: payload_for_map("works", updated_works)},
+                    self.server.backups_dir,
+                    dry_run=self.server.dry_run,
+                    repo_root=self.server.repo_root,
+                )
+                backup_response_paths = write_result.backups
 
             response_payload: Dict[str, Any] = {
                 "ok": True,
@@ -1904,8 +1914,8 @@ class Handler(BaseHTTPRequestHandler):
                 response_payload["would_write"] = changed
             elif changed:
                 response_payload["saved_at_utc"] = activity.utc_now()
-                if backup_paths:
-                    response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+                if backup_response_paths:
+                    response_payload["backups"] = backup_response_paths
 
             self.server.log_event(
                 "catalogue_bulk_save",
@@ -1963,13 +1973,18 @@ class Handler(BaseHTTPRequestHandler):
             updated_details[detail_uid] = updated_record
 
         changed = bool(changed_ids)
-        backup_paths = []
+        backup_response_paths = []
         if changed:
             target_path = self.server.work_details_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+            write_result = transactions.execute_source_json_write(
+                {target_path: payload_for_map("work_details", updated_details)},
+                self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                repo_root=self.server.repo_root,
+            )
+            backup_response_paths = write_result.backups
 
         response_payload = {
             "ok": True,
@@ -1993,8 +2008,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if backup_response_paths:
+                response_payload["backups"] = backup_response_paths
 
         self.server.log_event(
             "catalogue_bulk_save",
@@ -2646,9 +2661,12 @@ class Handler(BaseHTTPRequestHandler):
         target_path = self.server.works_path.resolve()
         if target_path not in self.server.allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        backup_paths: list[Path] = []
-        if not self.server.dry_run:
-            backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
+        write_result = transactions.execute_source_json_write(
+            {target_path: mutation_plan.payload},
+            self.server.backups_dir,
+            dry_run=self.server.dry_run,
+            repo_root=self.server.repo_root,
+        )
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -2665,8 +2683,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = True
         else:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if write_result.backups:
+                response_payload["backups"] = write_result.backups
 
         self.server.log_event(
             "catalogue_work_create",
@@ -2747,9 +2765,12 @@ class Handler(BaseHTTPRequestHandler):
         target_path = self.server.work_details_path.resolve()
         if target_path not in self.server.allowed_write_paths:
             raise ValueError("write target not allowlisted")
-        backup_paths: list[Path] = []
-        if not self.server.dry_run:
-            backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
+        write_result = transactions.execute_source_json_write(
+            {target_path: mutation_plan.payload},
+            self.server.backups_dir,
+            dry_run=self.server.dry_run,
+            repo_root=self.server.repo_root,
+        )
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -2767,8 +2788,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = True
         else:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if write_result.backups:
+                response_payload["backups"] = write_result.backups
 
         self.server.log_event(
             "catalogue_work_detail_create",
@@ -2849,13 +2870,18 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
         changed = mutation_plan.changed
-        backup_paths: list[Path] = []
+        backup_response_paths: list[str] = []
         if changed:
             target_path = self.server.work_details_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
+            write_result = transactions.execute_source_json_write(
+                {target_path: mutation_plan.payload},
+                self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                repo_root=self.server.repo_root,
+            )
+            backup_response_paths = write_result.backups
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -2897,8 +2923,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if backup_response_paths:
+                response_payload["backups"] = backup_response_paths
 
         self.server.log_event(
             "catalogue_work_detail_save",
@@ -3062,7 +3088,7 @@ class Handler(BaseHTTPRequestHandler):
 
         series_changed_fields = mutation_plan.changed_fields
         changed = mutation_plan.changed
-        backup_paths: list[Path] = []
+        backup_response_paths: list[str] = []
 
         if changed:
             target_payloads: Dict[Path, Dict[str, Any]] = {}
@@ -3073,8 +3099,13 @@ class Handler(BaseHTTPRequestHandler):
             for target_path in target_payloads:
                 if target_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-            if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
+            write_result = transactions.execute_source_json_write(
+                target_payloads,
+                self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                repo_root=self.server.repo_root,
+            )
+            backup_response_paths = write_result.backups
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3132,8 +3163,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if backup_response_paths:
+                response_payload["backups"] = backup_response_paths
 
         self.server.log_event(
             "catalogue_series_save",
@@ -3274,9 +3305,12 @@ class Handler(BaseHTTPRequestHandler):
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
 
-        backup_paths: list[Path] = []
-        if not self.server.dry_run:
-            backup_paths = transactions.atomic_write_many(target_payloads, self.server.backups_dir)
+        write_result = transactions.execute_source_json_write(
+            target_payloads,
+            self.server.backups_dir,
+            dry_run=self.server.dry_run,
+            repo_root=self.server.repo_root,
+        )
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3295,8 +3329,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = True
         else:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if write_result.backups:
+                response_payload["backups"] = write_result.backups
 
         self.server.log_event(
             "catalogue_series_create",
@@ -3383,7 +3417,7 @@ class Handler(BaseHTTPRequestHandler):
 
         changed = plan.importable_count > 0
         target_kind = plan.target_kind
-        backup_paths: list[Path] = []
+        backup_response_paths: list[str] = []
         if changed and not self.server.dry_run:
             updated_records = apply_workbook_import_plan(self.server.source_dir, plan)
             if target_kind == "works":
@@ -3395,7 +3429,13 @@ class Handler(BaseHTTPRequestHandler):
             for path in payloads_by_path:
                 if path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-            backup_paths = transactions.atomic_write_many(payloads_by_path, self.server.backups_dir)
+            write_result = transactions.execute_source_json_write(
+                payloads_by_path,
+                self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                repo_root=self.server.repo_root,
+            )
+            backup_response_paths = write_result.backups
             self._refresh_lookup_payloads()
 
         response_payload: Dict[str, Any] = {
@@ -3414,8 +3454,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if backup_response_paths:
+                response_payload["backups"] = backup_response_paths
 
         self.server.log_event(
             "catalogue_import_apply",
@@ -3726,13 +3766,18 @@ class Handler(BaseHTTPRequestHandler):
 
         changed = mutation_plan.changed
         apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
-        backup_paths: list[Path] = []
+        backup_response_paths: list[str] = []
         if changed:
             target_path = self.server.moments_path.resolve()
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            if not self.server.dry_run:
-                backup_paths = transactions.atomic_write_many({target_path: mutation_plan.payload}, self.server.backups_dir)
+            write_result = transactions.execute_source_json_write(
+                {target_path: mutation_plan.payload},
+                self.server.backups_dir,
+                dry_run=self.server.dry_run,
+                repo_root=self.server.repo_root,
+            )
+            backup_response_paths = write_result.backups
 
         response_payload: Dict[str, Any] = {
             "ok": True,
@@ -3768,8 +3813,8 @@ class Handler(BaseHTTPRequestHandler):
             response_payload["would_write"] = changed
         elif changed:
             response_payload["saved_at_utc"] = activity.utc_now()
-            if backup_paths:
-                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+            if backup_response_paths:
+                response_payload["backups"] = backup_response_paths
 
         self.server.log_event(
             "catalogue_moment_save",

@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server
 title: Catalogue Write Server
 added_date: 2026-04-22
-last_updated: "2026-05-08 23:56"
+last_updated: "2026-05-09 00:05"
 parent_id: servers
 sort_order: 40
 ---
@@ -53,7 +53,7 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 
 ## Module Ownership
 
-- `scripts/studio/catalogue_write_server.py` owns HTTP routing, request validation, canonical source write orchestration, endpoint-specific write allowlist checks, backup timing, refresh invocation, local service logging, activity-row append orchestration, and response payload assembly.
+- `scripts/studio/catalogue_write_server.py` owns HTTP routing, request validation, canonical source write orchestration, endpoint-specific write allowlist checks, write timing, refresh invocation, local service logging, activity-row append orchestration, and response payload assembly.
 - `scripts/catalogue_source.py` owns canonical source field order, shared catalogue id-list and detail-uid normalization, source record normalization, and source validation.
 - `scripts/catalogue_routes.py` owns catalogue local-service endpoint path constants, the POST route inventory, and the CORS preflight route inventory shared by the write server and catalogue activity profiles.
 - `scripts/catalogue_activity.py` owns catalogue-specific Studio Activity profiles, activity context normalization, activity row construction, and activity response-count bookkeeping.
@@ -63,7 +63,7 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `scripts/catalogue_prose_import.py` owns staged catalogue prose import target normalization, Markdown validation, preview payloads, and draft moment source import application helpers.
 - `scripts/catalogue_save_build.py` owns common save-time public-build response decisions for work, work-detail, series, and moment saves, including `build_requested`, `build_skipped`, no-public-artifact skip payloads, and the build runner call.
 - `scripts/catalogue_source_mutation.py` owns pure source mutation planning for save/create paths: source record normalization, changed-field calculation, source validation against already-loaded records, generated detail section-id planning, series member-work update planning, and source JSON payload construction without file writes.
-- `scripts/catalogue_transactions.py` owns timestamped backup names, transaction backup copying, best-effort restore behavior, path de-duplication for transaction paths, atomic multi-file JSON writes with rollback, and the no-backup atomic text write primitive used by prose imports.
+- `scripts/catalogue_transactions.py` owns source JSON write execution, source payload-map validation, timestamped backup names, backup path formatting for source-write responses, transaction backup copying, best-effort restore behavior, path de-duplication for transaction paths, atomic multi-file JSON writes with rollback, and the no-backup atomic text write primitive used by prose imports.
 - `scripts/catalogue_lookup.py` owns construction and writing of derived Studio catalogue lookup payloads.
 - `scripts/catalogue_json_build.py` owns scoped public catalogue build planning and execution used by publication and build endpoints.
 

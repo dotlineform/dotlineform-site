@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-write-server
 title: Catalogue Write Server Slices
 added_date: 2026-05-08
-last_updated: "2026-05-08 23:56"
+last_updated: "2026-05-09 00:05"
 parent_id: site-request-script-structural-review
 sort_order: 10
 ---
@@ -10,8 +10,8 @@ sort_order: 10
 
 Status:
 
-- Slices 1-10 implemented
-- Slice 11 is the next planned implementation slice
+- Slices 1-11 implemented
+- Slice 12 is the next planned implementation slice
 
 ## Purpose
 
@@ -276,13 +276,14 @@ Risks:
 - keep this slice planner-only to avoid combining source-shape changes with transaction behavior changes
 - lower-level normalization helpers still have legacy server call sites in bulk, delete, and publication flows; later planner/executor slices should continue migrating those paths without broad compatibility aliases
 
-## Planned Slices
-
 ### Slice 11: save/create transaction executor
 
-Status: planned.
+Status: implemented.
 
-After the source mutation planners are stable, extract common atomic source-write mechanics for save, create, bulk-save, and workbook-import apply paths.
+The eleventh implementation slice added a shared source JSON write executor in `scripts/catalogue_transactions.py` and switched save, create, bulk-save, and workbook-import apply paths to use it after their existing endpoint-specific allowlist checks.
+The executor owns source payload-map validation, dry-run write suppression, calls into the atomic multi-file JSON writer, and backup path formatting for response payloads.
+The write server still owns request parsing, existence/conflict validation, endpoint-specific allowlist checks, lookup/build/activity timing, and final response assembly.
+`tests/python/test_catalogue_transactions.py` now covers executor dry-runs, response backup paths, empty payload-map rejection, and rollback behavior through the executor path.
 
 Target ownership:
 
@@ -308,6 +309,8 @@ Risks:
 
 - backup timing, dry-run behavior, and rollback behavior are safety contracts
 - do not hide service-specific write allowlists inside a generic executor
+
+## Planned Slices
 
 ### Slice 12: delete/publication preview planners
 

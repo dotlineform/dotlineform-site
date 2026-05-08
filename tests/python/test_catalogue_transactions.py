@@ -91,6 +91,104 @@ def test_atomic_write_many_rolls_back_replaced_files_on_failure() -> None:
         assert not list(root.glob("*.tmp"))
 
 
+def test_execute_source_json_write_dry_run_suppresses_write() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        target = root / "assets/studio/data/catalogue/works.json"
+        backups_dir = root / "var/studio/catalogue/backups"
+        write_text(target, json.dumps({"works": {"00001": {"title": "Before"}}}) + "\n")
+
+        result = transactions.execute_source_json_write(
+            {target: {"works": {"00001": {"title": "After"}}}},
+            backups_dir,
+            dry_run=True,
+            repo_root=root,
+        )
+
+        assert result.backup_paths == []
+        assert result.backups == []
+        assert json.loads(target.read_text(encoding="utf-8")) == {"works": {"00001": {"title": "Before"}}}
+        assert not backups_dir.exists()
+
+
+def test_execute_source_json_write_reports_relative_backup_paths() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        target = root / "assets/studio/data/catalogue/works.json"
+        backups_dir = root / "var/studio/catalogue/backups"
+        write_text(target, json.dumps({"works": {"00001": {"title": "Before"}}}) + "\n")
+
+        result = transactions.execute_source_json_write(
+            {target: {"works": {"00001": {"title": "After"}}}},
+            backups_dir,
+            dry_run=False,
+            repo_root=root,
+        )
+
+        assert json.loads(target.read_text(encoding="utf-8")) == {"works": {"00001": {"title": "After"}}}
+        assert len(result.backup_paths) == 1
+        assert len(result.backups) == 1
+        backup_rel_path = result.backups[0]
+        assert backup_rel_path.startswith("var/studio/catalogue/backups/catalogue-save-")
+        assert backup_rel_path.endswith("/works.json")
+        assert json.loads((root / backup_rel_path).read_text(encoding="utf-8")) == {"works": {"00001": {"title": "Before"}}}
+
+
+def test_execute_source_json_write_rolls_back_replaced_files_on_failure() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        backups_dir = root / "backups"
+        first = root / "first.json"
+        second = root / "second.json"
+        write_text(first, json.dumps({"before": 1}) + "\n")
+        write_text(second, json.dumps({"before": 2}) + "\n")
+        original_replace = transactions.os.replace
+        calls = 0
+
+        def fail_second_replace(src: str | Path, dst: str | Path) -> None:
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                raise OSError("simulated replace failure")
+            original_replace(src, dst)
+
+        transactions.os.replace = fail_second_replace
+        try:
+            try:
+                transactions.execute_source_json_write(
+                    {first: {"after": 1}, second: {"after": 2}},
+                    backups_dir,
+                    dry_run=False,
+                    repo_root=root,
+                )
+            except OSError as exc:
+                assert "simulated replace failure" in str(exc)
+            else:
+                raise AssertionError("expected simulated replace failure")
+        finally:
+            transactions.os.replace = original_replace
+
+        assert json.loads(first.read_text(encoding="utf-8")) == {"before": 1}
+        assert json.loads(second.read_text(encoding="utf-8")) == {"before": 2}
+        assert not list(root.glob("*.tmp"))
+
+
+def test_execute_source_json_write_rejects_empty_payload_map() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        try:
+            transactions.execute_source_json_write(
+                {},
+                root / "backups",
+                dry_run=False,
+                repo_root=root,
+            )
+        except ValueError as exc:
+            assert "source write payloads are required" in str(exc)
+        else:
+            raise AssertionError("expected empty payload map to be rejected")
+
+
 def test_atomic_write_text_no_backup_replaces_text_without_backup() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -106,5 +204,9 @@ if __name__ == "__main__":
     test_transaction_backups_preserve_repo_and_external_layout()
     test_restore_transaction_paths_restores_backups_and_removes_created_files()
     test_atomic_write_many_rolls_back_replaced_files_on_failure()
+    test_execute_source_json_write_dry_run_suppresses_write()
+    test_execute_source_json_write_reports_relative_backup_paths()
+    test_execute_source_json_write_rolls_back_replaced_files_on_failure()
+    test_execute_source_json_write_rejects_empty_payload_map()
     test_atomic_write_text_no_backup_replaces_text_without_backup()
     print("catalogue transaction tests passed")

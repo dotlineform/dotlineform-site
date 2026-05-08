@@ -8,14 +8,66 @@ import json
 import os
 import shutil
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 import catalogue_cleanup
 
 
+@dataclass(frozen=True)
+class SourceJsonWriteResult:
+    backup_paths: list[Path]
+    backups: list[str]
+
+
 def backup_stamp_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
+
+
+def rel_response_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root.resolve()))
+    except ValueError:
+        return path.name
+
+
+def response_backup_paths(paths: Iterable[Path], repo_root: Path) -> list[str]:
+    return [rel_response_path(path, repo_root) for path in paths]
+
+
+def validate_json_payloads_by_path(payloads_by_path: Mapping[Path, Mapping[str, Any]]) -> Dict[Path, Dict[str, Any]]:
+    if not payloads_by_path:
+        raise ValueError("source write payloads are required")
+
+    payloads: Dict[Path, Dict[str, Any]] = {}
+    for raw_path, raw_payload in payloads_by_path.items():
+        if not isinstance(raw_path, Path):
+            raise TypeError("source write target paths must be pathlib.Path values")
+        path = raw_path.resolve()
+        if path in payloads:
+            raise ValueError(f"duplicate source write target: {path}")
+        if not isinstance(raw_payload, Mapping):
+            raise TypeError("source write payloads must be mappings")
+        payloads[path] = dict(raw_payload)
+    return payloads
+
+
+def execute_source_json_write(
+    payloads_by_path: Mapping[Path, Mapping[str, Any]],
+    backups_dir: Path,
+    *,
+    dry_run: bool,
+    repo_root: Path,
+) -> SourceJsonWriteResult:
+    payloads = validate_json_payloads_by_path(payloads_by_path)
+    backup_paths: list[Path] = []
+    if not dry_run:
+        backup_paths = atomic_write_many(payloads, backups_dir)
+    return SourceJsonWriteResult(
+        backup_paths=backup_paths,
+        backups=response_backup_paths(backup_paths, repo_root),
+    )
 
 
 def unique_paths(paths: Iterable[Path]) -> list[Path]:

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-08"
+last_updated: "2026-05-09"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,27 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue source write executor
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the eleventh implementation slice of the script structural review by adding a shared source JSON write executor to `scripts/catalogue_transactions.py`.
+Save, create, bulk-save, and workbook-import apply handlers still perform endpoint-specific allowlist checks in `scripts/studio/catalogue_write_server.py`, then delegate payload-map validation, dry-run write suppression, atomic JSON writes, rollback behavior, and backup response-path formatting to the transaction module.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_transactions.py`
+- `scripts/studio/catalogue_write_server.py`
+- `tests/python/test_catalogue_transactions.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+Source-write mechanics for save/create-style flows now have direct executor coverage while endpoint response assembly, lookup/build/activity timing, and write allowlist visibility remain in the write server.
 
 ## [2026-05-08] Extracted catalogue source mutation planners
 

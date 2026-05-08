@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T22:57:32Z",
+  "generated_at": "2026-05-08T23:06:19Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -87,7 +87,7 @@
       "doc_id": "site-request-script-structural-review-catalogue-write-server",
       "title": "Catalogue Write Server Slices",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 23:56",
+      "last_updated": "2026-05-09 00:05",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 10,
       "published": true,
@@ -95,7 +95,7 @@
       "source_path": "site-request-script-structural-review-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-write-server.json",
-      "content_text_length": 23552
+      "content_text_length": 24170
     },
     {
       "scope": "studio",
@@ -1098,7 +1098,7 @@
       "doc_id": "scripts-catalogue-write-server",
       "title": "Catalogue Write Server",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-08 23:56",
+      "last_updated": "2026-05-09 00:05",
       "parent_id": "servers",
       "sort_order": 40,
       "published": true,
@@ -1106,7 +1106,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 32683
+      "content_text_length": 32793
     },
     {
       "scope": "studio",
@@ -2993,7 +2993,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-08",
+      "last_updated": "2026-05-09",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3001,7 +3001,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 76185
+      "content_text_length": 77201
     },
     {
       "scope": "studio",
