@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a0414f5a7116614741e6f770ae32e31b",
-    "generated_at_utc": "2026-05-08T09:03:18Z",
+    "version": "blake2b-416b3c786c3c5e4f76c5c58ddd281cc5",
+    "generated_at_utc": "2026-05-08T09:44:32Z",
     "count": 198
   },
   "entries": [
@@ -1376,10 +1376,10 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-05-08 00:00",
+      "last_updated": "2026-05-08 00:30",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-08 00:00 • Site Docs",
+      "display_meta": "2026-05-08 00:30 • Site Docs",
       "search_terms": [
         "local-setup",
         "local",
@@ -1388,13 +1388,14 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-08 00:00",
+        "2026-05-08 00:30",
         "2026",
         "05",
         "08",
-        "00"
+        "00",
+        "30"
       ],
-      "search_text": "local-setup local setup local setup site docs site docs 2026-05-08 00:00 2026 05 08 00"
+      "search_text": "local-setup local setup local setup site docs site docs 2026-05-08 00:30 2026 05 08 00 30"
     },
     {
       "id": "search-field-registry",
