@@ -51,6 +51,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue_source.py",
                 "scripts/catalogue_cleanup.py",
                 "scripts/catalogue_invalidation.py",
+                "scripts/catalogue_lookup_refresh.py",
                 "scripts/catalogue_prose_import.py",
                 "scripts/catalogue_routes.py",
                 "scripts/catalogue_transactions.py",
@@ -58,6 +59,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_catalogue_cleanup.py",
                 "tests/python/test_catalogue_invalidation.py",
+                "tests/python/test_catalogue_lookup_refresh.py",
                 "tests/python/test_catalogue_prose_import.py",
                 "tests/python/test_catalogue_routes.py",
                 "tests/python/test_catalogue_transactions.py",
@@ -77,6 +79,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "catalogue-invalidation-tests",
             (sys.executable, "tests/python/test_catalogue_invalidation.py"),
             "Verify catalogue lookup and moment-build invalidation rules.",
+        ),
+        CheckCommand(
+            "catalogue-lookup-refresh-tests",
+            (sys.executable, "tests/python/test_catalogue_lookup_refresh.py"),
+            "Verify catalogue lookup refresh execution helpers.",
         ),
         CheckCommand(
             "catalogue-cleanup-tests",

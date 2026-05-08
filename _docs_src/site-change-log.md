@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extracted catalogue lookup refresh helpers
+
+**Status:** implemented
+
+**Area:** Studio / scripts / maintainability
+
+**Summary:**
+Completed the eighth implementation slice of the script structural review by moving Studio catalogue lookup refresh execution into `scripts/catalogue_lookup_refresh.py`.
+The write server keeps refresh timing, response insertion, local service logging, and Studio Activity append timing, while the extracted module owns full and focused refresh writes plus the `lookup_refresh` result payload shape.
+The series-save member-work fallback now correctly forces a full lookup refresh when the save changes work membership.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_lookup_refresh.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_lookup_refresh.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+
+**Impact:**
+Lookup refresh execution now has direct-module coverage for full, work, detail, and series refresh result payloads, and the write server is left with endpoint orchestration rather than payload-writing loops.
+
 ## [2026-05-08] Split catalogue write-server slice plan
 
 **Status:** documented

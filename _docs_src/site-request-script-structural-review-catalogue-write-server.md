@@ -10,8 +10,8 @@ sort_order: 10
 
 Status:
 
-- Slices 1-7 implemented
-- Slice 8 is the next planned implementation slice
+- Slices 1-8 implemented
+- Slice 9 is the next planned implementation slice
 
 ## Purpose
 
@@ -179,39 +179,30 @@ Risks:
 - `Handler.POST_HANDLERS` still lives in the write server because it points to server-local handler methods; future endpoint additions must update both `routes.POST_PATHS` and the dispatch table
 - this slice only cleans routing structure; it does not reduce the larger endpoint method bodies or extract source-write orchestration
 
-## Planned Slices
-
 ### Slice 8: lookup refresh execution helpers
 
-Status: planned.
+Status: implemented.
 
-Extract the `_refresh_lookup_payload*` methods into `scripts/catalogue_lookup_refresh.py`.
-
-Target ownership:
-
-- full catalogue lookup refresh execution
-- focused work, detail, and series lookup refresh execution
-- refresh result payload shape
-- lookup artifact labels and written counts
-
-The write server should keep the decision about when a refresh runs, where the refresh payload is inserted into an endpoint response, local service logging, and Studio Activity append timing.
-
-Acceptance checks:
-
-- direct tests pin representative work, detail, series, and full refresh result payloads
-- save/create/import handlers still report the same `lookup_refresh` response shape
-- the extracted module calls existing `scripts/catalogue_lookup.py` builders and writers rather than duplicating lookup construction
+The eighth implementation slice extracted lookup refresh execution helpers from `scripts/studio/catalogue_write_server.py` into `scripts/catalogue_lookup_refresh.py`.
+The new module owns full lookup refresh execution, focused work/detail/series refresh writes, result payload shape, artifact labels, written counts, and written path reporting.
+The write server still decides when a refresh runs, inserts `lookup_refresh` into endpoint responses, writes local service log rows, and appends Studio Activity rows.
+`tests/python/test_catalogue_lookup_refresh.py` pins representative full, work, detail, and series refresh result payloads directly against the extracted module.
+The focused lookup refresh test is included in the `quick` run-checks profile.
 
 Benefits:
 
 - reduces repeated handler body logic without moving source-write transactions
 - completes the extraction path started by `scripts/catalogue_invalidation.py`
 - gives refresh execution a focused module owner that can be tested without HTTP routing
+- keeps `scripts/catalogue_lookup.py` as the payload builder/writer owner instead of duplicating lookup construction
 
 Risks:
 
 - `lookup_refresh` payloads are Studio-facing contracts, so result keys and artifact names must stay stable
 - focused refresh paths depend on invalidation classifications; avoid re-encoding invalidation rules in the refresh module
+- the write server still computes invalidation decisions before and after save writes, so later save-flow cleanup should avoid diverging those two paths
+
+## Planned Slices
 
 ### Slice 9: save/build follow-through helper
 
