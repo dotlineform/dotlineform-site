@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:29"
+last_updated: "2026-05-08 16:44"
 ui_status: in-progress
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -35,6 +35,7 @@ Use these status values consistently:
 | `future` | Worth supporting later, but not needed for the initial catalogue activity report. |
 | `excluded` | Not an activity-log source because it is navigation, read-only filtering, sorting, or local-only form editing. |
 | `retire` | Existing report surface that should be replaced by `/studio/activity/` after the unified page is trusted. |
+| `done` | Implemented for the current slice. |
 
 ## Coverage Rules
 
@@ -58,10 +59,10 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Item | Status | Notes |
 |---|---|---|
-| Define `catalogue-work` page entry in the activity contract registry | `v1-target` | Page label: `catalogue work editor`; route: `/studio/catalogue-work/`. |
-| Define `save-work` action for `#catalogueWorkSave` | `v1-target` | User action label: `save work`; scenario: metadata edits to one existing work. |
-| Define script purposes for the v1 save path | `v1-target` | `save canonical data`, `rebuild published work data`, `rebuild lookups`, `update search`. |
-| Validate activity contract registry | `v1-target` | Unique page ids, action ids, script-purpose ids, required labels, and action-to-purpose references. |
+| Define `catalogue-work` page entry in the activity contract registry | `done` | Implemented in `assets/studio/data/activity_contract.json`; page label: `catalogue work editor`; route: `/studio/catalogue-work/`. |
+| Define `save-work` action for `#catalogueWorkSave` | `done` | Implemented in `assets/studio/data/activity_contract.json`; user action label: `save work`; scenario: metadata edits to one existing work. |
+| Define script purposes for the v1 save path | `done` | Implemented script purposes: `save canonical data`, `rebuild published work data`, `rebuild lookups`, `update search`. |
+| Validate activity contract registry | `done` | Implemented in `scripts/verify_activity_contract.py` and `tests/python/test_activity_contract.py`; wired into the quick check profile. |
 | Pass activity context from Work editor to catalogue write server | `v1-target` | Include page id, action id, route, control id, work id, and correlation context. |
 | Emit structured rows from `/catalogue/work/save` | `v1-target` | Use existing save and build outcome data rather than scraping UI text. |
 | Generate Studio-readable activity feed | `v1-target` | Keep raw logs local-only and remove full payloads, local absolute paths, and verbose command output. |

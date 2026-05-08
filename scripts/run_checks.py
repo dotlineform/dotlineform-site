@@ -46,11 +46,18 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/run_checks.py",
                 "scripts/studio_backup_retention.py",
                 "scripts/audit_studio_ready_state.py",
+                "scripts/verify_activity_contract.py",
                 "scripts/studio/audit_service.py",
+                "tests/python/test_activity_contract.py",
                 "tests/python/test_catalogue_field_registry.py",
                 "tests/python/test_studio_backup_retention.py",
             ),
             "Compile lightweight Python check scripts.",
+        ),
+        CheckCommand(
+            "activity-contract-tests",
+            (sys.executable, "tests/python/test_activity_contract.py"),
+            "Verify Studio activity contract registry shape and v1 save-work coverage.",
         ),
         CheckCommand(
             "studio-backup-retention-tests",
@@ -66,6 +73,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "studio-config-json",
             (sys.executable, "-m", "json.tool", "assets/studio/data/studio_config.json"),
             "Parse Studio config JSON.",
+        ),
+        CheckCommand(
+            "activity-contract-json",
+            (sys.executable, "-m", "json.tool", "assets/studio/data/activity_contract.json"),
+            "Parse Studio activity contract JSON.",
         ),
     ),
     "catalogue": (

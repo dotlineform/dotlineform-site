@@ -1,0 +1,85 @@
+{
+  "schema": "activity_contract_v1",
+  "status": "v1_initial_contract",
+  "last_updated": "2026-05-08",
+  "source_doc": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
+  "inventory_doc": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
+  "description": "Registry for Studio user actions and the script-purpose rows that may appear in the unified activity log.",
+  "pages": {
+    "catalogue-work": {
+      "label": "catalogue work editor",
+      "route": "/studio/catalogue-work/",
+      "actions": {
+        "save-work": {
+          "label": "save work",
+          "status": "v1-target",
+          "control_id": "catalogueWorkSave",
+          "control_selector": "#catalogueWorkSave",
+          "control_label": "Save",
+          "endpoint": "/catalogue/work/save",
+          "record_family": "work",
+          "record_id_field": "work_id",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers metadata edits to one existing work. Create, bulk save, publish, delete, preview, prose import, and media refresh are later actions.",
+          "script_purposes": [
+            {
+              "id": "save-canonical-data",
+              "optional": false,
+              "when": "core work source JSON changes"
+            },
+            {
+              "id": "rebuild-published-work-data",
+              "optional": true,
+              "when": "published work output is attempted"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "script_purposes": {
+    "save-canonical-data": {
+      "label": "save canonical data",
+      "status": "v1-target",
+      "artifact_families": ["source-json"],
+      "detail_templates": [
+        "Saved canonical work record {work_id}"
+      ]
+    },
+    "rebuild-published-work-data": {
+      "label": "rebuild published work data",
+      "status": "v1-target",
+      "artifact_families": ["work-json", "works-index-json", "series-index-json", "recent-index-json"],
+      "detail_templates": [
+        "Updated published work JSON for {work_id}"
+      ]
+    },
+    "rebuild-lookups": {
+      "label": "rebuild lookups",
+      "status": "v1-target",
+      "artifact_families": ["studio-lookup"],
+      "detail_templates": [
+        "Refreshed catalogue lookup data for work {work_id}"
+      ]
+    },
+    "update-search": {
+      "label": "update search",
+      "status": "v1-target",
+      "artifact_families": ["catalogue-search"],
+      "detail_templates": [
+        "Rebuilt catalogue search for work {work_id}"
+      ]
+    }
+  }
+}

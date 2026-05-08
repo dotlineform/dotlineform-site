@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log
 title: Studio Unified Activity Log Request
 added_date: 2026-05-08
-last_updated: "2026-05-08 16:29"
+last_updated: "2026-05-08 16:44"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 208
@@ -185,11 +185,11 @@ Downstream scripts should preserve that context rather than inventing their own 
 
 Add a structured registry or config file for the activity contract.
 
-Candidate location:
+Location:
 
 - `assets/studio/data/activity_contract.json`
 
-The exact filename can change during implementation, but the contract should stay in a reviewable data file rather than being scattered across page scripts and services.
+The contract should stay in a reviewable data file rather than being scattered across page scripts and services.
 
 Suggested top-level shape:
 
@@ -406,7 +406,7 @@ If the save path rewrites files or runs publishing work despite no core data cha
    - Validate unique page ids, action ids, and script-purpose ids.
    - Validate every action references existing script-purpose ids.
    - Validate required display labels are present.
-   - Keep validation runnable from Codex and from the normal check profile once the implementation is mature.
+   - Keep validation runnable from Codex and from the normal check profile.
 
 3. Pass activity context from the work editor to the catalogue write server.
    - Include page id, action id, route, control id, and current work id in the save request.
