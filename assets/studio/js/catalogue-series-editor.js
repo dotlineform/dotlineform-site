@@ -442,7 +442,15 @@ function setModeFieldAvailability(state) {
 function buildPayload(state, workUpdates) {
   return {
     ...buildSaveSeriesPayload(state, workUpdates),
-    apply_build: currentSeriesIsPublished(state)
+    apply_build: currentSeriesIsPublished(state),
+    activity_context: {
+      page_id: "catalogue-series",
+      action_id: "save-series",
+      route: "/studio/catalogue-series/",
+      control_id: "catalogueSeriesSave",
+      control_selector: "#catalogueSeriesSave",
+      series_id: state.currentSeriesId
+    }
   };
 }
 

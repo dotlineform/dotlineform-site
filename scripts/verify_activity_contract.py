@@ -12,14 +12,59 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_REL_PATH = Path("assets/studio/data/activity_contract.json")
 
 EXPECTED_SCHEMA = "activity_contract_v1"
-EXPECTED_V1_PAGE_ID = "catalogue-work"
-EXPECTED_V1_ACTION_ID = "save-work"
-EXPECTED_V1_PURPOSE_IDS = [
-    "save-canonical-data",
-    "rebuild-published-work-data",
-    "rebuild-lookups",
-    "update-search",
-]
+EXPECTED_BATCH_A_ACTIONS = {
+    "catalogue-work": {
+        "route": "/studio/catalogue-work/",
+        "action_id": "save-work",
+        "control_id": "catalogueWorkSave",
+        "control_selector": "#catalogueWorkSave",
+        "endpoint": "/catalogue/work/save",
+        "purpose_ids": [
+            "save-canonical-data",
+            "rebuild-published-work-data",
+            "rebuild-lookups",
+            "update-search",
+        ],
+    },
+    "catalogue-work-detail": {
+        "route": "/studio/catalogue-work-detail/",
+        "action_id": "save-work-detail",
+        "control_id": "catalogueWorkDetailSave",
+        "control_selector": "#catalogueWorkDetailSave",
+        "endpoint": "/catalogue/work-detail/save",
+        "purpose_ids": [
+            "save-canonical-data",
+            "rebuild-published-work-data",
+            "rebuild-lookups",
+            "update-search",
+        ],
+    },
+    "catalogue-series": {
+        "route": "/studio/catalogue-series/",
+        "action_id": "save-series",
+        "control_id": "catalogueSeriesSave",
+        "control_selector": "#catalogueSeriesSave",
+        "endpoint": "/catalogue/series/save",
+        "purpose_ids": [
+            "save-canonical-data",
+            "rebuild-published-series-data",
+            "rebuild-lookups",
+            "update-search",
+        ],
+    },
+    "catalogue-moment": {
+        "route": "/studio/catalogue-moment/",
+        "action_id": "save-moment",
+        "control_id": "catalogueMomentSave",
+        "control_selector": "#catalogueMomentSave",
+        "endpoint": "/catalogue/moment/save",
+        "purpose_ids": [
+            "save-canonical-data",
+            "rebuild-published-moment-data",
+            "update-search",
+        ],
+    },
+}
 
 
 def fail(message: str) -> None:
@@ -122,42 +167,42 @@ def verify_pages(contract: Mapping[str, Any], purpose_ids: set[str]) -> set[str]
 
 def verify_v1_contract(contract: Mapping[str, Any]) -> None:
     pages = require_mapping(contract, "pages", "activity contract")
-    page = pages.get(EXPECTED_V1_PAGE_ID)
-    if not isinstance(page, Mapping):
-        fail(f"missing v1 page {EXPECTED_V1_PAGE_ID}")
-    if page.get("label") != "catalogue work editor":
-        fail("v1 page label must be 'catalogue work editor'")
-    if page.get("route") != "/studio/catalogue-work/":
-        fail("v1 page route must be /studio/catalogue-work/")
-    actions = require_mapping(page, "actions", f"page {EXPECTED_V1_PAGE_ID}")
-    action = actions.get(EXPECTED_V1_ACTION_ID)
-    if not isinstance(action, Mapping):
-        fail(f"missing v1 action {EXPECTED_V1_ACTION_ID}")
-    if action.get("control_id") != "catalogueWorkSave":
-        fail("v1 save action control_id must be catalogueWorkSave")
-    if action.get("control_selector") != "#catalogueWorkSave":
-        fail("v1 save action control_selector must be #catalogueWorkSave")
-    if action.get("endpoint") != "/catalogue/work/save":
-        fail("v1 save action endpoint must be /catalogue/work/save")
-    if action.get("no_change_activity") != "skip":
-        fail("v1 save action must skip true no-change activity")
-    if action.get("report_forced_rewrites") is not True:
-        fail("v1 save action must report forced rewrites")
+    for page_id, expected in EXPECTED_BATCH_A_ACTIONS.items():
+        page = pages.get(page_id)
+        if not isinstance(page, Mapping):
+            fail(f"missing v1 page {page_id}")
+        if page.get("route") != expected["route"]:
+            fail(f"v1 page {page_id} route must be {expected['route']}")
+        actions = require_mapping(page, "actions", f"page {page_id}")
+        action_id = str(expected["action_id"])
+        action = actions.get(action_id)
+        if not isinstance(action, Mapping):
+            fail(f"missing v1 action {action_id}")
+        if action.get("control_id") != expected["control_id"]:
+            fail(f"v1 action {action_id} control_id must be {expected['control_id']}")
+        if action.get("control_selector") != expected["control_selector"]:
+            fail(f"v1 action {action_id} control_selector must be {expected['control_selector']}")
+        if action.get("endpoint") != expected["endpoint"]:
+            fail(f"v1 action {action_id} endpoint must be {expected['endpoint']}")
+        if action.get("no_change_activity") != "skip":
+            fail(f"v1 action {action_id} must skip true no-change activity")
+        if action.get("report_forced_rewrites") is not True:
+            fail(f"v1 action {action_id} must report forced rewrites")
 
-    script_purposes = require_list(action, "script_purposes", f"action {EXPECTED_V1_ACTION_ID}")
-    purpose_refs = [str(row.get("id") or "").strip() for row in script_purposes if isinstance(row, Mapping)]
-    if purpose_refs != EXPECTED_V1_PURPOSE_IDS:
-        fail(f"v1 save action purpose order mismatch: {purpose_refs!r}")
-    optional_by_id = {
-        str(row.get("id") or "").strip(): row.get("optional")
-        for row in script_purposes
-        if isinstance(row, Mapping)
-    }
-    if optional_by_id.get("save-canonical-data") is not False:
-        fail("save-canonical-data must be the required v1 purpose")
-    for purpose_id in EXPECTED_V1_PURPOSE_IDS[1:]:
-        if optional_by_id.get(purpose_id) is not True:
-            fail(f"{purpose_id} must be optional in v1")
+        script_purposes = require_list(action, "script_purposes", f"action {action_id}")
+        purpose_refs = [str(row.get("id") or "").strip() for row in script_purposes if isinstance(row, Mapping)]
+        if purpose_refs != expected["purpose_ids"]:
+            fail(f"v1 action {action_id} purpose order mismatch: {purpose_refs!r}")
+        optional_by_id = {
+            str(row.get("id") or "").strip(): row.get("optional")
+            for row in script_purposes
+            if isinstance(row, Mapping)
+        }
+        if optional_by_id.get("save-canonical-data") is not False:
+            fail(f"save-canonical-data must be the required v1 purpose for {action_id}")
+        for purpose_id in expected["purpose_ids"][1:]:
+            if optional_by_id.get(purpose_id) is not True:
+                fail(f"{purpose_id} must be optional in v1 action {action_id}")
 
 
 def main() -> None:

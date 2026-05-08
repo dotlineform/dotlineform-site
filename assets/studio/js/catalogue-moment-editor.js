@@ -939,7 +939,15 @@ async function saveMoment(state) {
       moment_id: state.currentMomentId,
       expected_record_hash: state.expectedRecordHash,
       record: validation.draft,
-      apply_build: applyBuild
+      apply_build: applyBuild,
+      activity_context: {
+        page_id: "catalogue-moment",
+        action_id: "save-moment",
+        route: "/studio/catalogue-moment/",
+        control_id: "catalogueMomentSave",
+        control_selector: "#catalogueMomentSave",
+        moment_id: state.currentMomentId
+      }
     });
     state.currentRecord = payload.record || validation.draft;
     state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);

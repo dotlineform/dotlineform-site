@@ -186,6 +186,18 @@ ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK = "catalogue-work"
 ACTIVITY_CONTEXT_ACTION_SAVE_WORK = "save-work"
 ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK = "/studio/catalogue-work/"
 ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE = "catalogueWorkSave"
+ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL = "catalogue-work-detail"
+ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL = "save-work-detail"
+ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL = "/studio/catalogue-work-detail/"
+ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE = "catalogueWorkDetailSave"
+ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES = "catalogue-series"
+ACTIVITY_CONTEXT_ACTION_SAVE_SERIES = "save-series"
+ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES = "/studio/catalogue-series/"
+ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE = "catalogueSeriesSave"
+ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT = "catalogue-moment"
+ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT = "save-moment"
+ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT = "/studio/catalogue-moment/"
+ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE = "catalogueMomentSave"
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -530,6 +542,18 @@ def activity_correlation_id(value: Any) -> str:
     return safe_value[:120] or uuid.uuid4().hex
 
 
+def normalize_activity_record_id(record_id_field: str, value: Any) -> str:
+    if record_id_field == "work_id":
+        return slug_id(value)
+    if record_id_field == "detail_uid":
+        return normalize_detail_uid_value(value)
+    if record_id_field == "series_id":
+        return normalize_series_id(value)
+    if record_id_field == "moment_id":
+        return normalize_moment_id_value(value)
+    return activity_context_value(value)
+
+
 def normalize_activity_context(
     raw_context: Any,
     *,
@@ -556,7 +580,7 @@ def normalize_activity_context(
         if value != expected:
             raise ValueError(f"activity_context.{key} must be {expected!r}")
 
-    requested_record_id = slug_id(raw_context.get(record_id_field))
+    requested_record_id = normalize_activity_record_id(record_id_field, raw_context.get(record_id_field))
     if requested_record_id and requested_record_id != record_id:
         raise ValueError(f"activity_context.{record_id_field} must match request {record_id_field}")
 
@@ -620,6 +644,71 @@ def build_step_status(build_payload: Mapping[str, Any], label: str) -> str:
 def build_step_attempted(build_payload: Mapping[str, Any], label: str) -> bool:
     steps = build_payload.get("steps") if isinstance(build_payload.get("steps"), list) else []
     return any(isinstance(step, Mapping) and str(step.get("label") or "").strip() == label for step in steps)
+
+
+def increment_studio_activity_count(response_payload: Dict[str, Any], count: int) -> None:
+    if count <= 0:
+        return
+    activity_log_payload = response_payload.setdefault("activity_log", {"written_count": 0})
+    activity_log_payload["written_count"] = int(activity_log_payload.get("written_count") or 0) + count
+
+
+def append_studio_activity_rows(server: Any, response_payload: Dict[str, Any], rows: list[Dict[str, Any]]) -> None:
+    if not rows:
+        return
+    server.append_studio_activity(rows)
+    increment_studio_activity_count(response_payload, len(rows))
+
+
+def catalogue_build_record_groups(build_payload: Mapping[str, Any], fallback: Mapping[str, list[str]]) -> Dict[str, list[str]]:
+    build_scope = build_payload.get("build") if isinstance(build_payload.get("build"), Mapping) else {}
+    return {
+        "works": list(build_scope.get("work_ids") or fallback.get("works") or []),
+        "series": list(build_scope.get("series_ids") or fallback.get("series") or []),
+        "work_details": list(build_scope.get("work_detail_uids") or fallback.get("work_details") or []),
+        "moments": list(build_scope.get("moment_ids") or fallback.get("moments") or []),
+        "search": ["catalogue"] if build_step_attempted(build_payload, "Build Catalogue Search Index") else [],
+    }
+
+
+def catalogue_build_activity_rows(
+    activity_context: Mapping[str, str],
+    build_payload: Mapping[str, Any],
+    *,
+    published_step_label: str,
+    published_script_purpose_id: str,
+    published_detail: str,
+    search_detail: str,
+    fallback_record_groups: Mapping[str, list[str]],
+) -> list[Dict[str, Any]]:
+    now_utc = activity_context_value(build_payload.get("completed_at_utc")) or utc_now()
+    record_groups = catalogue_build_record_groups(build_payload, fallback_record_groups)
+    rows: list[Dict[str, Any]] = []
+    if build_step_attempted(build_payload, published_step_label):
+        rows.append(
+            studio_activity_entry(
+                activity_context,
+                now_utc=now_utc,
+                script_purpose_id=published_script_purpose_id,
+                status=build_step_status(build_payload, published_step_label),
+                record_groups=record_groups,
+                detail_items=[published_detail],
+                source_refs=catalogue_log_source_ref(),
+            )
+        )
+    if build_step_attempted(build_payload, "Build Catalogue Search Index"):
+        rows.append(
+            studio_activity_entry(
+                activity_context,
+                now_utc=now_utc,
+                script_purpose_id="update-search",
+                status=build_step_status(build_payload, "Build Catalogue Search Index"),
+                record_groups=record_groups,
+                detail_items=[search_detail],
+                source_refs=catalogue_log_source_ref(),
+            )
+        )
+    return rows
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -3324,8 +3413,7 @@ class Handler(BaseHTTPRequestHandler):
                         source_refs=catalogue_log_source_ref(),
                     ),
                 ]
-                self.server.append_studio_activity(activity_rows)
-                response_payload["activity_log"] = {"written_count": len(activity_rows)}
+                append_studio_activity_rows(self.server, response_payload, activity_rows)
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "work.save"),
@@ -3365,43 +3453,19 @@ class Handler(BaseHTTPRequestHandler):
             )
             response_payload["build"] = build_payload
             if activity_context:
-                build_scope = build_payload.get("build") if isinstance(build_payload.get("build"), Mapping) else {}
-                build_record_groups = {
-                    "works": list(build_scope.get("work_ids") or [work_id]),
-                    "series": list(build_scope.get("series_ids") or []),
-                    "work_details": [],
-                    "moments": list(build_scope.get("moment_ids") or []),
-                    "search": ["catalogue"] if build_step_attempted(build_payload, "Build Catalogue Search Index") else [],
-                }
-                build_activity_rows: list[Dict[str, Any]] = []
-                if build_step_attempted(build_payload, "Generate Work Pages"):
-                    build_activity_rows.append(
-                        studio_activity_entry(
-                            activity_context,
-                            now_utc=activity_context_value(build_payload.get("completed_at_utc")) or utc_now(),
-                            script_purpose_id="rebuild-published-work-data",
-                            status=build_step_status(build_payload, "Generate Work Pages"),
-                            record_groups=build_record_groups,
-                            detail_items=[f"Updated published work JSON for {work_id}"],
-                            source_refs=catalogue_log_source_ref(),
-                        )
-                    )
-                if build_step_attempted(build_payload, "Build Catalogue Search Index"):
-                    build_activity_rows.append(
-                        studio_activity_entry(
-                            activity_context,
-                            now_utc=activity_context_value(build_payload.get("completed_at_utc")) or utc_now(),
-                            script_purpose_id="update-search",
-                            status=build_step_status(build_payload, "Build Catalogue Search Index"),
-                            record_groups=build_record_groups,
-                            detail_items=[f"Rebuilt catalogue search for work {work_id}"],
-                            source_refs=catalogue_log_source_ref(),
-                        )
-                    )
-                if build_activity_rows:
-                    self.server.append_studio_activity(build_activity_rows)
-                    activity_log_payload = response_payload.setdefault("activity_log", {"written_count": 0})
-                    activity_log_payload["written_count"] = int(activity_log_payload.get("written_count") or 0) + len(build_activity_rows)
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    catalogue_build_activity_rows(
+                        activity_context,
+                        build_payload,
+                        published_step_label="Generate Work Pages",
+                        published_script_purpose_id="rebuild-published-work-data",
+                        published_detail=f"Updated published work JSON for {work_id}",
+                        search_detail=f"Rebuilt catalogue search for work {work_id}",
+                        fallback_record_groups={"works": [work_id], "series": [], "work_details": [], "moments": []},
+                    ),
+                )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_bulk_save(self, allowed: Optional[str]) -> None:
@@ -4391,6 +4455,15 @@ class Handler(BaseHTTPRequestHandler):
         if not requested_detail_uid:
             requested_detail_uid = detail_update.get("detail_uid")
         detail_uid = normalize_detail_uid_value(requested_detail_uid)
+        activity_context = normalize_activity_context(
+            body.get("activity_context"),
+            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
+            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL,
+            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
+            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
+            record_id_field="detail_uid",
+            record_id=detail_uid,
+        )
 
         details_payload = load_work_details_payload(self.server.work_details_path)
         work_details = details_payload["work_details"]
@@ -4436,6 +4509,8 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": fields_changed,
             "record": updated_record,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
@@ -4478,6 +4553,9 @@ class Handler(BaseHTTPRequestHandler):
                 "changed_fields": fields_changed,
                 "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
                 "lookup_refresh_artifacts": lookup_refresh_payload.get("artifacts") if changed else [],
+                "activity_correlation_id": activity_context.get("correlation_id") if activity_context else "",
+                "activity_page_id": activity_context.get("page_id") if activity_context else "",
+                "activity_action_id": activity_context.get("action_id") if activity_context else "",
                 "dry_run": self.server.dry_run,
             },
         )
@@ -4496,6 +4574,34 @@ class Handler(BaseHTTPRequestHandler):
                 "written_count": refresh_result["written_count"],
             }
             now_utc = utc_now()
+            if activity_context:
+                activity_rows = [
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="save-canonical-data",
+                        status="completed",
+                        record_groups={"works": [work_id], "series": [], "work_details": [detail_uid], "moments": []},
+                        detail_items=[
+                            f"Saved canonical work detail record {detail_uid}",
+                            f"Changed fields: {', '.join(fields_changed)}",
+                        ],
+                        source_refs=catalogue_log_source_ref(),
+                    ),
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="rebuild-lookups",
+                        status="completed",
+                        record_groups={"works": [work_id], "series": [], "work_details": [detail_uid], "moments": []},
+                        detail_items=[
+                            f"Refreshed catalogue lookup data for work detail {detail_uid}",
+                            f"Wrote {refresh_result['written_count']} lookup file(s)",
+                        ],
+                        source_refs=catalogue_log_source_ref(),
+                    ),
+                ]
+                append_studio_activity_rows(self.server, response_payload, activity_rows)
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "work-detail.save"),
@@ -4526,6 +4632,20 @@ class Handler(BaseHTTPRequestHandler):
                 build_plan=build_plan,
             )
             response_payload["build"] = build_payload
+            if activity_context:
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    catalogue_build_activity_rows(
+                        activity_context,
+                        build_payload,
+                        published_step_label="Generate Work Pages",
+                        published_script_purpose_id="rebuild-published-work-data",
+                        published_detail=f"Updated published parent work JSON for detail {detail_uid}",
+                        search_detail=f"Rebuilt catalogue search for work detail {detail_uid}",
+                        fallback_record_groups={"works": [work_id], "series": [], "work_details": [detail_uid], "moments": []},
+                    ),
+                )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _send_retired_work_child_metadata_response(self, allowed: Optional[str]) -> None:
@@ -4564,6 +4684,15 @@ class Handler(BaseHTTPRequestHandler):
         if requested_series_id is None:
             requested_series_id = series_update.get("series_id")
         series_id = normalize_series_id(requested_series_id)
+        activity_context = normalize_activity_context(
+            body.get("activity_context"),
+            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
+            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_SERIES,
+            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES,
+            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE,
+            record_id_field="series_id",
+            record_id=series_id,
+        )
         work_updates_request = extract_series_work_updates(body)
         extra_work_ids = [slug_id(raw) for raw in body.get("extra_work_ids") or []]
 
@@ -4636,6 +4765,8 @@ class Handler(BaseHTTPRequestHandler):
             "record": updated_series_record,
             "work_records": response_work_records,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
@@ -4693,6 +4824,9 @@ class Handler(BaseHTTPRequestHandler):
                 "changed_work_ids": changed_work_ids,
                 "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
                 "lookup_refresh_artifacts": lookup_refresh_payload.get("artifacts") if changed else [],
+                "activity_correlation_id": activity_context.get("correlation_id") if activity_context else "",
+                "activity_page_id": activity_context.get("page_id") if activity_context else "",
+                "activity_action_id": activity_context.get("action_id") if activity_context else "",
                 "dry_run": self.server.dry_run,
             },
         )
@@ -4712,6 +4846,36 @@ class Handler(BaseHTTPRequestHandler):
                 "written_count": refresh_result["written_count"],
             }
             now_utc = utc_now()
+            if activity_context:
+                canonical_detail_items = [f"Saved canonical series record {series_id}"]
+                if series_changed_fields:
+                    canonical_detail_items.append(f"Changed series fields: {', '.join(series_changed_fields)}")
+                if changed_work_ids:
+                    canonical_detail_items.append(f"Saved {len(changed_work_ids)} member work record(s)")
+                activity_rows = [
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="save-canonical-data",
+                        status="completed",
+                        record_groups={"works": changed_work_ids, "series": [series_id], "work_details": [], "moments": []},
+                        detail_items=canonical_detail_items,
+                        source_refs=catalogue_log_source_ref(),
+                    ),
+                    studio_activity_entry(
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="rebuild-lookups",
+                        status="completed",
+                        record_groups={"works": changed_work_ids, "series": [series_id], "work_details": [], "moments": []},
+                        detail_items=[
+                            f"Refreshed catalogue lookup data for series {series_id}",
+                            f"Wrote {refresh_result['written_count']} lookup file(s)",
+                        ],
+                        source_refs=catalogue_log_source_ref(),
+                    ),
+                ]
+                append_studio_activity_rows(self.server, response_payload, activity_rows)
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "series.save"),
@@ -4747,6 +4911,20 @@ class Handler(BaseHTTPRequestHandler):
                 build_plan=build_plan,
             )
             response_payload["build"] = build_payload
+            if activity_context:
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    catalogue_build_activity_rows(
+                        activity_context,
+                        build_payload,
+                        published_step_label="Generate Work Pages",
+                        published_script_purpose_id="rebuild-published-series-data",
+                        published_detail=f"Updated published series/work JSON for series {series_id}",
+                        search_detail=f"Rebuilt catalogue search for series {series_id}",
+                        fallback_record_groups={"works": changed_work_ids, "series": [series_id], "work_details": [], "moments": []},
+                    ),
+                )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_series_create(self, allowed: Optional[str]) -> None:
@@ -5240,6 +5418,15 @@ class Handler(BaseHTTPRequestHandler):
         if requested_moment_id is None:
             requested_moment_id = moment_update.get("moment_id")
         moment_id = normalize_moment_id_value(requested_moment_id)
+        activity_context = normalize_activity_context(
+            body.get("activity_context"),
+            page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
+            action_id=ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT,
+            route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
+            control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE,
+            record_id_field="moment_id",
+            record_id=moment_id,
+        )
 
         moments_payload = load_moments_payload(self.server.moments_path)
         moments = moments_payload["moments"]
@@ -5273,6 +5460,8 @@ class Handler(BaseHTTPRequestHandler):
             "changed_fields": fields_changed,
             "record": updated_record,
         }
+        if activity_context:
+            response_payload["activity_context"] = activity_context
         build_plan: Dict[str, Any] = {}
         if changed:
             invalidation = moment_lookup_invalidation_for_fields(fields_changed)
@@ -5307,11 +5496,33 @@ class Handler(BaseHTTPRequestHandler):
                 "moment_id": moment_id,
                 "changed": changed,
                 "changed_fields": fields_changed,
+                "activity_correlation_id": activity_context.get("correlation_id") if activity_context else "",
+                "activity_page_id": activity_context.get("page_id") if activity_context else "",
+                "activity_action_id": activity_context.get("action_id") if activity_context else "",
                 "dry_run": self.server.dry_run,
             },
         )
         if changed and not self.server.dry_run:
             now_utc = utc_now()
+            if activity_context:
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    [
+                        studio_activity_entry(
+                            activity_context,
+                            now_utc=now_utc,
+                            script_purpose_id="save-canonical-data",
+                            status="completed",
+                            record_groups={"works": [], "series": [], "work_details": [], "moments": [moment_id]},
+                            detail_items=[
+                                f"Saved canonical moment record {moment_id}",
+                                f"Changed fields: {', '.join(fields_changed)}",
+                            ],
+                            source_refs=catalogue_log_source_ref(),
+                        )
+                    ],
+                )
             self.server.append_activity(
                 {
                     "id": activity_id(now_utc, "moment.save"),
@@ -5353,6 +5564,20 @@ class Handler(BaseHTTPRequestHandler):
                 build_plan=build_plan,
             )
             response_payload["build"] = build_payload
+            if activity_context:
+                append_studio_activity_rows(
+                    self.server,
+                    response_payload,
+                    catalogue_build_activity_rows(
+                        activity_context,
+                        build_payload,
+                        published_step_label="Generate Moment Pages",
+                        published_script_purpose_id="rebuild-published-moment-data",
+                        published_detail=f"Updated published moment JSON for {moment_id}",
+                        search_detail=f"Rebuilt catalogue search for moment {moment_id}",
+                        fallback_record_groups={"works": [], "series": [], "work_details": [], "moments": [moment_id]},
+                    ),
+                )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_prose_import_preview(self, allowed: Optional[str]) -> None:

@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-08] Extended Studio activity logging to catalogue editor saves
+
+**Status:** implemented
+
+**Area:** Studio / activity reporting
+
+**Summary:**
+Completed Batch A for unified Studio activity logging by wiring single-record save actions on the work, work detail, series, and moment catalogue editors into the structured activity contract and feed.
+
+**Files changed:**
+
+- `assets/studio/data/activity_contract.json`
+- `scripts/studio/catalogue_write_server.py`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
+- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+
+**Impact:**
+Single metadata saves now produce correlated activity rows for canonical source writes, lookup refreshes where they actually occur, published-data rebuilds when attempted, and catalogue search rebuilds when attempted.
+Batch findings are recorded in the request so later create/delete/publication coverage can reuse the same approach without over-expanding this slice.
+
 ## [2026-05-08] Implemented v1 Studio activity report route
 
 **Status:** implemented

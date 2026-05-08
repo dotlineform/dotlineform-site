@@ -486,6 +486,14 @@ Tasks:
 - run one `/studio/activity/` browser smoke test for the batch
 - record workflow findings for save flows, especially modal or confirmation behavior that could affect attribution
 
+Batch A findings:
+
+| Route/control | User action | Observed behavior | Activity-log impact | Handling |
+|---|---|---|---|---|
+| `/studio/catalogue-work-detail/` `#catalogueWorkDetailSave`; `/studio/catalogue-moment/` `#catalogueMomentSave` | `save work detail`; `save moment` | The first activity-context normalizer was work-id specific and used numeric work-id normalization for every record id. | Would reject valid detail and moment activity contexts before those actions could write unified rows. | `v1-fix`: the normalizer now dispatches by record id field. |
+| `/studio/catalogue-moment/` `#catalogueMomentSave` | `save moment` | Moment metadata saves describe a lookup-style invalidation plan, but the current durable downstream work is published moment data and catalogue search, not Studio catalogue lookup payloads. | A `rebuild lookups` row for moment save would be misleading. | `v1-fix`: moment save registry and rows exclude `rebuild-lookups`; follow up later on whether the response field should be renamed away from `lookup_refresh`. |
+| catalogue save handlers | save work/detail/series/moment | The source-save, lookup-refresh, and scoped-build orchestration is similar across handlers but still spread through separate methods. | Current rows can be correct, but later batches could duplicate mistakes if each action is hand-shaped. | `follow-up`: Batch B should either extend the helper profile introduced here or create an action-profile abstraction before adding create/delete/publication coverage. |
+
 ### Batch B: Catalogue Create, Delete, And Publication Paths
 
 Scope:

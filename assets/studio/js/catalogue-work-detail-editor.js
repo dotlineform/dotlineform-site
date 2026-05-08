@@ -536,7 +536,17 @@ function buildPayload(state) {
   }
 
   const draft = state.draft;
-  return buildSaveWorkDetailPayload({ ...state, draft, applyBuild: currentDetailIsPublished(state) });
+  return {
+    ...buildSaveWorkDetailPayload({ ...state, draft, applyBuild: currentDetailIsPublished(state) }),
+    activity_context: {
+      page_id: "catalogue-work-detail",
+      action_id: "save-work-detail",
+      route: "/studio/catalogue-work-detail/",
+      control_id: "catalogueWorkDetailSave",
+      control_selector: "#catalogueWorkDetailSave",
+      detail_uid: state.currentDetailUid
+    }
+  };
 }
 
 function currentDetailIsPublished(state) {
