@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T20:05:54Z",
+  "generated_at": "2026-05-09T20:14:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3011,7 +3011,7 @@
       "doc_id": "site-request-scripts-directory-organization",
       "title": "Scripts Directory Organization Request",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-09 21:13",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3019,8 +3019,8 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 11913,
-      "ui_status": "proposed"
+      "content_text_length": 34907,
+      "ui_status": "in_progress"
     },
     {
       "scope": "studio",

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-776ffda163c377b6c9fae800eec771e8",
-    "generated_at_utc": "2026-05-09T20:05:54Z",
+    "version": "blake2b-612b32cef31767e94bb8dabcf47cc1e1",
+    "generated_at_utc": "2026-05-09T20:14:02Z",
     "count": 209
   },
   "entries": [
@@ -4989,10 +4989,10 @@
       "kind": "doc",
       "title": "Scripts Directory Organization Request",
       "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-09 21:13",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 16:00 • Change Requests",
+      "display_meta": "2026-05-09 21:13 • Change Requests",
       "search_terms": [
         "site-request-scripts-directory-organization",
         "site",
@@ -5004,14 +5004,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 16:00",
+        "2026-05-09 21:13",
         "2026",
         "05",
         "09",
-        "16",
-        "00"
+        "21",
+        "13"
       ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 21:13 2026 05 09 21 13"
     },
     {
       "id": "site-request-analytics-tag-route-cleanup",

@@ -2,15 +2,15 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 16:00"
-ui_status: proposed
+last_updated: "2026-05-09 21:13"
+ui_status: in_progress
 parent_id: change-requests
 sort_order: 212
 viewable: true
 ---
 # Scripts Directory Organization Request
 
-Status: proposed.
+Status: slice 1 inventory complete; awaiting review before file moves.
 
 ## Purpose
 
@@ -107,6 +107,117 @@ Acceptance checks:
 - the move map is reviewed before moving files
 - every proposed top-level survivor has a reason
 - every proposed subfolder has a short ownership rule
+
+#### Slice 1 inventory result
+
+Inventory date: 2026-05-09.
+
+This slice does not move files. It records the proposed ownership map so the later implementation slices can update imports, command paths, docs, tests, and `bin/dev-studio` deliberately instead of treating path churn as incidental cleanup.
+
+Reference coverage is intentionally compact:
+
+- `Public refs` names runnable commands and `bin/dev-studio` startup usage that would need command-path updates or wrapper decisions.
+- `Tests/docs refs` lists concrete test files when present and gives primary docs plus a `+N` count when historical request/change-log docs also mention the path.
+- Before moving any row, rerun `rg` for the exact path and module stem because many Python tests import modules by name rather than by path.
+
+Proposed folder ownership rules:
+
+- `scripts/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, catalogue validation, catalogue route constants, catalogue write service, and source-adjacent project-state utilities.
+- `scripts/analytics/` owns Analytics metadata over catalogue works and series. Current `tag_*` modules and the tag write service move here as the first Analytics implementation layer.
+- `scripts/docs/` remains the Docs domain package.
+- `scripts/search/` owns search build configuration and, pending Slice 4, may own the search builder implementation.
+- `scripts/studio/` owns non-domain-specific Studio runtime services and admin maintenance only.
+- `scripts/media/` should own media derivation and remote media publishing tooling.
+- `scripts/checks/` should own standalone audit/verification commands, while `scripts/run_checks.py` remains the stable top-level aggregator command.
+- Top-level `scripts/` survivors must be either stable public entrypoints, shell wrappers over a moved implementation, or shared infrastructure modules with cross-domain callers.
+
+| Current path | Role | Owner | Proposed target | Public refs | Tests/docs refs | Risk |
+|---|---|---|---|---|---|---|
+| `scripts/audit_site_consistency.py` | entrypoint | Checks | `scripts/checks/audit_site_consistency.py` | `./scripts/audit_site_consistency.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/site-change-log-2026-03-and-earlier.md` +11 | high |
+| `scripts/audit_studio_ready_state.py` | entrypoint | Checks | `scripts/checks/audit_studio_ready_state.py` | `./scripts/audit_studio_ready_state.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/studio-audits.md` +6 | high |
+| `scripts/build_docs.rb` | entrypoint | Docs | Slice 4: keep top-level wrapper or move to `scripts/docs/build_docs.rb` | `bin/dev-studio`, `./scripts/build_docs.rb` | tests: `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-docs-build-incremental.md`, `_docs/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `scripts/build_palette_data.py` | entrypoint | Media | `scripts/media/build_palette_data.py` | `./scripts/build_palette_data.py` | - | medium |
+| `scripts/build_search.rb` | entrypoint | Search | Slice 4: keep top-level wrapper or move to `scripts/search/build_search.rb` | `bin/dev-studio`, `./scripts/build_search.rb` | tests: `tests/python/test_catalogue_build_commands.py`, `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-docs-build-incremental.md`, `_docs/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `scripts/catalogue_activity.py` | helper | Catalogue | `scripts/catalogue/catalogue_activity.py` | - | tests: `tests/python/test_catalogue_routes.py`, `tests/python/test_studio_activity_context.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_build_commands.py` | helper | Catalogue | `scripts/catalogue/catalogue_build_commands.py` | - | tests: `tests/python/test_catalogue_build_commands.py`; docs: `_docs/site-request-script-structural-review-catalogue-json-build.md`, `_docs/scripts-build-catalogue-json.md` +1 | medium |
+| `scripts/catalogue_build_field_plan.py` | helper | Catalogue | `scripts/catalogue/catalogue_build_field_plan.py` | - | tests: `tests/python/test_catalogue_build_field_plan.py`; docs: `_docs/site-request-script-structural-review-catalogue-json-build.md`, `_docs/scripts-build-catalogue-json.md` +1 | medium |
+| `scripts/catalogue_build_media.py` | helper | Catalogue | `scripts/catalogue/catalogue_build_media.py` | - | tests: `tests/python/test_catalogue_build_media.py`, `tests/python/test_catalogue_media_cleanup.py`; docs: `_docs/site-request-script-structural-review-catalogue-json-build.md`, `_docs/scripts-build-catalogue-json.md` +1 | medium |
+| `scripts/catalogue_build_scopes.py` | helper | Catalogue | `scripts/catalogue/catalogue_build_scopes.py` | - | tests: `tests/python/test_catalogue_build_scopes.py`; docs: `_docs/site-request-script-structural-review-catalogue-json-build.md`, `_docs/scripts-build-catalogue-json.md` +1 | medium |
+| `scripts/catalogue_cleanup.py` | helper | Catalogue | `scripts/catalogue/catalogue_cleanup.py` | - | tests: `tests/python/test_catalogue_cleanup.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-request-script-structural-review-catalogue-json-build.md` +2 | medium |
+| `scripts/catalogue_delete_plans.py` | helper | Catalogue | `scripts/catalogue/catalogue_delete_plans.py` | - | tests: `tests/python/test_catalogue_delete_plans.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_field_registry.py` | helper | Catalogue | `scripts/catalogue/catalogue_field_registry.py` | - | docs: `_docs/site-change-log-2026-05.md`, `_docs/scripts-verify-catalogue-field-registry.md` | medium |
+| `scripts/catalogue_generation_common.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_common.py` | - | docs: `_docs/site-change-log.md`, `_docs/site-request-script-structural-review-generate-work-pages.md` | medium |
+| `scripts/catalogue_generation_indexes.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_indexes.py` | - | tests: `tests/python/test_catalogue_generation_indexes.py`; docs: `_docs/scripts-generate-work-pages.md`, `_docs/site-request-script-structural-review-generate-work-pages.md` +1 | medium |
+| `scripts/catalogue_generation_moments.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_moments.py` | - | tests: `tests/python/test_catalogue_generation_moments.py`; docs: `_docs/scripts-generate-work-pages.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_generation_recent.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_recent.py` | - | tests: `tests/python/test_catalogue_generation_recent.py`; docs: `_docs/scripts-generate-work-pages.md`, `_docs/site-request-script-structural-review-generate-work-pages.md` +1 | medium |
+| `scripts/catalogue_generation_records.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_records.py` | - | tests: `tests/python/test_catalogue_generation_records.py`; docs: `_docs/scripts-generate-work-pages.md`, `_docs/site-request-script-structural-review-generate-work-pages.md` | medium |
+| `scripts/catalogue_generation_source_updates.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_source_updates.py` | - | tests: `tests/python/test_catalogue_generation_source_updates.py`; docs: `_docs/scripts-generate-work-pages.md`, `_docs/site-request-script-structural-review-generate-work-pages.md` +1 | medium |
+| `scripts/catalogue_generation_writes.py` | helper | Catalogue | `scripts/catalogue/catalogue_generation_writes.py` | - | tests: `tests/python/test_catalogue_generation_writes.py`; docs: `_docs/site-request-script-structural-review-generate-work-pages.md` | medium |
+| `scripts/catalogue_invalidation.py` | helper | Catalogue | `scripts/catalogue/catalogue_invalidation.py` | - | tests: `tests/python/test_catalogue_invalidation.py`, `tests/python/test_catalogue_lookup_refresh.py` +1; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_json_build.py` | entrypoint | Catalogue | `scripts/catalogue/catalogue_json_build.py` | `./scripts/catalogue_json_build.py` | docs: `_docs/scripts-main-pipeline.md`, `_docs/site-change-log-2026-05.md` +26 | high |
+| `scripts/catalogue_lookup.py` | helper | Catalogue | `scripts/catalogue/catalogue_lookup.py` | - | tests: `tests/python/test_catalogue_lookup_refresh.py`; docs: `_docs/site-change-log-2026-05.md`, `_docs/scripts-catalogue-write-server.md` +5 | medium |
+| `scripts/catalogue_lookup_refresh.py` | helper | Catalogue | `scripts/catalogue/catalogue_lookup_refresh.py` | - | tests: `tests/python/test_catalogue_lookup_refresh.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_prose_import.py` | helper | Catalogue | `scripts/catalogue/catalogue_prose_import.py` | - | tests: `tests/python/test_catalogue_prose_import.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-request-script-structural-review-catalogue-json-build.md` +2 | medium |
+| `scripts/catalogue_publication.py` | helper | Catalogue | `scripts/catalogue/catalogue_publication.py` | - | tests: `tests/python/test_catalogue_publication.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-request-script-structural-review-catalogue-json-build.md` +2 | medium |
+| `scripts/catalogue_routes.py` | helper | Catalogue | `scripts/catalogue/catalogue_routes.py` | - | tests: `tests/python/test_catalogue_routes.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_save_build.py` | helper | Catalogue | `scripts/catalogue/catalogue_save_build.py` | - | tests: `tests/python/test_catalogue_save_build.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_source.py` | helper | Catalogue | `scripts/catalogue/catalogue_source.py` | - | tests: `tests/python/test_catalogue_build_field_plan.py`, `tests/python/test_catalogue_build_media.py` +8; docs: `_docs/site-change-log-2026-05.md`, `_docs/scripts-catalogue-write-server.md` +15 | medium |
+| `scripts/catalogue_source_mutation.py` | helper | Catalogue | `scripts/catalogue/catalogue_source_mutation.py` | - | tests: `tests/python/test_catalogue_source_mutation.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_transactions.py` | helper | Catalogue | `scripts/catalogue/catalogue_transactions.py` | - | tests: `tests/python/test_catalogue_transactions.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/catalogue_workbook_import.py` | helper | Catalogue | `scripts/catalogue/catalogue_workbook_import.py` | - | docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-catalogue-compatibility-cleanup.md` +4 | medium |
+| `scripts/css_token_audit.py` | entrypoint | Checks | `scripts/checks/css_token_audit.py` | `./scripts/css_token_audit.py` | docs: `_docs/local-setup.md`, `_docs/scripts-css-token-audit.md` +2 | medium |
+| `scripts/display_paths.py` | helper | Shared infrastructure | `scripts/display_paths.py` | - | docs: `_docs/site-change-log-2026-04.md` | low |
+| `scripts/docs/docs_activity.py` | helper | Docs | `scripts/docs/docs_activity.py` | - | tests: `tests/python/test_docs_activity.py`; docs: `_docs/site-request-script-structural-review-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_broken_links.py` | entrypoint | Docs | `scripts/docs/docs_broken_links.py` | `./scripts/docs/docs_broken_links.py` | tests: `tests/python/test_docs_broken_links.py`; docs: `_docs/site-change-log-2026-04.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_export.py` | entrypoint | Docs | `scripts/docs/docs_export.py` | `./scripts/docs/docs_export.py` | tests: `tests/python/test_docs_export.py`; docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-script-structural-review.md` +9 | high |
+| `scripts/docs/docs_generated_reads.py` | helper | Docs | `scripts/docs/docs_generated_reads.py` | - | tests: `tests/python/test_docs_generated_reads.py`; docs: `_docs/site-request-script-structural-review-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_html_import.py` | entrypoint | Docs | `scripts/docs/docs_html_import.py` | `./scripts/docs/docs_html_import.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-docs-html-inline-raster-media.md` +7 | high |
+| `scripts/docs/docs_import.py` | entrypoint | Docs | `scripts/docs/docs_import.py` | `./scripts/docs/docs_import.py` | tests: `tests/python/test_docs_import.py`; docs: `_docs/library-import.md`, `_docs/site-change-log-2026-05.md` +10 | high |
+| `scripts/docs/docs_import_source_service.py` | helper | Docs | `scripts/docs/docs_import_source_service.py` | - | tests: `tests/python/test_docs_import_service.py`; docs: `_docs/site-request-script-structural-review-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_live_rebuild_watcher.py` | entrypoint | Docs | `scripts/docs/docs_live_rebuild_watcher.py` | `bin/dev-studio`, `./scripts/docs/docs_live_rebuild_watcher.py` | tests: `tests/python/test_docs_live_rebuild_watcher.py`; docs: `_docs/site-change-log-2026-04.md`, `_docs/search-change-log.md` +5 | medium |
+| `scripts/docs/docs_management_mutations.py` | helper | Docs | `scripts/docs/docs_management_mutations.py` | - | tests: `tests/python/test_docs_management_mutations.py`, `tests/python/test_docs_management_server.py`; docs: `_docs/scripts-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_management_routes.py` | helper | Docs | `scripts/docs/docs_management_routes.py` | - | tests: `tests/python/test_docs_activity.py`, `tests/python/test_docs_management_routes.py`; docs: `_docs/scripts-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_management_server.py` | entrypoint | Docs | `scripts/docs/docs_management_server.py` | `bin/dev-studio`, `./scripts/docs/docs_management_server.py` | tests: `tests/python/test_docs_import_service.py`, `tests/python/test_docs_management_routes.py` +1; docs: `_docs/library-import.md`, `_docs/site-change-log-2026-05.md` +20 | high |
+| `scripts/docs/docs_scope_config.py` | helper | Docs | `scripts/docs/docs_scope_config.py` | - | docs: `_docs/site-change-log.md` | low |
+| `scripts/docs/docs_scopes.json` | config | Docs | `scripts/docs/docs_scopes.json` | config read | docs: `_docs/site-change-log.md`, `_docs/scripts-docs-live-rebuild-watcher.md` +1 | medium |
+| `scripts/docs/docs_source_model.py` | helper | Docs | `scripts/docs/docs_source_model.py` | - | tests: `tests/python/test_docs_import_service.py`, `tests/python/test_docs_live_rebuild_watcher.py` +3; docs: `_docs/scripts-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/docs_watch_suppression.py` | helper | Docs | `scripts/docs/docs_watch_suppression.py` | - | docs: `_docs/site-change-log-2026-04.md` | low |
+| `scripts/docs/docs_write_rebuild.py` | helper | Docs | `scripts/docs/docs_write_rebuild.py` | - | tests: `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-script-structural-review-docs-management-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/docs/export_import_adapters.py` | helper | Docs | `scripts/docs/export_import_adapters.py` | - | tests: `tests/python/test_docs_import_service.py`, `tests/python/test_docs_management_server.py` +1; docs: `_docs/config-export-import-adapters.md`, `_docs/site-request-export-import-adapters.md` +2 | medium |
+| `scripts/export_catalogue_lookup.py` | entrypoint | Catalogue | `scripts/catalogue/export_catalogue_lookup.py` | `bin/dev-studio`, `./scripts/export_catalogue_lookup.py` | docs: `_docs/scripts-catalogue-lookup.md`, `_docs/studio-runtime.md` +3 | high |
+| `scripts/fix_missing_title_sort.py` | entrypoint | Catalogue | `scripts/catalogue/fix_missing_title_sort.py` | `./scripts/fix_missing_title_sort.py` | docs: `_docs/scripts-fix-missing-title-sort.md` | medium |
+| `scripts/generate_work_pages.py` | entrypoint | Catalogue | `scripts/catalogue/generate_work_pages.py` | `./scripts/generate_work_pages.py` | tests: `tests/python/test_catalogue_build_commands.py`; docs: `_docs/site-change-log-2026-05.md`, `_docs/scripts-generate-work-pages.md` +29 | high |
+| `scripts/jekyll_markdown_renderer.rb` | entrypoint | Shared infrastructure | `scripts/jekyll_markdown_renderer.rb` | `./scripts/jekyll_markdown_renderer.rb` | docs: `_docs/site-change-log-2026-04.md` | low |
+| `scripts/jekyll_webrick_client_reset_filter.rb` | entrypoint | Shared infrastructure | `scripts/jekyll_webrick_client_reset_filter.rb` | `bin/dev-studio`, `./scripts/jekyll_webrick_client_reset_filter.rb` | docs: `_docs/site-change-log-2026-04.md`, `_docs/scripts-dev-studio.md` | low |
+| `scripts/local_env.py` | helper | Shared infrastructure | `scripts/local_env.py` | - | tests: `tests/python/test_local_env.py`; docs: `_docs/site-change-log.md` | medium |
+| `scripts/make_srcset_images.py` | entrypoint | Media | `scripts/media/make_srcset_images.py` | `./scripts/make_srcset_images.py` | tests: `tests/python/test_catalogue_build_media.py`, `tests/python/test_catalogue_cleanup.py` +1; docs: `_docs/site-change-log-2026-04.md`, `_docs/pipeline-config-refactor-plan.md` +2 | medium |
+| `scripts/make_srcset_images.sh` | entrypoint | Media | Keep top-level shell wrapper; implementation to `scripts/media/make_srcset_images.py` | `./scripts/make_srcset_images.sh` | tests: `tests/python/test_catalogue_build_media.py`, `tests/python/test_catalogue_cleanup.py` +1; docs: `_docs/pipeline-config-refactor-plan.md`, `_docs/scripts.md` +1 | medium |
+| `scripts/migrate_catalogue_media_sections.py` | entrypoint | Catalogue | `scripts/catalogue/migrate_catalogue_media_sections.py` | `./scripts/migrate_catalogue_media_sections.py` | tests: `tests/python/test_catalogue_media_section_migration.py`; docs: `_docs/site-request-catalogue-media-section-schema.md`, `_docs/scripts-catalogue-source.md` +1 | medium |
+| `scripts/moment_sources.py` | helper | Catalogue | `scripts/catalogue/moment_sources.py` | - | tests: `tests/python/test_catalogue_build_scopes.py`, `tests/python/test_catalogue_delete_plans.py` +2; docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-catalogue-source-registry-drift-verification.md` +7 | medium |
+| `scripts/pipeline_config.py` | helper | Shared infrastructure | `scripts/pipeline_config.py` | - | tests: `tests/python/test_catalogue_build_media.py`; docs: `_docs/pipeline-config-refactor-plan.md`, `_docs/moments-json-migration-plan.md` +2 | medium |
+| `scripts/project_state_report.py` | entrypoint | Catalogue | `scripts/catalogue/project_state_report.py` | `./scripts/project_state_report.py` | docs: `_docs/scripts-project-state-report.md`, `_docs/scripts-catalogue-write-server.md` +4 | medium |
+| `scripts/publish_media_to_r2.py` | entrypoint | Media | `scripts/media/publish_media_to_r2.py` | `./scripts/publish_media_to_r2.py` | tests: `tests/python/test_publish_media_to_r2.py`; docs: `_docs/scripts-publish-media-to-r2.md`, `_docs/local-setup.md` +2 | medium |
+| `scripts/render_markdown_with_jekyll.rb` | entrypoint | Shared infrastructure | `scripts/render_markdown_with_jekyll.rb` | `./scripts/render_markdown_with_jekyll.rb` | docs: `_docs/moments-json-migration-plan.md` | low |
+| `scripts/run_checks.py` | entrypoint | Shared entrypoint | `scripts/run_checks.py` | `./scripts/run_checks.py` | tests: `tests/README.md`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/library-import.md` +22 | high |
+| `scripts/script_logging.py` | helper | Shared infrastructure | `scripts/script_logging.py` | - | - | low |
+| `scripts/search/build_config.json` | config | Search | `scripts/search/build_config.json` | config read | docs: `_docs/search-validation-checklist.md`, `_docs/search-overview.md` +7 | medium |
+| `scripts/series_ids.py` | helper | Catalogue | `scripts/catalogue/series_ids.py` | - | tests: `tests/python/test_catalogue_build_commands.py`, `tests/python/test_catalogue_build_field_plan.py` +11; docs: `_docs/site-change-log-2026-04.md` | medium |
+| `scripts/studio/audit_service.py` | entrypoint | Studio runtime | `scripts/studio/audit_service.py` | `bin/dev-studio`, `./scripts/studio/audit_service.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/studio-runtime.md` +8 | high |
+| `scripts/studio/catalogue_write_server.py` | entrypoint | Catalogue | `scripts/catalogue/catalogue_write_server.py` | `bin/dev-studio`, `./scripts/studio/catalogue_write_server.py` | tests: `tests/python/test_catalogue_routes.py`, `tests/python/test_studio_activity_feed.py`; docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-catalogue-delete-cleanup.md` +24 | high |
+| `scripts/studio/tag_write_server.py` | entrypoint | Analytics | `scripts/analytics/tag_write_server.py` | `bin/dev-studio`, `./scripts/studio/tag_write_server.py` | tests: `tests/python/test_tag_activity.py`, `tests/python/test_tag_routes.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/offline-tag-assignments-implementation-breakdown.md` +12 | high |
+| `scripts/studio_activity.py` | helper | Shared infrastructure | `scripts/studio_activity.py` | - | tests: `tests/python/test_docs_activity.py`, `tests/python/test_studio_activity_feed.py`; docs: `_docs/scripts-tag-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/studio_backup_retention.py` | entrypoint | Studio runtime | `scripts/studio/studio_backup_retention.py` | `bin/dev-studio`, `./scripts/studio_backup_retention.py` | tests: `tests/python/test_studio_backup_retention.py`; docs: `_docs/scripts-studio-backup-retention.md`, `_docs/site-change-log.md` +1 | high |
+| `scripts/tag_activity.py` | helper | Analytics | `scripts/analytics/tag_activity.py` | - | tests: `tests/python/test_tag_activity.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/scripts-tag-write-server.md` | medium |
+| `scripts/tag_alias_mutations.py` | helper | Analytics | `scripts/analytics/tag_alias_mutations.py` | - | tests: `tests/python/test_tag_alias_mutations.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/scripts-tag-write-server.md` +1 | medium |
+| `scripts/tag_assignment_service.py` | helper | Analytics | `scripts/analytics/tag_assignment_service.py` | - | tests: `tests/python/test_tag_assignment_service.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/tag_promotion_mutations.py` | helper | Analytics | `scripts/analytics/tag_promotion_mutations.py` | - | tests: `tests/python/test_tag_promotion_mutations.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/scripts-tag-write-server.md` +1 | medium |
+| `scripts/tag_registry_mutations.py` | helper | Analytics | `scripts/analytics/tag_registry_mutations.py` | - | tests: `tests/python/test_tag_registry_mutations.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/tag_routes.py` | helper | Analytics | `scripts/analytics/tag_routes.py` | - | tests: `tests/python/test_tag_activity.py`, `tests/python/test_tag_routes.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/tag_source_model.py` | helper | Analytics | `scripts/analytics/tag_source_model.py` | - | tests: `tests/python/test_tag_source_model.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/site-change-log.md` +1 | medium |
+| `scripts/tag_write_transactions.py` | helper | Analytics | `scripts/analytics/tag_write_transactions.py` | - | tests: `tests/python/test_tag_write_transactions.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/scripts-tag-write-server.md` +1 | medium |
+| `scripts/validate_catalogue_source.py` | entrypoint | Catalogue | `scripts/catalogue/validate_catalogue_source.py` | `./scripts/validate_catalogue_source.py` | docs: `_docs/local-setup.md`, `_docs/site-request-catalogue-media-section-schema.md` +4 | medium |
+| `scripts/verify_activity_contract.py` | entrypoint | Checks | `scripts/checks/verify_activity_contract.py` | `./scripts/verify_activity_contract.py` | tests: `tests/python/test_activity_contract.py`; docs: `_docs/site-request-studio-unified-activity-log-inventory.md` | medium |
+| `scripts/verify_catalogue_field_registry.py` | entrypoint | Catalogue | `scripts/catalogue/verify_catalogue_field_registry.py` | `./scripts/verify_catalogue_field_registry.py` | tests: `tests/python/test_catalogue_field_registry.py`; docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-catalogue-source-registry-drift-verification.md` +8 | high |
 
 ### Slice 2: catalogue package move
 
