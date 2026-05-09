@@ -12,10 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
+import catalogue_build_field_plan as build_field_plan
 import catalogue_build_media as build_media
 import catalogue_build_scopes as build_scopes
-from catalogue_field_registry import apply_field_build_plan_to_scope, field_aware_build_plan, load_catalogue_field_registry
-from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
+from catalogue_source import DEFAULT_SOURCE_DIR
 from local_env import runtime_env
 from moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
@@ -332,34 +332,11 @@ def summarize_moment_scope(moment_ids: Sequence[str]) -> str:
 
 
 def parse_csv_tokens(value: Any) -> list[str]:
-    out: list[str] = []
-    seen: set[str] = set()
-    if value is None:
-        return out
-    raw_values = value if isinstance(value, list) else [value]
-    for raw in raw_values:
-        for part in str(raw or "").split(","):
-            item = part.strip()
-            if not item or item in seen:
-                continue
-            seen.add(item)
-            out.append(item)
-    return out
+    return build_field_plan.parse_csv_tokens(value)
 
 
 def infer_record_family_for_scope(scope: Mapping[str, Any], explicit_family: str = "") -> str:
-    family = str(explicit_family or "").strip().lower().replace("-", "_")
-    if family:
-        if family not in {"work", "work_detail", "series", "moment"}:
-            raise ValueError("--record-family must be work, work_detail, series, or moment")
-        return family
-    if str(scope.get("kind") or "") == "moment":
-        return "moment"
-    if scope.get("detail_uid"):
-        return "work_detail"
-    if scope.get("series_ids") and not scope.get("work_ids"):
-        return "series"
-    return "work"
+    return build_field_plan.infer_record_family_for_scope(scope, explicit_family)
 
 
 def build_field_plan_for_scope(
@@ -370,63 +347,21 @@ def build_field_plan_for_scope(
     changed_fields: Sequence[str],
     record_family: str = "",
 ) -> Dict[str, Any]:
-    fields = [str(field).strip() for field in changed_fields if str(field).strip()]
-    if not fields:
-        return {}
-    family = infer_record_family_for_scope(scope, record_family)
-    registry = load_catalogue_field_registry(repo_root)
-    context: Dict[str, Any] = {}
-    if family in {"work", "work_detail", "series"}:
-        records = records_from_json_source(source_dir)
-        context["source_records"] = records
-        if family == "work":
-            work_ids = [str(item) for item in scope.get("work_ids", []) if str(item)]
-            if work_ids:
-                record = records.works.get(work_ids[0])
-                if isinstance(record, dict):
-                    context["current_record"] = record
-                    context["updated_record"] = record
-        elif family == "work_detail":
-            detail_uid = str(scope.get("detail_uid") or "").strip()
-            if detail_uid:
-                record = records.work_details.get(detail_uid)
-                if isinstance(record, dict):
-                    context["current_record"] = record
-                    context["updated_record"] = record
-        else:
-            series_ids = [str(item) for item in scope.get("series_ids", []) if str(item)]
-            if series_ids:
-                record = records.series.get(series_ids[0])
-                if isinstance(record, dict):
-                    context["current_record"] = record
-                    context["updated_record"] = record
-    return field_aware_build_plan(
-        registry,
-        record_family=family,
-        operation="metadata_update",
-        changed_field_names=fields,
-        context=context,
+    return build_field_plan.build_field_plan_for_scope(
+        repo_root,
+        source_dir,
+        scope,
+        changed_fields=changed_fields,
+        record_family=record_family,
     )
 
 
+def apply_field_build_plan_to_scope(scope: Dict[str, Any], build_plan: Mapping[str, Any]) -> None:
+    build_field_plan.apply_field_build_plan_to_scope(scope, build_plan)
+
+
 def field_plan_explanation_lines(field_plan: Mapping[str, Any]) -> list[str]:
-    explanations = field_plan.get("explanations") if isinstance(field_plan.get("explanations"), list) else []
-    grouped: dict[tuple[str, str, str], list[str]] = {}
-    for row in explanations:
-        if not isinstance(row, Mapping):
-            continue
-        artifact = str(row.get("artifact") or "").strip()
-        if not artifact:
-            continue
-        fields = ", ".join(str(field) for field in row.get("fields") or [] if str(field).strip()) or "field-aware plan"
-        reason = str(row.get("reason") or "").strip() or "Selected by the field registry."
-        fallback = str(row.get("fallback_reason") or "").strip() if row.get("fallback") else ""
-        grouped.setdefault((fields, reason, fallback), []).append(artifact)
-    lines: list[str] = []
-    for (fields, reason, fallback), artifacts in grouped.items():
-        prefix = "fallback " if fallback else ""
-        lines.append(f"{', '.join(sorted(set(artifacts)))}: {prefix}{fields} -> {reason}")
-    return lines
+    return build_field_plan.field_plan_explanation_lines(field_plan)
 
 
 def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:

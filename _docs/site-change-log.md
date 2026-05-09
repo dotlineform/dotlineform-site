@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Extracted catalogue build field-plan adapter
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Implemented Slice 3 of the catalogue JSON build structural review.
+`scripts/catalogue_build_field_plan.py` now owns changed-field token normalization, record-family inference, field registry plan lookup, scope application, and preview explanation line construction.
+`scripts/catalogue_json_build.py` keeps compatibility wrappers for the existing CLI and Studio imports while delegating field-aware planning behavior to the new owner.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_build_field_plan.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_build_field_plan.py`
+- [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build)
+
+**Impact:**
+The supported `--changed-fields` and `--record-family` CLI meanings, Studio build payload shape, generated artifact selection, search rebuild selection, and local-media selection stay unchanged.
+The extracted module now has direct tests for work/detail/series/moment family inference, empty changed-field behavior, focused JSON reductions, local-media-only reductions, search rebuild reductions, and generator `--only` reductions.
+
 ## [2026-05-09] Extracted catalogue build media planning
 
 **Status:** implemented

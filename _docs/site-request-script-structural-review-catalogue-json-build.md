@@ -16,6 +16,7 @@ Status:
 - Slice 0 read-only extraction map completed
 - Slice 1 scoped build planning helpers implemented
 - Slice 2 local media planning and readiness implemented
+- Slice 3 field-aware build-plan adapter implemented
 
 ## Purpose
 
@@ -269,7 +270,7 @@ Risks:
 
 ### Slice 3: field-aware build-plan adapter
 
-Status: planned.
+Status: implemented.
 
 Likely module owner:
 
@@ -291,6 +292,23 @@ The entrypoint should keep:
 Tests:
 
 - pin work/detail/series/moment family inference, empty changed-field behavior, media-only reductions, search rebuild reductions, and generator `--only` reductions
+
+Implementation result:
+
+- `scripts/catalogue_build_field_plan.py` now owns changed-field token normalization, record-family inference, field registry plan lookup, field-plan application to scoped build payloads, and preview explanation line construction
+- `scripts/catalogue_json_build.py` keeps compatibility wrappers for the existing CLI and Studio imports, but delegates field-aware planning behavior to the new owner
+- `tests/python/test_catalogue_build_field_plan.py` pins CLI-style changed-field parsing, family inference for work/detail/series/moment scopes, empty changed-field behavior, focused work JSON reductions, local-media-only reductions, search rebuild reductions, and generator `--only` reductions
+- `scripts/run_checks.py` quick syntax and focused test coverage now include the extracted field-plan module and tests
+
+Benefits:
+
+- separates registry-specific field-plan adaptation from scoped-build orchestration and preview placement
+- gives changed-field behavior a direct test owner before command construction and subprocess result shaping move
+
+Risks:
+
+- `catalogue_json_build.py` still carries compatibility wrappers until later slices update import ownership deliberately
+- field registry output is runtime-facing; tests pin representative reductions but do not replace full registry verification
 
 ### Slice 4: generator/search command construction and execution results
 

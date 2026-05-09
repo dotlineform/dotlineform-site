@@ -48,6 +48,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/pipeline_config.py",
                 "scripts/publish_media_to_r2.py",
                 "scripts/catalogue_json_build.py",
+                "scripts/catalogue_build_field_plan.py",
                 "scripts/catalogue_build_media.py",
                 "scripts/catalogue_build_scopes.py",
                 "scripts/generate_work_pages.py",
@@ -117,6 +118,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_studio_activity_context.py",
                 "tests/python/test_studio_activity_feed.py",
                 "tests/python/test_catalogue_field_registry.py",
+                "tests/python/test_catalogue_build_field_plan.py",
                 "tests/python/test_catalogue_build_media.py",
                 "tests/python/test_catalogue_build_scopes.py",
                 "tests/python/test_catalogue_generation_indexes.py",
@@ -253,6 +255,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "catalogue-build-scope-tests",
             (sys.executable, "tests/python/test_catalogue_build_scopes.py"),
             "Verify scoped catalogue build planning helpers.",
+        ),
+        CheckCommand(
+            "catalogue-build-field-plan-tests",
+            (sys.executable, "tests/python/test_catalogue_build_field_plan.py"),
+            "Verify scoped catalogue field-aware build-plan helpers.",
         ),
         CheckCommand(
             "catalogue-build-media-tests",
