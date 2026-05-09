@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from http import HTTPStatus
@@ -68,6 +67,7 @@ import catalogue_invalidation as invalidation  # noqa: E402
 import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 import catalogue_save_build as save_build  # noqa: E402
 import catalogue_source_mutation as source_mutation  # noqa: E402
+from local_env import runtime_env  # noqa: E402
 from catalogue_json_build import (  # noqa: E402
     build_search_command,
     build_local_media_plan,
@@ -574,7 +574,7 @@ def load_moments_payload(path: Path) -> Dict[str, Any]:
 
 def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> Dict[str, Any]:
     proc = subprocess.run(
-        build_search_command(repo_root, write=write, force=False, env=os.environ.copy()),
+        build_search_command(repo_root, write=write, force=False, env=runtime_env(repo_root=repo_root)),
         cwd=repo_root,
         text=True,
         capture_output=True,

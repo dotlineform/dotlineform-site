@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 17:51"
+last_updated: "2026-05-09 18:17"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,41 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Standardized local runtime config on site.env
+
+**Status:** implemented
+
+**Area:** Studio / local runtime / media / R2
+
+**Summary:**
+Added `scripts/local_env.py` as the shared parser for `var/local/site.env`.
+Local Python media and pipeline env lookups now read `site.env` directly and let its values win over inherited shell values, while cloud sessions still fall back to process environment variables when the file is absent.
+`bin/dev-studio` now loads `var/local/site.env` itself before applying defaults, and the R2 publisher now uses `var/local/site.env` as its default local credential source instead of a separate `r2.env`.
+
+**Files changed/docs:**
+
+- `scripts/local_env.py`
+- `scripts/pipeline_config.py`
+- `scripts/publish_media_to_r2.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/generate_work_pages.py`
+- `scripts/make_srcset_images.py`
+- `scripts/project_state_report.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/run_checks.py`
+- `bin/dev-studio`
+- `tests/python/test_local_env.py`
+- `tests/python/test_publish_media_to_r2.py`
+- [Local Setup](/docs/?scope=studio&doc=local-setup)
+- [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2)
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+
+**Impact:**
+Repo-specific local values such as `DOTLINEFORM_PROJECTS_BASE_DIR`, `MAKE_SRCSET_JOBS`, `DOCS_STARTUP_REBUILD_SCOPES`, and `R2_*` now have one local source of truth.
+Deleting matching shell-startup exports should not change local repo behavior as long as `var/local/site.env` contains the needed values.
 
 ## [2026-05-09] Completed tag write-server structural review
 
@@ -926,7 +961,7 @@ Added `./scripts/publish_media_to_r2.py`, a dry-run-first Cloudflare R2 publishe
 
 **Impact:**
 Catalogue work, work-detail, and moment primary variants can now be previewed or uploaded to R2 from the CLI.
-The publisher loads credentials from environment variables or gitignored local env files, skips unchanged objects, blocks changed remote objects unless `--force` is explicit, supports exact-id remote primary deletion with `--delete --write`, and keeps docs media publishing out of scope for this milestone.
+The publisher loads credentials from environment variables or the gitignored local env file, skips unchanged objects, blocks changed remote objects unless `--force` is explicit, supports exact-id remote primary deletion with `--delete --write`, and keeps docs media publishing out of scope for this milestone.
 
 ## [2026-05-07] Clarified Docs Viewer draft visibility
 

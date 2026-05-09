@@ -76,12 +76,8 @@ R2 credentials should be provided through environment variables that match the c
 - `R2_BUCKET`
 - `R2_ENDPOINT`
 
-Local setup can support a gitignored secret file if useful, such as:
-
-- `.env.local`
-- `var/local/r2.env`
-
-If a local secret file is supported, it must be explicitly ignored by git and loaded only by the CLI script or a local wrapper.
+Local setup uses the gitignored `var/local/site.env` file for those same R2 variables.
+The file must be loaded only by CLI scripts or local server-side wrappers.
 The script should fail closed when credentials are missing, with setup guidance that names the missing variables but never prints existing secret values.
 
 The R2 API key should be scoped as narrowly as Cloudflare allows.

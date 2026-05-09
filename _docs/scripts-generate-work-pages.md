@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: 2026-05-02
+last_updated: "2026-05-09 18:17"
 parent_id: archive
 sort_order: 50
 ---
@@ -89,7 +89,7 @@ Moment canonical source model:
   - writes a lightweight moments index object keyed by `moment_id`
   - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
 - `--projects-base-dir`
-  - defaults from `DOTLINEFORM_PROJECTS_BASE_DIR`
+  - defaults from `DOTLINEFORM_PROJECTS_BASE_DIR` in `var/local/site.env` for local runs
   - used for work-detail sources plus source media dimension lookups
   - refreshes work primary-image dimensions only when `work-json` is selected directly or indirectly via `work-pages`
 - `--series-index-json-path` with default `assets/data/series_index.json`

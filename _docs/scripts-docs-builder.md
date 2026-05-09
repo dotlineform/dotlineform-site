@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-09"
+last_updated: "2026-05-09 18:17"
 parent_id: docs-viewer
 sort_order: 85
 ---
@@ -176,10 +176,11 @@ Jekyll verification builds:
 bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 ```
 
-Local environment variables shared with media/generation scripts:
+Local runtime values shared with media/generation scripts live in `var/local/site.env`:
 
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
+export MAKE_SRCSET_JOBS=4
 ```
 
 Pipeline policy config:

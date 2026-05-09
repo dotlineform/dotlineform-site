@@ -2,7 +2,7 @@
 doc_id: scripts-project-state-report
 title: Project State Report
 added_date: 2026-04-27
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-09 18:17"
 parent_id: catalogue
 sort_order: 140
 ---
@@ -24,9 +24,10 @@ It is meant to replace ad hoc catalogue/source-folder comparisons when deciding 
 
 - `assets/studio/data/catalogue/works.json`
 - `assets/studio/data/catalogue/work_details.json`, only to identify `details_subfolder` paths to skip
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/projects`
+- `DOTLINEFORM_PROJECTS_BASE_DIR` from `var/local/site.env`, resolving to a folder that contains `projects/`
 
-Do not pass `--projects-base-dir` during normal local or cloud runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` instead.
+Do not pass `--projects-base-dir` during normal local runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` in `var/local/site.env` instead.
+Cloud/Codespaces runs can provide the same key through platform environment configuration.
 
 ## Output
 

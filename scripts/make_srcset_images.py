@@ -88,7 +88,7 @@ def parse_args() -> argparse.Namespace:
     )
     ap.add_argument("input_dir", nargs="?", default=default_input, help="Source images folder")
     ap.add_argument("output_dir", nargs="?", default=default_output, help="Derivative output root")
-    ap.add_argument("jobs", nargs="?", default=os.environ.get(SRCSET_JOBS_ENV_NAME, "1"), help="Parallel workers")
+    ap.add_argument("jobs", nargs="?", default=env_var_value(PIPELINE_CONFIG, "srcset_jobs") or "1", help="Parallel workers")
     ap.add_argument("--dry-run", action="store_true", help="Preview writes and source cleanup only")
     args = ap.parse_args()
 

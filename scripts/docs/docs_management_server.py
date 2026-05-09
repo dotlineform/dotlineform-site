@@ -47,7 +47,6 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -74,6 +73,7 @@ import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
 from docs_scope_config import SCOPE_ROOTS  # noqa: E402
+from local_env import runtime_env  # noqa: E402
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -114,7 +114,7 @@ def detect_repo_root(explicit_root: str) -> Path:
 
 
 def detect_preferred_markdown_app() -> Optional[str]:
-    configured = os.environ.get(DEFAULT_MARKDOWN_APP_ENV, "").strip()
+    configured = runtime_env().get(DEFAULT_MARKDOWN_APP_ENV, "").strip()
     if configured:
         return configured
 

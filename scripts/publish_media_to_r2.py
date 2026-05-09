@@ -9,8 +9,6 @@ import hashlib
 import hmac
 import json
 import mimetypes
-import os
-import re
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -23,11 +21,13 @@ try:
         load_pipeline_config,
         media_mode_output_subdir,
     )
+    from local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import (
         load_pipeline_config,
         media_mode_output_subdir,
     )
+    from scripts.local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -46,8 +46,7 @@ R2_ENV_VARS = (
 )
 
 DEFAULT_ENV_FILES = (
-    Path(".env.local"),
-    Path("var/local/r2.env"),
+    SITE_ENV_REL_PATH,
 )
 
 
@@ -256,49 +255,21 @@ def validate_item_id(item_id: str) -> None:
         raise SystemExit(f"Error: invalid id: {item_id!r}")
 
 
-def load_env_file(path: Path) -> Dict[str, str]:
-    values: Dict[str, str] = {}
-    if not path.exists():
-        return values
-    if not path.is_file():
-        raise SystemExit(f"Error: env file is not a file: {path}")
-    for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
-        line = raw_line.strip()
-        if line == "" or line.startswith("#"):
-            continue
-        if line.startswith("export "):
-            line = line[len("export ") :].strip()
-        if "=" not in line:
-            raise SystemExit(f"Error: invalid env file line {line_number} in {path}")
-        key, value = line.split("=", 1)
-        key = key.strip()
-        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
-            raise SystemExit(f"Error: invalid env var name {key!r} in {path}")
-        values[key] = strip_env_value(value.strip())
-    return values
-
-
-def strip_env_value(value: str) -> str:
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
-        return value[1:-1]
-    return value
-
-
 def load_r2_credentials(
-    env_files: Iterable[Path] = (),
+    env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> R2Credentials:
-    combined: Dict[str, str] = {}
-    for env_file in env_files:
-        combined.update(load_env_file(env_file))
-    combined.update(dict(environ if environ is not None else os.environ))
+    try:
+        combined = runtime_env(environ=environ, env_files=env_files)
+    except ValueError as exc:
+        raise SystemExit(f"Error: {exc}") from exc
 
     missing = [name for name in R2_ENV_VARS if not str(combined.get(name, "")).strip()]
     if missing:
         names = ", ".join(missing)
         raise SystemExit(
             "Error: missing R2 configuration: "
-            f"{names}. Set environment variables or use .env.local / var/local/r2.env."
+            f"{names}. Add them to var/local/site.env for local runs or provide cloud environment variables."
         )
 
     endpoint = str(combined["R2_ENDPOINT"]).strip().rstrip("/")

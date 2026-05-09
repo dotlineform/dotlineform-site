@@ -993,8 +993,8 @@ def main() -> None:
     needs_projects_base = run_work_details_pages or run_work_json or run_series_pages or run_moments_artifact or run_moments_index_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
-            f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
-            "or pass --projects-base-dir."
+            f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
+            "to var/local/site.env or pass --projects-base-dir."
         )
     def require_series_primary_work_id(
         sid: str,

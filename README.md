@@ -27,10 +27,11 @@ Scripts are run locally from the repo root. They are designed to keep the catalo
 
 For a centralized local install/setup guide covering Python, Ruby, external tools, env vars, and version checks, see [`_docs/local-setup.md`](_docs/local-setup.md).
 
-Before running media/generation scripts, set local environment variables, e.g.
+Before running media/generation scripts locally, create `var/local/site.env`, e.g.
 
 ```bash
-export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/projects"
+mkdir -p var/local
+printf 'export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/projects"\n' >> var/local/site.env
 ```
 
 Shared pipeline defaults live in `_data/pipeline.json`. That file stores env var names and repo-local media staging subpaths.

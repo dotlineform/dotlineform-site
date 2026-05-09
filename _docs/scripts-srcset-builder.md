@@ -2,7 +2,7 @@
 doc_id: scripts-srcset-builder
 title: Srcset Builder
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-09 18:17"
 parent_id: catalogue
 sort_order: 120
 ---
@@ -56,7 +56,7 @@ Shell entrypoint arguments:
 - `--dry-run`
   - preview derivative writes and source cleanup only
 
-Runtime defaults are resolved from `_data/pipeline.json` plus env vars, especially:
+Runtime defaults are resolved from `_data/pipeline.json` plus `var/local/site.env`, especially:
 
 - `MAKE_SRCSET_JOBS`
 - `MAKE_SRCSET_WORK_IDS_FILE`

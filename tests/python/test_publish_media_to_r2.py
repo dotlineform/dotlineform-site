@@ -72,7 +72,7 @@ def write_primary(repo_root: Path, kind_subdir: str, filename: str, content: byt
 
 def test_credentials_load_from_env_file_without_printing_values() -> None:
     with tempfile.TemporaryDirectory() as temp:
-        env_file = Path(temp) / "r2.env"
+        env_file = Path(temp) / "site.env"
         env_file.write_text(
             "\n".join(
                 [
@@ -96,6 +96,10 @@ def test_credentials_load_from_env_file_without_printing_values() -> None:
     assert credentials.endpoint == "https://example.r2.cloudflarestorage.com"
 
 
+def test_default_env_file_is_site_env() -> None:
+    assert publisher.DEFAULT_ENV_FILES == (Path("var/local/site.env"),)
+
+
 def test_missing_credentials_error_names_missing_vars_only() -> None:
     try:
         publisher.load_r2_credentials(env_files=[], environ={"R2_ACCESS_KEY_ID": "access"})
@@ -105,6 +109,7 @@ def test_missing_credentials_error_names_missing_vars_only() -> None:
         raise AssertionError("missing credentials should exit")
 
     assert "R2_ACCOUNT_ID" in message
+    assert "var/local/site.env" in message
     assert "R2_ACCESS_KEY_ID" not in message
     assert "access" not in message
 
@@ -255,6 +260,7 @@ def test_delete_plan_uses_deterministic_remote_keys_and_requires_write() -> None
 
 if __name__ == "__main__":
     test_credentials_load_from_env_file_without_printing_values()
+    test_default_env_file_is_site_env()
     test_missing_credentials_error_names_missing_vars_only()
     test_catalogue_mapping_uses_configured_remote_prefixes_and_blocks_partial_sets()
     test_symlink_escape_is_refused()

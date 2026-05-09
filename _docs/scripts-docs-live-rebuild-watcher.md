@@ -2,7 +2,7 @@
 doc_id: scripts-docs-live-rebuild-watcher
 title: Docs Live Rebuild Watcher
 added_date: 2026-04-24
-last_updated: "2026-05-09"
+last_updated: "2026-05-09 18:17"
 parent_id: docs-viewer
 sort_order: 55
 ---
@@ -111,7 +111,7 @@ Targeted affected-id rules:
 
 - `bin/dev-studio` starts this watcher by default
 - `bin/dev-studio` no longer performs a default startup docs/docs-search rebuild; startup rebuilds are opt-in through `DOCS_STARTUP_REBUILD_SCOPES`
-- `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` controls the default targeted threshold when the watcher is started through `bin/dev-studio`
+- `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `var/local/site.env` for local runs, including when the watcher is started through `bin/dev-studio`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
 - when the localhost docs-management server writes a source doc and rebuilds the same scope itself, it now leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change

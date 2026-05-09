@@ -169,7 +169,7 @@ R2-related variables should be configured through cloud secret stores, for examp
 - `R2_ENDPOINT`
 
 The R2 publisher uses those values from the process environment in cloud sessions.
-Local-only env files such as `.env.local` and `var/local/r2.env` are for local machines and should not be used as committed cloud configuration.
+The local-only `var/local/site.env` file is for local machines and should not be used as committed cloud configuration.
 
 ### 5) Keep remote-media boundary explicit
 

@@ -2,7 +2,7 @@
 doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
-last_updated: "2026-05-08"
+last_updated: "2026-05-09 18:17"
 parent_id: site-docs
 sort_order: 30
 ---
@@ -186,7 +186,7 @@ If local verification accidentally picks up `/usr/bin/ruby`, fix the shell setup
 
 ## Repo-local env file
 
-Use a gitignored repo-local env file for runtime paths and R2 credentials:
+Use a gitignored repo-local env file for runtime paths, local runner options, and R2 credentials:
 
 ```bash
 mkdir -p var/local
@@ -198,6 +198,7 @@ Recommended shape:
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/absolute/path/to/dotlineform"
 export MAKE_SRCSET_JOBS=4
+export DOCS_STARTUP_REBUILD_SCOPES=""
 
 export R2_ACCOUNT_ID="..."
 export R2_ACCESS_KEY_ID="..."
@@ -206,16 +207,14 @@ export R2_BUCKET="..."
 export R2_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
 ```
 
-Load it before running repo commands:
-
-```bash
-source var/local/site.env
-```
+Local repo scripts and `bin/dev-studio` read this file directly.
+Do not duplicate these repo-specific values in shell startup files.
 
 What the shared variables mean:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
+- `DOCS_STARTUP_REBUILD_SCOPES`: optional `bin/dev-studio` startup docs/docs-search rebuild scopes; keep it blank as an explicit reminder that startup rebuilds are off
 
 Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
 
@@ -231,10 +230,10 @@ Do not commit R2 credential values.
 The publisher script reports missing variable names without printing configured values.
 `var/local/` is gitignored, so `var/local/site.env` is local-only.
 
-For the R2 publisher specifically, either source `site.env` first or pass it directly:
+The R2 publisher reads `var/local/site.env` by default:
 
 ```bash
-./scripts/publish_media_to_r2.py --env-file var/local/site.env --scope catalogue --kind works --id 01007
+./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 Two additional env vars are used by the srcset wrapper, but they are usually set per-command by pipeline scripts rather than persisted globally:
@@ -244,26 +243,18 @@ Two additional env vars are used by the srcset wrapper, but they are usually set
 
 Those manifest env vars do not normally need to be added to your shell startup files.
 
-## Env vars versus site.env
+## site.env versus process environment
 
-Process environment variables and `var/local/site.env` contain the same values once `site.env` has been sourced, but they are useful at different boundaries.
+For local runs, `var/local/site.env` is the canonical source for repo-specific runtime configuration.
+The shared Python loader reads it directly, and values from this file win over inherited shell values when the same key appears in both places.
 
-- Process env vars are already loaded into the current shell and inherited by every child process from that shell.
 - `var/local/site.env` is a repo-specific source file that keeps local paths and credentials in one predictable place.
-- Sourcing `site.env` gives normal scripts the env vars they already expect without hardcoding machine-specific paths in tracked files.
-- Local UI-driven media flows should load `site.env` server-side, inside the local write service or script wrapper. Browser code must never read this file or receive R2 credentials.
-- In cloud/Codespaces runs, use platform secret stores or configured environment variables instead of committing or syncing a `site.env` file.
+- Local CLI scripts and local services read `site.env` server-side; browser code must never read this file or receive R2 credentials.
+- If `site.env` is absent, scripts fall back to process environment variables for cloud/Codespaces runs.
+- In cloud/Codespaces, use platform secret stores or configured environment variables instead of creating, committing, or syncing a `site.env` file.
 
 The practical reason for this convention is that media handling is increasingly driven by local Studio actions.
-Keeping repo-specific runtime config in `var/local/site.env` gives CLI commands, local write services, and future UI-triggered orchestration one consistent source of local configuration while preserving the existing env-var contract.
-
-If you prefer long-lived shell setup for interactive work, you can still source the repo-local file from your shell startup file:
-
-```bash
-source /path/to/dotlineform-site/var/local/site.env
-```
-
-Use this only on machines where that absolute repo path is stable.
+Keeping repo-specific runtime config in `var/local/site.env` gives CLI commands, local write services, and future UI-triggered orchestration one consistent source of local configuration without relying on shell startup files.
 
 
 ## Repo-specific operating notes

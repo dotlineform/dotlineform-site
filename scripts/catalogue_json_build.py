@@ -15,6 +15,7 @@ from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from catalogue_field_registry import apply_field_build_plan_to_scope, field_aware_build_plan, load_catalogue_field_registry
 from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
+from local_env import runtime_env
 from moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
@@ -76,10 +77,9 @@ def detect_repo_root(start: Path | None = None) -> Path:
 
 
 def detect_projects_base_dir(env: Dict[str, str] | None = None) -> Path:
-    env = env or os.environ
     value = env_var_value(PIPELINE_CONFIG, "projects_base_dir", env)
     if not value:
-        raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} is required for moment source builds.")
+        raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} is required in var/local/site.env for moment source builds.")
     path = Path(value).expanduser().resolve()
     if not path.exists():
         raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} does not exist: {path}")
@@ -1378,7 +1378,7 @@ def field_plan_explanation_lines(field_plan: Mapping[str, Any]) -> list[str]:
 
 
 def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:
-    env = env or os.environ
+    env = env or runtime_env()
     home = Path(env.get("HOME", "")).expanduser()
     shim = home / ".rbenv/shims/bundle"
     if shim.exists() and os.access(shim, os.X_OK):
@@ -1472,7 +1472,7 @@ def run_scoped_build_scope(
     force: bool = False,
     media_only: bool = False,
 ) -> Dict[str, Any]:
-    env = os.environ.copy()
+    env = runtime_env()
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     refresh_published = True
     effective_force = bool(force)

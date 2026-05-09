@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 18:17"
 parent_id: servers
 sort_order: 20
 ---
@@ -39,13 +39,17 @@ bin/dev-studio
 The script:
 
 - changes into the repo root
+- loads `var/local/site.env` when present
 - prefers `~/.rbenv/shims/bundle` when present
 - prefers `~/miniconda3/bin/python3` when present
 - otherwise falls back to `bundle` and `python3`
 
-## Optional Environment Overrides
+## Local Configuration
 
-The runner does not currently take CLI flags. It is configured through environment variables:
+The runner does not currently take CLI flags.
+For local runs, configure repo-specific defaults in `var/local/site.env`.
+Values in that file are loaded before defaults are evaluated and win over inherited shell values.
+If `var/local/site.env` is absent, the runner falls back to process environment variables.
 
 - `JEKYLL_HOST`
   default: `127.0.0.1`
@@ -63,7 +67,7 @@ The runner does not currently take CLI flags. It is configured through environme
   default: `8790`
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
-  accepted values: `studio`, `library`, or `studio,library`
+  accepted values: `studio`, `library`, `analysis`, or comma-separated combinations
 - `DOCS_WATCH_ENABLED`
   default: `1`
 - `DOCS_WATCH_POLL_SECONDS`
@@ -80,21 +84,18 @@ The runner does not currently take CLI flags. It is configured through environme
 Example:
 
 ```bash
-DOCS_STARTUP_REBUILD_SCOPES=studio JEKYLL_PORT=4001 TAG_WRITE_PORT=8797 CATALOGUE_WRITE_PORT=8798 DOCS_MANAGEMENT_PORT=8799 AUDIT_SERVICE_PORT=8800 DOCS_WATCH_DEBOUNCE_SECONDS=1.5 DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8 bin/dev-studio
-```
-
-That form applies the environment overrides to that one `bin/dev-studio` run only.
-
-If you want the variable available by default in your shell, add an export to your shell startup file instead, for example:
-
-```bash
 export DOCS_STARTUP_REBUILD_SCOPES=""
+export JEKYLL_PORT=4001
+export TAG_WRITE_PORT=8797
+export CATALOGUE_WRITE_PORT=8798
+export DOCS_MANAGEMENT_PORT=8799
+export AUDIT_SERVICE_PORT=8800
+export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
+export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
 
-Then you can either:
-
-- run `bin/dev-studio` and keep the startup docs/docs-search rebuild scopes blank
-- or temporarily override the exported value for one run with `DOCS_STARTUP_REBUILD_SCOPES=studio bin/dev-studio`
+Keeping `DOCS_STARTUP_REBUILD_SCOPES=""` in `var/local/site.env` is a valid reminder that startup docs/docs-search rebuilds are intentionally off.
+To run a startup rebuild locally, edit that value to `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
 
 ## Startup Sequence
 

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-09 14:23"
+last_updated: "2026-05-09 18:17"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -422,8 +422,8 @@ Open-source behavior:
 
 - resolves the source Markdown path for the current doc within the current scope
 - `editor: "default"` opens the file in the preferred Markdown app for the local machine
-- the server first checks `DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP`
-- if that env var is unset, it currently prefers `MarkEdit`, then `Typora`, then `Marked 2`, then `Marked` when installed
+- the server first checks `DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP` from `var/local/site.env` for local runs
+- if that key is unset, it currently prefers `MarkEdit`, then `Typora`, then `Marked 2`, then `Marked` when installed
 - if none of those apps are present, it falls back to plain `open`, which follows macOS Launch Services defaults
 - `editor: "vscode"` opens the file in Visual Studio Code
 - intended for use from the manage-mode right-click menu on doc rows

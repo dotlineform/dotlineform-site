@@ -2,7 +2,7 @@
 doc_id: scripts-publish-media-to-r2
 title: Publish Media To R2
 added_date: 2026-05-08
-last_updated: "2026-05-08 10:03"
+last_updated: "2026-05-09 18:17"
 parent_id: studio
 sort_order: 110
 viewable: true
@@ -31,7 +31,7 @@ Docs media publishing is reserved for a later milestone.
 
 ## Credentials
 
-The script reads R2 settings from environment variables:
+The script reads R2 settings from `var/local/site.env` by default for local runs:
 
 - `R2_ACCOUNT_ID`
 - `R2_ACCESS_KEY_ID`
@@ -39,13 +39,10 @@ The script reads R2 settings from environment variables:
 - `R2_BUCKET`
 - `R2_ENDPOINT`
 
-It can also load local-only env files:
+It can also load additional files passed with `--env-file`.
+If `var/local/site.env` is absent, it falls back to process environment variables for cloud/Codespaces runs.
 
-- `.env.local`
-- `var/local/r2.env`
-- additional files passed with `--env-file`
-
-Those files are gitignored and must not be committed.
+`var/local/site.env` is gitignored and must not be committed.
 When credentials are missing, the command reports the missing variable names but never prints configured values.
 
 ## Source And Target Mapping

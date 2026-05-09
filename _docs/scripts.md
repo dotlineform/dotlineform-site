@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-08 00:00"
+last_updated: "2026-05-09 18:17"
 parent_id: site-docs
 sort_order: 80
 ---
@@ -26,8 +26,9 @@ The current script surface falls into four groups:
 - For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc=local-setup).
 - use project-local script paths
 - if `jekyll serve` or `bin/dev-studio` is already running, verify one-off builds to `/tmp/dlf-jekyll-build` rather than `_site/`
-- media and generation scripts expect `DOTLINEFORM_PROJECTS_BASE_DIR`
-- R2 media publishing additionally expects R2 credentials through environment variables or gitignored local env files
+- media and generation scripts read `DOTLINEFORM_PROJECTS_BASE_DIR` from `var/local/site.env` for local runs
+- R2 media publishing reads R2 credentials from `var/local/site.env` for local runs
+- in cloud/Codespaces runs, those same keys should be provided through platform environment variables or secrets
 - shared pipeline defaults live in `_data/pipeline.json`
 
 ## Current Build Boundaries

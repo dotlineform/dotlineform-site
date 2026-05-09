@@ -20,12 +20,15 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 SCRIPTS_DOCS_DIR = Path(__file__).resolve().parent
-if str(SCRIPTS_DOCS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
+SCRIPTS_DIR = SCRIPTS_DOCS_DIR.parent
+for path in (SCRIPTS_DOCS_DIR, SCRIPTS_DIR):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 from docs_source_model import load_scope_docs, scope_doc_sort_key
 from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
+from local_env import runtime_env
 
 
 def log(message: str) -> None:
@@ -215,25 +218,26 @@ def rebuild_scope(
 
 
 def parse_args() -> argparse.Namespace:
+    env = runtime_env()
     parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild same-scope outputs.")
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
     parser.add_argument("--bundle-bin", default="", help="Override bundle executable path.")
     parser.add_argument(
         "--poll-seconds",
         type=float,
-        default=float(os.environ.get("DOCS_WATCH_POLL_SECONDS", "1.0")),
+        default=float(env.get("DOCS_WATCH_POLL_SECONDS", "1.0")),
         help="Polling interval in seconds.",
     )
     parser.add_argument(
         "--debounce-seconds",
         type=float,
-        default=float(os.environ.get("DOCS_WATCH_DEBOUNCE_SECONDS", "1.0")),
+        default=float(env.get("DOCS_WATCH_DEBOUNCE_SECONDS", "1.0")),
         help="Debounce window in seconds before rebuild.",
     )
     parser.add_argument(
         "--targeted-search-threshold",
         type=int,
-        default=int(os.environ.get("DOCS_WATCH_TARGETED_SEARCH_THRESHOLD", "5")),
+        default=int(env.get("DOCS_WATCH_TARGETED_SEARCH_THRESHOLD", "5")),
         help="Maximum changed file count for targeted docs-search updates; use -1 to always target when safe.",
     )
     return parser.parse_args()

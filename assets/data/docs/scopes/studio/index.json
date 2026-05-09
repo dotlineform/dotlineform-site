@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T16:52:48Z",
+  "generated_at": "2026-05-09T17:24:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -433,7 +433,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "servers",
       "sort_order": 20,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 7457
+      "content_text_length": 7591
     },
     {
       "scope": "studio",
@@ -903,7 +903,7 @@
       "doc_id": "local-setup",
       "title": "Local Setup",
       "added_date": "2026-04-13",
-      "last_updated": "2026-05-08",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "site-docs",
       "sort_order": 30,
       "published": true,
@@ -911,7 +911,7 @@
       "source_path": "local-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup.json",
-      "content_text_length": 12124
+      "content_text_length": 12014
     },
     {
       "scope": "studio",
@@ -1154,7 +1154,7 @@
       "source_path": "scripts-cloud-environments.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json",
-      "content_text_length": 9215
+      "content_text_length": 9192
     },
     {
       "scope": "studio",
@@ -1327,7 +1327,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 14:23",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1335,7 +1335,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 29436
+      "content_text_length": 29471
     },
     {
       "scope": "studio",
@@ -1403,7 +1403,7 @@
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "archive",
       "sort_order": 50,
       "published": true,
@@ -1411,7 +1411,7 @@
       "source_path": "scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json",
-      "content_text_length": 11821
+      "content_text_length": 11858
     },
     {
       "scope": "studio",
@@ -1569,7 +1569,7 @@
       "doc_id": "scripts-docs-live-rebuild-watcher",
       "title": "Docs Live Rebuild Watcher",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "docs-viewer",
       "sort_order": 55,
       "published": true,
@@ -1577,7 +1577,7 @@
       "source_path": "scripts-docs-live-rebuild-watcher.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-live-rebuild-watcher.json",
-      "content_text_length": 4641
+      "content_text_length": 4719
     },
     {
       "scope": "studio",
@@ -2097,7 +2097,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-08 00:00",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "site-docs",
       "sort_order": 80,
       "published": true,
@@ -2105,7 +2105,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 5870
+      "content_text_length": 5982
     },
     {
       "scope": "studio",
@@ -2142,7 +2142,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "docs-viewer",
       "sort_order": 85,
       "published": true,
@@ -2150,7 +2150,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 8902
+      "content_text_length": 8951
     },
     {
       "scope": "studio",
@@ -2403,7 +2403,7 @@
       "doc_id": "scripts-publish-media-to-r2",
       "title": "Publish Media To R2",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 10:03",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "studio",
       "sort_order": 110,
       "published": true,
@@ -2411,7 +2411,7 @@
       "source_path": "scripts-publish-media-to-r2.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
-      "content_text_length": 3313
+      "content_text_length": 3401
     },
     {
       "scope": "studio",
@@ -2464,7 +2464,7 @@
       "doc_id": "scripts-srcset-builder",
       "title": "Srcset Builder",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "catalogue",
       "sort_order": 120,
       "published": true,
@@ -2472,7 +2472,7 @@
       "source_path": "scripts-srcset-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json",
-      "content_text_length": 2248
+      "content_text_length": 2259
     },
     {
       "scope": "studio",
@@ -2589,7 +2589,7 @@
       "doc_id": "scripts-project-state-report",
       "title": "Project State Report",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "catalogue",
       "sort_order": 140,
       "published": true,
@@ -2597,7 +2597,7 @@
       "source_path": "scripts-project-state-report.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-project-state-report",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-project-state-report.json",
-      "content_text_length": 2131
+      "content_text_length": 2297
     },
     {
       "scope": "studio",
@@ -2651,7 +2651,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-08 00:00",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "catalogue",
       "sort_order": 150,
       "published": true,
@@ -2659,7 +2659,7 @@
       "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
-      "content_text_length": 7764
+      "content_text_length": 7914
     },
     {
       "scope": "studio",
@@ -2876,7 +2876,7 @@
       "source_path": "site-request-r2-media-upload-automation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
-      "content_text_length": 8130,
+      "content_text_length": 8065,
       "ui_status": "urgent"
     },
     {
@@ -3073,7 +3073,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 17:51",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3081,7 +3081,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 92677
+      "content_text_length": 94107
     },
     {
       "scope": "studio",

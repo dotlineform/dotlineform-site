@@ -5,9 +5,13 @@ from __future__ import annotations
 
 import copy
 import json
-import os
 from pathlib import Path
 from typing import Any, Dict, Mapping
+
+try:
+    from local_env import runtime_env
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.local_env import runtime_env
 
 
 CONFIG_REL_PATH = Path("_data/pipeline.json")
@@ -127,7 +131,7 @@ def env_var_value(
     key: str,
     environ: Mapping[str, str] | None = None,
 ) -> str:
-    source = environ if environ is not None else os.environ
+    source = environ if environ is not None else runtime_env()
     return str(source.get(env_var_name(config, key), "")).strip()
 
 
