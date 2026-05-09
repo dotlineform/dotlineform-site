@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a043421ceff525646c4526b8319ba372",
-    "generated_at_utc": "2026-05-09T11:29:00Z",
+    "version": "blake2b-7246b1c02c3b9e0a2b6832dce8b38c42",
+    "generated_at_utc": "2026-05-09T11:35:22Z",
     "count": 203
   },
   "entries": [
@@ -830,10 +830,10 @@
       "kind": "doc",
       "title": "Docs Management Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
-      "last_updated": "2026-05-09 12:27",
+      "last_updated": "2026-05-09 12:34",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 12:27 • Script Structural Review Request",
+      "display_meta": "2026-05-09 12:34 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-docs-management-server",
         "site",
@@ -847,14 +847,14 @@
         "docs management server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 12:27",
+        "2026-05-09 12:34",
         "2026",
         "05",
         "09",
         "12",
-        "27"
+        "34"
       ],
-      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 12:27 2026 05 09 12 27"
+      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 12:34 2026 05 09 12 34"
     },
     {
       "id": "ui-primitive-input",
