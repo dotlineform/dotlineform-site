@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 20:55"
+last_updated: "2026-05-09 21:05"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue build command helpers
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Implemented Slice 4 of the catalogue JSON build structural review.
+`scripts/catalogue_build_commands.py` now owns scoped generator command construction, moment generator command construction, catalogue search command construction, subprocess output tailing, per-step result shaping, and failed-step message selection.
+`scripts/catalogue_json_build.py` keeps compatibility wrappers and top-level orchestration while delegating command behavior to the new owner.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_build_commands.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_build_commands.py`
+- [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build)
+
+**Impact:**
+The supported CLI flags, preview command shapes, command ordering, media-first execution, search rebuild selection, and Studio result payload keys are unchanged.
+The extracted module now has direct tests for work, moment, and search argv shapes plus failed subprocess step payloads with a fake runner.
 
 ## [2026-05-09] Extracted catalogue build field-plan adapter
 

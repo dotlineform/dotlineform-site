@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-json-build
 title: Catalogue JSON Build Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 20:55"
+last_updated: "2026-05-09 21:05"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 50
@@ -17,6 +17,7 @@ Status:
 - Slice 1 scoped build planning helpers implemented
 - Slice 2 local media planning and readiness implemented
 - Slice 3 field-aware build-plan adapter implemented
+- Slice 4 command construction and execution-result helpers implemented
 
 ## Purpose
 
@@ -312,7 +313,7 @@ Risks:
 
 ### Slice 4: generator/search command construction and execution results
 
-Status: planned.
+Status: implemented.
 
 Likely module owner:
 
@@ -335,6 +336,24 @@ Tests:
 
 - pin command argv shapes for work, series, moment, write, force, refresh-published, and search rebuild modes
 - pin failure-result payload shape without running real subprocesses
+
+Implementation result:
+
+- `scripts/catalogue_build_commands.py` now owns generator command construction for work/series scopes, generator command construction for moment scopes, catalogue search command construction, subprocess output tailing, per-step result shaping, and failed-step message selection
+- `scripts/catalogue_json_build.py` keeps compatibility wrappers for existing callers while delegating command helpers and per-command execution result shaping to the new owner
+- top-level orchestration remains in the entrypoint: local media still runs first, generator commands run second, catalogue search runs last, and field-aware plans can still suppress generation or search
+- `tests/python/test_catalogue_build_commands.py` pins work, moment, and search argv shapes plus failed subprocess step payloads with an injected fake process runner
+- `scripts/run_checks.py` quick syntax and focused test coverage now include the extracted command module and tests
+
+Benefits:
+
+- separates argv and subprocess-result contracts from the scoped-build orchestration path
+- gives command shapes direct focused coverage before the final entrypoint cleanup slice
+
+Risks:
+
+- `catalogue_json_build.py` still carries compatibility wrappers until Slice 5 removes or narrows them deliberately
+- focused tests pin representative command shapes, while the final dry-run previews remain the guard for user-facing preview ordering and wording
 
 ### Slice 5: final orchestration cleanup
 

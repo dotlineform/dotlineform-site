@@ -5,13 +5,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
+import catalogue_build_commands as build_commands
 import catalogue_build_field_plan as build_field_plan
 import catalogue_build_media as build_media
 import catalogue_build_scopes as build_scopes
@@ -365,12 +364,7 @@ def field_plan_explanation_lines(field_plan: Mapping[str, Any]) -> list[str]:
 
 
 def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:
-    env = env or runtime_env()
-    home = Path(env.get("HOME", "")).expanduser()
-    shim = home / ".rbenv/shims/bundle"
-    if shim.exists() and os.access(shim, os.X_OK):
-        return str(shim)
-    return env.get("BUNDLE_BIN", "bundle")
+    return build_commands.resolve_bundle_bin(env or runtime_env())
 
 
 def build_generate_command(
@@ -382,27 +376,14 @@ def build_generate_command(
     force: bool,
     refresh_published: bool,
 ) -> list[str]:
-    cmd = [
-        sys.executable,
-        str(repo_root / "scripts" / "generate_work_pages.py"),
-        "--internal-json-source-run",
-        "--source-dir",
-        str(source_dir),
-        "--work-ids",
-        ",".join(scope["work_ids"]),
-    ]
-    series_ids = list(scope.get("series_ids", []))
-    if series_ids:
-        cmd += ["--series-ids", ",".join(series_ids)]
-    for artifact in scope.get("generate_only", []):
-        cmd += ["--only", str(artifact)]
-    if write:
-        cmd.append("--write")
-    if refresh_published:
-        cmd.append("--refresh-published")
-    if force:
-        cmd.append("--force")
-    return cmd
+    return build_commands.build_generate_command(
+        repo_root,
+        source_dir,
+        scope,
+        write=write,
+        force=force,
+        refresh_published=refresh_published,
+    )
 
 
 def build_generate_moment_command(
@@ -414,41 +395,18 @@ def build_generate_moment_command(
     force: bool,
     refresh_published: bool,
 ) -> list[str]:
-    cmd = [
-        sys.executable,
-        str(repo_root / "scripts" / "generate_work_pages.py"),
-        "--internal-json-source-run",
-        "--source-dir",
-        str(source_dir),
-        "--only",
-        "moments",
-        "--moment-ids",
-        ",".join(scope["moment_ids"]),
-    ]
-    if write:
-        cmd.append("--write")
-    if refresh_published:
-        cmd.append("--refresh-published")
-    if force:
-        cmd.append("--force")
-    return cmd
+    return build_commands.build_generate_moment_command(
+        repo_root,
+        source_dir,
+        scope,
+        write=write,
+        force=force,
+        refresh_published=refresh_published,
+    )
 
 
 def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Dict[str, str] | None = None) -> list[str]:
-    bundle_bin = resolve_bundle_bin(env)
-    cmd = [
-        bundle_bin,
-        "exec",
-        "ruby",
-        str(repo_root / "scripts" / "build_search.rb"),
-        "--scope",
-        "catalogue",
-    ]
-    if write:
-        cmd.append("--write")
-    if force:
-        cmd.append("--force")
-    return cmd
+    return build_commands.build_search_command(repo_root, write=write, force=force, env=env or runtime_env())
 
 
 def run_scoped_build_scope(
@@ -542,19 +500,18 @@ def run_scoped_build_scope(
                 text=True,
                 capture_output=True,
             )
-            steps.append(
-                {
-                    "label": label,
-                    "command": cmd,
-                    "exit_code": proc.returncode,
-                    "stdout_tail": "\n".join(proc.stdout.strip().splitlines()[-8:]) if proc.stdout else "",
-                    "stderr_tail": "\n".join(proc.stderr.strip().splitlines()[-8:]) if proc.stderr else "",
-                }
+            step = build_commands.normalize_subprocess_step(
+                label,
+                cmd,
+                returncode=proc.returncode,
+                stdout=proc.stdout or "",
+                stderr=proc.stderr or "",
             )
-            if proc.returncode != 0:
+            steps.append(step)
+            if int(step.get("exit_code", 0)) != 0:
                 status = "failed"
                 failed_step = label
-                failure_message = proc.stderr.strip() or proc.stdout.strip() or f"{label} failed with exit code {proc.returncode}"
+                failure_message = build_commands.step_failure_message(label, step)
                 break
 
     response: Dict[str, Any] = {

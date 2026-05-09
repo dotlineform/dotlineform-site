@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""Verify scoped catalogue build command helpers."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+import catalogue_build_commands as commands  # noqa: E402
+
+
+def test_generate_work_command_preserves_scope_and_flags() -> None:
+    repo_root = Path("/repo")
+    source_dir = repo_root / "assets/studio/data/catalogue"
+    scope = {
+        "work_ids": ["00001", "00002"],
+        "series_ids": ["009"],
+        "generate_only": ["work-json", "series-index-json"],
+    }
+
+    cmd = commands.build_generate_command(
+        repo_root,
+        source_dir,
+        scope,
+        write=True,
+        force=True,
+        refresh_published=True,
+    )
+
+    assert cmd == [
+        sys.executable,
+        "/repo/scripts/generate_work_pages.py",
+        "--internal-json-source-run",
+        "--source-dir",
+        "/repo/assets/studio/data/catalogue",
+        "--work-ids",
+        "00001,00002",
+        "--series-ids",
+        "009",
+        "--only",
+        "work-json",
+        "--only",
+        "series-index-json",
+        "--write",
+        "--refresh-published",
+        "--force",
+    ]
+
+
+def test_generate_moment_command_preserves_scope_and_flags() -> None:
+    repo_root = Path("/repo")
+    cmd = commands.build_generate_moment_command(
+        repo_root,
+        repo_root / "assets/studio/data/catalogue",
+        {"moment_ids": ["leaves"]},
+        write=False,
+        force=True,
+        refresh_published=True,
+    )
+
+    assert cmd == [
+        sys.executable,
+        "/repo/scripts/generate_work_pages.py",
+        "--internal-json-source-run",
+        "--source-dir",
+        "/repo/assets/studio/data/catalogue",
+        "--only",
+        "moments",
+        "--moment-ids",
+        "leaves",
+        "--refresh-published",
+        "--force",
+    ]
+
+
+def test_search_command_uses_configured_bundle_and_catalogue_scope() -> None:
+    cmd = commands.build_search_command(
+        Path("/repo"),
+        write=True,
+        force=True,
+        env={"HOME": "/no/such/home", "BUNDLE_BIN": "/custom/bundle"},
+    )
+
+    assert cmd == [
+        "/custom/bundle",
+        "exec",
+        "ruby",
+        "/repo/scripts/build_search.rb",
+        "--scope",
+        "catalogue",
+        "--write",
+        "--force",
+    ]
+
+
+def test_failed_command_step_shape_and_message_without_running_subprocess() -> None:
+    step = commands.normalize_subprocess_step(
+        "Build Catalogue Search Index",
+        ["build", "search"],
+        returncode=2,
+        stdout="\n".join([f"out {index}" for index in range(10)]),
+        stderr="\n".join([f"err {index}" for index in range(10)]),
+    )
+
+    assert step == {
+        "label": "Build Catalogue Search Index",
+        "command": ["build", "search"],
+        "exit_code": 2,
+        "stdout_tail": "\n".join([f"out {index}" for index in range(2, 10)]),
+        "stderr_tail": "\n".join([f"err {index}" for index in range(2, 10)]),
+    }
+    assert commands.step_failure_message("Build Catalogue Search Index", step) == step["stderr_tail"]
+
+
+if __name__ == "__main__":
+    test_generate_work_command_preserves_scope_and_flags()
+    test_generate_moment_command_preserves_scope_and_flags()
+    test_search_command_uses_configured_bundle_and_catalogue_scope()
+    test_failed_command_step_shape_and_message_without_running_subprocess()
+    print("Catalogue build command tests OK")

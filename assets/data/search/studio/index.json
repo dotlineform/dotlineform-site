@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-026d177a549cd88a22695f260d7ceaf3",
-    "generated_at_utc": "2026-05-09T19:31:48Z",
+    "version": "blake2b-293955cff161046d054a6461fada445e",
+    "generated_at_utc": "2026-05-09T19:50:50Z",
     "count": 209
   },
   "entries": [
@@ -2263,10 +2263,10 @@
       "kind": "doc",
       "title": "Catalogue JSON Build Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build",
-      "last_updated": "2026-05-09 20:55",
+      "last_updated": "2026-05-09 21:05",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 20:55 • Script Structural Review Request",
+      "display_meta": "2026-05-09 21:05 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-catalogue-json-build",
         "site",
@@ -2280,14 +2280,13 @@
         "catalogue json build slices",
         "slices",
         "script structural review request",
-        "2026-05-09 20:55",
+        "2026-05-09 21:05",
         "2026",
         "05",
         "09",
-        "20",
-        "55"
+        "21"
       ],
-      "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 20:55 2026 05 09 20 55"
+      "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 21:05 2026 05 09 21"
     },
     {
       "id": "catalogue-moment-import",
@@ -5150,22 +5149,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-09 20:55",
-      "display_meta": "2026-05-09 20:55",
+      "last_updated": "2026-05-09 21:05",
+      "display_meta": "2026-05-09 21:05",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-09 20:55",
+        "2026-05-09 21:05",
         "2026",
         "05",
         "09",
-        "20",
-        "55"
+        "21"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-09 20:55 2026 05 09 20 55"
+      "search_text": "site-change-log site change log site change log 2026-05-09 21:05 2026 05 09 21"
     },
     {
       "id": "archive",
