@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b0c48f0c5e2845c5b8c9abcc734d6e4b",
-    "generated_at_utc": "2026-05-09T20:47:33Z",
+    "version": "blake2b-d9f0b6f5580cdc2cb14ca63c4d8a5933",
+    "generated_at_utc": "2026-05-09T20:55:20Z",
     "count": 209
   },
   "entries": [
@@ -3190,22 +3190,24 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-26 • Search",
+      "display_meta": "2026-05-09 21:53 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-04-26",
+        "2026-05-09 21:53",
         "2026",
-        "04",
-        "26"
+        "05",
+        "09",
+        "21",
+        "53"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-26 2026 04 26"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-09 21:53 2026 05 09 21 53"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -3500,23 +3502,23 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-09 21:28 • Site Docs",
+      "display_meta": "2026-05-09 21:53 • Site Docs",
       "search_terms": [
         "scripts",
         "site docs",
         "site",
         "docs",
-        "2026-05-09 21:28",
+        "2026-05-09 21:53",
         "2026",
         "05",
         "09",
         "21",
-        "28"
+        "53"
       ],
-      "search_text": "scripts site docs site docs 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts site docs site docs 2026-05-09 21:53 2026 05 09 21 53"
     },
     {
       "id": "search-validation-checklist",
@@ -3572,10 +3574,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 18:17 • Docs",
+      "display_meta": "2026-05-09 21:53 • Docs",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -3583,14 +3585,14 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-05-09 18:17",
+        "2026-05-09 21:53",
         "2026",
         "05",
         "09",
-        "18",
-        "17"
+        "21",
+        "53"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-09 18:17 2026 05 09 18 17"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-09 21:53 2026 05 09 21 53"
     },
     {
       "id": "design",
@@ -5007,10 +5009,10 @@
       "kind": "doc",
       "title": "Scripts Directory Organization Request",
       "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 21:45 • Change Requests",
+      "display_meta": "2026-05-09 21:53 • Change Requests",
       "search_terms": [
         "site-request-scripts-directory-organization",
         "site",
@@ -5022,14 +5024,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 21:45",
+        "2026-05-09 21:53",
         "2026",
         "05",
         "09",
         "21",
-        "45"
+        "53"
       ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 21:53 2026 05 09 21 53"
     },
     {
       "id": "site-request-analytics-tag-route-cleanup",

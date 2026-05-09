@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 21:53"
 parent_id: docs-viewer
 sort_order: 85
 ---
@@ -13,6 +13,9 @@ Script:
 ```bash
 ./scripts/build_docs.rb --write
 ```
+
+The stable operational entrypoint is the top-level wrapper above.
+The implementation lives in `scripts/docs/build_docs.rb` so Docs build behavior is owned by the Docs script domain while existing commands remain stable.
 
 ## Scope
 

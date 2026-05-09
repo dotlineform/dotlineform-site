@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Split docs and search build implementation ownership from stable wrappers
+
+**Status:** implemented
+
+**Area:** scripts / docs / search / maintainability
+
+**Summary:**
+Moved the Docs Viewer builder implementation to `scripts/docs/build_docs.rb` and the search builder implementation to `scripts/search/build_search.rb`.
+The top-level `./scripts/build_docs.rb` and `./scripts/build_search.rb` commands remain as thin stable wrappers for existing runbooks, local services, and docs examples.
+
+**Files changed/docs:**
+
+- `scripts/docs/build_docs.rb`
+- `scripts/search/build_search.rb`
+- `scripts/build_docs.rb`
+- `scripts/build_search.rb`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
+
+**Impact:**
+Docs and Search now have domain-owned implementation paths without forcing broad command-path churn.
+The top-level wrappers are the stable public command API, not temporary compatibility modules.
+
 ## [2026-05-09] Moved Analytics tag scripts into package boundary
 
 **Status:** implemented

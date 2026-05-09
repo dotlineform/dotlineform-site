@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-09 21:53"
 parent_id: site-docs
 sort_order: 80
 ---
@@ -36,15 +36,20 @@ The current script surface falls into four groups:
 Docs-domain builds:
 
 - `./scripts/build_docs.rb`
+  - stable top-level wrapper for `scripts/docs/build_docs.rb`
   - source docs:
     - `_docs/`
+    - `_docs_analysis/`
+    - `_docs_library/`
   - outputs:
     - `assets/data/docs/scopes/studio/`
+    - `assets/data/docs/scopes/analysis/`
     - `assets/data/docs/scopes/library/`
 
 Search builds:
 
 - `./scripts/build_search.rb`
+  - stable top-level wrapper for `scripts/search/build_search.rb`
   - source indexes:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
@@ -52,10 +57,12 @@ Search builds:
     - `assets/studio/data/tag_assignments.json`
     - `assets/studio/data/tag_registry.json`
     - `assets/data/docs/scopes/studio/index.json`
+    - `assets/data/docs/scopes/analysis/index.json`
     - `assets/data/docs/scopes/library/index.json`
   - outputs:
     - `assets/data/search/catalogue/index.json`
     - `assets/data/search/studio/index.json`
+    - `assets/data/search/analysis/index.json`
     - `assets/data/search/library/index.json`
 
 Catalogue/runtime maintenance:

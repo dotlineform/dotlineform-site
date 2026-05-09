@@ -2,7 +2,7 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 21:45"
+last_updated: "2026-05-09 21:53"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 212
@@ -10,7 +10,7 @@ viewable: true
 ---
 # Scripts Directory Organization Request
 
-Status: slice 3 Analytics package move complete; docs and search entrypoint consistency is next.
+Status: slice 4 docs/search implementation ownership complete; shared infrastructure and final closeout is next.
 
 ## Purpose
 
@@ -25,8 +25,8 @@ After this request is implemented, the user should be able to look at `scripts/`
 
 The current layout has useful subfolders, but their rule is inconsistent:
 
-- `scripts/docs/` is a coherent Docs domain package containing the docs-management server, docs source-model helpers, import/export helpers, generated-read helpers, rebuild helpers, and docs route constants.
-- `scripts/search/` currently contains search configuration, while the search builder entrypoint remains top-level as `scripts/build_search.rb`.
+- `scripts/docs/` is a coherent Docs domain package containing the docs builder implementation, docs-management server, docs source-model helpers, import/export helpers, generated-read helpers, rebuild helpers, and docs route constants.
+- `scripts/search/` contains search configuration and the search builder implementation, while `scripts/build_search.rb` remains the stable top-level command wrapper.
 - `scripts/studio/` contains local Studio services such as `catalogue_write_server.py`, `tag_write_server.py`, and `audit_service.py`, but catalogue and Analytics tag domain helpers mostly do not live there.
 - Catalogue has many top-level modules: `catalogue_source.py`, `catalogue_json_build.py`, `catalogue_lookup.py`, `catalogue_transactions.py`, `catalogue_routes.py`, `catalogue_publication.py`, and related helpers.
 - Shared helpers such as `script_logging.py`, `studio_activity.py`, `pipeline_config.py`, and `display_paths.py` also live at top level, which is reasonable only if top level is explicitly treated as shared infrastructure plus stable entrypoints.
@@ -62,10 +62,10 @@ Proposed target folders:
   - Candidate moves include current `catalogue_*` modules, `generate_work_pages.py` if it remains the internal catalogue JSON engine, `validate_catalogue_source.py`, `verify_catalogue_field_registry.py`, `export_catalogue_lookup.py`, and `migrate_catalogue_media_sections.py`.
 - `scripts/docs/`
   - Keep as the Docs domain package.
-  - Review whether `build_docs.rb` should move under `scripts/docs/` or remain a top-level stable entrypoint with clear documentation.
+  - Docs builder implementation lives here; the top-level `scripts/build_docs.rb` wrapper remains the stable operational command.
 - `scripts/search/`
   - Search build configuration and search builder ownership.
-  - Review whether `build_search.rb` should move under `scripts/search/` or remain a top-level stable entrypoint.
+  - Search builder implementation lives here; the top-level `scripts/build_search.rb` wrapper remains the stable operational command.
 - `scripts/analytics/`
   - Analytics metadata and analysis services over catalogue works and series.
   - Candidate moves include `tag_write_server.py` and future tag helper modules extracted by the structural review.
@@ -124,8 +124,8 @@ Proposed folder ownership rules:
 
 - `scripts/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, catalogue validation, catalogue route constants, catalogue write service, and source-adjacent project-state utilities.
 - `scripts/analytics/` owns Analytics metadata over catalogue works and series. Current `tag_*` modules and the tag write service move here as the first Analytics implementation layer.
-- `scripts/docs/` remains the Docs domain package.
-- `scripts/search/` owns search build configuration and, pending Slice 4, may own the search builder implementation.
+- `scripts/docs/` owns the Docs domain package and the docs builder implementation.
+- `scripts/search/` owns search build configuration and search builder implementation.
 - `scripts/studio/` owns non-domain-specific Studio runtime services and admin maintenance only.
 - `scripts/media/` should own media derivation and remote media publishing tooling.
 - `scripts/checks/` should own standalone audit/verification commands, while `scripts/run_checks.py` remains the stable top-level aggregator command.
@@ -135,9 +135,9 @@ Proposed folder ownership rules:
 |---|---|---|---|---|---|---|
 | `scripts/audit_site_consistency.py` | entrypoint | Checks | `scripts/checks/audit_site_consistency.py` | `./scripts/audit_site_consistency.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/site-change-log-2026-03-and-earlier.md` +11 | high |
 | `scripts/audit_studio_ready_state.py` | entrypoint | Checks | `scripts/checks/audit_studio_ready_state.py` | `./scripts/audit_studio_ready_state.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/studio-audits.md` +6 | high |
-| `scripts/build_docs.rb` | entrypoint | Docs | Slice 4: keep top-level wrapper or move to `scripts/docs/build_docs.rb` | `bin/dev-studio`, `./scripts/build_docs.rb` | tests: `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-docs-build-incremental.md`, `_docs/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `scripts/build_docs.rb` | wrapper | Docs | stable wrapper for `scripts/docs/build_docs.rb` | `bin/dev-studio`, `./scripts/build_docs.rb` | tests: `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-docs-build-incremental.md`, `_docs/site-request-catalogue-delete-cleanup.md` +23 | high |
 | `scripts/build_palette_data.py` | entrypoint | Media | `scripts/media/build_palette_data.py` | `./scripts/build_palette_data.py` | - | medium |
-| `scripts/build_search.rb` | entrypoint | Search | Slice 4: keep top-level wrapper or move to `scripts/search/build_search.rb` | `bin/dev-studio`, `./scripts/build_search.rb` | tests: `tests/python/test_catalogue_build_commands.py`, `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-docs-build-incremental.md`, `_docs/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `scripts/build_search.rb` | wrapper | Search | stable wrapper for `scripts/search/build_search.rb` | `bin/dev-studio`, `./scripts/build_search.rb` | tests: `tests/python/test_catalogue_build_commands.py`, `tests/python/test_docs_write_rebuild.py`; docs: `_docs/site-request-docs-build-incremental.md`, `_docs/site-request-catalogue-delete-cleanup.md` +23 | high |
 | `scripts/catalogue_activity.py` | helper | Catalogue | `scripts/catalogue/catalogue_activity.py` | - | tests: `tests/python/test_catalogue_routes.py`, `tests/python/test_studio_activity_context.py`; docs: `_docs/scripts-catalogue-write-server.md`, `_docs/site-change-log.md` +1 | medium |
 | `scripts/catalogue_build_commands.py` | helper | Catalogue | `scripts/catalogue/catalogue_build_commands.py` | - | tests: `tests/python/test_catalogue_build_commands.py`; docs: `_docs/site-request-script-structural-review-catalogue-json-build.md`, `_docs/scripts-build-catalogue-json.md` +1 | medium |
 | `scripts/catalogue_build_field_plan.py` | helper | Catalogue | `scripts/catalogue/catalogue_build_field_plan.py` | - | tests: `tests/python/test_catalogue_build_field_plan.py`; docs: `_docs/site-request-script-structural-review-catalogue-json-build.md`, `_docs/scripts-build-catalogue-json.md` +1 | medium |
@@ -325,6 +325,16 @@ Acceptance checks:
 - docs/search build commands in repo docs match the chosen target
 - docs and search check profiles still pass
 - no stale command paths remain in `_docs/`, tests, or `bin/`
+
+#### Slice 4 implementation result
+
+Slice 4 split implementation ownership from the stable command surface:
+
+- `./scripts/build_docs.rb` remains the supported operational command and now wraps `scripts/docs/build_docs.rb`
+- `./scripts/build_search.rb` remains the supported operational command and now wraps `scripts/search/build_search.rb`
+
+This keeps existing docs, services, and runbook commands stable while making the implementation location match the Docs and Search domains.
+The wrappers are intentionally not compatibility clutter; they are the public command API for common build operations.
 
 ### Slice 5: shared infrastructure and final closeout
 

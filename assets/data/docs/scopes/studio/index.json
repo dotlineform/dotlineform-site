@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T20:48:55Z",
+  "generated_at": "2026-05-09T20:55:11Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1933,7 +1933,7 @@
       "doc_id": "search-build-pipeline",
       "title": "Search Build Pipeline",
       "added_date": "2026-04-23",
-      "last_updated": "2026-04-26",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "search",
       "sort_order": 70,
       "published": true,
@@ -1941,7 +1941,7 @@
       "source_path": "search-build-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json",
-      "content_text_length": 14892
+      "content_text_length": 14976
     },
     {
       "scope": "studio",
@@ -2129,7 +2129,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "site-docs",
       "sort_order": 80,
       "published": true,
@@ -2137,7 +2137,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 6024
+      "content_text_length": 6288
     },
     {
       "scope": "studio",
@@ -2174,7 +2174,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "docs-viewer",
       "sort_order": 85,
       "published": true,
@@ -2182,7 +2182,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 8951
+      "content_text_length": 9169
     },
     {
       "scope": "studio",
@@ -3011,7 +3011,7 @@
       "doc_id": "site-request-scripts-directory-organization",
       "title": "Scripts Directory Organization Request",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-09 21:53",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3019,7 +3019,7 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 37955,
+      "content_text_length": 38570,
       "ui_status": "in_progress"
     },
     {
@@ -3113,7 +3113,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 105491
+      "content_text_length": 106379
     },
     {
       "scope": "studio",

@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline
 title: "Search Build Pipeline"
 added_date: 2026-04-23
-last_updated: 2026-04-26
+last_updated: "2026-05-09 21:53"
 parent_id: search
 sort_order: 70
 ---
@@ -26,7 +26,8 @@ This is a build-time document. It does not define ranking or UI behaviour.
 
 The current search build is one subsystem with one build entrypoint:
 
-- `scripts/build_search.rb`
+- stable command wrapper: `scripts/build_search.rb`
+- implementation owner: `scripts/search/build_search.rb`
 
 Current live search outputs:
 
@@ -89,7 +90,7 @@ Current config responsibilities:
 - map emitted search fields to source families
 - keep one combined artifact strategy per scope
 
-Current validation responsibilities in `scripts/build_search.rb`:
+Current validation responsibilities in `scripts/search/build_search.rb`:
 
 - reject unsupported config versions
 - reject source-family references outside their declared scopes
