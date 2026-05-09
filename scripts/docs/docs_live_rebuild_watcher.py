@@ -23,7 +23,7 @@ SCRIPTS_DOCS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DOCS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
 
-from docs_management_server import load_scope_docs, scope_doc_sort_key
+from docs_source_model import load_scope_docs, scope_doc_sort_key
 from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
 

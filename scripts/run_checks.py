@@ -49,6 +49,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/verify_activity_contract.py",
                 "scripts/studio_activity.py",
                 "scripts/docs/docs_activity.py",
+                "scripts/docs/docs_live_rebuild_watcher.py",
                 "scripts/docs/docs_management_mutations.py",
                 "scripts/catalogue_source.py",
                 "scripts/catalogue_cleanup.py",
@@ -64,6 +65,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio/audit_service.py",
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_docs_activity.py",
+                "tests/python/test_docs_live_rebuild_watcher.py",
                 "tests/python/test_docs_management_mutations.py",
                 "tests/python/test_catalogue_cleanup.py",
                 "tests/python/test_catalogue_delete_plans.py",
@@ -215,6 +217,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "docs-activity-tests",
             (sys.executable, "tests/python/test_docs_activity.py"),
             "Verify Docs Management Studio Activity helper behavior.",
+        ),
+        CheckCommand(
+            "docs-live-rebuild-watcher-tests",
+            (sys.executable, "tests/python/test_docs_live_rebuild_watcher.py"),
+            "Verify Docs live rebuild watcher imports source-model helpers directly.",
         ),
         CheckCommand(
             "docs-write-rebuild-tests",
