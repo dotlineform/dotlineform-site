@@ -45,7 +45,7 @@ Run the broad profile:
 - `catalogue`
   Runs catalogue field-registry verification and a representative field-aware build preview.
 - `docs`
-  Runs focused Docs Viewer export, Library import engine, Library import service, Docs Management Server, and Docs Broken Links checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
+  Runs focused Docs Viewer export, Library import engine, Library import service, generated-read helpers, Docs Management Server, and Docs Broken Links checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `studio-smoke`
   Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Studio data import route with docs-management unavailable and a mocked Library import preview flow.
 - `full`

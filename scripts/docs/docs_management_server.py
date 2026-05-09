@@ -66,6 +66,13 @@ from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
+from docs_generated_reads import (  # noqa: E402
+    generated_scope_data_available,
+    generated_search_data_available,
+    read_generated_doc_payload,
+    read_generated_docs_index,
+    read_generated_search_index,
+)
 import docs_management_routes as routes  # noqa: E402
 from docs_source_model import (  # noqa: E402
     ScopeDoc,
@@ -115,7 +122,6 @@ from studio_activity import (  # noqa: E402
 
 
 MAX_BODY_BYTES = 64 * 1024
-SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 BACKUPS_REL_DIR = Path("var/docs/backups")
 LOGS_REL_DIR = Path("var/docs/logs")
 DEFAULT_MARKDOWN_APP_ENV = "DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP"
@@ -441,71 +447,6 @@ def viewer_url_for(scope: str, doc_id: str) -> str:
     return f"/library/?doc={doc_id}&mode=manage"
 
 
-def generated_docs_index_path(repo_root: Path, scope: str) -> Path:
-    return repo_root / "assets" / "data" / "docs" / "scopes" / scope / "index.json"
-
-
-def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
-    if not SAFE_DOC_ID_PATTERN.match(doc_id):
-        raise ValueError("doc_id contains unsupported characters")
-    return repo_root / "assets" / "data" / "docs" / "scopes" / scope / "by-id" / f"{doc_id}.json"
-
-
-def generated_search_index_path(repo_root: Path, scope: str) -> Path:
-    return repo_root / "assets" / "data" / "search" / scope / "index.json"
-
-
-def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
-    if not path.exists():
-        raise FileNotFoundError(f"{label} not found: {path.name}")
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"{label} is not valid JSON: {path.name}") from exc
-
-
-def generated_scope_data_available(repo_root: Path, scope: str) -> bool:
-    return generated_docs_index_path(repo_root, scope).exists()
-
-
-def read_generated_docs_index(repo_root: Path, scope: str) -> Dict[str, Any]:
-    return read_generated_json(
-        generated_docs_index_path(repo_root, scope),
-        f"generated docs index for {scope}",
-    )
-
-
-def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
-    return read_generated_json(
-        generated_search_index_path(repo_root, scope),
-        f"generated search index for {scope}",
-    )
-
-
-def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
-    if not SAFE_DOC_ID_PATTERN.match(doc_id):
-        raise ValueError("doc_id contains unsupported characters")
-
-    index_payload = read_generated_docs_index(repo_root, scope)
-    docs = index_payload.get("docs")
-    if not isinstance(docs, list):
-        raise RuntimeError(f"generated docs index for {scope} is missing docs")
-
-    record = next((doc for doc in docs if isinstance(doc, dict) and doc.get("doc_id") == doc_id), None)
-    if record is None:
-        raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
-
-    expected_url = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
-    content_url = str(record.get("content_url") or "").strip()
-    if content_url and urlparse(content_url).path != expected_url:
-        raise RuntimeError(f"generated docs index for {scope} has an unexpected payload path for {doc_id}")
-
-    return read_generated_json(
-        generated_doc_payload_path(repo_root, scope, doc_id),
-        f"generated doc payload for {doc_id}",
-    )
-
-
 def query_param(handler: BaseHTTPRequestHandler, name: str) -> str:
     parsed = urlparse(handler.path)
     values = parse_qs(parsed.query).get(name, [])
@@ -640,7 +581,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "root": relative_path(repo_root, root),
             "archive_available": any(doc.doc_id == "archive" for doc in scope_docs),
             "generated_data_reads": generated_scope_data_available(repo_root, scope),
-            "generated_search_reads": generated_search_index_path(repo_root, scope).exists(),
+            "generated_search_reads": generated_search_data_available(repo_root, scope),
             "count": len(scope_docs),
         }
     return {

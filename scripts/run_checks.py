@@ -203,6 +203,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Management Library import service handlers.",
         ),
         CheckCommand(
+            "docs-generated-read-tests",
+            (sys.executable, "tests/python/test_docs_generated_reads.py"),
+            "Verify generated Docs Viewer read helpers and safety checks.",
+        ),
+        CheckCommand(
             "docs-management-server-tests",
             (sys.executable, "tests/python/test_docs_management_server.py"),
             "Verify Docs Management Server archive-parent handling.",

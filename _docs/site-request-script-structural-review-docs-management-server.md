@@ -12,7 +12,7 @@ Status:
 
 - Slice 1 implemented
 - Slice 2 implemented
-- Slice 3 is the next planned implementation slice
+- Slice 3 implemented
 - later slices are planned, but should still be reconfirmed before editing
 
 ## Purpose
@@ -112,17 +112,16 @@ Risks:
 
 ## Planned Slice Sequence
 
-The next slice is deliberately generated-data focused.
-It should separate local generated-artifact reads from source mutation behavior without touching importer/exporter internals.
+The remaining sequence now moves from generated-data reads into activity, rebuild/write, and mutation-planning ownership.
+Slice 4 is the next planned implementation slice and should still be reconfirmed before editing.
 
-Planned order:
+Remaining planned order:
 
-1. Slice 3: generated-data read helpers.
-2. Slice 4: docs activity helpers.
-3. Slice 5: rebuild and source-write follow-through helpers.
-4. Slice 6: management mutation planners.
-5. Slice 7: import-source orchestration cleanup, only if still useful.
-6. Slice 8: final handler body cleanup and closeout.
+1. Slice 4: docs activity helpers.
+2. Slice 5: rebuild and source-write follow-through helpers.
+3. Slice 6: management mutation planners.
+4. Slice 7: import-source orchestration cleanup, only if still useful.
+5. Slice 8: final handler body cleanup and closeout.
 
 Importer/exporter note:
 
@@ -189,9 +188,13 @@ Risks:
 
 ### Slice 3: generated-data read helpers
 
-Status: planned.
+Status: implemented.
 
-Proposed module owner:
+The third implementation slice extracted generated Docs Viewer JSON read helpers from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_generated_reads.py`.
+The server still owns GET route dispatch, query parameter extraction, scope normalization, HTTP status mapping, and raw JSON response writing.
+The generated-read module owns generated artifact paths, JSON loading errors, payload safety checks, and generated-data availability probes used by `/capabilities`.
+
+Module owner:
 
 - `scripts/docs/docs_generated_reads.py`
 
@@ -213,21 +216,21 @@ The server should keep:
 
 Acceptance checks:
 
-- add a focused `tests/python/test_docs_generated_reads.py` or move the existing generated-read tests out of `test_docs_management_server.py`
-- preserve rejection of unsafe `doc_id` values
-- preserve rejection of payload files not referenced by the generated scope index
-- preserve rejection of generated index `content_url` values that point outside the expected scope path
-- preserve `generated_data_reads` and `generated_search_reads` capability behavior
+- `tests/python/test_docs_generated_reads.py` covers generated docs/search availability, unsafe `doc_id` rejection, non-viewable indexed payload reads, unlisted payload rejection, unexpected `content_url` rejection, external URL path handling, and invalid generated JSON errors
+- `tests/python/test_docs_management_server.py` keeps `/capabilities` behavior covered
+- `scripts/run_checks.py --profile docs` now includes the generated-read helper tests
 
 Benefits:
 
 - separates local generated-artifact reads from source mutation behavior
 - keeps the public viewer runtime from becoming responsible for local manage-mode read safety
+- gives generated-read safety checks a direct test owner before later write/rebuild extraction
 
 Risks:
 
 - generated read endpoints are used by local docs viewer manage mode; error and missing-file behavior should remain stable
 - this module should not drift into docs build ownership
+- the server imports the generated-read helpers directly, so future endpoint additions still need route and handler updates in the server layer
 
 ### Slice 4: docs activity helpers
 

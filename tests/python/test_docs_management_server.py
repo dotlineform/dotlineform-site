@@ -244,54 +244,6 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
 
 
-def test_generated_doc_payload_allows_non_viewable_indexed_doc() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_generated_docs(repo_root)
-        payload = docs_management_server.read_generated_doc_payload(repo_root, "studio", "archive")
-
-    assert payload["doc_id"] == "archive"
-
-
-def test_generated_doc_payload_requires_index_record() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_generated_docs(repo_root)
-        write_json(
-            repo_root / "assets/data/docs/scopes/studio/by-id/unlisted.json",
-            {"doc_id": "unlisted"},
-        )
-        try:
-            docs_management_server.read_generated_doc_payload(repo_root, "studio", "unlisted")
-        except FileNotFoundError as exc:
-            assert "not found" in str(exc)
-        else:
-            raise AssertionError("Expected unlisted generated payload to be rejected")
-
-
-def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_generated_docs(repo_root)
-        write_json(
-            repo_root / "assets/data/docs/scopes/studio/index.json",
-            {
-                "docs": [
-                    {
-                        "doc_id": "child",
-                        "content_url": "/assets/data/docs/scopes/library/by-id/child.json",
-                    }
-                ]
-            },
-        )
-        try:
-            docs_management_server.read_generated_doc_payload(repo_root, "studio", "child")
-        except RuntimeError as exc:
-            assert "unexpected payload path" in str(exc)
-        else:
-            raise AssertionError("Expected mismatched generated payload path to be rejected")
-
-
 class FakeHandler:
     def __init__(self) -> None:
         self.headers: dict[str, str] = {}
@@ -364,9 +316,6 @@ def main() -> None:
         test_archive_parent_delete_is_blocked_only_by_children,
         test_archive_command_noops_on_archive_parent,
         test_capabilities_advertise_generated_data_reads,
-        test_generated_doc_payload_allows_non_viewable_indexed_doc,
-        test_generated_doc_payload_requires_index_record,
-        test_generated_doc_payload_rejects_unexpected_content_url,
         test_json_responses_are_not_cached,
         test_docs_export_request_passes_target_format,
     ]
