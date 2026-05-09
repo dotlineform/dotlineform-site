@@ -17,6 +17,33 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Completed catalogue JSON build orchestration cleanup
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Implemented Slice 5 of the catalogue JSON build structural review.
+`scripts/catalogue_json_build.py` now keeps the supported CLI, preview output placement, command ordering, subprocess execution, and Studio result payload assembly.
+Scope, media, field-plan, command, publication, prose import, cleanup, and Studio write-server call sites now import extracted helpers from their owning modules directly.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_json_build.py`
+- `scripts/catalogue_build_scopes.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue_publication.py`
+- `scripts/catalogue_prose_import.py`
+- `scripts/catalogue_cleanup.py`
+- `tests/python/test_catalogue_media_cleanup.py`
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build)
+
+**Impact:**
+The CLI flags, preview command shapes, command ordering, media paths, field-aware reductions, and Studio result payload keys are unchanged.
+The entrypoint no longer carries broad compatibility wrappers for helpers owned by the extracted modules; current in-repo callers use the owner modules directly.
+
 ## [2026-05-09] Extracted catalogue build command helpers
 
 **Status:** implemented

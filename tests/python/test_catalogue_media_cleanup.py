@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import importlib.util
 import sys
 import tempfile
 from pathlib import Path
@@ -11,22 +10,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-CATALOGUE_BUILD_PATH = SCRIPTS_DIR / "catalogue_json_build.py"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
-
-def load_catalogue_build_module():
-    if str(SCRIPTS_DIR) not in sys.path:
-        sys.path.insert(0, str(SCRIPTS_DIR))
-    spec = importlib.util.spec_from_file_location("catalogue_json_build", CATALOGUE_BUILD_PATH)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load catalogue_json_build.py")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-catalogue_build = load_catalogue_build_module()
+import catalogue_build_media as build_media  # noqa: E402
 
 
 def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() -> None:
@@ -71,30 +58,24 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
             "counts": {"pending": 1, "current": 0, "blocked": 0, "unavailable": 0},
         }
 
-        original_build_local_media_plan = catalogue_build.build_local_media_plan
-        original_run_ffmpeg_thumb = catalogue_build.run_ffmpeg_thumb
-        original_run_ffmpeg_primary = catalogue_build.run_ffmpeg_primary
-        try:
-            catalogue_build.build_local_media_plan = lambda *args, **kwargs: plan
+        def fake_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(f"thumb:{size}".encode("utf-8"))
+            return 0, ""
 
-            def fake_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                dest.write_bytes(f"thumb:{size}".encode("utf-8"))
-                return 0, ""
+        def fake_primary(src: Path, width: int, dest: Path) -> tuple[int, str]:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(f"primary:{width}".encode("utf-8"))
+            return 0, ""
 
-            def fake_primary(src: Path, width: int, dest: Path) -> tuple[int, str]:
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                dest.write_bytes(f"primary:{width}".encode("utf-8"))
-                return 0, ""
-
-            catalogue_build.run_ffmpeg_thumb = fake_thumb
-            catalogue_build.run_ffmpeg_primary = fake_primary
-
-            result = catalogue_build.execute_local_media_plan(root, scope={}, write=True)
-        finally:
-            catalogue_build.build_local_media_plan = original_build_local_media_plan
-            catalogue_build.run_ffmpeg_thumb = original_run_ffmpeg_thumb
-            catalogue_build.run_ffmpeg_primary = original_run_ffmpeg_primary
+        result = build_media.execute_local_media_plan(
+            root,
+            scope={},
+            write=True,
+            plan_builder=lambda *args, **kwargs: plan,
+            thumb_runner=fake_thumb,
+            primary_runner=fake_primary,
+        )
 
         assert result["status"] == "completed"
         assert asset_thumb.read_bytes() == b"thumb:96"

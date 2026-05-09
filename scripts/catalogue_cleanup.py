@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 import catalogue_activity as activity
-from catalogue_json_build import CATALOGUE_MEDIA_STAGING_REL_DIR
+from catalogue_build_media import CATALOGUE_MEDIA_STAGING_REL_DIR
 from catalogue_source import load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
 from series_ids import normalize_series_id
 

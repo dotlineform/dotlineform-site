@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-from catalogue_json_build import preview_moment_source
+from catalogue_build_scopes import preview_moment_source
 from catalogue_source import records_from_json_source, slug_id
 import catalogue_transactions as transactions
 from moment_sources import (

@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
-last_updated: "2026-05-09 20:20"
+last_updated: "2026-05-09 21:05"
 parent_id: catalogue
 sort_order: 150
 ---
@@ -17,7 +17,8 @@ Script:
 This helper is the current JSON-source rebuild entrypoint for focused work, series, and moment scopes.
 
 It also supports a focused moment scope used by the first Studio moments import page.
-Scope planning rules for work, series, and moment builds live in `scripts/catalogue_build_scopes.py`; `scripts/catalogue_json_build.py` remains the supported CLI and Studio-callable orchestration entrypoint.
+Scope planning rules for work, series, and moment builds live in `scripts/catalogue_build_scopes.py`; media readiness and local derivative work live in `scripts/catalogue_build_media.py`; field-aware build narrowing lives in `scripts/catalogue_build_field_plan.py`; generator/search command shapes and step result shaping live in `scripts/catalogue_build_commands.py`.
+`scripts/catalogue_json_build.py` remains the supported CLI and Studio-callable orchestration entrypoint.
 
 ## Common Runs
 
@@ -119,7 +120,7 @@ The helper:
   - `recent-index-json`
 - then runs `build_search.rb --scope catalogue`
 
-The scoped planning module owns the pure selection and validation rules, including extra series/work id normalization, series build preconditions, moment metadata merge behavior, and scope summaries. The entrypoint owns CLI option binding, preview text, local media planning/execution, generator/search command sequencing, and the response payload shape used by Studio.
+The extracted build modules own selection and validation rules, media planning/execution, field-aware narrowing, command construction, and step-result shaping. The entrypoint owns CLI option binding, preview text, command sequencing, subprocess execution, and the response payload shape used by Studio.
 
 When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. The preview prints `Field-aware reasons` lines that group selected artifact families by the changed fields and registry reason. Unknown fields and mixed rule classes use conservative fallback and explain the fallback selection.
 

@@ -3,7 +3,7 @@ doc_id: site-request-script-structural-review-catalogue-json-build
 title: Catalogue JSON Build Slices
 added_date: 2026-05-09
 last_updated: "2026-05-09 21:05"
-ui_status: in-progress
+ui_status: done
 parent_id: site-request-script-structural-review
 sort_order: 50
 viewable: true
@@ -18,6 +18,7 @@ Status:
 - Slice 2 local media planning and readiness implemented
 - Slice 3 field-aware build-plan adapter implemented
 - Slice 4 command construction and execution-result helpers implemented
+- Slice 5 final orchestration cleanup implemented
 
 ## Purpose
 
@@ -29,7 +30,7 @@ The intended end state is not to make the scoped build entrypoint small for its 
 
 ## Current Shape
 
-`scripts/catalogue_json_build.py` currently owns several responsibilities in one file:
+Before this review, `scripts/catalogue_json_build.py` owned several responsibilities in one file:
 
 - CLI argument parsing for work, series, detail, moment, changed-field, force, write, and media-only modes
 - source-dir and projects-base-dir detection
@@ -357,7 +358,7 @@ Risks:
 
 ### Slice 5: final orchestration cleanup
 
-Status: planned.
+Status: implemented.
 
 Task:
 
@@ -372,6 +373,25 @@ Tests and checks:
 - run focused tests for extracted modules
 - run representative dry-run previews for work, series, and moment scopes
 - run the smallest relevant run-checks profile if shared catalogue behavior changed broadly enough to justify it
+
+Implementation result:
+
+- `scripts/catalogue_json_build.py` now keeps the supported CLI, preview output placement, command ordering, subprocess execution, and Studio result payload assembly
+- `scripts/catalogue_build_scopes.py` now owns moment preview defaults in addition to work/series/moment scope construction, so scope planning no longer imports back through the entrypoint for readiness or preview helpers
+- Studio/publication/prose/cleanup callers now import scope, media, field-plan, command, and staging-path helpers from their owning modules directly
+- obsolete compatibility wrappers were removed from the entrypoint; `run_scoped_build_scope` remains as the Studio-callable orchestration function used by the catalogue write server
+- `tests/python/test_catalogue_media_cleanup.py` now tests the media owner directly with injected plan and image runners instead of patching compatibility wrappers
+
+Benefits:
+
+- leaves `catalogue_json_build.py` focused on CLI and orchestration concerns after the extraction sequence
+- removes circular default-builder imports from `catalogue_build_scopes.py`
+- makes ownership explicit at current call sites before any later script-directory organization work
+
+Risks:
+
+- external callers outside this repo that imported retired compatibility helper names from `catalogue_json_build.py` would need to switch to the extracted owner modules
+- the Studio-facing orchestration function still lives in the entrypoint by design, so a future package move must preserve that callable boundary deliberately
 
 ## Validation Plan
 

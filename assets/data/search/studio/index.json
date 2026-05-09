@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-293955cff161046d054a6461fada445e",
-    "generated_at_utc": "2026-05-09T19:50:50Z",
+    "version": "blake2b-5b76b5d929263096a011a2bd689b2870",
+    "generated_at_utc": "2026-05-09T20:01:03Z",
     "count": 209
   },
   "entries": [
@@ -4412,10 +4412,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-05-09 20:20",
+      "last_updated": "2026-05-09 21:05",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-09 20:20 • Catalogue",
+      "display_meta": "2026-05-09 21:05 • Catalogue",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -4424,13 +4424,13 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-05-09 20:20",
+        "2026-05-09 21:05",
         "2026",
         "05",
         "09",
-        "20"
+        "21"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-09 20:20 2026 05 09 20"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-09 21:05 2026 05 09 21"
     },
     {
       "id": "scripts-catalogue-lookup",

@@ -6,15 +6,10 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
 import catalogue_cleanup
+from catalogue_build_media import build_local_media_plan
+from catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work, preview_moment_source
 import catalogue_source_mutation as source_mutation
 import catalogue_transactions as transactions
-from catalogue_json_build import (
-    build_local_media_plan,
-    build_scope_for_moment,
-    build_scope_for_series,
-    build_scope_for_work,
-    preview_moment_source,
-)
 from catalogue_source import (
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
