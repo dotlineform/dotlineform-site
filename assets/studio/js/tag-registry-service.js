@@ -25,7 +25,7 @@ function registryActivityContext(actionId, controlId, controlSelector, recordIdF
   return buildStudioActivityContext({
     pageId: "tag-registry",
     actionId,
-    route: "/studio/tag-registry/",
+    route: "/studio/analytics/tag-registry/",
     controlId,
     controlSelector,
     recordIdField,

@@ -39,10 +39,10 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-analytics
     <section class="catalogueDashboardColumn">
       <h3>Tags</h3>
       <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/studio/tag-registry/' | relative_url }}">registry</a></li>
-        <li><a href="{{ '/studio/tag-aliases/' | relative_url }}">aliases</a></li>
-        <li><a href="{{ '/studio/tag-groups/' | relative_url }}">groups</a></li>
-        <li><a href="{{ '/studio/series-tags/' | relative_url }}">series tags</a></li>
+        <li><a href="{{ '/studio/analytics/tag-registry/' | relative_url }}">registry</a></li>
+        <li><a href="{{ '/studio/analytics/tag-aliases/' | relative_url }}">aliases</a></li>
+        <li><a href="{{ '/studio/analytics/tag-groups/' | relative_url }}">groups</a></li>
+        <li><a href="{{ '/studio/analytics/series-tags/' | relative_url }}">series tags</a></li>
       </ul>
     </section>
   </section>

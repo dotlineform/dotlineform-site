@@ -8,7 +8,7 @@
 {%- if studio_domain == '' and is_docs_page == false -%}
   {%- if studio_url == '/studio/library/' -%}
     {%- assign studio_domain = 'library' -%}
-  {%- elsif studio_url == '/studio/analytics/' -%}
+  {%- elsif studio_url == '/studio/analytics/' or studio_url contains '/studio/analytics/' -%}
     {%- assign studio_domain = 'analytics' -%}
   {%- elsif studio_url == '/studio/search/' -%}
     {%- assign studio_domain = 'search' -%}
@@ -16,7 +16,7 @@
     {%- assign studio_domain = 'catalogue' -%}
   {%- elsif studio_url == '/studio/catalogue/' or studio_url contains '/studio/catalogue-' -%}
     {%- assign studio_domain = 'catalogue' -%}
-  {%- elsif studio_url contains '/studio/tag-' or studio_url contains '/studio/series-tag-' or studio_url == '/studio/series-tags/' or studio_url contains '/studio/ui-catalogue/' -%}
+  {%- elsif studio_url contains '/studio/ui-catalogue/' -%}
     {%- assign studio_domain = 'analytics' -%}
   {%- endif -%}
 {%- endif -%}

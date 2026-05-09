@@ -1,7 +1,8 @@
 ---
 layout: studio
 title: "Series Tag Editor"
-permalink: /studio/series-tag-editor/
+permalink: /studio/analytics/series-tag-editor/
+studio_domain: analytics
 section: works
 studio_page_doc: /docs/?scope=studio&doc=tag-editor
 ---

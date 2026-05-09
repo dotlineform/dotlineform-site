@@ -2,7 +2,7 @@
 doc_id: studio-smoke-testing
 title: Studio Smoke Testing
 added_date: 2026-05-01
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-09 16:00"
 parent_id: studio
 sort_order: 40
 ---
@@ -134,12 +134,12 @@ Adopted routes:
 - `/studio/docs-broken-links/` with `#docsBrokenLinksRoot`
 - `/studio/docs-import/` with `#docsHtmlImportRoot`
 - `/studio/project-state/` with `#projectStateRoot`
-- `/studio/series-tag-editor/` with `#seriesTagEditorRoot`
-- `/studio/series-tags/` with `#series-tags`
+- `/studio/analytics/series-tag-editor/` with `#seriesTagEditorRoot`
+- `/studio/analytics/series-tags/` with `#series-tags`
 - `/studio/studio-works/` with `#worksStudioRoot`
-- `/studio/tag-aliases/` with `#tag-aliases`
-- `/studio/tag-groups/` with `#tag-groups`
-- `/studio/tag-registry/` with `#tag-registry`
+- `/studio/analytics/tag-aliases/` with `#tag-aliases`
+- `/studio/analytics/tag-groups/` with `#tag-groups`
+- `/studio/analytics/tag-registry/` with `#tag-registry`
 - `/studio/` with `#studioHomeRoot`
 - `/studio/audits/` with `#studioAuditsRoot`
 - `/studio/catalogue/` with `#studioCatalogueDashboardRoot`

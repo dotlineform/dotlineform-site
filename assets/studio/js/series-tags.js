@@ -47,7 +47,7 @@ import {
 } from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+let GROUP_INFO_PAGE_PATH = "/studio/analytics/tag-groups/";
 const SORTABLE_KEYS = new Set(["series", "status", "tags"]);
 const RAG_ORDER = {
   red: 0,
@@ -708,7 +708,7 @@ async function handleApplyImport(state) {
       activity_context: buildStudioActivityContext({
         pageId: "series-tags",
         actionId: "import-series-tag-assignments",
-        route: "/studio/series-tags/",
+        route: "/studio/analytics/series-tags/",
         controlId: "apply-import",
         controlSelector: "[data-import-action=\"apply-import\"]",
         recordIdField: "import_filename",

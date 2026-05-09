@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09"
+last_updated: "2026-05-09 16:00"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Moved tag Studio routes under Analytics
+
+**Status:** implemented
+
+**Area:** Studio / Analytics / routing
+
+**Summary:**
+Moved the tag registry, tag aliases, tag groups, series tags, and series tag editor pages from top-level Studio routes into the Analytics namespace.
+The old routes were removed without compatibility redirects or aliases, and route config, activity metadata, dashboard links, docs, and smoke-test route references now use `/studio/analytics/...`.
+
+**Files changed/docs:**
+
+- `studio/analytics/tag-registry/index.md`
+- `studio/analytics/tag-aliases/index.md`
+- `studio/analytics/tag-groups/index.md`
+- `studio/analytics/series-tags/index.md`
+- `studio/analytics/series-tag-editor/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/data/activity_contract.json`
+- [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup)
+- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+
+**Impact:**
+Analytics route ownership is now explicit before the tag write-server structural review continues.
+Local bookmarks and any missed hardcoded links to the old `/studio/tag-*`, `/studio/series-tags/`, or `/studio/series-tag-editor/` routes now fail instead of being masked by aliases.
 
 ## [2026-05-09] Advanced docs-management server structural review slices
 

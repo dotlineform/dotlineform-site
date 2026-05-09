@@ -2,7 +2,7 @@
 doc_id: pipeline-config
 title: "Pipeline Config Refactor Plan"
 added_date: 2026-03-29
-last_updated: 2026-03-29
+last_updated: "2026-05-09 16:00"
 parent_id: archive
 sort_order: 10
 published: false
@@ -221,7 +221,7 @@ Status: `completed`
 - 2026-03-20: Updated `_layouts/work.html`, `_layouts/work_details.html`, and `_layouts/moment.html` to derive primary media URLs and `srcset` strings from shared config.
 - 2026-03-20: Replaced width-specific work/detail image data attributes with config-derived generic media attributes.
 - 2026-03-20: Updated `_layouts/series.html`, `series/index.md`, `moments/index.md`, and `_includes/work_index_item.html` to derive thumb URLs and `srcset` strings from shared config.
-- 2026-03-20: Updated `studio/series-tag-editor/index.md` and `assets/studio/js/series-tag-editor-page.js` so Studio primary-media rendering reads config-derived variant policy from page data.
+- 2026-03-20: Updated `studio/analytics/series-tag-editor/index.md` and `assets/studio/js/series-tag-editor-page.js` so Studio primary-media rendering reads config-derived variant policy from page data.
 
 ### Verification
 

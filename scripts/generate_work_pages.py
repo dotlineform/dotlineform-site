@@ -988,7 +988,7 @@ def main() -> None:
     run_works_index_json = True
     run_moments_artifact = artifact_enabled("moments")
     run_moments_index_json = True
-    run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
+    run_studio_series_pages = False  # retired: use /studio/analytics/series-tag-editor/?series=<id>
 
     needs_projects_base = run_work_details_pages or run_work_json or run_series_pages or run_moments_artifact or run_moments_index_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":

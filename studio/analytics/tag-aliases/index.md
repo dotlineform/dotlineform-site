@@ -1,23 +1,24 @@
 ---
 layout: studio
-title: "Tag Registry"
-permalink: /studio/tag-registry/
-studio_page_doc: /docs/?scope=studio&doc=tag-registry
+title: "Tag Aliases"
+permalink: /studio/analytics/tag-aliases/
+studio_domain: analytics
+studio_page_doc: /docs/?scope=studio&doc=tag-aliases
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagRegistryPage">
-  <div id="tag-registry" data-role="tag-registry" data-studio-ready="false" data-studio-busy="false">
+<div class="tagAliasesPage">
+  <div id="tag-aliases" data-role="tag-aliases" data-studio-ready="false" data-studio-busy="false">
     <div class="seriesTagsActions">
       <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
-      <button type="button" class="tagStudio__button" data-role="open-new-tag">New tag</button>
+      <button type="button" class="tagStudio__button" data-role="open-new-alias">New alias</button>
     </div>
     <section class="tagStudio__panel">
       <div class="tagStudioFilters" data-role="filters">
         <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
         <label class="tagStudioFilters__searchWrap">
-          <span class="visually-hidden" data-role="search-label">Search tags</span>
+          <span class="visually-hidden" data-role="search-label">Search aliases</span>
           <input
             type="text"
             class="tagStudio__input tagStudioFilters__searchInput"
@@ -35,4 +36,4 @@ studio_page_doc: /docs/?scope=studio&doc=tag-registry
   </div>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/tag-registry.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/studio/js/tag-aliases.js' | relative_url }}"></script>

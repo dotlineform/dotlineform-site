@@ -25,7 +25,7 @@ function aliasesActivityContext(actionId, controlId, controlSelector, recordIdFi
   return buildStudioActivityContext({
     pageId: "tag-aliases",
     actionId,
-    route: "/studio/tag-aliases/",
+    route: "/studio/analytics/tag-aliases/",
     controlId,
     controlSelector,
     recordIdField,

@@ -2,15 +2,15 @@
 doc_id: site-request-analytics-tag-route-cleanup
 title: Analytics Tag Route Cleanup Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:54"
-ui_status: in-progress
+last_updated: "2026-05-09 16:00"
+ui_status: done
 parent_id: change-requests
 sort_order: 213
 viewable: true
 ---
 # Analytics Tag Route Cleanup Request
 
-Status: proposed.
+Status: implemented.
 
 ## Purpose
 
@@ -18,11 +18,11 @@ Move the existing tag Studio pages under the Analytics route namespace so UI rou
 
 Tags are conceptually an Analytics metadata layer over catalogue works and series.
 The docs already place tag pages under the Analytics parent, and `/studio/analytics/` already links to the tag pages.
-The remaining mismatch is that the page routes still live directly under `/studio/`.
+The page routes now live under `/studio/analytics/`.
 
 ## Context
 
-The current routes are historical:
+The retired historical routes were:
 
 - `/studio/tag-registry/`
 - `/studio/tag-aliases/`
@@ -30,7 +30,7 @@ The current routes are historical:
 - `/studio/series-tags/`
 - `/studio/series-tag-editor/?series=<series_id>`
 
-The desired Analytics routes are:
+The canonical Analytics routes are:
 
 - `/studio/analytics/tag-registry/`
 - `/studio/analytics/tag-aliases/`
@@ -38,21 +38,21 @@ The desired Analytics routes are:
 - `/studio/analytics/series-tags/`
 - `/studio/analytics/series-tag-editor/?series=<series_id>`
 
-This cleanup should happen before the `tag_write_server.py` structural review moves into implementation slices that touch route/activity context.
-It should also happen before the scripts directory reorganization, because script folders should follow settled UI/domain ownership rather than trying to force it.
+This cleanup was completed before the `tag_write_server.py` structural review moves into implementation slices that touch route/activity context.
+It also settles the route ownership before the scripts directory reorganization.
 
 ## Scope
 
 In scope:
 
-- move or alias all tag page routes under `/studio/analytics/`
+- move all tag page routes under `/studio/analytics/`
 - update `/studio/analytics/` dashboard links
 - update `assets/studio/data/studio_config.json` route values
 - update `assets/studio/data/activity_contract.json` route metadata for tag pages
 - update docs that list the tag page routes
 - update Studio smoke-test route references and readiness expectations
 - update any hardcoded links from tag page controllers
-- decide and document compatibility behavior for old routes
+- document that old routes have no redirects or aliases
 
 Out of scope:
 
@@ -64,14 +64,14 @@ Out of scope:
 
 ## Compatibility Decision
 
-Preferred behavior:
+Implemented behavior:
 
 - new canonical routes live under `/studio/analytics/`
-- old `/studio/tag-registry/`, `/studio/tag-aliases/`, `/studio/tag-groups/`, `/studio/series-tags/`, and `/studio/series-tag-editor/` routes should remain as short-term compatibility redirects or lightweight aliases if Jekyll routing supports that cleanly
+- old `/studio/tag-registry/`, `/studio/tag-aliases/`, `/studio/tag-groups/`, `/studio/series-tags/`, and `/studio/series-tag-editor/` routes were removed without compatibility redirects or aliases
 - docs and config should use the new canonical routes
 - tests should target the new canonical routes
 
-If redirects add too much complexity, keep the old pages as compatibility aliases for one pass, but make the canonical route explicit in docs and follow up with removal once local links have moved.
+This deliberately avoids a separate cleanup pass for temporary compatibility pages.
 
 ## Implementation Plan
 
@@ -116,7 +116,7 @@ Acceptance checks:
 
 - pages render at the new canonical routes
 - route roots keep the same `data-studio-ready`, `data-studio-busy`, `data-studio-mode`, `data-studio-service`, and `data-studio-record-loaded` contracts
-- old route behavior is either redirected, aliased, or deliberately removed according to the compatibility decision
+- old route behavior is deliberately removed according to the compatibility decision
 
 ### Slice 3: config, activity, and link updates
 
@@ -131,7 +131,7 @@ Update canonical route references:
 
 Acceptance checks:
 
-- `rg "/studio/tag-registry|/studio/tag-aliases|/studio/tag-groups|/studio/series-tags|/studio/series-tag-editor"` shows only deliberate compatibility notes or historical changelog entries
+- `rg "/studio/tag-registry|/studio/tag-aliases|/studio/tag-groups|/studio/series-tags|/studio/series-tag-editor"` shows only deliberate historical notes
 - activity contract tests still pass
 - Studio smoke tests target the new canonical routes
 
@@ -166,10 +166,9 @@ Closeout docs:
 
 - route changes can break local bookmarks or hardcoded links
 - activity contract route metadata can drift from page paths
-- smoke tests may pass old aliases unless they are explicitly updated to canonical routes
-- Jekyll permalink aliases or redirects may add clutter if not kept intentionally short-lived
+- local bookmarks to old routes now fail rather than redirecting
+- any missed hardcoded old route now fails immediately instead of being masked by an alias
 
-## Recommended Next Step
+## Closeout
 
-Start with the route inventory and compatibility decision.
-This should be a small, self-contained request and is likely suitable for a one-session implementation if compatibility behavior stays simple.
+The implementation moved the page templates, route config, activity metadata, hardcoded activity contexts, route docs, and smoke-test route references to the Analytics namespace.

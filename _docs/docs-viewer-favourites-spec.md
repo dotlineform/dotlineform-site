@@ -2,7 +2,7 @@
 doc_id: ui-request-docs-viewer-favourites-spec
 title: Docs Viewer Favourites Spec
 added_date: 2026-04-19
-last_updated: 2026-05-02
+last_updated: "2026-05-09 16:00"
 ui_status: done
 parent_id: change-requests
 sort_order: 130
@@ -133,7 +133,7 @@ The bookmark pill style should follow the small-pill direction already used in t
 
 Reference route:
 
-- `/studio/series-tag-editor/?series=036&works=00293%2C00294%2C00296`
+- `/studio/analytics/series-tag-editor/?series=036&works=00293%2C00294%2C00296`
 
 Required visual traits:
 

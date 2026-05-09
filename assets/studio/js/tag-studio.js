@@ -1686,7 +1686,7 @@ async function handleSaveInner(state) {
       const activityContext = buildStudioActivityContext({
         pageId: "series-tag-editor",
         actionId: "save-series-tags",
-        route: "/studio/series-tag-editor/",
+        route: "/studio/analytics/series-tag-editor/",
         controlId: "save",
         controlSelector: "[data-role=\"save\"]",
         recordIdField: "series_id",

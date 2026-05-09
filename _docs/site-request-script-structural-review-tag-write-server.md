@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:45"
+last_updated: "2026-05-09 16:00"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -34,7 +34,7 @@ Current state:
 - the Analytics dashboard lives at `/studio/analytics/`
 - Analytics dashboard links point to the tag pages
 - tag docs such as [Series Tags](/docs/?scope=studio&doc=series-tags), [Tag Editor](/docs/?scope=studio&doc=tag-editor), and [Tag Aliases](/docs/?scope=studio&doc=tag-aliases) already sit under the Analytics docs parent
-- tag UI routes still live at `/studio/series-tags/` and `/studio/tag-registry/`
+- tag UI routes now live under `/studio/analytics/`
 - the write service still lives at `scripts/studio/tag_write_server.py`
 
 Target concept:
@@ -45,9 +45,8 @@ Target concept:
 - script ownership should align with that concept, so a later folder reorganization should use `scripts/analytics/` rather than a tag-specific package
 - `scripts/studio/` should be reserved for general-purpose Studio admin and shared runtime services
 
-Routing cleanup is related but separate from this server restructuring.
-The likely UI target is to move tag routes under `/studio/analytics/`, for example `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/`, while preserving compatibility redirects or links as needed.
-That route migration is tracked in [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) and should be handled before tag write-server implementation slices that depend on settled page route context.
+Routing cleanup was related but separate from this server restructuring.
+The tag routes were moved under `/studio/analytics/` without compatibility redirects or aliases in [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup), so tag write-server implementation slices can now depend on settled page route context.
 
 Server naming is also an open architectural question.
 If this local service remains limited to tag assignment, tag registry, and tag alias writes, `tag_write_server.py` remains accurate.
@@ -56,7 +55,7 @@ That decision should be made before final closeout, because it affects route con
 
 Sequencing decision:
 
-1. Complete [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) so page routes match the Analytics domain.
+1. Use the completed [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) as the settled page-route context.
 2. Complete the tag write-server structural review in the current script layout.
 3. Use top-level `scripts/tag_*.py` modules for extracted owners during this review so each slice can focus on behavior boundaries rather than package moves.
 4. Decide during final closeout whether the service remains `tag_write_server.py` or becomes an Analytics service such as `analytics_server.py`.
@@ -388,7 +387,7 @@ Risks:
 
 ## Open Questions
 
-- Should tag UI routes move from `/studio/tag-registry/` and `/studio/series-tags/` to `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/` before or after the service restructuring?
+- Tag UI route migration is complete; future slices should use the canonical `/studio/analytics/...` routes.
 - Should `tag_write_server.py` be renamed to `analytics_server.py` if Analytics registries and scoring workflows start sharing the same local service?
 - Should backup/write helpers become tag-specific first, then be compared with catalogue/docs transaction helpers for a possible shared local-service utility?
 - Is there enough overlap between registry mutation, alias mutation, promotion, and demotion to justify one mutation module, or are separate owners clearer?

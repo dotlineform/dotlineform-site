@@ -2,7 +2,7 @@
 doc_id: tag-registry
 title: Tag Registry
 added_date: 2026-03-31
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 16:00"
 parent_id: analytics
 sort_order: 40
 ---
@@ -10,7 +10,7 @@ sort_order: 40
 
 Route:
 
-- `/studio/tag-registry/`
+- `/studio/analytics/tag-registry/`
 
 Purpose:
 
@@ -33,7 +33,7 @@ Covered write actions include registry import, create tag, edit tag, delete tag,
 
 Primary template:
 
-- `studio/tag-registry/index.md`
+- `studio/analytics/tag-registry/index.md`
 
 Page controller:
 

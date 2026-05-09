@@ -65,7 +65,7 @@ const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
 const DEMOTE_TAG_MATCH_CAP = 12;
-let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+let GROUP_INFO_PAGE_PATH = "/studio/analytics/tag-groups/";
 const UI = tagAliasesUi;
 const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 

@@ -2,7 +2,7 @@
 doc_id: tag-editor
 title: Tag Editor
 added_date: 2026-03-31
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 16:00"
 parent_id: analytics
 sort_order: 30
 ---
@@ -10,9 +10,9 @@ sort_order: 30
 
 Route:
 
-- `/studio/series-tag-editor/`
+- `/studio/analytics/series-tag-editor/`
 - required query param: `?series=<series_id>`
-- example: `/studio/series-tag-editor/?series=curve-poems`
+- example: `/studio/analytics/series-tag-editor/?series=curve-poems`
 
 Purpose:
 
@@ -36,7 +36,7 @@ Multiple row writes from one Save click share the same initiating action context
 
 Primary template:
 
-- `studio/series-tag-editor/index.md`
+- `studio/analytics/series-tag-editor/index.md`
 
 Page boot module:
 

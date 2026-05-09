@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a9a0ec2fbd52591481cb64f4822362f7",
-    "generated_at_utc": "2026-05-09T14:54:45Z",
+    "version": "blake2b-0d7e2880fc451af97ba5f0e2693751f0",
+    "generated_at_utc": "2026-05-09T15:08:41Z",
     "count": 207
   },
   "entries": [
@@ -76,10 +76,10 @@
       "kind": "doc",
       "title": "Activity Log Coverage Inventory",
       "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
-      "last_updated": "2026-05-08 20:20",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "site-request-studio-unified-activity-log",
       "parent_title": "Studio Unified Activity Log Request",
-      "display_meta": "2026-05-08 20:20 • Studio Unified Activity Log Request",
+      "display_meta": "2026-05-09 16:00 • Studio Unified Activity Log Request",
       "search_terms": [
         "site-request-studio-unified-activity-log-inventory",
         "site",
@@ -92,13 +92,14 @@
         "activity log coverage inventory",
         "coverage",
         "studio unified activity log request",
-        "2026-05-08 20:20",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "08",
-        "20"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-08 20:20 2026 05 08 20"
+      "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "data-models-analysis",
@@ -726,10 +727,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-06 20:36",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-06 20:36 • Servers",
+      "display_meta": "2026-05-09 16:00 • Servers",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -738,14 +739,14 @@
         "dev studio runner",
         "runner",
         "servers",
-        "2026-05-06 20:36",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "20",
-        "36"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-06 20:36 2026 05 06 20 36"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -1096,39 +1097,41 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-08",
-      "display_meta": "2026-05-08",
+      "last_updated": "2026-05-09 16:00",
+      "display_meta": "2026-05-09 16:00",
       "search_terms": [
         "studio",
-        "2026-05-08",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "08"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "studio 2026-05-08 2026 05 08"
+      "search_text": "studio 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "studio-runtime",
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-06 20:51 • Studio",
+      "display_meta": "2026-05-09 16:00 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-06 20:51",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "20",
-        "51"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "studio-ui-start",
@@ -1159,24 +1162,24 @@
       "kind": "doc",
       "title": "Tag Groups",
       "href": "/docs/?scope=studio&doc=tag-groups",
-      "last_updated": "2026-05-06 20:54",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
+      "display_meta": "2026-05-09 16:00 • Analytics",
       "search_terms": [
         "tag-groups",
         "tag",
         "groups",
         "tag groups",
         "analytics",
-        "2026-05-06 20:54",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "20",
-        "54"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "tag-groups tag groups tag groups analytics 2026-05-06 20:54 2026 05 06 20 54"
+      "search_text": "tag-groups tag groups tag groups analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "catalogue",
@@ -1543,10 +1546,10 @@
       "kind": "doc",
       "title": "Site Shell Runtime",
       "href": "/docs/?scope=studio&doc=site-shell-runtime",
-      "last_updated": "2026-05-06 21:10",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-06 21:10 • Architecture",
+      "display_meta": "2026-05-09 16:00 • Architecture",
       "search_terms": [
         "site-shell-runtime",
         "site",
@@ -1554,14 +1557,14 @@
         "runtime",
         "site shell runtime",
         "architecture",
-        "2026-05-06 21:10",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "21",
-        "10"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-06 21:10 2026 05 06 21 10"
+      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -1642,24 +1645,24 @@
       "kind": "doc",
       "title": "Tag Editor",
       "href": "/docs/?scope=studio&doc=tag-editor",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-08 19:25 • Analytics",
+      "display_meta": "2026-05-09 16:00 • Analytics",
       "search_terms": [
         "tag-editor",
         "tag",
         "editor",
         "tag editor",
         "analytics",
-        "2026-05-08 19:25",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "tag-editor tag editor tag editor analytics 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "tag-editor tag editor tag editor analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "scripts-tag-write-server",
@@ -1692,10 +1695,10 @@
       "kind": "doc",
       "title": "Tag Write Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
-      "last_updated": "2026-05-09 15:45",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 15:45 • Script Structural Review Request",
+      "display_meta": "2026-05-09 16:00 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-tag-write-server",
         "site",
@@ -1709,14 +1712,14 @@
         "tag write server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 15:45",
+        "2026-05-09 16:00",
         "2026",
         "05",
         "09",
-        "15",
-        "45"
+        "16",
+        "00"
       ],
-      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 15:45 2026 05 09 15 45"
+      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -1793,10 +1796,10 @@
       "kind": "doc",
       "title": "Studio Ready State Contract Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
-      "last_updated": "2026-05-03 22:38",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 22:38 • Change Requests",
+      "display_meta": "2026-05-09 16:00 • Change Requests",
       "search_terms": [
         "site-request-studio-ready-state-contract",
         "site",
@@ -1809,14 +1812,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03 22:38",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "03",
-        "22",
-        "38"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-03 22:38 2026 05 03 22 38"
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -2070,24 +2073,24 @@
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-06 20:51 • Studio",
+      "display_meta": "2026-05-09 16:00 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-06 20:51",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "20",
-        "51"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "studio-ui-conformance",
@@ -2119,24 +2122,24 @@
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=tag-registry",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-08 19:25 • Analytics",
+      "display_meta": "2026-05-09 16:00 • Analytics",
       "search_terms": [
         "tag-registry",
         "tag",
         "registry",
         "tag registry",
         "analytics",
-        "2026-05-08 19:25",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "tag-registry tag registry tag registry analytics 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "tag-registry tag registry tag registry analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-work-series-prose-source-model",
@@ -2343,10 +2346,10 @@
       "kind": "doc",
       "title": "Jekyll Site Config",
       "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
-      "last_updated": "2026-05-06 21:11",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-06 21:11 • Site Docs",
+      "display_meta": "2026-05-09 16:00 • Site Docs",
       "search_terms": [
         "config-jekyll-site-config",
         "config",
@@ -2355,14 +2358,14 @@
         "jekyll site config",
         "site docs",
         "docs",
-        "2026-05-06 21:11",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "21",
-        "11"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "config-jekyll-site-config config jekyll site jekyll site config site docs docs 2026-05-06 21:11 2026 05 06 21 11"
+      "search_text": "config-jekyll-site-config config jekyll site jekyll site config site docs docs 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "config-library-export-configs",
@@ -2494,10 +2497,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-07 • UI",
+      "display_meta": "2026-05-09 16:00 • UI",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -2507,36 +2510,38 @@
         "and",
         "decision",
         "log",
-        "2026-05-07",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "07"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-07 2026 05 07"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "tag-aliases",
       "kind": "doc",
       "title": "Tag Aliases",
       "href": "/docs/?scope=studio&doc=tag-aliases",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-08 19:25 • Analytics",
+      "display_meta": "2026-05-09 16:00 • Analytics",
       "search_terms": [
         "tag-aliases",
         "tag",
         "aliases",
         "tag aliases",
         "analytics",
-        "2026-05-08 19:25",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "studio-activity",
@@ -2783,24 +2788,24 @@
       "kind": "doc",
       "title": "Series Tags",
       "href": "/docs/?scope=studio&doc=series-tags",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-08 19:25 • Analytics",
+      "display_meta": "2026-05-09 16:00 • Analytics",
       "search_terms": [
         "series-tags",
         "series",
         "tags",
         "series tags",
         "analytics",
-        "2026-05-08 19:25",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "series-tags series tags series tags analytics 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "series-tags series tags series tags analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "scripts-studio-audit-service",
@@ -2875,10 +2880,10 @@
       "kind": "doc",
       "title": "Analytics Plan",
       "href": "/docs/?scope=studio&doc=new-pipeline-refine-analytics",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "archive",
       "parent_title": "Archive",
-      "display_meta": "2026-05-05 • Archive",
+      "display_meta": "2026-05-09 16:00 • Archive",
       "search_terms": [
         "new-pipeline-refine-analytics",
         "new",
@@ -2888,11 +2893,14 @@
         "analytics plan",
         "plan",
         "archive",
-        "2026-05-05",
+        "2026-05-09 16:00",
         "2026",
-        "05"
+        "05",
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan archive 2026-05-05 2026 05"
+      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan archive 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "new-pipeline-studio-ui-polish",
@@ -4101,10 +4109,10 @@
       "kind": "doc",
       "title": "Docs Viewer Favourites Spec",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
+      "display_meta": "2026-05-09 16:00 • Change Requests",
       "search_terms": [
         "ui-request-docs-viewer-favourites-spec",
         "ui",
@@ -4117,12 +4125,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-02",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "02"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-catalogue-publication-workflow",
@@ -4461,10 +4471,10 @@
       "kind": "doc",
       "title": "Pipeline Config JSON",
       "href": "/docs/?scope=studio&doc=config-pipeline-json",
-      "last_updated": "2026-05-06 21:11",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 21:11 • Catalogue",
+      "display_meta": "2026-05-09 16:00 • Catalogue",
       "search_terms": [
         "config-pipeline-json",
         "config",
@@ -4472,14 +4482,14 @@
         "json",
         "pipeline config json",
         "catalogue",
-        "2026-05-06 21:11",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "06",
-        "21",
-        "11"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "config-pipeline-json config pipeline json pipeline config json catalogue 2026-05-06 21:11 2026 05 06 21 11"
+      "search_text": "config-pipeline-json config pipeline json pipeline config json catalogue 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "ui-request-docs-viewer-index-drag-undo-task",
@@ -4851,10 +4861,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 15:15",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 15:15 • Change Requests",
+      "display_meta": "2026-05-09 16:00 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4866,23 +4876,24 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 15:15",
+        "2026-05-09 16:00",
         "2026",
         "05",
         "09",
-        "15"
+        "16",
+        "00"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 15:15 2026 05 09 15"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-import-export-system-review",
       "kind": "doc",
       "title": "Import/Export System Review Request",
       "href": "/docs/?scope=studio&doc=site-request-import-export-system-review",
-      "last_updated": "2026-05-09 14:15",
+      "last_updated": "2026-05-09 15:47",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 14:15 • Change Requests",
+      "display_meta": "2026-05-09 15:47 • Change Requests",
       "search_terms": [
         "site-request-import-export-system-review",
         "site",
@@ -4895,24 +4906,24 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 14:15",
+        "2026-05-09 15:47",
         "2026",
         "05",
         "09",
-        "14",
-        "15"
+        "15",
+        "47"
       ],
-      "search_text": "site-request-import-export-system-review site request import export system review import/export system review request change requests change requests 2026-05-09 14:15 2026 05 09 14 15"
+      "search_text": "site-request-import-export-system-review site request import export system review import/export system review request change requests change requests 2026-05-09 15:47 2026 05 09 15 47"
     },
     {
       "id": "site-request-scripts-directory-organization",
       "kind": "doc",
       "title": "Scripts Directory Organization Request",
       "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
-      "last_updated": "2026-05-09 15:45",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 15:45 • Change Requests",
+      "display_meta": "2026-05-09 16:00 • Change Requests",
       "search_terms": [
         "site-request-scripts-directory-organization",
         "site",
@@ -4924,24 +4935,24 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 15:45",
+        "2026-05-09 16:00",
         "2026",
         "05",
         "09",
-        "15",
-        "45"
+        "16",
+        "00"
       ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 15:45 2026 05 09 15 45"
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-analytics-tag-route-cleanup",
       "kind": "doc",
       "title": "Analytics Tag Route Cleanup Request",
       "href": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
-      "last_updated": "2026-05-09 15:54",
+      "last_updated": "2026-05-09 16:00",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 15:54 • Change Requests",
+      "display_meta": "2026-05-09 16:00 • Change Requests",
       "search_terms": [
         "site-request-analytics-tag-route-cleanup",
         "site",
@@ -4954,14 +4965,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 15:54",
+        "2026-05-09 16:00",
         "2026",
         "05",
         "09",
-        "15",
-        "54"
+        "16",
+        "00"
       ],
-      "search_text": "site-request-analytics-tag-route-cleanup site request analytics tag route cleanup analytics tag route cleanup request change requests change requests 2026-05-09 15:54 2026 05 09 15 54"
+      "search_text": "site-request-analytics-tag-route-cleanup site request analytics tag route cleanup analytics tag route cleanup request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "change-requests",
@@ -5069,20 +5080,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-09",
-      "display_meta": "2026-05-09",
+      "last_updated": "2026-05-09 16:00",
+      "display_meta": "2026-05-09 16:00",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-09",
+        "2026-05-09 16:00",
         "2026",
         "05",
-        "09"
+        "09",
+        "16",
+        "00"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-09 2026 05 09"
+      "search_text": "site-change-log site change log site change log 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "archive",

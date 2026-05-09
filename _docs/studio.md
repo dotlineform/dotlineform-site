@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-08"
+last_updated: "2026-05-09 16:00"
 parent_id: ""
 sort_order: 20
 ---
@@ -100,11 +100,11 @@ Current workflow/detail routes:
 - `/studio/catalogue-moment/?moment=<moment_id>`
 - `/studio/catalogue-moment-import/` compatibility redirect
 - `/studio/catalogue-work/?work=<work_id>`
-- `/studio/tag-groups/`
-- `/studio/tag-registry/`
-- `/studio/tag-aliases/`
-- `/studio/series-tags/`
-- `/studio/series-tag-editor/?series=<series_id>`
+- `/studio/analytics/tag-groups/`
+- `/studio/analytics/tag-registry/`
+- `/studio/analytics/tag-aliases/`
+- `/studio/analytics/series-tags/`
+- `/studio/analytics/series-tag-editor/?series=<series_id>`
 - `/studio/studio-works/`
 
 ## Local Development

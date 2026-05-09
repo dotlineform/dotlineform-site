@@ -2,7 +2,7 @@
 doc_id: new-pipeline-refine-analytics
 title: "Analytics Plan"
 added_date: 2026-04-18
-last_updated: "2026-05-05"
+last_updated: "2026-05-09 16:00"
 parent_id: archive
 sort_order: 61
 ---
@@ -17,6 +17,7 @@ This document should be developed in parallel with **[Studio Implementation Plan
 
 The current `/studio/analytics/` dashboard is a lightweight Studio domain entry page.
 It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) to group Analytics data workflow links and tag tooling without route-card descriptions.
+Tag registry, alias, group, series-tag, and series tag editor routes now live under `/studio/analytics/` as the first concrete Analytics metadata layer.
 
 ## Purpose
 
@@ -26,7 +27,7 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 
 ## Current Boundary
 
-- existing tag-oriented Studio pages remain live and useful
+- existing tag-oriented Studio pages remain live under `/studio/analytics/`
 - `/studio/export/?scope=analytics` and `/studio/import/?scope=analytics` expose the shared scoped data workflow shell for future Analytics export and staged-import review contracts
 - Analytics should not absorb Catalogue, Library, or Search concerns unless a workflow is genuinely cross-domain
 - shared shell, nav, and common Studio patterns belong to the Studio implementation plan
@@ -56,5 +57,5 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 ## Open Questions
 
 - what should the first Analytics dashboard show
-- which current tag workflows should remain where they are versus moving under a wider Analytics domain
+- which current tag workflows should grow into broader Analytics workflows now that their routes live under the Analytics namespace
 - which analytics tasks are primarily observational and which require action surfaces

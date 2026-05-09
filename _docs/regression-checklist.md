@@ -2,7 +2,7 @@
 doc_id: regression-checklist
 title: "Studio Regression Checklist"
 added_date: 2026-03-28
-last_updated: 2026-03-28
+last_updated: "2026-05-09 16:00"
 parent_id: archive
 sort_order: 80
 published: false
@@ -24,7 +24,7 @@ Use `Pass`, `Fail`, or `N/A` for each item.
 
 ## Series Tag Editor
 
-Page: `studio/series-tag-editor/index.md`
+Page: `studio/analytics/series-tag-editor/index.md`
 
 - [ ] Load page with valid `?series=...`; works appear.
 - [ ] Work search accepts exact `work_id`.
@@ -54,7 +54,7 @@ Notes:
 
 ## Tag Registry
 
-Page: `studio/tag-registry/index.md`
+Page: `studio/analytics/tag-registry/index.md`
 
 - [ ] Registry page loads without error.
 - [ ] Registry shell layout renders correctly on desktop/mobile.
@@ -89,7 +89,7 @@ Notes:
 
 ## Tag Aliases
 
-Page: `studio/tag-aliases/index.md`
+Page: `studio/analytics/tag-aliases/index.md`
 
 - [ ] Aliases page loads without error.
 - [ ] Aliases shell layout renders correctly on desktop/mobile.
@@ -123,7 +123,7 @@ Notes:
 
 ## Series Tags
 
-Page: `studio/series-tags/index.md`
+Page: `studio/analytics/series-tags/index.md`
 
 - [ ] Series Tags page loads without error.
 - [ ] Group filter buttons work.
@@ -138,7 +138,7 @@ Page: `studio/series-tags/index.md`
 
 ## Tag Groups
 
-Page: `studio/tag-groups/index.md`
+Page: `studio/analytics/tag-groups/index.md`
 
 - [ ] Tag Groups page loads without error.
 - [ ] Group sections render in configured order.

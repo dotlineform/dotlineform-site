@@ -2,7 +2,7 @@
 doc_id: studio-plan
 title: "Implementation Plan"
 added_date: 2026-03-28
-last_updated: 2026-03-28
+last_updated: "2026-05-09 16:00"
 parent_id: archive
 sort_order: 90
 published: false
@@ -66,7 +66,7 @@ Goal: separate page/template structure from behavior.
 
 Tasks:
 1. Create `assets/studio/js/series-tag-editor-page.js`
-2. Move logic from `studio/series-tag-editor/index.md` into the module
+2. Move logic from `studio/analytics/series-tag-editor/index.md` into the module
 3. Pass Liquid/runtime values through `data-*` or inline JSON, not embedded logic
 4. Create `assets/studio/js/studio-works.js`
 5. Move logic from `studio/studio-works/index.md` into the module

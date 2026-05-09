@@ -2,7 +2,7 @@
 doc_id: config-pipeline-json
 title: Pipeline Config JSON
 added_date: 2026-03-31
-last_updated: "2026-05-06 21:11"
+last_updated: "2026-05-09 16:00"
 parent_id: catalogue
 sort_order: 170
 ---
@@ -38,7 +38,7 @@ Current Jekyll/Liquid callers read it as `site.data.pipeline`:
 - `_layouts/moment.html`
 - `_layouts/series.html`
 - `series/index.md`
-- `studio/series-tag-editor/index.md`
+- `studio/analytics/series-tag-editor/index.md`
 - `_includes/work_index_item.html`
 
 ## When it is read

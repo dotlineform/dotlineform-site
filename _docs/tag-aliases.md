@@ -2,7 +2,7 @@
 doc_id: tag-aliases
 title: Tag Aliases
 added_date: 2026-03-31
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 16:00"
 parent_id: analytics
 sort_order: 50
 ---
@@ -10,7 +10,7 @@ sort_order: 50
 
 Route:
 
-- `/studio/tag-aliases/`
+- `/studio/analytics/tag-aliases/`
 
 Purpose:
 
@@ -33,7 +33,7 @@ Covered write actions include alias import, create alias, edit alias, delete ali
 
 Primary template:
 
-- `studio/tag-aliases/index.md`
+- `studio/analytics/tag-aliases/index.md`
 
 Page controller:
 

@@ -2,7 +2,7 @@
 doc_id: series-tags
 title: Series Tags
 added_date: 2026-03-31
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 16:00"
 parent_id: analytics
 sort_order: 60
 ---
@@ -10,7 +10,7 @@ sort_order: 60
 
 Route:
 
-- `/studio/series-tags/`
+- `/studio/analytics/series-tags/`
 
 Purpose:
 
@@ -31,7 +31,7 @@ The page root `#series-tags` exposes the shared Studio route-ready contract:
 
 Primary template:
 
-- `studio/series-tags/index.md`
+- `studio/analytics/series-tags/index.md`
 
 Page controller:
 

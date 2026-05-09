@@ -2,7 +2,7 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:45"
+last_updated: "2026-05-09 16:00"
 ui_status: proposed
 parent_id: change-requests
 sort_order: 212
@@ -145,7 +145,7 @@ Expected decision:
 Acceptance checks:
 
 - tag-service command paths and `bin/dev-studio` wiring are updated if moved
-- route migration from `/studio/tag-registry/` and `/studio/series-tags/` to `/studio/analytics/...` is either explicitly implemented in a UI/routing request or deliberately deferred
+- route migration into `/studio/analytics/...` is already implemented, so script folder ownership can follow the settled Analytics UI domain
 - focused tag tests still pass
 - Studio audit docs still point at the correct path
 

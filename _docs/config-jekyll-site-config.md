@@ -2,7 +2,7 @@
 doc_id: config-jekyll-site-config
 title: Jekyll Site Config
 added_date: 2026-03-31
-last_updated: "2026-05-06 21:11"
+last_updated: "2026-05-09 16:00"
 parent_id: site-docs
 sort_order: 50
 ---
@@ -44,7 +44,7 @@ Current direct readers:
   - `_layouts/series.html`
   - `_layouts/about.html`
   - `series/index.md`
-  - `studio/series-tag-editor/index.md`
+  - `studio/analytics/series-tag-editor/index.md`
   - `_includes/work_index_item.html`
 - `scripts/build_docs.rb`, which reads `media_base` when resolving docs media tokens
 

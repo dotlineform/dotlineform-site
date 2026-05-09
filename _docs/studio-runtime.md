@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-09 16:00"
 parent_id: studio
 sort_order: 20
 ---
@@ -65,11 +65,11 @@ Current route inventory:
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-work-detail/index.md`
 - `studio/catalogue-series/index.md`
-- `studio/tag-groups/index.md`
-- `studio/tag-registry/index.md`
-- `studio/tag-aliases/index.md`
-- `studio/series-tags/index.md`
-- `studio/series-tag-editor/index.md`
+- `studio/analytics/tag-groups/index.md`
+- `studio/analytics/tag-registry/index.md`
+- `studio/analytics/tag-aliases/index.md`
+- `studio/analytics/series-tags/index.md`
+- `studio/analytics/series-tag-editor/index.md`
 - `studio/studio-works/index.md`
 
 Current page-level doc links:

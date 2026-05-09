@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-06 20:36"
+last_updated: "2026-05-09 16:00"
 parent_id: servers
 sort_order: 20
 ---
@@ -222,7 +222,7 @@ At startup the runner prints quick links for:
 - Docs Live Watcher status
 - Backup retention status
 - Series Tag Editor:
-  - `http://127.0.0.1:4000/studio/series-tag-editor/?series=<series_id>`
+  - `http://127.0.0.1:4000/studio/analytics/series-tag-editor/?series=<series_id>`
 
 ## Shutdown Behavior
 

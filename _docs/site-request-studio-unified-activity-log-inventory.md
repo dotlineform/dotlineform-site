@@ -2,7 +2,7 @@
 doc_id: site-request-studio-unified-activity-log-inventory
 title: Activity Log Coverage Inventory
 added_date: 2026-05-08
-last_updated: "2026-05-08 20:20"
+last_updated: "2026-05-09 16:00"
 ui_status: done
 parent_id: site-request-studio-unified-activity-log
 sort_order: 10
@@ -142,18 +142,18 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
-| Series tags | `/studio/series-tags/` | import modal `preview-import` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
-| Series tags | `/studio/series-tags/` | import modal `apply-import` | `import series tag assignments` | tag assignment import apply; tag assignment writes; backup; conflict resolution summary | `done` | Batch C coverage through the tag write service. |
-| Series tags | `/studio/series-tags/` | session modal copy/download/clear | none | none | `excluded` | Browser/session-local output controls unless a later follow-up persists them by service. |
-| Series tag editor | `/studio/series-tag-editor/` | `data-role="add-tag"` | none | none | `excluded` | Local assignment edit until Save. |
-| Series tag editor | `/studio/series-tag-editor/` | `data-role="save"` | `save series tags` | save tag assignments; backup; generated tag assignment data update | `done` | Batch C coverage through the shared tag save flow. |
-| Tag registry | `/studio/tag-registry/` | `data-role="open-import-modal"` then import action | `import tag registry` | registry import preview/apply; registry writes; backups; validation results | `done` | Batch C coverage for import apply; patch-mode output remains excluded. |
-| Tag registry | `/studio/tag-registry/` | `data-role="open-new-tag"` / row edit actions | `create tag` / `edit tag` | mutate tag preview/apply; registry writes; backups; validation results | `done` | Batch C coverage; affected tag ids are carried in activity details/groups. |
-| Tag registry | `/studio/tag-registry/` | demote/delete-like actions | `demote tag` / `delete tag` | demote/delete apply; registry updates; assignment or alias consequences | `done` | Batch C coverage for confirmed write actions. |
-| Tag aliases | `/studio/tag-aliases/` | `data-role="open-import-modal"` then import action | `import tag aliases` | alias import preview/apply; alias writes; backups; validation results | `done` | Batch C coverage through the tag write service. |
-| Tag aliases | `/studio/tag-aliases/` | `data-role="open-new-alias"` / row edit actions | `create tag alias` / `edit tag alias` | alias mutation; alias writes; backups | `done` | Batch C coverage; affected alias keys are carried in activity details/groups. |
-| Tag aliases | `/studio/tag-aliases/` | promote/demote/delete actions | `promote tag alias` / `delete tag alias` / `demote tag` | preview/apply where applicable; alias registry writes; tag registry effects when promoting or demoting | `done` | Batch C coverage for confirmed write actions. |
-| Tag groups | `/studio/tag-groups/` | filters/sort/open controls | none | none | `excluded` | Review surface; future writable behavior belongs in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
+| Series tags | `/studio/analytics/series-tags/` | import modal `preview-import` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
+| Series tags | `/studio/analytics/series-tags/` | import modal `apply-import` | `import series tag assignments` | tag assignment import apply; tag assignment writes; backup; conflict resolution summary | `done` | Batch C coverage through the tag write service. |
+| Series tags | `/studio/analytics/series-tags/` | session modal copy/download/clear | none | none | `excluded` | Browser/session-local output controls unless a later follow-up persists them by service. |
+| Series tag editor | `/studio/analytics/series-tag-editor/` | `data-role="add-tag"` | none | none | `excluded` | Local assignment edit until Save. |
+| Series tag editor | `/studio/analytics/series-tag-editor/` | `data-role="save"` | `save series tags` | save tag assignments; backup; generated tag assignment data update | `done` | Batch C coverage through the shared tag save flow. |
+| Tag registry | `/studio/analytics/tag-registry/` | `data-role="open-import-modal"` then import action | `import tag registry` | registry import preview/apply; registry writes; backups; validation results | `done` | Batch C coverage for import apply; patch-mode output remains excluded. |
+| Tag registry | `/studio/analytics/tag-registry/` | `data-role="open-new-tag"` / row edit actions | `create tag` / `edit tag` | mutate tag preview/apply; registry writes; backups; validation results | `done` | Batch C coverage; affected tag ids are carried in activity details/groups. |
+| Tag registry | `/studio/analytics/tag-registry/` | demote/delete-like actions | `demote tag` / `delete tag` | demote/delete apply; registry updates; assignment or alias consequences | `done` | Batch C coverage for confirmed write actions. |
+| Tag aliases | `/studio/analytics/tag-aliases/` | `data-role="open-import-modal"` then import action | `import tag aliases` | alias import preview/apply; alias writes; backups; validation results | `done` | Batch C coverage through the tag write service. |
+| Tag aliases | `/studio/analytics/tag-aliases/` | `data-role="open-new-alias"` / row edit actions | `create tag alias` / `edit tag alias` | alias mutation; alias writes; backups | `done` | Batch C coverage; affected alias keys are carried in activity details/groups. |
+| Tag aliases | `/studio/analytics/tag-aliases/` | promote/demote/delete actions | `promote tag alias` / `delete tag alias` / `demote tag` | preview/apply where applicable; alias registry writes; tag registry effects when promoting or demoting | `done` | Batch C coverage for confirmed write actions. |
+| Tag groups | `/studio/analytics/tag-groups/` | filters/sort/open controls | none | none | `excluded` | Review surface; future writable behavior belongs in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 
 ## Audit And Utility Pages
 

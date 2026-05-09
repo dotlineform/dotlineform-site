@@ -1,7 +1,8 @@
 ---
 layout: studio
 title: "Tag Groups"
-permalink: /studio/tag-groups/
+permalink: /studio/analytics/tag-groups/
+studio_domain: analytics
 studio_page_doc: /docs/?scope=studio&doc=tag-groups
 ---
 

@@ -2,7 +2,7 @@
 doc_id: tag-groups
 title: Tag Groups
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:54"
+last_updated: "2026-05-09 16:00"
 parent_id: analytics
 sort_order: 20
 ---
@@ -10,7 +10,7 @@ sort_order: 20
 
 Route:
 
-- `/studio/tag-groups/`
+- `/studio/analytics/tag-groups/`
 
 Purpose:
 
@@ -29,7 +29,7 @@ The page root `#tag-groups` exposes the shared Studio route-ready contract:
 
 Primary template:
 
-- `studio/tag-groups/index.md`
+- `studio/analytics/tag-groups/index.md`
 
 Page controller:
 

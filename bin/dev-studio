@@ -169,7 +169,7 @@ echo "Tag Write Server: http://127.0.0.1:$TAG_WRITE_PORT"
 echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
 echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
 echo "Audit Service: http://127.0.0.1:$AUDIT_SERVICE_PORT"
-echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-editor/?series=<series_id>"
+echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/analytics/series-tag-editor/?series=<series_id>"
 if [ "${#STARTUP_DOC_SCOPES[@]}" -gt 0 ]; then
   echo "Startup docs rebuild scopes: ${STARTUP_DOC_SCOPES[*]}"
 else

@@ -64,7 +64,7 @@ let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const MAX_ALIAS_TAGS = 4;
 const DEMOTE_TAG_MATCH_CAP = 12;
 const TAG_SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
-let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+let GROUP_INFO_PAGE_PATH = "/studio/analytics/tag-groups/";
 const UI = tagRegistryUi;
 const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 

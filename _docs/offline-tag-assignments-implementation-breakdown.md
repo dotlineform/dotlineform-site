@@ -2,7 +2,7 @@
 doc_id: offline-tag-assignments-implementation-breakdown
 title: "Offline Tag Assignments Implementation Breakdown"
 added_date: 2026-03-28
-last_updated: 2026-03-28
+last_updated: "2026-05-09 16:00"
 parent_id: archive
 published: false
 ---
@@ -116,7 +116,7 @@ Locked styling rule:
 
 Primary files:
 
-- `studio/series-tags/index.md`
+- `studio/analytics/series-tags/index.md`
 - `assets/studio/js/series-tags.js`
 - `assets/studio/css/studio.css`
 - optionally `assets/studio/js/studio-ui.js`
@@ -166,7 +166,7 @@ Likely helper additions:
 Primary files:
 
 - `assets/studio/js/series-tags.js`
-- `studio/series-tags/index.md`
+- `studio/analytics/series-tags/index.md`
 - `assets/studio/css/studio.css`
 - optionally `assets/studio/js/studio-transport.js`
 

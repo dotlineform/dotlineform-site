@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 15:15"
+last_updated: "2026-05-09 16:00"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -149,7 +149,7 @@ Recommended next review questions:
 - Which tag-service concerns overlap with catalogue/docs local-service infrastructure, and which must stay service-specific for safety?
 - Which response payload keys are public contracts for Studio tag pages and should be pinned before extraction?
 - Should the later [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) move tag code into `scripts/analytics/` after the structural boundary is clearer?
-- Should tag UI routes move from `/studio/tag-registry/` and `/studio/series-tags/` to `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/` in a separate Studio routing request?
+- Treat the completed Analytics tag route migration as the settled route context for tag write-server review.
 
 ## Acceptance Criteria
 

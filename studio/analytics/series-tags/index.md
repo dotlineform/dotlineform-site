@@ -1,7 +1,8 @@
 ---
 layout: studio
 title: "Series Tags"
-permalink: /studio/series-tags/
+permalink: /studio/analytics/series-tags/
+studio_domain: analytics
 studio_page_doc: /docs/?scope=studio&doc=series-tags
 ---
 

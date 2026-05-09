@@ -2,7 +2,7 @@
 doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
-last_updated: "2026-05-03 22:38"
+last_updated: "2026-05-09 16:00"
 ui_status: done
 parent_id: change-requests
 sort_order: 37
@@ -73,12 +73,12 @@ Adopted routes:
 - `/studio/import/`
 - `/studio/audits/`
 - `/studio/project-state/`
-- `/studio/series-tag-editor/`
-- `/studio/series-tags/`
+- `/studio/analytics/series-tag-editor/`
+- `/studio/analytics/series-tags/`
 - `/studio/studio-works/`
-- `/studio/tag-aliases/`
-- `/studio/tag-groups/`
-- `/studio/tag-registry/`
+- `/studio/analytics/tag-aliases/`
+- `/studio/analytics/tag-groups/`
+- `/studio/analytics/tag-registry/`
 
 Current shared helper:
 
@@ -122,12 +122,12 @@ Primary async or service-backed Studio routes:
 - [x] `/studio/import/` root `#dataImportRoot`
 - [x] `/studio/audits/` root `#studioAuditsRoot`
 - [x] `/studio/project-state/` root `#projectStateRoot`
-- [x] `/studio/series-tag-editor/` root `#seriesTagEditorRoot`
-- [x] `/studio/series-tags/` root from `data-role="series-tags"`
+- [x] `/studio/analytics/series-tag-editor/` root `#seriesTagEditorRoot`
+- [x] `/studio/analytics/series-tags/` root from `data-role="series-tags"`
 - [x] `/studio/studio-works/` root `#worksStudioRoot`
-- [x] `/studio/tag-aliases/` root from `data-role="tag-aliases"`
-- [x] `/studio/tag-groups/` root from `data-role="tag-groups"`
-- [x] `/studio/tag-registry/` root from `data-role="tag-registry"`
+- [x] `/studio/analytics/tag-aliases/` root from `data-role="tag-aliases"`
+- [x] `/studio/analytics/tag-groups/` root from `data-role="tag-groups"`
+- [x] `/studio/analytics/tag-registry/` root from `data-role="tag-registry"`
 
 Lower-priority dashboard, landing, and reference routes:
 

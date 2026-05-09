@@ -2,7 +2,7 @@
 doc_id: site-shell-runtime
 title: Site Shell Runtime
 added_date: 2026-03-31
-last_updated: "2026-05-06 21:10"
+last_updated: "2026-05-09 16:00"
 parent_id: architecture
 sort_order: 30
 ---
@@ -114,7 +114,7 @@ Current public active-state rules:
 Current Studio-context nav inside `_layouts/default.html`:
 
 - `studio` -> `/studio/`
-- `series tags` -> `/studio/series-tags/`
+- `series tags` -> `/studio/analytics/series-tags/`
 - `docs` -> `/docs/?scope=studio&doc=studio`
 
 The default layout switches to that Studio nav when the current page is in Studio docs context.
