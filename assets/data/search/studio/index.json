@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cac2c455233acff0abc1205bbc411fb8",
-    "generated_at_utc": "2026-05-09T19:00:12Z",
-    "count": 208
+    "version": "blake2b-75b3fe9b5769d2340a3bce5c9c7bcde3",
+    "generated_at_utc": "2026-05-09T19:07:05Z",
+    "count": 209
   },
   "entries": [
     {
@@ -1927,10 +1927,10 @@
       "kind": "doc",
       "title": "Generate Work Pages Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
-      "last_updated": "2026-05-09 19:59",
+      "last_updated": "2026-05-09 20:01",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 19:59 • Script Structural Review Request",
+      "display_meta": "2026-05-09 20:01 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-generate-work-pages",
         "site",
@@ -1944,14 +1944,14 @@
         "generate work pages slices",
         "slices",
         "script structural review request",
-        "2026-05-09 19:59",
+        "2026-05-09 20:01",
         "2026",
         "05",
         "09",
-        "19",
-        "59"
+        "20",
+        "01"
       ],
-      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 19:59 2026 05 09 19 59"
+      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 20:01 2026 05 09 20 01"
     },
     {
       "id": "new-pipeline-implementation-plan",
@@ -2257,6 +2257,36 @@
         "35"
       ],
       "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
+    },
+    {
+      "id": "site-request-script-structural-review-catalogue-json-build",
+      "kind": "doc",
+      "title": "Catalogue JSON Build Slices",
+      "href": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build",
+      "last_updated": "2026-05-09 20:05",
+      "parent_id": "site-request-script-structural-review",
+      "parent_title": "Script Structural Review Request",
+      "display_meta": "2026-05-09 20:05 • Script Structural Review Request",
+      "search_terms": [
+        "site-request-script-structural-review-catalogue-json-build",
+        "site",
+        "request",
+        "script",
+        "structural",
+        "review",
+        "catalogue",
+        "json",
+        "build",
+        "catalogue json build slices",
+        "slices",
+        "script structural review request",
+        "2026-05-09 20:05",
+        "2026",
+        "05",
+        "09",
+        "20"
+      ],
+      "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 20:05 2026 05 09 20"
     },
     {
       "id": "catalogue-moment-import",
@@ -4902,10 +4932,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 18:33",
+      "last_updated": "2026-05-09 20:05",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 18:33 • Change Requests",
+      "display_meta": "2026-05-09 20:05 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4917,14 +4947,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 18:33",
+        "2026-05-09 20:05",
         "2026",
         "05",
         "09",
-        "18",
-        "33"
+        "20"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 18:33 2026 05 09 18 33"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 20:05 2026 05 09 20"
     },
     {
       "id": "site-request-import-export-system-review",

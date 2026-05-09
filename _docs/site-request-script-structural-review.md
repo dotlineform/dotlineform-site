@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 18:33"
+last_updated: "2026-05-09 20:05"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -12,11 +12,12 @@ viewable: true
 
 Status:
 
-- in progress; priorities 1-3 are complete and the remaining review queue starts at Priority 4
+- in progress; priorities 1-4 are complete and the remaining review queue starts at Priority 5
 - Priority 1 catalogue write-server sequence complete; see [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
 - Priority 2 docs-management server sequence complete; see [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
 - Priority 3 tag write-server sequence complete through Slice 8 closeout; see [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
-- Priority 4 generate-work-pages implementation tracker created; see [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+- Priority 4 generate-work-pages sequence complete; see [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+- Priority 5 catalogue-json-build implementation tracker created; see [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build)
 
 ## Summary
 
@@ -49,8 +50,8 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 | 1 | `scripts/studio/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
 | 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | complete; final boundary recorded in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
-| 4 | `scripts/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | planned; implementation tasks tracked in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
-| 5 | `scripts/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | separate local media planning/execution from build-scope planning and CLI/reporting code |
+| 4 | `scripts/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | complete; final boundary recorded in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
+| 5 | `scripts/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | planned; implementation tasks tracked in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build) |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | group checks by domain with shared report contracts |
 | 7 | `scripts/docs/docs_html_import.py`, `scripts/docs/docs_export.py`, `scripts/docs/docs_import.py` | import/export adapters may need clearer boundaries as Library and Docs workflows evolve | review after docs-management boundaries are clearer |
 
@@ -179,9 +180,9 @@ Recommended next review questions:
 
 ## Suggested Next Slice
 
-Continue with Priority 4, `scripts/generate_work_pages.py`, starting with a read-only extraction map.
+Continue with Priority 5, `scripts/catalogue_json_build.py`, starting with a read-only extraction map.
 Do not reorganize script folders as part of that slice; folder moves are tracked separately in [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
-The implementation tracker for this priority lives in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages).
+The implementation tracker for this priority lives in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build).
 
 ## Implementation Notes
 
@@ -195,4 +196,7 @@ Priority 3 tag write-server slices are tracked in [Tag Write Server Slices](/doc
 That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, write-transaction, and final handler-body closeout boundary for `scripts/studio/tag_write_server.py`.
 
 Priority 4 generate-work-pages slices are tracked in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages).
-That child doc records planned implementation tasks for splitting catalogue record projection, index builders, recent-entry merging, route/file write decisions, source update planning, moment artifact building, and final generator orchestration cleanup.
+That child doc records the implemented catalogue record projection, index builder, recent-entry merging, route/file write decision, source update planning, moment artifact building, and final generator orchestration cleanup boundary for `scripts/generate_work_pages.py`.
+
+Priority 5 catalogue-json-build slices are tracked in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build).
+That child doc records planned implementation tasks for splitting scoped build planning, media readiness and local media execution, field-aware build-plan adaptation, command construction, subprocess result shaping, and final orchestration cleanup.
