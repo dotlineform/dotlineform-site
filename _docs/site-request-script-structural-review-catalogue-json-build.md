@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-json-build
 title: Catalogue JSON Build Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 20:05"
+last_updated: "2026-05-09 20:10"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 50
@@ -13,7 +13,8 @@ viewable: true
 Status:
 
 - initial implementation tracker created
-- Slice 0 planned
+- Slice 0 read-only extraction map completed
+- implementation slices ready to start with scoped build planning
 
 ## Purpose
 
@@ -87,7 +88,7 @@ The sequence below should be revised after the read-only map.
 
 ### Slice 0: read-only extraction map
 
-Status: planned.
+Status: completed.
 
 Task:
 
@@ -97,13 +98,82 @@ Task:
 
 Likely output:
 
-- update this doc with final proposed module owners
+- this doc records the proposed module owners, call boundaries, and test files
 - no code movement in this slice
 
 Acceptance checks:
 
 - map identifies scope planning, media readiness, local media execution, field-aware planning, command construction, subprocess orchestration, and CLI/reporting boundaries
 - map calls out any behavior that should stay in `catalogue_json_build.py` because it binds command-line state or user-facing preview/report output
+
+#### Slice 0 Responsibility Map
+
+Current `catalogue_json_build.py` responsibilities fall into these implementation bands:
+
+| Responsibility | Current functions/constants | Main dependencies | Proposed owner |
+| --- | --- | --- | --- |
+| CLI, mode selection, preview text, write result exit behavior | `parse_args`, `main`, `print_preview` | `argparse`, scoped builders, command builders, media plan counts | keep in `scripts/catalogue_json_build.py` |
+| Repo/source path and display helpers | `detect_repo_root`, `repo_relative_path`, `display_source_path`, `normalize_filename` | `Path`, `os`, configured project paths | keep minimal entrypoint helpers where CLI-bound; move reusable media display helpers to `scripts/catalogue_build_media.py` only when used by media owners |
+| Projects-base detection for source media | `detect_projects_base_dir`, `detect_projects_base_dir_optional`, `PROJECTS_BASE_DIR_ENV_NAME` | `pipeline_config`, `local_env` runtime values | `scripts/catalogue_build_media.py` |
+| Source media resolution and readiness payloads | `resolve_work_media_source`, `resolve_detail_media_source`, `resolve_moment_media_source`, `build_media_readiness_item`, `build_readiness_item`, `build_work_readiness`, `build_series_readiness`, `build_detail_readiness`, `build_moment_readiness` | `catalogue_source`, `moment_sources`, pipeline media roots, staging paths | `scripts/catalogue_build_media.py`, with prose-readiness helpers included because Studio readiness payloads combine prose and media status |
+| Local media path planning and state checks | `thumb_output_dir`, `media_staging_kind_dir`, `media_staging_input_path`, `media_srcset_root`, `staged_thumb_output_paths`, `staged_primary_output_paths`, `thumb_output_paths`, `thumb_output_paths_for_kind`, `local_output_state`, `local_thumb_state`, `local_media_state`, `path_needs_refresh`, `build_local_media_task`, `build_local_media_plan` | media constants, filesystem state, source media resolution | `scripts/catalogue_build_media.py` |
+| Local media execution | `run_ffmpeg_thumb`, `run_ffmpeg_primary`, `execute_local_media_plan` | `ffmpeg`, `subprocess`, `shutil`, local media plan payloads | `scripts/catalogue_build_media.py`, but keep process runners injectable or patchable so tests avoid real `ffmpeg` |
+| Moment source preview/import metadata | `build_moment_paths`, `build_moment_import_metadata`, `preview_moment_source` | `moment_sources`, configured projects roots, `_docs_catalogue`, staged prose paths, generated moment artifacts | `scripts/catalogue_build_scopes.py` for build-preview metadata that feeds moment scope construction; leave write/import mutation ownership in existing prose/publication modules |
+| Work, series, and moment scope construction | `normalize_series_ids`, `validate_buildable_series_scope`, `build_scope_for_work`, `build_scope_for_series`, `build_scope_for_moment`, `summarize_scope`, `summarize_moment_scope` | `catalogue_source`, `series_ids`, readiness builders, moment preview | `scripts/catalogue_build_scopes.py` |
+| Field-aware build-plan adapter | `parse_csv_tokens`, `infer_record_family_for_scope`, `build_field_plan_for_scope`, `field_plan_explanation_lines` | `catalogue_field_registry`, source records, current scope payloads | `scripts/catalogue_build_field_plan.py`; explanation string construction can move with the adapter because it is registry-specific, while placement stays in `print_preview` |
+| Generator and search command construction | `resolve_bundle_bin`, `build_generate_command`, `build_generate_moment_command`, `build_search_command` | `sys.executable`, Bundler binary detection, generator/search script paths | `scripts/catalogue_build_commands.py` |
+| Subprocess step execution and result payload shaping | subprocess loop inside `run_scoped_build_scope`; media step normalization in the same function | command builders, `runtime_env`, media execution, Studio result payload keys | split command step normalization into `scripts/catalogue_build_commands.py`; keep top-level orchestration and final Studio response assembly in `catalogue_json_build.py` until call sites are updated |
+| Compatibility wrappers for Studio/publication callers | `run_scoped_build`, `run_series_scoped_build`, `run_moment_scoped_build`, plus imported helper names | `catalogue_write_server.py`, `catalogue_publication.py`, `catalogue_prose_import.py`, `catalogue_cleanup.py`, tests | keep wrappers in `catalogue_json_build.py` during extraction, delegating to owner modules explicitly |
+
+#### External Contracts To Preserve
+
+Current in-repo consumers import these names from `catalogue_json_build.py`:
+
+- `scripts/studio/catalogue_write_server.py`: `build_search_command`, `build_local_media_plan`, `build_moment_readiness`, `build_field_plan_for_scope`, `build_scope_for_moment`, `build_scope_for_series`, `build_scope_for_work`, `preview_moment_source`, `run_scoped_build_scope`
+- `scripts/catalogue_publication.py`: `build_local_media_plan`, `build_scope_for_moment`, `build_scope_for_series`, `build_scope_for_work`, `preview_moment_source`
+- `scripts/catalogue_prose_import.py`: `preview_moment_source`
+- `scripts/catalogue_cleanup.py`: `CATALOGUE_MEDIA_STAGING_REL_DIR`
+- `tests/python/test_catalogue_media_cleanup.py`: imports the script module directly and patches `build_local_media_plan`, `run_ffmpeg_thumb`, and `run_ffmpeg_primary`
+
+During extraction, keep `catalogue_json_build.py` compatibility names until the importing modules are deliberately updated in the same slice.
+Avoid a broad permanent re-export layer: each slice should either leave a compatibility wrapper for an active caller or update that caller to import the new owner directly.
+
+#### Functions That Should Move First
+
+- Move scope construction first because `build_scope_for_work`, `build_scope_for_series`, `build_scope_for_moment`, `validate_buildable_series_scope`, and the summary helpers are mostly pure once readiness builders are injected or imported from the media owner.
+- Move field-aware planning independently because it already depends on `catalogue_field_registry` and mutates only the provided scope through the existing registry helper.
+- Move command construction before subprocess normalization because command argv shapes are easy to pin without running external processes.
+- Move local media in two steps if needed: planning/state/readiness first, then derivative execution. Execution has filesystem writes and `ffmpeg`, so its tests need fakes or monkeypatching.
+
+#### Behavior To Keep In `catalogue_json_build.py`
+
+- CLI argument parsing, exactly-one target validation, and top-level mode selection
+- binding command-line `--repo-root`, `--source-dir`, `--write`, `--force`, `--media-only`, `--changed-fields`, and `--record-family` to the orchestration flow
+- preview output ordering and wording in `print_preview`
+- final `SystemExit` behavior and success messages
+- top-level response keys consumed by Studio: `scope`, `status`, `write`, `force`, `media_only`, `refresh_published`, `steps`, `media`, `failed_step`, and `error`
+- sequencing decisions: media step first, generator step second, catalogue search step last, and search suppression when field-aware plans disable it
+
+#### Proposed Test Files
+
+- `tests/python/test_catalogue_build_scopes.py`: work, series, moment, extra-id handling, detail UID inclusion, invalid series preconditions, stable scope payload keys
+- `tests/python/test_catalogue_build_media.py`: source path resolution, readiness states, missing metadata reasons, pending/current/blocked/unavailable counts, staged output paths, force behavior, dry-run write suppression, execution with fake process runners
+- `tests/python/test_catalogue_build_field_plan.py`: changed-field parsing, family inference, registry plan application, media-only and search/generator reductions, explanation lines
+- `tests/python/test_catalogue_build_commands.py`: generator/search argv shapes for work, series, moment, write, force, refresh-published, and normalized failed subprocess step payloads
+- keep or migrate `tests/python/test_catalogue_media_cleanup.py` with the local media execution owner so staged thumbnail cleanup remains pinned
+
+#### Revised Slice Sequence After Mapping
+
+The planned module names still look right:
+
+- Slice 1: `scripts/catalogue_build_scopes.py`
+- Slice 2: `scripts/catalogue_build_media.py`
+- Slice 3: `scripts/catalogue_build_field_plan.py`
+- Slice 4: `scripts/catalogue_build_commands.py`
+- Slice 5: final `catalogue_json_build.py` orchestration cleanup and compatibility import cleanup
+
+The main adjustment is that Slice 1 should depend on the existing readiness helpers through `catalogue_json_build.py` or a narrow temporary import until Slice 2 moves readiness ownership.
+That avoids mixing scope construction and local media execution in the same first implementation slice.
 
 ### Slice 1: scoped build planning helpers
 
