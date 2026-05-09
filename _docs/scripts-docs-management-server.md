@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 12:27"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -45,6 +45,7 @@ Exposed endpoints:
 - `POST /docs/open-source`
 - `POST /docs/update-metadata`
 - `POST /docs/update-viewability`
+- `POST /docs/update-viewability-bulk`
 - `POST /docs/create`
 - `POST /docs/move`
 - `POST /docs/restore-move`
@@ -55,6 +56,7 @@ Exposed endpoints:
 Current behavior:
 
 - local-only write service for the shared Docs Viewer
+- endpoint path constants are owned by `scripts/docs/docs_management_routes.py`; the server handler uses explicit GET and POST dispatch tables
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and source import writes

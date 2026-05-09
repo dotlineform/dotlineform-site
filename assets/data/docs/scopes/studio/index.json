@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T11:20:18Z",
+  "generated_at": "2026-05-09T11:28:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -487,6 +487,21 @@
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
       "content_text_length": 7726
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-script-structural-review-docs-management-server",
+      "title": "Docs Management Server Slices",
+      "added_date": "2026-05-09",
+      "last_updated": "2026-05-09 12:27",
+      "parent_id": "site-request-script-structural-review",
+      "sort_order": 20,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-script-structural-review-docs-management-server.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-docs-management-server.json",
+      "content_text_length": 3695
     },
     {
       "scope": "studio",
@@ -1294,7 +1309,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 12:27",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1302,7 +1317,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 28030
+      "content_text_length": 28205
     },
     {
       "scope": "studio",
@@ -2915,7 +2930,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 12:20",
+      "last_updated": "2026-05-09 12:27",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2923,7 +2938,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 8943,
+      "content_text_length": 10175,
       "ui_status": "in-progress"
     },
     {
@@ -3001,7 +3016,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 81021
+      "content_text_length": 81866
     },
     {
       "scope": "studio",

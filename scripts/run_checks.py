@@ -208,6 +208,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Management Server archive-parent handling.",
         ),
         CheckCommand(
+            "docs-management-route-tests",
+            (sys.executable, "tests/python/test_docs_management_routes.py"),
+            "Verify Docs Management route inventory and handler dispatch coverage.",
+        ),
+        CheckCommand(
             "docs-broken-links-tests",
             (sys.executable, "tests/python/test_docs_broken_links.py"),
             "Verify Docs Broken Links audit filtering.",

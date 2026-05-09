@@ -68,6 +68,7 @@ from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
+import docs_management_routes as routes  # noqa: E402
 from docs_html_import import (  # noqa: E402
     generate_import_preview,
     list_staged_import_source_files,
@@ -101,11 +102,6 @@ SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 BACKUPS_REL_DIR = Path("var/docs/backups")
 LOGS_REL_DIR = Path("var/docs/logs")
 DEFAULT_MARKDOWN_APP_ENV = "DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP"
-DOCS_BROKEN_LINKS_PATH = "/docs/broken-links"
-DOCS_EXPORT_PATH = "/docs/export"
-DOCS_IMPORT_SOURCE_PATH = "/docs/import-source"
-DOCS_IMPORT_HTML_PATH = "/docs/import-html"
-DOCS_IMPORT_APPLY_PATH = "/docs/import/apply"
 
 
 @dataclass
@@ -1087,7 +1083,7 @@ def maybe_attach_broken_links_activity(repo_root: Path, body: Dict[str, Any], pa
         repo_root,
         body,
         payload,
-        endpoint=DOCS_BROKEN_LINKS_PATH,
+        endpoint=routes.BROKEN_LINKS_PATH,
         script_purpose_id="run-audit",
         record_id=scope,
         record_groups={"docs": [scope]},
@@ -1112,7 +1108,7 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
         repo_root,
         body,
         payload,
-        endpoint=DOCS_EXPORT_PATH,
+        endpoint=routes.EXPORT_PATH,
         script_purpose_id="export-data",
         record_id=f"{payload.get('data_domain') or body.get('data_domain')}:{payload.get('config_id') or body.get('config_id')}",
         record_groups={"docs": compact_ids(body.get("doc_ids"))},
@@ -1141,7 +1137,7 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
         repo_root,
         body,
         payload,
-        endpoint=DOCS_IMPORT_SOURCE_PATH,
+        endpoint=routes.IMPORT_SOURCE_PATH,
         script_purpose_id="import-source-data",
         record_id=str(body.get("staged_filename") or "").strip(),
         record_groups={"docs": [doc_id], "files": compact_ids([item.get("path") for item in media_written if isinstance(item, dict)])},
@@ -1164,7 +1160,7 @@ def maybe_attach_documents_import_apply_activity(repo_root: Path, body: Dict[str
         repo_root,
         body,
         payload,
-        endpoint=DOCS_IMPORT_APPLY_PATH,
+        endpoint=routes.IMPORT_APPLY_PATH,
         script_purpose_id="update-docs-source",
         record_id=str(body.get("staged_filename") or "").strip(),
         record_groups={"docs": doc_ids},
@@ -2871,11 +2867,53 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
 class DocsManagementHandler(BaseHTTPRequestHandler):
     server_version = "DocsManagementServer/0.1"
 
+    GET_HANDLERS: Dict[str, str] = {
+        routes.HEALTH_PATH: "_handle_health_get",
+        routes.CAPABILITIES_PATH: "_handle_capabilities_get",
+        routes.GENERATED_INDEX_PATH: "_handle_generated_index_get",
+        routes.GENERATED_INDEX_ALT_PATH: "_handle_generated_index_get",
+        routes.GENERATED_PAYLOAD_PATH: "_handle_generated_payload_get",
+        routes.GENERATED_PAYLOAD_ALT_PATH: "_handle_generated_payload_get",
+        routes.GENERATED_SEARCH_PATH: "_handle_generated_search_get",
+        routes.GENERATED_SEARCH_ALT_PATH: "_handle_generated_search_get",
+        routes.IMPORT_SOURCE_FILES_PATH: "_handle_import_source_files_get",
+        routes.IMPORT_HTML_FILES_PATH: "_handle_import_source_files_get",
+        routes.IMPORT_FILES_PATH: "_handle_import_files_get",
+    }
+
+    POST_HANDLERS: Dict[str, str] = {
+        routes.OPEN_SOURCE_PATH: "_handle_open_source_post",
+        routes.BROKEN_LINKS_PATH: "_handle_broken_links_post",
+        routes.EXPORT_PATH: "_handle_export_post",
+        routes.IMPORT_SOURCE_PATH: "_handle_import_source_post",
+        routes.IMPORT_HTML_PATH: "_handle_import_source_post",
+        routes.IMPORT_PREVIEW_PATH: "_handle_import_preview_post",
+        routes.IMPORT_APPLY_PATH: "_handle_import_apply_post",
+        routes.UPDATE_METADATA_PATH: "_handle_update_metadata_post",
+        routes.UPDATE_VIEWABILITY_PATH: "_handle_update_viewability_post",
+        routes.UPDATE_VIEWABILITY_BULK_PATH: "_handle_update_viewability_bulk_post",
+        routes.CREATE_PATH: "_handle_create_post",
+        routes.REBUILD_PATH: "_handle_rebuild_post",
+        routes.MOVE_PATH: "_handle_move_post",
+        routes.RESTORE_MOVE_PATH: "_handle_restore_move_post",
+        routes.ARCHIVE_PATH: "_handle_archive_post",
+        routes.DELETE_PREVIEW_PATH: "_handle_delete_preview_post",
+        routes.DELETE_APPLY_PATH: "_handle_delete_apply_post",
+    }
+
     @property
     def app(self) -> Dict[str, Any]:
         return getattr(self.server, "app_state")  # type: ignore[attr-defined]
 
+    def _request_path(self) -> str:
+        return urlparse(self.path).path
+
     def do_OPTIONS(self) -> None:  # noqa: N802
+        request_path = self._request_path()
+        if request_path not in routes.OPTIONS_PATHS:
+            self.send_response(HTTPStatus.NOT_FOUND)
+            self.end_headers()
+            return
         origin = allowed_origin(self.headers.get("Origin", ""))
         if not origin:
             self.send_response(HTTPStatus.FORBIDDEN)
@@ -2888,54 +2926,58 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
+    def _handle_health_get(self) -> None:
+        write_response(
+            self,
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "service": "docs_management",
+                "dry_run": self.app["dry_run"],
+            },
+        )
+
+    def _handle_capabilities_get(self) -> None:
+        write_response(self, HTTPStatus.OK, capabilities_payload(self.app["repo_root"]))
+
+    def _handle_generated_index_get(self) -> None:
+        scope = normalize_scope(query_param(self, "scope"))
+        payload = read_generated_docs_index(self.app["repo_root"], scope)
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_generated_payload_get(self) -> None:
+        scope = normalize_scope(query_param(self, "scope"))
+        doc_id = query_param(self, "doc_id") or query_param(self, "doc")
+        if not doc_id:
+            raise ValueError("doc_id is required")
+        payload = read_generated_doc_payload(self.app["repo_root"], scope, doc_id)
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_generated_search_get(self) -> None:
+        scope = normalize_scope(query_param(self, "scope"))
+        payload = read_generated_search_index(self.app["repo_root"], scope)
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_import_source_files_get(self) -> None:
+        write_response(
+            self,
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "files": list_staged_import_source_files(self.app["repo_root"]),
+            },
+        )
+
+    def _handle_import_files_get(self) -> None:
+        data_domain = query_param(self, "data_domain")
+        write_response(self, HTTPStatus.OK, handle_documents_import_files(self.app["repo_root"], data_domain))
+
     def do_GET(self) -> None:  # noqa: N802
         try:
-            if self.path == "/health":
-                write_response(
-                    self,
-                    HTTPStatus.OK,
-                    {
-                        "ok": True,
-                        "service": "docs_management",
-                        "dry_run": self.app["dry_run"],
-                    },
-                )
-                return
-            if self.path == "/capabilities":
-                write_response(self, HTTPStatus.OK, capabilities_payload(self.app["repo_root"]))
-                return
-            parsed = urlparse(self.path)
-            if parsed.path in {"/docs/index", "/docs/generated/index"}:
-                scope = normalize_scope(query_param(self, "scope"))
-                payload = read_generated_docs_index(self.app["repo_root"], scope)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if parsed.path in {"/docs/doc", "/docs/generated/payload"}:
-                scope = normalize_scope(query_param(self, "scope"))
-                doc_id = query_param(self, "doc_id") or query_param(self, "doc")
-                if not doc_id:
-                    raise ValueError("doc_id is required")
-                payload = read_generated_doc_payload(self.app["repo_root"], scope, doc_id)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if parsed.path in {"/docs/search", "/docs/generated/search"}:
-                scope = normalize_scope(query_param(self, "scope"))
-                payload = read_generated_search_index(self.app["repo_root"], scope)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if parsed.path in {"/docs/import-source-files", "/docs/import-html-files"}:
-                write_response(
-                    self,
-                    HTTPStatus.OK,
-                    {
-                        "ok": True,
-                        "files": list_staged_import_source_files(self.app["repo_root"]),
-                    },
-                )
-                return
-            if parsed.path == "/docs/import/files":
-                data_domain = query_param(self, "data_domain")
-                write_response(self, HTTPStatus.OK, handle_documents_import_files(self.app["repo_root"], data_domain))
+            request_path = self._request_path()
+            handler_name = self.GET_HANDLERS.get(request_path)
+            if handler_name:
+                getattr(self, handler_name)()
                 return
             error_response(self, HTTPStatus.NOT_FOUND, "Not found")
         except FileNotFoundError as error:
@@ -2944,6 +2986,70 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             error_response(self, HTTPStatus.BAD_REQUEST, str(error))
         except RuntimeError as error:
             error_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, str(error))
+
+    def _handle_open_source_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
+
+    def _handle_broken_links_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_broken_links(repo_root, body)
+        maybe_attach_broken_links_activity(repo_root, body, payload)
+        return HTTPStatus.OK, payload
+
+    def _handle_export_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_docs_export(repo_root, body, dry_run)
+        maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
+        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
+
+    def _handle_import_source_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_import_source(repo_root, body, dry_run)
+        maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
+        return HTTPStatus.OK, payload
+
+    def _handle_import_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_documents_import_preview(repo_root, body, dry_run)
+        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
+
+    def _handle_import_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_documents_import_apply(repo_root, body, dry_run)
+        maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
+        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
+
+    def _handle_update_metadata_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
+
+    def _handle_update_viewability_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_update_viewability(repo_root, body, dry_run)
+
+    def _handle_update_viewability_bulk_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_update_viewability_bulk(repo_root, body, dry_run)
+
+    def _handle_create_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
+
+    def _handle_rebuild_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        scope = normalize_scope(body.get("scope"))
+        payload = rebuild_scope_outputs(repo_root, scope)
+        payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
+        return HTTPStatus.OK, payload
+
+    def _handle_move_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
+
+    def _handle_restore_move_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_restore_move(repo_root, body, dry_run)
+
+    def _handle_archive_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_archive(repo_root, body, dry_run)
+
+    def _handle_delete_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        scope = normalize_scope(body.get("scope"))
+        doc_id = str(body.get("doc_id") or "").strip()
+        if not doc_id:
+            raise ValueError("doc_id is required")
+        return HTTPStatus.OK, preview_delete(repo_root, scope, doc_id)
+
+    def _handle_delete_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
 
     def do_POST(self) -> None:  # noqa: N802
         origin = self.headers.get("Origin", "")
@@ -2955,79 +3061,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             body = parse_json_body(self)
             repo_root = self.app["repo_root"]
             dry_run = self.app["dry_run"]
-            if self.path == "/docs/open-source":
-                payload = open_source_doc(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/broken-links":
-                payload = handle_broken_links(repo_root, body)
-                maybe_attach_broken_links_activity(repo_root, body, payload)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/export":
-                payload = handle_docs_export(repo_root, body, dry_run)
-                maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
-                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
-                return
-            if self.path in {"/docs/import-source", "/docs/import-html"}:
-                payload = handle_import_source(repo_root, body, dry_run)
-                maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/import/preview":
-                payload = handle_documents_import_preview(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
-                return
-            if self.path == "/docs/import/apply":
-                payload = handle_documents_import_apply(repo_root, body, dry_run)
-                maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
-                write_response(self, HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload)
-                return
-            if self.path == "/docs/update-metadata":
-                payload = handle_update_metadata(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/update-viewability":
-                payload = handle_update_viewability(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/update-viewability-bulk":
-                payload = handle_update_viewability_bulk(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/create":
-                payload = handle_create(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/rebuild":
-                scope = normalize_scope(body.get("scope"))
-                payload = rebuild_scope_outputs(repo_root, scope)
-                payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/move":
-                payload = handle_move(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/restore-move":
-                payload = handle_restore_move(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/archive":
-                payload = handle_archive(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/delete-preview":
-                scope = normalize_scope(body.get("scope"))
-                doc_id = str(body.get("doc_id") or "").strip()
-                if not doc_id:
-                    raise ValueError("doc_id is required")
-                payload = preview_delete(repo_root, scope, doc_id)
-                write_response(self, HTTPStatus.OK, payload)
-                return
-            if self.path == "/docs/delete-apply":
-                payload = handle_delete_apply(repo_root, body, dry_run)
-                write_response(self, HTTPStatus.OK, payload)
+            handler_name = self.POST_HANDLERS.get(self._request_path())
+            if handler_name:
+                status, payload = getattr(self, handler_name)(repo_root, body, dry_run)
+                write_response(self, status, payload)
                 return
             error_response(self, HTTPStatus.NOT_FOUND, "Not found")
         except FileNotFoundError as error:
