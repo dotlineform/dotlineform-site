@@ -1,10 +1,11 @@
 ---
 doc_id: site-docs
-title: "Site Docs"
+title: Site Docs
 added_date: 2026-04-19
-last_updated: 2026-04-19
+last_updated: "2026-05-09 12:19"
 parent_id: ""
 sort_order: 10
+viewable: true
 ---
 # Site Docs
 

@@ -2,8 +2,8 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 00:40"
-ui_status: in_progress
+last_updated: "2026-05-09 12:20"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
 viewable: true
