@@ -49,9 +49,9 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from script_logging import append_script_log
-from studio_activity import append_studio_activity
-from tag_activity import attach_tag_activity, tag_activity_changed, tag_activity_status
+import script_logging
+import studio_activity
+import tag_activity
 import tag_alias_mutations as tag_aliases
 import tag_assignment_service as tag_assignments
 import tag_promotion_mutations as tag_promotions
@@ -114,106 +114,6 @@ def allowed_origin(origin: str) -> Optional[str]:
     return f"{parsed.scheme}://{parsed.hostname}:{parsed.port}"
 
 
-def rewrite_assignment_tag_list_for_tag(
-    raw_tags: Any,
-    field_name: str,
-    old_tag_id: str,
-    new_tag_id: Optional[str],
-) -> tuple[list[Dict[str, Any]], bool, int]:
-    tags = raw_tags if isinstance(raw_tags, list) else []
-    changed = not isinstance(raw_tags, list)
-    out: list[Dict[str, Any]] = []
-    seen: set[str] = set()
-    refs_rewritten = 0
-
-    for raw_tag in tags:
-        normalized_tag = tag_source.normalize_assignment_tag(raw_tag, f"{field_name}[*]", strict=False)
-        if normalized_tag is None:
-            changed = True
-            continue
-
-        tag_value = normalized_tag["tag_id"]
-        if tag_value == old_tag_id:
-            refs_rewritten += 1
-            changed = True
-            if new_tag_id is None:
-                continue
-            tag_value = new_tag_id
-        if tag_value in seen:
-            changed = True
-            continue
-        seen.add(tag_value)
-        out.append(tag_source.build_assignment_tag(tag_value, normalized_tag["w_manual"]))
-
-    return out, changed, refs_rewritten
-
-
-def rewrite_assignments_for_tag(
-    assignments_payload: Dict[str, Any],
-    old_tag_id: str,
-    new_tag_id: Optional[str],
-    now_utc: str,
-) -> tuple[Dict[str, Any], Dict[str, int]]:
-    series_obj = assignments_payload.get("series")
-    if not isinstance(series_obj, dict):
-        series_obj = {}
-        assignments_payload["series"] = series_obj
-    if "tag_assignments_version" not in assignments_payload:
-        assignments_payload["tag_assignments_version"] = "tag_assignments_v1"
-
-    series_rows_touched = 0
-    series_refs_rewritten = 0
-    work_rows_touched = 0
-    work_refs_rewritten = 0
-
-    for series_id, row in series_obj.items():
-        if not isinstance(row, dict):
-            continue
-        series_out, series_changed, series_refs = rewrite_assignment_tag_list_for_tag(
-            row.get("tags"),
-            f"series[{series_id}].tags",
-            old_tag_id,
-            new_tag_id,
-        )
-        if series_changed:
-            row["tags"] = series_out
-            row["updated_at_utc"] = now_utc
-            series_rows_touched += 1
-        series_refs_rewritten += series_refs
-
-        works_obj = row.get("works")
-        if not isinstance(works_obj, dict):
-            continue
-        for work_id, work_row in list(works_obj.items()):
-            if not isinstance(work_row, dict):
-                continue
-            work_out, work_changed, work_refs = rewrite_assignment_tag_list_for_tag(
-                work_row.get("tags"),
-                f"series[{series_id}].works[{work_id}].tags",
-                old_tag_id,
-                new_tag_id,
-            )
-            if work_changed:
-                if work_out:
-                    work_row["tags"] = work_out
-                    work_row["updated_at_utc"] = now_utc
-                else:
-                    del works_obj[work_id]
-                row["updated_at_utc"] = now_utc
-                work_rows_touched += 1
-            work_refs_rewritten += work_refs
-        if not works_obj:
-            row.pop("works", None)
-
-    assignments_payload["updated_at_utc"] = now_utc
-    return assignments_payload, {
-        "series_rows_touched": series_rows_touched,
-        "series_tag_refs_rewritten": series_refs_rewritten,
-        "work_rows_touched": work_rows_touched,
-        "work_tag_refs_rewritten": work_refs_rewritten,
-    }
-
-
 class TagWriteServer(ThreadingHTTPServer):
     def __init__(
         self,
@@ -240,7 +140,7 @@ class TagWriteServer(ThreadingHTTPServer):
 
     def log_event(self, event: str, details: Optional[Dict[str, Any]] = None) -> None:
         try:
-            append_script_log(
+            script_logging.append_script_log(
                 Path(__file__),
                 event=event,
                 details=details,
@@ -252,7 +152,7 @@ class TagWriteServer(ThreadingHTTPServer):
             pass
 
     def append_activity(self, entry: Dict[str, Any]) -> None:
-        append_studio_activity(self.repo_root, entry)
+        studio_activity.append_studio_activity(self.repo_root, entry)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -395,7 +295,7 @@ class Handler(BaseHTTPRequestHandler):
                 "dry_run": self.server.dry_run,
             },
         )
-        attach_tag_activity(
+        tag_activity.attach_tag_activity(
             repo_root=self.server.repo_root,
             endpoint=self.path,
             dry_run=self.server.dry_run,
@@ -455,8 +355,8 @@ class Handler(BaseHTTPRequestHandler):
                 **stats,
             },
         )
-        if tag_activity_changed(stats):
-            attach_tag_activity(
+        if tag_activity.tag_activity_changed(stats):
+            tag_activity.attach_tag_activity(
                 repo_root=self.server.repo_root,
                 endpoint=self.path,
                 dry_run=self.server.dry_run,
@@ -467,7 +367,7 @@ class Handler(BaseHTTPRequestHandler):
                     summary_text,
                     f"Mode: {mode}; imported: {stats.get('imported_total')}; final tags: {stats.get('final_total')}.",
                 ],
-                status=tag_activity_status(stats),
+                status=tag_activity.tag_activity_status(stats),
             )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -547,8 +447,8 @@ class Handler(BaseHTTPRequestHandler):
                 "dry_run": self.server.dry_run,
             },
         )
-        if tag_activity_changed(apply_stats):
-            attach_tag_activity(
+        if tag_activity.tag_activity_changed(apply_stats):
+            tag_activity.attach_tag_activity(
                 repo_root=self.server.repo_root,
                 endpoint=self.path,
                 dry_run=self.server.dry_run,
@@ -559,7 +459,7 @@ class Handler(BaseHTTPRequestHandler):
                     apply_summary_text,
                     f"Applied series: {apply_stats.get('applied_series')}; skipped: {apply_stats.get('skipped_series')}.",
                 ],
-                status=tag_activity_status(apply_stats),
+                status=tag_activity.tag_activity_status(apply_stats),
             )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -605,8 +505,8 @@ class Handler(BaseHTTPRequestHandler):
                 **stats,
             },
         )
-        if tag_activity_changed(stats):
-            attach_tag_activity(
+        if tag_activity.tag_activity_changed(stats):
+            tag_activity.attach_tag_activity(
                 repo_root=self.server.repo_root,
                 endpoint=self.path,
                 dry_run=self.server.dry_run,
@@ -617,7 +517,7 @@ class Handler(BaseHTTPRequestHandler):
                     summary_text,
                     f"Mode: {mode}; imported: {stats.get('imported_total')}; final aliases: {stats.get('final_total')}.",
                 ],
-                status=tag_activity_status(stats),
+                status=tag_activity.tag_activity_status(stats),
             )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -659,7 +559,7 @@ class Handler(BaseHTTPRequestHandler):
                 **stats,
             },
         )
-        attach_tag_activity(
+        tag_activity.attach_tag_activity(
             repo_root=self.server.repo_root,
             endpoint=self.path,
             dry_run=self.server.dry_run,
@@ -667,7 +567,7 @@ class Handler(BaseHTTPRequestHandler):
             body=body,
             response_payload=response_payload,
             detail_items=[summary_text],
-            status=tag_activity_status(stats),
+            status=tag_activity.tag_activity_status(stats),
         )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -735,8 +635,8 @@ class Handler(BaseHTTPRequestHandler):
                     **stats,
                 },
             )
-            if tag_activity_changed(stats):
-                attach_tag_activity(
+            if tag_activity.tag_activity_changed(stats):
+                tag_activity.attach_tag_activity(
                     repo_root=self.server.repo_root,
                     endpoint=self.path,
                     dry_run=self.server.dry_run,
@@ -747,7 +647,7 @@ class Handler(BaseHTTPRequestHandler):
                         summary_text,
                         f"Alias: {stats.get('alias')}; new alias: {stats.get('new_alias')}.",
                     ],
-                    status=tag_activity_status(stats),
+                    status=tag_activity.tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -818,8 +718,8 @@ class Handler(BaseHTTPRequestHandler):
                     **stats,
                 },
             )
-            if tag_activity_changed(stats):
-                attach_tag_activity(
+            if tag_activity.tag_activity_changed(stats):
+                tag_activity.attach_tag_activity(
                     repo_root=self.server.repo_root,
                     endpoint=self.path,
                     dry_run=self.server.dry_run,
@@ -830,7 +730,7 @@ class Handler(BaseHTTPRequestHandler):
                         summary_text,
                         f"Promoted alias {stats.get('alias')} to {stats.get('new_tag_id')}.",
                     ],
-                    status=tag_activity_status(stats),
+                    status=tag_activity.tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -905,8 +805,8 @@ class Handler(BaseHTTPRequestHandler):
                     **stats,
                 },
             )
-            if tag_activity_changed(stats):
-                attach_tag_activity(
+            if tag_activity.tag_activity_changed(stats):
+                tag_activity.attach_tag_activity(
                     repo_root=self.server.repo_root,
                     endpoint=self.path,
                     dry_run=self.server.dry_run,
@@ -917,7 +817,7 @@ class Handler(BaseHTTPRequestHandler):
                         summary_text,
                         f"Demoted {stats.get('old_tag_id')} to alias {stats.get('alias_key')}.",
                     ],
-                    status=tag_activity_status(stats),
+                    status=tag_activity.tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
@@ -970,7 +870,7 @@ class Handler(BaseHTTPRequestHandler):
                 new_tag_id=rewrite_to,
                 now_utc=now_utc,
             )
-            assignments_updated, assignment_stats = rewrite_assignments_for_tag(
+            assignments_updated, assignment_stats = tag_registry.rewrite_assignments_for_tag(
                 assignments_payload,
                 old_tag_id=old_tag_id,
                 new_tag_id=rewrite_to,
@@ -1049,8 +949,8 @@ class Handler(BaseHTTPRequestHandler):
                     **stats,
                 },
             )
-            if tag_activity_changed(stats):
-                attach_tag_activity(
+            if tag_activity.tag_activity_changed(stats):
+                tag_activity.attach_tag_activity(
                     repo_root=self.server.repo_root,
                     endpoint=self.path,
                     dry_run=self.server.dry_run,
@@ -1061,7 +961,7 @@ class Handler(BaseHTTPRequestHandler):
                         summary_text,
                         f"Action: {action}; tag: {old_tag_id}.",
                     ],
-                    status=tag_activity_status(stats),
+                    status=tag_activity.tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 

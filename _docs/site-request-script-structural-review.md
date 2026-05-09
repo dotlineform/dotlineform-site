@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 17:44"
+last_updated: "2026-05-09 17:51"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -12,10 +12,10 @@ viewable: true
 
 Status:
 
-- in progress
+- in progress; priorities 1-3 are complete and the remaining review queue starts at Priority 4
 - Priority 1 catalogue write-server sequence complete; see [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
 - Priority 2 docs-management server sequence complete; see [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
-- Priority 3 tag write-server sequence in progress; Slices 1-6 implemented in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+- Priority 3 tag write-server sequence complete through Slice 8 closeout; see [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
 
 ## Summary
 
@@ -47,7 +47,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 |---|---|---|---|
 | 1 | `scripts/studio/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
-| 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | in progress; Slices 1-7 implemented in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
+| 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | complete; final boundary recorded in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
 | 4 | `scripts/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
 | 5 | `scripts/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | separate local media planning/execution from build-scope planning and CLI/reporting code |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | group checks by domain with shared report contracts |
@@ -136,21 +136,25 @@ End result:
 The request [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) tracks whether the completed script ownership work should be reflected directly in the filesystem layout.
 That request is separate from this structural review because it is mostly about package and command-path organization rather than extracting mixed responsibilities inside individual scripts.
 
-## Remaining Review Queue
+## Priority 3 Review: Tag Write Server
 
-Priority 3 is `scripts/studio/tag_write_server.py`.
+Priority 3 was `scripts/studio/tag_write_server.py`.
 The detailed implementation tracker lives in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
 Tags are conceptually part of Analytics: they are a metadata layer over catalogue works and series, currently surfaced through Studio admin pages because they are not public catalogue UI.
-Slices 1-7 have moved route inventory, POST dispatch, tag-specific activity helpers, source-model validation/loading helpers, assignment save/import planners, registry/alias mutation planners, promotion/demotion planners, and backup/write transaction helpers into focused module owners.
-The remaining candidates should still be handled as narrow, finishable slices rather than one broad refactor.
+Slices 1-8 moved route inventory, POST dispatch, tag-specific activity helpers, source-model validation/loading helpers, assignment save/import planners, registry/alias mutation planners, promotion/demotion planners, canonical assignment rewrites, and backup/write transaction helpers into focused module owners.
+`scripts/studio/tag_write_server.py` remains the loopback HTTP orchestration layer for tag writes, including request parsing, route dispatch, response status mapping, endpoint-specific write allowlists, dry-run suppression, local logging timing, and Studio Activity append timing.
+The service name remains tag-specific until a separate Analytics metadata or scoring workflow needs the same local-service contract.
+
+## Remaining Review Queue
+
+The remaining lower-priority candidates should still be handled as narrow, finishable slices rather than one broad refactor.
 
 Recommended next review questions:
 
-- Which tag write-server functions are pure domain logic and can be tested without an HTTP server?
-- Which tag-service concerns overlap with catalogue/docs local-service infrastructure, and which must stay service-specific for safety?
-- Which response payload keys are public contracts for Studio tag pages and should be pinned before extraction?
-- Should the later [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) move tag code into `scripts/analytics/` after the structural boundary is clearer?
-- Treat the completed Analytics tag route migration as the settled route context for tag write-server review.
+- Which generator or pipeline functions are pure domain logic and can be tested without full CLI execution?
+- Which local-service concerns overlap enough to justify shared utilities without weakening service-specific safety checks?
+- Which response payload or generated-artifact keys are public contracts for Studio pages and should be pinned before extraction?
+- Should the later [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) move tag code into `scripts/analytics/` now that the tag write-server structural boundary is clearer?
 
 ## Acceptance Criteria
 
@@ -174,7 +178,7 @@ Recommended next review questions:
 
 ## Suggested Next Slice
 
-Continue Priority 3 with final handler body cleanup and closeout.
+Continue with Priority 4, `scripts/generate_work_pages.py`, starting with a read-only extraction map.
 Do not reorganize script folders as part of that slice; folder moves are tracked separately in [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
 
 ## Implementation Notes
@@ -186,4 +190,4 @@ Priority 2 docs-management server slices are tracked in [Docs Management Server 
 That child doc records implemented Slices 1-8 and the final module ownership boundary for `scripts/docs/docs_management_server.py`.
 
 Priority 3 tag write-server slices are tracked in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
-That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, and write-transaction slices plus the remaining closeout plan for `scripts/studio/tag_write_server.py`.
+That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, write-transaction, and final handler-body closeout boundary for `scripts/studio/tag_write_server.py`.

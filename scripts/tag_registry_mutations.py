@@ -202,6 +202,106 @@ def mutate_registry_tag(
     }
 
 
+def rewrite_assignment_tag_list_for_tag(
+    raw_tags: Any,
+    field_name: str,
+    old_tag_id: str,
+    new_tag_id: Optional[str],
+) -> tuple[list[Dict[str, Any]], bool, int]:
+    tags = raw_tags if isinstance(raw_tags, list) else []
+    changed = not isinstance(raw_tags, list)
+    out: list[Dict[str, Any]] = []
+    seen: set[str] = set()
+    refs_rewritten = 0
+
+    for raw_tag in tags:
+        normalized_tag = tag_source.normalize_assignment_tag(raw_tag, f"{field_name}[*]", strict=False)
+        if normalized_tag is None:
+            changed = True
+            continue
+
+        tag_value = normalized_tag["tag_id"]
+        if tag_value == old_tag_id:
+            refs_rewritten += 1
+            changed = True
+            if new_tag_id is None:
+                continue
+            tag_value = new_tag_id
+        if tag_value in seen:
+            changed = True
+            continue
+        seen.add(tag_value)
+        out.append(tag_source.build_assignment_tag(tag_value, normalized_tag["w_manual"]))
+
+    return out, changed, refs_rewritten
+
+
+def rewrite_assignments_for_tag(
+    assignments_payload: Dict[str, Any],
+    old_tag_id: str,
+    new_tag_id: Optional[str],
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, int]]:
+    series_obj = assignments_payload.get("series")
+    if not isinstance(series_obj, dict):
+        series_obj = {}
+        assignments_payload["series"] = series_obj
+    if "tag_assignments_version" not in assignments_payload:
+        assignments_payload["tag_assignments_version"] = "tag_assignments_v1"
+
+    series_rows_touched = 0
+    series_refs_rewritten = 0
+    work_rows_touched = 0
+    work_refs_rewritten = 0
+
+    for series_id, row in series_obj.items():
+        if not isinstance(row, dict):
+            continue
+        series_out, series_changed, series_refs = rewrite_assignment_tag_list_for_tag(
+            row.get("tags"),
+            f"series[{series_id}].tags",
+            old_tag_id,
+            new_tag_id,
+        )
+        if series_changed:
+            row["tags"] = series_out
+            row["updated_at_utc"] = now_utc
+            series_rows_touched += 1
+        series_refs_rewritten += series_refs
+
+        works_obj = row.get("works")
+        if not isinstance(works_obj, dict):
+            continue
+        for work_id, work_row in list(works_obj.items()):
+            if not isinstance(work_row, dict):
+                continue
+            work_out, work_changed, work_refs = rewrite_assignment_tag_list_for_tag(
+                work_row.get("tags"),
+                f"series[{series_id}].works[{work_id}].tags",
+                old_tag_id,
+                new_tag_id,
+            )
+            if work_changed:
+                if work_out:
+                    work_row["tags"] = work_out
+                    work_row["updated_at_utc"] = now_utc
+                else:
+                    del works_obj[work_id]
+                row["updated_at_utc"] = now_utc
+                work_rows_touched += 1
+            work_refs_rewritten += work_refs
+        if not works_obj:
+            row.pop("works", None)
+
+    assignments_payload["updated_at_utc"] = now_utc
+    return assignments_payload, {
+        "series_rows_touched": series_rows_touched,
+        "series_tag_refs_rewritten": series_refs_rewritten,
+        "work_rows_touched": work_rows_touched,
+        "work_tag_refs_rewritten": work_refs_rewritten,
+    }
+
+
 def build_import_summary_text(stats: Dict[str, Any], noun: str = "tags") -> str:
     mode = str(stats.get("mode") or "unknown")
     imported_total = int(stats.get("imported_total") or 0)

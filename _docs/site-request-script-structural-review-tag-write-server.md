@@ -2,8 +2,8 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 17:44"
-ui_status: in-progress
+last_updated: "2026-05-09 17:51"
+ui_status: implemented
 parent_id: site-request-script-structural-review
 sort_order: 30
 viewable: true
@@ -27,7 +27,8 @@ Status:
 - alias promotion planning, tag demotion planning, demotion assignment rewrites, cross-artifact promotion/demotion response stats, and promotion/demotion summary text are now owned by `scripts/tag_promotion_mutations.py`
 - Slice 7 implemented
 - timestamped backup names, single-file JSON writes with backup, and multi-file JSON writes with backup and rollback are now owned by `scripts/tag_write_transactions.py`
-- next slice: final handler body cleanup and closeout
+- Slice 8 implemented
+- final handler body cleanup is complete: tag activity, script logging, Studio Activity, and extracted helper call sites now use explicit module namespaces; canonical tag assignment rewrites are owned by `scripts/tag_registry_mutations.py`; `tag_write_server.py` remains the service name until a broader Analytics write-service contract exists
 
 ## Purpose
 
@@ -421,13 +422,26 @@ Risks:
 
 ### Slice 8: final handler body cleanup and closeout
 
+Status: implemented.
+
+The final closeout kept endpoint behavior stable while removing the remaining canonical tag assignment rewrite helpers from `scripts/studio/tag_write_server.py`.
+Those helpers now live with canonical tag mutation behavior in `scripts/tag_registry_mutations.py`, with focused coverage for rename and delete assignment rewrites.
+The server now calls extracted owners through explicit module namespaces for script logging, Studio Activity append, tag activity rows, registry mutation helpers, route constants, source loading/validation, assignment planning, alias mutation planning, promotion/demotion planning, and write transactions.
+
+Decision: keep the executable name as `scripts/studio/tag_write_server.py` for this completed review.
+The current service writes only tag assignments, tag registry rows, tag aliases, promotion, and demotion, so renaming it to `analytics_server.py` now would imply a broader Analytics write surface that does not exist yet.
+If future Analytics metadata or scoring registries share the same local service, that rename should be handled as a separate request because it affects command paths, docs, `bin/dev-studio`, route constants, and folder organization.
+
+The remaining candidate scripts stay in the parent review queue rather than being folded into this closeout.
+Folder moves into `scripts/analytics/` remain deferred to [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
+
 Target ownership:
 
 - remove stale imports and dead helpers
 - verify server call sites use explicit module namespaces
 - refresh [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) and this slice plan with the final boundary
-- decide whether `tag_write_server.py` should remain tag-specific or become `analytics_server.py`
-- decide whether remaining candidates should be marked `leave` or linked to a separate request
+- decide whether `tag_write_server.py` should remain tag-specific or become `analytics_server.py`: leave as `tag_write_server.py` until broader Analytics writes exist
+- decide whether remaining candidates should be marked `leave` or linked to a separate request: keep lower-priority candidates in the parent queue and defer folder organization to the existing directory request
 
 Acceptance checks:
 

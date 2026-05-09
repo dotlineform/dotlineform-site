@@ -2,7 +2,7 @@
 doc_id: scripts-tag-write-server
 title: Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-09 17:44"
+last_updated: "2026-05-09 17:51"
 parent_id: servers
 sort_order: 30
 ---
@@ -19,10 +19,11 @@ The server keeps HTTP orchestration and maps `routes.POST_PATHS` to handler meth
 Tag-specific Studio Activity status, changed-state, write-endpoint, record-group, and row-construction helpers are owned by `scripts/tag_activity.py`.
 Tag source artifact paths, JSON loading defaults, tag/alias/group/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are owned by `scripts/tag_source_model.py`.
 Tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are owned by `scripts/tag_assignment_service.py`.
-Tag registry import and canonical tag mutation planners are owned by `scripts/tag_registry_mutations.py`.
+Tag registry import, canonical tag mutation planners, canonical rename/delete assignment rewrites, and registry mutation summary text are owned by `scripts/tag_registry_mutations.py`.
 Tag alias import, edit/delete, target rewrite, and redundant alias cleanup planners are owned by `scripts/tag_alias_mutations.py`.
 Alias promotion and tag demotion planners are owned by `scripts/tag_promotion_mutations.py`.
 Timestamped backups and atomic JSON write transactions are owned by `scripts/tag_write_transactions.py`.
+The service remains `tag_write_server.py` for this completed structural pass because the write surface is still limited to tag assignments, registry rows, aliases, promotion, and demotion. A broader `analytics_server.py` rename should wait until a separate Analytics metadata or scoring workflow shares the same local-service contract.
 
 ## Optional Flags
 
@@ -141,7 +142,7 @@ Tag Aliases behavior:
 - tag activity row construction is centralized in `scripts/tag_activity.py`
 - tag source artifact paths and validation defaults are centralized in `scripts/tag_source_model.py`
 - tag assignment save and import planners are centralized in `scripts/tag_assignment_service.py`
-- tag registry mutation planners are centralized in `scripts/tag_registry_mutations.py`
+- tag registry mutation planners and canonical tag assignment rewrites are centralized in `scripts/tag_registry_mutations.py`
 - tag alias mutation and rewrite planners are centralized in `scripts/tag_alias_mutations.py`
 - tag promotion and demotion planners are centralized in `scripts/tag_promotion_mutations.py`
 - tag write transaction helpers are centralized in `scripts/tag_write_transactions.py`

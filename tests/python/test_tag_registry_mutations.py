@@ -30,6 +30,10 @@ def row(tag_id: str, description: str = "", status: str = "active") -> dict[str,
     }
 
 
+def assignment_tag(tag_id: str, weight: float = 0.6) -> dict[str, Any]:
+    return {"tag_id": tag_id, "w_manual": weight}
+
+
 def assert_equal(actual: Any, expected: Any, label: str) -> None:
     if actual != expected:
         raise AssertionError(f"{label}: expected {expected!r}, got {actual!r}")
@@ -161,12 +165,62 @@ def test_registry_summary_text() -> None:
     )
 
 
+def test_rewrite_assignments_for_canonical_rename() -> None:
+    payload = {
+        "series": {
+            "009": {
+                "tags": [assignment_tag("subject:trees"), assignment_tag("theme:growth")],
+                "works": {
+                    "00001": {"tags": [assignment_tag("subject:trees", 0.9)]},
+                    "00002": {"tags": [assignment_tag("theme:growth")]},
+                },
+            }
+        }
+    }
+
+    updated, stats = registry.rewrite_assignments_for_tag(payload, "subject:trees", "subject:canopy", NOW)
+
+    assert_equal(updated["series"]["009"]["tags"][0], assignment_tag("subject:canopy"), "series tag rewritten")
+    assert_equal(updated["series"]["009"]["works"]["00001"]["tags"][0], assignment_tag("subject:canopy", 0.9), "work tag rewritten")
+    assert_equal(updated["series"]["009"]["works"]["00002"]["tags"][0], assignment_tag("theme:growth"), "untouched work preserved")
+    assert_equal(updated["updated_at_utc"], NOW, "root timestamp updated")
+    assert_equal(stats["series_rows_touched"], 1, "series rows touched")
+    assert_equal(stats["series_tag_refs_rewritten"], 1, "series refs rewritten")
+    assert_equal(stats["work_rows_touched"], 1, "work rows touched")
+    assert_equal(stats["work_tag_refs_rewritten"], 1, "work refs rewritten")
+
+
+def test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows() -> None:
+    payload = {
+        "series": {
+            "009": {
+                "tags": [assignment_tag("subject:trees"), assignment_tag("theme:growth")],
+                "works": {
+                    "00001": {"tags": [assignment_tag("subject:trees")]},
+                    "00002": {"tags": [assignment_tag("subject:trees"), assignment_tag("theme:growth")]},
+                },
+            }
+        }
+    }
+
+    updated, stats = registry.rewrite_assignments_for_tag(payload, "subject:trees", None, NOW)
+
+    assert_equal(updated["series"]["009"]["tags"], [assignment_tag("theme:growth")], "series tag removed")
+    if "00001" in updated["series"]["009"].get("works", {}):
+        raise AssertionError("empty work row should be removed")
+    assert_equal(updated["series"]["009"]["works"]["00002"]["tags"], [assignment_tag("theme:growth")], "non-empty work row preserved")
+    assert_equal(stats["series_tag_refs_rewritten"], 1, "series delete refs rewritten")
+    assert_equal(stats["work_tag_refs_rewritten"], 2, "work delete refs rewritten")
+
+
 def main() -> None:
     test_registry_import_modes()
     test_registry_import_duplicate_handling()
     test_canonical_edit_and_delete_plans()
     test_canonical_mutation_guards()
     test_registry_summary_text()
+    test_rewrite_assignments_for_canonical_rename()
+    test_rewrite_assignments_for_canonical_delete_removes_empty_work_rows()
     print("Tag registry mutation tests OK")
 
 

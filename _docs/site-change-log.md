@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 17:44"
+last_updated: "2026-05-09 17:51"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Completed tag write-server structural review
+
+**Status:** implemented
+
+**Area:** Studio / Analytics / scripts / maintainability
+
+**Summary:**
+Implemented Slice 8 closeout for the tag write-server structural review.
+`scripts/tag_registry_mutations.py` now owns canonical tag assignment rewrites for rename and delete flows, and `scripts/studio/tag_write_server.py` calls extracted owners through explicit module namespaces while remaining the localhost HTTP orchestration layer.
+The service name remains `tag_write_server.py`; a future `analytics_server.py` rename is deferred until broader Analytics metadata or scoring writes exist.
+
+**Files changed/docs:**
+
+- `scripts/tag_registry_mutations.py`
+- `scripts/studio/tag_write_server.py`
+- `tests/python/test_tag_registry_mutations.py`
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+
+**Impact:**
+Endpoint URLs, request payloads, response payload keys, dry-run behavior, backup behavior, and write allowlists are unchanged.
+The next structural-review work starts with Priority 4 rather than adding more cleanup to the tag server.
 
 ## [2026-05-09] Advanced tag write-server transaction ownership
 
