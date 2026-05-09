@@ -53,6 +53,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue_generation_indexes.py",
                 "scripts/catalogue_generation_recent.py",
                 "scripts/catalogue_generation_records.py",
+                "scripts/catalogue_generation_writes.py",
                 "scripts/make_srcset_images.py",
                 "scripts/project_state_report.py",
                 "scripts/studio/catalogue_write_server.py",
@@ -115,6 +116,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_catalogue_generation_indexes.py",
                 "tests/python/test_catalogue_generation_recent.py",
                 "tests/python/test_catalogue_generation_records.py",
+                "tests/python/test_catalogue_generation_writes.py",
                 "tests/python/test_studio_backup_retention.py",
             ),
             "Compile lightweight Python check scripts.",
@@ -243,6 +245,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "catalogue-generation-recent-tests",
             (sys.executable, "tests/python/test_catalogue_generation_recent.py"),
             "Verify generated catalogue recent-publications builders.",
+        ),
+        CheckCommand(
+            "catalogue-generation-write-tests",
+            (sys.executable, "tests/python/test_catalogue_generation_writes.py"),
+            "Verify generated catalogue write-decision helpers.",
         ),
         CheckCommand(
             "studio-ready-state-audit",

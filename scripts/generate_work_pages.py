@@ -75,6 +75,7 @@ try:
     import catalogue_generation_indexes as indexes
     import catalogue_generation_recent as recent
     import catalogue_generation_records as records
+    import catalogue_generation_writes as writes
     from catalogue_generation_common import (
         coerce_int,
         coerce_numeric,
@@ -91,6 +92,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts import catalogue_generation_indexes as indexes
     from scripts import catalogue_generation_recent as recent
     from scripts import catalogue_generation_records as records
+    from scripts import catalogue_generation_writes as writes
     from scripts.catalogue_generation_common import (
         coerce_int,
         coerce_numeric,
@@ -320,11 +322,6 @@ def build_front_matter(fields: Dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_route_stub_content() -> str:
-    """Build a metadata-free Jekyll collection route anchor."""
-    return build_front_matter({})
-
-
 def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
     filename_value = coerce_string(filename)
     label_value = coerce_string(label)
@@ -379,19 +376,10 @@ def load_recent_entries(path: Path) -> List[Dict[str, Any]]:
 def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
     """Extract header.<key> from an existing JSON payload."""
     try:
-        obj = json.loads(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
     except Exception:
         return None
-    if not isinstance(obj, dict):
-        return None
-    header = obj.get("header")
-    if not isinstance(header, dict):
-        return None
-    hv = header.get(key)
-    if hv is None:
-        return None
-    s = str(hv).strip()
-    return s or None
+    return writes.extract_header_scalar_from_json_text(text, key)
 
 
 def render_markdown_with_jekyll(markdown_path: Path) -> str:
@@ -1010,12 +998,13 @@ def main() -> None:
                 if canonical_work_fm is None:
                     skipped += 1
                     continue
-                work_page_content = build_route_stub_content()
+                work_page_content = writes.build_route_stub_content()
                 out_path = out_dir / f"{wid}.md"
 
                 def write_page(path: Path, label: str, page_content: str) -> bool:
                     exists = path.exists()
-                    if exists and not args.force:
+                    decision = writes.decide_route_stub_write(path_exists=exists, force=args.force)
+                    if not decision.should_write:
                         print(f"{prefix}SKIP ({label}; route exists): {display_path(path)}")
                         return False
                     if args.write:
@@ -1196,11 +1185,12 @@ def main() -> None:
                         "work_count": len(series_work_ids_sorted),
                     })
                 )
-                series_content = build_route_stub_content()
+                series_content = writes.build_route_stub_content()
 
                 series_path = series_out_dir / f"{series_id}.md"
                 series_exists = series_path.exists()
-                if series_exists and not args.force:
+                series_decision = writes.decide_route_stub_write(path_exists=series_exists, force=args.force)
+                if not series_decision.should_write:
                     print(f"{prefix_s}SKIP (route exists): {display_path(series_path)}")
                     series_skipped += 1
                 else:
@@ -1226,7 +1216,13 @@ def main() -> None:
                 out_json_path = series_json_dir / f"{series_id}.json"
                 out_exists = out_json_path.exists()
                 existing_payload_version = extract_existing_header_scalar(out_json_path, "version") if out_exists else None
-                if (existing_payload_version is not None) and (existing_payload_version == payload_version) and (not args.force):
+                json_decision = writes.decide_json_payload_write(
+                    path_exists=out_exists,
+                    existing_version=existing_payload_version,
+                    payload_version=payload_version,
+                    force=args.force,
+                )
+                if not json_decision.should_write:
                     series_json_skipped += 1
                 else:
                     if args.write:
@@ -1357,7 +1353,13 @@ def main() -> None:
 
     exists = series_index_json_path.exists()
     existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
-    if (existing_version is not None) and (existing_version == series_version) and (not args.force):
+    index_decision = writes.decide_json_payload_write(
+        path_exists=exists,
+        existing_version=existing_version,
+        payload_version=series_version,
+        force=args.force,
+    )
+    if not index_decision.should_write:
         print("Series index JSON done. Wrote: 0. Skipped: 1.")
     else:
         if args.write:
@@ -1484,10 +1486,11 @@ def main() -> None:
                 elif project_filename:
                     print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
-                d_content = build_route_stub_content()
+                d_content = writes.build_route_stub_content()
                 d_path = work_details_out_dir / f"{detail_uid}.md"
                 d_exists = d_path.exists()
-                if d_exists and not args.force:
+                detail_decision = writes.decide_route_stub_write(path_exists=d_exists, force=args.force)
+                if not detail_decision.should_write:
                     details_skipped += 1
                     continue
 
@@ -1607,8 +1610,14 @@ def main() -> None:
                 exists = out_json_path.exists()
                 existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
                 payload_version = payload["header"]["version"]
+                json_decision = writes.decide_json_payload_write(
+                    path_exists=exists,
+                    existing_version=existing_version,
+                    payload_version=payload_version,
+                    force=args.force,
+                )
 
-                if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+                if not json_decision.should_write:
                     wj_skipped += 1
                     continue
 
@@ -1642,7 +1651,13 @@ def main() -> None:
     payload_version = payload["header"]["version"]
     exists = works_index_json_path.exists()
     existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
-    if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+    index_decision = writes.decide_json_payload_write(
+        path_exists=exists,
+        existing_version=existing_version,
+        payload_version=payload_version,
+        force=args.force,
+    )
+    if not index_decision.should_write:
         print("Works index JSON done. Wrote: 0. Skipped: 1.")
     else:
         if args.write:
@@ -1677,7 +1692,13 @@ def main() -> None:
     recent_exists = recent_index_json_path.exists()
     recent_existing_version = extract_existing_header_scalar(recent_index_json_path, "version") if recent_exists else None
     recent_payload_version = recent_index_payload["header"]["version"]
-    if (recent_existing_version is not None) and (recent_existing_version == recent_payload_version) and (not args.force):
+    recent_decision = writes.decide_json_payload_write(
+        path_exists=recent_exists,
+        existing_version=recent_existing_version,
+        payload_version=recent_payload_version,
+        force=args.force,
+    )
+    if not recent_decision.should_write:
         print("Recent index JSON done. Wrote: 0. Skipped: 1.")
     else:
         if args.write:
@@ -1699,7 +1720,13 @@ def main() -> None:
     work_storage_payload_version = work_storage_payload_out["header"]["version"]
     work_storage_exists = work_storage_index_json_path.exists()
     existing_work_storage_version = extract_existing_header_scalar(work_storage_index_json_path, "version") if work_storage_exists else None
-    if (existing_work_storage_version is not None) and (existing_work_storage_version == work_storage_payload_version) and (not args.force):
+    work_storage_decision = writes.decide_json_payload_write(
+        path_exists=work_storage_exists,
+        existing_version=existing_work_storage_version,
+        payload_version=work_storage_payload_version,
+        force=args.force,
+    )
+    if not work_storage_decision.should_write:
         print("Work storage index JSON done. Wrote: 0. Skipped: 1.")
     else:
         if args.write:
@@ -1879,11 +1906,12 @@ def main() -> None:
                 continue
 
             if moment_actionable:
-                m_content = build_route_stub_content()
+                m_content = writes.build_route_stub_content()
                 m_path = moments_out_dir / f"{moment_id}.md"
                 m_exists = m_path.exists()
+                moment_route_decision = writes.decide_route_stub_write(path_exists=m_exists, force=args.force)
 
-                if m_exists and not args.force:
+                if not moment_route_decision.should_write:
                     moments_pages_skipped += 1
                 else:
                     if args.write:
@@ -1911,8 +1939,14 @@ def main() -> None:
                 exists = out_json_path.exists()
                 existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
                 payload_version = payload["header"]["version"]
+                moment_json_decision = writes.decide_json_payload_write(
+                    path_exists=exists,
+                    existing_version=existing_version,
+                    payload_version=payload_version,
+                    force=args.force,
+                )
 
-                if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+                if not moment_json_decision.should_write:
                     moments_json_skipped += 1
                 else:
                     if args.write:
@@ -2015,7 +2049,13 @@ def main() -> None:
     payload_version = payload["header"]["version"]
     exists = moments_index_json_path.exists()
     existing_version = extract_existing_header_scalar(moments_index_json_path, "version") if exists else None
-    if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+    moments_index_decision = writes.decide_json_payload_write(
+        path_exists=exists,
+        existing_version=existing_version,
+        payload_version=payload_version,
+        force=args.force,
+    )
+    if not moments_index_decision.should_write:
         print("Moments index JSON done. Wrote: 0. Skipped: 1.")
     else:
         if args.write:

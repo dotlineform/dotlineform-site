@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 19:09"
+last_updated: "2026-05-09 19:19"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -17,10 +17,12 @@ Status:
 - Slice 1 implemented
 - Slice 2 implemented
 - Slice 3 implemented
+- Slice 4 implemented
 - read-only extraction map recorded
 - record projection helpers extracted
 - series and work index builders extracted
 - recent-publications builder extracted
+- route-stub and generated JSON write-decision helpers extracted
 
 ## Purpose
 
@@ -316,7 +318,7 @@ Risks:
 
 ### Slice 4: route-stub and file-write decisions
 
-Status: planned.
+Status: implemented.
 
 Proposed module owner:
 
@@ -328,6 +330,13 @@ Target ownership:
 - generated JSON payload version comparison
 - write/skip decision helpers for route stubs and JSON payloads
 - common dry-run/write result objects used by work, series, detail, moment, and aggregate JSON writers
+
+Implementation result:
+
+- `scripts/catalogue_generation_writes.py` now owns metadata-free route-stub content, tolerant JSON header scalar extraction, route-stub write/skip decisions, JSON payload version-match decisions, and a shared generated-write decision object
+- `scripts/generate_work_pages.py` imports the write-decision owner as `writes` and still owns filesystem reads/writes, path selection, artifact-specific labels, counters, status/source updates, and exact dry-run/write print wording
+- `tests/python/test_catalogue_generation_writes.py` pins skip-on-existing route behavior, force overwrite behavior, JSON header extraction, version-match JSON skip behavior, force overwrite for matching versions, and no-file-write dry-run decision behavior
+- `scripts/run_checks.py` quick syntax and focused test coverage now includes the extracted write-decision module
 
 The generator should keep:
 
