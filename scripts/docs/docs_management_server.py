@@ -35,7 +35,7 @@ Endpoints:
 Security constraints:
   - Binds to 127.0.0.1 only.
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
-  - Writes only allowlisted Markdown docs under _docs_src/, _docs_library_src/, and _docs_src_analysis/.
+  - Writes only allowlisted Markdown docs under _docs/, _docs_library/, and _docs_analysis/.
   - Writes export artifacts only under the resolved adapter export root.
   - Writes import preview artifacts only under the resolved adapter preview root.
   - Creates timestamped backup bundles under var/docs/backups/.
@@ -76,6 +76,7 @@ from docs_html_import import (  # noqa: E402
     retarget_inline_raster_media_plans,
 )
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
+from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS  # noqa: E402
 from docs_watch_suppression import (  # noqa: E402
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -97,12 +98,6 @@ INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
 SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
-SCOPE_ROOTS = {
-    "studio": Path("_docs_src"),
-    "library": Path("_docs_library_src"),
-    "analysis": Path("_docs_src_analysis"),
-}
-NESTED_SOURCE_SCOPES = {"analysis"}
 BACKUPS_REL_DIR = Path("var/docs/backups")
 LOGS_REL_DIR = Path("var/docs/logs")
 DEFAULT_MARKDOWN_APP_ENV = "DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP"

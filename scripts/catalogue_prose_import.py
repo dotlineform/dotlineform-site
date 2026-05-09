@@ -24,7 +24,7 @@ from series_ids import normalize_series_id
 
 
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
-CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
+CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_catalogue")
 MAX_PROSE_MARKDOWN_BYTES = 1024 * 1024
 
 

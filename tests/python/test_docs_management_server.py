@@ -36,7 +36,7 @@ def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: 
     for key, value in front_matter.items():
         lines.append(f"{key}: {docs_management_server.format_front_matter_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "_docs_src" / filename
+    path = root / "_docs" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -96,12 +96,12 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "export_root": "var/studio/export-import/library/exports",
                                 "staging_root": "var/studio/export-import/library/import-staging",
                                 "preview_root": "var/studio/export-import/library/import-preview",
-                                "source_root": "_docs_library_src",
+                                "source_root": "_docs_library",
                             },
                             "sources": {
                                 "docs_index": "assets/data/docs/scopes/library/index.json",
                                 "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-                                "source_root": "_docs_library_src",
+                                "source_root": "_docs_library",
                             },
                             "config": {
                                 "export_configs_path": "assets/studio/data/library_export_configs.json",

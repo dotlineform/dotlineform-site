@@ -21,7 +21,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-DEFAULT_OUTPUT_REL_PATH = Path("_docs_src/project-state.md")
+DEFAULT_OUTPUT_REL_PATH = Path("_docs/project-state.md")
 IMAGE_EXTENSIONS = {
     ".avif",
     ".gif",
@@ -244,9 +244,9 @@ def build_project_state_report(
     )
 
     if write:
-        expected_root = (repo_root / "_docs_src").resolve()
+        expected_root = (repo_root / "_docs").resolve()
         if output.parent != expected_root:
-            raise ValueError("Project-state report writes are restricted to _docs_src/.")
+            raise ValueError("Project-state report writes are restricted to _docs/.")
         output.write_text(markdown, encoding="utf-8")
 
     return {

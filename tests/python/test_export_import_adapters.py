@@ -57,12 +57,12 @@ def registry_payload() -> dict[str, object]:
                             "export_root": "var/studio/export-import/library/exports",
                             "staging_root": "var/studio/export-import/library/import-staging",
                             "preview_root": "var/studio/export-import/library/import-preview",
-                            "source_root": "_docs_library_src",
+                            "source_root": "_docs_library",
                         },
                         "sources": {
                             "docs_index": "assets/data/docs/scopes/library/index.json",
                             "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-                            "source_root": "_docs_library_src",
+                            "source_root": "_docs_library",
                         },
                         "config": {
                             "export_configs_path": "assets/studio/data/library_export_configs.json",

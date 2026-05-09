@@ -189,7 +189,7 @@ async function init() {
       docsServerAvailable,
       isBusy: false,
       summary: null,
-      outputPath: "_docs_src/project-state.md",
+      outputPath: "_docs/project-state.md",
       sourceRoot: "$DOTLINEFORM_PROJECTS_BASE_DIR/projects",
       statusNode,
       warningNode,

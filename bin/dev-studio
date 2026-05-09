@@ -176,7 +176,7 @@ else
   echo "Startup docs rebuild scopes: none"
 fi
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  echo "Docs Live Watcher: enabled (_docs_src + _docs_library_src + _docs_src_analysis)"
+  echo "Docs Live Watcher: enabled (_docs + _docs_library + _docs_analysis)"
 else
   echo "Docs Live Watcher: disabled"
 fi

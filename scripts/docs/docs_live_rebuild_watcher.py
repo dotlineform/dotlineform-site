@@ -24,14 +24,8 @@ if str(SCRIPTS_DOCS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
 
 from docs_management_server import load_scope_docs, scope_doc_sort_key
+from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
-
-SCOPE_ROOTS = {
-    "studio": Path("_docs_src"),
-    "library": Path("_docs_library_src"),
-    "analysis": Path("_docs_src_analysis"),
-}
-NESTED_SOURCE_SCOPES = {"analysis"}
 
 
 def log(message: str) -> None:
@@ -272,8 +266,8 @@ def main() -> int:
         }
 
     log(
-        "Watching _docs_src/*.md -> studio, _docs_library_src/*.md -> library, "
-        "and _docs_src_analysis/**/*.md -> analysis "
+        "Watching _docs/*.md -> studio, _docs_library/*.md -> library, "
+        "and _docs_analysis/**/*.md -> analysis "
         f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
     )
 

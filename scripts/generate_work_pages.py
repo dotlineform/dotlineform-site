@@ -52,7 +52,7 @@ Common flags:
 
 Path variables used by the script:
 - projects_root = [projects-base-dir]/projects (work + work_details source lookup)
-- moment prose root = _docs_src_catalogue/moments
+- moment prose root = _docs_catalogue/moments
 - moments_images_root = [projects-base-dir]/moments/images (moment source image lookup)
 
 """
@@ -134,7 +134,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_src_catalogue")
+CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_catalogue")
 
 
 # ----------------------------

@@ -12,6 +12,9 @@ require "yaml"
 
 require_relative "jekyll_markdown_renderer"
 
+DOCS_SCOPE_CONFIG_PATH = File.expand_path("docs/docs_scopes.json", __dir__)
+DOCS_SCOPE_CONFIG_SCHEMA_VERSION = "docs_scopes_v1"
+
 ScopeConfig = Struct.new(
   :scope_id,
   :source,
@@ -566,6 +569,61 @@ class DocsDataBuilder
   end
 end
 
+def normalize_scope_config_path(value, label)
+  text = value.to_s.strip
+  raise "Docs scope config field #{label} is required" if text.empty?
+
+  path = Pathname(text)
+  if path.absolute? || path.each_filename.any? { |part| part == ".." }
+    raise "Docs scope config field #{label} must be a safe relative path"
+  end
+  text
+end
+
+def normalize_scope_config_array(value, label)
+  raise "Docs scope config field #{label} must be an array" unless value.nil? || value.is_a?(Array)
+
+  Array(value).map { |item| item.to_s.strip }.reject(&:empty?)
+end
+
+def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
+  payload = JSON.parse(File.read(path))
+  unless payload.is_a?(Hash) && payload["schema_version"] == DOCS_SCOPE_CONFIG_SCHEMA_VERSION
+    raise "Docs scope config schema_version must be #{DOCS_SCOPE_CONFIG_SCHEMA_VERSION}"
+  end
+  scopes = payload["scopes"]
+  raise "Docs scope config scopes must be an array" unless scopes.is_a?(Array)
+
+  seen = {}
+  scopes.each_with_index.map do |item, index|
+    raise "Docs scope config scopes[#{index}] must be an object" unless item.is_a?(Hash)
+
+    scope_id = item["scope_id"].to_s.strip.downcase
+    raise "Docs scope config scopes[#{index}].scope_id is required" if scope_id.empty?
+    raise "Docs scope config scope_id #{scope_id.inspect} is duplicated" if seen[scope_id]
+
+    seen[scope_id] = true
+    ScopeConfig.new(
+      scope_id: scope_id,
+      source: normalize_scope_config_path(item["source"], "scopes[#{index}].source"),
+      output: normalize_scope_config_path(item["output"], "scopes[#{index}].output"),
+      viewer_base_url: item["viewer_base_url"].to_s,
+      include_scope_param: item["include_scope_param"] == true,
+      allow_nested_source: item["allow_nested_source"] == true,
+      non_loadable_doc_ids: normalize_scope_config_array(
+        item["non_loadable_doc_ids"],
+        "scopes[#{index}].non_loadable_doc_ids"
+      ),
+      manage_only_tree_root_ids: normalize_scope_config_array(
+        item["manage_only_tree_root_ids"],
+        "scopes[#{index}].manage_only_tree_root_ids"
+      ),
+      show_updated_date: item["show_updated_date"] != false,
+      allow_unresolved_parent_ids: item["allow_unresolved_parent_ids"] == true
+    )
+  end
+end
+
 options = {
   scopes: [],
   source: nil,
@@ -598,42 +656,7 @@ OptionParser.new do |parser|
   end
 end.parse!
 
-scope_configs = [
-  ScopeConfig.new(
-    scope_id: "studio",
-    source: "_docs_src",
-    output: "assets/data/docs/scopes/studio",
-    viewer_base_url: "/docs/",
-    include_scope_param: true,
-    allow_nested_source: false,
-    non_loadable_doc_ids: [],
-    manage_only_tree_root_ids: [],
-    show_updated_date: true
-  ),
-  ScopeConfig.new(
-    scope_id: "library",
-    source: "_docs_library_src",
-    output: "assets/data/docs/scopes/library",
-    viewer_base_url: "/library/",
-    include_scope_param: false,
-    allow_nested_source: false,
-    non_loadable_doc_ids: [],
-    manage_only_tree_root_ids: [],
-    show_updated_date: false,
-    allow_unresolved_parent_ids: true
-  ),
-  ScopeConfig.new(
-    scope_id: "analysis",
-    source: "_docs_src_analysis",
-    output: "assets/data/docs/scopes/analysis",
-    viewer_base_url: "/analysis/",
-    include_scope_param: false,
-    allow_nested_source: true,
-    non_loadable_doc_ids: [],
-    manage_only_tree_root_ids: [],
-    show_updated_date: true
-  )
-]
+scope_configs = load_scope_configs
 
 selected_scopes = scope_configs.select do |config|
   options[:scopes].empty? || options[:scopes].include?(config.scope_id)

@@ -60,14 +60,14 @@ def test_prose_import_preview_reports_overwrite_and_hashes() -> None:
         root = Path(tmp)
         source_dir = write_source_baseline(root)
         write_text(root / "var/docs/catalogue/import-staging/works/00008.md", "new prose\n")
-        write_text(root / "_docs_src_catalogue/works/00008.md", "old prose\n")
+        write_text(root / "_docs_catalogue/works/00008.md", "old prose\n")
 
         preview = prose_import.build_prose_import_preview(root, source_dir, {"target_kind": "work", "work_id": "8"})
 
         assert preview["valid"] is True
         assert preview["target_id"] == "00008"
         assert preview["staging_path"] == "var/docs/catalogue/import-staging/works/00008.md"
-        assert preview["target_path"] == "_docs_src_catalogue/works/00008.md"
+        assert preview["target_path"] == "_docs_catalogue/works/00008.md"
         assert preview["overwrite_required"] is True
         assert preview["changed"] is True
         assert preview["content_sha256"]
@@ -104,13 +104,13 @@ def test_prose_import_apply_writes_changed_source_without_backup() -> None:
             root,
             source_dir,
             {"target_kind": "series", "series_id": "67"},
-            allowed_write_roots={(root / "_docs_src_catalogue/series").resolve()},
+            allowed_write_roots={(root / "_docs_catalogue/series").resolve()},
             dry_run=False,
         )
 
         assert result.changed is True
         assert result.target.target_id == "067"
-        assert (root / "_docs_src_catalogue/series/067.md").read_text(encoding="utf-8") == "series prose\n"
+        assert (root / "_docs_catalogue/series/067.md").read_text(encoding="utf-8") == "series prose\n"
         assert not (root / "var/studio/catalogue/backups").exists()
 
 
@@ -134,13 +134,13 @@ def test_moment_import_apply_writes_body_and_metadata_backup() -> None:
                     "image_alt": "keys on a table",
                 },
             },
-            allowed_write_roots={(root / "_docs_src_catalogue/moments").resolve()},
+            allowed_write_roots={(root / "_docs_catalogue/moments").resolve()},
             backups_dir=backups_dir,
             dry_run=False,
         )
 
         assert result.moment_id == "keys"
-        assert (root / "_docs_src_catalogue/moments/keys.md").read_text(encoding="utf-8") == "Moment body\n"
+        assert (root / "_docs_catalogue/moments/keys.md").read_text(encoding="utf-8") == "Moment body\n"
         payload = json.loads((source_dir / MOMENT_METADATA_FILENAME).read_text(encoding="utf-8"))
         record = payload["moments"]["keys"]
         assert record["title"] == "Keys updated"

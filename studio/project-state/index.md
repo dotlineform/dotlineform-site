@@ -37,7 +37,7 @@ studio_page_doc: /docs/?scope=studio&doc=project-state-page
       <div class="tagStudioForm__fields catalogueWorkForm__fields">
         <div class="tagStudioForm__field">
           <span class="tagStudioForm__label" id="projectStateOutputLabel">output</span>
-          <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">_docs_src/project-state.md</span>
+          <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">_docs/project-state.md</span>
         </div>
         <div class="tagStudioForm__field">
           <span class="tagStudioForm__label" id="projectStateSourceLabel">source</span>

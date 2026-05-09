@@ -23,9 +23,9 @@ Works are identified by a stable ID (e.g. `00361`). Page *.md files are mainly s
 
 ## Scripts
 
-Scripts are run locally from the repo root. They are designed to keep the catalogue consistent and reduce manual work. See [`_docs_src/scripts-overview.md`](_docs_src/scripts-overview.md) for details.
+Scripts are run locally from the repo root. They are designed to keep the catalogue consistent and reduce manual work. See [`_docs/scripts.md`](_docs/scripts.md) for details.
 
-For a centralized local install/setup guide covering Python, Ruby, external tools, env vars, and version checks, see [`_docs_src/local-setup.md`](_docs_src/local-setup.md).
+For a centralized local install/setup guide covering Python, Ruby, external tools, env vars, and version checks, see [`_docs/local-setup.md`](_docs/local-setup.md).
 
 Before running media/generation scripts, set local environment variables, e.g.
 
@@ -41,11 +41,11 @@ Quick audit command:
 ./scripts/audit_site_consistency.py --strict
 ```
 
-Sorting architecture and consistency contract are documented in [`_docs_src/sorting-architecture.md`](_docs_src/sorting-architecture.md)
+Sorting architecture and consistency contract are documented in [`_docs/sorting-architecture.md`](_docs/sorting-architecture.md)
 
-Deferred improvements and follow-up tasks are tracked in [`_docs_src/backlog.md`](_docs_src/backlog.md)
+Deferred improvements and follow-up tasks are tracked in [`_docs/backlog.md`](_docs/backlog.md)
 
-Site-shell layout/runtime decisions are documented in [`_docs_src/site-shell-runtime.md`](_docs_src/site-shell-runtime.md).
+Site-shell layout/runtime decisions are documented in [`_docs/site-shell-runtime.md`](_docs/site-shell-runtime.md).
 
 ## Working on this repo
 

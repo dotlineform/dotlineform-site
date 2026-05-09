@@ -444,7 +444,7 @@
       "record_family": "work",
       "field": "work_prose_file",
       "removed_in": "Task 1A",
-      "replacement": "_docs_src_catalogue/works/<work_id>.md"
+      "replacement": "_docs_catalogue/works/<work_id>.md"
     },
     {
       "record_family": "work",
@@ -456,7 +456,7 @@
       "record_family": "series",
       "field": "series_prose_file",
       "removed_in": "Task 1A",
-      "replacement": "_docs_src_catalogue/series/<series_id>.md"
+      "replacement": "_docs_catalogue/series/<series_id>.md"
     }
   ]
 }

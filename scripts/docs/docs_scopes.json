@@ -1,0 +1,41 @@
+{
+  "schema_version": "docs_scopes_v1",
+  "scopes": [
+    {
+      "scope_id": "studio",
+      "source": "_docs",
+      "output": "assets/data/docs/scopes/studio",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "allow_nested_source": false,
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "show_updated_date": true,
+      "allow_unresolved_parent_ids": false
+    },
+    {
+      "scope_id": "library",
+      "source": "_docs_library",
+      "output": "assets/data/docs/scopes/library",
+      "viewer_base_url": "/library/",
+      "include_scope_param": false,
+      "allow_nested_source": false,
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "show_updated_date": false,
+      "allow_unresolved_parent_ids": true
+    },
+    {
+      "scope_id": "analysis",
+      "source": "_docs_analysis",
+      "output": "assets/data/docs/scopes/analysis",
+      "viewer_base_url": "/analysis/",
+      "include_scope_param": false,
+      "allow_nested_source": true,
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "show_updated_date": true,
+      "allow_unresolved_parent_ids": false
+    }
+  ]
+}

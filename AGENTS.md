@@ -58,8 +58,8 @@
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
-- After changing `_docs_src/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
-- After changing `_docs_library_src/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
+- After changing `_docs/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
+- After changing `_docs_library/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - When docs search output must be kept live with docs changes, rebuild the matching scope explicitly:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
@@ -97,8 +97,8 @@
   - installed browsers currently live under `~/Library/Caches/ms-playwright/`
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
-- For Studio Playwright smoke tests, follow `_docs_src/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
-- Use `_docs_src/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
+- For Studio Playwright smoke tests, follow `_docs/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
+- Use `_docs/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
 - When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
 - For implementation changes, define proportional targeted verification for both:
   - Codex-run checks
@@ -145,8 +145,8 @@
 
 ## Studio UI Guidance
 
-- `_docs_src/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
-- `_docs_src/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI 
+- `_docs/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
+- `_docs/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI
 - Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
@@ -163,18 +163,18 @@
 
 ## Studio Documentation
 
-- Docs source is now flat under `_docs_src/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs_src/.
-- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs_src/` directly.
+- Docs source is now flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
+- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs/` directly.
 - If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, do not rebuild doc payloads.
 - Prefer explicit scope for docs search rebuilds:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
 - Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
-- `_docs_src/site-change-log.md` is the central change log. Only record changes when UI, build flow, validation, or architecture changes are significant and meaningful. Simple UI changes or minor code changes do not need change log entries. If in doubt, ask if a change log entry is required.
-- For meaningful search changes, update `_docs_src/search-change-log.md` in the same change set as part of normal close-out.
+- `_docs/site-change-log.md` is the central change log. Only record changes when UI, build flow, validation, or architecture changes are significant and meaningful. Simple UI changes or minor code changes do not need change log entries. If in doubt, ask if a change log entry is required.
+- For meaningful search changes, update `_docs/search-change-log.md` in the same change set as part of normal close-out.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
 - Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
 - Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
 - When features are implemented or changed, update docs in the same change.
-- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs_src/search.md` in the same change.
+- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs/search.md` in the same change.

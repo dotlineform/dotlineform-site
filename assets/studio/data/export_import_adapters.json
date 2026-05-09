@@ -72,12 +72,12 @@
             "export_root": "var/studio/export-import/library/exports",
             "staging_root": "var/studio/export-import/library/import-staging",
             "preview_root": "var/studio/export-import/library/import-preview",
-            "source_root": "_docs_library_src"
+            "source_root": "_docs_library"
           },
           "sources": {
             "docs_index": "assets/data/docs/scopes/library/index.json",
             "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-            "source_root": "_docs_library_src"
+            "source_root": "_docs_library"
           },
           "config": {
             "export_configs_path": "assets/studio/data/library_export_configs.json"
@@ -165,10 +165,10 @@
             "export_root": "var/studio/export-import/analytics/exports",
             "staging_root": "var/studio/export-import/analytics/import-staging",
             "preview_root": "var/studio/export-import/analytics/import-preview",
-            "source_root": "_docs_src_analysis"
+            "source_root": "_docs_analysis"
           },
           "sources": {
-            "source_root": "_docs_src_analysis",
+            "source_root": "_docs_analysis",
             "docs_index": "assets/data/docs/scopes/analysis/index.json",
             "docs_payload_root": "assets/data/docs/scopes/analysis/by-id",
             "search_index": "assets/data/search/analysis/index.json"

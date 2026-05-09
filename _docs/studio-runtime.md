@@ -1,0 +1,256 @@
+---
+doc_id: studio-runtime
+title: Studio Runtime
+added_date: 2026-04-24
+last_updated: "2026-05-06 20:51"
+parent_id: studio
+sort_order: 20
+---
+# Studio Runtime
+
+This document describes the current Studio route shell, shared runtime modules, and the way Studio pages connect into the scoped Docs Viewer.
+
+## Route Shell
+
+All Studio pages use:
+
+- `layout: studio`
+- `_layouts/studio.html`
+
+The Studio route shell now provides the shared admin-facing navigation model. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
+
+- `Catalogue`
+- `Library`
+- `Analytics`
+- `Search`
+- `Docs`
+
+The Studio page layout then renders:
+
+- the page title
+- the page body content
+- an optional `i` link when `page.studio_page_doc` is present
+
+The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
+
+- the site title at top left, which returns to the public site
+- the footer `studio` link, which enters `/studio/`
+
+Studio-originated Library viewer links open `/library/` with `mode=manage` so local management controls are available during admin workflows.
+
+The `i` link is the page-to-doc bridge for Studio. Each page now points to a scoped Docs Viewer URL in the form:
+
+```text
+/docs/?scope=studio&doc=<doc_id>
+```
+
+This keeps Studio implementation notes in the shared `/docs/` module rather than on page-local routes.
+
+## Studio Pages
+
+Current route inventory:
+
+- `studio/index.md`
+- `studio/catalogue/index.md`
+- `studio/library/index.md`
+- `studio/analytics/index.md`
+- `studio/search/index.md`
+- `studio/catalogue-status/index.md`
+- `studio/activity/index.md`
+- `studio/docs-broken-links/index.md`
+- `studio/docs-import/index.md`
+- `studio/bulk-add-work/index.md`
+- `studio/catalogue-moment/index.md`
+- `studio/catalogue-moment-import/index.md` compatibility bridge to `/studio/catalogue-moment/`
+- `studio/catalogue-work/index.md`
+- `studio/catalogue-work-detail/index.md`
+- `studio/catalogue-series/index.md`
+- `studio/tag-groups/index.md`
+- `studio/tag-registry/index.md`
+- `studio/tag-aliases/index.md`
+- `studio/series-tags/index.md`
+- `studio/series-tag-editor/index.md`
+- `studio/studio-works/index.md`
+
+Current page-level doc links:
+
+- Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
+- Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
+- Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
+- Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
+- Docs Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
+- Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
+- Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
+- Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import` compatibility route note
+- Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
+- Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
+- Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
+- Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
+- Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
+- Series Tags -> `/docs/?scope=studio&doc=series-tags`
+- Series Tag Editor -> `/docs/?scope=studio&doc=tag-editor`
+- Studio Works -> `/docs/?scope=studio&doc=studio-works`
+- Studio landing and dashboards -> phased-plan and domain-plan docs
+- Library Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
+
+## Shared Runtime Modules
+
+Shared Studio runtime and wiring currently live in:
+
+- `assets/studio/js/studio-config.js`
+  loads `assets/studio/data/studio_config.json`, merges defaults, and resolves root-relative paths against the current site base path
+- `assets/studio/js/studio-data.js`
+  provides shared JSON loading and common shaping helpers for Studio pages
+- `assets/studio/js/studio-transport.js`
+  provides local-write endpoint definitions, health probing, and shared JSON POST transport
+- `assets/studio/js/studio-route-state.js`
+  provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
+- `assets/studio/js/studio-dashboard.js`
+  hydrates lightweight dashboard metrics for the new domain landing pages
+- `assets/studio/js/studio-audits.js`
+  powers `/studio/audits/` by probing the local audit service, listing allowlisted audits, running selected audits, and rendering structured findings
+- `assets/studio/js/docs-rebuild-button.js`
+  wires the docs rebuild action beside the Studio docs search input
+- `assets/studio/js/catalogue-work-fields.js`
+  provides shared work-editor field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers for work create/edit surfaces
+
+Current page controllers:
+
+- `assets/studio/js/activity-log.js`
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/studio-audits.js`
+- `assets/studio/js/docs-html-import.js`
+- `assets/studio/js/bulk-add-work.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/tag-groups.js`
+- `assets/studio/js/tag-registry.js`
+- `assets/studio/js/tag-aliases.js`
+- `assets/studio/js/series-tags.js`
+- `assets/studio/js/tag-studio.js`
+- `assets/studio/js/studio-works.js`
+
+Retired catalogue create routes:
+
+- `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, and `/studio/catalogue-new-series/` are no longer published Studio pages.
+- The old standalone controllers `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` have been removed.
+- Active create behavior now lives in `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-detail-editor.js`, and `assets/studio/js/catalogue-series-editor.js`.
+
+Controller splits that are already live:
+
+- Tag Editor:
+  - `tag-studio.js`
+  - `tag-studio-domain.js`
+  - `tag-studio-save.js`
+- Tag Registry:
+  - `tag-registry.js`
+  - `tag-registry-domain.js`
+  - `tag-registry-save.js`
+  - `tag-registry-service.js`
+- Tag Aliases:
+  - `tag-aliases.js`
+  - `tag-aliases-domain.js`
+  - `tag-aliases-save.js`
+  - `tag-aliases-service.js`
+
+## Route Ready State
+
+Studio pages can expose a shared machine-readable route state on their main page root.
+
+Shared attributes:
+
+- `data-studio-ready="false"` while initial route data and first render are still loading
+- `data-studio-ready="true"` after the route has reached its initial stable interaction state
+- `data-studio-busy="true"` while a route-level command is running
+- `data-studio-busy="false"` when no route-level command is running
+
+Optional route detail attributes:
+
+- `data-studio-route`
+- `data-studio-mode`
+- `data-studio-service`
+- `data-studio-record-loaded`
+
+`assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The catalogue work, work-detail, series, and moment editors plus Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Docs Broken Links, Docs Import, Project State, Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, Tag Registry, Studio landing, domain dashboards, and UI catalogue reference pages have adopted the contract.
+
+Dashboard routes use `assets/studio/js/studio-dashboard.js` to set `data-studio-busy="true"` while metric hydration runs, then mark the route ready after the metric reads settle. Static landing and reference routes use `assets/studio/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
+
+## Relation to `/docs/`
+
+Studio no longer owns a separate documentation route. Its docs are served by the shared Docs Viewer, which also serves other docs scopes.
+
+Current Studio usage of the Docs Viewer:
+
+- Studio section docs live in `_docs/`
+- `scripts/build_docs.rb` builds the Studio docs payload into the Studio docs scope
+- `/docs/?scope=studio&doc=<doc_id>` opens those docs in the shared Docs Viewer shell
+- Studio page `i` links use those scoped URLs directly
+- the Studio docs page uses the same top header nav and also renders a `Rebuild docs` action beside the docs search input
+
+This means Studio documentation changes must stay aligned with the shared Docs Viewer behavior documented in **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** and **[Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)**.
+
+## Local Development Boundary
+
+`bin/dev-studio` is the current Studio route runner.
+
+What it runs before starting long-lived services:
+
+- required port preflight for Jekyll and the local write services
+- optional docs/docs-search rebuilds for scopes listed in `DOCS_STARTUP_REBUILD_SCOPES`
+- `./scripts/export_catalogue_lookup.py --write`
+
+What it starts:
+
+- `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
+- `scripts/studio/tag_write_server.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/studio/audit_service.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+
+What it does not start:
+
+- catalogue/search regeneration scripts
+- any separate Studio-only frontend server
+
+Current local generated Studio feeds surfaced through this runtime:
+
+- unified Studio activity via `GET /catalogue/read?key=activity_log`
+
+Current mutable catalogue data surfaced through this runtime:
+
+- catalogue source records and catalogue lookup/search records are read from `scripts/studio/catalogue_write_server.py`
+- Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `assets/studio/data/activity_log.json`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
+- catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of falling back to stale static source JSON
+
+Current localhost docs-maintenance integration surfaced through this runtime:
+
+- `POST /docs/broken-links`
+
+Current localhost audit integration surfaced through this runtime:
+
+- `GET /audits`
+- `POST /audits/run`
+- `POST /docs/rebuild`
+
+The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
+
+## Current Catalogue UI Baseline
+
+After Phase 3, the current Catalogue shell conventions are:
+
+- Catalogue-domain pages no longer render a persistent page-link strip above the editor content
+- work, series, and detail editors now use the right-hand summary rail for readiness state as well as current-record context
+- work and detail editors now place compact media previews at the top of that summary rail
+- work detail rows on the work editor now use thumbnail-led navigation rather than text-only rows
+- the Catalogue dashboard uses grouped directional link lists rather than card panels
+- metadata editors use a shared single-column row layout with labels on the left
+- Catalogue Drafts is a sortable draft-record list and links directly into work, series, detail, and moment editors
+- work-owned downloads and links are edited from the work editor rather than standalone child-record pages
+
+Current operational reporting conventions are:
+
+- `Studio Activity` is the unified surface for covered Studio save, create, delete, publication, import, report, audit, tag, docs, lookup, search, and build effects
