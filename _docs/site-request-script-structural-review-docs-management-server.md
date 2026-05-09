@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 13:03"
+last_updated: "2026-05-09 13:15"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -14,6 +14,7 @@ Status:
 - Slice 2 implemented
 - Slice 3 implemented
 - Slice 4 implemented
+- Slice 5 implemented
 - later slices are planned, but should still be reconfirmed before editing
 
 ## Purpose
@@ -109,19 +110,18 @@ Risks:
 
 - the server still calls the moved helpers directly, so file-size reduction is only partial until later handler cleanup
 - front matter formatting remains a source-file contract; future helper changes should keep formatting tests close to the module
-- source-write helpers remain Docs-source-specific until write/rebuild ownership is reviewed in Slice 5
+- source-write helpers remain Docs-source-specific; rebuild follow-through is now owned by Slice 5's write/rebuild helper module
 
 ## Planned Slice Sequence
 
 The remaining sequence now moves from activity into rebuild/write and mutation-planning ownership.
-Slice 5 is the next planned implementation slice and should still be reconfirmed before editing.
+Slice 6 is the next planned implementation slice and should still be reconfirmed before editing.
 
 Remaining planned order:
 
-1. Slice 5: rebuild and source-write follow-through helpers.
-2. Slice 6: management mutation planners.
-3. Slice 7: import-source orchestration cleanup, only if still useful.
-4. Slice 8: final handler body cleanup and closeout.
+1. Slice 6: management mutation planners.
+2. Slice 7: import-source orchestration cleanup, only if still useful.
+3. Slice 8: final handler body cleanup and closeout.
 
 Importer/exporter note:
 
@@ -157,7 +157,7 @@ The server should keep:
 
 - endpoint request extraction
 - dry-run decisions
-- backup bundle creation until write/rebuild ownership is reviewed
+- backup bundle creation until a later ownership review
 - rebuild calls and watcher suppression
 - import/export adapter calls
 - generated-data reads until Slice 3
@@ -184,7 +184,7 @@ Risks:
 
 - front matter formatting is a source-file contract, so subtle ordering or quoting changes can create noisy docs diffs
 - `load_scope_docs(...)` currently allows unknown Library parents; moving it must preserve that deliberate behavior
-- source write helpers may look generic but remain docs-source-specific until write/rebuild ownership is reviewed
+- source write helpers may look generic but remain docs-source-specific; rebuild follow-through ownership is handled separately in Slice 5
 
 ### Slice 3: generated-data read helpers
 
@@ -280,22 +280,26 @@ Risks:
 
 ### Slice 5: rebuild and source-write follow-through helpers
 
-Status: planned.
+Status: implemented.
 
-Proposed module owner:
+The fifth implementation slice extracted Docs Management rebuild and source-write follow-through helpers from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_write_rebuild.py`.
+The server still decides which docs changed, when endpoint-specific dry-run or no-op behavior suppresses writes, which search doc ids are targeted, when backups are created, and how response payloads are assembled.
+The extracted module owns the subprocess rebuild command shapes, bundle executable detection, watcher-suppression setup/cleanup/completion, search id de-duplication for rebuilds, and the common source-write followed by rebuild wrapper.
+
+Module owner:
 
 - `scripts/docs/docs_write_rebuild.py`
 
 Target ownership:
 
-- bundle executable detection if still only used for docs rebuilds
+- bundle executable detection for Docs Management rebuilds
 - same-scope docs payload rebuild command assembly
 - same-scope docs-search rebuild command assembly, including targeted `--only-doc-ids` and `--remove-missing`
-- all-scope docs rebuild helper if it still belongs to this service
+- all-scope docs rebuild helper used by the explicit rebuild endpoint
 - watcher suppression setup/clear/complete around source writes
 - common write-operation wrapper that runs source writes followed by rebuilds
 
-The server should keep:
+The server keeps:
 
 - deciding which docs changed
 - deciding whether search is included and which doc ids are targeted
@@ -305,22 +309,24 @@ The server should keep:
 
 Acceptance checks:
 
-- add focused tests that stub rebuild execution rather than invoking Ruby
-- preserve command shapes for `scripts/build_docs.rb --scope <scope> --write`
-- preserve command shapes for `scripts/build_search.rb --scope <scope> --write`
-- preserve targeted search behavior with `--only-doc-ids` and `--remove-missing`
-- preserve watcher-suppression cleanup on exceptions
-- keep `./scripts/run_checks.py --profile docs` passing
+- `tests/python/test_docs_write_rebuild.py` stubs rebuild execution and covers full same-scope rebuild command shapes
+- targeted search behavior preserves `--only-doc-ids` and `--remove-missing`
+- empty targeted search ids still rebuild docs payloads without a search command
+- watcher suppression is marked pending before writes, complete after successful rebuilds, and cleared on exceptions
+- all-scope rebuild command sequence remains explicit for docs payloads plus studio, library, and analysis search
+- `./scripts/run_checks.py --profile docs` now includes the write/rebuild helper tests
 
 Benefits:
 
 - isolates subprocess and watcher-suppression mechanics from endpoint bodies
 - gives later docs viewer UI work a clearer local-service rebuild contract
+- keeps rebuild command-shape tests close to the module that owns those commands
 
 Risks:
 
-- rebuild command shape is part of the local workflow; do not change all-scope versus scope-specific behavior casually
+- rebuild command shape is part of the local workflow; future changes should keep the helper tests updated with intentional behavior changes
 - watcher suppression can hide useful rebuilds if filenames or status transitions are wrong
+- the server still owns backup and mutation decisions, so Slice 6 should avoid re-moving write/rebuild mechanics back into mutation planning
 
 ### Slice 6: management mutation planners
 

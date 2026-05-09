@@ -215,6 +215,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Docs Management Studio Activity helper behavior.",
         ),
         CheckCommand(
+            "docs-write-rebuild-tests",
+            (sys.executable, "tests/python/test_docs_write_rebuild.py"),
+            "Verify Docs Management write/rebuild helper command shapes and watcher suppression.",
+        ),
+        CheckCommand(
             "docs-management-server-tests",
             (sys.executable, "tests/python/test_docs_management_server.py"),
             "Verify Docs Management Server archive-parent handling.",
