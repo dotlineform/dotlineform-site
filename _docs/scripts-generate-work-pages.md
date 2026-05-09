@@ -43,6 +43,7 @@ Current helper ownership:
 
 - `scripts/catalogue_generation_records.py` owns pure public work, series, detail, and moment record projection helpers
 - `scripts/catalogue_generation_indexes.py` owns pure series/work aggregate contexts plus series, works, and Studio storage index payload builders
+- `scripts/catalogue_generation_moments.py` owns pure moment source-record collection, moment generation decisions, per-moment runtime payload construction, and `moments_index_v1` payload construction
 - `scripts/catalogue_generation_recent.py` owns pure recent-publications entry normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction
 - `scripts/catalogue_generation_source_updates.py` owns pure work/work-detail status, published-date, source image path, dimension update, and work publish-transition planners
 - `scripts/generate_work_pages.py` remains the internal CLI/path/write orchestration layer for source loading, configured project-root binding, image dimension reads, rendering, generated-file decisions, applying source update plans, source write-back, and run summaries
@@ -208,6 +209,7 @@ Catalogue search note:
 Pure generated-record shaping lives in `scripts/catalogue_generation_records.py`.
 Pure series/work aggregate context and index payload construction lives in `scripts/catalogue_generation_indexes.py`, including series sort context, published series membership, primary-work validation, `assets/data/series_index.json`, `assets/data/works_index.json`, and `assets/studio/data/work_storage_index.json` payload construction.
 Pure source update planning lives in `scripts/catalogue_generation_source_updates.py`, including actionable status checks, first-time work/work-detail publication updates, work publish-transition records for `/recent/`, source image path planning, structured missing-path warnings, and dimension update suppression.
+Pure moment artifact building lives in `scripts/catalogue_generation_moments.py`, including moment metadata source collection, slug/actionability decisions, runtime moment record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction.
 The generator still owns CLI parsing, configured path binding, image dimension reads, Markdown rendering, existing-version comparisons, dry-run/write reporting, file writes, applying planned source updates during `--write`, source write-back, and event logging.
 
 ## Internal JSON Source Mode

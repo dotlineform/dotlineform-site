@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 19:34"
+last_updated: "2026-05-09 19:41"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue moment artifact builder
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Moved pure moment source-record collection, slug/actionability decisions, runtime record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_moments.py`.
+The generator still owns configured project-root binding, prose existence checks, source image dimension reads, Markdown rendering, route and JSON writes, existing-version checks, and dry-run/write reporting.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_generation_moments.py`
+- `scripts/generate_work_pages.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_generation_moments.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+
+**Impact:**
+Moment generation now has direct focused tests for source-record defaults, slug/prose skip decisions, image fallback behavior, per-moment runtime payloads, and the aggregate moments index without changing generated schemas or output paths.
 
 ## [2026-05-09] Extracted catalogue source update planners
 

@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 19:34"
+last_updated: "2026-05-09 19:41"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -19,12 +19,14 @@ Status:
 - Slice 3 implemented
 - Slice 4 implemented
 - Slice 5 implemented
+- Slice 6 implemented
 - read-only extraction map recorded
 - record projection helpers extracted
 - series and work index builders extracted
 - recent-publications builder extracted
 - route-stub and generated JSON write-decision helpers extracted
 - source update planners extracted
+- moment artifact builder extracted
 
 ## Purpose
 
@@ -402,7 +404,7 @@ Risks:
 
 ### Slice 6: moment artifact builder
 
-Status: planned.
+Status: implemented.
 
 Proposed module owner:
 
@@ -415,6 +417,13 @@ Target ownership:
 - moment record payload construction
 - moments index payload construction
 - moment selection/actionability decisions that do not require filesystem writes
+
+Implementation result:
+
+- `scripts/catalogue_generation_moments.py` now owns pure moment metadata source-record collection, slug/actionability/selection decisions, runtime moment record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction
+- `scripts/generate_work_pages.py` imports the moment artifact owner and still owns configured project-root binding, source prose existence checks, source image dimension reads, Markdown rendering, route and JSON file writes, existing-version checks, and dry-run/write reporting
+- `tests/python/test_catalogue_generation_moments.py` pins source-record ordering/default paths, slug-safe decisions, missing-prose skip decisions, image alt fallback, image omission when source media is missing, per-moment JSON payload shape, and moments index payload shape
+- `scripts/run_checks.py` quick syntax and focused test coverage now includes the extracted moment artifact module
 
 The generator should keep:
 

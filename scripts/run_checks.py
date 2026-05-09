@@ -51,6 +51,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/generate_work_pages.py",
                 "scripts/catalogue_generation_common.py",
                 "scripts/catalogue_generation_indexes.py",
+                "scripts/catalogue_generation_moments.py",
                 "scripts/catalogue_generation_recent.py",
                 "scripts/catalogue_generation_records.py",
                 "scripts/catalogue_generation_source_updates.py",
@@ -115,6 +116,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_studio_activity_feed.py",
                 "tests/python/test_catalogue_field_registry.py",
                 "tests/python/test_catalogue_generation_indexes.py",
+                "tests/python/test_catalogue_generation_moments.py",
                 "tests/python/test_catalogue_generation_recent.py",
                 "tests/python/test_catalogue_generation_records.py",
                 "tests/python/test_catalogue_generation_source_updates.py",
@@ -242,6 +244,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "studio-backup-retention-tests",
             (sys.executable, "tests/python/test_studio_backup_retention.py"),
             "Verify local Studio backup retention planning.",
+        ),
+        CheckCommand(
+            "catalogue-generation-moment-tests",
+            (sys.executable, "tests/python/test_catalogue_generation_moments.py"),
+            "Verify generated catalogue moment artifact builders.",
         ),
         CheckCommand(
             "catalogue-generation-recent-tests",

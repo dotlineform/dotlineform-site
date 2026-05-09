@@ -73,6 +73,7 @@ import sys
 
 try:
     import catalogue_generation_indexes as indexes
+    import catalogue_generation_moments as moment_artifacts
     import catalogue_generation_recent as recent
     import catalogue_generation_records as records
     import catalogue_generation_source_updates as source_updates
@@ -91,6 +92,7 @@ try:
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts import catalogue_generation_indexes as indexes
+    from scripts import catalogue_generation_moments as moment_artifacts
     from scripts import catalogue_generation_recent as recent
     from scripts import catalogue_generation_records as records
     from scripts import catalogue_generation_source_updates as source_updates
@@ -1773,46 +1775,22 @@ def main() -> None:
     elif not source_moment_index:
         print("No moment artifacts to generate (no moment metadata records found).")
     else:
-        def collect_moment_source_records() -> List[Dict[str, Any]]:
-            records: List[Dict[str, Any]] = []
-            for moment_id in sorted(source_moment_index.keys()):
-                source_record = source_moment_index[moment_id]
-                records.append({
-                    "moment_id": moment_id,
-                    "title": coerce_string(source_record.get("title")) or moment_id,
-                    "status": normalize_status(source_record.get("status")),
-                    "published_date": parse_date(source_record.get("published_date")),
-                    "date": parse_date(source_record.get("date")),
-                    "date_display": coerce_string(source_record.get("date_display")),
-                    "width_px": None,
-                    "height_px": None,
-                    "image_file": f"{moment_id}.jpg",
-                    "source_image_file": coerce_string(source_record.get("source_image_file")) or f"{moment_id}.jpg",
-                    "image_alt": coerce_string(source_record.get("image_alt")),
-                    "source_prose_path": Path(coerce_string(source_record.get("source_prose_path")) or (moments_prose_root / f"{moment_id}.md")),
-                    "source_image_path": moments_images_root / ((coerce_string(source_record.get("source_image_file")) or f"{moment_id}.jpg")),
-                })
-            return records
-
-        moment_source_records = collect_moment_source_records()
-
-        def is_actionable_moment_status(status_value: str) -> bool:
-            if status_value == "draft":
-                return True
-            if status_value == "published" and refresh_published:
-                return True
-            return False
+        moment_source_records = moment_artifacts.build_moment_source_records(
+            source_moment_index,
+            moments_prose_root=moments_prose_root,
+            moments_images_root=moments_images_root,
+        )
 
         moments_pages_total = 0
         moments_json_total = 0
         for moment_entry in moment_source_records:
-            mid = str(moment_entry.get("moment_id") or "").strip().lower()
+            mid = moment_artifacts.moment_entry_id(moment_entry)
             if not mid:
                 continue
             if selected_moment_ids is not None and mid not in selected_moment_ids:
                 continue
             status = normalize_status(moment_entry.get("status"))
-            if run_moments and is_actionable_moment_status(status):
+            if run_moments and moment_artifacts.is_actionable_moment_status(status, refresh_published=refresh_published):
                 moments_pages_total += 1
                 moments_json_total += 1
 
@@ -1824,7 +1802,7 @@ def main() -> None:
         moments_processed = 0
 
         for moment_entry in moment_source_records:
-            moment_id = str(moment_entry.get("moment_id") or "").strip().lower()
+            moment_id = moment_artifacts.moment_entry_id(moment_entry)
             if not moment_id:
                 if run_moments:
                     moments_pages_skipped += 1
@@ -1837,30 +1815,27 @@ def main() -> None:
                     moments_json_skipped += 1
                 continue
             status = normalize_status(moment_entry.get("status"))
-            moment_actionable = run_moments and is_actionable_moment_status(status)
+            moment_actionable = run_moments and moment_artifacts.is_actionable_moment_status(
+                status,
+                refresh_published=refresh_published,
+            )
             if not moment_actionable and run_moments:
                 moments_pages_skipped += 1
                 moments_json_skipped += 1
             if not moment_actionable:
                 continue
 
-            if not is_slug_safe(moment_id):
+            if not moment_artifacts.is_slug_safe(moment_id):
                 raise SystemExit(f"Moment source filename must be slug-safe; got: {moment_id!r}")
 
             moments_processed += 1
             prefix_m = f"[moment {moment_id}] "
             print(f"[moment {moments_processed}/{moments_pages_total}] {moment_id}", flush=True)
 
-            title = coerce_string(moment_entry.get("title")) or moment_id
-            date_value = parse_date(moment_entry.get("date"))
-            date_display = coerce_string(moment_entry.get("date_display"))
             width_px = coerce_int(moment_entry.get("width_px"))
             height_px = coerce_int(moment_entry.get("height_px"))
 
-            default_moment_filename = f"{moment_id}.jpg"
-            image_file = coerce_string(moment_entry.get("image_file")) or default_moment_filename
-            source_image_file = coerce_string(moment_entry.get("source_image_file")) or default_moment_filename
-            image_alt = coerce_string(moment_entry.get("image_alt"))
+            source_image_file = coerce_string(moment_entry.get("source_image_file")) or f"{moment_id}.jpg"
 
             # Resolve source image for dimensions when possible.
             src_path: Optional[Path] = None
@@ -1877,27 +1852,13 @@ def main() -> None:
                     width_px = src_w
                     height_px = src_h
 
-            images_list: List[Dict[str, Any]] = []
-            if image_file is not None and image_alt is None:
-                image_alt = title or moment_id
-            if image_file is not None and source_image_exists:
-                images_list.append(
-                    {
-                        "file": image_file,
-                        "alt": image_alt,
-                    }
-                )
-
-            moment_record: Dict[str, Any] = {
-                "moment_id": moment_id,
-                "title": title or moment_id,
-                "date": date_value,
-                "date_display": date_display,
-                "images": images_list,
-                "width_px": width_px,
-                "height_px": height_px,
-                "layout": "moment",
-            }
+            moment_record = moment_artifacts.build_moment_runtime_record(
+                moment_entry,
+                source_image_exists=source_image_exists,
+                width_px=width_px,
+                height_px=height_px,
+                include_layout=True,
+            )
             source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
             source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
             if not source_prose_path.exists():
@@ -1925,18 +1886,11 @@ def main() -> None:
                         moments_pages_written += 1
 
                 content_html = render_markdown_with_jekyll(source_prose_path)
-                moment_json_record = records.build_moment_json_record(moment_record)
-                payload_version = compute_payload_version(compact_json_object({"moment": moment_json_record, "content_html": content_html}))
-                payload = compact_json_object({
-                    "header": {
-                        "schema": "moment_record_v1",
-                        "version": payload_version,
-                        "generated_at_utc": moment_json_generated_at_utc,
-                        "moment_id": moment_id,
-                    },
-                    "moment": moment_json_record,
-                    "content_html": content_html,
-                })
+                payload = moment_artifacts.build_moment_record_payload(
+                    moment_record,
+                    content_html=content_html,
+                    generated_at_utc=moment_json_generated_at_utc,
+                )
                 out_json_path = moments_json_dir / f"{moment_id}.json"
                 exists = out_json_path.exists()
                 existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
@@ -1967,12 +1921,12 @@ def main() -> None:
                 f"Moment JSON done. {'Would write' if not args.write else 'Wrote'}: {moments_json_written}. Skipped: {moments_json_skipped}."
             )
 
-    moments_payload: Dict[str, Dict[str, Any]] = {}
+    moment_index_records: List[Dict[str, Any]] = []
     projects_base_dir = Path(args.projects_base_dir).expanduser()
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
 
     for moment_entry in moment_source_records:
-        moment_id = str(moment_entry.get("moment_id") or "").strip().lower()
+        moment_id = moment_artifacts.moment_entry_id(moment_entry)
         if not moment_id:
             continue
 
@@ -1980,17 +1934,12 @@ def main() -> None:
         if status not in {"draft", "published"}:
             continue
 
-        if not is_slug_safe(moment_id):
+        if not moment_artifacts.is_slug_safe(moment_id):
             raise SystemExit(f"Moment source filename must be slug-safe; got: {moment_id!r}")
 
-        title = coerce_string(moment_entry.get("title")) or moment_id
-        date_value = parse_date(moment_entry.get("date"))
-        date_display = coerce_string(moment_entry.get("date_display"))
         width_px = coerce_int(moment_entry.get("width_px"))
         height_px = coerce_int(moment_entry.get("height_px"))
-        image_file = coerce_string(moment_entry.get("image_file")) or f"{moment_id}.jpg"
         source_image_file = coerce_string(moment_entry.get("source_image_file")) or f"{moment_id}.jpg"
-        image_alt = coerce_string(moment_entry.get("image_alt"))
 
         src_path: Optional[Path] = None
         source_filename = source_image_file
@@ -2006,48 +1955,25 @@ def main() -> None:
                 width_px = src_w
                 height_px = src_h
 
-        images_list: List[Dict[str, Any]] = []
-        if image_file is not None and image_alt is None:
-            image_alt = title or moment_id
-        if image_file is not None and source_image_exists:
-            images_list.append(
-                {
-                    "file": image_file,
-                    "alt": image_alt,
-                }
-            )
-
         source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
         source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
         if not source_prose_path.exists():
             print(f"[moment {moment_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moments index.")
             continue
 
-        moment_record = {
-            "moment_id": moment_id,
-            "title": title,
-            "date": date_value,
-            "date_display": date_display,
-            "images": images_list,
-            "width_px": width_px,
-            "height_px": height_px,
-        }
-        moments_payload[moment_id] = records.build_moment_index_record(moment_record)
+        moment_index_records.append(
+            moment_artifacts.build_moment_runtime_record(
+                moment_entry,
+                source_image_exists=source_image_exists,
+                width_px=width_px,
+                height_px=height_px,
+            )
+        )
 
-    version_payload = compact_json_object({
-        "schema": "moments_index_v1",
-        "moments": moments_payload,
-    })
-    version = compute_payload_version(version_payload)
-    payload = compact_json_object({
-        "header": {
-            "schema": "moments_index_v1",
-            "version": version,
-            "generated_at_utc": utc_timestamp_now(),
-            "count": len(moments_payload),
-        },
-        "moments": moments_payload,
-    })
+    payload = moment_artifacts.build_moments_index_payload(
+        moment_index_records,
+        generated_at_utc=utc_timestamp_now(),
+    )
     payload_version = payload["header"]["version"]
     exists = moments_index_json_path.exists()
     existing_version = extract_existing_header_scalar(moments_index_json_path, "version") if exists else None
