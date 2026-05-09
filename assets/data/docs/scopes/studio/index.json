@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T16:07:49Z",
+  "generated_at": "2026-05-09T16:15:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1023,7 +1023,7 @@
       "doc_id": "scripts-tag-write-server",
       "title": "Tag Write Server",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 17:06",
+      "last_updated": "2026-05-09 17:14",
       "parent_id": "servers",
       "sort_order": 30,
       "published": true,
@@ -1031,14 +1031,14 @@
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 6299
+      "content_text_length": 6582
     },
     {
       "scope": "studio",
       "doc_id": "site-request-script-structural-review-tag-write-server",
       "title": "Tag Write Server Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 17:06",
+      "last_updated": "2026-05-09 17:14",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 30,
       "published": true,
@@ -1046,7 +1046,7 @@
       "source_path": "site-request-script-structural-review-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-tag-write-server.json",
-      "content_text_length": 19785,
+      "content_text_length": 21148,
       "ui_status": "in-progress"
     },
     {
@@ -2948,7 +2948,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 16:44",
+      "last_updated": "2026-05-09 17:14",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2956,7 +2956,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 12240,
+      "content_text_length": 12321,
       "ui_status": "in-progress"
     },
     {
@@ -3073,7 +3073,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 17:06",
+      "last_updated": "2026-05-09 17:14",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3081,7 +3081,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 86095
+      "content_text_length": 87300
     },
     {
       "scope": "studio",

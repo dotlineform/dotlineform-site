@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 17:06"
+last_updated: "2026-05-09 17:14"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -19,7 +19,9 @@ Status:
 - tag activity status, changed-state, endpoint, record-group, and activity row helpers are now owned by `scripts/tag_activity.py`
 - Slice 3 implemented
 - tag source artifact paths, loading defaults, tag id/group/alias/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are now owned by `scripts/tag_source_model.py`
-- next slice: assignment import and save planners
+- Slice 4 implemented
+- tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are now owned by `scripts/tag_assignment_service.py`
+- next slice: registry and alias mutation planners
 
 ## Purpose
 
@@ -235,9 +237,17 @@ Risks:
 
 ### Slice 4: assignment import and save planners
 
+Status: implemented.
+
+The fourth implementation slice kept endpoint behavior stable while moving assignment-specific save and import planning into `scripts/tag_assignment_service.py`.
+The helper now owns series assignment row creation, series save planning, work override save planning, inherited-tag stripping, explicit empty work rows, work-row deletion, assignment import preview conflict/missing/invalid decisions, assignment import overwrite/skip apply behavior, and assignment import response summary text.
+`scripts/studio/tag_write_server.py` still reads HTTP request bodies, loads the needed source artifacts, decides preview versus apply endpoints, validates write allowlists, suppresses writes during dry-run, executes assignment writes/backups, logs local events, and appends Studio Activity after completed writes.
+`tests/python/test_tag_assignment_service.py` pins series saves, work override saves, work-row deletion, empty explicit work rows, import conflict detection, overwrite/skip decisions, invalid/missing skip behavior, no-mutation preview/apply behavior, and response summary text.
+The focused tag assignment-service test is included in the `quick` run-checks profile.
+
 Proposed module owner:
 
-- `scripts/tag_assignment_service.py` or `scripts/tag_assignment_mutations.py` during this structural review, then the matching `scripts/analytics/` module during the later folder organization pass
+- `scripts/tag_assignment_service.py` during this structural review, then `scripts/analytics/tag_assignment_service.py` during the later folder organization pass
 
 Target ownership:
 

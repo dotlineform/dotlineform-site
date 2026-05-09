@@ -2,7 +2,7 @@
 doc_id: scripts-tag-write-server
 title: Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-09 17:06"
+last_updated: "2026-05-09 17:14"
 parent_id: servers
 sort_order: 30
 ---
@@ -18,6 +18,7 @@ Endpoint paths are owned by `scripts/tag_routes.py`.
 The server keeps HTTP orchestration and maps `routes.POST_PATHS` to handler methods through `Handler.POST_HANDLERS`.
 Tag-specific Studio Activity status, changed-state, write-endpoint, record-group, and row-construction helpers are owned by `scripts/tag_activity.py`.
 Tag source artifact paths, JSON loading defaults, tag/alias/group/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are owned by `scripts/tag_source_model.py`.
+Tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are owned by `scripts/tag_assignment_service.py`.
 
 ## Optional Flags
 
@@ -135,6 +136,7 @@ Tag Aliases behavior:
 - unified activity rows are written only through fixed local feed paths owned by `scripts/studio_activity.py`
 - tag activity row construction is centralized in `scripts/tag_activity.py`
 - tag source artifact paths and validation defaults are centralized in `scripts/tag_source_model.py`
+- tag assignment save and import planners are centralized in `scripts/tag_assignment_service.py`
 - timestamped backups are created in `var/studio/backups/`
   - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
   - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
