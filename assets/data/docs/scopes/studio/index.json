@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T13:52:36Z",
+  "generated_at": "2026-05-09T13:55:22Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2939,7 +2939,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 11726,
+      "content_text_length": 11601,
       "ui_status": "in-progress"
     },
     {
