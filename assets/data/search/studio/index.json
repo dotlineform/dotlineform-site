@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6167cf7f2d75b907f655d24cc4632feb",
-    "generated_at_utc": "2026-05-09T18:01:07Z",
+    "version": "blake2b-62838454de032fcd1aef6824a2dce38f",
+    "generated_at_utc": "2026-05-09T18:13:14Z",
     "count": 208
   },
   "entries": [
@@ -1927,10 +1927,10 @@
       "kind": "doc",
       "title": "Generate Work Pages Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
-      "last_updated": "2026-05-09 19:00",
+      "last_updated": "2026-05-09 19:09",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 19:00 • Script Structural Review Request",
+      "display_meta": "2026-05-09 19:09 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-generate-work-pages",
         "site",
@@ -1944,14 +1944,13 @@
         "generate work pages slices",
         "slices",
         "script structural review request",
-        "2026-05-09 19:00",
+        "2026-05-09 19:09",
         "2026",
         "05",
         "09",
-        "19",
-        "00"
+        "19"
       ],
-      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 19:00 2026 05 09 19 00"
+      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 19:09 2026 05 09 19"
     },
     {
       "id": "new-pipeline-implementation-plan",
@@ -2334,10 +2333,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-05-09 19:00",
+      "last_updated": "2026-05-09 19:09",
       "parent_id": "archive",
       "parent_title": "Archive",
-      "display_meta": "2026-05-09 19:00 • Archive",
+      "display_meta": "2026-05-09 19:09 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -2346,14 +2345,13 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-05-09 19:00",
+        "2026-05-09 19:09",
         "2026",
         "05",
         "09",
-        "19",
-        "00"
+        "19"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-09 19:00 2026 05 09 19 00"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-09 19:09 2026 05 09 19"
     },
     {
       "id": "import-export",
@@ -5121,22 +5119,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-09 19:00",
-      "display_meta": "2026-05-09 19:00",
+      "last_updated": "2026-05-09 19:09",
+      "display_meta": "2026-05-09 19:09",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-09 19:00",
+        "2026-05-09 19:09",
         "2026",
         "05",
         "09",
-        "19",
-        "00"
+        "19"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-09 19:00 2026 05 09 19 00"
+      "search_text": "site-change-log site change log site change log 2026-05-09 19:09 2026 05 09 19"
     },
     {
       "id": "archive",

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 19:00"
+last_updated: "2026-05-09 19:09"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue recent-publications builder
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Moved pure recent-publications normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_recent.py`.
+The generator still owns recent-index file loading, path binding, version comparison, JSON writes, and dry-run/write reporting.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_generation_recent.py`
+- `scripts/generate_work_pages.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_generation_recent.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+
+**Impact:**
+The stateful `/recent/` ledger behavior now has direct focused tests for retained entries, series publish entries, grouped work publish entries, latest-series absorption, cap behavior, and deterministic ordering without changing generated artifact schemas or output paths.
 
 ## [2026-05-09] Extracted catalogue generation index builders
 

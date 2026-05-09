@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 19:00"
+last_updated: "2026-05-09 19:09"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -16,9 +16,11 @@ Status:
 - Slice 0 implemented
 - Slice 1 implemented
 - Slice 2 implemented
+- Slice 3 implemented
 - read-only extraction map recorded
 - record projection helpers extracted
 - series and work index builders extracted
+- recent-publications builder extracted
 
 ## Purpose
 
@@ -270,7 +272,7 @@ Risks:
 
 ### Slice 3: recent-publications builder
 
-Status: planned.
+Status: implemented.
 
 Proposed module owner:
 
@@ -284,6 +286,13 @@ Target ownership:
 - grouping newly published works by primary series
 - absorption of work entries into the latest series entry
 - final `recent_index_v1` payload construction
+
+Implementation result:
+
+- `scripts/catalogue_generation_recent.py` now owns pure recent-entry normalization, deterministic sorting, current-published target filtering, publication-transition merging, latest-series absorption, grouped work publication entries, and `recent_index_v1` payload construction
+- `scripts/generate_work_pages.py` imports the recent owner as `recent` and keeps existing recent-index file loading, path selection, version comparison, JSON writes, and dry-run/write reporting local
+- `tests/python/test_catalogue_generation_recent.py` pins retained-entry filtering, series publish entries, grouped work publish entries, latest-series absorption, same-series series/work suppression, cap behavior, and deterministic ordering
+- `scripts/run_checks.py` quick syntax and test coverage now includes the extracted recent-publications module and direct helper tests
 
 The generator should keep:
 

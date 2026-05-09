@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: "2026-05-09 19:00"
+last_updated: "2026-05-09 19:09"
 parent_id: archive
 sort_order: 50
 ---
@@ -38,6 +38,13 @@ Before any writes begin, the generator validates canonical source records and mo
 Generator log output also shortens local absolute paths for source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
 
 When `--write` is used, the generator writes mutable catalogue/source state back into canonical JSON rather than into a workbook.
+
+Current helper ownership:
+
+- `scripts/catalogue_generation_records.py` owns pure public work, series, detail, and moment record projection helpers
+- `scripts/catalogue_generation_indexes.py` owns pure series/work aggregate contexts plus series, works, and Studio storage index payload builders
+- `scripts/catalogue_generation_recent.py` owns pure recent-publications entry normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction
+- `scripts/generate_work_pages.py` remains the internal CLI/path/write orchestration layer for source loading, rendering, generated-file decisions, source write-back, and run summaries
 
 Moment canonical source model:
 
