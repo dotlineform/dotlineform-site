@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 19:49"
+last_updated: "2026-05-09 19:59"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -480,11 +480,3 @@ Benefits:
 Risks:
 
 - moving too much in one cleanup pass can obscure behavior changes; keep this as final call-site cleanup after the extracted owners are already tested
-
-## Open Questions
-
-- Should payload schema constants live with the index/record builders immediately, or stay in the generator until the first payload builder moves?
-- Should source image path resolution be part of source update planning, or should it stay in the generator because it binds configured project roots?
-- Should per-artifact dry-run output be normalized into structured result objects, or should existing print wording stay local to the generator until there is a second consumer?
-- Should `render_markdown_with_jekyll` become a shared docs/catalogue rendering helper, or remain generator-local because it is currently only needed by catalogue generation?
-- Should tag-assignment series-entry sync remain in the series page loop, or move to a tag-specific owner once series generation is clearer?

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T18:50:21Z",
+  "generated_at": "2026-05-09T19:00:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1176,7 +1176,7 @@
       "doc_id": "site-request-script-structural-review-generate-work-pages",
       "title": "Generate Work Pages Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 19:49",
+      "last_updated": "2026-05-09 19:59",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 40,
       "published": true,
@@ -1184,7 +1184,7 @@
       "source_path": "site-request-script-structural-review-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-generate-work-pages.json",
-      "content_text_length": 25956,
+      "content_text_length": 25161,
       "ui_status": "in-progress"
     },
     {
