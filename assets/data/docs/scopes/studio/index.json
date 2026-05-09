@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T23:04:49Z",
+  "generated_at": "2026-05-09T23:18:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3020,6 +3020,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-request-modal-composition-pattern",
+      "title": "Modal Composition Pattern Request",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10",
+      "parent_id": "change-requests",
+      "sort_order": 190,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-request-modal-composition-pattern.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
+      "content_text_length": 4162,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
       "doc_id": "bulk-add-work",
       "title": "Bulk Add Work",
       "added_date": "2026-04-19",
@@ -3251,7 +3268,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1713
+      "content_text_length": 1747
     },
     {
       "scope": "studio",
