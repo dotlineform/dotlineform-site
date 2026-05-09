@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:32"
+last_updated: "2026-05-09 15:45"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -42,17 +42,27 @@ Target concept:
 - tags are the first implemented Analytics metadata layer, not the whole Analytics model
 - future Analytics work may add more metadata or scoring layers over catalogue works and series
 - [Registry-Driven Scoring Architecture](/docs/?scope=studio&doc=registry-driven-scoring-architecture) describes one likely expansion path: Analytics functionality will need its own registries and registry-driven scoring interfaces, which may need pages similar to the existing tag registry and series-tags pages, or extensions of those pages
-- script ownership should align with that concept, so a later folder reorganization should prefer `scripts/analytics/` over `scripts/tags/`
+- script ownership should align with that concept, so a later folder reorganization should use `scripts/analytics/` rather than a tag-specific package
 - `scripts/studio/` should be reserved for general-purpose Studio admin and shared runtime services
 
 Routing cleanup is related but separate from this server restructuring.
 The likely UI target is to move tag routes under `/studio/analytics/`, for example `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/`, while preserving compatibility redirects or links as needed.
-That route migration should be tracked as a Studio UI/routing request rather than folded into the tag write-server extraction slices.
+That route migration is tracked in [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) and should be handled before tag write-server implementation slices that depend on settled page route context.
 
 Server naming is also an open architectural question.
 If this local service remains limited to tag assignment, tag registry, and tag alias writes, `tag_write_server.py` remains accurate.
 If the service becomes the write/service layer for broader Analytics registries, scoring dimensions, or future Analytics metadata workflows, the target name should probably become `analytics_server.py` or an equivalent Analytics service name rather than creating a second parallel local server for each new Analytics registry.
 That decision should be made before final closeout, because it affects route constants, docs, `bin/dev-studio`, check profiles, and the future `scripts/analytics/` package layout.
+
+Sequencing decision:
+
+1. Complete [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) so page routes match the Analytics domain.
+2. Complete the tag write-server structural review in the current script layout.
+3. Use top-level `scripts/tag_*.py` modules for extracted owners during this review so each slice can focus on behavior boundaries rather than package moves.
+4. Decide during final closeout whether the service remains `tag_write_server.py` or becomes an Analytics service such as `analytics_server.py`.
+5. Move Analytics-owned script files into `scripts/analytics/` through the separate [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) after the structural boundaries and service name are stable.
+
+This avoids moving a mixed-responsibility server into a new package before its ownership boundaries are understood.
 
 ## Current Shape
 
@@ -77,8 +87,8 @@ That mix is workable, but it creates the same maintenance risk seen in the compl
 - Keep local-only service guardrails visible in the server.
 - Prefer direct tests against the owning extracted module.
 - Close each slice without broad compatibility aliases, duplicate endpoint strings, duplicate constants, or temporary server re-export layers.
-- Do not reorganize script folders as part of these slices; package moves are tracked separately in [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
-- Do not move Studio tag page routes as part of these slices; route migration belongs in a separate Studio UI/routing request.
+- Do not reorganize script folders as part of these slices; package moves happen after this review through [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
+- Do not move Studio tag page routes as part of these slices; route migration belongs in [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup).
 
 ## Planned Slice Sequence
 
@@ -88,7 +98,7 @@ The sequence below should be revised after a read-only code review, but it gives
 
 Proposed module owner:
 
-- `scripts/analytics/tag_routes.py` after folder organization, or `scripts/tag_routes.py` temporarily if implementation happens before package moves
+- `scripts/tag_routes.py` during this structural review, then `scripts/analytics/tag_routes.py` during the later folder organization pass
 
 Target ownership:
 
@@ -127,7 +137,7 @@ Risks:
 
 Proposed module owner:
 
-- `scripts/analytics/tag_activity.py` after folder organization, or `scripts/tag_activity.py` temporarily if implementation happens before package moves
+- `scripts/tag_activity.py` during this structural review, then `scripts/analytics/tag_activity.py` during the later folder organization pass
 
 Target ownership:
 
@@ -162,7 +172,7 @@ Risks:
 
 Proposed module owner:
 
-- `scripts/analytics/tag_source_model.py` after folder organization, or `scripts/tag_source_model.py` temporarily if implementation happens before package moves
+- `scripts/tag_source_model.py` during this structural review, then `scripts/analytics/tag_source_model.py` during the later folder organization pass
 
 Target ownership:
 
@@ -199,7 +209,7 @@ Risks:
 
 Proposed module owner:
 
-- `scripts/analytics/tag_assignment_service.py` or `scripts/analytics/tag_assignment_mutations.py` after folder organization, with temporary top-level equivalents only if needed before package moves
+- `scripts/tag_assignment_service.py` or `scripts/tag_assignment_mutations.py` during this structural review, then the matching `scripts/analytics/` module during the later folder organization pass
 
 Target ownership:
 
@@ -237,8 +247,8 @@ Risks:
 
 Proposed module owners:
 
-- `scripts/analytics/tag_registry_mutations.py`
-- `scripts/analytics/tag_alias_mutations.py`
+- `scripts/tag_registry_mutations.py`
+- `scripts/tag_alias_mutations.py`
 
 Target ownership:
 
@@ -275,7 +285,7 @@ Risks:
 
 Proposed module owner:
 
-- `scripts/analytics/tag_promotion_mutations.py` or a combined Analytics tag mutation planner if Slice 5 shows the boundary is simpler that way
+- `scripts/tag_promotion_mutations.py` or a combined tag mutation planner if Slice 5 shows the boundary is simpler that way
 
 Target ownership:
 
@@ -310,7 +320,7 @@ Risks:
 
 Proposed module owner:
 
-- `scripts/analytics/tag_write_transactions.py`
+- `scripts/tag_write_transactions.py`
 
 Target ownership:
 
@@ -378,7 +388,6 @@ Risks:
 
 ## Open Questions
 
-- Should Analytics tag helpers move directly into `scripts/analytics/`, or should temporary top-level `scripts/tag_*.py` modules be allowed until the folder organization request is implemented?
 - Should tag UI routes move from `/studio/tag-registry/` and `/studio/series-tags/` to `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/` before or after the service restructuring?
 - Should `tag_write_server.py` be renamed to `analytics_server.py` if Analytics registries and scoring workflows start sharing the same local service?
 - Should backup/write helpers become tag-specific first, then be compared with catalogue/docs transaction helpers for a possible shared local-service utility?

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T14:33:17Z",
+  "generated_at": "2026-05-09T14:46:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1038,7 +1038,7 @@
       "doc_id": "site-request-script-structural-review-tag-write-server",
       "title": "Tag Write Server Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 15:32",
+      "last_updated": "2026-05-09 15:45",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 30,
       "published": true,
@@ -1046,7 +1046,7 @@
       "source_path": "site-request-script-structural-review-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-tag-write-server.json",
-      "content_text_length": 16304,
+      "content_text_length": 16871,
       "ui_status": "in-progress"
     },
     {
@@ -2980,7 +2980,7 @@
       "doc_id": "site-request-scripts-directory-organization",
       "title": "Scripts Directory Organization Request",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 15:32",
+      "last_updated": "2026-05-09 15:45",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -2988,7 +2988,23 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 11495,
+      "content_text_length": 11951,
+      "ui_status": "proposed"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-analytics-tag-route-cleanup",
+      "title": "Analytics Tag Route Cleanup Request",
+      "added_date": "2026-05-09",
+      "last_updated": "2026-05-09 15:45",
+      "parent_id": "change-requests",
+      "sort_order": 213,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-analytics-tag-route-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-analytics-tag-route-cleanup.json",
+      "content_text_length": 5547,
       "ui_status": "proposed"
     },
     {
@@ -2996,7 +3012,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-09 14:38",
+      "last_updated": "2026-05-09 15:45",
       "parent_id": "",
       "sort_order": 220,
       "published": true,
@@ -3004,7 +3020,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1677
+      "content_text_length": 1713
     },
     {
       "scope": "studio",

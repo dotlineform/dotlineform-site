@@ -2,7 +2,7 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:32"
+last_updated: "2026-05-09 15:45"
 ui_status: proposed
 parent_id: change-requests
 sort_order: 212
@@ -131,11 +131,14 @@ Acceptance checks:
 
 ### Slice 3: Analytics tags and Studio runtime boundary
 
-Review `scripts/studio/tag_write_server.py` and `scripts/studio/audit_service.py`.
+Run this slice after [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) and the tag write-server structural review are complete.
+At that point the Analytics tag service boundary, extracted helper modules, and server name should be stable enough to move without mixing package churn into behavior extraction.
+Review `scripts/studio/tag_write_server.py`, any extracted top-level `scripts/tag_*.py` modules, and `scripts/studio/audit_service.py`.
 
 Expected decision:
 
-- move tag behavior to `scripts/analytics/`, because tags are conceptually Analytics metadata applied to catalogue works and series
+- move Analytics tag behavior to `scripts/analytics/`, because tags are conceptually Analytics metadata applied to catalogue works and series
+- decide whether the service path becomes `scripts/analytics/tag_write_server.py` or `scripts/analytics/analytics_server.py`
 - keep audit service under `scripts/studio/` only if it is genuinely Studio-runtime infrastructure
 - document why any service remains under `scripts/studio/`
 
@@ -201,7 +204,7 @@ Acceptance checks:
 ## Open Questions
 
 - Should `build_docs.rb` and `build_search.rb` move into domain folders, or are they stable enough operational entrypoints to remain top-level?
-- Should Analytics tag scripts move directly under `scripts/analytics/`, or should temporary top-level `scripts/tag_*.py` modules be allowed during structural extraction?
+- Should the Analytics local service be named `tag_write_server.py` or `analytics_server.py` after the tag structural review determines its likely scope?
 - Should Studio tag UI routes be migrated under `/studio/analytics/` in the same broader sequence or tracked as a separate UI/routing request?
 - Should shared helpers remain as top-level modules or move under a small `scripts/shared/` package?
 - Are any root-level script command paths used outside the repo strongly enough to justify temporary deprecation wrappers?
