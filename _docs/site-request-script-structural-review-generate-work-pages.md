@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 19:19"
+last_updated: "2026-05-09 19:34"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -18,11 +18,13 @@ Status:
 - Slice 2 implemented
 - Slice 3 implemented
 - Slice 4 implemented
+- Slice 5 implemented
 - read-only extraction map recorded
 - record projection helpers extracted
 - series and work index builders extracted
 - recent-publications builder extracted
 - route-stub and generated JSON write-decision helpers extracted
+- source update planners extracted
 
 ## Purpose
 
@@ -359,7 +361,7 @@ Risks:
 
 ### Slice 5: source update planning
 
-Status: planned.
+Status: implemented.
 
 Proposed module owner:
 
@@ -371,6 +373,13 @@ Target ownership:
 - work-detail status and `published_date` update plans
 - work and detail image-dimension update plans
 - publish-transition records used by recent-index generation
+
+Implementation result:
+
+- `scripts/catalogue_generation_source_updates.py` now owns pure work and work-detail source update planners for actionable status checks, first-time publication updates, recent work-transition records, source image path plans, structured path warnings, and dimension update suppression
+- `scripts/generate_work_pages.py` imports the source-update owner as `source_updates` and still owns configured project-root binding, image dimension reads, warning print wording, applying planned updates only during `--write`, source validation, and canonical source write-back
+- `tests/python/test_catalogue_generation_source_updates.py` pins draft publication updates, published refresh/force actionability without mutation, detail publication updates, unchanged dimension suppression, structured missing-path warnings, and no mutation during dry-run-style planning
+- `scripts/run_checks.py` quick syntax and focused test coverage now includes the extracted source-update planner module
 
 The generator should keep:
 

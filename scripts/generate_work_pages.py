@@ -75,6 +75,7 @@ try:
     import catalogue_generation_indexes as indexes
     import catalogue_generation_recent as recent
     import catalogue_generation_records as records
+    import catalogue_generation_source_updates as source_updates
     import catalogue_generation_writes as writes
     from catalogue_generation_common import (
         coerce_int,
@@ -92,6 +93,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts import catalogue_generation_indexes as indexes
     from scripts import catalogue_generation_recent as recent
     from scripts import catalogue_generation_records as records
+    from scripts import catalogue_generation_source_updates as source_updates
     from scripts import catalogue_generation_writes as writes
     from scripts.catalogue_generation_common import (
         coerce_int,
@@ -790,13 +792,6 @@ def main() -> None:
     run_work_selection_scope = run_work_processing or run_work_json
     run_work_dimension_refresh = run_work_json
 
-    def is_actionable_status(status_value: str) -> bool:
-        if status_value == "draft":
-            return True
-        if status_value == "published" and refresh_published:
-            return True
-        return False
-
     # Optional filtering: allow a specific list of work_ids (from file or comma-separated arg).
     selected_ids = None
     explicit_work_filter = bool(args.work_ids_file or args.work_ids)
@@ -897,34 +892,37 @@ def main() -> None:
             height_px = coerce_int(work_record.get("height_px"))
             project_filename = coerce_string(work_record.get("project_filename"))
 
-            src_path: Optional[Path] = None
-            if project_filename:
-                if Path(project_filename).is_absolute():
-                    src_path = Path(project_filename)
+            source_path_plan = source_updates.plan_work_image_source_path(
+                work_id=wid,
+                project_filename=project_filename,
+                project_folder=work_project_folder_by_id.get(wid),
+                project_subfolder=work_project_subfolder_by_id.get(wid),
+                projects_root=projects_root,
+                has_project_folder_column=has_project_folder_col,
+            )
+            if source_path_plan.warning is not None and not work_project_folder_missing_warned:
+                if source_path_plan.warning.code == source_updates.NO_PROJECT_FOLDER_COLUMN:
+                    print("Warning: work source records have no project_folder values; cannot persist work image dimensions.")
                 else:
-                    project_folder = work_project_folder_by_id.get(wid)
-                    if project_folder:
-                        src_path = projects_root / project_folder
-                        project_subfolder = work_project_subfolder_by_id.get(wid)
-                        if project_subfolder:
-                            src_path = src_path / project_subfolder
-                        src_path = src_path / project_filename
-                    elif not work_project_folder_missing_warned:
-                        if not has_project_folder_col:
-                            print("Warning: work source records have no project_folder values; cannot persist work image dimensions.")
-                        else:
-                            print("Warning: missing Works.project_folder for one or more works; cannot persist those image dimensions.")
-                        work_project_folder_missing_warned = True
+                    print("Warning: missing Works.project_folder for one or more works; cannot persist those image dimensions.")
+                work_project_folder_missing_warned = True
 
+            src_path = source_path_plan.source_path
             if src_path is not None:
                 src_w, src_h = read_image_dims_px(src_path)
                 if src_w is not None and src_h is not None:
-                    prev_w = width_px
-                    prev_h = height_px
-                    width_px = src_w
-                    height_px = src_h
-                    if args.write and (prev_w != src_w or prev_h != src_h):
-                        update_source_work_record(wid, width_px=src_w, height_px=src_h)
+                    dimension_plan = source_updates.plan_dimension_update(
+                        record_kind=source_updates.WORK_RECORD,
+                        record_id=wid,
+                        current_width_px=width_px,
+                        current_height_px=height_px,
+                        source_width_px=src_w,
+                        source_height_px=src_h,
+                    )
+                    width_px = dimension_plan.width_px
+                    height_px = dimension_plan.height_px
+                    if args.write and dimension_plan.updates:
+                        update_source_work_record(wid, **dimension_plan.updates)
                         work_dimensions_updated += 1
                 else:
                     print(f"Warning: could not read dimensions for work primary source image: {display_projects_path(src_path)}")
@@ -958,7 +956,7 @@ def main() -> None:
             if selected_ids is not None and wid not in selected_ids:
                 continue
             status = normalize_status(work_record.get("status"))
-            if is_actionable_status(status):
+            if source_updates.is_actionable_status(status, refresh_published=refresh_published):
                 total += 1
 
     processed = 0
@@ -981,7 +979,7 @@ def main() -> None:
                 skipped += 1
                 continue
 
-            if not is_actionable_status(status):
+            if not source_updates.is_actionable_status(status, refresh_published=refresh_published):
                 skipped += 1
                 continue
 
@@ -1017,24 +1015,22 @@ def main() -> None:
                 if write_page(out_path, "work", work_page_content):
                     written += 1
                     if args.write:
-                        status_was = normalize_status(work_record.get("status"))
-                        if status_was != "published":
-                            update_source_work_record(wid, status="published")
+                        work_meta = work_meta_by_id.get(wid, {})
+                        publication_plan = source_updates.plan_work_publication_update(
+                            work_id=wid,
+                            status=work_record.get("status"),
+                            today=today,
+                            work_meta=work_meta if isinstance(work_meta, dict) else {},
+                            series_title_by_id=series_title_by_id,
+                        )
+                        if publication_plan.updates:
+                            update_source_work_record(wid, **publication_plan.updates)
+                        if "status" in publication_plan.updates:
                             status_updated += 1
-                        if status_was != "published":
-                            update_source_work_record(wid, published_date=today.isoformat())
+                        if "published_date" in publication_plan.updates:
                             published_date_updated += 1
-                        if status_was != "published":
-                            work_meta = work_meta_by_id.get(wid, {})
-                            series_ids = work_meta.get("series_ids") if isinstance(work_meta, dict) else []
-                            primary_series_id = series_ids[0] if isinstance(series_ids, list) and series_ids else ""
-                            work_publish_transitions.append({
-                                "work_id": wid,
-                                "title": coerce_string(work_meta.get("title")) if isinstance(work_meta, dict) else None,
-                                "primary_series_id": primary_series_id,
-                                "series_title": series_title_by_id.get(primary_series_id) if primary_series_id else None,
-                                "published_date": today.isoformat(),
-                            })
+                        if publication_plan.transition is not None:
+                            work_publish_transitions.append(publication_plan.transition)
                 else:
                     skipped += 1
 
@@ -1394,13 +1390,6 @@ def main() -> None:
                 continue
             known_work_ids.add(slug_id(wid_raw))
 
-        def is_actionable_detail_status(status_value: str) -> bool:
-            if status_value == "draft":
-                return True
-            if status_value == "published" and refresh_published:
-                return True
-            return False
-
         if run_work_details_pages:
             details_written = 0
             details_skipped = 0
@@ -1418,7 +1407,7 @@ def main() -> None:
                 if selected_ids is not None and wid not in selected_ids:
                     continue
                 status = normalize_status(detail_source_record.get("status"))
-                if is_actionable_detail_status(status):
+                if source_updates.is_actionable_status(status, refresh_published=refresh_published):
                     details_total += 1
 
             details_processed = 0
@@ -1440,7 +1429,7 @@ def main() -> None:
                     continue
 
                 status = normalize_status(detail_source_record.get("status"))
-                if not is_actionable_detail_status(status):
+                if not source_updates.is_actionable_status(status, refresh_published=refresh_published):
                     details_skipped += 1
                     continue
 
@@ -1457,29 +1446,37 @@ def main() -> None:
                 height_px = coerce_int(detail_source_record.get("height_px"))
 
                 # Resolve source image and persist dimensions back to WorkDetails for stable future rebuilds.
-                project_folder = work_project_folder_by_id.get(wid)
-                src_path: Optional[Path] = None
-                if project_folder and project_filename:
-                    src_path = projects_root / project_folder
-                    if details_subfolder:
-                        src_path = src_path / details_subfolder
-                    src_path = src_path / project_filename
-                elif not project_folder_missing_warned:
-                    if not has_project_folder_col:
+                source_path_plan = source_updates.plan_detail_image_source_path(
+                    detail_uid=detail_uid,
+                    project_filename=project_filename,
+                    work_project_folder=work_project_folder_by_id.get(wid),
+                    details_subfolder=details_subfolder,
+                    projects_root=projects_root,
+                    has_project_folder_column=has_project_folder_col,
+                )
+                if source_path_plan.warning is not None and not project_folder_missing_warned:
+                    if source_path_plan.warning.code == source_updates.NO_PROJECT_FOLDER_COLUMN:
                         print("Warning: work source records have no project_folder values; cannot persist work detail image dimensions.")
                     else:
                         print("Warning: missing work project_folder for one or more work detail records; cannot persist those image dimensions.")
                     project_folder_missing_warned = True
 
+                src_path = source_path_plan.source_path
                 if src_path is not None:
                     src_w, src_h = read_image_dims_px(src_path)
                     if src_w is not None and src_h is not None:
-                        prev_w = width_px
-                        prev_h = height_px
-                        width_px = src_w
-                        height_px = src_h
-                        if args.write and (prev_w != src_w or prev_h != src_h):
-                            update_source_detail_record(detail_uid, width_px=src_w, height_px=src_h)
+                        dimension_plan = source_updates.plan_dimension_update(
+                            record_kind=source_updates.WORK_DETAIL_RECORD,
+                            record_id=detail_uid,
+                            current_width_px=width_px,
+                            current_height_px=height_px,
+                            source_width_px=src_w,
+                            source_height_px=src_h,
+                        )
+                        width_px = dimension_plan.width_px
+                        height_px = dimension_plan.height_px
+                        if args.write and dimension_plan.updates:
+                            update_source_detail_record(detail_uid, **dimension_plan.updates)
                             details_dimensions_updated += 1
                     else:
                         print(f"Warning: could not read dimensions for detail source image: {display_projects_path(src_path)}")
@@ -1499,11 +1496,16 @@ def main() -> None:
                     print(f"{prefix_d}WRITE: {display_path(d_path)}")
                     details_written += 1
 
-                    status_was = normalize_status(detail_source_record.get("status"))
-                    if status_was != "published":
-                        update_source_detail_record(detail_uid, status="published")
+                    publication_plan = source_updates.plan_detail_publication_update(
+                        detail_uid=detail_uid,
+                        status=detail_source_record.get("status"),
+                        today=today,
+                    )
+                    if publication_plan.updates:
+                        update_source_detail_record(detail_uid, **publication_plan.updates)
+                    if "status" in publication_plan.updates:
                         details_status_updated += 1
-                        update_source_detail_record(detail_uid, published_date=today.isoformat())
+                    if "published_date" in publication_plan.updates:
                         details_published_date_updated += 1
                 else:
                     print(f"{prefix_d}DRY-RUN: would write {display_path(d_path)} (overwrite={d_exists})")

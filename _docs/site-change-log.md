@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 19:09"
+last_updated: "2026-05-09 19:34"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue source update planners
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Moved pure work/work-detail source update planning out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_source_updates.py`.
+The generator still owns configured path binding, image dimension reads, warning print wording, applying planned updates only during `--write`, source validation, and canonical source write-back.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_generation_source_updates.py`
+- `scripts/generate_work_pages.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_generation_source_updates.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+
+**Impact:**
+First-time publication status/date updates, work publish-transition records for `/recent/`, source image path warnings, and dimension update suppression now have direct focused tests without changing canonical source write-back timing or generated artifact schemas.
 
 ## [2026-05-09] Extracted catalogue recent-publications builder
 
