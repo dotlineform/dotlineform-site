@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-json-build
 title: Catalogue JSON Build Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 20:10"
+last_updated: "2026-05-09 20:20"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 50
@@ -14,7 +14,7 @@ Status:
 
 - initial implementation tracker created
 - Slice 0 read-only extraction map completed
-- implementation slices ready to start with scoped build planning
+- Slice 1 scoped build planning helpers implemented
 
 ## Purpose
 
@@ -177,7 +177,7 @@ That avoids mixing scope construction and local media execution in the same firs
 
 ### Slice 1: scoped build planning helpers
 
-Status: planned.
+Status: implemented.
 
 Likely module owner:
 
@@ -202,6 +202,23 @@ The entrypoint should keep:
 Tests:
 
 - add focused tests for work, series, moment, extra ids, detail uid inclusion, invalid series scopes, and stable scope payload keys
+
+Implementation result:
+
+- `scripts/catalogue_build_scopes.py` now owns work, series, and moment scope construction, scoped-series buildability validation, normalized extra-id handling, scope summaries, and moment import metadata merging
+- `scripts/catalogue_json_build.py` keeps the existing public compatibility names and delegates scope planning to the new owner while still owning CLI parsing, preview/report wording, orchestration, media planning, generator/search execution, and Studio response payloads
+- readiness and moment preview dependencies remain temporarily bound through the entrypoint wrappers until Slice 2 moves local media planning and readiness ownership
+- `tests/python/test_catalogue_build_scopes.py` pins work, series, and moment scope payload shapes, extra-id dedupe, detail readiness inclusion, invalid series preconditions, and moment metadata merge behavior
+- `scripts/run_checks.py` quick syntax and focused test coverage now include the extracted scope-planning module
+
+Benefits:
+
+- gives scoped build selection rules a direct test owner before media and command execution move
+- keeps the Studio/publication import contract stable while reducing the mixed responsibility surface in `catalogue_json_build.py`
+
+Risks:
+
+- readiness is still entrypoint-owned for now, so Slice 2 must preserve the current readiness payload shape when moving media ownership
 
 ### Slice 2: local media planning and readiness
 

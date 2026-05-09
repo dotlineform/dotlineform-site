@@ -13,8 +13,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
+import catalogue_build_scopes as build_scopes
 from catalogue_field_registry import apply_field_build_plan_to_scope, field_aware_build_plan, load_catalogue_field_registry
-from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
+from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
 from local_env import runtime_env
 from moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
@@ -23,7 +24,6 @@ from moment_sources import (
     load_moment_metadata_records,
     moment_metadata_payload,
     normalize_moment_filename,
-    normalize_moment_metadata_record,
     validate_moment_metadata_record,
 )
 from pipeline_config import (
@@ -34,7 +34,6 @@ from pipeline_config import (
     source_moments_root_subdir,
     source_works_root_subdir,
 )
-from series_ids import normalize_series_id
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -43,15 +42,8 @@ CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 MOMENT_PROSE_STAGING_REL_DIR = CATALOGUE_PROSE_STAGING_REL_DIR / "moments"
 CATALOGUE_MEDIA_STAGING_REL_DIR = Path("var/catalogue/media")
 
-DEFAULT_ARTIFACTS = [
-    "work-pages",
-    "work-json",
-    "series-pages",
-    "series-index-json",
-    "works-index-json",
-    "recent-index-json",
-]
-DEFAULT_MOMENT_ARTIFACTS = ["moments"]
+DEFAULT_ARTIFACTS = build_scopes.DEFAULT_ARTIFACTS
+DEFAULT_MOMENT_ARTIFACTS = build_scopes.DEFAULT_MOMENT_ARTIFACTS
 THUMB_SIZES = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]})
 THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
 PRIMARY_WIDTHS = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["compatibility"]["generate_widths"]})
@@ -983,10 +975,7 @@ def build_moment_import_metadata(
     moment_id: str,
     metadata: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
-    records = load_moment_metadata_records(source_dir)
-    existing = records.get(moment_id, {})
-    merged = {**existing, **(metadata or {}), "moment_id": moment_id}
-    return normalize_moment_metadata_record(moment_id, merged)
+    return build_scopes.build_moment_import_metadata(source_dir, moment_id, metadata)
 
 
 def preview_moment_source(
@@ -1073,60 +1062,11 @@ def preview_moment_source(
 
 
 def normalize_series_ids(values: Iterable[Any]) -> list[str]:
-    out: list[str] = []
-    seen: set[str] = set()
-    for raw in values:
-        text = str(raw or "").strip()
-        if not text:
-            continue
-        for part in text.split(","):
-            token = str(part or "").strip()
-            if not token:
-                continue
-            series_id = normalize_series_id(token)
-            if series_id in seen:
-                continue
-            seen.add(series_id)
-            out.append(series_id)
-    return out
+    return build_scopes.normalize_series_ids(values)
 
 
 def validate_buildable_series_scope(records, series_ids: Sequence[str]) -> None:
-    work_series_ids_by_work_id: dict[str, list[str]] = {}
-    for work_id, work_record in records.works.items():
-        raw_series_ids = work_record.get("series_ids", [])
-        if isinstance(raw_series_ids, list):
-            work_series_ids_by_work_id[work_id] = normalize_series_ids(raw_series_ids)
-        else:
-            work_series_ids_by_work_id[work_id] = []
-
-    errors: list[str] = []
-    for series_id in series_ids:
-        series_record = records.series.get(series_id)
-        if not isinstance(series_record, dict):
-            errors.append(f"series {series_id}: not found in source records")
-            continue
-        status = normalize_status(series_record.get("status"))
-        if status != "published":
-            errors.append(f"series {series_id}: status must be published for runtime build")
-            continue
-        raw_primary_work_id = str(series_record.get("primary_work_id") or "").strip()
-        if not raw_primary_work_id:
-            errors.append(f"series {series_id}: missing primary_work_id for runtime build")
-            continue
-        primary_work_id = slug_id(raw_primary_work_id)
-        primary_work_record = records.works.get(primary_work_id)
-        if not isinstance(primary_work_record, dict):
-            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} not found in works")
-            continue
-        if normalize_status(primary_work_record.get("status")) != "published":
-            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} is not a published work")
-            continue
-        if series_id not in work_series_ids_by_work_id.get(primary_work_id, []):
-            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} is not in that work's series_ids")
-
-    if errors:
-        raise ValueError("series build precondition failed: " + "; ".join(errors[:20]))
+    build_scopes.validate_buildable_series_scope(records, series_ids)
 
 
 def build_scope_for_work(
@@ -1137,42 +1077,15 @@ def build_scope_for_work(
     detail_uid: str = "",
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
-    normalized_work_id = slug_id(work_id)
-    records = records_from_json_source(source_dir)
-    work_record = records.works.get(normalized_work_id)
-    if not isinstance(work_record, dict):
-        raise ValueError(f"work_id not found: {normalized_work_id}")
-    if normalize_status(work_record.get("status")) != "published":
-        raise ValueError(f"work {normalized_work_id}: status must be published for runtime build")
-
-    current_series_ids: list[str] = []
-    for series_id in normalize_series_ids(work_record.get("series_ids", [])):
-        series_record = records.series.get(series_id)
-        if isinstance(series_record, dict) and normalize_status(series_record.get("status")) == "published":
-            current_series_ids.append(series_id)
-    requested_extra_series_ids = normalize_series_ids(extra_series_ids or [])
-    series_ids = normalize_series_ids([*current_series_ids, *requested_extra_series_ids])
-    validate_buildable_series_scope(records, series_ids)
-    scope = {
-        "work_ids": [normalized_work_id],
-        "series_ids": series_ids,
-        "current_series_ids": current_series_ids,
-        "extra_series_ids": [series_id for series_id in requested_extra_series_ids if series_id not in current_series_ids],
-        "generate_only": list(DEFAULT_ARTIFACTS),
-        "rebuild_search": True,
-        "search_scope": "catalogue",
-        "source_mode": "json",
-        "source_dir": str(source_dir),
-        "refresh_published": True,
-        "summary": summarize_scope([normalized_work_id], series_ids),
-    }
-    readiness = build_work_readiness(records, normalized_work_id, env=env)
-    if detail_uid:
-        normalized_detail_uid = str(detail_uid or "").strip()
-        readiness["items"].extend(build_detail_readiness(records, normalized_detail_uid, env=env).get("items", []))
-        scope["detail_uid"] = normalized_detail_uid
-    scope["readiness"] = readiness
-    return scope
+    return build_scopes.build_scope_for_work(
+        source_dir,
+        work_id,
+        extra_series_ids=extra_series_ids,
+        detail_uid=detail_uid,
+        env=env,
+        work_readiness_builder=build_work_readiness,
+        detail_readiness_builder=build_detail_readiness,
+    )
 
 
 def build_scope_for_series(
@@ -1182,57 +1095,13 @@ def build_scope_for_series(
     *,
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
-    normalized_series_id = normalize_series_id(series_id)
-    records = records_from_json_source(source_dir)
-    series_record = records.series.get(normalized_series_id)
-    if not isinstance(series_record, dict):
-        raise ValueError(f"series_id not found: {normalized_series_id}")
-    if normalize_status(series_record.get("status")) != "published":
-        raise ValueError(f"series {normalized_series_id}: status must be published for runtime build")
-
-    current_work_ids: list[str] = []
-    for work_id, work_record in records.works.items():
-        if normalize_status(work_record.get("status")) != "published":
-            continue
-        series_ids = work_record.get("series_ids", [])
-        if isinstance(series_ids, list) and normalized_series_id in normalize_series_ids(series_ids):
-            current_work_ids.append(work_id)
-    current_work_ids = sorted(current_work_ids)
-
-    requested_extra_work_ids: list[str] = []
-    seen_extra: set[str] = set()
-    for raw in extra_work_ids or []:
-        text = str(raw or "").strip()
-        if not text:
-            continue
-        for part in text.split(","):
-            token = str(part or "").strip()
-            if not token:
-                continue
-            work_id = slug_id(token)
-            if work_id in seen_extra:
-                continue
-            seen_extra.add(work_id)
-            requested_extra_work_ids.append(work_id)
-
-    work_ids = sorted({*current_work_ids, *requested_extra_work_ids})
-    validate_buildable_series_scope(records, [normalized_series_id])
-    scope = {
-        "kind": "series",
-        "work_ids": work_ids,
-        "series_ids": [normalized_series_id],
-        "current_work_ids": current_work_ids,
-        "extra_work_ids": [work_id for work_id in requested_extra_work_ids if work_id not in current_work_ids],
-        "generate_only": list(DEFAULT_ARTIFACTS),
-        "rebuild_search": True,
-        "search_scope": "catalogue",
-        "source_mode": "json",
-        "source_dir": str(source_dir),
-        "refresh_published": True,
-        "summary": summarize_scope(work_ids, [normalized_series_id]),
-    }
-    scope["readiness"] = build_series_readiness(records, normalized_series_id, env=env)
-    return scope
+    return build_scopes.build_scope_for_series(
+        source_dir,
+        series_id,
+        extra_work_ids=extra_work_ids,
+        env=env,
+        series_readiness_builder=build_series_readiness,
+    )
 
 
 def build_scope_for_moment(
@@ -1243,40 +1112,24 @@ def build_scope_for_moment(
     force: bool = False,
     env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
-    preview = preview_moment_source(repo_root, moment_file, metadata=metadata, env=env)
-    if not preview.get("valid"):
-        errors = preview.get("errors") or []
-        raise ValueError("; ".join(str(error) for error in errors) or "moment source preview failed")
-    moment_id = str(preview.get("moment_id") or "").strip().lower()
-    moment_metadata = build_moment_import_metadata(repo_root / DEFAULT_SOURCE_DIR, moment_id, metadata)
-    return {
-        "kind": "moment",
-        "moment_ids": [moment_id],
-        "moment_file": str(preview.get("moment_file") or ""),
-        "moment_metadata": moment_metadata,
-        "work_ids": [],
-        "series_ids": [],
-        "generate_only": list(DEFAULT_MOMENT_ARTIFACTS),
-        "rebuild_search": True,
-        "search_scope": "catalogue",
-        "source_mode": "moment-source",
-        "summary": summarize_moment_scope([moment_id]),
-        "effective_force": bool(force),
-        "refresh_published": True,
-        "preview": preview,
-        "readiness": build_moment_readiness(repo_root, moment_file, metadata=moment_metadata, env=env),
-    }
+    return build_scopes.build_scope_for_moment(
+        repo_root,
+        moment_file,
+        metadata=metadata,
+        force=force,
+        env=env,
+        moment_preview_builder=preview_moment_source,
+        moment_metadata_builder=build_moment_import_metadata,
+        moment_readiness_builder=build_moment_readiness,
+    )
 
 
 def summarize_scope(work_ids: Sequence[str], series_ids: Sequence[str]) -> str:
-    work_text = ", ".join(work_ids) if work_ids else "none"
-    series_text = ", ".join(series_ids) if series_ids else "none"
-    return f"Build works [{work_text}], series [{series_text}], aggregate indexes, and catalogue search."
+    return build_scopes.summarize_scope(work_ids, series_ids)
 
 
 def summarize_moment_scope(moment_ids: Sequence[str]) -> str:
-    moment_text = ", ".join(moment_ids) if moment_ids else "none"
-    return f"Build moments [{moment_text}], rebuild the moments index, and rebuild catalogue search."
+    return build_scopes.summarize_moment_scope(moment_ids)
 
 
 def parse_csv_tokens(value: Any) -> list[str]:

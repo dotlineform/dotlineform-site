@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-28ef4a00c89f0f2d901299fdefd97dd2",
-    "generated_at_utc": "2026-05-09T19:11:15Z",
+    "version": "blake2b-8852df591340583d4c9da4f493868b48",
+    "generated_at_utc": "2026-05-09T19:20:42Z",
     "count": 209
   },
   "entries": [
@@ -2263,10 +2263,10 @@
       "kind": "doc",
       "title": "Catalogue JSON Build Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build",
-      "last_updated": "2026-05-09 20:10",
+      "last_updated": "2026-05-09 20:20",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 20:10 • Script Structural Review Request",
+      "display_meta": "2026-05-09 20:20 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-catalogue-json-build",
         "site",
@@ -2280,14 +2280,13 @@
         "catalogue json build slices",
         "slices",
         "script structural review request",
-        "2026-05-09 20:10",
+        "2026-05-09 20:20",
         "2026",
         "05",
         "09",
-        "20",
-        "10"
+        "20"
       ],
-      "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 20:10 2026 05 09 20 10"
+      "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 20:20 2026 05 09 20"
     },
     {
       "id": "catalogue-moment-import",
@@ -4413,10 +4412,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-09 20:20",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-09 18:17 • Catalogue",
+      "display_meta": "2026-05-09 20:20 • Catalogue",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -4425,14 +4424,13 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-05-09 18:17",
+        "2026-05-09 20:20",
         "2026",
         "05",
         "09",
-        "18",
-        "17"
+        "20"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-09 18:17 2026 05 09 18 17"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-09 20:20 2026 05 09 20"
     },
     {
       "id": "scripts-catalogue-lookup",

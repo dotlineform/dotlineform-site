@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T19:11:56Z",
+  "generated_at": "2026-05-09T19:20:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1374,7 +1374,7 @@
       "doc_id": "site-request-script-structural-review-catalogue-json-build",
       "title": "Catalogue JSON Build Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 20:10",
+      "last_updated": "2026-05-09 20:20",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 50,
       "published": true,
@@ -1382,7 +1382,7 @@
       "source_path": "site-request-script-structural-review-catalogue-json-build.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-json-build.json",
-      "content_text_length": 17523,
+      "content_text_length": 18865,
       "ui_status": "in-progress"
     },
     {
@@ -2683,7 +2683,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-09 20:20",
       "parent_id": "catalogue",
       "sort_order": 150,
       "published": true,
@@ -2691,7 +2691,7 @@
       "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
-      "content_text_length": 7914
+      "content_text_length": 8489
     },
     {
       "scope": "studio",
