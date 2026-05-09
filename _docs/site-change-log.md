@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 19:49"
+last_updated: "2026-05-09 20:55"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue build media planning
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Implemented Slice 2 of the catalogue JSON build structural review.
+`scripts/catalogue_build_media.py` now owns projects-base detection, work/detail/moment source-media resolution, media/prose readiness payloads, local media state checks, derivative task planning, and local media execution helpers.
+`scripts/catalogue_json_build.py` keeps compatibility wrappers for existing Studio/publication callers while delegating media behavior to the new owner.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_build_media.py`
+- `scripts/catalogue_json_build.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_build_media.py`
+- [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build)
+
+**Impact:**
+The supported CLI flags, Studio result payload keys, local media staging paths, public thumbnail paths, and default `ffmpeg` runtime behavior are unchanged.
+The extracted module now has direct tests for source lookup, readiness states, local media counts, forced refresh planning, staged paths, and dry-run write suppression.
 
 ## [2026-05-09] Completed generate-work-pages orchestration cleanup
 

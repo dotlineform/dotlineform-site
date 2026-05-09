@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-catalogue-json-build
 title: Catalogue JSON Build Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 20:20"
+last_updated: "2026-05-09 20:55"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 50
@@ -15,6 +15,7 @@ Status:
 - initial implementation tracker created
 - Slice 0 read-only extraction map completed
 - Slice 1 scoped build planning helpers implemented
+- Slice 2 local media planning and readiness implemented
 
 ## Purpose
 
@@ -222,7 +223,7 @@ Risks:
 
 ### Slice 2: local media planning and readiness
 
-Status: planned.
+Status: implemented.
 
 Likely module owner:
 
@@ -246,6 +247,25 @@ The entrypoint should keep:
 Tests:
 
 - pin source path resolution, missing metadata reasons, pending/current/blocked/unavailable states, force behavior, staged output paths, and dry-run write suppression
+
+Implementation result:
+
+- `scripts/catalogue_build_media.py` now owns projects-base detection, work/detail/moment source-media resolution, media/prose readiness item construction, local media state checks, media task planning, `ffmpeg` derivative execution, and local media result summaries
+- `scripts/catalogue_json_build.py` keeps compatibility names for existing Studio/publication/cleanup callers, but delegates media and readiness behavior to the new owner
+- local media execution now supports injected plan and process runners for focused tests while keeping the default `ffmpeg` runtime path unchanged
+- `tests/python/test_catalogue_build_media.py` pins source path resolution, missing metadata reasons, local media pending/current/blocked/unavailable counts, forced refresh planning, staged output paths, readiness states, and dry-run write suppression
+- `tests/python/test_catalogue_media_cleanup.py` continues to pass through the compatibility wrapper so staged thumbnail cleanup behavior remains pinned during the transition
+- `scripts/run_checks.py` quick syntax and focused test coverage now include the extracted media module and tests
+
+Benefits:
+
+- gives media readiness and derivative planning a direct owner with focused tests before command construction and subprocess result shaping move
+- keeps the supported CLI, Studio result payloads, media paths, and caller imports stable while reducing the entrypoint responsibility surface
+
+Risks:
+
+- `catalogue_json_build.py` still carries compatibility wrappers until later slices update import ownership deliberately
+- the default runtime path still depends on local `ffmpeg`; tests use injection to avoid requiring real image processing
 
 ### Slice 3: field-aware build-plan adapter
 
