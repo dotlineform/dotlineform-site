@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 16:44"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Started tag write-server structural review slices
+
+**Status:** implemented
+
+**Area:** Studio / Analytics / scripts / maintainability
+
+**Summary:**
+Implemented the first tag write-server structural review slice.
+`scripts/tag_routes.py` now owns tag local-service endpoint constants, POST route inventory, and OPTIONS coverage, while `scripts/studio/tag_write_server.py` keeps HTTP orchestration and dispatches through `Handler.POST_HANDLERS`.
+The focused route test is included in the `quick` run-checks profile.
+
+**Files changed/docs:**
+
+- `scripts/tag_routes.py`
+- `scripts/studio/tag_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_tag_routes.py`
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+
+**Impact:**
+Endpoint URLs, payloads, write behavior, dry-run behavior, backups, and allowlists are unchanged.
+Future tag endpoint additions now have one route inventory plus a dispatch coverage test instead of duplicated literals in preflight and POST handling.
 
 ## [2026-05-09] Moved tag Studio routes under Analytics
 

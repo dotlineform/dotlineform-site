@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 16:44"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -13,7 +13,9 @@ viewable: true
 Status:
 
 - initial review tracker created
-- no implementation slices started
+- Slice 1 implemented
+- route inventory and POST dispatch are now owned by `scripts/tag_routes.py` plus `Handler.POST_HANDLERS`
+- next slice: tag activity helpers
 
 ## Purpose
 
@@ -94,6 +96,14 @@ That mix is workable, but it creates the same maintenance risk seen in the compl
 The sequence below should be revised after a read-only code review, but it gives the initial implementation map.
 
 ### Slice 1: route inventory and handler dispatch
+
+Status: implemented.
+
+The first implementation slice kept endpoint behavior stable while moving the route inventory into `scripts/tag_routes.py`.
+The new route owner defines `HEALTH_PATH`, every public tag POST endpoint, `POST_PATHS`, and `OPTIONS_PATHS`.
+`scripts/studio/tag_write_server.py` now imports those route constants, exposes `Handler.POST_HANDLERS`, dispatches POST requests through the table, and uses the parsed request path for OPTIONS, GET, and POST route matching.
+`tests/python/test_tag_routes.py` pins route uniqueness, OPTIONS coverage, and handler coverage for every POST route.
+The focused tag route test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 

@@ -9,22 +9,8 @@ Run:
   python3 scripts/studio/tag_write_server.py --dry-run
 
 What it does:
-  - Exposes a tiny localhost API for Tag Studio:
-    - GET /health
-    - POST /save-tags
-    - POST /import-tag-assignments-preview
-    - POST /import-tag-assignments
-    - POST /import-tag-registry
-    - POST /import-tag-aliases
-    - POST /delete-tag-alias
-    - POST /mutate-tag-alias-preview
-    - POST /mutate-tag-alias
-    - POST /promote-tag-alias-preview
-    - POST /promote-tag-alias
-    - POST /demote-tag-preview
-    - POST /demote-tag
-    - POST /mutate-tag-preview
-    - POST /mutate-tag
+  - Exposes a tiny localhost API for Tag Studio.
+  - Endpoint paths are owned by scripts/tag_routes.py.
   - Updates:
     - assets/studio/data/tag_assignments.json (series and work tag saves)
     - assets/studio/data/tag_registry.json (registry import replace/merge)
@@ -61,7 +47,7 @@ import tempfile
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Mapping, Optional
 from urllib.parse import urlparse
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
@@ -74,6 +60,7 @@ from studio_activity import (
     normalize_activity_context_from_contract,
     studio_activity_entry,
 )
+import tag_routes as routes
 
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
@@ -2033,24 +2020,30 @@ def attach_tag_activity(
 class Handler(BaseHTTPRequestHandler):
     server: TagWriteServer  # type: ignore[assignment]
 
+    POST_HANDLERS: Mapping[str, str] = {
+        routes.SAVE_TAGS_PATH: "_handle_save_tags",
+        routes.BUILD_DOCS_PATH: "_handle_build_docs_deprecated",
+        routes.IMPORT_ASSIGNMENTS_PREVIEW_PATH: "_handle_import_tag_assignments_preview",
+        routes.IMPORT_ASSIGNMENTS_APPLY_PATH: "_handle_import_tag_assignments_apply",
+        routes.IMPORT_REGISTRY_PATH: "_handle_import_tag_registry",
+        routes.IMPORT_ALIASES_PATH: "_handle_import_tag_aliases",
+        routes.DELETE_ALIAS_PATH: "_handle_delete_tag_alias",
+        routes.MUTATE_ALIAS_PREVIEW_PATH: "_handle_mutate_tag_alias_preview",
+        routes.MUTATE_ALIAS_APPLY_PATH: "_handle_mutate_tag_alias",
+        routes.PROMOTE_ALIAS_PREVIEW_PATH: "_handle_promote_tag_alias_preview",
+        routes.PROMOTE_ALIAS_APPLY_PATH: "_handle_promote_tag_alias",
+        routes.DEMOTE_TAG_PREVIEW_PATH: "_handle_demote_tag_preview",
+        routes.DEMOTE_TAG_APPLY_PATH: "_handle_demote_tag",
+        routes.MUTATE_TAG_PREVIEW_PATH: "_handle_mutate_tag_preview",
+        routes.MUTATE_TAG_APPLY_PATH: "_handle_mutate_tag",
+    }
+
+    def _request_path(self) -> str:
+        return urlparse(self.path).path
+
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {
-            "/build-docs",
-            "/save-tags",
-            "/import-tag-assignments-preview",
-            "/import-tag-assignments",
-            "/import-tag-registry",
-            "/import-tag-aliases",
-            "/delete-tag-alias",
-            "/mutate-tag-alias",
-            "/mutate-tag-alias-preview",
-            "/promote-tag-alias",
-            "/promote-tag-alias-preview",
-            "/demote-tag",
-            "/demote-tag-preview",
-            "/mutate-tag",
-            "/mutate-tag-preview",
-        }:
+        request_path = self._request_path()
+        if request_path not in routes.OPTIONS_PATHS:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -2071,7 +2064,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "origin not allowed"})
             return
 
-        if self.path != "/health":
+        request_path = self._request_path()
+        if request_path != routes.HEALTH_PATH:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
             return
 
@@ -2095,66 +2089,30 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "origin not allowed"})
             return
 
-        try:
-            if self.path == "/save-tags":
-                self._handle_save_tags(allowed)
-                return
-            if self.path == "/build-docs":
-                self._send_json(
-                    HTTPStatus.GONE,
-                    {
-                        "ok": False,
-                        "error": "`/build-docs` is deprecated. Use the Docs Management Server `POST /docs/rebuild` path for live docs rebuilds.",
-                    },
-                    allowed,
-                )
-                return
-            if self.path == "/import-tag-assignments-preview":
-                self._handle_import_tag_assignments(allowed, preview=True)
-                return
-            if self.path == "/import-tag-assignments":
-                self._handle_import_tag_assignments(allowed, preview=False)
-                return
-            if self.path == "/import-tag-registry":
-                self._handle_import_tag_registry(allowed)
-                return
-            if self.path == "/import-tag-aliases":
-                self._handle_import_tag_aliases(allowed)
-                return
-            if self.path == "/delete-tag-alias":
-                self._handle_delete_tag_alias(allowed)
-                return
-            if self.path == "/mutate-tag-alias":
-                self._handle_mutate_tag_alias(allowed, preview=False)
-                return
-            if self.path == "/mutate-tag-alias-preview":
-                self._handle_mutate_tag_alias(allowed, preview=True)
-                return
-            if self.path == "/promote-tag-alias":
-                self._handle_promote_tag_alias(allowed, preview=False)
-                return
-            if self.path == "/promote-tag-alias-preview":
-                self._handle_promote_tag_alias(allowed, preview=True)
-                return
-            if self.path == "/demote-tag":
-                self._handle_demote_tag(allowed, preview=False)
-                return
-            if self.path == "/demote-tag-preview":
-                self._handle_demote_tag(allowed, preview=True)
-                return
-            if self.path == "/mutate-tag":
-                self._handle_mutate_tag(allowed, preview=False)
-                return
-            if self.path == "/mutate-tag-preview":
-                self._handle_mutate_tag(allowed, preview=True)
-                return
+        request_path = self._request_path()
+        handler_name = self.POST_HANDLERS.get(request_path)
+        if handler_name is None:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
+            return
+
+        try:
+            getattr(self, handler_name)(allowed)
         except ValueError as exc:
-            self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "validation"})
+            self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "validation"})
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
         except Exception as exc:  # noqa: BLE001
-            self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "internal"})
+            self.server.log_event("request_error", {"path": request_path, "error": str(exc), "kind": "internal"})
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"internal error: {exc}"}, allowed)
+
+    def _handle_build_docs_deprecated(self, allowed: Optional[str]) -> None:
+        self._send_json(
+            HTTPStatus.GONE,
+            {
+                "ok": False,
+                "error": f"`{routes.BUILD_DOCS_PATH}` is deprecated. Use the Docs Management Server `POST /docs/rebuild` path for live docs rebuilds.",
+            },
+            allowed,
+        )
 
     def _handle_save_tags(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
@@ -2296,6 +2254,12 @@ class Handler(BaseHTTPRequestHandler):
                 status=tag_activity_status(stats),
             )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_import_tag_assignments_preview(self, allowed: Optional[str]) -> None:
+        self._handle_import_tag_assignments(allowed, preview=True)
+
+    def _handle_import_tag_assignments_apply(self, allowed: Optional[str]) -> None:
+        self._handle_import_tag_assignments(allowed, preview=False)
 
     def _handle_import_tag_assignments(self, allowed: Optional[str], preview: bool) -> None:
         body = self._read_json_body()
@@ -2500,6 +2464,9 @@ class Handler(BaseHTTPRequestHandler):
         )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
+    def _handle_mutate_tag_alias_preview(self, allowed: Optional[str]) -> None:
+        self._handle_mutate_tag_alias(allowed, preview=True)
+
     def _handle_mutate_tag_alias(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
         alias_key = sanitize_alias_key(body.get("alias"), 0)
@@ -2573,6 +2540,9 @@ class Handler(BaseHTTPRequestHandler):
                     status=tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_promote_tag_alias_preview(self, allowed: Optional[str]) -> None:
+        self._handle_promote_tag_alias(allowed, preview=True)
 
     def _handle_promote_tag_alias(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
@@ -2650,6 +2620,9 @@ class Handler(BaseHTTPRequestHandler):
                     status=tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_demote_tag_preview(self, allowed: Optional[str]) -> None:
+        self._handle_demote_tag(allowed, preview=True)
 
     def _handle_demote_tag(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
@@ -2731,6 +2704,9 @@ class Handler(BaseHTTPRequestHandler):
                     status=tag_activity_status(stats),
                 )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_mutate_tag_preview(self, allowed: Optional[str]) -> None:
+        self._handle_mutate_tag(allowed, preview=True)
 
     def _handle_mutate_tag(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()

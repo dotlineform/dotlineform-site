@@ -52,6 +52,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/docs/docs_import_source_service.py",
                 "scripts/docs/docs_live_rebuild_watcher.py",
                 "scripts/docs/docs_management_mutations.py",
+                "scripts/tag_routes.py",
                 "scripts/catalogue_source.py",
                 "scripts/catalogue_cleanup.py",
                 "scripts/catalogue_delete_plans.py",
@@ -68,6 +69,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_docs_activity.py",
                 "tests/python/test_docs_live_rebuild_watcher.py",
                 "tests/python/test_docs_management_mutations.py",
+                "tests/python/test_tag_routes.py",
                 "tests/python/test_catalogue_cleanup.py",
                 "tests/python/test_catalogue_delete_plans.py",
                 "tests/python/test_catalogue_invalidation.py",
@@ -129,6 +131,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "catalogue-route-tests",
             (sys.executable, "tests/python/test_catalogue_routes.py"),
             "Verify catalogue route inventory and write-server POST dispatch coverage.",
+        ),
+        CheckCommand(
+            "tag-route-tests",
+            (sys.executable, "tests/python/test_tag_routes.py"),
+            "Verify tag route inventory and write-server POST dispatch coverage.",
         ),
         CheckCommand(
             "catalogue-save-build-tests",

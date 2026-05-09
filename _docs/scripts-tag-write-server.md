@@ -2,7 +2,7 @@
 doc_id: scripts-tag-write-server
 title: Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 16:44"
 parent_id: servers
 sort_order: 30
 ---
@@ -14,6 +14,9 @@ Script:
 ./scripts/studio/tag_write_server.py
 ```
 
+Endpoint paths are owned by `scripts/tag_routes.py`.
+The server keeps HTTP orchestration and maps `routes.POST_PATHS` to handler methods through `Handler.POST_HANDLERS`.
+
 ## Optional Flags
 
 - `--port 8787`: override port
@@ -22,10 +25,11 @@ Script:
 
 ## Endpoints And Behavior
 
-Exposed endpoints:
+Exposed endpoints are defined in `scripts/tag_routes.py`:
 
 - `GET /health`
 - `POST /save-tags`
+- `POST /build-docs` (deprecated; returns `410 Gone`)
 - `POST /import-tag-registry`
 - `POST /import-tag-aliases`
 - `POST /delete-tag-alias`
