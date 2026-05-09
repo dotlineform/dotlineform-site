@@ -13,7 +13,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_generation_source_updates as updates  # noqa: E402
+from catalogue import catalogue_generation_source_updates as updates  # noqa: E402
 
 
 def test_draft_work_publication_update_includes_recent_transition() -> None:

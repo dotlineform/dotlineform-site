@@ -9,10 +9,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-from catalogue_build_scopes import preview_moment_source
-from catalogue_source import records_from_json_source, slug_id
-import catalogue_transactions as transactions
-from moment_sources import (
+from catalogue.catalogue_build_scopes import preview_moment_source
+from catalogue.catalogue_source import records_from_json_source, slug_id
+from catalogue import catalogue_transactions as transactions
+from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
     load_moment_metadata_records,
@@ -20,7 +20,7 @@ from moment_sources import (
     normalize_moment_filename,
     normalize_moment_metadata_record,
 )
-from series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")

@@ -2,7 +2,7 @@
 doc_id: local-studio-server-architecture
 title: "Local Studio Server Architecture"
 added_date: 2026-04-17
-last_updated: "2026-05-06 21:05"
+last_updated: "2026-05-09 21:28"
 parent_id: servers
 sort_order: 10
 ---
@@ -15,7 +15,7 @@ Studio currently uses `bin/dev-studio` as the integrated local runner for everyd
 That runner starts Jekyll plus several separate localhost services:
 
 - `scripts/studio/tag_write_server.py`
-- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
 - `scripts/studio/audit_service.py`
 

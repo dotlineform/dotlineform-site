@@ -10,7 +10,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from catalogue_source import (  # noqa: E402
+from catalogue.catalogue_source import (  # noqa: E402
     CatalogueSourceRecords,
     next_detail_section_id,
     validate_source_records,

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 try:
-    from catalogue_source import (
+    from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR,
         CatalogueSourceRecords,
         build_detail_section_resolution_by_uid,
@@ -14,7 +14,7 @@ try:
         records_from_json_source,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import (  # type: ignore
+    from catalogue.catalogue_source import (  # type: ignore
         DEFAULT_SOURCE_DIR,
         CatalogueSourceRecords,
         build_detail_section_resolution_by_uid,

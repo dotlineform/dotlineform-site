@@ -4,14 +4,19 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
-    from catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup
-    from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
+    from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # type: ignore
-    from scripts.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source  # type: ignore
+    from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # type: ignore
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source  # type: ignore
 
 
 def main() -> int:

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, Mapping
 
-from catalogue_source import (
+from catalogue.catalogue_source import (
     DETAIL_FIELDS,
     DETAIL_TEXT_FIELDS,
     SERIES_FIELDS,
@@ -25,13 +25,13 @@ from catalogue_source import (
     validate_work_detail_media_section_record,
     validate_work_detail_section_metadata_consistency,
 )
-from moment_sources import (
+from catalogue.moment_sources import (
     moment_metadata_payload,
     normalize_moment_filename,
     normalize_moment_metadata_record,
     validate_moment_metadata_record,
 )
-from series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 
 @dataclass(frozen=True)

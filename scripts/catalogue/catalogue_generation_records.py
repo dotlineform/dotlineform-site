@@ -7,7 +7,7 @@ import json
 from typing import Any, Dict, List, Mapping, Optional
 
 try:
-    from catalogue_generation_common import (
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_numeric,
         coerce_string,
@@ -16,7 +16,7 @@ try:
         parse_list,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_generation_common import (
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_numeric,
         coerce_string,
@@ -26,9 +26,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 try:
-    from series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.

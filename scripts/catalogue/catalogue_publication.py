@@ -5,12 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
-import catalogue_cleanup
-from catalogue_build_media import build_local_media_plan
-from catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work, preview_moment_source
-import catalogue_source_mutation as source_mutation
-import catalogue_transactions as transactions
-from catalogue_source import (
+from catalogue import catalogue_cleanup
+from catalogue.catalogue_build_media import build_local_media_plan
+from catalogue.catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work, preview_moment_source
+from catalogue import catalogue_source_mutation as source_mutation
+from catalogue import catalogue_transactions as transactions
+from catalogue.catalogue_source import (
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
     load_json_file,
@@ -20,7 +20,7 @@ from catalogue_source import (
     records_from_json_source,
     slug_id,
 )
-from moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload, normalize_moment_metadata_record
+from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload, normalize_moment_metadata_record
 
 
 def publication_source_path_key(kind: str) -> str:

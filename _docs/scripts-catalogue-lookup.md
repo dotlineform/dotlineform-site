@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-lookup
 title: Catalogue Lookup Export
 added_date: 2026-04-17
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-09 21:28"
 parent_id: catalogue
 sort_order: 160
 ---
@@ -11,7 +11,7 @@ sort_order: 160
 Script:
 
 ```bash
-python3 ./scripts/export_catalogue_lookup.py
+./scripts/catalogue/export_catalogue_lookup.py
 ```
 
 ## Purpose

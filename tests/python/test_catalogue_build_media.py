@@ -16,8 +16,8 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_build_media as media  # noqa: E402
-from catalogue_source import payload_for_map  # noqa: E402
+from catalogue import catalogue_build_media as media  # noqa: E402
+from catalogue.catalogue_source import payload_for_map  # noqa: E402
 from pipeline_config import source_works_root_subdir  # noqa: E402
 
 

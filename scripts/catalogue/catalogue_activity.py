@@ -9,10 +9,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
-import catalogue_routes as routes
-from catalogue_source import slug_id
-from moment_sources import normalize_moment_filename
-from series_ids import normalize_series_id
+from catalogue import catalogue_routes as routes
+from catalogue.catalogue_source import slug_id
+from catalogue.moment_sources import normalize_moment_filename
+from catalogue.series_ids import normalize_series_id
 
 
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")

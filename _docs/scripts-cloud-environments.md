@@ -2,7 +2,7 @@
 doc_id: scripts-cloud-environments
 title: Cloud Environments
 added_date: 2026-04-14
-last_updated: "2026-05-08 00:00"
+last_updated: "2026-05-09 21:28"
 parent_id: site-docs
 sort_order: 40
 ---
@@ -190,8 +190,8 @@ Example check sequence:
 
 ```bash
 ./scripts/audit_site_consistency.py --strict
-python3 ./scripts/validate_catalogue_source.py
-python3 ./scripts/catalogue_json_build.py --work-id 00001
+./scripts/catalogue/validate_catalogue_source.py
+./scripts/catalogue/catalogue_json_build.py --work-id 00001
 ./scripts/build_docs.rb
 ./scripts/build_search.rb
 bundle exec jekyll build --quiet

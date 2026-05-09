@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Optional
 
 try:
-    import catalogue_generation_records as records
-    from catalogue_generation_common import (
+    from catalogue import catalogue_generation_records as records
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_numeric,
         coerce_string,
@@ -21,8 +21,8 @@ try:
         slug_id,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts import catalogue_generation_records as records
-    from scripts.catalogue_generation_common import (
+    from catalogue import catalogue_generation_records as records
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_numeric,
         coerce_string,
@@ -37,9 +37,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 try:
-    from series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 
 
 class CatalogueGenerationIndexError(ValueError):

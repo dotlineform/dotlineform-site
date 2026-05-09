@@ -8,8 +8,8 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable, Dict, Sequence
 
-from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
-from moment_sources import (
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
+from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     build_moment_metadata_entry,
     load_moment_metadata_records,

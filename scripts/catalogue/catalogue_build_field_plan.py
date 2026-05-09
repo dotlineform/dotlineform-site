@@ -5,12 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, Mapping, Sequence
 
-from catalogue_field_registry import (
+from catalogue.catalogue_field_registry import (
     apply_field_build_plan_to_scope as apply_registry_field_build_plan_to_scope,
     field_aware_build_plan,
     load_catalogue_field_registry,
 )
-from catalogue_source import records_from_json_source
+from catalogue.catalogue_source import records_from_json_source
 
 
 RECORD_FAMILIES = {"work", "work_detail", "series", "moment"}

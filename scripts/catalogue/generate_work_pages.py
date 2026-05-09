@@ -70,14 +70,18 @@ from typing import Any, Callable, Dict, List, Optional
 import json
 import sys
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
-    import catalogue_generation_indexes as indexes
-    import catalogue_generation_moments as moment_artifacts
-    import catalogue_generation_recent as recent
-    import catalogue_generation_records as records
-    import catalogue_generation_source_updates as source_updates
-    import catalogue_generation_writes as writes
-    from catalogue_generation_common import (
+    from catalogue import catalogue_generation_indexes as indexes
+    from catalogue import catalogue_generation_moments as moment_artifacts
+    from catalogue import catalogue_generation_recent as recent
+    from catalogue import catalogue_generation_records as records
+    from catalogue import catalogue_generation_source_updates as source_updates
+    from catalogue import catalogue_generation_writes as writes
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_string,
         compact_json_object,
@@ -89,13 +93,13 @@ try:
         parse_date,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts import catalogue_generation_indexes as indexes
-    from scripts import catalogue_generation_moments as moment_artifacts
-    from scripts import catalogue_generation_recent as recent
-    from scripts import catalogue_generation_records as records
-    from scripts import catalogue_generation_source_updates as source_updates
-    from scripts import catalogue_generation_writes as writes
-    from scripts.catalogue_generation_common import (
+    from catalogue import catalogue_generation_indexes as indexes
+    from catalogue import catalogue_generation_moments as moment_artifacts
+    from catalogue import catalogue_generation_recent as recent
+    from catalogue import catalogue_generation_records as records
+    from catalogue import catalogue_generation_source_updates as source_updates
+    from catalogue import catalogue_generation_writes as writes
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_string,
         compact_json_object,
@@ -136,7 +140,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 
 try:
-    from catalogue_source import (
+    from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
         build_detail_section_resolution_by_uid,
         records_from_json_source,
@@ -144,7 +148,7 @@ try:
         write_source_record_payloads,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import (
+    from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
         build_detail_section_resolution_by_uid,
         records_from_json_source,
@@ -153,14 +157,14 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 try:
-    from series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 
 try:
-    from moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
+    from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
+    from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -277,7 +281,7 @@ def write_index_json_payload(
 
 def render_markdown_with_jekyll(markdown_path: Path) -> str:
     """Render a markdown file to HTML using the repo's local Jekyll stack."""
-    renderer_script = Path(__file__).resolve().with_name("render_markdown_with_jekyll.rb")
+    renderer_script = Path(__file__).resolve().parents[1] / "render_markdown_with_jekyll.rb"
     if not renderer_script.exists():
         raise SystemExit(f"Markdown renderer helper not found: {renderer_script}")
 
@@ -469,13 +473,13 @@ def main() -> None:
 
     if not args.internal_json_source_run:
         print(
-            "Deprecated direct entrypoint: scripts/generate_work_pages.py is now an internal JSON build engine.\n"
-            "Use `python3 ./scripts/catalogue_json_build.py --work-id <work_id> [--write]` for scoped runtime rebuilds.\n"
+            "Deprecated direct entrypoint: scripts/catalogue/generate_work_pages.py is now an internal JSON build engine.\n"
+            "Use `./scripts/catalogue/catalogue_json_build.py --work-id <work_id> [--write]` for scoped runtime rebuilds.\n"
             "Direct generation through this script is retired."
         )
         return
 
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = Path(__file__).resolve().parents[2]
     catalogue_prose_source_root = repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR
     projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
 

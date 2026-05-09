@@ -26,9 +26,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import load_pipeline_config
 
 try:
-    from series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

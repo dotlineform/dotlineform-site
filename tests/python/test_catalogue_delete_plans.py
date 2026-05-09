@@ -14,9 +14,9 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_delete_plans  # noqa: E402
-from catalogue_source import payload_for_map  # noqa: E402
-from moment_sources import moment_metadata_payload  # noqa: E402
+from catalogue import catalogue_delete_plans  # noqa: E402
+from catalogue.catalogue_source import payload_for_map  # noqa: E402
+from catalogue.moment_sources import moment_metadata_payload  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:

@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 21:28"
 parent_id: site-docs
 sort_order: 80
 ---
@@ -64,19 +64,19 @@ Catalogue/runtime maintenance:
   - runs optional repo check profiles and writes local logs under `var/test-runs/`
 - `./scripts/audit_studio_ready_state.py`
   - audits Studio route-ready template contracts and flags static routes that need a route-specific ready/busy implementation
-- `./scripts/catalogue_json_build.py`
+- `./scripts/catalogue/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
-- `./scripts/verify_catalogue_field_registry.py`
+- `./scripts/catalogue/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
 - `./scripts/docs/docs_export.py`
   - exports generated Docs Viewer data through source-controlled export configs into `var/studio/export-import/<scope>/exports/`; also powers the Studio Library export service path
 - `./scripts/docs/docs_import.py`
   - parses staged Library import JSON/JSONL files under `var/studio/export-import/library/import-staging/` and returns a read-only structured report
-- `./scripts/validate_catalogue_source.py`
+- `./scripts/catalogue/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
-- `./scripts/migrate_catalogue_media_sections.py`
+- `./scripts/catalogue/migrate_catalogue_media_sections.py`
   - previews or applies the work-detail source migration from legacy `project_subfolder` to separated `details_subfolder`, `section_id`, and `section_title`
-- `python3 ./scripts/export_catalogue_lookup.py`
+- `./scripts/catalogue/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
 - `bash scripts/make_srcset_images.sh`
   - builds derivative image outputs when media work is needed outside the Studio metadata flow

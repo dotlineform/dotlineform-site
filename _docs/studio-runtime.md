@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 21:28"
 parent_id: studio
 sort_order: 20
 ---
@@ -200,13 +200,13 @@ What it runs before starting long-lived services:
 
 - required port preflight for Jekyll and the local write services
 - optional docs/docs-search rebuilds for scopes listed in `DOCS_STARTUP_REBUILD_SCOPES`
-- `./scripts/export_catalogue_lookup.py --write`
+- `./scripts/catalogue/export_catalogue_lookup.py --write`
 
 What it starts:
 
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/tag_write_server.py`
-- `scripts/studio/catalogue_write_server.py`
+- `scripts/catalogue/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
 - `scripts/studio/audit_service.py`
 - `scripts/docs/docs_live_rebuild_watcher.py`
@@ -222,7 +222,7 @@ Current local generated Studio feeds surfaced through this runtime:
 
 Current mutable catalogue data surfaced through this runtime:
 
-- catalogue source records and catalogue lookup/search records are read from `scripts/studio/catalogue_write_server.py`
+- catalogue source records and catalogue lookup/search records are read from `scripts/catalogue/catalogue_write_server.py`
 - Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
 - catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of falling back to stale static source JSON
 

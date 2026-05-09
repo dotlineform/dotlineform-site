@@ -2,7 +2,7 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 21:13"
+last_updated: "2026-05-09 21:28"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 212
@@ -10,7 +10,7 @@ viewable: true
 ---
 # Scripts Directory Organization Request
 
-Status: slice 1 inventory complete; awaiting review before file moves.
+Status: slice 2 catalogue package move complete; Analytics tags and Studio runtime boundary is next.
 
 ## Purpose
 
@@ -239,6 +239,35 @@ Acceptance checks:
 - `bin/dev-studio` starts the catalogue service through the new path
 - no duplicate catalogue route constants or broad compatibility re-export modules remain
 - docs examples use the new command path
+
+#### Slice 2 implementation result
+
+Implemented 2026-05-09.
+
+Catalogue-owned Python modules now live under `scripts/catalogue/` as a package.
+The moved package includes source/model helpers, lookup/build helpers, generated-artifact helpers, validation/export utilities, `generate_work_pages.py`, `catalogue_json_build.py`, and the catalogue write server.
+Imports now use explicit package paths such as `from catalogue.catalogue_source import ...` or `from catalogue import catalogue_routes`, rather than old top-level module imports.
+
+Runtime and command-path updates:
+
+- `bin/dev-studio` now starts the catalogue write service from `scripts/catalogue/catalogue_write_server.py`.
+- `bin/dev-studio` now refreshes lookup data through `scripts/catalogue/export_catalogue_lookup.py`.
+- `scripts/run_checks.py` now compiles and invokes the moved catalogue paths.
+- `scripts/catalogue/catalogue_build_commands.py` now invokes the internal generator at `scripts/catalogue/generate_work_pages.py`.
+- Active script docs now use `./scripts/catalogue/...` command examples.
+
+Validation:
+
+- Python syntax check for moved catalogue modules, updated catalogue tests, `scripts/run_checks.py`, and `scripts/audit_site_consistency.py`.
+- Focused catalogue test sweep for `tests/python/test_catalogue_*.py`, `test_studio_activity_context.py`, and `test_studio_activity_feed.py`.
+- `./scripts/run_checks.py --profile catalogue`.
+- `./scripts/catalogue/catalogue_json_build.py --work-id 00001`.
+- `./scripts/catalogue/export_catalogue_lookup.py`.
+- `./scripts/catalogue/validate_catalogue_source.py`.
+- dry-run catalogue write server start plus `GET /health` on port `8798`.
+
+No compatibility modules were left at the old top-level paths.
+Historical change-log and already-closed request docs may still mention the old paths as historical records; active script and runtime docs should use the new paths.
 
 ### Slice 3: Analytics tags and Studio runtime boundary
 

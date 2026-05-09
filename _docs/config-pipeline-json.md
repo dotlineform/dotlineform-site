@@ -2,7 +2,7 @@
 doc_id: config-pipeline-json
 title: Pipeline Config JSON
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 21:28"
 parent_id: catalogue
 sort_order: 170
 ---
@@ -27,7 +27,7 @@ Current responsibilities include:
 
 Current Python callers load it through `scripts/pipeline_config.py`:
 
-- `scripts/generate_work_pages.py`
+- `scripts/catalogue/generate_work_pages.py`
 - `scripts/make_srcset_images.py`
 - `scripts/audit_site_consistency.py`
 

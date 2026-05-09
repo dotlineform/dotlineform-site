@@ -4,12 +4,17 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
-    from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
 
 try:
     from display_paths import format_display_path
@@ -27,7 +32,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = Path(__file__).resolve().parents[2]
     source_dir = Path(args.source_dir).expanduser()
     records = records_from_json_source(source_dir)
     errors = validate_source_records(

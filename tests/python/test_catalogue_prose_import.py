@@ -13,9 +13,9 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_prose_import as prose_import  # noqa: E402
-from catalogue_source import SOURCE_FILES, payload_for_map  # noqa: E402
-from moment_sources import MOMENT_METADATA_FILENAME, moment_metadata_payload  # noqa: E402
+from catalogue import catalogue_prose_import as prose_import  # noqa: E402
+from catalogue.catalogue_source import SOURCE_FILES, payload_for_map  # noqa: E402
+from catalogue.moment_sources import MOMENT_METADATA_FILENAME, moment_metadata_payload  # noqa: E402
 
 
 def write_json(path: Path, payload: dict) -> None:

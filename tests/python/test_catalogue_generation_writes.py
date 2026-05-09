@@ -12,7 +12,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_generation_writes as writes  # noqa: E402
+from catalogue import catalogue_generation_writes as writes  # noqa: E402
 
 
 def test_route_stub_content_is_metadata_free() -> None:

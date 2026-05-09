@@ -12,7 +12,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_build_commands as commands  # noqa: E402
+from catalogue import catalogue_build_commands as commands  # noqa: E402
 
 
 def test_generate_work_command_preserves_scope_and_flags() -> None:
@@ -35,7 +35,7 @@ def test_generate_work_command_preserves_scope_and_flags() -> None:
 
     assert cmd == [
         sys.executable,
-        "/repo/scripts/generate_work_pages.py",
+        "/repo/scripts/catalogue/generate_work_pages.py",
         "--internal-json-source-run",
         "--source-dir",
         "/repo/assets/studio/data/catalogue",
@@ -66,7 +66,7 @@ def test_generate_moment_command_preserves_scope_and_flags() -> None:
 
     assert cmd == [
         sys.executable,
-        "/repo/scripts/generate_work_pages.py",
+        "/repo/scripts/catalogue/generate_work_pages.py",
         "--internal-json-source-run",
         "--source-dir",
         "/repo/assets/studio/data/catalogue",

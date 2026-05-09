@@ -12,8 +12,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from catalogue_source import DETAIL_FIELDS, WORK_FIELDS, normalize_source_record  # noqa: E402
-from migrate_catalogue_media_sections import build_migration_plan, stable_json, write_migration  # noqa: E402
+from catalogue.catalogue_source import DETAIL_FIELDS, WORK_FIELDS, normalize_source_record  # noqa: E402
+from catalogue.migrate_catalogue_media_sections import build_migration_plan, stable_json, write_migration  # noqa: E402
 
 
 def write_json(path: Path, payload: dict) -> None:

@@ -227,7 +227,7 @@ else
   done
 fi
 echo "Building catalogue lookup data"
-"$PYTHON_BIN" scripts/export_catalogue_lookup.py --write
+"$PYTHON_BIN" scripts/catalogue/export_catalogue_lookup.py --write
 echo
 echo "Press Ctrl+C to stop all processes."
 echo
@@ -238,7 +238,7 @@ JEKYLL_PID=$!
 "$PYTHON_BIN" scripts/studio/tag_write_server.py --port "$TAG_WRITE_PORT" &
 TAG_WRITE_PID=$!
 
-"$PYTHON_BIN" scripts/studio/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT" &
+"$PYTHON_BIN" scripts/catalogue/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT" &
 CATALOGUE_WRITE_PID=$!
 
 "$PYTHON_BIN" scripts/docs/docs_management_server.py --port "$DOCS_MANAGEMENT_PORT" &

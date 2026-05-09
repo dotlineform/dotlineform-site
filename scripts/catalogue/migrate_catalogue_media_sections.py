@@ -6,13 +6,18 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
-    from catalogue_source import (
+    from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR,
         SOURCE_FILES,
         build_detail_section_id,
@@ -23,7 +28,7 @@ try:
         slug_id,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import (
+    from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR,
         SOURCE_FILES,
         build_detail_section_id,
@@ -348,7 +353,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parents[1]
+    repo_root = Path(__file__).resolve().parents[2]
     source_dir = Path(args.source_dir).expanduser()
     backup_dir = Path(args.backup_dir).expanduser()
     if not source_dir.is_absolute():

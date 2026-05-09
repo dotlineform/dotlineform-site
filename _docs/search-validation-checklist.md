@@ -2,7 +2,7 @@
 doc_id: search-validation-checklist
 title: "Search Validation Checklist"
 added_date: 2026-04-01
-last_updated: 2026-04-25
+last_updated: "2026-05-09 21:28"
 parent_id: search
 sort_order: 80
 ---
@@ -34,7 +34,7 @@ Prefer real site examples over synthetic test strings.
 
 ## A. Catalogue Build And Artifact Checks
 
-- [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/generate_work_pages.py`
+- [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/catalogue/generate_work_pages.py`
 - [ ] Run `./scripts/build_search.rb --scope catalogue`
 - [ ] Confirm the dry run completes without error, including build-config validation
 - [ ] Run `./scripts/build_search.rb --scope catalogue --write`

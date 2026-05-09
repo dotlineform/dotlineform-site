@@ -8,11 +8,12 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR.parent
-sys.path.insert(0, str(SCRIPT_DIR))
+SCRIPTS_DIR = SCRIPT_DIR.parent
+REPO_ROOT = SCRIPTS_DIR.parent
+sys.path.insert(0, str(SCRIPTS_DIR))
 
-from catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry  # noqa: E402
-from catalogue_source import (  # noqa: E402
+from catalogue.catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry  # noqa: E402
+from catalogue.catalogue_source import (  # noqa: E402
     DETAIL_FIELDS,
     DETAIL_TEXT_FIELDS,
     OMIT_EMPTY_SOURCE_FIELDS,
@@ -26,7 +27,7 @@ from catalogue_source import (  # noqa: E402
     CatalogueSourceRecords,
     normalize_source_record,
 )
-from moment_sources import (  # noqa: E402
+from catalogue.moment_sources import (  # noqa: E402
     MOMENT_DERIVED_FIELDS,
     MOMENT_IDENTITY_FIELDS,
     MOMENT_METADATA_FIELDS,

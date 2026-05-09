@@ -2,7 +2,7 @@
 doc_id: sorting-architecture
 title: Sorting Architecture
 added_date: 2026-03-31
-last_updated: "2026-05-06 21:10"
+last_updated: "2026-05-09 21:28"
 parent_id: architecture
 sort_order: 40
 ---
@@ -49,7 +49,7 @@ Whenever series ordering might change (new work in series, title/year edits affe
 Recommended command:
 
 ```bash
-python3 ./scripts/catalogue_json_build.py --series-id <series_id> --write
+./scripts/catalogue/catalogue_json_build.py --series-id <series_id> --write
 ```
 
 This command is the live scoped rebuild path for JSON-led catalogue maintenance.

@@ -28,7 +28,7 @@ def build_generate_command(
 ) -> list[str]:
     cmd = [
         sys.executable,
-        str(repo_root / "scripts" / "generate_work_pages.py"),
+        str(repo_root / "scripts" / "catalogue" / "generate_work_pages.py"),
         "--internal-json-source-run",
         "--source-dir",
         str(source_dir),
@@ -60,7 +60,7 @@ def build_generate_moment_command(
 ) -> list[str]:
     cmd = [
         sys.executable,
-        str(repo_root / "scripts" / "generate_work_pages.py"),
+        str(repo_root / "scripts" / "catalogue" / "generate_work_pages.py"),
         "--internal-json-source-run",
         "--source-dir",
         str(source_dir),
@@ -125,4 +125,3 @@ def step_failure_message(label: str, step: Mapping[str, Any]) -> str:
     if stdout:
         return stdout
     return f"{label} failed with exit code {int(step.get('exit_code', 1))}"
-

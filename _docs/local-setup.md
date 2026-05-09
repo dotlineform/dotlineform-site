@@ -2,7 +2,7 @@
 doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 21:28"
 parent_id: site-docs
 sort_order: 30
 ---
@@ -275,8 +275,8 @@ Common commands:
 
 ```bash
 ./scripts/audit_site_consistency.py --strict
-python3 ./scripts/validate_catalogue_source.py
-python3 ./scripts/catalogue_json_build.py --work-id 00001
+./scripts/catalogue/validate_catalogue_source.py
+./scripts/catalogue/catalogue_json_build.py --work-id 00001
 python3 ./scripts/css_token_audit.py
 bin/dev-studio
 ```

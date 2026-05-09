@@ -2,7 +2,7 @@
 doc_id: new-pipeline-web-system-spec
 title: "Web System Specification"
 added_date: 2026-04-17
-last_updated: 2026-05-02
+last_updated: "2026-05-09 21:28"
 parent_id: archive
 sort_order: 30
 ---
@@ -381,7 +381,7 @@ Bulk edit apply should:
 
 Recommended implementation:
 
-- add `scripts/studio/catalogue_write_server.py`
+- add `scripts/catalogue/catalogue_write_server.py`
 - keep it separate from `tag_write_server.py` initially to preserve a clear write allowlist and reduce regression risk
 - optionally extract shared localhost server utilities after both services stabilize
 
@@ -472,8 +472,8 @@ First target:
 The live user-facing generator path is the scoped JSON build CLI:
 
 ```bash
-./scripts/catalogue_json_build.py --work-id <work_id>
-./scripts/catalogue_json_build.py --work-id <work_id> --write
+./scripts/catalogue/catalogue_json_build.py --work-id <work_id>
+./scripts/catalogue/catalogue_json_build.py --work-id <work_id> --write
 ```
 
 `generate_work_pages.py` remains the internal generation engine behind that command.

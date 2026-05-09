@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Mapping
 
-import catalogue_cleanup
+from catalogue import catalogue_cleanup
 
 
 @dataclass(frozen=True)

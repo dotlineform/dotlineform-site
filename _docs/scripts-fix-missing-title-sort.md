@@ -2,7 +2,7 @@
 doc_id: scripts-fix-missing-title-sort
 title: Legacy Title Sort Fix
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:40"
+last_updated: "2026-05-09 21:28"
 parent_id: archive
 sort_order: 240
 ---
@@ -11,7 +11,7 @@ sort_order: 240
 Script:
 
 ```bash
-python3 ./scripts/fix_missing_title_sort.py
+./scripts/catalogue/fix_missing_title_sort.py
 ```
 
 Generated site JSON no longer persists `title_sort`.
@@ -20,19 +20,19 @@ This helper remains only for older or hand-authored `_works` front matter that s
 Dry-run:
 
 ```bash
-python3 ./scripts/fix_missing_title_sort.py
+./scripts/catalogue/fix_missing_title_sort.py
 ```
 
 Write changes:
 
 ```bash
-python3 ./scripts/fix_missing_title_sort.py --write
+./scripts/catalogue/fix_missing_title_sort.py --write
 ```
 
 Scope to selected IDs or ranges:
 
 ```bash
-python3 ./scripts/fix_missing_title_sort.py \
+./scripts/catalogue/fix_missing_title_sort.py \
   --work-ids 66-74,38,40 \
   --write
 ```

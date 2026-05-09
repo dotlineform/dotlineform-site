@@ -10,7 +10,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import bulk_import_workbook_path, load_pipeline_config
 
 try:
-    from catalogue_source import (
+    from catalogue.catalogue_source import (
         CatalogueSourceRecords,
         DETAIL_FIELDS,
         DETAIL_TEXT_FIELDS,
@@ -31,7 +31,7 @@ try:
         validate_work_detail_section_metadata_consistency,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import (
+    from catalogue.catalogue_source import (
         CatalogueSourceRecords,
         DETAIL_FIELDS,
         DETAIL_TEXT_FIELDS,
@@ -53,9 +53,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 try:
-    from series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.series_ids import normalize_series_id
+    from catalogue.series_ids import normalize_series_id
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

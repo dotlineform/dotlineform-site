@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
-from catalogue_source import CatalogueSourceRecords, load_json_file
-from series_ids import normalize_series_id, parse_series_ids
+from catalogue.catalogue_source import CatalogueSourceRecords, load_json_file
+from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 
 STUDIO_CONFIG_REL_PATH = Path("assets/studio/data/studio_config.json")

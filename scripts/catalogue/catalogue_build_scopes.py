@@ -6,9 +6,9 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Sequence
 
-import catalogue_build_media as build_media
-from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
-from moment_sources import (
+from catalogue import catalogue_build_media as build_media
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
+from catalogue.moment_sources import (
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
     load_moment_metadata_records,
@@ -17,7 +17,7 @@ from moment_sources import (
     validate_moment_metadata_record,
 )
 from pipeline_config import load_pipeline_config, source_moments_images_subdir
-from series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

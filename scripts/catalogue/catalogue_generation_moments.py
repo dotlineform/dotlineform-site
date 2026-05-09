@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Optional
 
 try:
-    import catalogue_generation_records as records
-    from catalogue_generation_common import (
+    from catalogue import catalogue_generation_records as records
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_string,
         compact_json_object,
@@ -19,8 +19,8 @@ try:
         parse_date,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts import catalogue_generation_records as records
-    from scripts.catalogue_generation_common import (
+    from catalogue import catalogue_generation_records as records
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_string,
         compact_json_object,

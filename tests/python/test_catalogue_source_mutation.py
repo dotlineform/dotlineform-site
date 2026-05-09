@@ -12,8 +12,8 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from catalogue_source import CatalogueSourceRecords  # noqa: E402
-import catalogue_source_mutation as source_mutation  # noqa: E402
+from catalogue.catalogue_source import CatalogueSourceRecords  # noqa: E402
+from catalogue import catalogue_source_mutation as source_mutation  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:

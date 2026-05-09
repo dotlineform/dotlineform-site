@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
 try:
-    from catalogue_generation_common import coerce_int, coerce_string, normalize_status
+    from catalogue.catalogue_generation_common import coerce_int, coerce_string, normalize_status
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_generation_common import coerce_int, coerce_string, normalize_status
+    from catalogue.catalogue_generation_common import coerce_int, coerce_string, normalize_status
 
 
 WORK_RECORD = "work"

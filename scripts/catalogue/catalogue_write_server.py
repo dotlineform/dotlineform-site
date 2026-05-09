@@ -3,12 +3,12 @@
 Localhost-only write service for canonical catalogue source JSON.
 
 Run:
-  ./scripts/studio/catalogue_write_server.py
-  ./scripts/studio/catalogue_write_server.py --port 8788
-  ./scripts/studio/catalogue_write_server.py --repo-root /path/to/dotlineform-site
-  ./scripts/studio/catalogue_write_server.py --dry-run
+  ./scripts/catalogue/catalogue_write_server.py
+  ./scripts/catalogue/catalogue_write_server.py --port 8788
+  ./scripts/catalogue/catalogue_write_server.py --repo-root /path/to/dotlineform-site
+  ./scripts/catalogue/catalogue_write_server.py --dry-run
 
-Endpoint paths are owned by scripts/catalogue_routes.py.
+Endpoint paths are owned by scripts/catalogue/catalogue_routes.py.
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -34,7 +34,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from catalogue_source import (  # noqa: E402
+from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     DETAIL_FIELDS,
     SERIES_FIELDS,
@@ -54,7 +54,7 @@ from catalogue_source import (  # noqa: E402
     validate_work_detail_section_metadata_consistency,
 )
 from studio_activity import append_studio_activity  # noqa: E402
-from catalogue_lookup import (  # noqa: E402
+from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_series_search_payload,
     build_series_lookup_payload,
@@ -63,34 +63,34 @@ from catalogue_lookup import (  # noqa: E402
     build_work_lookup_payload,
     build_work_search_payload,
 )
-import catalogue_invalidation as invalidation  # noqa: E402
-from catalogue_build_commands import build_search_command  # noqa: E402
-from catalogue_build_field_plan import build_field_plan_for_scope  # noqa: E402
-from catalogue_build_media import build_local_media_plan, build_moment_readiness  # noqa: E402
-from catalogue_build_scopes import (  # noqa: E402
+from catalogue import catalogue_invalidation as invalidation  # noqa: E402
+from catalogue.catalogue_build_commands import build_search_command  # noqa: E402
+from catalogue.catalogue_build_field_plan import build_field_plan_for_scope  # noqa: E402
+from catalogue.catalogue_build_media import build_local_media_plan, build_moment_readiness  # noqa: E402
+from catalogue.catalogue_build_scopes import (  # noqa: E402
     build_scope_for_moment,
     build_scope_for_series,
     build_scope_for_work,
     preview_moment_source,
 )
-import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
-import catalogue_save_build as save_build  # noqa: E402
-import catalogue_source_mutation as source_mutation  # noqa: E402
+from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
+from catalogue import catalogue_save_build as save_build  # noqa: E402
+from catalogue import catalogue_source_mutation as source_mutation  # noqa: E402
 from local_env import runtime_env  # noqa: E402
-from catalogue_json_build import run_scoped_build_scope  # noqa: E402
-from catalogue_field_registry import (  # noqa: E402
+from catalogue.catalogue_json_build import run_scoped_build_scope  # noqa: E402
+from catalogue.catalogue_field_registry import (  # noqa: E402
     apply_field_build_plan_to_scope,
     field_aware_build_plan,
     full_fallback_build_plan,
     load_catalogue_field_registry,
 )
-from moment_sources import (  # noqa: E402
+from catalogue.moment_sources import (  # noqa: E402
     CATALOGUE_MOMENT_PROSE_REL_DIR,
     MOMENT_METADATA_FILENAME,
     normalize_moment_filename,
     normalize_moment_metadata_record,
 )
-from catalogue_workbook_import import (  # noqa: E402
+from catalogue.catalogue_workbook_import import (  # noqa: E402
     DEFAULT_IMPORT_WORKBOOK_PATH,
     IMPORT_MODE_WORKS,
     IMPORT_MODE_WORK_DETAILS,
@@ -99,20 +99,20 @@ from catalogue_workbook_import import (  # noqa: E402
     normalize_import_mode,
     plan_to_response,
 )
-from project_state_report import (  # noqa: E402
+from catalogue.project_state_report import (  # noqa: E402
     DEFAULT_OUTPUT_REL_PATH,
     PROJECTS_BASE_DIR_ENV_NAME,
     build_project_state_report,
     resolve_projects_base_dir,
 )
 from script_logging import append_script_log  # noqa: E402
-from series_ids import normalize_series_id  # noqa: E402
-import catalogue_activity as activity  # noqa: E402
-import catalogue_delete_plans  # noqa: E402
-import catalogue_prose_import as prose_import  # noqa: E402
-import catalogue_publication  # noqa: E402
-import catalogue_routes as routes  # noqa: E402
-import catalogue_transactions as transactions  # noqa: E402
+from catalogue.series_ids import normalize_series_id  # noqa: E402
+from catalogue import catalogue_activity as activity  # noqa: E402
+from catalogue import catalogue_delete_plans  # noqa: E402
+from catalogue import catalogue_prose_import as prose_import  # noqa: E402
+from catalogue import catalogue_publication  # noqa: E402
+from catalogue import catalogue_routes as routes  # noqa: E402
+from catalogue import catalogue_transactions as transactions  # noqa: E402
 
 
 BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")

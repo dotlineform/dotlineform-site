@@ -2,7 +2,7 @@
 doc_id: scripts-project-state-report
 title: Project State Report
 added_date: 2026-04-27
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 21:28"
 parent_id: catalogue
 sort_order: 140
 ---
@@ -11,7 +11,7 @@ sort_order: 140
 Script:
 
 ```bash
-./scripts/project_state_report.py
+./scripts/catalogue/project_state_report.py
 ```
 
 ## Purpose
@@ -34,19 +34,19 @@ Cloud/Codespaces runs can provide the same key through platform environment conf
 Default preview:
 
 ```bash
-./scripts/project_state_report.py
+./scripts/catalogue/project_state_report.py
 ```
 
 Write the persistent Markdown report:
 
 ```bash
-./scripts/project_state_report.py --write
+./scripts/catalogue/project_state_report.py --write
 ```
 
 Include source subfolders in the report:
 
 ```bash
-./scripts/project_state_report.py --write --include-subfolders
+./scripts/catalogue/project_state_report.py --write --include-subfolders
 ```
 
 The write target is:

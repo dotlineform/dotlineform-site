@@ -14,9 +14,9 @@ for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import catalogue_activity as activity  # noqa: E402
-import catalogue_routes as routes  # noqa: E402
-import catalogue_write_server  # noqa: E402
+from catalogue import catalogue_activity as activity  # noqa: E402
+from catalogue import catalogue_routes as routes  # noqa: E402
+from catalogue import catalogue_write_server  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:

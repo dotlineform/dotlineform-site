@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: "2026-05-09 19:49"
+last_updated: "2026-05-09 21:28"
 parent_id: archive
 sort_order: 50
 ---
@@ -19,18 +19,18 @@ This document describes the retired direct `generate_work_pages.py` command surf
 Script:
 
 ```bash
-./scripts/generate_work_pages.py
+./scripts/catalogue/generate_work_pages.py
 ```
 
 Common runs:
 
 ```bash
-./scripts/generate_work_pages.py
-./scripts/generate_work_pages.py --write
-./scripts/catalogue_json_build.py --work-id 00456
-./scripts/catalogue_json_build.py --work-id 00456 --write
-./scripts/catalogue_json_build.py --moment-file keys.md
-./scripts/catalogue_json_build.py --moment-file keys.md --write
+./scripts/catalogue/generate_work_pages.py
+./scripts/catalogue/generate_work_pages.py --write
+./scripts/catalogue/catalogue_json_build.py --work-id 00456
+./scripts/catalogue/catalogue_json_build.py --work-id 00456 --write
+./scripts/catalogue/catalogue_json_build.py --moment-file keys.md
+./scripts/catalogue/catalogue_json_build.py --moment-file keys.md --write
 ```
 
 Before any writes begin, the generator validates canonical source records and moment-source inputs before file writes or canonical source updates start.
@@ -41,12 +41,12 @@ When `--write` is used, the generator writes mutable catalogue/source state back
 
 Current helper ownership:
 
-- `scripts/catalogue_generation_records.py` owns pure public work, series, detail, and moment record projection helpers
-- `scripts/catalogue_generation_indexes.py` owns pure series/work aggregate contexts plus series, works, and Studio storage index payload builders
-- `scripts/catalogue_generation_moments.py` owns pure moment source-record collection, moment generation decisions, per-moment runtime payload construction, and `moments_index_v1` payload construction
-- `scripts/catalogue_generation_recent.py` owns pure recent-publications entry normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction
-- `scripts/catalogue_generation_source_updates.py` owns pure work/work-detail status, published-date, source image path, dimension update, and work publish-transition planners
-- `scripts/generate_work_pages.py` remains the internal CLI/path/write orchestration layer for source loading, configured project-root binding, image dimension reads, rendering, aggregate generated-file write decisions, applying source update plans, source write-back, and run summaries
+- `scripts/catalogue/catalogue_generation_records.py` owns pure public work, series, detail, and moment record projection helpers
+- `scripts/catalogue/catalogue_generation_indexes.py` owns pure series/work aggregate contexts plus series, works, and Studio storage index payload builders
+- `scripts/catalogue/catalogue_generation_moments.py` owns pure moment source-record collection, moment generation decisions, per-moment runtime payload construction, and `moments_index_v1` payload construction
+- `scripts/catalogue/catalogue_generation_recent.py` owns pure recent-publications entry normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction
+- `scripts/catalogue/catalogue_generation_source_updates.py` owns pure work/work-detail status, published-date, source image path, dimension update, and work publish-transition planners
+- `scripts/catalogue/generate_work_pages.py` remains the internal CLI/path/write orchestration layer for source loading, configured project-root binding, image dimension reads, rendering, aggregate generated-file write decisions, applying source update plans, source write-back, and run summaries
 
 Moment canonical source model:
 
@@ -206,10 +206,10 @@ Catalogue search note:
 ## Generator Module Ownership
 
 `generate_work_pages.py` remains the internal orchestration entrypoint for the catalogue JSON build pipeline.
-Pure generated-record shaping lives in `scripts/catalogue_generation_records.py`.
-Pure series/work aggregate context and index payload construction lives in `scripts/catalogue_generation_indexes.py`, including series sort context, published series membership, primary-work validation, `assets/data/series_index.json`, `assets/data/works_index.json`, and `assets/studio/data/work_storage_index.json` payload construction.
-Pure source update planning lives in `scripts/catalogue_generation_source_updates.py`, including actionable status checks, first-time work/work-detail publication updates, work publish-transition records for `/recent/`, source image path planning, structured missing-path warnings, and dimension update suppression.
-Pure moment artifact building lives in `scripts/catalogue_generation_moments.py`, including moment metadata source collection, slug/actionability decisions, runtime moment record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction.
+Pure generated-record shaping lives in `scripts/catalogue/catalogue_generation_records.py`.
+Pure series/work aggregate context and index payload construction lives in `scripts/catalogue/catalogue_generation_indexes.py`, including series sort context, published series membership, primary-work validation, `assets/data/series_index.json`, `assets/data/works_index.json`, and `assets/studio/data/work_storage_index.json` payload construction.
+Pure source update planning lives in `scripts/catalogue/catalogue_generation_source_updates.py`, including actionable status checks, first-time work/work-detail publication updates, work publish-transition records for `/recent/`, source image path planning, structured missing-path warnings, and dimension update suppression.
+Pure moment artifact building lives in `scripts/catalogue/catalogue_generation_moments.py`, including moment metadata source collection, slug/actionability decisions, runtime moment record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction.
 The generator still owns CLI parsing, configured path binding, image dimension reads, Markdown rendering, existing-version comparisons, aggregate JSON write orchestration, dry-run/write reporting, file writes, applying planned source updates during `--write`, source write-back, and event logging.
 Retired Studio-series route generation has been removed from the generator; use `/studio/analytics/series-tag-editor/?series=<id>` for Studio series tag work.
 

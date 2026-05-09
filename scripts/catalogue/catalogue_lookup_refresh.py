@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from catalogue_lookup import (
+from catalogue.catalogue_lookup import (
     build_and_write_catalogue_lookup,
     build_series_lookup_payload,
     build_series_search_payload,
@@ -18,13 +18,13 @@ from catalogue_lookup import (
     write_series_lookup_payload,
     write_work_lookup_payload,
 )
-from catalogue_source import (
+from catalogue.catalogue_source import (
     normalize_series_ids_value,
     normalize_text,
     records_from_json_source,
     slug_id,
 )
-import catalogue_invalidation as invalidation
+from catalogue import catalogue_invalidation as invalidation
 
 
 def rel_path(repo_root: Path, path: Path) -> str:

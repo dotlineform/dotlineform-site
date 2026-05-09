@@ -13,7 +13,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import catalogue_transactions as transactions  # noqa: E402
+from catalogue import catalogue_transactions as transactions  # noqa: E402
 
 
 def write_text(path: Path, text: str) -> None:

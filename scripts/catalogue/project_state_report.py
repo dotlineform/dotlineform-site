@@ -11,11 +11,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
-    from catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, normalize_text, records_from_json_source
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, normalize_text, records_from_json_source
     from pipeline_config import env_var_name, env_var_value, load_pipeline_config, source_works_root_subdir
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, normalize_text, records_from_json_source
+    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, normalize_text, records_from_json_source
     from scripts.pipeline_config import env_var_name, env_var_value, load_pipeline_config, source_works_root_subdir
 
 

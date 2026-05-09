@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 21:28"
 parent_id: servers
 sort_order: 20
 ---
@@ -117,7 +117,7 @@ After that preflight, `bin/dev-studio` runs the startup write steps below:
    - `./scripts/build_docs.rb --scope <scope> --write`
    - `./scripts/build_search.rb --scope <scope> --write`
    for each listed docs scope
-3. `./scripts/export_catalogue_lookup.py --write`
+3. `./scripts/catalogue/export_catalogue_lookup.py --write`
 
 That means a fresh `bin/dev-studio` run always updates:
 
@@ -167,7 +167,7 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 - command:
 
 ```bash
-./scripts/studio/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT"
+./scripts/catalogue/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT"
 ```
 
 - default URL: `http://127.0.0.1:8788`
@@ -245,7 +245,7 @@ If any one of the child processes exits unexpectedly, the runner stops monitorin
 
 `bin/dev-studio` does not currently:
 
-- run `./scripts/catalogue_json_build.py`
+- run `./scripts/catalogue/catalogue_json_build.py`
 - rebuild any docs/docs-search scope on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - rebuild catalogue or public search artifacts on startup
 - start a separate frontend asset server

@@ -2,7 +2,7 @@
 doc_id: scripts-verify-catalogue-field-registry
 title: Catalogue Field Registry Verification
 added_date: 2026-05-01
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-09 21:28"
 parent_id: catalogue
 sort_order: 80
 ---
@@ -11,7 +11,7 @@ sort_order: 80
 Script:
 
 ```bash
-./scripts/verify_catalogue_field_registry.py
+./scripts/catalogue/verify_catalogue_field_registry.py
 ```
 
 Test wrapper:
@@ -27,9 +27,9 @@ This read-only helper verifies representative catalogue field-registry build pla
 Use this script after changing:
 
 - `assets/studio/data/catalogue_field_registry.json`
-- `scripts/catalogue_field_registry.py`
-- `scripts/catalogue_source.py`
-- `scripts/moment_sources.py`
+- `scripts/catalogue/catalogue_field_registry.py`
+- `scripts/catalogue/catalogue_source.py`
+- `scripts/catalogue/moment_sources.py`
 - field-aware preview or save-time build planning
 - the optional `catalogue` check profile in `./scripts/run_checks.py`
 
@@ -77,6 +77,6 @@ A failing check exits non-zero and reports the first mismatched plan field.
 
 ## Boundaries
 
-This script verifies planner behavior and source/registry coverage. It does not make the registry the owner of source serialization. Field order, normalization, and omit-empty behavior still live in `scripts/catalogue_source.py` and `scripts/moment_sources.py`.
+This script verifies planner behavior and source/registry coverage. It does not make the registry the owner of source serialization. Field order, normalization, and omit-empty behavior still live in `scripts/catalogue/catalogue_source.py` and `scripts/catalogue/moment_sources.py`.
 
 It does not write generated files, run local media generation, rebuild catalogue search, or verify browser UI behavior.

@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Mapping, Optional
 
 try:
-    from catalogue_generation_common import (
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_string,
         compact_json_object,
@@ -14,7 +14,7 @@ try:
         parse_date,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_generation_common import (
+    from catalogue.catalogue_generation_common import (
         coerce_int,
         coerce_string,
         compact_json_object,

@@ -2,7 +2,7 @@
 doc_id: new-pipeline-current-pipeline-map
 title: "Current Pipeline Map"
 added_date: 2026-04-17
-last_updated: 2026-05-01
+last_updated: "2026-05-09 21:28"
 parent_id: archive
 sort_order: 10
 ---
@@ -54,7 +54,7 @@ Main Studio flows:
 The live rebuild entrypoint is:
 
 ```bash
-./scripts/catalogue_json_build.py
+./scripts/catalogue/catalogue_json_build.py
 ```
 
 The build path reads canonical JSON source records and invokes the internal generator boundary. `generate_work_pages.py` remains the internal generation engine, not the user-facing command.

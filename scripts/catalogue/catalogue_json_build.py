@@ -5,14 +5,19 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Dict
 
-import catalogue_build_commands as build_commands
-import catalogue_build_field_plan as build_field_plan
-import catalogue_build_media as build_media
-import catalogue_build_scopes as build_scopes
-from catalogue_source import DEFAULT_SOURCE_DIR
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from catalogue import catalogue_build_commands as build_commands
+from catalogue import catalogue_build_field_plan as build_field_plan
+from catalogue import catalogue_build_media as build_media
+from catalogue import catalogue_build_scopes as build_scopes
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR
 from local_env import runtime_env
 
 

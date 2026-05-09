@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-import catalogue_cleanup
-import catalogue_source_mutation as source_mutation
-from catalogue_source import (
+from catalogue import catalogue_cleanup
+from catalogue import catalogue_source_mutation as source_mutation
+from catalogue.catalogue_source import (
     CatalogueSourceRecords,
     SOURCE_FILES,
     load_json_file,
@@ -19,7 +19,7 @@ from catalogue_source import (
     sort_record_map,
     validate_source_records,
 )
-from moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload
+from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload
 
 
 @dataclass(frozen=True)

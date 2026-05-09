@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 try:
-    from series_ids import normalize_series_id, parse_series_ids
+    from catalogue.series_ids import normalize_series_id, parse_series_ids
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.series_ids import normalize_series_id, parse_series_ids
+    from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 
 DEFAULT_SOURCE_DIR = Path("assets/studio/data/catalogue")

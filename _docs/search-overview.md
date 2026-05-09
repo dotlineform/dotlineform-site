@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: "Search Overview"
 added_date: 2026-03-31
-last_updated: "2026-05-05"
+last_updated: "2026-05-09 21:28"
 parent_id: search
 sort_order: 20
 ---
@@ -87,7 +87,7 @@ Those source and upstream artifact families are documented in:
 
 ### 2. Search index generation
 
-`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical generated docs indexes, skips docs with `viewable: false`, and can now patch affected docs-search entries by `doc_id` instead of always rebuilding the full docs-domain artifact. The builder also validates `scripts/search/build_config.json` so emitted fields have explicit source-family declarations.
+`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/catalogue/generate_work_pages.py`; for `studio` and `library`, it reads the canonical generated docs indexes, skips docs with `viewable: false`, and can now patch affected docs-search entries by `doc_id` instead of always rebuilding the full docs-domain artifact. The builder also validates `scripts/search/build_config.json` so emitted fields have explicit source-family declarations.
 
 ### 3. Search policy
 

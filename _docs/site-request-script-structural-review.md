@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 21:05"
+last_updated: "2026-05-09 21:28"
 ui_status: done
 parent_id: change-requests
 sort_order: 210
@@ -24,7 +24,7 @@ Status:
 
 Review large Studio and catalogue scripts for structural confusion, not only file size.
 
-The immediate trigger is `scripts/studio/catalogue_write_server.py`: it is large enough to be awkward, but the more important problem is that HTTP transport, source mutation, publication/delete planning, activity rows, lookup refreshes, generated-artifact cleanup, prose imports, and build orchestration all live in one file.
+The immediate trigger is `scripts/catalogue/catalogue_write_server.py`: it is large enough to be awkward, but the more important problem is that HTTP transport, source mutation, publication/delete planning, activity rows, lookup refreshes, generated-artifact cleanup, prose imports, and build orchestration all live in one file.
 Small changes can therefore require broad local knowledge and can carry hidden side effects across unrelated workflows.
 
 ## Goals
@@ -48,11 +48,11 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 
 | Priority | Script | Review focus | Status or likely direction |
 |---|---|---|---|
-| 1 | `scripts/studio/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
+| 1 | `scripts/catalogue/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
 | 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | complete; final boundary recorded in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
-| 4 | `scripts/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | complete; final boundary recorded in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
-| 5 | `scripts/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | complete; final boundary recorded in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build) |
+| 4 | `scripts/catalogue/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | complete; final boundary recorded in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
+| 5 | `scripts/catalogue/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | complete; final boundary recorded in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build) |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | deferred; low priority until audit checks become harder to maintain |
 | 7 | `scripts/docs/docs_html_import.py`, `scripts/docs/docs_export.py`, `scripts/docs/docs_import.py` | import/export adapters may need clearer boundaries as Library and Docs workflows evolve | deferred; low priority until import/export requirements expand or adapter friction appears |
 
@@ -73,14 +73,14 @@ Future work should reopen or create a narrower request for one of those candidat
 
 ## Priority 1 Review: Catalogue Write Server
 
-`scripts/studio/catalogue_write_server.py` was reviewed around responsibility boundaries.
+`scripts/catalogue/catalogue_write_server.py` was reviewed around responsibility boundaries.
 The detailed implementation record lives in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
 
 Status: complete through Slice 14.
 
 End result:
 
-- `scripts/studio/catalogue_write_server.py` remains the local HTTP orchestration layer
+- `scripts/catalogue/catalogue_write_server.py` remains the local HTTP orchestration layer
 - the server keeps request parsing, endpoint-specific allowlist checks, final response assembly, local logging, and Studio Activity append timing
 - activity row construction, lookup invalidation, lookup refresh execution, generated cleanup planning, delete/publication planning, transaction mechanics, prose import logic, route inventories, source mutation planning, and save-build follow-through now have explicit module owners
 - focused tests exercise the extracted owners directly instead of using the server as the access path for moved behavior
@@ -201,7 +201,7 @@ If the deferred candidates become painful later, create or reopen a narrower req
 ## Implementation Notes
 
 Priority 1 catalogue write-server slices are tracked in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
-That child doc records implemented Slices 1-14 and the final module ownership boundary for `scripts/studio/catalogue_write_server.py`.
+That child doc records implemented Slices 1-14 and the final module ownership boundary for `scripts/catalogue/catalogue_write_server.py`.
 
 Priority 2 docs-management server slices are tracked in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
 That child doc records implemented Slices 1-8 and the final module ownership boundary for `scripts/docs/docs_management_server.py`.
@@ -210,7 +210,7 @@ Priority 3 tag write-server slices are tracked in [Tag Write Server Slices](/doc
 That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, write-transaction, and final handler-body closeout boundary for `scripts/studio/tag_write_server.py`.
 
 Priority 4 generate-work-pages slices are tracked in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages).
-That child doc records the implemented catalogue record projection, index builder, recent-entry merging, route/file write decision, source update planning, moment artifact building, and final generator orchestration cleanup boundary for `scripts/generate_work_pages.py`.
+That child doc records the implemented catalogue record projection, index builder, recent-entry merging, route/file write decision, source update planning, moment artifact building, and final generator orchestration cleanup boundary for `scripts/catalogue/generate_work_pages.py`.
 
 Priority 5 catalogue-json-build slices are tracked in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build).
-That child doc records the implemented scope planning, media readiness and local media execution, field-aware build-plan adaptation, command construction, subprocess result shaping, and final orchestration cleanup boundary for `scripts/catalogue_json_build.py`.
+That child doc records the implemented scope planning, media readiness and local media execution, field-aware build-plan adaptation, command construction, subprocess result shaping, and final orchestration cleanup boundary for `scripts/catalogue/catalogue_json_build.py`.

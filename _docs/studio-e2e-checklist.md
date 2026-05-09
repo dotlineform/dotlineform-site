@@ -2,7 +2,7 @@
 doc_id: new-pipeline-studio-e2e-checklist
 title: "Studio E2E Checklist"
 added_date: 2026-04-19
-last_updated: 2026-04-29
+last_updated: "2026-05-09 21:28"
 parent_id: archive
 sort_order: 60
 ---
@@ -471,11 +471,11 @@ Expected results:
 Use these as companion checks during execution:
 
 ```bash
-python -m py_compile scripts/generate_work_pages.py scripts/catalogue_json_build.py scripts/studio/catalogue_write_server.py
+python -m py_compile scripts/catalogue/generate_work_pages.py scripts/catalogue/catalogue_json_build.py scripts/catalogue/catalogue_write_server.py
 ./scripts/build_docs.rb --scope studio --write
 bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
-python scripts/catalogue_json_build.py --work-id <work_id>
-python scripts/catalogue_json_build.py --moment-file <moment_file>.md
+./scripts/catalogue/catalogue_json_build.py --work-id <work_id>
+./scripts/catalogue/catalogue_json_build.py --moment-file <moment_file>.md
 ```
 
 Add narrower commands only when a scenario needs them.
