@@ -48,6 +48,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/audit_studio_ready_state.py",
                 "scripts/verify_activity_contract.py",
                 "scripts/studio_activity.py",
+                "scripts/docs/docs_activity.py",
                 "scripts/catalogue_source.py",
                 "scripts/catalogue_cleanup.py",
                 "scripts/catalogue_delete_plans.py",
@@ -61,6 +62,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue_transactions.py",
                 "scripts/studio/audit_service.py",
                 "tests/python/test_activity_contract.py",
+                "tests/python/test_docs_activity.py",
                 "tests/python/test_catalogue_cleanup.py",
                 "tests/python/test_catalogue_delete_plans.py",
                 "tests/python/test_catalogue_invalidation.py",
@@ -206,6 +208,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "docs-generated-read-tests",
             (sys.executable, "tests/python/test_docs_generated_reads.py"),
             "Verify generated Docs Viewer read helpers and safety checks.",
+        ),
+        CheckCommand(
+            "docs-activity-tests",
+            (sys.executable, "tests/python/test_docs_activity.py"),
+            "Verify Docs Management Studio Activity helper behavior.",
         ),
         CheckCommand(
             "docs-management-server-tests",

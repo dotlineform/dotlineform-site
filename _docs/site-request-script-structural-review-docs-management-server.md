@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 12:44"
+last_updated: "2026-05-09 13:03"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -13,6 +13,7 @@ Status:
 - Slice 1 implemented
 - Slice 2 implemented
 - Slice 3 implemented
+- Slice 4 implemented
 - later slices are planned, but should still be reconfirmed before editing
 
 ## Purpose
@@ -112,16 +113,15 @@ Risks:
 
 ## Planned Slice Sequence
 
-The remaining sequence now moves from generated-data reads into activity, rebuild/write, and mutation-planning ownership.
-Slice 4 is the next planned implementation slice and should still be reconfirmed before editing.
+The remaining sequence now moves from activity into rebuild/write and mutation-planning ownership.
+Slice 5 is the next planned implementation slice and should still be reconfirmed before editing.
 
 Remaining planned order:
 
-1. Slice 4: docs activity helpers.
-2. Slice 5: rebuild and source-write follow-through helpers.
-3. Slice 6: management mutation planners.
-4. Slice 7: import-source orchestration cleanup, only if still useful.
-5. Slice 8: final handler body cleanup and closeout.
+1. Slice 5: rebuild and source-write follow-through helpers.
+2. Slice 6: management mutation planners.
+3. Slice 7: import-source orchestration cleanup, only if still useful.
+4. Slice 8: final handler body cleanup and closeout.
 
 Importer/exporter note:
 
@@ -234,9 +234,13 @@ Risks:
 
 ### Slice 4: docs activity helpers
 
-Status: planned.
+Status: implemented.
 
-Proposed module owner:
+The fourth implementation slice extracted Docs Management Studio Activity construction from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_activity.py`.
+The server still owns endpoint completion timing: each POST handler decides whether work completed far enough to call the activity helper, then tolerates activity append failure without failing the main endpoint.
+The activity module owns docs-specific status selection, record-group id compaction, endpoint constants through `scripts/docs/docs_management_routes.py`, and the docs-management local log source reference used in activity rows.
+
+Module owner:
 
 - `scripts/docs/docs_activity.py`
 
@@ -256,22 +260,23 @@ The server should keep:
 
 Acceptance checks:
 
-- add focused activity helper tests, either new `tests/python/test_docs_activity.py` or an expanded activity-context test
-- cover dry-run/export no-write suppression
-- cover import-source preview and overwrite-confirmation suppression
-- cover import-apply confirmation suppression
-- cover broken-link warning status when broken links are found
-- keep activity endpoint strings sourced from `docs_management_routes`
+- `tests/python/test_docs_activity.py` covers dry-run/export no-write suppression, successful export record groups/source refs, import-source preview and overwrite-confirmation suppression, import-apply confirmation suppression, and broken-link warning status when broken links are found
+- activity helper tests use endpoint constants from `scripts/docs/docs_management_routes.py`
+- `scripts/run_checks.py --profile docs` now includes the activity helper tests
+- `scripts/docs/docs_activity.py`, `scripts/docs/docs_management_server.py`, `scripts/run_checks.py`, `tests/python/test_docs_activity.py`, and `tests/python/test_docs_management_server.py` compile with the configured Python interpreter
+- `tests/python/test_docs_management_server.py` and `tests/python/test_docs_management_routes.py` still pass
 
 Benefits:
 
 - removes docs-specific activity construction from the HTTP server
 - makes activity behavior easier to expand as importer/exporter use cases grow
+- keeps the server focused on endpoint timing and response status rather than row assembly details
 
 Risks:
 
 - Studio Activity rows are user-facing operational history, so row status, record ids, and source refs should not drift
 - do not generalize to a shared activity framework until catalogue/docs/tag patterns are compared after their own slices
+- the server still calls the moved helpers directly, so later handler cleanup should keep endpoint timing easy to follow
 
 ### Slice 5: rebuild and source-write follow-through helpers
 

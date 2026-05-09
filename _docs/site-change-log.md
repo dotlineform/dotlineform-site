@@ -17,27 +17,33 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
-## [2026-05-09] Started docs-management server structural review slices
+## [2026-05-09] Advanced docs-management server structural review slices
 
 **Status:** implemented
 
 **Area:** Studio / Docs Viewer / scripts / maintainability
 
 **Summary:**
-Started the priority-2 docs-management server sequence in the script structural review.
-The first slice moved Docs Management endpoint path ownership into `scripts/docs/docs_management_routes.py`, switched the server handler to explicit GET/POST dispatch tables, and added route coverage tests.
+Advanced the priority-2 docs-management server sequence in the script structural review through Slice 4.
+The extracted owners now cover endpoint route inventory, docs source-model helpers, generated Docs Viewer read helpers, and docs-specific Studio Activity row construction.
 
 **Files changed/docs:**
 
 - `scripts/docs/docs_management_server.py`
 - `scripts/docs/docs_management_routes.py`
+- `scripts/docs/docs_source_model.py`
+- `scripts/docs/docs_generated_reads.py`
+- `scripts/docs/docs_activity.py`
 - `tests/python/test_docs_management_routes.py`
+- `tests/python/test_docs_source_model.py`
+- `tests/python/test_docs_generated_reads.py`
+- `tests/python/test_docs_activity.py`
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
 
 **Impact:**
-Endpoint URLs and payload behavior are unchanged, but route ownership is now explicit and future Docs Management endpoint additions have a focused testable path.
+Endpoint URLs and payload behavior are unchanged, but route, source-model, generated-read, and activity-row responsibilities now have focused module owners and direct tests.
 
 ## [2026-05-09] Renamed docs source roots
 

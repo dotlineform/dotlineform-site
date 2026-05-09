@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-09 12:27"
+last_updated: "2026-05-09 13:03"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -57,6 +57,9 @@ Current behavior:
 
 - local-only write service for the shared Docs Viewer
 - endpoint path constants are owned by `scripts/docs/docs_management_routes.py`; the server handler uses explicit GET and POST dispatch tables
+- docs source-model helpers are owned by `scripts/docs/docs_source_model.py`
+- generated Docs Viewer JSON read helpers are owned by `scripts/docs/docs_generated_reads.py`
+- docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and source import writes
@@ -620,6 +623,7 @@ Export/import adapter behavior is covered by focused checks:
 - `tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
 - `tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
 - `tests/python/test_export_import_adapters.py` verifies active adapter resolution and future stub rejection.
+- `tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
 - `tests/smoke/data_import.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
 
 The `docs` profile runs the parser, service, and adapter checks.

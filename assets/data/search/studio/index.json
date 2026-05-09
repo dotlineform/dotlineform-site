@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-40053d79b58c172b2c498df03084cb21",
-    "generated_at_utc": "2026-05-09T11:46:07Z",
+    "version": "blake2b-742df98ed43d59bb7ba5f4859422bd77",
+    "generated_at_utc": "2026-05-09T12:04:12Z",
     "count": 203
   },
   "entries": [
@@ -830,10 +830,10 @@
       "kind": "doc",
       "title": "Docs Management Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
-      "last_updated": "2026-05-09 12:44",
+      "last_updated": "2026-05-09 13:03",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 12:44 • Script Structural Review Request",
+      "display_meta": "2026-05-09 13:03 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-docs-management-server",
         "site",
@@ -847,14 +847,14 @@
         "docs management server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 12:44",
+        "2026-05-09 13:03",
         "2026",
         "05",
         "09",
-        "12",
-        "44"
+        "13",
+        "03"
       ],
-      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 12:44 2026 05 09 12 44"
+      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 13:03 2026 05 09 13 03"
     },
     {
       "id": "ui-primitive-input",
@@ -2142,10 +2142,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-09 12:27",
+      "last_updated": "2026-05-09 13:03",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 12:27 • Docs",
+      "display_meta": "2026-05-09 13:03 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2153,14 +2153,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-09 12:27",
+        "2026-05-09 13:03",
         "2026",
         "05",
         "09",
-        "12",
-        "27"
+        "13",
+        "03"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 12:27 2026 05 09 12 27"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 13:03 2026 05 09 13 03"
     },
     {
       "id": "site-request-json-schema-adoption",
@@ -4820,10 +4820,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 12:27",
+      "last_updated": "2026-05-09 13:03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 12:27 • Change Requests",
+      "display_meta": "2026-05-09 13:03 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4835,14 +4835,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 12:27",
+        "2026-05-09 13:03",
         "2026",
         "05",
         "09",
-        "12",
-        "27"
+        "13",
+        "03"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 12:27 2026 05 09 12 27"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 13:03 2026 05 09 13 03"
     },
     {
       "id": "change-requests",
