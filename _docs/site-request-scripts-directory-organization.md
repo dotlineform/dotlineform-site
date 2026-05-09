@@ -439,8 +439,3 @@ Final validation:
 - shared helpers remain top-level infrastructure modules because the root is now small and the helpers have cross-domain callers.
 - no old root Python compatibility wrappers were kept; active repo docs and checks use owner paths directly.
 
-## Recommended First Slice
-
-Start with the inventory and move map.
-Do not move files in that slice.
-The first implementation slice should then move Catalogue-owned files together, because the current `scripts/studio/catalogue_write_server.py` placement is the clearest mismatch and Catalogue already has a completed ownership map from the script structural review.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T21:03:23Z",
+  "generated_at": "2026-05-09T21:08:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3019,7 +3019,7 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 40248,
+      "content_text_length": 39889,
       "ui_status": "done"
     },
     {
