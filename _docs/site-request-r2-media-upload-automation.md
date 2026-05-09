@@ -11,7 +11,10 @@ sort_order: 206
 
 Status:
 
-- implemented
+- the first implementation is CLI-only.
+- var/local/site.env has been implemenmted
+- still need to create the R2 keys
+- then need to switch UI over to using R2
 
 ## Summary
 
