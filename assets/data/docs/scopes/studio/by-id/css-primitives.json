@@ -7,6 +7,7 @@
   "parent_id": "ui",
   "sort_order": 60,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "css-primitives.md",
   "viewer_url": "/docs/?scope=studio&doc=css-primitives",

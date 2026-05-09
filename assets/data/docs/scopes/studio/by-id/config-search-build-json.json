@@ -7,6 +7,7 @@
   "parent_id": "search",
   "sort_order": 1030,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "config-search-build-json.md",
   "viewer_url": "/docs/?scope=studio&doc=config-search-build-json",

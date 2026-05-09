@@ -7,6 +7,7 @@
   "parent_id": "studio",
   "sort_order": 80,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-studio-backup-retention.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-studio-backup-retention",

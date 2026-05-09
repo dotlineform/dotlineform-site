@@ -7,6 +7,7 @@
   "parent_id": "studio",
   "sort_order": 100,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "config-studio-config-js.md",
   "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",

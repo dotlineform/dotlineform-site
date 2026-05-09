@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 30,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-copy-draft-media.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",

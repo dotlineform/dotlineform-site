@@ -7,6 +7,7 @@
   "parent_id": "",
   "sort_order": 60,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "3d-space-to-many-dimensions.md",
   "viewer_url": "/library/?doc=3d-space-to-many-dimensions",

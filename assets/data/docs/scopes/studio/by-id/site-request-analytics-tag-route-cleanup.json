@@ -7,6 +7,7 @@
   "parent_id": "change-requests",
   "sort_order": 213,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "site-request-analytics-tag-route-cleanup.md",
   "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",

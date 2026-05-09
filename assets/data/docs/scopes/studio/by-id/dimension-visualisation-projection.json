@@ -7,6 +7,7 @@
   "parent_id": "analytics",
   "sort_order": 80,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "dimension-visualisation-projection.md",
   "viewer_url": "/docs/?scope=studio&doc=dimension-visualisation-projection",

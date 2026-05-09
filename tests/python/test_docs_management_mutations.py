@@ -170,6 +170,28 @@ def test_metadata_status_only_plan_suppresses_search_target() -> None:
     assert plan.search_doc_ids == []
 
 
+def test_metadata_hidden_plan_writes_hidden_and_removes_legacy_viewable() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "title": "Target",
+                "parent_id": "",
+                "sort_order": 20,
+                "hidden": True,
+            },
+        )
+
+    assert plan.response["record"]["hidden"] is True
+    assert plan.response["record"]["viewable"] is False
+    assert plan.response["changes"]["hidden_changed"] is True
+    assert "hidden: true" in plan.source_writes[0].text
+    assert "viewable:" not in plan.source_writes[0].text
+
+
 def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -286,6 +308,7 @@ def main() -> None:
         test_create_plan_selects_unique_source_path_backup_metadata_and_search_target,
         test_metadata_plan_keeps_child_search_target_for_title_changes,
         test_metadata_status_only_plan_suppresses_search_target,
+        test_metadata_hidden_plan_writes_hidden_and_removes_legacy_viewable,
         test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,
         test_move_plan_returns_undo_records_and_only_searches_moved_doc,
         test_restore_move_plan_deduplicates_records_and_searches_changed_docs,

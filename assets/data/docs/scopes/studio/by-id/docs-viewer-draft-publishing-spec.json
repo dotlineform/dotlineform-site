@@ -7,6 +7,7 @@
   "parent_id": "docs-viewer",
   "sort_order": 35,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "docs-viewer-draft-publishing-spec.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",

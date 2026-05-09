@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 240,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-fix-missing-title-sort.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",

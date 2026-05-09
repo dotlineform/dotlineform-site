@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-07 21:52"
+last_updated: "2026-05-09 23:23"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -16,7 +16,7 @@ Status:
 - Phase 3 implemented: leaf-doc drag/drop move with front-matter-only tree updates
 - Phase 4 implemented: current-doc metadata edit modal for `title`, `summary`, `ui_status`, `parent_id`, and `sort_order`
 - Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
-- Phase 6 implemented: draft/non-viewable review and bulk-backed `Make viewable`
+- Phase 6 implemented: hidden-doc review and bulk-backed `Show`
 - Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
 - current follow-on work is optional rather than required for the local management surface
 
@@ -38,11 +38,12 @@ Implemented now:
 - create-after-selected uses sparse `sort_order` increments without renumbering siblings
 - create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
 - docs-management writes new `added_date` and changed `last_updated` values in `YYYY-MM-DD HH:MM` form; existing date-only docs remain valid and do not need migration
-- Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`
-- manage mode always shows draft/non-viewable docs and uses a checked-by-default `show viewable` checkbox to keep viewable docs visible for context
-- selected non-viewable docs can be made viewable through the manage toolbar
-- `Make viewable` includes required non-viewable ancestors after confirmation and can optionally include descendants
-- viewability changes are sent through a bulk endpoint so one action writes the affected source files and runs one docs/search rebuild
+- Library create/import defaults to `published: true`, `hidden: true`; Studio create/import defaults to `published: true`, `hidden: false`
+- generated docs data keeps a compatibility `viewable` field computed as `!hidden`
+- manage mode uses a checked-by-default `show hidden` checkbox so hidden docs remain visible for review
+- selected hidden docs can be shown through the manage toolbar
+- `Show` includes required hidden ancestors after confirmation and can optionally include descendants
+- hidden/show changes are sent through a bulk endpoint so one action writes the affected source files and runs one docs/search rebuild
 - docs-management backups are operation-scoped rather than full-scope snapshots
 - `Open Source` is available from a manage-mode right-click menu on doc rows
 - right-click `Open Source` currently exposes:
@@ -56,16 +57,19 @@ Implemented now:
   - `title`
   - `summary`
   - `ui_status`
-  - `viewable`
+  - `hidden`
   - `parent_id`
   - `sort_order`
 - blank `summary` removes the front matter field
 - blank `ui_status` removes the front matter field
-- selecting `draft` in the metadata status dropdown writes `viewable: false` and clears `ui_status`
-- selecting any non-draft status, including `<none>`, writes `viewable: true`
+- the metadata status control is a listbox sized to show all available options without scrolling and labels the active choice as selected
+- `ui_status` is descriptive UI metadata and does not change viewer visibility
+- `draft` is a configured `ui_status` option rather than a special modal-only status
+- `hidden` is edited independently through a metadata checkbox
+- the metadata parent control is a searchable text field; `Root` resolves to blank `parent_id`, and selected parent suggestions resolve back to their source `doc_id`
 - configured `ui_status` values also render as compact document status pills beside the bookmark control
 - status pills are read-only outside available manage mode
-- in available manage mode, status pill clicks write immediately through the metadata endpoint, set `viewable: true`, and reload the docs payload
+- in available manage mode, status pill clicks write immediately through the metadata endpoint without changing `hidden`, and reload the docs payload
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
 - when the metadata modal changes `parent_id` to a non-root parent and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
@@ -88,8 +92,8 @@ Current state:
   - metadata edit for the current doc
   - `New Sibling`
   - `New Child`
-  - draft/non-viewable review
-  - `Make viewable` with required-ancestor and optional-descendant handling
+  - hidden-doc review
+  - `Show` with required-ancestor and optional-descendant handling
   - drag/drop move for leaf docs
   - one-step move Undo
   - archive and delete
@@ -520,8 +524,8 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 - `published` does not change automatically
 - tree position changes through `parent_id = archive`
 - archived Studio docs remain discoverable in the normal docs tree under the Archive doc
-- archived Library docs remain generated; public visibility depends on each doc's own `viewable` value
-- `archive` is an ordinary doc id and can be hidden from public views with `viewable: false`
+- archived Library docs remain generated; public visibility depends on each doc's own `hidden` value
+- `archive` is an ordinary doc id and can be hidden from public views with `hidden: true`
 
 ### `delete`
 
@@ -553,7 +557,7 @@ Implementation consequence:
 
 - write-enabled viewer management can now rely on a flat Studio source root
 - any future layout change still requires relative-link review because nested-path assumptions can affect markdown source links
-- viewer visibility comes from generated doc fields such as `viewable`, not from hard-coded source-folder names
+- viewer visibility comes from generated doc fields such as `hidden`, not from hard-coded source-folder names
 
 ## Related Work
 
@@ -645,7 +649,7 @@ If sort_order changes by drag/drop, should the system renumber sibling items aut
 A: drag/drop now normalizes the destination sibling set to sparse unique values after each move. This may rewrite multiple sibling docs, but it makes reorders visible and prevents duplicate `sort_order` values from making a requested placement appear impossible. Undo restores every touched doc's prior placement in one client-side history step.
 
 What does archive mean?  
-A: parent_id becomes doc_id: archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs. published remains true, so that it is still viewable.
+A: parent_id becomes doc_id: archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs. published remains true, so that it is still visible unless `hidden: true` is set.
 
 Is delete a real file deletion or a soft-delete workflow?  
 A: real file deletion. warning prompt.
@@ -699,7 +703,7 @@ are there any sections that depend on special folder names such as archive, _dra
 A: yes, but only in terms of doc_id. I have already mentioned archive, that needs to exist for the Archive command. if system finds that it doesn't exist, it fails with error. In terms of file structure, archive, _draft etc will disappear in flat structure.
 
 Should `archive` be treated as a protected system doc?  
-A: no. `archive` is required only as the conventional Archive command target. It should be editable like a normal doc, and public/search visibility should be controlled with `viewable: false`.
+A: no. `archive` is required only as the conventional Archive command target. It should be editable like a normal doc, and public/search visibility should be controlled with `hidden: true`.
 
 If a title changes later, should that mutate `doc_id` and filename?  
 A: no. title changes do not mutate `doc_id` or filename.

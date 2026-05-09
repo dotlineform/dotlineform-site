@@ -7,6 +7,7 @@
   "parent_id": "analytics",
   "sort_order": 70,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "registry-driven-scoring-architecture.md",
   "viewer_url": "/docs/?scope=studio&doc=registry-driven-scoring-architecture",

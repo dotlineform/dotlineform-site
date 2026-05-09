@@ -18,6 +18,7 @@ from docs_management_mutations import metadata_search_doc_ids
 from docs_source_model import (
     ScopeDoc,
     current_doc_timestamp,
+    default_hidden_for_scope,
     default_viewable_for_scope,
     format_source,
     load_scope_docs,
@@ -81,7 +82,7 @@ def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc
         "parent_id": "",
         "sort_order": next_sort_order(docs, ""),
         "published": True,
-        "viewable": default_viewable_for_scope(scope),
+        "hidden": default_hidden_for_scope(scope),
     }
     return format_source(front_matter, imported_body_markdown(preview))
 
@@ -96,7 +97,8 @@ def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc
     front_matter["last_updated"] = timestamp
     front_matter["parent_id"] = target.parent_id
     front_matter.setdefault("published", True)
-    front_matter.setdefault("viewable", target.viewable)
+    front_matter.setdefault("hidden", target.hidden)
+    front_matter.pop("viewable", None)
     if target.sort_order is None:
         front_matter.pop("sort_order", None)
     else:
@@ -374,6 +376,7 @@ def handle_import_source(
             "parent_id": "",
             "sort_order": next_sort_order(docs, ""),
             "published": True,
+            "hidden": default_hidden_for_scope(scope),
             "viewable": default_viewable_for_scope(scope),
         },
         "collision": collision,

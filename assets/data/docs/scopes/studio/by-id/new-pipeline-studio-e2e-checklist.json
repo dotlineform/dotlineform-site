@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 60,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "studio-e2e-checklist.md",
   "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",

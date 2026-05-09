@@ -7,6 +7,7 @@
   "parent_id": "ui",
   "sort_order": 90,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "design.md",
   "viewer_url": "/docs/?scope=studio&doc=design",

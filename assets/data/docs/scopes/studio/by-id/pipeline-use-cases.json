@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 10,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "pipeline-use-cases.md",
   "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",

@@ -35,10 +35,10 @@
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageEditButton">Edit</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageArchiveButton">Archive</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageDeleteButton">Delete</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Make viewable</button>
+        <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>
         <label class="docsViewer__draftToggle">
           <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">
-          <span class="docsViewer__draftLabel">drafts</span>
+          <span class="docsViewer__draftLabel">hidden</span>
         </label>
       </div>
       <p class="docsViewer__manageNote muted small" id="docsViewerManageNote"></p>
@@ -107,11 +107,16 @@
         </label>
         <label class="docsViewer__field">
           <span class="docsViewer__fieldLabel" id="docsViewerMetadataStatusLabel">status</span>
-          <select class="docsViewer__fieldInput" id="docsViewerMetadataStatusInput" name="ui_status"></select>
+          <select class="docsViewer__fieldInput docsViewer__fieldInput--listbox" id="docsViewerMetadataStatusInput" name="ui_status"></select>
+        </label>
+        <label class="docsViewer__field docsViewer__field--checkbox">
+          <input class="docsViewer__checkboxInput" id="docsViewerMetadataHiddenInput" name="hidden" type="checkbox">
+          <span class="docsViewer__fieldLabel" id="docsViewerMetadataHiddenLabel">hidden</span>
         </label>
         <label class="docsViewer__field">
           <span class="docsViewer__fieldLabel">parent</span>
-          <select class="docsViewer__fieldInput" id="docsViewerMetadataParentInput" name="parent_id"></select>
+          <input class="docsViewer__fieldInput" id="docsViewerMetadataParentInput" name="parent_id" type="text" list="docsViewerMetadataParentList" autocomplete="off" spellcheck="false">
+          <datalist id="docsViewerMetadataParentList"></datalist>
         </label>
         <label class="docsViewer__field">
           <span class="docsViewer__fieldLabel">sort order</span>

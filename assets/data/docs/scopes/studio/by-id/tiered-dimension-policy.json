@@ -7,6 +7,7 @@
   "parent_id": "analytics",
   "sort_order": 100,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "tiered-dimension-policy.md",
   "viewer_url": "/docs/?scope=studio&doc=tiered-dimension-policy",

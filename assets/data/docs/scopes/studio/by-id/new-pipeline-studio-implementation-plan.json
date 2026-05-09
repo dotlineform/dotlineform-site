@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 50,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "studio-implementation-plan.md",
   "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",

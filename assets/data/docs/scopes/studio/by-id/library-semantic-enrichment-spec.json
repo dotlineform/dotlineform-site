@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 180,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "library-semantic-enrichment-spec.md",
   "viewer_url": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",

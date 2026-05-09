@@ -47,6 +47,7 @@ IMPORT_TYPE_CONFIG_FIELDS = {
         "summary",
         "headings",
         "last_updated",
+        "hidden",
         "viewable",
     ],
     "document_summaries": [
@@ -56,6 +57,7 @@ IMPORT_TYPE_CONFIG_FIELDS = {
         "headings",
         "current_summary",
         "last_updated",
+        "hidden",
         "viewable",
     ],
     "full_document_content": [
@@ -66,6 +68,7 @@ IMPORT_TYPE_CONFIG_FIELDS = {
         "headings",
         "source_text",
         "last_updated",
+        "hidden",
         "viewable",
     ],
     "minimal_document_records": [
@@ -100,6 +103,7 @@ KNOWN_RECORD_FIELDS = {
     "headings",
     "source_text",
     "last_updated",
+    "hidden",
     "viewable",
     "published",
 }
@@ -479,7 +483,7 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
     for key in ["summary", "current_summary"]:
         if key in row:
             normalized["metadata"][key] = str(row.get(key) or "")
-    for key in ["viewable", "published"]:
+    for key in ["hidden", "viewable", "published"]:
         if key in row:
             normalized["metadata"][key] = row.get(key)
     if "headings" in row:
@@ -566,6 +570,7 @@ def add_current_library_report(
         current_state: dict[str, Any] = {
             "exists": bool(current_doc),
             "published": None,
+            "hidden": None,
             "viewable": None,
             "payload_exists": False,
             "parent_exists": None,
@@ -573,6 +578,7 @@ def add_current_library_report(
         }
         if current_doc:
             current_state["published"] = current_doc.get("published")
+            current_state["hidden"] = current_doc.get("hidden")
             current_state["viewable"] = current_doc.get("viewable")
             current_state["payload_exists"] = doc_id in payload_ids
         record["current_library"] = current_state

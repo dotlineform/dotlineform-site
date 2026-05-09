@@ -34,6 +34,7 @@ class ScopeDoc:
     parent_id: str
     sort_order: Optional[int]
     published: bool
+    hidden: bool
     viewable: bool
 
 
@@ -118,6 +119,7 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "parent_id",
         "sort_order",
         "published",
+        "hidden",
         "viewable",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
@@ -151,7 +153,13 @@ def doc_is_published(front_matter: Dict[str, Any]) -> bool:
 
 
 def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
-    return front_matter_boolean(front_matter, "viewable", True)
+    return not doc_is_hidden(front_matter)
+
+
+def doc_is_hidden(front_matter: Dict[str, Any]) -> bool:
+    if "hidden" in front_matter:
+        return front_matter_boolean(front_matter, "hidden", False)
+    return not front_matter_boolean(front_matter, "viewable", True)
 
 
 def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) -> bool:
@@ -169,6 +177,10 @@ def normalize_ui_status(value: Any) -> str:
 
 def default_viewable_for_scope(scope: str) -> bool:
     return scope not in {"analysis", "library"}
+
+
+def default_hidden_for_scope(scope: str) -> bool:
+    return not default_viewable_for_scope(scope)
 
 
 def normalize_scope(scope: Any) -> str:
@@ -205,6 +217,7 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 sort_order = int(sort_order)
             except (TypeError, ValueError) as exc:
                 raise ValueError(f"Invalid sort_order for {path.name}: {sort_order!r}") from exc
+        hidden = doc_is_hidden(front_matter)
         docs.append(
             ScopeDoc(
                 scope=scope,
@@ -218,7 +231,8 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 parent_id=parent_id,
                 sort_order=sort_order,
                 published=doc_is_published(front_matter),
-                viewable=doc_is_viewable(front_matter),
+                hidden=hidden,
+                viewable=not hidden,
             )
         )
     validate_scope_docs(docs, allow_unknown_parent_ids=scope == "library")
@@ -293,7 +307,11 @@ def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> s
     updated_front_matter["added_date"] = str(
         updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
-    updated_front_matter.update(front_matter_updates)
+    for key, value in front_matter_updates.items():
+        if value is None:
+            updated_front_matter.pop(key, None)
+        else:
+            updated_front_matter[key] = value
     updated_front_matter["last_updated"] = timestamp
     return format_source(updated_front_matter, doc.body)
 

@@ -7,6 +7,7 @@
   "parent_id": "user-guide",
   "sort_order": 182,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "catalogue-moment-editor.md",
   "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",

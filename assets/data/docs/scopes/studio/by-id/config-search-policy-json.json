@@ -7,6 +7,7 @@
   "parent_id": "search",
   "sort_order": 1020,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "config-search-policy-json.md",
   "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",

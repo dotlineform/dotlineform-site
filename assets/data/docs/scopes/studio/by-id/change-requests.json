@@ -7,6 +7,7 @@
   "parent_id": "",
   "sort_order": 220,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "change-requests.md",
   "viewer_url": "/docs/?scope=studio&doc=change-requests",

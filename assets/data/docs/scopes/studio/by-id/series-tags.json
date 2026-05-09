@@ -7,6 +7,7 @@
   "parent_id": "analytics",
   "sort_order": 60,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "series-tags.md",
   "viewer_url": "/docs/?scope=studio&doc=series-tags",

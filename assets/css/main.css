@@ -1328,6 +1328,7 @@ th{ background: var(--panel-2); }
 }
 
 .docsViewer__modalCard{
+  box-sizing: border-box;
   position: relative;
   z-index: 1;
   width: min(38rem, calc(100vw - 2rem));
@@ -1385,10 +1386,23 @@ th{ background: var(--panel-2); }
   gap: 0.28rem;
 }
 
+.docsViewer__field--checkbox{
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .docsViewer__fieldLabel{
   font-size: 1rem;
   line-height: var(--line-snug);
   color: var(--text);
+}
+
+.docsViewer__checkboxInput{
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--text);
 }
 
 .docsViewer__fieldInput{
@@ -1411,6 +1425,13 @@ select.docsViewer__fieldInput{
   min-height: 2rem;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+select.docsViewer__fieldInput--listbox{
+  height: auto;
+  min-height: 0;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
 }
 
 .docsViewer__fieldInput--textarea{

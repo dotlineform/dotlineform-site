@@ -7,6 +7,7 @@
   "parent_id": "change-requests",
   "sort_order": 110,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "site-request-catalogue-work-unified-editor.md",
   "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",

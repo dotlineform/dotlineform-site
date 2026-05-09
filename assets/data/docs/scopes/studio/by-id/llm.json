@@ -7,6 +7,7 @@
   "parent_id": "",
   "sort_order": 150,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "llm.md",
   "viewer_url": "/docs/?scope=studio&doc=llm",

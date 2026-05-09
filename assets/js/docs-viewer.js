@@ -37,7 +37,10 @@
   var metadataSummaryInput = document.getElementById("docsViewerMetadataSummaryInput");
   var metadataStatusLabel = document.getElementById("docsViewerMetadataStatusLabel");
   var metadataStatusInput = document.getElementById("docsViewerMetadataStatusInput");
+  var metadataHiddenInput = document.getElementById("docsViewerMetadataHiddenInput");
+  var metadataHiddenLabel = document.getElementById("docsViewerMetadataHiddenLabel");
   var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
+  var metadataParentList = document.getElementById("docsViewerMetadataParentList");
   var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
   var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
   var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
@@ -56,7 +59,6 @@
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
   var DEFAULT_RECENT_LIMIT = 10;
-  var DRAFT_STATUS_VALUE = "draft";
   var BOOKMARK_DB_NAME = "dotlineform-docs-viewer";
   var BOOKMARK_DB_VERSION = 1;
   var BOOKMARK_STORE_NAME = "favorites";
@@ -119,12 +121,16 @@
       undoMoveStatus: "Undoing move...",
       serverNotConfiguredError: "Local docs-management server is not configured.",
       unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope.",
-      viewableAncestorPrompt: "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",
-      viewableDescendantPrompt: "Make descendant docs viewable too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
-      viewableInvalidChoice: "Viewability update cancelled: expected `all` or `selected`.",
+      viewableAncestorPrompt: "Showing this doc also requires showing these parent docs:\n\n{titles}\n\nContinue?",
+      viewableDescendantPrompt: "Show descendant docs too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
+      viewableInvalidChoice: "Show update cancelled: expected `all` or `selected`.",
       metadataStatusLabel: "status",
       metadataStatusNoneOption: "<none>",
-      metadataStatusDraftOption: "draft",
+      metadataStatusSelectedSuffix: " (selected)",
+      metadataHiddenLabel: "hidden",
+      metadataParentRootOption: "Root",
+      metadataParentInvalid: "Select a parent from the search field suggestions or enter Root.",
+      docHiddenEmoji: "🚫",
       statusPillSetLabel: "Set status: {label}",
       statusPillClearLabel: "Clear status: {label}",
       statusPillReadonlyLabel: "Status: {label}",
@@ -132,7 +138,7 @@
       statusPillSaved: "Status saved.",
       statusPillFailed: "Status update failed."
     },
-    showViewable: true,
+    showHidden: true,
     reloadNonce: "",
     reloadExpectedDocId: "",
     dragDocId: "",
@@ -307,9 +313,9 @@
     state.uiStatusByValue = new Map(state.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));
-    var draftColor = String(getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
-    if (draftColor) {
-      root.style.setProperty("--docs-viewer-draft-color", draftColor);
+    var hiddenColor = String(getConfigValue(config, "docs_viewer.hidden_nav_color") || getConfigValue(config, "docs_viewer.draft_nav_color") || "").trim();
+    if (hiddenColor) {
+      root.style.setProperty("--docs-viewer-draft-color", hiddenColor);
     }
     if (recentButton) {
       var label = getConfigText(config, "docs_viewer.recently_added_button", "recently added");
@@ -318,13 +324,13 @@
       recentButton.title = label;
     }
     if (draftLabel) {
-      draftLabel.textContent = getConfigText(config, "docs_viewer.draft_toggle_label", "show viewable");
+      draftLabel.textContent = getConfigText(config, "docs_viewer.hidden_toggle_label", getConfigText(config, "docs_viewer.draft_toggle_label", "show hidden"));
     }
     if (draftToggle) {
-      draftToggle.setAttribute("aria-label", getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show viewable docs"));
+      draftToggle.setAttribute("aria-label", getConfigText(config, "docs_viewer.hidden_toggle_aria_label", getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show hidden docs")));
     }
     if (manageViewableButton) {
-      var makeViewableLabel = getConfigText(config, "docs_viewer.make_viewable_button", "Make viewable");
+      var makeViewableLabel = getConfigText(config, "docs_viewer.make_viewable_button", "Show");
       manageViewableButton.textContent = makeViewableLabel;
       manageViewableButton.setAttribute("aria-label", makeViewableLabel);
       manageViewableButton.title = makeViewableLabel;
@@ -341,7 +347,11 @@
     state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
     state.managementText.metadataStatusLabel = getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
     state.managementText.metadataStatusNoneOption = getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
-    state.managementText.metadataStatusDraftOption = getConfigText(config, "docs_viewer.metadata_status_draft_option", state.managementText.metadataStatusDraftOption);
+    state.managementText.metadataStatusSelectedSuffix = getConfigText(config, "docs_viewer.metadata_status_selected_suffix", state.managementText.metadataStatusSelectedSuffix);
+    state.managementText.metadataHiddenLabel = getConfigText(config, "docs_viewer.metadata_hidden_label", getConfigText(config, "docs_viewer.metadata_viewable_label", state.managementText.metadataHiddenLabel));
+    state.managementText.metadataParentRootOption = getConfigText(config, "docs_viewer.metadata_parent_root_option", state.managementText.metadataParentRootOption);
+    state.managementText.metadataParentInvalid = getConfigText(config, "docs_viewer.metadata_parent_invalid", state.managementText.metadataParentInvalid);
+    state.managementText.docHiddenEmoji = String(getConfigValue(config, "docs_viewer.doc_hidden_emoji") || state.managementText.docHiddenEmoji);
     state.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
     state.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
     state.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
@@ -351,9 +361,13 @@
     if (metadataStatusLabel) {
       metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
     }
+    if (metadataHiddenLabel) {
+      metadataHiddenLabel.textContent = state.managementText.metadataHiddenLabel;
+    }
     if (state.metadataEditingDocId && metadataStatusInput) {
       var metadataDoc = state.docsById.get(state.metadataEditingDocId);
       renderMetadataStatusOptions(metadataDoc);
+      renderMetadataParentOptions(metadataDoc);
     }
     if (state.docs.length) {
       renderSidebar();
@@ -807,7 +821,7 @@
     }));
     docs.forEach(function (doc) {
       var parentId = doc.parent_id || "";
-      if (state.managementMode && !state.showViewable && parentId && !visibleDocIds.has(parentId)) {
+      if (state.managementMode && !state.showHidden && parentId && !visibleDocIds.has(parentId)) {
         parentId = "";
       }
       if (!childrenByParent.has(parentId)) {
@@ -822,7 +836,15 @@
   }
 
   function isDocViewable(doc) {
-    return !doc || doc.viewable !== false;
+    return !isDocHidden(doc);
+  }
+
+  function isDocHidden(doc) {
+    if (!doc) return false;
+    if (Object.prototype.hasOwnProperty.call(doc, "hidden")) {
+      return doc.hidden === true;
+    }
+    return doc.viewable === false;
   }
 
   function isManageOnlyTreeDoc(doc) {
@@ -840,7 +862,7 @@
   function shouldIncludeDoc(doc) {
     if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
     if (!state.managementMode) return isDocViewable(doc);
-    return !isDocViewable(doc) || state.showViewable;
+    return isDocViewable(doc) || state.showHidden;
   }
 
   function applyDocVisibility() {
@@ -865,13 +887,13 @@
     return null;
   }
 
-  function syncViewableVisibilityForRequestedDoc() {
+  function syncHiddenVisibilityForRequestedDoc() {
     if (!state.managementMode) return;
     var requestedDocId = getCurrentDocId();
     if (!requestedDocId) return;
     var requestedDoc = findAllDocById(requestedDocId);
-    if (requestedDoc && isDocViewable(requestedDoc)) {
-      state.showViewable = true;
+    if (requestedDoc && isDocHidden(requestedDoc)) {
+      state.showHidden = true;
     }
   }
 
@@ -880,7 +902,8 @@
   }
 
   function statusForIndexDoc(doc) {
-    if (!doc || !isDocViewable(doc) || isNonLoadableDoc(doc) || isManageOnlyTreeDoc(doc)) return null;
+    if (!doc || isNonLoadableDoc(doc) || isManageOnlyTreeDoc(doc)) return null;
+    if (!isDocViewable(doc) && !state.managementMode) return null;
     var statusValue = String(doc.ui_status || "").trim();
     return statusValue ? state.uiStatusByValue.get(statusValue) || null : null;
   }
@@ -987,7 +1010,7 @@
       item.className = "docsViewer__navItem";
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
-      if (!isDocViewable(doc)) {
+      if (isDocHidden(doc)) {
         row.className += " is-draft";
       }
       row.dataset.docRowId = doc.doc_id;
@@ -1017,9 +1040,9 @@
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
       }
-      if (!isDocViewable(doc)) {
+      if (isDocHidden(doc)) {
         link.setAttribute("data-draft-doc", "true");
-        link.title = "Draft";
+        link.title = state.managementText.metadataHiddenLabel;
       }
       link.href = viewerUrl(viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
@@ -1036,11 +1059,11 @@
         statusIcon.textContent = uiStatus.emoji;
         link.appendChild(statusIcon);
       }
-      if (!isDocViewable(doc)) {
+      if (isDocHidden(doc)) {
         var draftIcon = document.createElement("span");
         draftIcon.className = "docsViewer__draftPrefix";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = "✏️";
+        draftIcon.textContent = state.managementText.docHiddenEmoji;
         link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));
@@ -1077,14 +1100,15 @@
       pathEl.appendChild(link);
     });
 
+    var hiddenLabel = state.managementText.metadataHiddenLabel;
     if (!state.showUpdatedDate) {
-      updatedEl.textContent = isDocViewable(doc) ? "" : "Draft";
+      updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
       updatedEl.hidden = isDocViewable(doc);
     } else if (doc.last_updated) {
-      updatedEl.textContent = (isDocViewable(doc) ? "" : "Draft • ") + "Updated " + doc.last_updated;
+      updatedEl.textContent = (isDocHidden(doc) ? hiddenLabel + " • " : "") + "Updated " + doc.last_updated;
       updatedEl.hidden = false;
     } else {
-      updatedEl.textContent = isDocViewable(doc) ? "" : "Draft";
+      updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
       updatedEl.hidden = isDocViewable(doc);
     }
     if (summaryEl) {
@@ -1359,10 +1383,11 @@
   }
 
   function metadataParentOptions(doc) {
-    var blockedIds = collectDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
-    var options = [{ value: "", label: "Root" }];
+    var blockedIds = collectAllDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
+    var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
+    var docsByParent = buildChildrenMap(state.allDocs);
     function pushChildren(parentId, depth) {
-      (state.childrenByParent.get(parentId) || []).forEach(function (candidate) {
+      (docsByParent.get(parentId) || []).forEach(function (candidate) {
         if (!blockedIds.has(candidate.doc_id)) {
           options.push({
             value: candidate.doc_id,
@@ -1376,16 +1401,52 @@
     return options;
   }
 
-  function metadataStatusOptions(doc) {
+  function metadataParentOptionDisplay(option) {
+    if (!option || !option.value) return state.managementText.metadataParentRootOption;
+    return option.label + " [" + option.value + "]";
+  }
+
+  function renderMetadataParentOptions(doc) {
+    if (!metadataParentInput || !metadataParentList) return;
+    metadataParentInput.setAttribute("list", "docsViewerMetadataParentList");
+    var currentParentId = String(doc && doc.parent_id || "").trim();
+    var options = metadataParentOptions(doc);
+    var currentOption = options.find(function (option) {
+      return option.value === currentParentId;
+    }) || options[0];
+    metadataParentInput.value = metadataParentOptionDisplay(currentOption);
+    metadataParentList.innerHTML = options.map(function (option) {
+      return '<option value="' + escapeHtml(metadataParentOptionDisplay(option)) + '"></option>';
+    }).join("");
+  }
+
+  function resolveMetadataParentId(doc) {
+    if (!metadataParentInput) return "";
+    var inputValue = String(metadataParentInput.value || "").trim();
+    var rootLabel = state.managementText.metadataParentRootOption;
+    if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
+    var options = metadataParentOptions(doc);
+    var exactDisplay = options.find(function (option) {
+      return metadataParentOptionDisplay(option) === inputValue;
+    });
+    if (exactDisplay) return exactDisplay.value;
+    var exactDocId = options.find(function (option) {
+      return option.value && option.value === inputValue;
+    });
+    if (exactDocId) return exactDocId.value;
+    var exactTitle = options.filter(function (option) {
+      return option.value && option.label.replace(/^(—\s*)+/, "") === inputValue;
+    });
+    if (exactTitle.length === 1) return exactTitle[0].value;
+    return null;
+  }
+
+  function metadataStatusOptions() {
     var options = [{
       value: "",
       label: state.managementText.metadataStatusNoneOption
-    }, {
-      value: DRAFT_STATUS_VALUE,
-      label: state.managementText.metadataStatusDraftOption
     }];
     state.uiStatuses.forEach(function (status) {
-      if (status.ui_status === DRAFT_STATUS_VALUE) return;
       options.push({
         value: status.ui_status,
         label: status.emoji + " " + status.label
@@ -1396,16 +1457,36 @@
 
   function renderMetadataStatusOptions(doc) {
     if (!metadataStatusInput) return;
-    var docStatus = String(doc && doc.ui_status || "").trim();
-    var selectedValue = (!isDocViewable(doc) || docStatus === DRAFT_STATUS_VALUE) ? DRAFT_STATUS_VALUE : docStatus;
-    metadataStatusInput.innerHTML = metadataStatusOptions(doc).map(function (option) {
+    var selectedValue = String(doc && doc.ui_status || "").trim();
+    renderMetadataStatusSelection(selectedValue);
+  }
+
+  function renderMetadataStatusSelection(selectedValue) {
+    if (!metadataStatusInput) return;
+    metadataStatusInput.innerHTML = metadataStatusOptions().map(function (option) {
       var selected = option.value === selectedValue ? ' selected' : "";
-      return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(option.label) + "</option>";
+      var label = option.label + (selected ? state.managementText.metadataStatusSelectedSuffix : "");
+      return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(label) + "</option>";
     }).join("");
+    metadataStatusInput.size = Math.max(1, metadataStatusInput.options.length);
+  }
+
+  function dismissMetadataParentSuggestions() {
+    if (!metadataParentInput) return;
+    metadataParentInput.blur();
+    metadataParentInput.value = "";
+    metadataParentInput.removeAttribute("list");
+    if (metadataParentList) {
+      metadataParentList.innerHTML = "";
+    }
   }
 
   function closeMetadataModal() {
     if (!metadataModal) return;
+    if (document.activeElement && metadataModal.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    dismissMetadataParentSuggestions();
     metadataModal.hidden = true;
     state.metadataEditingDocId = "";
     var restoreDocId = state.metadataRestoreFocusId;
@@ -1417,7 +1498,7 @@
 
   function openMetadataModal() {
     var doc = currentSelectedDoc();
-    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
     hideContextMenu();
     state.metadataEditingDocId = doc.doc_id;
     state.metadataRestoreFocusId = doc.doc_id;
@@ -1428,12 +1509,10 @@
     metadataTitleInput.value = doc.title || "";
     metadataSummaryInput.value = doc.summary || "";
     renderMetadataStatusOptions(doc);
+    metadataHiddenInput.checked = isDocHidden(doc);
     metadataSortOrderInput.value = doc.sort_order == null ? "" : String(doc.sort_order);
     metadataSortOrderInput.min = "0";
-    metadataParentInput.innerHTML = metadataParentOptions(doc).map(function (option) {
-      var selected = option.value === (doc.parent_id || "") ? ' selected' : "";
-      return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(option.label) + "</option>";
-    }).join("");
+    renderMetadataParentOptions(doc);
 
     metadataModal.hidden = false;
     window.requestAnimationFrame(function () {
@@ -1526,7 +1605,7 @@
     if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
 
     var doc = currentSelectedDoc();
-    var draftDoc = Boolean(doc && !isDocViewable(doc));
+    var draftDoc = Boolean(doc && isDocHidden(doc));
     var editDisabled = (
       state.managementBusy ||
       !doc ||
@@ -1559,7 +1638,7 @@
     manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
     if (draftToggle) {
       draftToggle.disabled = !state.managementAvailable || state.managementBusy;
-      draftToggle.checked = state.showViewable;
+      draftToggle.checked = state.showHidden;
     }
     if (metadataSaveButton) {
       metadataSaveButton.disabled = state.managementBusy;
@@ -1767,7 +1846,7 @@
 
   function handleEditMetadataSubmit() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
@@ -1775,7 +1854,13 @@
       return;
     }
 
-    var parentId = String(metadataParentInput.value || "").trim();
+    var parentId = resolveMetadataParentId(doc);
+    if (parentId === null) {
+      setManagementMessage(state.managementText.metadataParentInvalid, true);
+      setStatus(state.managementText.metadataParentInvalid, true);
+      metadataParentInput.focus();
+      return;
+    }
     var originalParentId = String(doc.parent_id || "").trim();
     var originalSortOrderText = normalizeSortOrderValue(doc.sort_order);
     var sortOrderText = String(metadataSortOrderInput.value || "").trim();
@@ -1790,14 +1875,13 @@
       payloadSortOrder = "append";
     }
     var selectedStatus = String(metadataStatusInput.value || "").trim();
-    var isDraftStatus = selectedStatus === DRAFT_STATUS_VALUE;
     var payload = {
       scope: viewerScope,
       doc_id: doc.doc_id,
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
-      ui_status: isDraftStatus ? "" : selectedStatus,
-      viewable: !isDraftStatus,
+      ui_status: selectedStatus,
+      hidden: metadataHiddenInput.checked,
       parent_id: parentId,
       sort_order: payloadSortOrder
     };
@@ -1829,7 +1913,7 @@
       title: String(doc.title || "").trim(),
       summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
       ui_status: String(uiStatus || "").trim(),
-      viewable: true,
+      hidden: isDocHidden(doc),
       parent_id: String(doc.parent_id || "").trim(),
       sort_order: normalizeSortOrderValue(doc.sort_order)
     };
@@ -1995,17 +2079,17 @@
 
     state.managementBusy = true;
     var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
-    setManagementMessage("Making " + countText + " viewable...", false);
-    setStatus("Making " + countText + " viewable...", false);
+    setManagementMessage("Showing " + countText + "...", false);
+    setStatus("Showing " + countText + "...", false);
 
     fetchManagementJson("/docs/update-viewability-bulk", "POST", {
       scope: viewerScope,
       doc_ids: targetDocIds,
-      viewable: true
+      hidden: false
     })
       .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc made viewable.", false);
-        return reloadDocsIndex(doc.doc_id, payload.summary_text || "Doc made viewable.");
+        setManagementMessage(payload.summary_text || "Doc shown.", false);
+        return reloadDocsIndex(doc.doc_id, payload.summary_text || "Doc shown.");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Viewability update failed.", true);
@@ -2019,7 +2103,7 @@
 
   function handleDraftToggleChange() {
     if (!draftToggle) return;
-    state.showViewable = Boolean(draftToggle.checked);
+    state.showHidden = Boolean(draftToggle.checked);
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     applyDocVisibility();
     renderSidebar();
@@ -2649,6 +2733,12 @@
       });
     }
 
+    if (metadataStatusInput) {
+      metadataStatusInput.addEventListener("change", function () {
+        renderMetadataStatusSelection(String(metadataStatusInput.value || "").trim());
+      });
+    }
+
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape" && metadataModalOpen()) {
         event.preventDefault();
@@ -2728,7 +2818,7 @@
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.showUpdatedDate = viewerOptions.show_updated_date !== false;
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
-    syncViewableVisibilityForRequestedDoc();
+    syncHiddenVisibilityForRequestedDoc();
     applyDocVisibility();
 
     renderSidebar();
@@ -2745,7 +2835,7 @@
   function applyCurrentRoute(options) {
     setRecentModeActive(false);
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    syncViewableVisibilityForRequestedDoc();
+    syncHiddenVisibilityForRequestedDoc();
     applyDocVisibility();
     var route = resolveDocId();
     var docId = route.docId;

@@ -7,6 +7,7 @@
   "parent_id": "site-docs",
   "sort_order": 20,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "runtime-dependencies.md",
   "viewer_url": "/docs/?scope=studio&doc=runtime-dependencies",

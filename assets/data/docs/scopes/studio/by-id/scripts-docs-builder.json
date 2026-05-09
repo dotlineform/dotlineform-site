@@ -7,6 +7,7 @@
   "parent_id": "docs-viewer",
   "sort_order": 85,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-docs-builder.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",

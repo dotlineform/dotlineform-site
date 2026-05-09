@@ -7,6 +7,7 @@
   "parent_id": "site-docs",
   "sort_order": 70,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-audit-site-consistency.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",

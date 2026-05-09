@@ -121,9 +121,15 @@
   },
   "docs_viewer": {
     "recently_added_limit": 10,
-    "draft_nav_color": "var(--muted)",
+    "hidden_nav_color": "var(--muted)",
+    "doc_hidden_emoji": "🚫",
     "ui_statuses_by_scope": {
       "studio": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        },
         {
           "ui_status": "done",
           "label": "Done",
@@ -140,8 +146,20 @@
           "emoji": "🔄"
         }
       ],
-      "library": [],
-      "analysis": []
+      "library": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        }
+      ],
+      "analysis": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        }
+      ]
     }
   },
   "catalogue": {
@@ -150,18 +168,21 @@
   "ui_text": {
     "docs_viewer": {
       "recently_added_button": "recently added",
-      "draft_toggle_label": "show viewable",
-      "draft_toggle_aria_label": "Show viewable docs",
+      "hidden_toggle_label": "show hidden",
+      "hidden_toggle_aria_label": "Show hidden docs",
       "metadata_status_label": "status",
       "metadata_status_none_option": "<none>",
-      "metadata_status_draft_option": "draft",
+      "metadata_status_selected_suffix": " (selected)",
+      "metadata_hidden_label": "hidden",
+      "metadata_parent_root_option": "Root",
+      "metadata_parent_invalid": "Select a parent from the search field suggestions or enter Root.",
       "status_pill_set_label": "Set status: {label}",
       "status_pill_clear_label": "Clear status: {label}",
       "status_pill_readonly_label": "Status: {label}",
       "status_pill_saving": "Saving status for {title}...",
       "status_pill_saved": "Status saved.",
       "status_pill_failed": "Status update failed.",
-      "make_viewable_button": "Make viewable",
+      "make_viewable_button": "Show",
       "manage_archive_unavailable_note": "Archive is unavailable for this scope until `archive` exists.",
       "manage_checking_note": "Checking manage mode...",
       "manage_clear_search_note": "Clear search to manage the current doc.",
@@ -169,9 +190,9 @@
       "undo_move_status": "Undoing move...",
       "manage_server_not_configured_error": "Local docs-management server is not configured.",
       "manage_unavailable_note": "Manage mode unavailable: local docs server unavailable for this scope.",
-      "viewable_ancestor_prompt": "Making this doc viewable also requires making these parent docs viewable:\n\n{titles}\n\nContinue?",
-      "viewable_descendant_prompt": "Make descendant docs viewable too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
-      "viewable_invalid_choice": "Viewability update cancelled: expected `all` or `selected`."
+      "viewable_ancestor_prompt": "Showing this doc also requires showing these parent docs:\n\n{titles}\n\nContinue?",
+      "viewable_descendant_prompt": "Show descendant docs too?\n\nType \"all\" to include descendants, \"selected\" for this doc only, or cancel to stop.",
+      "viewable_invalid_choice": "Show update cancelled: expected `all` or `selected`."
     },
     "series_tag_editor": {
       "missing_series_id_error": "Tag Studio error: missing series id.",

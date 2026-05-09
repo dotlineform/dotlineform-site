@@ -51,6 +51,7 @@ SUPPORTED_FIELD_SOURCES = {
     "headings",
     "source_text",
     "last_updated",
+    "hidden",
     "viewable",
     "published",
 }
@@ -783,7 +784,7 @@ def ancestor_chain(context: ExportContext, doc: dict[str, Any]) -> list[dict[str
 
 def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> Any:
     doc_id = normalize_text(doc.get("doc_id"))
-    if source in {"doc_id", "title", "parent_id", "summary", "last_updated", "viewable", "published"}:
+    if source in {"doc_id", "title", "parent_id", "summary", "last_updated", "hidden", "viewable", "published"}:
         return doc.get(source)
     if source == "current_summary":
         return doc.get("summary", "")

@@ -7,6 +7,7 @@
   "parent_id": "import-export",
   "sort_order": 20,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-docs-import.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",

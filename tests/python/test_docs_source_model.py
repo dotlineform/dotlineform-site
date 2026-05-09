@@ -50,6 +50,7 @@ def make_doc(
         parent_id=parent_id,
         sort_order=sort_order,
         published=True,
+        hidden=False,
         viewable=True,
     )
 
@@ -66,7 +67,7 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
                     "parent_id: \"\"",
                     "sort_order: 20",
                     "published: false",
-                    "viewable: true",
+                    "hidden: true",
                     "summary: \"\"",
                     "---",
                     "# Sample",
@@ -83,12 +84,12 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
     assert front_matter["parent_id"] == ""
     assert front_matter["sort_order"] == 20
     assert front_matter["published"] is False
-    assert front_matter["viewable"] is True
+    assert front_matter["hidden"] is True
     assert front_matter["summary"] == ""
     assert "parent_id: \"\"" in formatted
     assert "sort_order: 20" in formatted
     assert "published: false" in formatted
-    assert "viewable: true" in formatted
+    assert "hidden: true" in formatted
 
 
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
@@ -189,7 +190,9 @@ def test_source_rewrite_preserves_added_date_updates_last_updated_and_removes_bl
         doc.front_matter["added_date"] = "2026-01-01"
         doc.front_matter["last_updated"] = "2026-01-02 09:00"
 
-        metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "viewable": False})
+        doc.front_matter["viewable"] = True
+
+        metadata_text = source_model.rewrite_doc_source(doc, {"title": "Updated", "hidden": True, "viewable": None})
         placement_text = source_model.rewrite_doc_placement_source(doc, "", None)
     finally:
         source_model.current_doc_timestamp = original_timestamp
@@ -197,7 +200,8 @@ def test_source_rewrite_preserves_added_date_updates_last_updated_and_removes_bl
     assert "added_date: 2026-01-01" in metadata_text
     assert 'last_updated: "2026-05-09 13:00"' in metadata_text
     assert "title: Updated" in metadata_text
-    assert "viewable: false" in metadata_text
+    assert "hidden: true" in metadata_text
+    assert "viewable:" not in metadata_text
     assert "parent_id: \"\"" in placement_text
     assert "sort_order:" not in placement_text
 

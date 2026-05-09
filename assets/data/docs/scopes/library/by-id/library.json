@@ -7,6 +7,7 @@
   "parent_id": "",
   "sort_order": 10,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "library.md",
   "viewer_url": "/library/?doc=library",

@@ -7,6 +7,7 @@
   "parent_id": "search",
   "sort_order": 40,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "search-ranking-model.md",
   "viewer_url": "/docs/?scope=studio&doc=search-ranking-model",

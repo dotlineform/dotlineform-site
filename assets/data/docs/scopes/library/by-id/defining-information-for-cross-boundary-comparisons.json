@@ -7,6 +7,7 @@
   "parent_id": "",
   "sort_order": 30,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "defining-information-for-cross-boundary-comparisons.md",
   "viewer_url": "/library/?doc=defining-information-for-cross-boundary-comparisons",

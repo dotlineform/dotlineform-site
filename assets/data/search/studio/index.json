@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ae8095dd50097f46f0e7448cfd9058b9",
-    "generated_at_utc": "2026-05-09T21:03:26Z",
+    "version": "blake2b-b00472bbd0d0a9d24d748d40c0e3ce36",
+    "generated_at_utc": "2026-05-09T22:23:18Z",
     "count": 209
   },
   "entries": [
@@ -4354,10 +4354,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-09 23:23",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-07 21:52 • Change Requests",
+      "display_meta": "2026-05-09 23:23 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4367,14 +4367,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-07 21:52",
+        "2026-05-09 23:23",
         "2026",
         "05",
-        "07",
-        "21",
-        "52"
+        "09",
+        "23"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-07 21:52 2026 05 07 21 52"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-09 23:23 2026 05 09 23"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",

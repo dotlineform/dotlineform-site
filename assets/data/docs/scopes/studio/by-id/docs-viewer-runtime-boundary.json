@@ -7,6 +7,7 @@
   "parent_id": "docs-viewer",
   "sort_order": 30,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "docs-viewer-runtime-boundary.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",

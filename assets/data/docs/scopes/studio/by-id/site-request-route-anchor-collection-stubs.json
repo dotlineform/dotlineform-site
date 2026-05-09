@@ -7,6 +7,7 @@
   "parent_id": "site-request-field-aware-build-scoping",
   "sort_order": 5,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "site-request-route-anchor-collection-stubs.md",
   "viewer_url": "/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs",

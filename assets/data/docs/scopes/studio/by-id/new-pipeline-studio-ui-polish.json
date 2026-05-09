@@ -7,6 +7,7 @@
   "parent_id": "archive",
   "sort_order": 61,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "studio-ui-polish.md",
   "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-ui-polish",

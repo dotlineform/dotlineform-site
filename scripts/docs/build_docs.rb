@@ -40,6 +40,7 @@ DocRecord = Struct.new(
   :parent_id,
   :sort_order,
   :published,
+  :hidden,
   :viewable,
   :source_path,
   :viewer_url,
@@ -161,7 +162,8 @@ class DocsDataBuilder
       ui_status = normalize_ui_status(front_matter["ui_status"])
       sort_order = normalize_sort_order(front_matter["sort_order"])
       published = true
-      viewable = boolean_front_matter_value(front_matter, "viewable", true)
+      hidden = hidden_front_matter_value(front_matter)
+      viewable = !hidden
 
       DocRecord.new(
         scope_id: @scope_id,
@@ -174,6 +176,7 @@ class DocsDataBuilder
         parent_id: parent_id,
         sort_order: sort_order,
         published: published,
+        hidden: hidden,
         viewable: viewable,
         source_path: relative_path,
         viewer_url: viewer_url_for(doc_id),
@@ -204,6 +207,12 @@ class DocsDataBuilder
     return value if value == true || value == false
 
     !%w[false 0 no off].include?(value.to_s.strip.downcase)
+  end
+
+  def hidden_front_matter_value(front_matter)
+    return boolean_front_matter_value(front_matter, "hidden", false) if front_matter.key?("hidden")
+
+    !boolean_front_matter_value(front_matter, "viewable", true)
   end
 
   def extract_title(markdown)
@@ -278,6 +287,7 @@ class DocsDataBuilder
       "parent_id" => effective_parent_id(doc, docs),
       "sort_order" => doc.sort_order,
       "published" => doc.published,
+      "hidden" => doc.hidden,
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,
@@ -302,6 +312,7 @@ class DocsDataBuilder
       "parent_id" => effective_parent_id(doc, docs),
       "sort_order" => doc.sort_order,
       "published" => doc.published,
+      "hidden" => doc.hidden,
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,

@@ -7,6 +7,7 @@
   "parent_id": "catalogue",
   "sort_order": 150,
   "published": true,
+  "hidden": false,
   "viewable": true,
   "source_path": "scripts-build-catalogue-json.md",
   "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
