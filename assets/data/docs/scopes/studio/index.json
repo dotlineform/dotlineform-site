@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T17:30:26Z",
+  "generated_at": "2026-05-09T17:34:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1170,6 +1170,22 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
       "content_text_length": 1899
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-script-structural-review-generate-work-pages",
+      "title": "Generate Work Pages Slices",
+      "added_date": "2026-05-09",
+      "last_updated": "2026-05-09 18:33",
+      "parent_id": "site-request-script-structural-review",
+      "sort_order": 40,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-script-structural-review-generate-work-pages.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-generate-work-pages.json",
+      "content_text_length": 13366,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",
@@ -2948,7 +2964,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 17:51",
+      "last_updated": "2026-05-09 18:33",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2956,7 +2972,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 12934,
+      "content_text_length": 13421,
       "ui_status": "in-progress"
     },
     {
