@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T13:40:20Z",
+  "generated_at": "2026-05-09T13:52:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2931,7 +2931,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 14:38",
+      "last_updated": "2026-05-09 14:51",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2939,7 +2939,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 10665,
+      "content_text_length": 11726,
       "ui_status": "in-progress"
     },
     {

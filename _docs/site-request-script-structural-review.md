@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 14:38"
+last_updated: "2026-05-09 14:51"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -13,8 +13,9 @@ viewable: true
 Status:
 
 - in progress
-- Priority 1 catalogue write-server slice sequence complete
-- Priority 2 docs-management server Slice 8 closeout implemented
+- Priority 1 catalogue write-server sequence complete; see [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
+- Priority 2 docs-management server sequence complete; see [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
+- Remaining candidates start at Priority 3
 
 ## Summary
 
@@ -42,10 +43,10 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 
 ## Candidate Scripts
 
-| Priority | Script | Current size | Review focus | Likely extraction direction |
+| Priority | Script | Current size | Review focus | Status or likely direction |
 |---|---:|---:|---|---|
-| 1 | `scripts/studio/catalogue_write_server.py` | 3148 lines | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | slice sequence complete; server now keeps HTTP transport, endpoint orchestration, allowlist checks, final response assembly, local logging, and activity append timing |
-| 2 | `scripts/docs/docs_management_server.py` | 3071 lines before Slice 1 | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | routes, source-model helpers, generated-data reads, activity helpers, write/rebuild helpers, mutation planners, and source-import orchestration extracted; final handler closeout remains |
+| 1 | `scripts/studio/catalogue_write_server.py` | 3148 lines before Slice 1 | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
+| 2 | `scripts/docs/docs_management_server.py` | 3071 lines before Slice 1 | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
 | 3 | `scripts/studio/tag_write_server.py` | 2972 lines | tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | separate tag domain mutations from transport and shared local-service write helpers |
 | 4 | `scripts/generate_work_pages.py` | 2891 lines | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
 | 5 | `scripts/catalogue_json_build.py` | 1775 lines | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | separate local media planning/execution from build-scope planning and CLI/reporting code |
@@ -60,9 +61,14 @@ Files lower on the list should remain untouched unless a concrete maintenance pa
 `scripts/studio/catalogue_write_server.py` was reviewed around responsibility boundaries.
 The detailed implementation record lives in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
 
-Status: the catalogue write-server priority sequence is complete through Slice 14.
-The server is still intentionally an orchestration layer rather than a tiny wrapper: endpoint request parsing, endpoint-specific allowlist checks, final response assembly, local logging, and Studio Activity append timing remain there.
-Pure source mutation, lookup refresh execution, cleanup planning, delete/publication planning, transaction mechanics, activity row construction, prose import logic, route inventories, and save-build follow-through now have explicit module owners and focused tests.
+Status: complete through Slice 14.
+
+End result:
+
+- `scripts/studio/catalogue_write_server.py` remains the local HTTP orchestration layer
+- the server keeps request parsing, endpoint-specific allowlist checks, final response assembly, local logging, and Studio Activity append timing
+- activity row construction, lookup invalidation, lookup refresh execution, generated cleanup planning, delete/publication planning, transaction mechanics, prose import logic, route inventories, source mutation planning, and save-build follow-through now have explicit module owners
+- focused tests exercise the extracted owners directly instead of using the server as the access path for moved behavior
 
 Review questions used for the completed catalogue write-server sequence:
 
@@ -111,22 +117,36 @@ The risk is over-generalizing too early; shared code should be introduced only w
 
 ## Priority 2 Review: Docs Management Server
 
-`scripts/docs/docs_management_server.py` is now the active priority-2 script in this review.
+`scripts/docs/docs_management_server.py` was reviewed around responsibility boundaries.
 The detailed implementation record lives in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
 
-Current status: Slices 1-8 extracted endpoint path ownership, docs source-model helpers, generated-data read helpers, docs-specific Studio Activity row construction, write/rebuild follow-through, management mutation planning, staged source-import orchestration, and final handler closeout.
-The server still owns HTTP transport, request parsing, endpoint orchestration, response status mapping, dependency binding for shared backup/log/rebuild helpers, structured import/export adapter orchestration, and the timing decision for activity append attempts.
+Status: complete through Slice 8 closeout.
+
+End result:
+
+- `scripts/docs/docs_management_server.py` remains the Docs Viewer local-service HTTP orchestration layer
+- the server keeps HTTP transport, request parsing, endpoint orchestration, response status mapping, backup/log dependency binding, structured import/export adapter orchestration, and Studio Activity append timing
+- endpoint path inventories, docs source-model helpers, generated Docs Viewer JSON reads, docs-specific Studio Activity construction, write/rebuild follow-through, management mutation planning, and staged source-import orchestration now have explicit module owners
+- temporary `handle_import_html(...)` wrapper layers were removed while the public `/docs/import-html` route alias remains an intentional compatibility endpoint in the route table
+- structured `/studio/import/` and `/studio/export/` adapter orchestration is intentionally deferred to the [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review)
+- focused tests exercise the extracted owners directly where practical
 
 ## Related Folder Organization Request
 
 The request [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) tracks whether the completed script ownership work should be reflected directly in the filesystem layout.
 That request is separate from this structural review because it is mostly about package and command-path organization rather than extracting mixed responsibilities inside individual scripts.
 
+## Remaining Review Queue
+
+Priority 3 is `scripts/studio/tag_write_server.py`.
+The remaining candidates should still be handled as narrow, finishable slices rather than one broad refactor.
+
 Recommended next review questions:
 
-- Which remaining handler-local helpers are dead, stale, or better expressed through existing owner modules?
-- Which import/export adapter flows should be explicitly marked leave or deferred after final docs-management closeout?
-- Are any backup/log dependency bindings now stable enough to review as shared local-service infrastructure, or should they stay service-specific?
+- Which tag write-server functions are pure domain logic and can be tested without an HTTP server?
+- Which tag-service concerns overlap with catalogue/docs local-service infrastructure, and which must stay service-specific for safety?
+- Which response payload keys are public contracts for Studio tag pages and should be pinned before extraction?
+- Should tag ownership remain under `scripts/studio/`, or should the later [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) move tag code into a domain package after the structural boundary is clearer?
 
 ## Acceptance Criteria
 
@@ -148,13 +168,17 @@ Recommended next review questions:
 - generated artifact cleanup and backup/restore paths are easy to regress without targeted tests
 - response payload changes can silently break Studio pages if they are not pinned before extraction
 
-## Suggested First Slice
+## Suggested Next Slice
 
-Start with a read-only review of `scripts/studio/catalogue_write_server.py` and produce a concrete extraction map.
+Start Priority 3 with a read-only review of `scripts/studio/tag_write_server.py` and produce a concrete extraction map.
 
-The first implementation slice should probably move only activity helpers or lookup invalidation helpers, because those are already relatively cohesive and have targeted tests.
+The first implementation slice should move only one cohesive tag behavior group with focused tests.
+Do not reorganize script folders as part of that slice; folder moves are tracked separately in [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
 
 ## Implementation Notes
 
 Priority 1 catalogue write-server slices are tracked in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
 That child doc records implemented Slices 1-14 and the final module ownership boundary for `scripts/studio/catalogue_write_server.py`.
+
+Priority 2 docs-management server slices are tracked in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
+That child doc records implemented Slices 1-8 and the final module ownership boundary for `scripts/docs/docs_management_server.py`.
