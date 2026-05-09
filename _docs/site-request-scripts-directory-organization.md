@@ -2,15 +2,15 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 21:53"
-ui_status: in_progress
+last_updated: "2026-05-09 22:35"
+ui_status: done
 parent_id: change-requests
 sort_order: 212
 viewable: true
 ---
 # Scripts Directory Organization Request
 
-Status: slice 4 docs/search implementation ownership complete; shared infrastructure and final closeout is next.
+Status: implemented.
 
 ## Purpose
 
@@ -357,6 +357,64 @@ Acceptance checks:
 - no moved behavior is still tested through old path compatibility wrappers
 - no stale path references remain in docs, tests, `bin/`, or CI-like check scripts
 
+#### Slice 5 implementation result
+
+Implemented 2026-05-09.
+
+Final owner folders are now concrete:
+
+- `scripts/checks/` owns standalone audits and verification commands:
+  - `audit_site_consistency.py`
+  - `audit_studio_ready_state.py`
+  - `css_token_audit.py`
+  - `verify_activity_contract.py`
+- `scripts/media/` owns media tooling:
+  - `build_palette_data.py`
+  - `make_srcset_images.py`
+  - `publish_media_to_r2.py`
+- `scripts/studio/` owns non-domain-specific Studio runtime services:
+  - `audit_service.py`
+  - `studio_backup_retention.py`
+
+Top-level `scripts/` is now reserved for:
+
+- stable command wrappers:
+  - `build_docs.rb`
+  - `build_search.rb`
+  - `make_srcset_images.sh`
+- the shared check-profile entrypoint:
+  - `run_checks.py`
+- shared infrastructure modules:
+  - `display_paths.py`
+  - `local_env.py`
+  - `pipeline_config.py`
+  - `script_logging.py`
+  - `studio_activity.py`
+- shared Ruby/Jekyll helpers:
+  - `jekyll_markdown_renderer.rb`
+  - `jekyll_webrick_client_reset_filter.rb`
+  - `render_markdown_with_jekyll.rb`
+
+Callers and checks now use owner paths directly:
+
+- `bin/dev-studio` runs backup retention through `scripts/studio/studio_backup_retention.py`
+- the Studio audit service runs the ready-state audit through `scripts/checks/audit_studio_ready_state.py`
+- `scripts/run_checks.py` compiles and invokes the moved paths
+- focused tests load moved implementations from their owner folders
+- active script docs and examples use project-local owner paths
+
+No broad compatibility Python modules were left at the old root paths.
+Historical change-log/archive entries can still mention old paths as historical records.
+
+Final validation:
+
+- Python syntax check for moved Checks, Media, Studio runtime, shared runner, and focused test files.
+- Focused tests for activity contract, R2 publishing, and Studio backup retention.
+- Ready-state audit through the new Checks path.
+- `./scripts/run_checks.py --profile quick`.
+- `./scripts/build_docs.rb --scope studio --write`.
+- `./scripts/build_search.rb --scope studio --write`.
+
 ## Benefits
 
 - makes script ownership visible from the filesystem
@@ -373,13 +431,13 @@ Acceptance checks:
 - command path changes can break local notes outside the repo
 - broad compatibility wrappers would reduce short-term pain but undermine the ownership goal if left in place
 
-## Open Questions
+## Resolved Decisions
 
-- Should `build_docs.rb` and `build_search.rb` move into domain folders, or are they stable enough operational entrypoints to remain top-level?
-- Should the Analytics local service be named `tag_write_server.py` or `analytics_server.py` after the tag structural review determines its likely scope?
-- Should Studio tag UI routes be migrated under `/studio/analytics/` in the same broader sequence or tracked as a separate UI/routing request?
-- Should shared helpers remain as top-level modules or move under a small `scripts/shared/` package?
-- Are any root-level script command paths used outside the repo strongly enough to justify temporary deprecation wrappers?
+- `build_docs.rb` and `build_search.rb` stay as stable top-level wrappers over domain-owned implementations.
+- the Analytics local service remains `tag_write_server.py` until non-tag Analytics writes share the same loopback-service contract.
+- Studio tag UI route migration was handled separately before the Analytics script move.
+- shared helpers remain top-level infrastructure modules because the root is now small and the helpers have cross-domain callers.
+- no old root Python compatibility wrappers were kept; active repo docs and checks use owner paths directly.
 
 ## Recommended First Slice
 

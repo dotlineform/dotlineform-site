@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-09 21:53"
+last_updated: "2026-05-09 22:35"
 parent_id: site-docs
 sort_order: 80
 ---
@@ -12,13 +12,15 @@ sort_order: 80
 - Command-level usage, flags, output paths, and operational notes live in the child docs below.
 - Local server architecture and future consolidation strategy live in **[Servers](/docs/?scope=studio&doc=servers)**.
 
-The current script surface falls into four groups:
+The current script surface is organized by owner:
 
+- catalogue-domain source, build, and write-service behavior
+- analytics-domain tag metadata behavior
 - docs-domain builders for scope-owned docs artifacts
 - search builders for scope-owned search artifacts
-- JSON-led catalogue maintenance and scoped rebuild helpers
-- local tooling for audits, CSS analysis, and Studio write flows
-- optional check profiles for larger-risk changes
+- Studio runtime services that are not domain-owned
+- checks and media tooling
+- shared infrastructure plus stable top-level command wrappers
 
 ## Common Runtime Assumptions
 
@@ -30,6 +32,25 @@ The current script surface falls into four groups:
 - R2 media publishing reads R2 credentials from `var/local/site.env` for local runs
 - in cloud/Codespaces runs, those same keys should be provided through platform environment variables or secrets
 - shared pipeline defaults live in `_data/pipeline.json`
+
+## Folder Rules
+
+- `scripts/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
+- `scripts/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
+- `scripts/docs/` owns Docs Viewer build, import/export, live rebuild, generated-read, and docs-management behavior.
+- `scripts/search/` owns search build configuration and the search builder implementation.
+- `scripts/studio/` owns non-domain-specific Studio runtime services such as audit and backup-retention services.
+- `scripts/checks/` owns standalone audits and verification commands.
+- `scripts/media/` owns media derivation and remote media publishing commands.
+- top-level `scripts/` is reserved for stable wrappers and shared infrastructure modules.
+
+Top-level survivors are intentional:
+
+- `build_docs.rb` and `build_search.rb` are stable operational wrappers over domain-owned implementations.
+- `run_checks.py` is the shared check-profile entrypoint.
+- `make_srcset_images.sh` is the stable shell wrapper for the media implementation.
+- `display_paths.py`, `local_env.py`, `pipeline_config.py`, `script_logging.py`, and `studio_activity.py` are shared infrastructure modules with cross-domain callers.
+- `jekyll_markdown_renderer.rb`, `render_markdown_with_jekyll.rb`, and `jekyll_webrick_client_reset_filter.rb` are shared Ruby/Jekyll helpers.
 
 ## Current Build Boundaries
 
@@ -69,7 +90,7 @@ Catalogue/runtime maintenance:
 
 - `./scripts/run_checks.py`
   - runs optional repo check profiles and writes local logs under `var/test-runs/`
-- `./scripts/audit_studio_ready_state.py`
+- `./scripts/checks/audit_studio_ready_state.py`
   - audits Studio route-ready template contracts and flags static routes that need a route-specific ready/busy implementation
 - `./scripts/catalogue/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search

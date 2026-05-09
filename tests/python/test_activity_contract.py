@@ -11,7 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def main() -> None:
-    runpy.run_path(str(REPO_ROOT / "scripts" / "verify_activity_contract.py"), run_name="__main__")
+    runpy.run_path(str(REPO_ROOT / "scripts" / "checks" / "verify_activity_contract.py"), run_name="__main__")
 
 
 if __name__ == "__main__":

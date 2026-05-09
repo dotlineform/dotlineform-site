@@ -26,7 +26,7 @@ Detailed search architecture proposals stay in:
 
 ## Active Backlog
 
-- Add CI job(s) to run `scripts/audit_site_consistency.py` on pull requests.
+- Add CI job(s) to run `scripts/checks/audit_site_consistency.py` on pull requests.
 - Decide CI policy for warnings vs errors (`--strict` currently errors-only).
 - Add a short contributor checklist for when to run scoped vs full audit checks.
 - Add a local front-end for selected repo scripts so common dry-run/write flows can be run without dropping to the terminal.

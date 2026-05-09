@@ -118,7 +118,7 @@ Before finishing Studio UI work:
 - update [Site Change Log](/docs/?scope=studio&doc=site-change-log) for meaningful Studio/site changes
 - save any formal page-level conformance review in [UI Audits](/docs/?scope=studio&doc=ui-audits)
 - verify desktop and mobile behavior
-- run `./scripts/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
+- run `./scripts/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 - run the sanitization scan on changed files
 
 ## Then Go Deeper

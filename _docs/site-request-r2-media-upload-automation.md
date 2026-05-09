@@ -23,7 +23,7 @@ The implementation also establishes a credential and upload architecture that ca
 Implemented entrypoint:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 ## Problem
@@ -156,8 +156,8 @@ The first docs milestone may only validate and report upload plans without rewri
 Candidate script:
 
 ```text
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --dry-run
-./scripts/publish_media_to_r2.py --scope catalogue --all --write
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --dry-run
+./scripts/media/publish_media_to_r2.py --scope catalogue --all --write
 ```
 
 The default should be dry-run.

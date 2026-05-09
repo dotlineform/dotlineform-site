@@ -9,12 +9,17 @@ import hashlib
 import hmac
 import json
 import mimetypes
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Protocol, Sequence
+
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
 try:
     from pipeline_config import (
@@ -30,7 +35,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
 PRIMARY_OUTPUT_SUBDIR = str(PIPELINE_CONFIG["variants"]["primary"]["output_subdir"])

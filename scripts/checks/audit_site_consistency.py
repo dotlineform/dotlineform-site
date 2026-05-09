@@ -20,6 +20,10 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
     from pipeline_config import load_pipeline_config
 except ModuleNotFoundError:  # pragma: no cover - package import fallback

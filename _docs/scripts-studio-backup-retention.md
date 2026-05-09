@@ -2,7 +2,7 @@
 doc_id: scripts-studio-backup-retention
 title: Studio Backup Retention
 added_date: 2026-05-04
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-09 22:35"
 parent_id: studio
 sort_order: 80
 ---
@@ -11,12 +11,12 @@ sort_order: 80
 Script:
 
 ```bash
-./scripts/studio_backup_retention.py
+./scripts/studio/studio_backup_retention.py
 ```
 
 ## Purpose
 
-`scripts/studio_backup_retention.py` prunes local Studio backup files so untracked backup folders do not grow indefinitely.
+`scripts/studio/studio_backup_retention.py` prunes local Studio backup files so untracked backup folders do not grow indefinitely.
 
 It manages:
 
@@ -49,19 +49,19 @@ Known local filesystem metadata such as `.DS_Store` is ignored.
 Preview cleanup:
 
 ```bash
-./scripts/studio_backup_retention.py --dry-run
+./scripts/studio/studio_backup_retention.py --dry-run
 ```
 
 Apply cleanup:
 
 ```bash
-./scripts/studio_backup_retention.py --write
+./scripts/studio/studio_backup_retention.py --write
 ```
 
 Override retention counts:
 
 ```bash
-./scripts/studio_backup_retention.py --dry-run --studio-keep 20 --catalogue-keep 30
+./scripts/studio/studio_backup_retention.py --dry-run --studio-keep 20 --catalogue-keep 30
 ```
 
 ## Dev Studio Startup
@@ -69,7 +69,7 @@ Override retention counts:
 `bin/dev-studio` runs backup retention once during startup before the long-running services start:
 
 ```bash
-./scripts/studio_backup_retention.py --write --quiet
+./scripts/studio/studio_backup_retention.py --write --quiet
 ```
 
 If cleanup fails, `bin/dev-studio` prints a warning and continues startup.

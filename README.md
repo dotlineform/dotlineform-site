@@ -39,7 +39,7 @@ Shared pipeline defaults live in `_data/pipeline.json`. That file stores env var
 Quick audit command:
 
 ```bash
-./scripts/audit_site_consistency.py --strict
+./scripts/checks/audit_site_consistency.py --strict
 ```
 
 Sorting architecture and consistency contract are documented in [`_docs/sorting-architecture.md`](_docs/sorting-architecture.md)

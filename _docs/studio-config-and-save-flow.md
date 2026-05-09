@@ -252,6 +252,6 @@ Current operational constraints:
 
 - `bin/dev-studio` rebuilds Studio Docs Viewer data and derived catalogue lookup artifacts, but not docs-search artifacts
 - Studio route behavior depends on the current site build being present under Jekyll
-- `scripts/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
+- `scripts/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 
 For command-level usage and script flags, keep **[Scripts](/docs/?scope=studio&doc=scripts)** aligned with Studio workflow changes.

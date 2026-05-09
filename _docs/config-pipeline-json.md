@@ -28,8 +28,8 @@ Current responsibilities include:
 Current Python callers load it through `scripts/pipeline_config.py`:
 
 - `scripts/catalogue/generate_work_pages.py`
-- `scripts/make_srcset_images.py`
-- `scripts/audit_site_consistency.py`
+- `scripts/media/make_srcset_images.py`
+- `scripts/checks/audit_site_consistency.py`
 
 Current Jekyll/Liquid callers read it as `site.data.pipeline`:
 

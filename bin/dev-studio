@@ -204,7 +204,7 @@ require_open_port "Audit Service" "127.0.0.1" "$AUDIT_SERVICE_PORT" "AUDIT_SERVI
 if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
   echo "Skipping Studio backup retention cleanup"
 else
-  "$PYTHON_BIN" scripts/studio_backup_retention.py --write --quiet || {
+  "$PYTHON_BIN" scripts/studio/studio_backup_retention.py --write --quiet || {
     echo "WARNING: Studio backup retention cleanup failed; continuing startup." >&2
   }
 fi

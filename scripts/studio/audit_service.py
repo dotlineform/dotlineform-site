@@ -124,7 +124,7 @@ def build_audit_registry(repo_root: Path) -> Dict[str, AuditDefinition]:
             description="Checks Studio route-ready template contracts and static-route drift.",
             argv=(
                 sys.executable,
-                str(repo_root / "scripts" / "audit_studio_ready_state.py"),
+                str(repo_root / "scripts" / "checks" / "audit_studio_ready_state.py"),
                 "--strict",
                 "--json",
             ),

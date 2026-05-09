@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 21:45"
+last_updated: "2026-05-09 22:35"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,35 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Closed scripts directory organization request
+
+**Status:** implemented
+
+**Area:** scripts / checks / media / Studio runtime / maintainability
+
+**Summary:**
+Moved remaining domain-owned root commands into concrete owner folders: standalone audits and verifiers now live under `scripts/checks/`, media tooling lives under `scripts/media/`, and Studio backup retention lives under `scripts/studio/`.
+The top-level `scripts/` directory is now reserved for stable wrappers and shared infrastructure modules.
+
+**Files changed/docs:**
+
+- `scripts/checks/audit_site_consistency.py`
+- `scripts/checks/audit_studio_ready_state.py`
+- `scripts/checks/css_token_audit.py`
+- `scripts/checks/verify_activity_contract.py`
+- `scripts/media/build_palette_data.py`
+- `scripts/media/make_srcset_images.py`
+- `scripts/media/publish_media_to_r2.py`
+- `scripts/studio/studio_backup_retention.py`
+- `scripts/make_srcset_images.sh`
+- `bin/dev-studio`
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
+
+**Impact:**
+Script location now communicates ownership across Catalogue, Analytics, Docs, Search, Studio runtime, Checks, Media, and shared infrastructure.
+The stable srcset shell wrapper remains top-level while delegating to the media implementation.
 
 ## [2026-05-09] Split docs and search build implementation ownership from stable wrappers
 

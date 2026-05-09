@@ -95,7 +95,7 @@ Update the full contract:
 - `scripts/generate_work_pages.py`
 - `scripts/catalogue_json_build.py`
 - `scripts/studio/catalogue_write_server.py`
-- `scripts/audit_site_consistency.py`
+- `scripts/checks/audit_site_consistency.py`
 - delete/update helpers that touch affected per-series payloads
 - data-model docs for generated catalogue artifacts
 - search/docs references that describe membership ownership

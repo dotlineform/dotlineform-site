@@ -2,7 +2,7 @@
 doc_id: scripts-audit-studio-ready-state
 title: Studio Ready-State Audit
 added_date: 2026-05-03
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-09 22:35"
 parent_id: studio
 sort_order: 70
 ---
@@ -11,7 +11,7 @@ sort_order: 70
 Script:
 
 ```bash
-./scripts/audit_studio_ready_state.py --strict
+./scripts/checks/audit_studio_ready_state.py --strict
 ```
 
 Run this after changing Studio route shells, dashboard shells, static/reference pages, or route-ready helper scripts.
@@ -19,7 +19,7 @@ Run this after changing Studio route shells, dashboard shells, static/reference 
 Structured output for the Studio audit service:
 
 ```bash
-./scripts/audit_studio_ready_state.py --strict --json
+./scripts/checks/audit_studio_ready_state.py --strict --json
 ```
 
 ## Purpose
@@ -40,7 +40,7 @@ The audit keeps the shared Studio ready-state contract from drifting as pages ev
 Use strict mode for normal verification:
 
 ```bash
-./scripts/audit_studio_ready_state.py --strict
+./scripts/checks/audit_studio_ready_state.py --strict
 ```
 
 Strict mode exits non-zero for warnings as well as errors. Without `--strict`, warnings are informational and errors still fail the run.

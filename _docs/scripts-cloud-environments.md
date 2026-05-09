@@ -189,7 +189,7 @@ Use the same command sequence in both environments:
 Example check sequence:
 
 ```bash
-./scripts/audit_site_consistency.py --strict
+./scripts/checks/audit_site_consistency.py --strict
 ./scripts/catalogue/validate_catalogue_source.py
 ./scripts/catalogue/catalogue_json_build.py --work-id 00001
 ./scripts/build_docs.rb

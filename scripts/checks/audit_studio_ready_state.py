@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 STUDIO_ROOT = REPO_ROOT / "studio"
 STATIC_SCRIPT = "studio-static-route.js"
 DASHBOARD_SCRIPT = "studio-dashboard.js"

@@ -23,7 +23,7 @@ The first slice is implemented.
 - `/studio/` links to Audits from Resources.
 - `assets/studio/js/studio-audits.js` loads the audit registry, probes service availability, runs an allowlisted audit, renders results, and maintains route-ready attributes.
 - `scripts/studio/audit_service.py` exposes the local read-only audit service.
-- `scripts/audit_studio_ready_state.py --strict --json` provides structured output for the service.
+- `scripts/checks/audit_studio_ready_state.py --strict --json` provides structured output for the service.
 - `bin/dev-studio` starts the audit service on `AUDIT_SERVICE_PORT`, default `8790`.
 
 Only `studio-ready-state` is wired in this slice.
@@ -103,7 +103,7 @@ Initial audit:
 
 | ID | Label | Command owner | Script | Strict? |
 |---|---|---|---|---|
-| `studio-ready-state` | Studio ready state | audit service | `scripts/audit_studio_ready_state.py` | yes |
+| `studio-ready-state` | Studio ready state | audit service | `scripts/checks/audit_studio_ready_state.py` | yes |
 
 Future candidates:
 
@@ -169,7 +169,7 @@ The ready-state audit should gain a JSON output mode before the Studio page depe
 Suggested command:
 
 ```bash
-./scripts/audit_studio_ready_state.py --strict --json
+./scripts/checks/audit_studio_ready_state.py --strict --json
 ```
 
 JSON mode should preserve the existing human-readable terminal output by default and only emit JSON when explicitly requested.
@@ -214,7 +214,7 @@ Finding shape:
 
 ## Implementation Tasks
 
-1. Add JSON output to `scripts/audit_studio_ready_state.py`.
+1. Add JSON output to `scripts/checks/audit_studio_ready_state.py`.
 2. Add a loopback-only audit service under `scripts/studio/` with `health`, `audits`, and `audits/run` endpoints.
 3. Add `studio_config.json` entries for the Audits route, labels, and status text. Endpoint URLs remain in `assets/studio/js/studio-transport.js`, matching the existing local-service boundary.
 4. Add `/studio/audits/index.md` with the Studio route root and Resources navigation target.
@@ -229,7 +229,7 @@ Finding shape:
 
 | Slice | Codex-run checks | Manual checks |
 |---|---|---|
-| JSON audit output | Python syntax check; `./scripts/audit_studio_ready_state.py --strict`; JSON output parse check | Compare human and JSON summaries for the same run |
+| JSON audit output | Python syntax check; `./scripts/checks/audit_studio_ready_state.py --strict`; JSON output parse check | Compare human and JSON summaries for the same run |
 | Audit service | service health check; allowed audit run; invalid audit ID rejection | Confirm service binds only to loopback and logs only minimal run metadata |
 | Studio page | Jekyll build; Playwright smoke for unavailable and passing states | Open `/studio/audits/`, run the audit, inspect findings display and button/busy behavior on desktop and mobile |
 | Home link | Jekyll build; link presence check | Open `/studio/` and follow the Audits link from Resources |

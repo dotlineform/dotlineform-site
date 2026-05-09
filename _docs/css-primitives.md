@@ -213,7 +213,7 @@ When changing CSS:
 2. Then check whether an approved primitive already matches the pattern.
 3. If the pattern repeats across pages, extend the primitive.
 4. If the pattern is truly page-specific, keep it in the page namespace.
-5. Re-run `python3 scripts/css_token_audit.py` after each cleanup pass.
+5. Re-run `python3 scripts/checks/css_token_audit.py` after each cleanup pass.
 
 ## Current Direction
 

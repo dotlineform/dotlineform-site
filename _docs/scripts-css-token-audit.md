@@ -2,7 +2,7 @@
 doc_id: scripts-css-token-audit
 title: CSS Token Audit
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:42"
+last_updated: "2026-05-09 22:35"
 parent_id: ui-audits
 sort_order: 20
 ---
@@ -11,7 +11,7 @@ sort_order: 20
 Script:
 
 ```bash
-python3 ./scripts/css_token_audit.py
+python3 ./scripts/checks/css_token_audit.py
 ```
 
 ## Optional Flags

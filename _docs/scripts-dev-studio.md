@@ -112,7 +112,7 @@ If any port is unavailable, the runner exits immediately with a message naming t
 After that preflight, `bin/dev-studio` runs the startup write steps below:
 
 1. if `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
-   - `./scripts/studio_backup_retention.py --write --quiet`
+   - `./scripts/studio/studio_backup_retention.py --write --quiet`
 2. if `DOCS_STARTUP_REBUILD_SCOPES` is set, it runs:
    - `./scripts/build_docs.rb --scope <scope> --write`
    - `./scripts/build_search.rb --scope <scope> --write`

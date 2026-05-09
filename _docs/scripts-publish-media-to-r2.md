@@ -2,7 +2,7 @@
 doc_id: scripts-publish-media-to-r2
 title: Publish Media To R2
 added_date: 2026-05-08
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 22:35"
 parent_id: studio
 sort_order: 110
 viewable: true
@@ -12,10 +12,10 @@ viewable: true
 Project-local entrypoint:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
-The command publishes approved local media derivatives to Cloudflare R2.
+The media-owned command publishes approved local media derivatives to Cloudflare R2.
 It also provides an exact-id remote delete path for catalogue records that have been deleted locally.
 It defaults to dry-run mode and requires `--write` before it uploads or deletes anything.
 
@@ -69,43 +69,43 @@ Use `--allow-partial` only when intentionally publishing an incomplete set.
 Preview one work:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 Preview all catalogue primary derivatives:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --all
+./scripts/media/publish_media_to_r2.py --scope catalogue --all
 ```
 
 Upload one work:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --write
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --write
 ```
 
 Preview remote primary-variant deletion for one deleted work:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete
 ```
 
 Delete remote primary variants for one deleted work:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete --write
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete --write
 ```
 
 Write a JSON report:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind moments --id keys --report-json var/local/r2-publish-report.json
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind moments --id keys --report-json var/local/r2-publish-report.json
 ```
 
 Overwrite changed remote objects intentionally:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --force --write
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --force --write
 ```
 
 ## Safety Behavior

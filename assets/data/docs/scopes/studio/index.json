@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T20:55:11Z",
+  "generated_at": "2026-05-09T21:03:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -49,7 +49,7 @@
       "source_path": "site-request-studio-unified-activity-log-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log-inventory.json",
-      "content_text_length": 21577,
+      "content_text_length": 21584,
       "ui_status": "done"
     },
     {
@@ -418,7 +418,7 @@
       "doc_id": "scripts-css-token-audit",
       "title": "CSS Token Audit",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 20:42",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "ui-audits",
       "sort_order": 20,
       "published": true,
@@ -426,7 +426,7 @@
       "source_path": "scripts-css-token-audit.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-css-token-audit.json",
-      "content_text_length": 753
+      "content_text_length": 760
     },
     {
       "scope": "studio",
@@ -441,7 +441,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 7617
+      "content_text_length": 7624
     },
     {
       "scope": "studio",
@@ -698,7 +698,7 @@
       "source_path": "studio-ui-start.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
-      "content_text_length": 4270
+      "content_text_length": 4277
     },
     {
       "scope": "studio",
@@ -911,7 +911,7 @@
       "source_path": "local-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup.json",
-      "content_text_length": 12018
+      "content_text_length": 12045
     },
     {
       "scope": "studio",
@@ -971,7 +971,7 @@
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 11772
+      "content_text_length": 11779
     },
     {
       "scope": "studio",
@@ -1107,7 +1107,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9635,
+      "content_text_length": 9649,
       "ui_status": "done"
     },
     {
@@ -1123,7 +1123,7 @@
       "source_path": "site-request-studio-audits-page.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-audits-page",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-audits-page.json",
-      "content_text_length": 8242,
+      "content_text_length": 8277,
       "ui_status": "done"
     },
     {
@@ -1154,7 +1154,7 @@
       "source_path": "scripts-cloud-environments.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json",
-      "content_text_length": 9196
+      "content_text_length": 9203
     },
     {
       "scope": "studio",
@@ -1290,7 +1290,7 @@
       "source_path": "studio-smoke-testing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
-      "content_text_length": 7517
+      "content_text_length": 7524
     },
     {
       "scope": "studio",
@@ -1534,7 +1534,7 @@
       "source_path": "studio-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-audits.json",
-      "content_text_length": 1644
+      "content_text_length": 1651
     },
     {
       "scope": "studio",
@@ -1670,7 +1670,7 @@
       "source_path": "css-primitives.md",
       "viewer_url": "/docs/?scope=studio&doc=css-primitives",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json",
-      "content_text_length": 5199
+      "content_text_length": 5206
     },
     {
       "scope": "studio",
@@ -1948,7 +1948,7 @@
       "doc_id": "scripts-audit-site-consistency",
       "title": "Site Consistency Audit",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 21:18",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "site-docs",
       "sort_order": 70,
       "published": true,
@@ -1956,14 +1956,14 @@
       "source_path": "scripts-audit-site-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-site-consistency.json",
-      "content_text_length": 3794
+      "content_text_length": 3836
     },
     {
       "scope": "studio",
       "doc_id": "scripts-audit-studio-ready-state",
       "title": "Studio Ready-State Audit",
       "added_date": "2026-05-03",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
       "sort_order": 70,
       "published": true,
@@ -1971,7 +1971,7 @@
       "source_path": "scripts-audit-studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-studio-ready-state.json",
-      "content_text_length": 1575
+      "content_text_length": 1596
     },
     {
       "scope": "studio",
@@ -2129,7 +2129,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09 21:53",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "site-docs",
       "sort_order": 80,
       "published": true,
@@ -2137,7 +2137,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 6288
+      "content_text_length": 7788
     },
     {
       "scope": "studio",
@@ -2159,7 +2159,7 @@
       "doc_id": "scripts-studio-backup-retention",
       "title": "Studio Backup Retention",
       "added_date": "2026-05-04",
-      "last_updated": "2026-05-06 20:51",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
       "sort_order": 80,
       "published": true,
@@ -2167,7 +2167,7 @@
       "source_path": "scripts-studio-backup-retention.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-studio-backup-retention.json",
-      "content_text_length": 2003
+      "content_text_length": 2045
     },
     {
       "scope": "studio",
@@ -2435,7 +2435,7 @@
       "doc_id": "scripts-publish-media-to-r2",
       "title": "Publish Media To R2",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
       "sort_order": 110,
       "published": true,
@@ -2443,7 +2443,7 @@
       "source_path": "scripts-publish-media-to-r2.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-publish-media-to-r2.json",
-      "content_text_length": 3401
+      "content_text_length": 3461
     },
     {
       "scope": "studio",
@@ -2496,7 +2496,7 @@
       "doc_id": "scripts-srcset-builder",
       "title": "Srcset Builder",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "catalogue",
       "sort_order": 120,
       "published": true,
@@ -2504,7 +2504,7 @@
       "source_path": "scripts-srcset-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json",
-      "content_text_length": 2259
+      "content_text_length": 2299
     },
     {
       "scope": "studio",
@@ -2597,7 +2597,7 @@
       "source_path": "site-request-catalogue-unified-editor-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-unified-editor-cleanup.json",
-      "content_text_length": 10931,
+      "content_text_length": 10938,
       "ui_status": "done"
     },
     {
@@ -2768,7 +2768,7 @@
       "source_path": "config-pipeline-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-pipeline-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-pipeline-json.json",
-      "content_text_length": 1501
+      "content_text_length": 1514
     },
     {
       "scope": "studio",
@@ -2908,7 +2908,7 @@
       "source_path": "site-request-r2-media-upload-automation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-r2-media-upload-automation.json",
-      "content_text_length": 8065,
+      "content_text_length": 8083,
       "ui_status": "urgent"
     },
     {
@@ -3011,7 +3011,7 @@
       "doc_id": "site-request-scripts-directory-organization",
       "title": "Scripts Directory Organization Request",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 21:53",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3019,8 +3019,8 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 38570,
-      "ui_status": "in_progress"
+      "content_text_length": 40248,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3105,7 +3105,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3113,7 +3113,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 106379
+      "content_text_length": 107547
     },
     {
       "scope": "studio",

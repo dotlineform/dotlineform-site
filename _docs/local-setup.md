@@ -233,7 +233,7 @@ The publisher script reports missing variable names without printing configured 
 The R2 publisher reads `var/local/site.env` by default:
 
 ```bash
-./scripts/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 Two additional env vars are used by the srcset wrapper, but they are usually set per-command by pipeline scripts rather than persisted globally:
@@ -274,10 +274,10 @@ Keeping repo-specific runtime config in `var/local/site.env` gives CLI commands,
 Common commands:
 
 ```bash
-./scripts/audit_site_consistency.py --strict
+./scripts/checks/audit_site_consistency.py --strict
 ./scripts/catalogue/validate_catalogue_source.py
 ./scripts/catalogue/catalogue_json_build.py --work-id 00001
-python3 ./scripts/css_token_audit.py
+python3 ./scripts/checks/css_token_audit.py
 bin/dev-studio
 ```
 
@@ -415,7 +415,7 @@ ruby -v
 bundle -v
 ffmpeg -version | head -n 1
 heif-convert --version
-./scripts/audit_site_consistency.py --strict
+./scripts/checks/audit_site_consistency.py --strict
 ```
 
 ## GitHub vs local setup

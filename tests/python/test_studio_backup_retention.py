@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPT_PATH = REPO_ROOT / "scripts" / "studio_backup_retention.py"
+SCRIPT_PATH = REPO_ROOT / "scripts" / "studio" / "studio_backup_retention.py"
 
 
 def load_retention_module():

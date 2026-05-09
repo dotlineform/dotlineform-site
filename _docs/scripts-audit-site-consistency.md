@@ -2,7 +2,7 @@
 doc_id: scripts-audit-site-consistency
 title: Site Consistency Audit
 added_date: 2026-03-31
-last_updated: "2026-05-06 21:18"
+last_updated: "2026-05-09 22:35"
 parent_id: site-docs
 sort_order: 70
 ---
@@ -11,19 +11,19 @@ sort_order: 70
 Script:
 
 ```bash
-./scripts/audit_site_consistency.py --strict
+./scripts/checks/audit_site_consistency.py --strict
 ```
 
 Run an audit across generated pages and JSON:
 
 ```bash
-./scripts/audit_site_consistency.py --strict
+./scripts/checks/audit_site_consistency.py --strict
 ```
 
 Scope and output options:
 
 ```bash
-./scripts/audit_site_consistency.py \
+./scripts/checks/audit_site_consistency.py \
   --checks cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
@@ -34,7 +34,7 @@ Scope and output options:
 Single check:
 
 ```bash
-./scripts/audit_site_consistency.py \
+./scripts/checks/audit_site_consistency.py \
   --check-only schema \
   --max-samples 10
 ```
@@ -42,7 +42,7 @@ Single check:
 Multiple repeated checks:
 
 ```bash
-./scripts/audit_site_consistency.py \
+./scripts/checks/audit_site_consistency.py \
   --check-only cross_refs \
   --check-only json_schema \
   --series-ids collected-1989-1998
@@ -79,7 +79,7 @@ Multiple repeated checks:
 Optional orphan-media scan:
 
 ```bash
-./scripts/audit_site_consistency.py \
+./scripts/checks/audit_site_consistency.py \
   --check-only orphans \
   --orphans-media
 ```
