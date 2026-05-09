@@ -2,7 +2,7 @@
 doc_id: scripts-generate-work-pages
 title: "Generate Work Pages"
 added_date: 2026-04-19
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 19:00"
 parent_id: archive
 sort_order: 50
 ---
@@ -193,6 +193,13 @@ Catalogue search note:
 
 - `generate_work_pages.py` no longer writes `assets/data/search/catalogue/index.json`
 - catalogue search is now rebuilt separately by [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) from the generated repo JSON artifacts above plus Studio tag metadata
+
+## Generator Module Ownership
+
+`generate_work_pages.py` remains the internal orchestration entrypoint for the catalogue JSON build pipeline.
+Pure generated-record shaping lives in `scripts/catalogue_generation_records.py`.
+Pure series/work aggregate context and index payload construction lives in `scripts/catalogue_generation_indexes.py`, including series sort context, published series membership, primary-work validation, `assets/data/series_index.json`, `assets/data/works_index.json`, and `assets/studio/data/work_storage_index.json` payload construction.
+The generator still owns CLI parsing, path binding, Markdown rendering, existing-version comparisons, dry-run/write reporting, file writes, source write-back, and event logging.
 
 ## Internal JSON Source Mode
 

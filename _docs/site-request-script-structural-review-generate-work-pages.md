@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 18:51"
+last_updated: "2026-05-09 19:00"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -15,8 +15,10 @@ Status:
 - initial implementation tracker created
 - Slice 0 implemented
 - Slice 1 implemented
+- Slice 2 implemented
 - read-only extraction map recorded
 - record projection helpers extracted
+- series and work index builders extracted
 
 ## Purpose
 
@@ -222,7 +224,7 @@ Risks:
 
 ### Slice 2: series and work index builders
 
-Status: planned.
+Status: implemented.
 
 Proposed module owner:
 
@@ -237,6 +239,14 @@ Target ownership:
 - lightweight works index payload construction
 - Studio work storage index payload construction
 - primary-work validation for generated series payloads
+
+Implementation result:
+
+- `scripts/catalogue_generation_indexes.py` now owns the pure series/work aggregate context and index payload builders
+- `scripts/catalogue_generation_common.py` now owns the shared `slug_id`, status normalization, and numeric-aware sort helper used by the generator and index module
+- `scripts/generate_work_pages.py` imports the index owner as `indexes` and keeps output paths, existing-version checks, JSON writes, and dry-run/write messages local
+- `tests/python/test_catalogue_generation_indexes.py` pins custom `sort_fields`, title sort aliasing, numeric sort ordering, published-only series membership, missing/invalid primary work validation, works index payload shape, and storage-index omission for empty storage values
+- `scripts/run_checks.py` quick syntax coverage now includes the extracted catalogue generation modules and direct generation helper tests
 
 The generator should keep:
 

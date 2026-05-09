@@ -75,6 +75,7 @@ RECENT_INDEX_SCHEMA = "recent_index_v1"
 RECENT_INDEX_LIMIT = 50
 
 try:
+    import catalogue_generation_indexes as indexes
     import catalogue_generation_records as records
     from catalogue_generation_common import (
         coerce_int,
@@ -83,10 +84,13 @@ try:
         compact_json_object,
         compute_payload_version,
         is_empty,
+        normalize_status,
         normalize_text,
+        slug_id,
         parse_date,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts import catalogue_generation_indexes as indexes
     from scripts import catalogue_generation_records as records
     from scripts.catalogue_generation_common import (
         coerce_int,
@@ -95,7 +99,9 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         compact_json_object,
         compute_payload_version,
         is_empty,
+        normalize_status,
         normalize_text,
+        slug_id,
         parse_date,
     )
 
@@ -164,19 +170,6 @@ CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_catalogue")
 # Helpers (ID/date/YAML parsing)
 # ----------------------------
 # These functions normalise source values and keep YAML output safe/consistent.
-def slug_id(raw: Any, width: int = 5) -> str:
-    if raw is None:
-        raise ValueError("Missing id")
-    s = normalize_text(raw)
-    # Handle numeric IDs that may arrive as 361.0.
-    s = re.sub(r"\.0$", "", s)
-    # NOTE: This strips ALL non-digits. If your IDs ever include prefixes/suffixes, change this logic.
-    s = re.sub(r"\D", "", s)  # keep digits only
-    if not s:
-        raise ValueError(f"Invalid id value: {raw!r}")
-    return s.zfill(width)
-
-
 def is_slug_safe(s: str) -> bool:
     return bool(re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", s))
 
@@ -213,23 +206,6 @@ def parse_work_id_selection(raw: str) -> set[str]:
         else:
             selected.add(slug_id(token))
     return selected
-
-
-def normalize_status(value: Any) -> str:
-    if value is None:
-        return ""
-    return normalize_text(value).lower()
-
-
-def numeric_aware_sort_key(value: Any, width: int = 3) -> str:
-    """
-    Build a numeric-aware string sort key by left-padding each run of digits.
-    Example (width=3): "test 2.10" -> "test 002.010"
-    """
-    s = normalize_text(value)
-    if not s:
-        return ""
-    return re.sub(r"\d+", lambda m: m.group(0).zfill(width), s)
 
 
 def slug_anchor(value: Any) -> str:
@@ -793,21 +769,6 @@ def main() -> None:
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
             "to var/local/site.env or pass --projects-base-dir."
         )
-    def require_series_primary_work_id(
-        sid: str,
-        series_record: Dict[str, Any],
-        *,
-        ordered_work_ids: Optional[List[str]] = None,
-    ) -> str:
-        """Return a required primary_work_id for a series and validate membership when provided."""
-        raw = series_record.get("primary_work_id")
-        if is_empty(raw):
-            raise ValueError(f"Series '{sid}' missing primary_work_id")
-        wid = slug_id(raw)
-        if ordered_work_ids and wid not in ordered_work_ids:
-            raise ValueError(f"Series '{sid}' primary_work_id '{wid}' is not in its works list")
-        return wid
-
     # Output directory:
     # - Use `works` for a normal pages folder.
     # - Use `_works` if you're using a Jekyll collection.
@@ -865,140 +826,21 @@ def main() -> None:
         for key, value in updates.items():
             record[key] = value
 
-    # Pre-index series titles/statuses by series_id
-    series_title_by_id: Dict[str, str] = {}
-    series_status_by_id: Dict[str, str] = {}
-    for series_record in source_records.series.values():
-        sid_raw = series_record.get("series_id")
-        if is_empty(sid_raw):
-            continue
-        try:
-            sid = normalize_series_id(sid_raw)
-        except ValueError:
-            continue
-        series_status_by_id[sid] = normalize_status(series_record.get("status"))
-        title_raw = series_record.get("title")
-        title = coerce_string(title_raw)
-        if title is None:
-            continue
-        series_title_by_id[sid] = title
-
-    # Pre-index unique project folders by series_id from Works.
-    series_project_folders_by_id: Dict[str, List[str]] = {}
-    project_folder_sets_by_series: Dict[str, set[str]] = {}
-    for work_record in source_records.works.values():
-        folder = coerce_string(work_record.get("project_folder"))
-        series_ids = records.parse_work_record_series_ids(work_record)
-        if not series_ids or folder is None:
-            continue
-        for sid in series_ids:
-            project_folder_sets_by_series.setdefault(sid, set()).add(folder)
-    for sid, folder_set in project_folder_sets_by_series.items():
-        series_project_folders_by_id[sid] = sorted(folder_set, key=lambda v: v.lower())
-
-    # Compile canonical series_sort per work:
-    # - default is work_id
-    # - optional custom per-series rules come from source series sort_fields
-    # - sort_fields supports comma-separated keys and optional '-' prefix for descending
-    # - 'title' aliases to 'title_sort' for numeric-aware ordering
-    # - work_id is always appended as final ascending tiebreaker
-    works_sortable_fields = {fm_key for fm_key, _, _ in records.WORKS_SCHEMA}
-    works_sortable_fields.update({"work_id", "series_title", "title_sort"})
-    numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
-    work_meta_by_id: Dict[str, Dict[str, Any]] = {}
-    work_status_by_id: Dict[str, str] = {}
-    work_ids_by_series_all: Dict[str, List[str]] = {}
-    for work_record in source_records.works.values():
-        wid_raw = work_record.get("work_id")
-        if is_empty(wid_raw):
-            continue
-        wid = slug_id(wid_raw)
-        meta = records.build_work_record_projection(work_record)
-        work_status_by_id[wid] = normalize_status(work_record.get("status"))
-        series_ids = records.parse_work_record_series_ids(work_record)
-        sid = series_ids[0] if series_ids else ""
-        meta["work_id"] = wid
-        meta["series_ids"] = series_ids
-        meta["series_id"] = sid
-        meta["series_title"] = series_title_by_id.get(sid) if sid else None
-        work_meta_by_id[wid] = meta
-        for series_id in series_ids:
-            work_ids_by_series_all.setdefault(series_id, []).append(wid)
-
-    series_sort_by_series_id: Dict[str, Dict[str, str]] = {
-        sid: {wid: wid for wid in work_ids}
-        for sid, work_ids in work_ids_by_series_all.items()
-    }
-    # Effective per-series sort_fields in user-facing terms (e.g. "title,work_id").
-    # Defaults to work_id when no custom series sort_fields value exists.
-    series_sort_fields_by_series_id: Dict[str, List[str]] = {
-        sid: ["work_id"] for sid in work_ids_by_series_all.keys()
-    }
-
-    if source_records.series:
-        seen_series_ids: set[str] = set()
-        for series_record in source_records.series.values():
-            sid_raw = series_record.get("series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = normalize_series_id(sid_raw)
-            if sid in seen_series_ids:
-                raise SystemExit(f"Catalogue source has duplicate series_id: {sid}")
-            seen_series_ids.add(sid)
-
-            sort_fields_raw = coerce_string(series_record.get("sort_fields")) or "work_id"
-
-            parsed_fields: List[tuple[str, bool]] = []
-            display_fields: List[str] = []
-            for raw_token in sort_fields_raw.split(","):
-                token = normalize_text(raw_token)
-                if token == "":
-                    continue
-                desc = token.startswith("-")
-                field = token[1:] if desc else token
-                field = normalize_text(field).lower()
-                display_field = field
-                if field == "title":
-                    field = "title_sort"
-                    display_field = "title"
-                elif field == "title_sort":
-                    display_field = "title"
-                if field not in works_sortable_fields:
-                    raise SystemExit(
-                        f"Series source has unknown sort field '{field}' for series_id '{sid}'"
-                    )
-                if field == "work_id":
-                    continue
-                parsed_fields.append((field, desc))
-                display_fields.append(f"-{display_field}" if desc else display_field)
-
-            parsed_fields.append(("work_id", False))
-            display_fields.append("work_id")
-            series_sort_fields_by_series_id[sid] = display_fields
-            series_work_ids = list(work_ids_by_series_all.get(sid, []))
-            if not series_work_ids:
-                continue
-
-            def sortable_value(wid: str, field: str) -> Any:
-                if field == "title_sort":
-                    value = numeric_aware_sort_key(work_meta_by_id[wid].get("title"))
-                else:
-                    value = work_meta_by_id[wid].get(field)
-                if field in numeric_sort_fields:
-                    nv = coerce_numeric(value)
-                    return float("-inf") if nv is None else nv
-                return normalize_text(value).lower()
-
-            for field, desc in reversed(parsed_fields):
-                series_work_ids.sort(
-                    key=lambda current_wid, current_field=field: sortable_value(current_wid, current_field),
-                    reverse=desc,
-                )
-
-            rank_width = max(3, len(str(len(series_work_ids))))
-            for idx, wid in enumerate(series_work_ids, start=1):
-                series_sort_value = f"{idx:0{rank_width}d}-{wid}"
-                series_sort_by_series_id.setdefault(sid, {})[wid] = series_sort_value
+    try:
+        series_work_context = indexes.build_series_work_index_context(
+            series_records=source_records.series,
+            work_records=source_records.works,
+        )
+    except indexes.CatalogueGenerationIndexError as exc:
+        raise SystemExit(str(exc)) from exc
+    series_title_by_id = series_work_context.series_title_by_id
+    series_status_by_id = series_work_context.series_status_by_id
+    series_project_folders_by_id = series_work_context.series_project_folders_by_id
+    work_meta_by_id = series_work_context.work_meta_by_id
+    work_status_by_id = series_work_context.work_status_by_id
+    work_ids_by_series_all = series_work_context.work_ids_by_series_all
+    series_sort_by_series_id = series_work_context.series_sort_by_series_id
+    series_sort_fields_by_series_id = series_work_context.series_sort_fields_by_series_id
 
     # Pre-index project folder by work_id for source media and dimension lookups.
     work_project_folder_by_id: Dict[str, str] = {}
@@ -1018,27 +860,6 @@ def main() -> None:
 
     def resolve_series_prose_source_path(series_id: str) -> Path:
         return catalogue_prose_source_root / "series" / f"{series_id}.md"
-
-    def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
-        wid = str(work_record.get("work_id", ""))
-        title_value = coerce_string(work_record.get("title"))
-        year_value = work_record.get("year")
-        year_display_value = coerce_string(work_record.get("year_display"))
-        return compact_json_object({
-            "work_id": wid,
-            "title": title_value,
-            "year": year_value,
-            "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
-            "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
-        })
-
-    def build_work_storage_index_record(work_record: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        storage_value = coerce_string(work_record.get("storage"))
-        if storage_value is None:
-            return None
-        return compact_json_object({
-            "storage": storage_value,
-        })
 
     written = 0
     skipped = 0
@@ -1404,11 +1225,14 @@ def main() -> None:
                     work_id for work_id in work_ids_by_series_all.get(series_id, [])
                     if work_status_by_id.get(work_id) == "published"
                 )
-                primary_work_id = require_series_primary_work_id(
-                    series_id,
-                    series_record,
-                    ordered_work_ids=series_work_ids_sorted,
-                )
+                try:
+                    primary_work_id = indexes.require_series_primary_work_id(
+                        series_id,
+                        series_record,
+                        ordered_work_ids=series_work_ids_sorted,
+                    )
+                except indexes.CatalogueGenerationIndexError as exc:
+                    raise SystemExit(str(exc)) from exc
                 published_date = parse_date(series_record.get("published_date"))
                 series_output_record = compact_json_object({
                     "series_id": series_id,
@@ -1585,84 +1409,16 @@ def main() -> None:
         else:
             print("Studio series pages retired: skipped.")
 
-    work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}
-    for work_record in source_records.works.values():
-        wid_raw = work_record.get("work_id")
-        if is_empty(wid_raw):
-            continue
-        status = normalize_status(work_record.get("status"))
-        if status != "published":
-            continue
-        wid = slug_id(wid_raw)
-        for sid in records.parse_work_record_series_ids(work_record):
-            series_sort = series_sort_by_series_id.get(sid, {}).get(wid, wid)
-            work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
-
-    ordered_work_ids_by_series_for_index: Dict[str, List[str]] = {}
-    for sid, rows in work_rows_by_series_for_index.items():
-        rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
-        ordered_work_ids_by_series_for_index[sid] = [wid for _, wid in rows_sorted]
-
-    series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
-    for series_record in source_records.series.values():
-        sid_raw = series_record.get("series_id")
-        if is_empty(sid_raw):
-            continue
-        sid = normalize_series_id(sid_raw)
-        status = normalize_status(series_record.get("status"))
-        if status != "published":
-            continue
-
-        title_raw = series_record.get("title")
-        series_title = coerce_string(title_raw) or sid
-        year = coerce_int(series_record.get("year"))
-        year_display = coerce_string(series_record.get("year_display"))
-        if year_display is None:
-            year_display = str(year) if year is not None else None
-        published_date = parse_date(series_record.get("published_date"))
-
-        ordered_work_ids = ordered_work_ids_by_series_for_index.get(sid, [])
-        primary_work_id = require_series_primary_work_id(
-            sid,
-            series_record,
-            ordered_work_ids=ordered_work_ids,
+    try:
+        series_index_payload = indexes.build_series_index_payload(
+            series_records=source_records.series,
+            context=series_work_context,
+            generated_at_utc=utc_timestamp_now(),
         )
-
-        sort_fields = ",".join(series_sort_fields_by_series_id.get(sid, ["work_id"]))
-        series_payload_unsorted[sid] = compact_json_object({
-            "series_id": sid,
-            "layout": "series",
-            "status": status,
-            "published_date": published_date,
-            "title": series_title,
-            "sort_fields": sort_fields,
-            "series_type": coerce_string(series_record.get("series_type")),
-            "year": year,
-            "year_display": year_display,
-            "primary_work_id": primary_work_id,
-            "notes": coerce_string(series_record.get("notes")),
-            "project_folders": series_project_folders_by_id.get(sid, []),
-            "works": ordered_work_ids,
-        })
-
-    series_payload: Dict[str, Dict[str, Any]] = {
-        sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())
-    }
-
-    series_version_payload = compact_json_object({
-        "schema": "series_index_v2",
-        "series": series_payload,
-    })
-    series_version = compute_payload_version(series_version_payload)
-    series_index_payload = compact_json_object({
-        "header": {
-            "schema": "series_index_v2",
-            "version": series_version,
-            "generated_at_utc": utc_timestamp_now(),
-            "count": len(series_payload),
-        },
-        "series": series_payload,
-    })
+    except indexes.CatalogueGenerationIndexError as exc:
+        raise SystemExit(str(exc)) from exc
+    series_payload: Dict[str, Dict[str, Any]] = series_index_payload.get("series", {})
+    series_version = series_index_payload["header"]["version"]
 
     exists = series_index_json_path.exists()
     existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
@@ -1935,40 +1691,19 @@ def main() -> None:
         else:
             print("Work detail JSON skipped: not selected by --only.")
 
-    works_payload: Dict[str, Dict[str, Any]] = {}
-    for work_record in source_records.works.values():
-        wid_raw = work_record.get("work_id")
-        if is_empty(wid_raw):
-            continue
-        status = normalize_status(work_record.get("status"))
-        if status not in {"draft", "published"}:
-            continue
-        wid = slug_id(wid_raw)
-        record = canonical_work_record_by_id.get(wid)
-        if record is None:
-            continue
-        works_payload[wid] = build_work_index_record(record)
+    works_payload = indexes.build_works_index_records(
+        work_records=source_records.works,
+        canonical_work_record_by_id=canonical_work_record_by_id,
+    )
+    work_storage_payload = indexes.build_work_storage_index_records(
+        works=works_payload,
+        canonical_work_record_by_id=canonical_work_record_by_id,
+    )
 
-    work_storage_payload: Dict[str, Dict[str, Any]] = {}
-    for wid, record in works_payload.items():
-        storage_record = build_work_storage_index_record(canonical_work_record_by_id.get(wid, {}))
-        if storage_record is not None:
-            work_storage_payload[wid] = storage_record
-
-    version_payload = compact_json_object({
-        "schema": "works_index_v4",
-        "works": works_payload,
-    })
-    version = compute_payload_version(version_payload)
-    payload = compact_json_object({
-        "header": {
-            "schema": "works_index_v4",
-            "version": version,
-            "generated_at_utc": utc_timestamp_now(),
-            "count": len(works_payload),
-        },
-        "works": works_payload,
-    })
+    payload = indexes.build_works_index_payload(
+        works=works_payload,
+        generated_at_utc=utc_timestamp_now(),
+    )
     payload_version = payload["header"]["version"]
     exists = works_index_json_path.exists()
     existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
@@ -2172,20 +1907,10 @@ def main() -> None:
                 f"Path: {display_path(recent_index_json_path)} (overwrite={recent_exists})"
             )
 
-    work_storage_version_payload = compact_json_object({
-        "schema": "work_storage_index_v1",
-        "works": work_storage_payload,
-    })
-    work_storage_version = compute_payload_version(work_storage_version_payload)
-    work_storage_payload_out = compact_json_object({
-        "header": {
-            "schema": "work_storage_index_v1",
-            "version": work_storage_version,
-            "generated_at_utc": utc_timestamp_now(),
-            "count": len(work_storage_payload),
-        },
-        "works": work_storage_payload,
-    })
+    work_storage_payload_out = indexes.build_work_storage_index_payload(
+        works=work_storage_payload,
+        generated_at_utc=utc_timestamp_now(),
+    )
     work_storage_payload_version = work_storage_payload_out["header"]["version"]
     work_storage_exists = work_storage_index_json_path.exists()
     existing_work_storage_version = extract_existing_header_scalar(work_storage_index_json_path, "version") if work_storage_exists else None

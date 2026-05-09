@@ -20,6 +20,35 @@ def normalize_text(value: Any) -> str:
     return s
 
 
+def slug_id(raw: Any, width: int = 5) -> str:
+    """Normalize numeric catalogue ids to zero-padded digit strings."""
+    if raw is None:
+        raise ValueError("Missing id")
+    s = normalize_text(raw)
+    s = re.sub(r"\.0$", "", s)
+    s = re.sub(r"\D", "", s)
+    if not s:
+        raise ValueError(f"Invalid id value: {raw!r}")
+    return s.zfill(width)
+
+
+def normalize_status(value: Any) -> str:
+    if value is None:
+        return ""
+    return normalize_text(value).lower()
+
+
+def numeric_aware_sort_key(value: Any, width: int = 3) -> str:
+    """
+    Build a numeric-aware string sort key by left-padding each run of digits.
+    Example (width=3): "test 2.10" -> "test 002.010"
+    """
+    s = normalize_text(value)
+    if not s:
+        return ""
+    return re.sub(r"\d+", lambda m: m.group(0).zfill(width), s)
+
+
 def parse_date(raw: Any) -> Optional[str]:
     if raw is None or str(raw).strip() == "":
         return None

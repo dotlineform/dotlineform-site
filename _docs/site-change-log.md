@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-09 19:00"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Extracted catalogue generation index builders
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Moved pure series/work aggregate context and index payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_indexes.py`.
+The generator still owns CLI orchestration, path binding, existing-version checks, writes, and dry-run reporting.
+
+**Files changed/docs:**
+
+- `scripts/catalogue_generation_indexes.py`
+- `scripts/catalogue_generation_common.py`
+- `scripts/generate_work_pages.py`
+- `scripts/run_checks.py`
+- `tests/python/test_catalogue_generation_indexes.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+
+**Impact:**
+Series sort rules, published series membership, primary-work validation, works index payloads, and Studio work-storage payloads now have direct focused tests without changing generated artifact schemas or command behavior.
 
 ## [2026-05-09] Standardized local runtime config on site.env
 
