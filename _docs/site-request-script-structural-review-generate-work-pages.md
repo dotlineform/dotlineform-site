@@ -2,8 +2,8 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 18:33"
-ui_status: planned
+last_updated: "2026-05-09 18:41"
+ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
 viewable: true
@@ -13,8 +13,9 @@ viewable: true
 Status:
 
 - initial implementation tracker created
-- no extraction slices implemented yet
-- start with a read-only extraction map before moving code
+- Slice 0 implemented
+- read-only extraction map recorded
+- no code extraction slices implemented yet
 
 ## Purpose
 
@@ -98,7 +99,7 @@ The sequence below should be revised after the read-only map, but it gives the f
 
 ### Slice 0: read-only extraction map
 
-Status: planned.
+Status: implemented.
 
 Task:
 
@@ -115,6 +116,59 @@ Acceptance checks:
 
 - map identifies source projection, index building, recent merging, route/file writing, source update planning, and CLI orchestration boundaries
 - map calls out any behavior that should stay in the generator because it binds filesystem, renderer, or run-mode state
+
+Read-only review result:
+
+- the supported external command contract comes from `scripts/catalogue_json_build.py`, which invokes `scripts/generate_work_pages.py` with `--internal-json-source-run`, `--source-dir`, scoped ids, repeated `--only` values, and optional `--write`, `--refresh-published`, and `--force`
+- top-level scalar/id/date/list/YAML helpers currently mix three concerns: source value normalization, legacy front-matter dumping, and route-stub construction
+- top-level JSON hash/compaction/version helpers are shared by record builders, aggregate indexes, recent index, and per-record JSON payloads
+- most catalogue-specific builders are nested in `main()`, which makes them hard to test without invoking CLI, path setup, source loading, and write orchestration
+- filesystem and process dependencies are concentrated in display path formatting, output directory creation, existing payload reads, Markdown rendering through Jekyll, `sips` image dimension reads, JSON writes, tag assignment writes, source write-back, and script logging
+
+Responsibility map:
+
+| Current area | Current owner | Target owner | Notes |
+|---|---|---|---|
+| CLI and internal-entrypoint contract | `main()` argument parser and direct-entrypoint guard | keep in `generate_work_pages.py` | must remain compatible with `scripts/catalogue_json_build.py` command construction |
+| artifact selection and scoped ids | `main()` selected-artifact, work/series/moment id parsing, and scoped-run rules | keep in `generate_work_pages.py` for now | extraction would not help until artifact builders are pure and tested |
+| source loading and validation | `records_from_json_source`, `validate_source_records`, write-back validation wrapper | keep in `generate_work_pages.py` | source-model ownership already lives in `scripts/catalogue_source.py`; generator should bind it |
+| common value normalization | `slug_id`, `parse_date`, `parse_list`, `normalize_text`, coercers | defer; likely `scripts/catalogue_generation_common.py` only when first extracted module needs it | avoid duplicating helper code across new modules |
+| YAML/front-matter route stubs | front-matter dump helpers and `build_route_stub_content()` | `scripts/catalogue_generation_writes.py` or a narrower route-stub helper | generated route anchors are metadata-free; legacy scalar YAML helpers may be more than route stubs need |
+| payload hashing and compaction | `compute_payload_version`, hash helpers, `compact_json_object` | `scripts/catalogue_generation_payloads.py` or `scripts/catalogue_generation_common.py` | this is a dependency for records, indexes, recent, and moments; move before duplicating constants |
+| work projection | `WORKS_SCHEMA`, `build_work_record_projection`, `build_canonical_work_record` | `scripts/catalogue_generation_records.py` | needs injected series title and sort context instead of closing over `main()` locals |
+| detail projection | `build_canonical_detail_record`, `build_sections_from_detail_records` | `scripts/catalogue_generation_records.py` | can be pure once section resolution is passed in |
+| series/work sort context | series title/status maps, project-folder aggregation, series sort fields, work ids by series | `scripts/catalogue_generation_indexes.py` | should expose one context object consumed by records, series pages, indexes, and recent |
+| per-series JSON record | inline series page loop and `build_series_json_record` | records module for public record shape; generator for prose/render/write | split record shape from Markdown render and file write |
+| series index JSON | published membership, primary work validation, `series_index_v2` payload | `scripts/catalogue_generation_indexes.py` | should accept generated timestamp as an injected value |
+| work JSON | encountered work ids, detail grouping, `work_record_v3` payload | records module for work/detail shape; generator for prose/render/write | prose rendering must stay bound in generator until there is a renderer abstraction |
+| works index JSON | `works_index_v4` and work storage payload loops | `scripts/catalogue_generation_indexes.py` | storage index can be built next to works index because it uses the same canonical work map |
+| recent index JSON | retained entries, publish-transition merge rules, `recent_index_v1` payload | `scripts/catalogue_generation_recent.py` | stateful enough to isolate before touching surrounding page loops |
+| work/detail source updates | status/date/dimension mutation logic inside page loops | `scripts/catalogue_generation_source_updates.py` | should return update plans and transition records; generator applies plans only when `--write` |
+| moment source collection and records | duplicated per-moment and moments-index construction | `scripts/catalogue_generation_moments.py` | should keep prose rendering and actual file writes in the generator |
+| tag assignment series sync | series page loop and `load_tag_assignments_payload` | defer; likely tag/source-model owner after series generation is clearer | current behavior follows `series-pages` selection and writes `assets/studio/data/tag_assignments.json` |
+| file write/version decisions | repeated route exists checks, version reads, JSON writes, and dry-run messages | `scripts/catalogue_generation_writes.py` | start with decision objects; keep exact print wording in generator until stable |
+
+Move candidates with low immediate risk:
+
+- pure public record shapers: `build_work_json_record`, `build_series_json_record`, `build_moment_json_record`, `build_moment_index_record`
+- detail section grouping once tests pin section ordering and payload pruning
+- recent entry normalization and sorting, then recent merge rules
+- aggregate payload builders after hash/version helpers have one owner
+
+Keep generator-local for now:
+
+- CLI parsing, deprecated direct-entrypoint message, and `catalogue_json_build.py` subprocess contract
+- path resolution from CLI/config values and display-path formatting
+- output directory creation
+- `render_markdown_with_jekyll`
+- `read_image_dims_px` process binding and warning presentation
+- actual source-record mutation and final `write_source_record_payloads`
+- local event logging
+- exact dry-run/write print wording
+
+First implementation constraint:
+
+- before Slice 1 moves record helpers, either move shared compaction/hash/coercion helpers into one common owner or keep the first slice small enough that the generator remains the only helper owner; do not copy those helpers into multiple new modules
 
 ### Slice 1: record projection helpers
 

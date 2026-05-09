@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b665fa183493fa4d6245d102c8e6a19c",
-    "generated_at_utc": "2026-05-09T17:34:53Z",
+    "version": "blake2b-fc45a83f48ad4db542015117aa52bda4",
+    "generated_at_utc": "2026-05-09T17:41:43Z",
     "count": 208
   },
   "entries": [
@@ -1925,10 +1925,10 @@
       "kind": "doc",
       "title": "Generate Work Pages Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
-      "last_updated": "2026-05-09 18:33",
+      "last_updated": "2026-05-09 18:41",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 18:33 • Script Structural Review Request",
+      "display_meta": "2026-05-09 18:41 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-generate-work-pages",
         "site",
@@ -1942,14 +1942,14 @@
         "generate work pages slices",
         "slices",
         "script structural review request",
-        "2026-05-09 18:33",
+        "2026-05-09 18:41",
         "2026",
         "05",
         "09",
         "18",
-        "33"
+        "41"
       ],
-      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 18:33 2026 05 09 18 33"
+      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 18:41 2026 05 09 18 41"
     },
     {
       "id": "new-pipeline-implementation-plan",
