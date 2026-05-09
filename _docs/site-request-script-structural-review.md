@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 13:03"
+last_updated: "2026-05-09 14:00"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -14,7 +14,7 @@ Status:
 
 - in progress
 - Priority 1 catalogue write-server slice sequence complete
-- Priority 2 docs-management server Slice 4 implemented
+- Priority 2 docs-management server Slice 7 implemented
 
 ## Summary
 
@@ -45,7 +45,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 | Priority | Script | Current size | Review focus | Likely extraction direction |
 |---|---:|---:|---|---|
 | 1 | `scripts/studio/catalogue_write_server.py` | 3148 lines | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | slice sequence complete; server now keeps HTTP transport, endpoint orchestration, allowlist checks, final response assembly, local logging, and activity append timing |
-| 2 | `scripts/docs/docs_management_server.py` | 3071 lines before Slice 1 | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | routes, source-model helpers, generated-data reads, and activity helpers extracted; remaining candidates are rebuild/write helpers, mutation planners, and import-source orchestration cleanup |
+| 2 | `scripts/docs/docs_management_server.py` | 3071 lines before Slice 1 | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | routes, source-model helpers, generated-data reads, activity helpers, write/rebuild helpers, mutation planners, and source-import orchestration extracted; final handler closeout remains |
 | 3 | `scripts/studio/tag_write_server.py` | 2972 lines | tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | separate tag domain mutations from transport and shared local-service write helpers |
 | 4 | `scripts/generate_work_pages.py` | 2891 lines | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
 | 5 | `scripts/catalogue_json_build.py` | 1775 lines | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | separate local media planning/execution from build-scope planning and CLI/reporting code |
@@ -114,15 +114,14 @@ The risk is over-generalizing too early; shared code should be introduced only w
 `scripts/docs/docs_management_server.py` is now the active priority-2 script in this review.
 The detailed implementation record lives in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
 
-Current status: Slices 1-4 extracted endpoint path ownership, docs source-model helpers, generated-data read helpers, and docs-specific Studio Activity row construction.
-The server still owns HTTP transport, request parsing, endpoint orchestration, response assembly, source writes, rebuild calls, import/export adapter orchestration, and the timing decision for activity append attempts.
+Current status: Slices 1-7 extracted endpoint path ownership, docs source-model helpers, generated-data read helpers, docs-specific Studio Activity row construction, write/rebuild follow-through, management mutation planning, and staged source-import orchestration.
+The server still owns HTTP transport, request parsing, endpoint orchestration, response status mapping, dependency binding for shared backup/log/rebuild helpers, structured import/export adapter orchestration, and the timing decision for activity append attempts.
 
 Recommended next review questions:
 
-- Which import/export adapter flows already have enough boundaries and should be left alone for now?
-- Which rebuild/write suppression mechanics are genuinely shared with other local services?
-- Which management mutation planners can be tested without HTTP transport once rebuild/write follow-through has an owner?
-- Which import-source orchestration body remains too dense after rebuild/write helpers move?
+- Which remaining handler-local helpers are dead, stale, or better expressed through existing owner modules?
+- Which import/export adapter flows should be explicitly marked leave or deferred after final docs-management closeout?
+- Are any backup/log dependency bindings now stable enough to review as shared local-service infrastructure, or should they stay service-specific?
 
 ## Acceptance Criteria
 

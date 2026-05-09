@@ -28,6 +28,7 @@ def load_docs_management_module():
 
 
 docs_management = load_docs_management_module()
+import docs_import_source_service as import_source_service  # noqa: E402
 
 
 def make_repo() -> tempfile.TemporaryDirectory:
@@ -221,6 +222,24 @@ def stub_rebuild():
     return original
 
 
+def handle_import_source(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    return import_source_service.handle_import_source(
+        root,
+        body,
+        dry_run,
+        docs_management.import_source_dependencies(),
+    )
+
+
+def handle_import_html(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    return import_source_service.handle_import_html(
+        root,
+        body,
+        dry_run,
+        docs_management.import_source_dependencies(),
+    )
+
+
 def test_library_import_files_lists_json_and_jsonl_only() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -346,7 +365,7 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -354,7 +373,7 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_html(
+            payload = handle_import_html(
                 root,
                 {"scope": "library", "staged_filename": "compact-name.html"},
                 dry_run=False,
@@ -388,7 +407,7 @@ def test_source_import_files_list_html_and_markdown() -> None:
         write_staged_bytes(root, "source.png", b"fake image")
         write_staged_bytes(root, "source.pdf", b"fake pdf")
 
-        files = docs_management.list_staged_import_source_files(root)
+        files = import_source_service.list_staged_import_source_files(root)
 
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["source.html"]["source_format"] == "html"
@@ -409,7 +428,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
             "# Imported Markdown\n\nBody from staged Markdown with [a link](https://example.com).\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -417,7 +436,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "markdown-note.md"},
                 dry_run=False,
@@ -447,7 +466,7 @@ def test_text_import_autolinks_plain_urls() -> None:
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_staged_text(root, "plain-note.txt", "Plain Note\n\nSee https://example.com/path.\n")
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -455,7 +474,7 @@ def test_text_import_autolinks_plain_urls() -> None:
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "plain-note.txt"},
                 dry_run=False,
@@ -487,7 +506,7 @@ def test_svg_import_strips_unsafe_content() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -495,7 +514,7 @@ def test_svg_import_strips_unsafe_content() -> None:
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "diagram.svg"},
                 dry_run=False,
@@ -521,7 +540,7 @@ def test_image_import_creates_r2_media_plan_wrapper() -> None:
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_staged_bytes(root, "reference-image.png", b"fake image")
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -529,7 +548,7 @@ def test_image_import_creates_r2_media_plan_wrapper() -> None:
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "reference-image.png"},
                 dry_run=False,
@@ -564,7 +583,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -572,7 +591,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "inline-diagram.html"},
                 dry_run=False,
@@ -605,7 +624,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             "# Inline Note\n\n![Inline](data:image/png;base64,bWFya2Rvd24tcG5n)\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -613,7 +632,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "inline-note.md"},
                 dry_run=False,
@@ -644,7 +663,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             "# Mixed Inline\n\n![Broken](data:image/png;base64,abc)\n\n![Valid](data:image/png;base64,dmFsaWQtcG5n)\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -652,7 +671,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "mixed-inline.md"},
                 dry_run=False,
@@ -678,7 +697,7 @@ def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -686,7 +705,7 @@ def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
             "renderer": "stub",
         }
         try:
-            payload = docs_management.handle_import_source(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "reference-file.pdf"},
                 dry_run=False,
@@ -710,7 +729,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
         write_library_doc(root, "reference-file.md", {"doc_id": "reference-file", "title": "Reference File", "parent_id": ""})
         write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
         original_rebuild = stub_rebuild()
-        validation_globals = docs_management.generate_import_preview.__globals__
+        validation_globals = import_source_service.generate_import_preview.__globals__
         original_validation = validation_globals["validate_markdown_with_jekyll"]
         validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
             "ok": True,
@@ -718,12 +737,12 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
             "renderer": "stub",
         }
         try:
-            preview_payload = docs_management.handle_import_source(
+            preview_payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "reference-file.pdf"},
                 dry_run=False,
             )
-            apply_payload = docs_management.handle_import_source(
+            apply_payload = handle_import_source(
                 root,
                 {
                     "scope": "library",

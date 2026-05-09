@@ -49,6 +49,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/verify_activity_contract.py",
                 "scripts/studio_activity.py",
                 "scripts/docs/docs_activity.py",
+                "scripts/docs/docs_import_source_service.py",
                 "scripts/docs/docs_live_rebuild_watcher.py",
                 "scripts/docs/docs_management_mutations.py",
                 "scripts/catalogue_source.py",

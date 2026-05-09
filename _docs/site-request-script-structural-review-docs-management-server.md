@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 14:20"
+last_updated: "2026-05-09 14:00"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -16,7 +16,8 @@ Status:
 - Slice 4 implemented
 - Slice 5 implemented
 - Slice 6 implemented
-- later slices are planned, but should still be reconfirmed before editing
+- Slice 7 implemented
+- Slice 8 remains planned closeout
 
 ## Purpose
 
@@ -115,13 +116,11 @@ Risks:
 
 ## Planned Slice Sequence
 
-The remaining sequence now moves from import-source orchestration into final handler cleanup.
-Slice 7 is optional and should still be reconfirmed before editing.
+The remaining sequence now moves into final handler cleanup.
 
 Remaining planned order:
 
-1. Slice 7: import-source orchestration cleanup, only if still useful.
-2. Slice 8: final handler body cleanup and closeout.
+1. Slice 8: final handler body cleanup and closeout.
 
 Importer/exporter note:
 
@@ -383,9 +382,11 @@ Risks:
 
 ### Slice 7: docs-import source orchestration cleanup
 
-Status: optional planned slice.
+Status: implemented.
 
-Only do this after Slices 2-6 if `handle_import_source(...)` remains too dense.
+The seventh implementation slice extracted staged source import orchestration from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_import_source_service.py`.
+The server still owns endpoint route dispatch, request body parsing, HTTP response status, dependency binding for existing backup/log/rebuild helpers, and Studio Activity append timing.
+The extracted service owns the `/studio/docs-import/` source-import flow around staged source files: import preview/apply orchestration, create versus overwrite response shaping, collision handling, replacement ids/titles, source text construction, inline-media materialization sequencing, backup/rebuild handoff timing, and import-source file listing payloads.
 
 Slice 7 is about the /studio/docs-import/ page flow, specifically the Docs Management endpoints around staged source files:
 
@@ -400,7 +401,7 @@ It is not the export/import adapter system used by `/studio/export/` and `/studi
 - **In scope**: cleanup around handle_import_source(...) in docs_management_server.py
 - **Out of scope**: `export_import_adapters.py`, `/studio/import/`, `/studio/export/`, `handle_documents_import_preview(...)`, `handle_documents_import_apply(...)`, and adapter dispatch logic
 
-Proposed module owner:
+Module owner:
 
 - `scripts/docs/docs_import_source_service.py`
 
@@ -419,7 +420,8 @@ The server should keep:
 - endpoint route dispatch
 - body parsing
 - HTTP response status
-- activity append timing if Slice 4 has not moved it
+- dependency binding for backup/log/rebuild helpers that remain server-local or shared with other endpoint flows
+- activity append timing
 
 Explicit non-goal:
 
@@ -427,19 +429,24 @@ Explicit non-goal:
 
 Acceptance checks:
 
-- expand `tests/python/test_docs_import_service.py` around collision, preview-only, overwrite confirmation, replacement id, Markdown import, and media-write paths
+- `tests/python/test_docs_import_service.py` now exercises source-import behavior through `scripts/docs/docs_import_source_service.py` while still using the server's dependency binding for backup/log/rebuild helpers
+- existing coverage pins staged source listing, HTML create, Markdown import, text import, SVG sanitization, standalone image/file wrapper imports, inline-media materialization, invalid inline media skip behavior, and replacement-id collision recovery
 - preserve existing import response keys such as `preview_only`, `requires_overwrite_confirmation`, `inline_media_written`, `backup_dir`, and `summary_text`
 - preserve no-write behavior for dry-run and preview-only requests
+- `scripts/run_checks.py --profile docs` includes the focused import-service tests
+- `scripts/docs/docs_import_source_service.py`, `scripts/docs/docs_management_server.py`, `scripts/run_checks.py`, and `tests/python/test_docs_import_service.py` compile with the configured Python interpreter
 
 Benefits:
 
 - narrows the biggest remaining endpoint body without taking over importer internals
 - creates a better surface for future import-source UI improvements
+- keeps source-import tests pointed at the owning module rather than relying on the HTTP server as the test access path
 
 Risks:
 
 - this flow mixes conversion, media staging, source writes, rebuilds, and collision UX; over-extraction could make it harder to trace
 - importer/exporter growth should still happen in adapter-owned modules unless the local-service orchestration itself is the pain point
+- backup and rebuild mechanics are still supplied through server dependencies, so a later closeout should avoid turning this dependency seam into a broad compatibility layer
 
 ### Slice 8: final handler body cleanup and closeout
 
