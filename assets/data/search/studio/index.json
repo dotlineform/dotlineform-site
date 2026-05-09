@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c75c95a3455ee571311352a8159f5982",
-    "generated_at_utc": "2026-05-09T13:52:37Z",
-    "count": 205
+    "version": "blake2b-f538c0e750b853990468e2da065d040d",
+    "generated_at_utc": "2026-05-09T14:33:18Z",
+    "count": 206
   },
   "entries": [
     {
@@ -830,10 +830,10 @@
       "kind": "doc",
       "title": "Docs Management Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
-      "last_updated": "2026-05-09 14:23",
+      "last_updated": "2026-05-09 14:56",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 14:23 • Script Structural Review Request",
+      "display_meta": "2026-05-09 14:56 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-docs-management-server",
         "site",
@@ -847,14 +847,14 @@
         "docs management server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 14:23",
+        "2026-05-09 14:56",
         "2026",
         "05",
         "09",
         "14",
-        "23"
+        "56"
       ],
-      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 14:23 2026 05 09 14 23"
+      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 14:56 2026 05 09 14 56"
     },
     {
       "id": "ui-primitive-input",
@@ -1686,6 +1686,37 @@
         "25"
       ],
       "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-08 19:25 2026 05 08 19 25"
+    },
+    {
+      "id": "site-request-script-structural-review-tag-write-server",
+      "kind": "doc",
+      "title": "Tag Write Server Slices",
+      "href": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
+      "last_updated": "2026-05-09 15:32",
+      "parent_id": "site-request-script-structural-review",
+      "parent_title": "Script Structural Review Request",
+      "display_meta": "2026-05-09 15:32 • Script Structural Review Request",
+      "search_terms": [
+        "site-request-script-structural-review-tag-write-server",
+        "site",
+        "request",
+        "script",
+        "structural",
+        "review",
+        "tag",
+        "write",
+        "server",
+        "tag write server slices",
+        "slices",
+        "script structural review request",
+        "2026-05-09 15:32",
+        "2026",
+        "05",
+        "09",
+        "15",
+        "32"
+      ],
+      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 15:32 2026 05 09 15 32"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -4820,10 +4851,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 14:51",
+      "last_updated": "2026-05-09 15:15",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 14:51 • Change Requests",
+      "display_meta": "2026-05-09 15:15 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4835,14 +4866,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 14:51",
+        "2026-05-09 15:15",
         "2026",
         "05",
         "09",
-        "14",
-        "51"
+        "15"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 14:51 2026 05 09 14 51"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 15:15 2026 05 09 15"
     },
     {
       "id": "site-request-import-export-system-review",
@@ -4879,10 +4909,10 @@
       "kind": "doc",
       "title": "Scripts Directory Organization Request",
       "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
-      "last_updated": "2026-05-09 14:38",
+      "last_updated": "2026-05-09 15:32",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 14:38 • Change Requests",
+      "display_meta": "2026-05-09 15:32 • Change Requests",
       "search_terms": [
         "site-request-scripts-directory-organization",
         "site",
@@ -4894,14 +4924,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 14:38",
+        "2026-05-09 15:32",
         "2026",
         "05",
         "09",
-        "14",
-        "38"
+        "15",
+        "32"
       ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 14:38 2026 05 09 14 38"
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 15:32 2026 05 09 15 32"
     },
     {
       "id": "change-requests",

@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 14:51"
+last_updated: "2026-05-09 15:15"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -47,7 +47,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 |---|---|---|---|
 | 1 | `scripts/studio/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
-| 3 | `scripts/studio/tag_write_server.py` | tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | separate tag domain mutations from transport and shared local-service write helpers |
+| 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | planned; detailed tracker in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
 | 4 | `scripts/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
 | 5 | `scripts/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | separate local media planning/execution from build-scope planning and CLI/reporting code |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | group checks by domain with shared report contracts |
@@ -139,6 +139,8 @@ That request is separate from this structural review because it is mostly about 
 ## Remaining Review Queue
 
 Priority 3 is `scripts/studio/tag_write_server.py`.
+The detailed implementation tracker lives in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
+Tags are conceptually part of Analytics: they are a metadata layer over catalogue works and series, currently surfaced through Studio admin pages because they are not public catalogue UI.
 The remaining candidates should still be handled as narrow, finishable slices rather than one broad refactor.
 
 Recommended next review questions:
@@ -146,7 +148,8 @@ Recommended next review questions:
 - Which tag write-server functions are pure domain logic and can be tested without an HTTP server?
 - Which tag-service concerns overlap with catalogue/docs local-service infrastructure, and which must stay service-specific for safety?
 - Which response payload keys are public contracts for Studio tag pages and should be pinned before extraction?
-- Should tag ownership remain under `scripts/studio/`, or should the later [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) move tag code into a domain package after the structural boundary is clearer?
+- Should the later [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) move tag code into `scripts/analytics/` after the structural boundary is clearer?
+- Should tag UI routes move from `/studio/tag-registry/` and `/studio/series-tags/` to `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/` in a separate Studio routing request?
 
 ## Acceptance Criteria
 
@@ -182,3 +185,6 @@ That child doc records implemented Slices 1-14 and the final module ownership bo
 
 Priority 2 docs-management server slices are tracked in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
 That child doc records implemented Slices 1-8 and the final module ownership boundary for `scripts/docs/docs_management_server.py`.
+
+Priority 3 tag write-server slices are tracked in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
+That child doc starts the review and implementation plan for `scripts/studio/tag_write_server.py`.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T13:55:22Z",
+  "generated_at": "2026-05-09T14:33:17Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -494,7 +494,7 @@
       "doc_id": "site-request-script-structural-review-docs-management-server",
       "title": "Docs Management Server Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 14:23",
+      "last_updated": "2026-05-09 14:56",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 20,
       "published": true,
@@ -502,7 +502,8 @@
       "source_path": "site-request-script-structural-review-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-docs-management-server.json",
-      "content_text_length": 27206
+      "content_text_length": 27206,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1031,6 +1032,22 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-tag-write-server.json",
       "content_text_length": 5506
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-script-structural-review-tag-write-server",
+      "title": "Tag Write Server Slices",
+      "added_date": "2026-05-09",
+      "last_updated": "2026-05-09 15:32",
+      "parent_id": "site-request-script-structural-review",
+      "sort_order": 30,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-script-structural-review-tag-write-server.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-tag-write-server.json",
+      "content_text_length": 16304,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -2931,7 +2948,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 14:51",
+      "last_updated": "2026-05-09 15:15",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2939,7 +2956,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 11601,
+      "content_text_length": 12146,
       "ui_status": "in-progress"
     },
     {
@@ -2963,7 +2980,7 @@
       "doc_id": "site-request-scripts-directory-organization",
       "title": "Scripts Directory Organization Request",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 14:38",
+      "last_updated": "2026-05-09 15:32",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -2971,7 +2988,7 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 9957,
+      "content_text_length": 11495,
       "ui_status": "proposed"
     },
     {

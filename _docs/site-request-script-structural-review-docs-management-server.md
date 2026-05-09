@@ -2,9 +2,11 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 14:23"
+last_updated: "2026-05-09 14:56"
+ui_status: done
 parent_id: site-request-script-structural-review
 sort_order: 20
+viewable: true
 ---
 # Docs Management Server Slices
 

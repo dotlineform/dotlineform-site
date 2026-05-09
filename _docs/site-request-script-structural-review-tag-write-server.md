@@ -1,0 +1,391 @@
+---
+doc_id: site-request-script-structural-review-tag-write-server
+title: Tag Write Server Slices
+added_date: 2026-05-09
+last_updated: "2026-05-09 15:32"
+ui_status: in-progress
+parent_id: site-request-script-structural-review
+sort_order: 30
+viewable: true
+---
+# Tag Write Server Slices
+
+Status:
+
+- initial review tracker created
+- no implementation slices started
+
+## Purpose
+
+This child doc tracks the detailed review and implementation slices for restructuring `scripts/studio/tag_write_server.py`.
+The parent [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review) stays focused on the broader review goals, candidate scripts, completed priority summaries, and acceptance criteria.
+
+The intended end state is not a small file for its own sake.
+The tag write server should remain the Tag Studio local-service HTTP and endpoint orchestration layer, while cohesive route inventory, tag assignment model helpers, registry and alias mutation planning, promotion/demotion flows, activity contracts, and backup/write mechanics get explicit owners only when the boundary is useful.
+
+## Analytics Context
+
+Tags carry historical routing and naming baggage.
+Conceptually, they are not generic Studio features: they are an Analytics metadata layer applied to catalogue works and series.
+They are currently hosted in Studio because they are not surfaced on public catalogue routes such as `/series/`, but the product concept has since moved toward Analytics as the domain for catalogue data analysis and metadata layers.
+
+Current state:
+
+- the Analytics dashboard lives at `/studio/analytics/`
+- Analytics dashboard links point to the tag pages
+- tag docs such as [Series Tags](/docs/?scope=studio&doc=series-tags), [Tag Editor](/docs/?scope=studio&doc=tag-editor), and [Tag Aliases](/docs/?scope=studio&doc=tag-aliases) already sit under the Analytics docs parent
+- tag UI routes still live at `/studio/series-tags/` and `/studio/tag-registry/`
+- the write service still lives at `scripts/studio/tag_write_server.py`
+
+Target concept:
+
+- tags are the first implemented Analytics metadata layer, not the whole Analytics model
+- future Analytics work may add more metadata or scoring layers over catalogue works and series
+- [Registry-Driven Scoring Architecture](/docs/?scope=studio&doc=registry-driven-scoring-architecture) describes one likely expansion path: Analytics functionality will need its own registries and registry-driven scoring interfaces, which may need pages similar to the existing tag registry and series-tags pages, or extensions of those pages
+- script ownership should align with that concept, so a later folder reorganization should prefer `scripts/analytics/` over `scripts/tags/`
+- `scripts/studio/` should be reserved for general-purpose Studio admin and shared runtime services
+
+Routing cleanup is related but separate from this server restructuring.
+The likely UI target is to move tag routes under `/studio/analytics/`, for example `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/`, while preserving compatibility redirects or links as needed.
+That route migration should be tracked as a Studio UI/routing request rather than folded into the tag write-server extraction slices.
+
+Server naming is also an open architectural question.
+If this local service remains limited to tag assignment, tag registry, and tag alias writes, `tag_write_server.py` remains accurate.
+If the service becomes the write/service layer for broader Analytics registries, scoring dimensions, or future Analytics metadata workflows, the target name should probably become `analytics_server.py` or an equivalent Analytics service name rather than creating a second parallel local server for each new Analytics registry.
+That decision should be made before final closeout, because it affects route constants, docs, `bin/dev-studio`, check profiles, and the future `scripts/analytics/` package layout.
+
+## Current Shape
+
+`scripts/studio/tag_write_server.py` currently owns several responsibilities in one file:
+
+- localhost HTTP transport, CORS, JSON body parsing, route dispatch, response status mapping, and dry-run handling
+- tag assignment normalization and series/work assignment update behavior
+- tag registry import and canonical tag mutation behavior
+- tag alias import, edit, delete, and promotion behavior
+- tag demotion behavior that touches registry, aliases, and assignments together
+- JSON source loading for assignments, registry, aliases, and generated series membership
+- atomic single-file and multi-file writes with timestamped backups and rollback
+- Studio Activity row construction and append timing
+- local operational logging and endpoint response assembly
+
+That mix is workable, but it creates the same maintenance risk seen in the completed catalogue and docs server reviews: a small endpoint change can require understanding unrelated mutation, backup, import, activity, and transport behavior.
+
+## Slice Principles
+
+- Define the ownership boundary before moving code.
+- Keep endpoint URLs, request payloads, response payloads, backup behavior, dry-run behavior, and write allowlists stable.
+- Keep local-only service guardrails visible in the server.
+- Prefer direct tests against the owning extracted module.
+- Close each slice without broad compatibility aliases, duplicate endpoint strings, duplicate constants, or temporary server re-export layers.
+- Do not reorganize script folders as part of these slices; package moves are tracked separately in [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
+- Do not move Studio tag page routes as part of these slices; route migration belongs in a separate Studio UI/routing request.
+
+## Planned Slice Sequence
+
+The sequence below should be revised after a read-only code review, but it gives the initial implementation map.
+
+### Slice 1: route inventory and handler dispatch
+
+Proposed module owner:
+
+- `scripts/analytics/tag_routes.py` after folder organization, or `scripts/tag_routes.py` temporarily if implementation happens before package moves
+
+Target ownership:
+
+- endpoint path constants
+- POST route inventory
+- OPTIONS/CORS preflight route coverage
+- handler-dispatch coverage tests
+
+The server should keep:
+
+- HTTP transport
+- request parsing
+- handler methods
+- response status mapping
+- endpoint orchestration
+
+Acceptance checks:
+
+- every POST route has a handler table entry
+- route inventories do not contain duplicates
+- OPTIONS coverage includes every public endpoint
+- existing tag server behavior still passes focused tests
+
+Benefits:
+
+- creates a single endpoint path owner before activity extraction
+- removes repeated literal endpoint strings from preflight and POST dispatch
+- follows the successful catalogue and docs route-slice pattern
+
+Risks:
+
+- route constants become part of the service contract; future endpoint additions must update route owner and handler dispatch together
+- this slice is structural only and does not reduce mutation bodies
+
+### Slice 2: tag activity helpers
+
+Proposed module owner:
+
+- `scripts/analytics/tag_activity.py` after folder organization, or `scripts/tag_activity.py` temporarily if implementation happens before package moves
+
+Target ownership:
+
+- tag activity status and changed-state decisions
+- record-group id compaction for tags, aliases, assignments, series, and works
+- Studio Activity row construction for tag assignment save, assignment import, registry import/mutation, alias import/mutation, promotion, and demotion
+- tag activity endpoint constants via the route owner
+
+The server should keep:
+
+- deciding whether the endpoint completed far enough to attempt activity append
+- passing request body and response payload into the helper
+- tolerating activity append failure without failing the main endpoint
+
+Acceptance checks:
+
+- activity helper tests cover no-op suppression, write-only activity behavior, alias/tag record groups, and warning/error status decisions
+- existing Studio activity feed/context tests still pass
+
+Benefits:
+
+- removes user-facing operational history construction from HTTP handlers
+- creates a direct test owner before mutation helpers are moved
+- keeps tag-specific activity behavior out of shared activity utilities
+
+Risks:
+
+- Studio Activity rows are user-facing history; status, record ids, endpoint strings, and source refs should not drift
+- over-generalizing catalogue/docs/tag activity behavior too early could hide service-specific contracts
+
+### Slice 3: tag source model and validation helpers
+
+Proposed module owner:
+
+- `scripts/analytics/tag_source_model.py` after folder organization, or `scripts/tag_source_model.py` temporarily if implementation happens before package moves
+
+Target ownership:
+
+- tag id, slug, group, alias key, and manual weight validation
+- assignment tag normalization
+- registry, alias, assignment, and series-index JSON loading defaults
+- allowed group extraction
+- stable source artifact path constants if they are not route-owned
+
+The server should keep:
+
+- endpoint body extraction
+- deciding which source artifacts are needed by an endpoint
+- write allowlist checks
+- local logging
+
+Acceptance checks:
+
+- focused tests cover valid and invalid tag ids, alias keys, groups, weights, assignment rows, import filename sanitization, and default payload loading
+- server tests still cover endpoint status mapping for validation errors
+
+Benefits:
+
+- gives the highest-reuse tag validation behavior a direct module home
+- makes later mutation planners smaller
+- reduces duplication risk between registry, aliases, and assignment flows
+
+Risks:
+
+- validation error text may be visible in Studio UI; tests should pin important messages before moving
+- source path constants must not be duplicated between the server and helper modules
+
+### Slice 4: assignment import and save planners
+
+Proposed module owner:
+
+- `scripts/analytics/tag_assignment_service.py` or `scripts/analytics/tag_assignment_mutations.py` after folder organization, with temporary top-level equivalents only if needed before package moves
+
+Target ownership:
+
+- series/work assignment update planning
+- assignment import preview and apply behavior
+- current versus staged row comparison
+- generated series membership checks
+- response payload bases and summary text for assignment flows
+
+The server should keep:
+
+- HTTP body parsing
+- dry-run write suppression
+- backup/write execution until the write helper slice
+- activity append timing
+- local logging after completed writes
+
+Acceptance checks:
+
+- focused tests cover series saves, work override saves, work-row deletion, empty explicit work rows, import conflict detection, overwrite/skip decisions, and no-write preview behavior
+- endpoint tests preserve existing response keys used by Tag Studio
+
+Benefits:
+
+- separates the largest assignment behavior from transport
+- makes the Series Tag Editor save contract testable without an HTTP server
+- gives import conflict behavior a focused owner
+
+Risks:
+
+- assignment import response payloads are Studio-facing; shape drift can break import review UI
+- work override behavior has subtle inherited-tag rules that need direct tests
+
+### Slice 5: registry and alias mutation planners
+
+Proposed module owners:
+
+- `scripts/analytics/tag_registry_mutations.py`
+- `scripts/analytics/tag_alias_mutations.py`
+
+Target ownership:
+
+- registry import add/merge/replace behavior
+- canonical tag edit/delete planning
+- alias import add/merge/replace behavior
+- alias edit/delete planning
+- alias target rewrite helpers
+- summary text for registry and alias flows if it is domain-specific
+
+The server should keep:
+
+- endpoint orchestration
+- write allowlist checks
+- dry-run write suppression
+- activity append timing
+- local logging
+
+Acceptance checks:
+
+- focused tests cover registry import modes, duplicate handling, canonical tag edit/delete, alias import modes, alias edit/delete, max targets, one-target-per-group constraints, and redundant alias cleanup
+- endpoint response keys remain stable
+
+Benefits:
+
+- separates canonical tag and alias domain behavior from HTTP handlers
+- gives mutation edge cases direct tests before demotion/promotion cleanup
+
+Risks:
+
+- registry, aliases, and assignments are tightly coupled during delete/edit flows; keep cross-artifact behavior visible rather than hiding it behind a generic helper too early
+
+### Slice 6: promotion and demotion planners
+
+Proposed module owner:
+
+- `scripts/analytics/tag_promotion_mutations.py` or a combined Analytics tag mutation planner if Slice 5 shows the boundary is simpler that way
+
+Target ownership:
+
+- alias promotion planning
+- tag demotion planning
+- cross-artifact rewrite plans for registry, aliases, and assignments
+- changed-artifact selection
+- response payload bases and summary text for promotion/demotion flows
+
+The server should keep:
+
+- endpoint request parsing
+- preview/apply response status mapping
+- backup/write execution until write helper extraction
+- local logs and activity append timing
+
+Acceptance checks:
+
+- focused tests cover promotion where canonical tag already exists, promotion that creates a canonical tag, demotion target validation, demotion assignment rewrites, alias-reference rewrites, and preview no-write behavior
+- multi-artifact response keys stay stable
+
+Benefits:
+
+- isolates the riskiest cross-artifact tag operations for direct testing
+- makes apply versus preview behavior clearer before write helper extraction
+
+Risks:
+
+- promotion/demotion rewrites touch multiple source files; later write execution must preserve current atomicity and rollback behavior
+
+### Slice 7: backup and write helpers
+
+Proposed module owner:
+
+- `scripts/analytics/tag_write_transactions.py`
+
+Target ownership:
+
+- timestamped backup names
+- single-file JSON writes with backup
+- multi-file JSON writes with backup and rollback
+- write result payloads if a common shape is useful
+
+The server should keep:
+
+- write allowlist checks
+- deciding which files are written
+- dry-run suppression
+- local logging and activity append timing
+
+Acceptance checks:
+
+- tests cover backup creation, no-existing-file writes, multi-file rollback, and backup restore after simulated write failure
+- existing endpoint tests still pass
+
+Benefits:
+
+- removes low-level file transaction mechanics from endpoint handlers
+- creates a clearer shared-service comparison point with catalogue transactions
+
+Risks:
+
+- write allowlists must remain visible and at least as strict as before
+- multi-file rollback failures must remain surfaced clearly
+
+### Slice 8: final handler body cleanup and closeout
+
+Target ownership:
+
+- remove stale imports and dead helpers
+- verify server call sites use explicit module namespaces
+- refresh [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) and this slice plan with the final boundary
+- decide whether `tag_write_server.py` should remain tag-specific or become `analytics_server.py`
+- decide whether remaining candidates should be marked `leave` or linked to a separate request
+
+Acceptance checks:
+
+- no duplicate endpoint constants outside the route owner
+- no broad compatibility aliases or re-export layers for extracted helpers
+- direct tests exist for each extracted owner
+- `./scripts/run_checks.py --profile quick` passes, or a narrower documented tag profile exists and passes
+- rebuild Studio docs/search payloads when docs changed
+
+Benefits:
+
+- leaves `scripts/studio/tag_write_server.py` as HTTP orchestration rather than a mixed domain module
+- creates a stable handoff point before reviewing generator or catalogue build scripts
+
+Risks:
+
+- closeout should not become a catch-all refactor; defer unclear work instead of folding it into the final cleanup
+
+## Initial Acceptance Criteria
+
+- endpoint URLs, request payloads, response payloads, backup behavior, dry-run behavior, and write allowlists remain stable unless a separate request approves a contract change
+- route constants are not duplicated
+- extracted behavior is tested through the owning module
+- server tests remain focused on HTTP orchestration and endpoint status mapping
+- script docs are updated in the same change set when module ownership or command behavior changes
+
+## Open Questions
+
+- Should Analytics tag helpers move directly into `scripts/analytics/`, or should temporary top-level `scripts/tag_*.py` modules be allowed until the folder organization request is implemented?
+- Should tag UI routes move from `/studio/tag-registry/` and `/studio/series-tags/` to `/studio/analytics/tag-registry/` and `/studio/analytics/series-tags/` before or after the service restructuring?
+- Should `tag_write_server.py` be renamed to `analytics_server.py` if Analytics registries and scoring workflows start sharing the same local service?
+- Should backup/write helpers become tag-specific first, then be compared with catalogue/docs transaction helpers for a possible shared local-service utility?
+- Is there enough overlap between registry mutation, alias mutation, promotion, and demotion to justify one mutation module, or are separate owners clearer?
+- Should `scripts/run_checks.py` gain a dedicated `tags` profile before implementation slices start?
+
+## Recommended First Slice
+
+Start with a read-only review of `scripts/studio/tag_write_server.py` and produce a concrete extraction map.
+The first implementation slice should probably move only the route inventory and handler dispatch because that creates a stable endpoint constant owner for later activity and mutation slices.
