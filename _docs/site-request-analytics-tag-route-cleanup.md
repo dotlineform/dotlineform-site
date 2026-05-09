@@ -2,7 +2,7 @@
 doc_id: site-request-analytics-tag-route-cleanup
 title: Analytics Tag Route Cleanup Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:48"
+last_updated: "2026-05-09 15:54"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 213
@@ -25,12 +25,16 @@ The remaining mismatch is that the page routes still live directly under `/studi
 The current routes are historical:
 
 - `/studio/tag-registry/`
+- `/studio/tag-aliases/`
+- `/studio/tag-groups/`
 - `/studio/series-tags/`
 - `/studio/series-tag-editor/?series=<series_id>`
 
 The desired Analytics routes are:
 
 - `/studio/analytics/tag-registry/`
+- `/studio/analytics/tag-aliases/`
+- `/studio/analytics/tag-groups/`
 - `/studio/analytics/series-tags/`
 - `/studio/analytics/series-tag-editor/?series=<series_id>`
 
@@ -41,13 +45,13 @@ It should also happen before the scripts directory reorganization, because scrip
 
 In scope:
 
-- move or alias the three tag page routes under `/studio/analytics/`
+- move or alias all tag page routes under `/studio/analytics/`
 - update `/studio/analytics/` dashboard links
 - update `assets/studio/data/studio_config.json` route values
 - update `assets/studio/data/activity_contract.json` route metadata for tag pages
 - update docs that list the tag page routes
 - update Studio smoke-test route references and readiness expectations
-- update any hardcoded links from tag registry, series tags, and tag editor controllers
+- update any hardcoded links from tag page controllers
 - decide and document compatibility behavior for old routes
 
 Out of scope:
@@ -63,7 +67,7 @@ Out of scope:
 Preferred behavior:
 
 - new canonical routes live under `/studio/analytics/`
-- old `/studio/tag-registry/`, `/studio/series-tags/`, and `/studio/series-tag-editor/` routes should remain as short-term compatibility redirects or lightweight aliases if Jekyll routing supports that cleanly
+- old `/studio/tag-registry/`, `/studio/tag-aliases/`, `/studio/tag-groups/`, `/studio/series-tags/`, and `/studio/series-tag-editor/` routes should remain as short-term compatibility redirects or lightweight aliases if Jekyll routing supports that cleanly
 - docs and config should use the new canonical routes
 - tests should target the new canonical routes
 
@@ -95,12 +99,16 @@ Create the canonical Analytics tag routes and update source templates.
 Expected target paths:
 
 - `studio/analytics/tag-registry/index.md`
+- `studio/analytics/tag-aliases/index.md`
+- `studio/analytics/tag-groups/index.md`
 - `studio/analytics/series-tags/index.md`
 - `studio/analytics/series-tag-editor/index.md`
 
 Expected canonical permalinks:
 
 - `/studio/analytics/tag-registry/`
+- `/studio/analytics/tag-aliases/`
+- `/studio/analytics/tag-groups/`
 - `/studio/analytics/series-tags/`
 - `/studio/analytics/series-tag-editor/`
 
@@ -123,7 +131,7 @@ Update canonical route references:
 
 Acceptance checks:
 
-- `rg "/studio/tag-registry|/studio/series-tags|/studio/series-tag-editor"` shows only deliberate compatibility notes or historical changelog entries
+- `rg "/studio/tag-registry|/studio/tag-aliases|/studio/tag-groups|/studio/series-tags|/studio/series-tag-editor"` shows only deliberate compatibility notes or historical changelog entries
 - activity contract tests still pass
 - Studio smoke tests target the new canonical routes
 
@@ -131,7 +139,7 @@ Acceptance checks:
 
 Run targeted verification:
 
-- route-ready smoke checks for the three canonical routes
+- route-ready smoke checks for the five canonical routes
 - activity contract tests
 - relevant Studio smoke tests if route references changed there
 - Jekyll build to a separate destination if a local server is already running
@@ -142,6 +150,8 @@ Closeout docs:
 - update [Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)
 - update [Series Tags](/docs/?scope=studio&doc=series-tags)
 - update [Tag Registry](/docs/?scope=studio&doc=tag-registry)
+- update [Tag Aliases](/docs/?scope=studio&doc=tag-aliases)
+- update [Tag Groups](/docs/?scope=studio&doc=tag-groups)
 - update [Tag Editor](/docs/?scope=studio&doc=tag-editor)
 - update [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) to note that UI route cleanup is complete
 
