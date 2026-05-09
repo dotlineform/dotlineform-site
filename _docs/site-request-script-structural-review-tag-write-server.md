@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 17:29"
+last_updated: "2026-05-09 17:37"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -23,7 +23,9 @@ Status:
 - tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are now owned by `scripts/tag_assignment_service.py`
 - Slice 5 implemented
 - tag registry import add/merge/replace behavior, canonical tag edit/delete planning, registry mutation summary text, alias import add/merge/replace behavior, alias edit/delete planning, alias target rewrite helpers, and alias mutation summary text are now owned by `scripts/tag_registry_mutations.py` and `scripts/tag_alias_mutations.py`
-- next slice: promotion and demotion planners
+- Slice 6 implemented
+- alias promotion planning, tag demotion planning, demotion assignment rewrites, cross-artifact promotion/demotion response stats, and promotion/demotion summary text are now owned by `scripts/tag_promotion_mutations.py`
+- next slice: backup and write helpers
 
 ## Purpose
 
@@ -331,9 +333,17 @@ Risks:
 
 ### Slice 6: promotion and demotion planners
 
+Status: implemented.
+
+The sixth implementation slice kept endpoint behavior stable while moving promotion and demotion planning into `scripts/tag_promotion_mutations.py`.
+The helper now owns alias promotion planning, canonical-tag creation-versus-existing decisions, promoted alias removal, tag demotion target validation, demoted canonical removal, alias-reference rewrites through the alias mutation owner, assignment rewrites for demoted tag references, changed-artifact flags, and promotion/demotion summary text.
+`scripts/studio/tag_write_server.py` still reads endpoint request bodies, loads the needed source artifacts, sanitizes request values, maps preview versus apply responses, checks write allowlists, suppresses writes during preview/dry-run, executes writes/backups, logs local events, and appends Studio Activity after completed writes.
+`tests/python/test_tag_promotion_mutations.py` pins promotion where the canonical tag already exists, promotion that creates a canonical tag, demotion target validation, demotion assignment rewrites, alias-reference rewrites, no-ref assignment rewrites, and response summary text.
+The focused tag promotion-mutation test is included in the `quick` run-checks profile.
+
 Proposed module owner:
 
-- `scripts/tag_promotion_mutations.py` or a combined tag mutation planner if Slice 5 shows the boundary is simpler that way
+- `scripts/tag_promotion_mutations.py`
 
 Target ownership:
 

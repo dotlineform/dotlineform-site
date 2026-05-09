@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 17:29"
+last_updated: "2026-05-09 17:37"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Advanced tag write-server promotion and demotion ownership
+
+**Status:** implemented
+
+**Area:** Studio / Analytics / scripts / maintainability
+
+**Summary:**
+Implemented Slice 6 of the tag write-server structural review.
+`scripts/tag_promotion_mutations.py` now owns alias promotion planning, canonical-tag creation-versus-existing decisions, promoted alias removal, tag demotion target validation, demoted canonical removal, demotion assignment rewrites, alias-reference rewrites through the alias mutation owner, and promotion/demotion summary text.
+`scripts/studio/tag_write_server.py` still owns HTTP request parsing, source artifact loading, request value sanitization, preview/apply response mapping, dry-run write suppression, write allowlist checks, writes/backups, local logging, and Studio Activity append timing.
+The focused promotion-mutation test is included in the `quick` run-checks profile.
+
+**Files changed/docs:**
+
+- `scripts/tag_promotion_mutations.py`
+- `scripts/studio/tag_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_tag_promotion_mutations.py`
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+
+**Impact:**
+Endpoint URLs, request payloads, response payload keys, dry-run behavior, backup/write behavior, and write allowlists are unchanged.
+Promotion and demotion edge cases now have direct-module coverage before backup/write helpers are moved.
 
 ## [2026-05-09] Advanced tag write-server registry and alias ownership
 

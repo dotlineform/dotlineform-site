@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 17:29"
+last_updated: "2026-05-09 17:37"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -15,7 +15,7 @@ Status:
 - in progress
 - Priority 1 catalogue write-server sequence complete; see [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
 - Priority 2 docs-management server sequence complete; see [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
-- Priority 3 tag write-server sequence in progress; Slices 1-5 implemented in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+- Priority 3 tag write-server sequence in progress; Slices 1-6 implemented in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
 
 ## Summary
 
@@ -47,7 +47,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 |---|---|---|---|
 | 1 | `scripts/studio/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
-| 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | in progress; Slices 1-5 implemented in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
+| 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | in progress; Slices 1-6 implemented in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
 | 4 | `scripts/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | split catalogue record projection/index builders from CLI orchestration and page/file writers |
 | 5 | `scripts/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | separate local media planning/execution from build-scope planning and CLI/reporting code |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | group checks by domain with shared report contracts |
@@ -141,7 +141,7 @@ That request is separate from this structural review because it is mostly about 
 Priority 3 is `scripts/studio/tag_write_server.py`.
 The detailed implementation tracker lives in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
 Tags are conceptually part of Analytics: they are a metadata layer over catalogue works and series, currently surfaced through Studio admin pages because they are not public catalogue UI.
-Slices 1-5 have moved route inventory, POST dispatch, tag-specific activity helpers, source-model validation/loading helpers, assignment save/import planners, and registry/alias mutation planners into focused module owners.
+Slices 1-6 have moved route inventory, POST dispatch, tag-specific activity helpers, source-model validation/loading helpers, assignment save/import planners, registry/alias mutation planners, and promotion/demotion planners into focused module owners.
 The remaining candidates should still be handled as narrow, finishable slices rather than one broad refactor.
 
 Recommended next review questions:

@@ -52,6 +52,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/tag_activity.py",
                 "scripts/tag_alias_mutations.py",
                 "scripts/tag_assignment_service.py",
+                "scripts/tag_promotion_mutations.py",
                 "scripts/tag_registry_mutations.py",
                 "scripts/tag_source_model.py",
                 "scripts/docs/docs_import_source_service.py",
@@ -75,6 +76,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_tag_activity.py",
                 "tests/python/test_tag_alias_mutations.py",
                 "tests/python/test_tag_assignment_service.py",
+                "tests/python/test_tag_promotion_mutations.py",
                 "tests/python/test_tag_registry_mutations.py",
                 "tests/python/test_tag_source_model.py",
                 "tests/python/test_docs_live_rebuild_watcher.py",
@@ -161,6 +163,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "tag-assignment-service-tests",
             (sys.executable, "tests/python/test_tag_assignment_service.py"),
             "Verify tag assignment save and import planners.",
+        ),
+        CheckCommand(
+            "tag-promotion-mutation-tests",
+            (sys.executable, "tests/python/test_tag_promotion_mutations.py"),
+            "Verify tag alias promotion and canonical tag demotion planners.",
         ),
         CheckCommand(
             "tag-registry-mutation-tests",
