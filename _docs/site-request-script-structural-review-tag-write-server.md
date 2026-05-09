@@ -2,8 +2,8 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 17:51"
-ui_status: implemented
+last_updated: "2026-05-09 18:30"
+ui_status: done
 parent_id: site-request-script-structural-review
 sort_order: 30
 viewable: true
