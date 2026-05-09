@@ -21,11 +21,13 @@ Current checked-in Studio data artifacts:
 
 - Studio route data:
   - `assets/studio/data/tag_registry.json`
-	  - `assets/studio/data/tag_aliases.json`
-	  - `assets/studio/data/tag_assignments.json`
-	  - `assets/studio/data/tag_groups.json`
-	  - `assets/studio/data/activity_log.json`
-	  - `assets/studio/data/work_storage_index.json`
+  - `assets/studio/data/tag_aliases.json`
+  - `assets/studio/data/tag_assignments.json`
+  - `assets/studio/data/tag_groups.json`
+  - `assets/studio/data/work_storage_index.json`
+  - local service-backed activity data:
+    - `var/studio/activity/activity_log.json`
+    - `var/studio/activity/activity_log.jsonl`
 - Studio docs source:
   - `_docs/*.md`
 - generated Studio docs data:

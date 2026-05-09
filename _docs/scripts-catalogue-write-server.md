@@ -89,7 +89,7 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `catalogue_lookup_series_base` with `record_id=<series_id>`
 - `activity_log`
 
-Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, and `assets/studio/data/activity_log.json` from its served source tree.
+Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data while Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, and `var/` from its served source tree.
 
 `POST /catalogue/project-state-report` accepts:
 
@@ -694,7 +694,7 @@ The save-time follow-through logic for work, work-detail, series, and moment sav
 
 The apply endpoint updates:
 
-- `assets/studio/data/activity_log.json` when valid Studio activity context is supplied for a covered action
+- `var/studio/activity/activity_log.json` when valid Studio activity context is supplied for a covered action
 
 ## Validation
 
@@ -710,7 +710,7 @@ The server validates the proposed update through the shared catalogue source loa
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
-- covered save, create, delete, publication, import, and report actions also update `assets/studio/data/activity_log.json` when valid Studio activity context is supplied
+- covered save, create, delete, publication, import, and report actions also update `var/studio/activity/activity_log.json` when valid Studio activity context is supplied
 
 ## Dev Studio
 
@@ -740,7 +740,7 @@ Source JSON:
 
 Studio activity feed:
 
-- `assets/studio/data/activity_log.json`
+- `var/studio/activity/activity_log.json`
 
 Backup target:
 

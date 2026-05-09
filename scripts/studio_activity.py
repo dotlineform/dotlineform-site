@@ -14,7 +14,7 @@ from typing import Any, Dict, Iterable, List, Mapping
 
 ACTIVITY_CONTRACT_REL_PATH = Path("assets/studio/data/activity_contract.json")
 JOURNAL_REL_PATH = Path("var/studio/activity/activity_log.jsonl")
-FEED_REL_PATH = Path("assets/studio/data/activity_log.json")
+FEED_REL_PATH = Path("var/studio/activity/activity_log.json")
 JOURNAL_LIMIT = 1000
 FEED_LIMIT = 100
 FEED_SCHEMA = "studio_activity_log_v1"

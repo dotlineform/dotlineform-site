@@ -35,7 +35,7 @@ Remaining optional expansion work has moved to [Studio Activity Follow-Ups](/doc
 The unified activity surface now summarizes covered Studio activity from these logs and generated feeds:
 
 - `var/studio/catalogue/logs/catalogue_write_server.log`
-- `assets/studio/data/activity_log.json`
+- `var/studio/activity/activity_log.json`
 - `var/studio/activity/activity_log.jsonl`
 
 Current report route:

@@ -151,7 +151,7 @@ Operational log target:
 Unified activity targets:
 
 - `var/studio/activity/activity_log.jsonl`
-- `assets/studio/data/activity_log.json`
+- `var/studio/activity/activity_log.json`
 
 ## Related References
 

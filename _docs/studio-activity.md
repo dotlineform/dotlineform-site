@@ -37,9 +37,9 @@ The page reads the unified feed through the local Catalogue Write Server:
 
 That service-backed read returns:
 
-- `assets/studio/data/activity_log.json`
+- `var/studio/activity/activity_log.json`
 
-The fuller local journal lives outside published route data:
+The fuller local journal lives beside the capped feed outside published route data:
 
 - `var/studio/activity/activity_log.jsonl`
 

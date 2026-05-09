@@ -554,7 +554,7 @@ Initial data sources:
 
 - `var/studio/catalogue/logs/catalogue_write_server.log`
 - `var/studio/catalogue/logs/catalogue_build.log`, if a separate build command/service is added
-- a Studio-facing summary JSON such as `assets/studio/data/activity_log.json`
+- a local Studio-facing summary JSON such as `var/studio/activity/activity_log.json`
 
 Initial UI:
 

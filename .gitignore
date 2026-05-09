@@ -31,6 +31,7 @@ var/test-runs/
 var/local/
 
 # Studio local backup output
+var/studio/activity/
 var/studio/backups/
 var/studio/catalogue/backups/
 var/docs/

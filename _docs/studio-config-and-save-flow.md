@@ -141,7 +141,7 @@ Catalogue editor local save behavior:
 - writes are constrained to allowlisted canonical catalogue source JSON
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - backup bundles are written under `var/studio/catalogue/backups/`
-- activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/activity_log.json`
+- activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `var/studio/activity/activity_log.json`
 - backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 - bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint

@@ -145,10 +145,10 @@ Work:
 - link each status row to its focused editor when that editor exists
 - add counts by record family
 - use the unified activity page at `/studio/activity/`
-- write a small Studio-facing activity summary artifact such as `assets/studio/data/activity_log.json`
+- write a small Studio-facing activity summary artifact such as `var/studio/activity/activity_log.json`
 - surface local write events, validation failures, imports, and build runs as those capabilities become available
 - provide easy access to underlying log references even before a complete field-level change UI exists
-- implemented first increment as `/studio/catalogue-status/`, `/studio/activity/`, `assets/studio/data/activity_log.json`, and `scripts/activity_log.py`
+- implemented first increment as `/studio/catalogue-status/`, `/studio/activity/`, `var/studio/activity/activity_log.json`, and `scripts/activity_log.py`
 
 Acceptance:
 

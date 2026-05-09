@@ -118,7 +118,7 @@ import catalogue_transactions as transactions  # noqa: E402
 
 BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
-STUDIO_ACTIVITY_FEED_REL_PATH = Path("assets/studio/data/activity_log.json")
+STUDIO_ACTIVITY_FEED_REL_PATH = Path("var/studio/activity/activity_log.json")
 MAX_BODY_BYTES = 1024 * 1024
 
 BULK_WORK_EDITABLE_FIELDS = {
