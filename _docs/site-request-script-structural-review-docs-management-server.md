@@ -381,11 +381,24 @@ Risks:
 - the server still wraps mutation plans with backup/write/rebuild execution, so future endpoint response changes should be tested both at planner and server levels
 - importer/exporter restructuring remains out of scope
 
-### Slice 7: import-source orchestration cleanup
+### Slice 7: docs-import source orchestration cleanup
 
 Status: optional planned slice.
 
 Only do this after Slices 2-6 if `handle_import_source(...)` remains too dense.
+
+Slice 7 is about the /studio/docs-import/ page flow, specifically the Docs Management endpoints around staged source files:
+
+- GET /docs/import-source-files
+- POST /docs/import-source
+- compatibility alias POST /docs/import-html
+
+That flow imports source-like documents from `var/docs/import-staging/` into Docs Viewer Markdown source files, including HTML, Markdown, text, SVG, image/file wrappers, collisions, overwrite confirmation, inline media materialization, backups, and rebuild follow-through.
+
+It is not the export/import adapter system used by `/studio/export/` and `/studio/import/` for structured data workflows such as Library JSON/JSONL summary or hierarchy import.
+
+- **In scope**: cleanup around handle_import_source(...) in docs_management_server.py
+- **Out of scope**: `export_import_adapters.py`, `/studio/import/`, `/studio/export/`, `handle_documents_import_preview(...)`, `handle_documents_import_apply(...)`, and adapter dispatch logic
 
 Proposed module owner:
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T12:33:16Z",
+  "generated_at": "2026-05-09T12:51:46Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -87,7 +87,7 @@
       "doc_id": "site-request-script-structural-review-catalogue-write-server",
       "title": "Catalogue Write Server Slices",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 00:40",
+      "last_updated": "2026-05-09 13:44",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 10,
       "published": true,
@@ -95,7 +95,8 @@
       "source_path": "site-request-script-structural-review-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-write-server.json",
-      "content_text_length": 26543
+      "content_text_length": 26543,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -501,7 +502,7 @@
       "source_path": "site-request-script-structural-review-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-docs-management-server.json",
-      "content_text_length": 21738
+      "content_text_length": 22670
     },
     {
       "scope": "studio",

@@ -2,9 +2,11 @@
 doc_id: site-request-script-structural-review-catalogue-write-server
 title: Catalogue Write Server Slices
 added_date: 2026-05-08
-last_updated: "2026-05-09 00:40"
+last_updated: "2026-05-09 13:44"
+ui_status: done
 parent_id: site-request-script-structural-review
 sort_order: 10
+viewable: true
 ---
 # Catalogue Write Server Slices
 
