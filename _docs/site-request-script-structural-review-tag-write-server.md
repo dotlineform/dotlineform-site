@@ -104,6 +104,27 @@ That mix is workable, but it creates the same maintenance risk seen in the compl
 - Do not reorganize script folders as part of these slices; package moves happen after this review through [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
 - Do not move Studio tag page routes as part of these slices; route migration belongs in [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup).
 
+## Initial Acceptance Criteria
+
+- endpoint URLs, request payloads, response payloads, backup behavior, dry-run behavior, and write allowlists remain stable unless a separate request approves a contract change
+- route constants are not duplicated
+- extracted behavior is tested through the owning module
+- server tests remain focused on HTTP orchestration and endpoint status mapping
+- script docs are updated in the same change set when module ownership or command behavior changes
+
+## Open Questions
+
+- Tag UI route migration is complete; future slices should use the canonical `/studio/analytics/...` routes.
+- Should `tag_write_server.py` be renamed to `analytics_server.py` if Analytics registries and scoring workflows start sharing the same local service?
+- Should backup/write helpers become tag-specific first, then be compared with catalogue/docs transaction helpers for a possible shared local-service utility?
+- Is there enough overlap between registry mutation, alias mutation, promotion, and demotion to justify one mutation module, or are separate owners clearer?
+- Should `scripts/run_checks.py` gain a dedicated `tags` profile before implementation slices start?
+
+## Recommended First Slice
+
+Start with a read-only review of `scripts/studio/tag_write_server.py` and produce a concrete extraction map.
+The first implementation slice should probably move only the route inventory and handler dispatch because that creates a stable endpoint constant owner for later activity and mutation slices.
+
 ## Planned Slice Sequence
 
 The sequence below should be revised after a read-only code review, but it gives the initial implementation map.
@@ -460,23 +481,3 @@ Risks:
 
 - closeout should not become a catch-all refactor; defer unclear work instead of folding it into the final cleanup
 
-## Initial Acceptance Criteria
-
-- endpoint URLs, request payloads, response payloads, backup behavior, dry-run behavior, and write allowlists remain stable unless a separate request approves a contract change
-- route constants are not duplicated
-- extracted behavior is tested through the owning module
-- server tests remain focused on HTTP orchestration and endpoint status mapping
-- script docs are updated in the same change set when module ownership or command behavior changes
-
-## Open Questions
-
-- Tag UI route migration is complete; future slices should use the canonical `/studio/analytics/...` routes.
-- Should `tag_write_server.py` be renamed to `analytics_server.py` if Analytics registries and scoring workflows start sharing the same local service?
-- Should backup/write helpers become tag-specific first, then be compared with catalogue/docs transaction helpers for a possible shared local-service utility?
-- Is there enough overlap between registry mutation, alias mutation, promotion, and demotion to justify one mutation module, or are separate owners clearer?
-- Should `scripts/run_checks.py` gain a dedicated `tags` profile before implementation slices start?
-
-## Recommended First Slice
-
-Start with a read-only review of `scripts/studio/tag_write_server.py` and produce a concrete extraction map.
-The first implementation slice should probably move only the route inventory and handler dispatch because that creates a stable endpoint constant owner for later activity and mutation slices.
