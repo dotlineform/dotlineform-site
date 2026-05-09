@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 17:14"
+last_updated: "2026-05-09 17:29"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,35 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Advanced tag write-server registry and alias ownership
+
+**Status:** implemented
+
+**Area:** Studio / Analytics / scripts / maintainability
+
+**Summary:**
+Implemented Slice 5 of the tag write-server structural review.
+`scripts/tag_registry_mutations.py` now owns registry import add/merge/replace behavior, duplicate import compaction, canonical tag edit/delete planning, canonical rename guards, and registry import/mutation summary text.
+`scripts/tag_alias_mutations.py` now owns alias import add/merge/replace behavior, duplicate alias compaction, alias edit/delete planning, registry-target validation for aliases, alias target constraints, alias target rewrite helpers, redundant alias cleanup, and alias mutation summary text.
+`scripts/studio/tag_write_server.py` still owns HTTP request parsing, source artifact loading, cross-artifact endpoint orchestration, dry-run write suppression, write allowlist checks, writes/backups, local logging, and Studio Activity append timing.
+The focused registry and alias mutation tests are included in the `quick` run-checks profile.
+
+**Files changed/docs:**
+
+- `scripts/tag_registry_mutations.py`
+- `scripts/tag_alias_mutations.py`
+- `scripts/studio/tag_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_tag_registry_mutations.py`
+- `tests/python/test_tag_alias_mutations.py`
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+
+**Impact:**
+Endpoint URLs, request payloads, response payload keys, dry-run behavior, backup/write behavior, and write allowlists are unchanged.
+Registry and alias edge cases now have direct-module coverage before promotion and demotion planners are moved.
 
 ## [2026-05-09] Advanced tag write-server assignment-service ownership
 

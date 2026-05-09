@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 17:14"
+last_updated: "2026-05-09 17:29"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -21,7 +21,9 @@ Status:
 - tag source artifact paths, loading defaults, tag id/group/alias/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are now owned by `scripts/tag_source_model.py`
 - Slice 4 implemented
 - tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are now owned by `scripts/tag_assignment_service.py`
-- next slice: registry and alias mutation planners
+- Slice 5 implemented
+- tag registry import add/merge/replace behavior, canonical tag edit/delete planning, registry mutation summary text, alias import add/merge/replace behavior, alias edit/delete planning, alias target rewrite helpers, and alias mutation summary text are now owned by `scripts/tag_registry_mutations.py` and `scripts/tag_alias_mutations.py`
+- next slice: promotion and demotion planners
 
 ## Purpose
 
@@ -282,6 +284,14 @@ Risks:
 - work override behavior has subtle inherited-tag rules that need direct tests
 
 ### Slice 5: registry and alias mutation planners
+
+Status: implemented.
+
+The fifth implementation slice kept endpoint behavior stable while moving registry and alias mutation planning into focused owners.
+`scripts/tag_registry_mutations.py` now owns registry import add/merge/replace behavior, duplicate import compaction, canonical tag edit/delete planning, canonical rename guards, and registry import/mutation summary text.
+`scripts/tag_alias_mutations.py` now owns alias import add/merge/replace behavior, duplicate alias compaction, alias edit/delete planning, registry-target validation for aliases, alias target count and one-target-per-group constraints, alias target rewrite helpers, redundant alias cleanup, and alias mutation summary text.
+`scripts/studio/tag_write_server.py` still reads endpoint bodies, loads the required artifacts, orchestrates cross-artifact registry mutation rewrites, checks write allowlists, suppresses writes during dry-run/preview, executes writes/backups, logs local events, and appends Studio Activity after completed writes.
+`tests/python/test_tag_registry_mutations.py` and `tests/python/test_tag_alias_mutations.py` pin the new owners, and both focused tests are included in the `quick` run-checks profile.
 
 Proposed module owners:
 
