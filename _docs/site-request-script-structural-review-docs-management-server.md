@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 14:00"
+last_updated: "2026-05-09 14:15"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -457,7 +457,15 @@ Target ownership:
 - remove dead helpers and stale constants
 - verify server call sites use explicit module namespaces
 - refresh script docs and this slice plan with the final module boundary
-- decide whether remaining candidates should be marked `leave` or moved to a separate request
+- decide whether remaining candidates should be marked `leave` or linked to a separate request
+
+Specific closeout checks:
+
+- decide whether the `handle_import_html(...)` wrappers in `scripts/docs/docs_management_server.py` and `scripts/docs/docs_import_source_service.py` are still useful; the endpoint alias should remain public, but dispatch can call the source-import handler directly if no direct wrapper callers remain
+- review small helper duplication such as `relative_path(...)` and `viewer_url_for(...)` now that source-import orchestration has its own service module; leave local copies only when that keeps ownership clearer than another shared helper
+- make an explicit decision on backup/log dependency binding for source import; keep backup helpers server-local unless a concrete second consumer justifies a docs-specific backup/log owner
+- mark structured import/export adapter orchestration as `defer` to the [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review); do not fold `/studio/import/`, `/studio/export/`, `export_import_adapters.py`, `handle_documents_import_preview(...)`, or `handle_documents_import_apply(...)` into the final cleanup
+- remove any unused imports/helpers left by Slices 1-7 and confirm compatibility endpoint aliases are intentional public API rather than temporary re-export layers
 
 Acceptance checks:
 
@@ -475,3 +483,4 @@ Benefits:
 Risks:
 
 - closeout should not become a catch-all refactor; defer unclear work instead of folding it into the final cleanup
+- import/export adapter organization is tracked separately in the [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review) because it is about the broader data import/export system, future adapter extensibility, config contracts, preview/apply lifecycles, and Studio UI workflow rather than the docs-management server boundary alone
