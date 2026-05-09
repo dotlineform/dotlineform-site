@@ -55,11 +55,8 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from script_logging import append_script_log
-from studio_activity import (
-    append_studio_activity,
-    normalize_activity_context_from_contract,
-    studio_activity_entry,
-)
+from studio_activity import append_studio_activity
+from tag_activity import attach_tag_activity, tag_activity_changed, tag_activity_status
 import tag_routes as routes
 
 
@@ -1935,88 +1932,6 @@ class TagWriteServer(ThreadingHTTPServer):
         append_studio_activity(self.repo_root, entry)
 
 
-def tag_activity_status(stats: Dict[str, Any]) -> str:
-    error_count = int(stats.get("invalid_count") or stats.get("missing_count") or 0)
-    conflict_count = int(stats.get("conflict_count") or 0)
-    if error_count:
-        return "failed"
-    if conflict_count:
-        return "warning"
-    return "completed"
-
-
-def tag_activity_changed(stats: Dict[str, Any]) -> bool:
-    changed_keys = [
-        "added",
-        "overwritten",
-        "removed",
-        "applied_series",
-        "canonical_added",
-        "alias_deleted",
-        "aliases_rewritten",
-        "aliases_removed_empty",
-        "aliases_removed_redundant",
-        "series_rows_touched",
-        "work_rows_touched",
-        "series_tag_refs_rewritten",
-        "work_tag_refs_rewritten",
-    ]
-    if any(int(stats.get(key) or 0) > 0 for key in changed_keys):
-        return True
-    if stats.get("changed") is True:
-        return True
-    if stats.get("canonical_changed") or stats.get("description_changed"):
-        return True
-    return False
-
-
-def attach_tag_activity(
-    handler: "Handler",
-    body: Dict[str, Any],
-    response_payload: Dict[str, Any],
-    *,
-    script_purpose_id: str = "save-tag-data",
-    record_id: str = "",
-    record_groups: Optional[Dict[str, Any]] = None,
-    detail_items: Optional[list[str]] = None,
-    activity_id_suffix: str = "",
-    status: str = "completed",
-) -> None:
-    raw_context = body.get("activity_context")
-    if not raw_context or handler.server.dry_run:
-        return
-    try:
-        activity_context = normalize_activity_context_from_contract(
-            handler.server.repo_root,
-            raw_context,
-            endpoint=handler.path,
-            record_id=record_id,
-        )
-        if not activity_context:
-            return
-        resolved_record_groups = dict(record_groups or {})
-        if "tag_id" in activity_context and not resolved_record_groups.get("tags"):
-            resolved_record_groups["tags"] = [activity_context["tag_id"]]
-        if "alias" in activity_context and not resolved_record_groups.get("aliases"):
-            resolved_record_groups["aliases"] = [activity_context["alias"]]
-        response_payload["activity_context"] = activity_context
-        handler.server.append_activity(
-            studio_activity_entry(
-                activity_context,
-                script_purpose_id=script_purpose_id,
-                now_utc=str(response_payload.get("updated_at_utc") or utc_now()),
-                status=status,
-                record_groups=resolved_record_groups,
-                detail_items=detail_items or [str(response_payload.get("summary_text") or "Updated tag data.")],
-                source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "tag_write_server.log")}],
-                activity_id_suffix=activity_id_suffix,
-            )
-        )
-        response_payload["activity_log"] = {"written_count": 1}
-    except Exception as exc:  # noqa: BLE001
-        response_payload["activity_log"] = {"written_count": 0, "error": str(exc)}
-
-
 class Handler(BaseHTTPRequestHandler):
     server: TagWriteServer  # type: ignore[assignment]
 
@@ -2186,9 +2101,12 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         attach_tag_activity(
-            self,
-            body,
-            response_payload,
+            repo_root=self.server.repo_root,
+            endpoint=self.path,
+            dry_run=self.server.dry_run,
+            append_activity=self.server.append_activity,
+            body=body,
+            response_payload=response_payload,
             record_id=series_id,
             record_groups={"series": [series_id], "works": [work_id] if work_id else []},
             detail_items=[
@@ -2244,9 +2162,12 @@ class Handler(BaseHTTPRequestHandler):
         )
         if tag_activity_changed(stats):
             attach_tag_activity(
-                self,
-                body,
-                response_payload,
+                repo_root=self.server.repo_root,
+                endpoint=self.path,
+                dry_run=self.server.dry_run,
+                append_activity=self.server.append_activity,
+                body=body,
+                response_payload=response_payload,
                 detail_items=[
                     summary_text,
                     f"Mode: {mode}; imported: {stats.get('imported_total')}; final tags: {stats.get('final_total')}.",
@@ -2351,9 +2272,12 @@ class Handler(BaseHTTPRequestHandler):
         )
         if tag_activity_changed(apply_stats):
             attach_tag_activity(
-                self,
-                body,
-                response_payload,
+                repo_root=self.server.repo_root,
+                endpoint=self.path,
+                dry_run=self.server.dry_run,
+                append_activity=self.server.append_activity,
+                body=body,
+                response_payload=response_payload,
                 detail_items=[
                     apply_summary_text,
                     f"Applied series: {apply_stats.get('applied_series')}; skipped: {apply_stats.get('skipped_series')}.",
@@ -2406,9 +2330,12 @@ class Handler(BaseHTTPRequestHandler):
         )
         if tag_activity_changed(stats):
             attach_tag_activity(
-                self,
-                body,
-                response_payload,
+                repo_root=self.server.repo_root,
+                endpoint=self.path,
+                dry_run=self.server.dry_run,
+                append_activity=self.server.append_activity,
+                body=body,
+                response_payload=response_payload,
                 detail_items=[
                     summary_text,
                     f"Mode: {mode}; imported: {stats.get('imported_total')}; final aliases: {stats.get('final_total')}.",
@@ -2456,9 +2383,12 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         attach_tag_activity(
-            self,
-            body,
-            response_payload,
+            repo_root=self.server.repo_root,
+            endpoint=self.path,
+            dry_run=self.server.dry_run,
+            append_activity=self.server.append_activity,
+            body=body,
+            response_payload=response_payload,
             detail_items=[summary_text],
             status=tag_activity_status(stats),
         )
@@ -2530,9 +2460,12 @@ class Handler(BaseHTTPRequestHandler):
             )
             if tag_activity_changed(stats):
                 attach_tag_activity(
-                    self,
-                    body,
-                    response_payload,
+                    repo_root=self.server.repo_root,
+                    endpoint=self.path,
+                    dry_run=self.server.dry_run,
+                    append_activity=self.server.append_activity,
+                    body=body,
+                    response_payload=response_payload,
                     detail_items=[
                         summary_text,
                         f"Alias: {stats.get('alias')}; new alias: {stats.get('new_alias')}.",
@@ -2610,9 +2543,12 @@ class Handler(BaseHTTPRequestHandler):
             )
             if tag_activity_changed(stats):
                 attach_tag_activity(
-                    self,
-                    body,
-                    response_payload,
+                    repo_root=self.server.repo_root,
+                    endpoint=self.path,
+                    dry_run=self.server.dry_run,
+                    append_activity=self.server.append_activity,
+                    body=body,
+                    response_payload=response_payload,
                     detail_items=[
                         summary_text,
                         f"Promoted alias {stats.get('alias')} to {stats.get('new_tag_id')}.",
@@ -2694,9 +2630,12 @@ class Handler(BaseHTTPRequestHandler):
             )
             if tag_activity_changed(stats):
                 attach_tag_activity(
-                    self,
-                    body,
-                    response_payload,
+                    repo_root=self.server.repo_root,
+                    endpoint=self.path,
+                    dry_run=self.server.dry_run,
+                    append_activity=self.server.append_activity,
+                    body=body,
+                    response_payload=response_payload,
                     detail_items=[
                         summary_text,
                         f"Demoted {stats.get('old_tag_id')} to alias {stats.get('alias_key')}.",
@@ -2835,9 +2774,12 @@ class Handler(BaseHTTPRequestHandler):
             )
             if tag_activity_changed(stats):
                 attach_tag_activity(
-                    self,
-                    body,
-                    response_payload,
+                    repo_root=self.server.repo_root,
+                    endpoint=self.path,
+                    dry_run=self.server.dry_run,
+                    append_activity=self.server.append_activity,
+                    body=body,
+                    response_payload=response_payload,
                     detail_items=[
                         summary_text,
                         f"Action: {action}; tag: {old_tag_id}.",

@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 16:44"
+last_updated: "2026-05-09 16:58"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -15,7 +15,9 @@ Status:
 - initial review tracker created
 - Slice 1 implemented
 - route inventory and POST dispatch are now owned by `scripts/tag_routes.py` plus `Handler.POST_HANDLERS`
-- next slice: tag activity helpers
+- Slice 2 implemented
+- tag activity status, changed-state, endpoint, record-group, and activity row helpers are now owned by `scripts/tag_activity.py`
+- next slice: tag source model and validation helpers
 
 ## Purpose
 
@@ -143,6 +145,14 @@ Risks:
 - this slice is structural only and does not reduce mutation bodies
 
 ### Slice 2: tag activity helpers
+
+Status: implemented.
+
+The second implementation slice kept endpoint behavior stable while moving tag-specific Studio Activity decisions and row construction into `scripts/tag_activity.py`.
+The helper now owns write-endpoint coverage via route constants from `scripts/tag_routes.py`, changed-state detection, warning/error status decisions, tag/alias record-group enrichment from normalized activity context, source refs for the tag write-server log, and non-fatal append failure handling.
+`scripts/studio/tag_write_server.py` still decides when a completed handler should attempt an activity append, passes request and response payloads into the helper, and continues to suppress preview/dry-run activity rows.
+`tests/python/test_tag_activity.py` pins route-owned write endpoints, no-op suppression, dry-run/no-context suppression, tag and alias record groups, source refs, status decisions, and append failure tolerance.
+The focused tag activity test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
