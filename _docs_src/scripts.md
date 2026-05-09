@@ -8,19 +8,9 @@ sort_order: 80
 ---
 # Scripts
 
-This document summarises the active repo scripts used to maintain site data.
-
-# Introduction
-
-All commands below assume you are in `dotlineform-site/`.
-
-For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc=local-setup).
-
-## Purpose
-
-This page is the high-level entry point for active repo scripts.
-Command-level usage, flags, output paths, and operational notes live in the child docs below.
-Local server architecture and future consolidation strategy live in **[Servers](/docs/?scope=studio&doc=servers)**.
+- This page is the high-level entry point for active repo scripts.
+- Command-level usage, flags, output paths, and operational notes live in the child docs below.
+- Local server architecture and future consolidation strategy live in **[Servers](/docs/?scope=studio&doc=servers)**.
 
 The current script surface falls into four groups:
 
@@ -32,21 +22,11 @@ The current script surface falls into four groups:
 
 ## Common Runtime Assumptions
 
-- run project commands from `dotlineform-site/`
+- All commands assume you are in `dotlineform-site/`.
+- For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc=local-setup).
 - use project-local script paths
-  - the two Ruby docs builders are executable directly:
-    - `./scripts/build_docs.rb`
-    - `./scripts/build_search.rb`
-  - most Python entrypoints are currently invoked through `python3 ./scripts/...`
-- docs-data rebuild command:
-
-```bash
-./scripts/build_docs.rb --write
-```
-
 - if `jekyll serve` or `bin/dev-studio` is already running, verify one-off builds to `/tmp/dlf-jekyll-build` rather than `_site/`
-- media and generation scripts expect:
-  - `DOTLINEFORM_PROJECTS_BASE_DIR`
+- media and generation scripts expect `DOTLINEFORM_PROJECTS_BASE_DIR`
 - R2 media publishing additionally expects R2 credentials through environment variables or gitignored local env files
 - shared pipeline defaults live in `_data/pipeline.json`
 
@@ -57,7 +37,6 @@ Docs-domain builds:
 - `./scripts/build_docs.rb`
   - source docs:
     - `_docs_src/`
-    - `_docs_library_src/`
   - outputs:
     - `assets/data/docs/scopes/studio/`
     - `assets/data/docs/scopes/library/`
