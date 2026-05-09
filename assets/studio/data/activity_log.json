@@ -1,9 +1,82 @@
 {
   "header": {
     "schema": "studio_activity_log_v1",
-    "count": 11
+    "count": 12
   },
   "entries": [
+    {
+      "id": "2026-05-09T09:31:29Z-run-broken-links-audit:studio:6510392f-be4a-4620-9dc4-277730e1c49d-run-audit",
+      "activity_id": "2026-05-09T09:31:29Z-run-broken-links-audit:studio:6510392f-be4a-4620-9dc4-277730e1c49d-run-audit",
+      "correlation_id": "run-broken-links-audit:studio:6510392f-be4a-4620-9dc4-277730e1c49d",
+      "timestamp": "2026-05-09T09:31:29Z",
+      "time_utc": "2026-05-09T09:31:29Z",
+      "status": "completed",
+      "page_id": "docs-broken-links",
+      "page_label": "docs broken links",
+      "user_action_id": "run-broken-links-audit",
+      "user_action_label": "run broken-links audit",
+      "script_purpose_id": "run-audit",
+      "script_purpose_label": "run audit",
+      "record_groups": {
+        "works": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "series": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "moments": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "docs": {
+          "count": 1,
+          "sample_ids": [
+            "studio"
+          ],
+          "truncated": 0
+        },
+        "files": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "tags": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "aliases": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "search": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "detail_items": [
+        "Ran broken-links audit for studio docs.",
+        "Checked 0 link reference(s); 0 broken."
+      ],
+      "source_refs": [
+        {
+          "kind": "log",
+          "path": "var/docs/logs/docs_management_server.log"
+        }
+      ]
+    },
     {
       "id": "2026-05-08T17:16:08Z-ef34272d2c774d58b73ad2d0788c428d-rebuild-published-work-data",
       "activity_id": "2026-05-08T17:16:08Z-ef34272d2c774d58b73ad2d0788c428d-rebuild-published-work-data",
