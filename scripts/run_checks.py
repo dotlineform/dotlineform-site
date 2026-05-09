@@ -50,6 +50,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio_activity.py",
                 "scripts/docs/docs_activity.py",
                 "scripts/tag_activity.py",
+                "scripts/tag_source_model.py",
                 "scripts/docs/docs_import_source_service.py",
                 "scripts/docs/docs_live_rebuild_watcher.py",
                 "scripts/docs/docs_management_mutations.py",
@@ -69,6 +70,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_docs_activity.py",
                 "tests/python/test_tag_activity.py",
+                "tests/python/test_tag_source_model.py",
                 "tests/python/test_docs_live_rebuild_watcher.py",
                 "tests/python/test_docs_management_mutations.py",
                 "tests/python/test_tag_routes.py",
@@ -143,6 +145,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "tag-activity-tests",
             (sys.executable, "tests/python/test_tag_activity.py"),
             "Verify tag Studio activity status, route, and row helpers.",
+        ),
+        CheckCommand(
+            "tag-source-model-tests",
+            (sys.executable, "tests/python/test_tag_source_model.py"),
+            "Verify tag source artifact validation, normalization, and default loading helpers.",
         ),
         CheckCommand(
             "catalogue-save-build-tests",

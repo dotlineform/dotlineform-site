@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 16:44"
+last_updated: "2026-05-09 17:06"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Advanced tag write-server source-model ownership
+
+**Status:** implemented
+
+**Area:** Studio / Analytics / scripts / maintainability
+
+**Summary:**
+Implemented Slice 3 of the tag write-server structural review.
+`scripts/tag_source_model.py` now owns tag source artifact path constants, JSON loading defaults, tag id/slug/group/alias/manual-weight validation, assignment tag normalization, import filename sanitization, import registry/alias validation, import assignment row validation, normalized assignment comparison helpers, and series-index membership extraction.
+`scripts/studio/tag_write_server.py` still owns HTTP orchestration, endpoint artifact selection, write allowlist checks, backups/writes, local logs, and response status mapping.
+The focused source-model test is included in the `quick` run-checks profile.
+
+**Files changed/docs:**
+
+- `scripts/tag_source_model.py`
+- `scripts/studio/tag_write_server.py`
+- `scripts/run_checks.py`
+- `tests/python/test_tag_source_model.py`
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
+
+**Impact:**
+Endpoint URLs, payloads, dry-run behavior, backup/write behavior, and write allowlists are unchanged.
+Later assignment, registry, alias, promotion, and demotion planner slices can now call one source-model owner instead of sharing validation and loading logic through the HTTP server.
 
 ## [2026-05-09] Started tag write-server structural review slices
 

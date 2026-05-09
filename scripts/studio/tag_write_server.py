@@ -39,9 +39,7 @@ import argparse
 import datetime as dt
 import json
 import os
-import re
 import shutil
-import subprocess
 import sys
 import tempfile
 from http import HTTPStatus
@@ -58,27 +56,10 @@ from script_logging import append_script_log
 from studio_activity import append_studio_activity
 from tag_activity import attach_tag_activity, tag_activity_changed, tag_activity_status
 import tag_routes as routes
+import tag_source_model as tag_source
 
 
-SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
-WORK_ID_RE = re.compile(r"^\d{5}$")
-ALIAS_KEY_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
-TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
 MUTATE_ACTIONS = {"edit", "delete"}
-MAX_TAGS = 50
-MAX_IMPORT_TAGS = 10000
-MAX_IMPORT_ALIASES = 10000
-MAX_ALIAS_TARGETS = 50
-MAX_ALIAS_TAGS_PER_ALIAS = 4
-TAG_STATUSES = {"active", "deprecated", "candidate"}
-DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
-MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
-DEFAULT_TAG_WEIGHT = 0.6
-
-ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/studio/data/tag_assignments.json")
-ALLOWED_REGISTRY_REL_PATH = Path("assets/studio/data/tag_registry.json")
-ALLOWED_ALIASES_REL_PATH = Path("assets/studio/data/tag_aliases.json")
-SITE_SERIES_INDEX_REL_PATH = Path("assets/data/series_index.json")
 BACKUPS_REL_DIR = Path("var/studio/backups")
 LOGS_REL_DIR = Path("var/studio/logs")
 
@@ -136,365 +117,6 @@ def allowed_origin(origin: str) -> Optional[str]:
     return f"{parsed.scheme}://{parsed.hostname}:{parsed.port}"
 
 
-def sanitize_manual_weight(raw_weight: Any, field_name: str, strict: bool = True) -> float:
-    if raw_weight is None:
-        if strict:
-            raise ValueError(f"{field_name} is required")
-        return DEFAULT_TAG_WEIGHT
-    try:
-        value = float(raw_weight)
-    except Exception as exc:  # noqa: BLE001
-        if strict:
-            raise ValueError(f"{field_name} must be numeric") from exc
-        return DEFAULT_TAG_WEIGHT
-
-    for allowed in MANUAL_WEIGHT_VALUES:
-        if abs(value - allowed) < 1e-9:
-            return allowed
-
-    if strict:
-        raise ValueError(f"{field_name} must be one of: {MANUAL_WEIGHT_VALUES}")
-
-    closest = MANUAL_WEIGHT_VALUES[0]
-    diff = abs(value - closest)
-    for allowed in MANUAL_WEIGHT_VALUES[1:]:
-        current = abs(value - allowed)
-        if current < diff:
-            closest = allowed
-            diff = current
-    return closest
-
-
-def build_assignment_tag(tag_id: str, w_manual: float, alias: str = "") -> Dict[str, Any]:
-    row = {
-        "tag_id": tag_id,
-        "w_manual": sanitize_manual_weight(w_manual, "w_manual", strict=False),
-    }
-    if alias:
-        row["alias"] = alias
-    return row
-
-
-def sanitize_assignment_alias(raw_alias: Any, field_name: str) -> str:
-    alias = str(raw_alias or "").strip().lower()
-    if not alias:
-        raise ValueError(f"{field_name} must not be empty")
-    if not ALIAS_KEY_RE.fullmatch(alias):
-        raise ValueError(f"{field_name} must be slug-safe")
-    return alias
-
-
-def normalize_assignment_tag(raw_tag: Any, field_name: str, strict: bool = False) -> Optional[Dict[str, Any]]:
-    if isinstance(raw_tag, str):
-        if strict:
-            raise ValueError(f"{field_name} must be an object with tag_id, w_manual")
-        try:
-            tag_id = sanitize_tag_id(raw_tag, field_name)
-        except ValueError:
-            return None
-        return build_assignment_tag(tag_id, DEFAULT_TAG_WEIGHT)
-
-    if not isinstance(raw_tag, dict):
-        if strict:
-            raise ValueError(f"{field_name} must be an object with tag_id, w_manual")
-        return None
-
-    try:
-        tag_id = sanitize_tag_id(raw_tag.get("tag_id"), f"{field_name}.tag_id")
-    except ValueError:
-        if strict:
-            raise
-        return None
-    w_manual = sanitize_manual_weight(raw_tag.get("w_manual"), f"{field_name}.w_manual", strict=strict)
-    alias = ""
-    if "alias" in raw_tag and raw_tag.get("alias") is not None:
-        alias = sanitize_assignment_alias(raw_tag.get("alias"), f"{field_name}.alias")
-    return build_assignment_tag(tag_id, w_manual, alias)
-
-
-def sanitize_assignment_tags(raw_tags: Any, field_name: str = "tags", strict: bool = True) -> list[Dict[str, Any]]:
-    if not isinstance(raw_tags, list):
-        raise ValueError(f"{field_name} must be an array")
-    if len(raw_tags) > MAX_TAGS:
-        raise ValueError(f"{field_name} may include at most {MAX_TAGS} entries")
-
-    out: list[Dict[str, Any]] = []
-    seen: set[str] = set()
-    for idx, raw in enumerate(raw_tags):
-        row = normalize_assignment_tag(raw, f"{field_name}[{idx}]", strict=strict)
-        if row is None:
-            continue
-        tag_id = row["tag_id"]
-        if tag_id in seen:
-            continue
-        seen.add(tag_id)
-        out.append(row)
-    return out
-
-
-def extract_allowed_groups(registry_payload: Dict[str, Any]) -> list[str]:
-    policy = registry_payload.get("policy")
-    if isinstance(policy, dict) and isinstance(policy.get("allowed_groups"), list):
-        groups: list[str] = []
-        for raw in policy.get("allowed_groups", []):
-            value = str(raw or "").strip().lower()
-            if not value or value in groups:
-                continue
-            groups.append(value)
-        if groups:
-            return groups
-    return list(DEFAULT_ALLOWED_GROUPS)
-
-
-def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Dict[str, str]:
-    if not isinstance(raw_tag, dict):
-        raise ValueError(f"import_registry.tags[{idx}] must be an object")
-
-    tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
-    group = str(raw_tag.get("group") or "").strip().lower()
-    status = str(raw_tag.get("status") or "active").strip().lower()
-    description = str(raw_tag.get("description") or "").strip()
-
-    if not TAG_ID_RE.fullmatch(tag_id):
-        raise ValueError(f"import_registry.tags[{idx}].tag_id must match <group>:<slug>")
-    if ":" not in tag_id:
-        raise ValueError(f"import_registry.tags[{idx}].tag_id must include ':'")
-    tag_group = tag_id.split(":", 1)[0]
-    slug = tag_id.split(":", 1)[1]
-    if group != tag_group:
-        raise ValueError(f"import_registry.tags[{idx}] group must match tag_id prefix")
-    if group not in allowed_groups:
-        raise ValueError(f"import_registry.tags[{idx}].group is not allowed")
-    if status not in TAG_STATUSES:
-        raise ValueError(f"import_registry.tags[{idx}].status must be one of {sorted(TAG_STATUSES)}")
-
-    return {
-        "tag_id": tag_id,
-        "group": group,
-        "label": slug,
-        "status": status,
-        "description": description,
-    }
-
-
-def sanitize_import_registry(raw_registry: Any, allowed_groups: list[str]) -> list[Dict[str, str]]:
-    if not isinstance(raw_registry, dict):
-        raise ValueError("import_registry must be an object")
-
-    raw_tags = raw_registry.get("tags")
-    if not isinstance(raw_tags, list):
-        raise ValueError("import_registry.tags must be an array")
-    if len(raw_tags) > MAX_IMPORT_TAGS:
-        raise ValueError(f"import_registry.tags may include at most {MAX_IMPORT_TAGS} entries")
-
-    out_order: list[str] = []
-    out_by_id: dict[str, Dict[str, str]] = {}
-    allowed_set = set(allowed_groups)
-    for idx, raw_tag in enumerate(raw_tags):
-        normalized = normalize_import_tag(raw_tag, idx, allowed_set)
-        tag_id = normalized["tag_id"]
-        if tag_id not in out_by_id:
-            out_order.append(tag_id)
-        out_by_id[tag_id] = normalized
-
-    return [out_by_id[tag_id] for tag_id in out_order]
-
-
-def sanitize_alias_key(raw_key: Any, idx: int) -> str:
-    key = str(raw_key or "").strip().lower()
-    if not key:
-        raise ValueError(f"import_aliases.aliases key at index {idx} must not be empty")
-    if not ALIAS_KEY_RE.fullmatch(key):
-        raise ValueError(f"import_aliases.aliases key at index {idx} must be slug-safe")
-    return key
-
-
-def enforce_alias_group_constraints(tags: list[str], field_name: str) -> None:
-    if not tags:
-        raise ValueError(f"{field_name} must include at least one tag id")
-    if len(tags) > MAX_ALIAS_TAGS_PER_ALIAS:
-        raise ValueError(f"{field_name} may include at most {MAX_ALIAS_TAGS_PER_ALIAS} tag ids")
-
-    seen_groups: set[str] = set()
-    for idx, tag_id in enumerate(tags):
-        group = tag_id.split(":", 1)[0]
-        if group in seen_groups:
-            raise ValueError(f"{field_name}[{idx}] duplicates group '{group}'")
-        seen_groups.add(group)
-
-
-def sanitize_alias_description(raw_description: Any, field_name: str) -> str:
-    if raw_description is None:
-        return ""
-    if not isinstance(raw_description, str):
-        raise ValueError(f"{field_name} must be a string")
-    return raw_description.strip()
-
-
-def sanitize_alias_entry(raw_value: Any, alias_key: str, field_prefix: str) -> Dict[str, Any]:
-    if isinstance(raw_value, dict):
-        tags = sanitize_tag_id_list(raw_value.get("tags"), f"{field_prefix}['{alias_key}'].tags")
-        enforce_alias_group_constraints(tags, f"{field_prefix}['{alias_key}'].tags")
-        description = sanitize_alias_description(raw_value.get("description", ""), f"{field_prefix}['{alias_key}'].description")
-        return {"description": description, "tags": tags}
-
-    tags = sanitize_tag_id_list(raw_value, f"{field_prefix}['{alias_key}']")
-    enforce_alias_group_constraints(tags, f"{field_prefix}['{alias_key}']")
-    return {"description": "", "tags": tags}
-
-
-def sanitize_import_aliases(raw_aliases_payload: Any) -> tuple[list[str], Dict[str, Dict[str, Any]]]:
-    if not isinstance(raw_aliases_payload, dict):
-        raise ValueError("import_aliases must be an object")
-
-    raw_aliases = raw_aliases_payload.get("aliases")
-    if not isinstance(raw_aliases, dict):
-        raise ValueError("import_aliases.aliases must be an object")
-    if len(raw_aliases) > MAX_IMPORT_ALIASES:
-        raise ValueError(f"import_aliases.aliases may include at most {MAX_IMPORT_ALIASES} entries")
-
-    order: list[str] = []
-    by_key: Dict[str, Dict[str, Any]] = {}
-    for idx, (raw_key, raw_value) in enumerate(raw_aliases.items()):
-        alias_key = sanitize_alias_key(raw_key, idx)
-        alias_value = sanitize_alias_entry(raw_value, alias_key, "import_aliases.aliases")
-        if alias_key not in by_key:
-            order.append(alias_key)
-        by_key[alias_key] = alias_value
-    return order, by_key
-
-
-def sanitize_import_filename(raw_filename: Any) -> str:
-    if raw_filename is None:
-        return ""
-    if not isinstance(raw_filename, str):
-        raise ValueError("import_filename must be a string")
-
-    # Keep basename only to avoid logging local path details.
-    normalized = raw_filename.replace("\\", "/").strip()
-    if not normalized:
-        return ""
-    basename = normalized.split("/")[-1]
-    if not basename:
-        return ""
-    if len(basename) > 255:
-        raise ValueError("import_filename is too long")
-    if any(ord(ch) < 32 or ord(ch) == 127 for ch in basename):
-        raise ValueError("import_filename contains control characters")
-    return basename
-
-
-def sanitize_tag_id(raw_tag_id: Any, field_name: str = "tag_id") -> str:
-    tag_id = str(raw_tag_id or "").strip().lower()
-    if not TAG_ID_RE.fullmatch(tag_id):
-        raise ValueError(f"{field_name} must match <group>:<slug>")
-    return tag_id
-
-
-def sanitize_slug(raw_slug: Any, field_name: str = "slug") -> str:
-    slug = str(raw_slug or "").strip().lower()
-    if not SLUG_RE.fullmatch(slug):
-        raise ValueError(f"{field_name} must be slug-safe")
-    return slug
-
-
-def sanitize_group(raw_group: Any, allowed_groups: list[str], field_name: str = "group") -> str:
-    group = str(raw_group or "").strip().lower()
-    if group not in allowed_groups:
-        raise ValueError(f"{field_name} must be one of: {allowed_groups}")
-    return group
-
-
-def sanitize_tag_id_list(raw_value: Any, field_name: str = "tag_ids") -> list[str]:
-    values: list[Any]
-    if isinstance(raw_value, str):
-        values = [raw_value]
-    elif isinstance(raw_value, list):
-        values = raw_value
-    else:
-        raise ValueError(f"{field_name} must be a string or array of strings")
-
-    if not values:
-        raise ValueError(f"{field_name} must include at least one tag_id")
-    if len(values) > MAX_ALIAS_TARGETS:
-        raise ValueError(f"{field_name} may include at most {MAX_ALIAS_TARGETS} tag ids")
-
-    out: list[str] = []
-    seen: set[str] = set()
-    for idx, raw in enumerate(values):
-        tag_id = sanitize_tag_id(raw, f"{field_name}[{idx}]")
-        if tag_id in seen:
-            continue
-        seen.add(tag_id)
-        out.append(tag_id)
-
-    if not out:
-        raise ValueError(f"{field_name} must include at least one tag_id")
-    return out
-
-
-def load_json_object(path: Path, default_payload: Dict[str, Any], object_name: str) -> Dict[str, Any]:
-    if not path.exists():
-        return default_payload
-
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise ValueError(f"failed to parse {object_name}: {exc}") from exc
-
-    if not isinstance(payload, dict):
-        raise ValueError(f"{object_name} must be a JSON object")
-    return payload
-
-
-def load_assignments(path: Path) -> Dict[str, Any]:
-    return load_json_object(
-        path,
-        {
-            "tag_assignments_version": "tag_assignments_v1",
-            "updated_at_utc": utc_now(),
-            "series": {},
-        },
-        "tag assignments",
-    )
-
-
-def load_registry(path: Path) -> Dict[str, Any]:
-    return load_json_object(
-        path,
-        {
-            "tag_registry_version": "tag_registry_v1",
-            "updated_at_utc": utc_now(),
-            "policy": {"allowed_groups": list(DEFAULT_ALLOWED_GROUPS)},
-            "tags": [],
-        },
-        "tag registry",
-    )
-
-
-def load_aliases(path: Path) -> Dict[str, Any]:
-    return load_json_object(
-        path,
-        {
-            "tag_aliases_version": "tag_aliases_v1",
-            "updated_at_utc": utc_now(),
-            "aliases": {},
-        },
-        "tag aliases",
-    )
-
-
-def load_series_index(path: Path) -> Dict[str, Any]:
-    return load_json_object(
-        path,
-        {
-            "header": {},
-            "series": {},
-        },
-        "series index",
-    )
-
-
 def ensure_assignment_series_row(payload: Dict[str, Any], series_id: str) -> Dict[str, Any]:
     if not isinstance(payload.get("series"), dict):
         payload["series"] = {}
@@ -527,7 +149,7 @@ def apply_work_assignment_update(
     now_utc: str,
 ) -> tuple[Dict[str, Any], bool]:
     row = ensure_assignment_series_row(payload, series_id)
-    series_tags = sanitize_assignment_tags(row.get("tags", []), f"series[{series_id}].tags", strict=False)
+    series_tags = tag_source.sanitize_assignment_tags(row.get("tags", []), f"series[{series_id}].tags", strict=False)
     series_tag_ids = {item["tag_id"] for item in series_tags}
     sanitized_tags = [item for item in tags if item["tag_id"] not in series_tag_ids]
 
@@ -554,137 +176,13 @@ def apply_work_assignment_update(
     return payload, deleted
 
 
-def normalize_assignment_rows_for_compare(rows: Any) -> list[Dict[str, Any]]:
-    return sanitize_assignment_tags(rows if rows is not None else [], "tags", strict=False)
-
-
-def normalize_assignment_series_row_for_compare(row: Any) -> Dict[str, Any]:
-    raw_row = row if isinstance(row, dict) else {}
-    works_obj = raw_row.get("works") if isinstance(raw_row.get("works"), dict) else {}
-    works: Dict[str, Dict[str, Any]] = {}
-
-    for raw_work_id, raw_work_row in works_obj.items():
-        work_id = str(raw_work_id or "").strip()
-        if not WORK_ID_RE.fullmatch(work_id):
-            continue
-        if not isinstance(raw_work_row, dict):
-            continue
-        works[work_id] = {
-            "tags": normalize_assignment_rows_for_compare(raw_work_row.get("tags", []))
-        }
-
-    normalized: Dict[str, Any] = {
-        "tags": normalize_assignment_rows_for_compare(raw_row.get("tags", []))
-    }
-    if works:
-        normalized["works"] = dict(sorted(works.items()))
-    return normalized
-
-
-def assignment_series_rows_equal(left: Any, right: Any) -> bool:
-    a = normalize_assignment_series_row_for_compare(left)
-    b = normalize_assignment_series_row_for_compare(right)
-    return a == b
-
-
-def sanitize_import_assignments_session(payload: Any) -> Dict[str, Any]:
-    if not isinstance(payload, dict):
-        raise ValueError("import_assignments must be a JSON object")
-
-    raw_series = payload.get("series")
-    if not isinstance(raw_series, dict):
-        raise ValueError("import_assignments.series must be an object")
-
-    out_series: Dict[str, Dict[str, Any]] = {}
-    for raw_series_id, raw_entry in raw_series.items():
-        series_id = str(raw_series_id or "").strip().lower()
-        if not series_id or not SLUG_RE.fullmatch(series_id):
-            raise ValueError(f"import_assignments.series[{raw_series_id!r}] must use a slug-safe series id")
-        out_series[series_id] = sanitize_import_assignments_series_entry(raw_entry, series_id)
-
-    return {
-        "version": str(payload.get("version") or "").strip(),
-        "updated_at_utc": str(payload.get("updated_at_utc") or "").strip(),
-        "series": out_series,
-    }
-
-
-def sanitize_import_assignments_series_entry(raw_entry: Any, series_id: str) -> Dict[str, Any]:
-    if not isinstance(raw_entry, dict):
-        raise ValueError(f"import_assignments.series[{series_id}] must be an object")
-
-    staged_row = sanitize_import_assignment_series_row(raw_entry.get("staged_row"), f"import_assignments.series[{series_id}].staged_row")
-    base_snapshot = sanitize_import_assignment_series_row(
-        raw_entry.get("base_row_snapshot"),
-        f"import_assignments.series[{series_id}].base_row_snapshot",
-        allow_missing=True,
-    )
-    base_updated = str(raw_entry.get("base_series_updated_at_utc") or "").strip()
-    staged_at = str(raw_entry.get("staged_at_utc") or "").strip()
-    return {
-        "base_series_updated_at_utc": base_updated,
-        "base_row_snapshot": base_snapshot,
-        "staged_row": staged_row,
-        "staged_at_utc": staged_at,
-    }
-
-
-def sanitize_import_assignment_series_row(raw_row: Any, field_name: str, allow_missing: bool = False) -> Dict[str, Any]:
-    if raw_row is None and allow_missing:
-        return {"tags": []}
-    if not isinstance(raw_row, dict):
-        raise ValueError(f"{field_name} must be an object")
-
-    tags = sanitize_assignment_tags(raw_row.get("tags", []), f"{field_name}.tags", strict=True)
-    works_out: Dict[str, Dict[str, Any]] = {}
-    raw_works = raw_row.get("works")
-    if raw_works is not None:
-        if not isinstance(raw_works, dict):
-            raise ValueError(f"{field_name}.works must be an object")
-        for raw_work_id, raw_work_row in raw_works.items():
-            work_id = str(raw_work_id or "").strip()
-            if not WORK_ID_RE.fullmatch(work_id):
-                raise ValueError(f"{field_name}.works keys must be 5-digit work ids")
-            if not isinstance(raw_work_row, dict):
-                raise ValueError(f"{field_name}.works[{work_id}] must be an object")
-            works_out[work_id] = {
-                "tags": sanitize_assignment_tags(raw_work_row.get("tags", []), f"{field_name}.works[{work_id}].tags", strict=True)
-            }
-
-    out: Dict[str, Any] = {"tags": tags}
-    if works_out:
-        out["works"] = dict(sorted(works_out.items()))
-    return out
-
-
-def build_series_work_membership(series_index_payload: Dict[str, Any]) -> Dict[str, set[str]]:
-    raw_series = series_index_payload.get("series")
-    if not isinstance(raw_series, dict):
-        return {}
-
-    membership: Dict[str, set[str]] = {}
-    for raw_series_id, raw_row in raw_series.items():
-        series_id = str(raw_series_id or "").strip().lower()
-        if not series_id or not isinstance(raw_row, dict):
-            continue
-        works = raw_row.get("works")
-        members: set[str] = set()
-        if isinstance(works, list):
-            for raw_work_id in works:
-                work_id = str(raw_work_id or "").strip()
-                if WORK_ID_RE.fullmatch(work_id):
-                    members.add(work_id)
-        membership[series_id] = members
-    return membership
-
-
 def preview_assignment_import(
     existing_payload: Dict[str, Any],
     import_session: Dict[str, Any],
     series_index_payload: Dict[str, Any],
 ) -> Dict[str, Any]:
     current_series = existing_payload.get("series") if isinstance(existing_payload.get("series"), dict) else {}
-    valid_series = build_series_work_membership(series_index_payload)
+    valid_series = tag_source.build_series_work_membership(series_index_payload)
     preview_rows: list[Dict[str, Any]] = []
     applicable_count = 0
     conflict_count = 0
@@ -693,9 +191,9 @@ def preview_assignment_import(
 
     for series_id in sorted(import_session.get("series", {}).keys()):
         entry = import_session["series"][series_id]
-        staged_row = normalize_assignment_series_row_for_compare(entry.get("staged_row"))
-        base_row = normalize_assignment_series_row_for_compare(entry.get("base_row_snapshot"))
-        current_row = normalize_assignment_series_row_for_compare(current_series.get(series_id))
+        staged_row = tag_source.normalize_assignment_series_row_for_compare(entry.get("staged_row"))
+        base_row = tag_source.normalize_assignment_series_row_for_compare(entry.get("base_row_snapshot"))
+        current_row = tag_source.normalize_assignment_series_row_for_compare(current_series.get(series_id))
 
         row_preview: Dict[str, Any] = {
             "series_id": series_id,
@@ -725,7 +223,7 @@ def preview_assignment_import(
             preview_rows.append(row_preview)
             continue
 
-        if not assignment_series_rows_equal(current_row, base_row):
+        if not tag_source.assignment_series_rows_equal(current_row, base_row):
             row_preview["status"] = "conflict"
             row_preview["resolution_required"] = True
             conflict_count += 1
@@ -781,7 +279,7 @@ def apply_assignment_import(
                 raise ValueError(f"resolution required for conflicted series: {series_id}")
             overwritten_series += 1
 
-        staged_row = normalize_assignment_series_row_for_compare(import_session["series"][series_id].get("staged_row"))
+        staged_row = tag_source.normalize_assignment_series_row_for_compare(import_session["series"][series_id].get("staged_row"))
         series_row = ensure_assignment_series_row(updated_payload, series_id)
         series_row["tags"] = staged_row.get("tags", [])
         works = staged_row.get("works") if isinstance(staged_row.get("works"), dict) else {}
@@ -820,8 +318,8 @@ def apply_registry_import(
     if mode not in {"replace", "merge", "add"}:
         raise ValueError("mode must be one of: replace, merge, add")
 
-    allowed_groups = extract_allowed_groups(existing_payload)
-    imported_tags = sanitize_import_registry(import_registry, allowed_groups)
+    allowed_groups = tag_source.extract_allowed_groups(existing_payload)
+    imported_tags = tag_source.sanitize_import_registry(import_registry, allowed_groups)
 
     raw_existing_tags = existing_payload.get("tags")
     existing_tags = raw_existing_tags if isinstance(raw_existing_tags, list) else []
@@ -924,15 +422,15 @@ def apply_aliases_import(
     if mode not in {"replace", "merge", "add"}:
         raise ValueError("mode must be one of: replace, merge, add")
 
-    import_order, import_by_key = sanitize_import_aliases(import_aliases_payload)
+    import_order, import_by_key = tag_source.sanitize_import_aliases(import_aliases_payload)
     raw_existing_aliases = existing_payload.get("aliases")
     existing_aliases = raw_existing_aliases if isinstance(raw_existing_aliases, dict) else {}
 
     existing_order: list[str] = []
     existing_by_key: Dict[str, Dict[str, Any]] = {}
     for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
-        alias_key = sanitize_alias_key(raw_key, idx)
-        alias_value = sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
+        alias_key = tag_source.sanitize_alias_key(raw_key, idx)
+        alias_value = tag_source.sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
         if alias_key not in existing_by_key:
             existing_order.append(alias_key)
         existing_by_key[alias_key] = alias_value
@@ -1004,8 +502,8 @@ def delete_alias_key(
     normalized_aliases: Dict[str, Dict[str, Any]] = {}
     found = False
     for idx, (raw_key, raw_value) in enumerate(aliases.items()):
-        key = sanitize_alias_key(raw_key, idx)
-        value = sanitize_alias_entry(raw_value, key, "tag_aliases.aliases")
+        key = tag_source.sanitize_alias_key(raw_key, idx)
+        value = tag_source.sanitize_alias_entry(raw_value, key, "tag_aliases.aliases")
         if key == alias_key:
             found = True
             continue
@@ -1026,7 +524,7 @@ def delete_alias_key(
 
 
 def build_alias_entry(description: str, tags: list[str]) -> Dict[str, Any]:
-    enforce_alias_group_constraints(tags, "alias.tags")
+    tag_source.enforce_alias_group_constraints(tags, "alias.tags")
     return {"description": description.strip(), "tags": list(tags)}
 
 
@@ -1035,8 +533,8 @@ def replace_alias_entry_refs(
     old_tag_id: str,
     replacement_tag_ids: list[str],
 ) -> tuple[Dict[str, Any], bool, int]:
-    original_tags = sanitize_tag_id_list(alias_entry.get("tags"), "tag_aliases.aliases[*].tags")
-    description = sanitize_alias_description(alias_entry.get("description", ""), "tag_aliases.aliases[*].description")
+    original_tags = tag_source.sanitize_tag_id_list(alias_entry.get("tags"), "tag_aliases.aliases[*].tags")
+    description = tag_source.sanitize_alias_description(alias_entry.get("description", ""), "tag_aliases.aliases[*].description")
 
     out: list[str] = []
     seen: set[str] = set()
@@ -1057,7 +555,7 @@ def replace_alias_entry_refs(
 
     if not out:
         out = list(replacement_tag_ids)
-    enforce_alias_group_constraints(out, "tag_aliases.aliases[*].tags")
+    tag_source.enforce_alias_group_constraints(out, "tag_aliases.aliases[*].tags")
 
     updated_entry = build_alias_entry(description, out)
     changed = (
@@ -1081,7 +579,7 @@ def rewrite_assignment_tag_list_for_targets(
     targets_inserted = 0
 
     for raw_tag in tags:
-        normalized_tag = normalize_assignment_tag(raw_tag, f"{field_name}[*]", strict=False)
+        normalized_tag = tag_source.normalize_assignment_tag(raw_tag, f"{field_name}[*]", strict=False)
         if normalized_tag is None:
             changed = True
             continue
@@ -1094,7 +592,7 @@ def rewrite_assignment_tag_list_for_targets(
                 if replacement in seen:
                     continue
                 seen.add(replacement)
-                out.append(build_assignment_tag(replacement, normalized_tag["w_manual"]))
+                out.append(tag_source.build_assignment_tag(replacement, normalized_tag["w_manual"]))
                 targets_inserted += 1
             continue
         if tag_value in seen:
@@ -1119,7 +617,7 @@ def rewrite_assignment_tag_list_for_tag(
     refs_rewritten = 0
 
     for raw_tag in tags:
-        normalized_tag = normalize_assignment_tag(raw_tag, f"{field_name}[*]", strict=False)
+        normalized_tag = tag_source.normalize_assignment_tag(raw_tag, f"{field_name}[*]", strict=False)
         if normalized_tag is None:
             changed = True
             continue
@@ -1135,7 +633,7 @@ def rewrite_assignment_tag_list_for_tag(
             changed = True
             continue
         seen.add(tag_value)
-        out.append(build_assignment_tag(tag_value, normalized_tag["w_manual"]))
+        out.append(tag_source.build_assignment_tag(tag_value, normalized_tag["w_manual"]))
 
     return out, changed, refs_rewritten
 
@@ -1231,8 +729,8 @@ def rewrite_aliases_for_targets(
     demoted_alias_overwritten = 0
 
     for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
-        alias_key = sanitize_alias_key(raw_key, idx)
-        alias_value = sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
+        alias_key = tag_source.sanitize_alias_key(raw_key, idx)
+        alias_value = tag_source.sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
         if alias_key == demoted_alias_key:
             demoted_alias_overwritten = 1
             continue
@@ -1282,8 +780,8 @@ def promote_alias_to_canonical_tag(
     final_aliases: Dict[str, Dict[str, Any]] = {}
     alias_found = False
     for idx, (raw_key, raw_value) in enumerate(aliases.items()):
-        key = sanitize_alias_key(raw_key, idx)
-        value = sanitize_alias_entry(raw_value, key, "tag_aliases.aliases")
+        key = tag_source.sanitize_alias_key(raw_key, idx)
+        value = tag_source.sanitize_alias_entry(raw_value, key, "tag_aliases.aliases")
         if key == alias_key:
             alias_found = True
             continue
@@ -1300,7 +798,7 @@ def promote_alias_to_canonical_tag(
         if "tag_registry_version" not in registry_payload:
             registry_payload["tag_registry_version"] = "tag_registry_v1"
         if not isinstance(registry_payload.get("policy"), dict):
-            registry_payload["policy"] = {"allowed_groups": list(DEFAULT_ALLOWED_GROUPS)}
+            registry_payload["policy"] = {"allowed_groups": list(tag_source.DEFAULT_ALLOWED_GROUPS)}
         appended_tags = list(tags)
         appended_tags.append(
             {
@@ -1375,7 +873,7 @@ def demote_tag_to_alias(
     if "tag_registry_version" not in registry_payload:
         registry_payload["tag_registry_version"] = "tag_registry_v1"
     if not isinstance(registry_payload.get("policy"), dict):
-        registry_payload["policy"] = {"allowed_groups": list(DEFAULT_ALLOWED_GROUPS)}
+        registry_payload["policy"] = {"allowed_groups": list(tag_source.DEFAULT_ALLOWED_GROUPS)}
     registry_payload["tags"] = final_tags
     registry_payload["updated_at_utc"] = now_utc
 
@@ -1410,8 +908,8 @@ def demote_tag_to_alias(
 def update_alias_entry_for_tag(
     entry: Dict[str, Any], old_tag_id: str, new_tag_id: Optional[str]
 ) -> tuple[Optional[Dict[str, Any]], bool]:
-    tags = sanitize_tag_id_list(entry.get("tags"), "tag_aliases.aliases[*].tags")
-    description = sanitize_alias_description(entry.get("description", ""), "tag_aliases.aliases[*].description")
+    tags = tag_source.sanitize_tag_id_list(entry.get("tags"), "tag_aliases.aliases[*].tags")
+    description = tag_source.sanitize_alias_description(entry.get("description", ""), "tag_aliases.aliases[*].description")
 
     changed = False
     out: list[str] = []
@@ -1433,13 +931,13 @@ def update_alias_entry_for_tag(
 
     if not out:
         return None, True if changed else False
-    enforce_alias_group_constraints(out, "tag_aliases.aliases[*].tags")
+    tag_source.enforce_alias_group_constraints(out, "tag_aliases.aliases[*].tags")
     updated = build_alias_entry(description, out)
     return updated, changed or out != tags
 
 
 def is_redundant_alias(alias_key: str, entry: Dict[str, Any]) -> bool:
-    tags = sanitize_tag_id_list(entry.get("tags"), "tag_aliases.aliases[*].tags")
+    tags = tag_source.sanitize_tag_id_list(entry.get("tags"), "tag_aliases.aliases[*].tags")
     if len(tags) != 1:
         return False
     target = tags[0]
@@ -1464,8 +962,8 @@ def rewrite_aliases_for_tag(
     removed_redundant = 0
 
     for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
-        alias_key = sanitize_alias_key(raw_key, idx)
-        alias_value = sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
+        alias_key = tag_source.sanitize_alias_key(raw_key, idx)
+        alias_value = tag_source.sanitize_alias_entry(raw_value, alias_key, "tag_aliases.aliases")
         updated_value, changed = update_alias_entry_for_tag(alias_value, old_tag_id, new_tag_id)
         if changed:
             rewritten += 1
@@ -1498,7 +996,7 @@ def extract_registry_tag_ids(registry_payload: Dict[str, Any]) -> set[str]:
         if not isinstance(raw, dict):
             continue
         tag_id = str(raw.get("tag_id") or "").strip().lower()
-        if TAG_ID_RE.fullmatch(tag_id):
+        if tag_source.TAG_ID_RE.fullmatch(tag_id):
             out.add(tag_id)
     return out
 
@@ -1512,7 +1010,7 @@ def mutate_alias_entry(
     tags: list[str],
     now_utc: str,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
-    enforce_alias_group_constraints(tags, "tags")
+    tag_source.enforce_alias_group_constraints(tags, "tags")
 
     registry_tag_ids = extract_registry_tag_ids(registry_payload)
     for idx, tag_id in enumerate(tags):
@@ -1525,8 +1023,8 @@ def mutate_alias_entry(
     normalized_order: list[str] = []
     normalized_by_key: Dict[str, Dict[str, Any]] = {}
     for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
-        key = sanitize_alias_key(raw_key, idx)
-        value = sanitize_alias_entry(raw_value, key, "tag_aliases.aliases")
+        key = tag_source.sanitize_alias_key(raw_key, idx)
+        value = tag_source.sanitize_alias_entry(raw_value, key, "tag_aliases.aliases")
         if key not in normalized_by_key:
             normalized_order.append(key)
         normalized_by_key[key] = value
@@ -1704,7 +1202,7 @@ def mutate_registry_tag(
         }
 
     old_slug = old_tag_id.split(":", 1)[1]
-    slug = old_slug if new_slug is None else sanitize_slug(new_slug, "new_slug")
+    slug = old_slug if new_slug is None else tag_source.sanitize_slug(new_slug, "new_slug")
     label = slug
     new_tag_id = f"{group}:{slug}"
     canonical_changed = new_tag_id != old_tag_id
@@ -1713,7 +1211,7 @@ def mutate_registry_tag(
     if canonical_changed and new_tag_id in existing_ids:
         raise ValueError(f"target tag_id already exists: {new_tag_id}")
     old_description = str(target_row.get("description") or "").strip()
-    description = old_description if new_description is None else sanitize_alias_description(new_description, "description")
+    description = old_description if new_description is None else tag_source.sanitize_alias_description(new_description, "description")
     description_changed = description != old_description
 
     updated_row = dict(target_row)
@@ -2037,26 +1535,26 @@ class Handler(BaseHTTPRequestHandler):
         tags = body.get("tags")
         _ = body.get("client_time_utc")
 
-        if not isinstance(series_id, str) or not series_id or not SLUG_RE.fullmatch(series_id):
+        if not isinstance(series_id, str) or not series_id or not tag_source.SLUG_RE.fullmatch(series_id):
             raise ValueError("series_id must be a non-empty slug-safe string")
 
-        sanitized_tags = sanitize_assignment_tags(tags, "tags", strict=True)
+        sanitized_tags = tag_source.sanitize_assignment_tags(tags, "tags", strict=True)
         now_utc = utc_now()
 
-        payload = load_assignments(self.server.assignments_path)
+        payload = tag_source.load_assignments(self.server.assignments_path)
         if work_id is None:
             updated_payload = apply_assignment_update(payload, series_id, sanitized_tags, now_utc)
             deleted = False
             persisted_tags = sanitized_tags
         else:
-            if not isinstance(work_id, str) or not WORK_ID_RE.fullmatch(work_id):
+            if not isinstance(work_id, str) or not tag_source.WORK_ID_RE.fullmatch(work_id):
                 raise ValueError("work_id must be a 5-digit string")
             if keep_work is None:
                 keep_work = False
             if not isinstance(keep_work, bool):
                 raise ValueError("keep_work must be a boolean when work_id is provided")
             updated_payload, deleted = apply_work_assignment_update(payload, series_id, work_id, sanitized_tags, keep_work, now_utc)
-            persisted_tags = sanitize_assignment_tags(
+            persisted_tags = tag_source.sanitize_assignment_tags(
                 updated_payload["series"][series_id].get("works", {}).get(work_id, {}).get("tags", []),
                 "tags",
                 strict=False,
@@ -2122,11 +1620,11 @@ class Handler(BaseHTTPRequestHandler):
         body = self._read_json_body()
         mode = str(body.get("mode") or "").strip().lower()
         import_registry = body.get("import_registry")
-        import_filename = sanitize_import_filename(body.get("import_filename"))
+        import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
-        existing_payload = load_registry(self.server.registry_path)
+        existing_payload = tag_source.load_registry(self.server.registry_path)
         updated_payload, stats = apply_registry_import(existing_payload, import_registry, mode, now_utc)
         summary_text = build_import_summary_text(stats)
 
@@ -2184,8 +1682,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_import_tag_assignments(self, allowed: Optional[str], preview: bool) -> None:
         body = self._read_json_body()
-        import_assignments = sanitize_import_assignments_session(body.get("import_assignments"))
-        import_filename = sanitize_import_filename(body.get("import_filename"))
+        import_assignments = tag_source.sanitize_import_assignments_session(body.get("import_assignments"))
+        import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
         raw_resolutions = body.get("resolutions")
         _ = body.get("client_time_utc")
 
@@ -2203,8 +1701,8 @@ class Handler(BaseHTTPRequestHandler):
                 resolutions[series_id] = resolution
 
         now_utc = utc_now()
-        existing_payload = load_assignments(self.server.assignments_path)
-        series_index_payload = load_series_index(self.server.series_index_path)
+        existing_payload = tag_source.load_assignments(self.server.assignments_path)
+        series_index_payload = tag_source.load_series_index(self.server.series_index_path)
         preview_payload = preview_assignment_import(existing_payload, import_assignments, series_index_payload)
         summary_text = (
             f"assignment import preview; staged {preview_payload['staged_series_count']}; "
@@ -2290,11 +1788,11 @@ class Handler(BaseHTTPRequestHandler):
         body = self._read_json_body()
         mode = str(body.get("mode") or "").strip().lower()
         import_aliases = body.get("import_aliases")
-        import_filename = sanitize_import_filename(body.get("import_filename"))
+        import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
-        existing_payload = load_aliases(self.server.aliases_path)
+        existing_payload = tag_source.load_aliases(self.server.aliases_path)
         updated_payload, stats = apply_aliases_import(existing_payload, import_aliases, mode, now_utc)
         summary_text = build_import_summary_text(stats, noun="aliases")
 
@@ -2347,11 +1845,11 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_delete_tag_alias(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         alias_raw = body.get("alias")
-        alias_key = sanitize_alias_key(alias_raw, 0)
+        alias_key = tag_source.sanitize_alias_key(alias_raw, 0)
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
-        existing_payload = load_aliases(self.server.aliases_path)
+        existing_payload = tag_source.load_aliases(self.server.aliases_path)
         updated_payload, stats = delete_alias_key(existing_payload, alias_key, now_utc)
         summary_text = f"deleted alias {alias_key}; final {int(stats.get('final_total') or 0)}"
 
@@ -2399,17 +1897,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_mutate_tag_alias(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
-        alias_key = sanitize_alias_key(body.get("alias"), 0)
+        alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
         new_alias_raw = body.get("new_alias", alias_key)
-        new_alias_key = sanitize_alias_key(new_alias_raw, 1)
-        description = sanitize_alias_description(body.get("description", ""), "description")
-        tags = sanitize_tag_id_list(body.get("tags"), "tags")
-        enforce_alias_group_constraints(tags, "tags")
+        new_alias_key = tag_source.sanitize_alias_key(new_alias_raw, 1)
+        description = tag_source.sanitize_alias_description(body.get("description", ""), "description")
+        tags = tag_source.sanitize_tag_id_list(body.get("tags"), "tags")
+        tag_source.enforce_alias_group_constraints(tags, "tags")
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
-        aliases_payload = load_aliases(self.server.aliases_path)
-        registry_payload = load_registry(self.server.registry_path)
+        aliases_payload = tag_source.load_aliases(self.server.aliases_path)
+        registry_payload = tag_source.load_registry(self.server.registry_path)
         aliases_updated, stats = mutate_alias_entry(
             aliases_payload=aliases_payload,
             registry_payload=registry_payload,
@@ -2479,14 +1977,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_promote_tag_alias(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
-        alias_key = sanitize_alias_key(body.get("alias"), 0)
+        alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
-        registry_payload = load_registry(self.server.registry_path)
-        aliases_payload = load_aliases(self.server.aliases_path)
-        allowed_groups = extract_allowed_groups(registry_payload)
-        group = sanitize_group(body.get("group"), allowed_groups, "group")
+        registry_payload = tag_source.load_registry(self.server.registry_path)
+        aliases_payload = tag_source.load_aliases(self.server.aliases_path)
+        allowed_groups = tag_source.extract_allowed_groups(registry_payload)
+        group = tag_source.sanitize_group(body.get("group"), allowed_groups, "group")
 
         registry_updated, aliases_updated, stats, registry_changed, aliases_changed = promote_alias_to_canonical_tag(
             registry_payload=registry_payload,
@@ -2562,15 +2060,15 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_demote_tag(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
-        old_tag_id = sanitize_tag_id(body.get("tag_id"), "tag_id")
-        alias_targets = sanitize_tag_id_list(body.get("alias_targets"), "alias_targets")
-        enforce_alias_group_constraints(alias_targets, "alias_targets")
+        old_tag_id = tag_source.sanitize_tag_id(body.get("tag_id"), "tag_id")
+        alias_targets = tag_source.sanitize_tag_id_list(body.get("alias_targets"), "alias_targets")
+        tag_source.enforce_alias_group_constraints(alias_targets, "alias_targets")
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
-        registry_payload = load_registry(self.server.registry_path)
-        aliases_payload = load_aliases(self.server.aliases_path)
-        assignments_payload = load_assignments(self.server.assignments_path)
+        registry_payload = tag_source.load_registry(self.server.registry_path)
+        aliases_payload = tag_source.load_aliases(self.server.aliases_path)
+        assignments_payload = tag_source.load_assignments(self.server.assignments_path)
 
         registry_updated, aliases_updated, assignments_updated, stats, assignments_changed = demote_tag_to_alias(
             registry_payload=registry_payload,
@@ -2650,7 +2148,7 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_mutate_tag(self, allowed: Optional[str], preview: bool = False) -> None:
         body = self._read_json_body()
         action = str(body.get("action") or "").strip().lower()
-        old_tag_id = sanitize_tag_id(body.get("tag_id"), "tag_id")
+        old_tag_id = tag_source.sanitize_tag_id(body.get("tag_id"), "tag_id")
         raw_allow_canonical_rename = body.get("allow_canonical_rename", False)
         if not isinstance(raw_allow_canonical_rename, bool):
             raise ValueError("allow_canonical_rename must be a boolean")
@@ -2665,14 +2163,14 @@ class Handler(BaseHTTPRequestHandler):
         if action == "edit":
             raw_new_slug = body.get("new_slug")
             if raw_new_slug is not None and str(raw_new_slug).strip():
-                new_slug = sanitize_slug(raw_new_slug, "new_slug")
+                new_slug = tag_source.sanitize_slug(raw_new_slug, "new_slug")
             if "description" in body:
-                new_description = sanitize_alias_description(body.get("description"), "description")
+                new_description = tag_source.sanitize_alias_description(body.get("description"), "description")
 
         now_utc = utc_now()
-        registry_payload = load_registry(self.server.registry_path)
-        aliases_payload = load_aliases(self.server.aliases_path)
-        assignments_payload = load_assignments(self.server.assignments_path)
+        registry_payload = tag_source.load_registry(self.server.registry_path)
+        aliases_payload = tag_source.load_aliases(self.server.aliases_path)
+        assignments_payload = tag_source.load_assignments(self.server.assignments_path)
 
         registry_updated, mutate_meta = mutate_registry_tag(
             registry_payload,
@@ -2840,10 +2338,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     repo_root = detect_repo_root(args.repo_root)
-    assignments_path = (repo_root / ALLOWED_ASSIGNMENTS_REL_PATH).resolve()
-    series_index_path = (repo_root / SITE_SERIES_INDEX_REL_PATH).resolve()
-    registry_path = (repo_root / ALLOWED_REGISTRY_REL_PATH).resolve()
-    aliases_path = (repo_root / ALLOWED_ALIASES_REL_PATH).resolve()
+    assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
+    series_index_path = (repo_root / tag_source.SERIES_INDEX_REL_PATH).resolve()
+    registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+    aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_paths = {assignments_path, registry_path, aliases_path}
 

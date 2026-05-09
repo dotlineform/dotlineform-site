@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 16:58"
+last_updated: "2026-05-09 17:06"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -17,7 +17,9 @@ Status:
 - route inventory and POST dispatch are now owned by `scripts/tag_routes.py` plus `Handler.POST_HANDLERS`
 - Slice 2 implemented
 - tag activity status, changed-state, endpoint, record-group, and activity row helpers are now owned by `scripts/tag_activity.py`
-- next slice: tag source model and validation helpers
+- Slice 3 implemented
+- tag source artifact paths, loading defaults, tag id/group/alias/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are now owned by `scripts/tag_source_model.py`
+- next slice: assignment import and save planners
 
 ## Purpose
 
@@ -188,6 +190,13 @@ Risks:
 - over-generalizing catalogue/docs/tag activity behavior too early could hide service-specific contracts
 
 ### Slice 3: tag source model and validation helpers
+
+Status: implemented.
+
+The third implementation slice kept endpoint behavior stable while moving source artifact path constants, JSON loading defaults, tag id/slug/group/alias/manual-weight validation, assignment tag normalization, import filename sanitization, import registry/alias validation, import assignment row validation, normalized assignment comparison helpers, and series-index membership extraction into `scripts/tag_source_model.py`.
+`scripts/studio/tag_write_server.py` now imports that source-model owner and still decides which artifacts each endpoint needs, performs write allowlist checks, executes writes/backups, logs local events, and maps validation failures to HTTP responses.
+`tests/python/test_tag_source_model.py` pins valid and invalid tag ids, alias keys, group and manual-weight rules, assignment row normalization, import filename basename sanitization, import assignment work-id validation, and default payload loading.
+The focused tag source-model test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
