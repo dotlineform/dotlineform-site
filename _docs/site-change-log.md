@@ -24,8 +24,8 @@ Archives:
 **Area:** Studio / Docs Viewer / scripts / maintainability
 
 **Summary:**
-Advanced the priority-2 docs-management server sequence in the script structural review through Slice 4.
-The extracted owners now cover endpoint route inventory, docs source-model helpers, generated Docs Viewer read helpers, and docs-specific Studio Activity row construction.
+Advanced the priority-2 docs-management server sequence in the script structural review through Slice 6.
+The extracted owners now cover endpoint route inventory, docs source-model helpers, generated Docs Viewer read helpers, docs-specific Studio Activity row construction, write/rebuild follow-through, and management mutation planning.
 
 **Files changed/docs:**
 
@@ -34,16 +34,20 @@ The extracted owners now cover endpoint route inventory, docs source-model helpe
 - `scripts/docs/docs_source_model.py`
 - `scripts/docs/docs_generated_reads.py`
 - `scripts/docs/docs_activity.py`
+- `scripts/docs/docs_write_rebuild.py`
+- `scripts/docs/docs_management_mutations.py`
 - `tests/python/test_docs_management_routes.py`
 - `tests/python/test_docs_source_model.py`
 - `tests/python/test_docs_generated_reads.py`
 - `tests/python/test_docs_activity.py`
+- `tests/python/test_docs_write_rebuild.py`
+- `tests/python/test_docs_management_mutations.py`
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
 
 **Impact:**
-Endpoint URLs and payload behavior are unchanged, but route, source-model, generated-read, and activity-row responsibilities now have focused module owners and direct tests.
+Endpoint URLs and payload behavior are unchanged, but route, source-model, generated-read, activity-row, write/rebuild, and mutation-planning responsibilities now have focused module owners and direct tests.
 
 ## [2026-05-09] Renamed docs source roots
 

@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 13:15"
+last_updated: "2026-05-09 14:20"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -15,6 +15,7 @@ Status:
 - Slice 3 implemented
 - Slice 4 implemented
 - Slice 5 implemented
+- Slice 6 implemented
 - later slices are planned, but should still be reconfirmed before editing
 
 ## Purpose
@@ -114,14 +115,13 @@ Risks:
 
 ## Planned Slice Sequence
 
-The remaining sequence now moves from activity into rebuild/write and mutation-planning ownership.
-Slice 6 is the next planned implementation slice and should still be reconfirmed before editing.
+The remaining sequence now moves from import-source orchestration into final handler cleanup.
+Slice 7 is optional and should still be reconfirmed before editing.
 
 Remaining planned order:
 
-1. Slice 6: management mutation planners.
-2. Slice 7: import-source orchestration cleanup, only if still useful.
-3. Slice 8: final handler body cleanup and closeout.
+1. Slice 7: import-source orchestration cleanup, only if still useful.
+2. Slice 8: final handler body cleanup and closeout.
 
 Importer/exporter note:
 
@@ -330,9 +330,13 @@ Risks:
 
 ### Slice 6: management mutation planners
 
-Status: planned after source model and write/rebuild helpers.
+Status: implemented.
 
-Proposed module owner:
+The sixth implementation slice extracted Docs Management mutation planning from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_management_mutations.py`.
+The server still owns HTTP request handling, dry-run write suppression, backup bundle creation, source write/rebuild execution through `scripts/docs/docs_write_rebuild.py`, local logging after completed writes, and response status mapping.
+The extracted module owns management mutation decisions: source write/delete plans, backup document-set and manifest metadata selection, delete-preview blockers and warnings, response payload bases, and targeted search doc ids.
+
+Module owner:
 
 - `scripts/docs/docs_management_mutations.py`
 
@@ -347,32 +351,35 @@ Target ownership:
 - backup document-set selection for these management mutations
 - search target id planning for metadata, create, move, archive, delete, and viewability changes
 
-The server should keep:
+The server keeps:
 
 - endpoint request parsing
 - endpoint response status mapping
 - dry-run write suppression orchestration
-- final response assembly where Studio currently expects specific keys
+- final response assembly for `dry_run`, `backup_dir`, and `rebuild` keys where Studio currently expects them
 - calling source write/rebuild helpers
-- activity timing if not already moved
+- completed-write local logging
 
 Acceptance checks:
 
-- move or add focused tests for create, metadata, viewability, move, restore, archive, delete-preview, and delete-apply planning
-- preserve current blocker messages for delete preview
-- preserve search target behavior documented in [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
-- preserve backup bundle contents and reported `backup_dir` shape
-- preserve no-op behavior for already-archived docs and unchanged viewability updates
+- `tests/python/test_docs_management_mutations.py` covers create, metadata, viewability, move, restore, archive no-op, delete-preview, and delete-apply planning
+- delete-preview blocker text remains `1 child docs still depend on this parent`
+- search target planning is pinned for create, metadata title changes, metadata status-only changes, viewability, move, restore, archive, and delete flows
+- backup operation, document selection, and manifest metadata are planned by the mutation module while reported `backup_dir` shape stays assembled by the server
+- no-op behavior is preserved for already-archived docs and unchanged viewability updates
+- `./scripts/run_checks.py --profile docs` now includes the mutation planner tests
 
 Benefits:
 
 - makes local docs management behavior testable without HTTP transport
 - leaves the server closer to request orchestration while keeping importer/exporter calls separate
+- gives backup/search planning a direct test owner without moving subprocess rebuild mechanics back out of `scripts/docs/docs_write_rebuild.py`
 
 Risks:
 
-- this is the highest-risk docs-management slice because it touches source writes, backups, delete behavior, and search updates
-- do not combine this with importer/exporter restructuring
+- this was the highest-risk docs-management slice because it touched source writes, backups, delete behavior, and search updates
+- the server still wraps mutation plans with backup/write/rebuild execution, so future endpoint response changes should be tested both at planner and server levels
+- importer/exporter restructuring remains out of scope
 
 ### Slice 7: import-source orchestration cleanup
 

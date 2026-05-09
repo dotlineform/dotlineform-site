@@ -48,7 +48,6 @@ import argparse
 import datetime as dt
 import json
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -86,24 +85,29 @@ from docs_write_rebuild import (  # noqa: E402
     rebuild_all_docs_outputs,
     rebuild_scope_outputs,
 )
+from docs_management_mutations import (  # noqa: E402
+    ManagementMutationPlan,
+    normalize_summary as mutation_normalize_summary,
+    plan_archive,
+    plan_create,
+    plan_delete_apply,
+    plan_delete_preview,
+    plan_move,
+    plan_restore_move,
+    plan_update_metadata,
+    plan_update_viewability,
+    plan_update_viewability_bulk,
+)
 from docs_source_model import (  # noqa: E402
     ScopeDoc,
-    create_sort_order_after,
     current_doc_timestamp,
     default_viewable_for_scope,
-    descendant_doc_ids,
     direct_child_doc_ids,
-    ensure_unique_stem,
     format_front_matter_value,
     format_source,
-    front_matter_boolean,
     load_scope_docs,
     normalize_scope,
     normalize_ui_status,
-    normalized_move_placements,
-    placement_record,
-    rewrite_doc_placement_source,
-    rewrite_doc_source,
     scope_root,
     slugify,
     next_sort_order,
@@ -191,7 +195,7 @@ def allowed_origin(origin: str) -> Optional[str]:
 
 
 def normalize_summary(value: Any) -> str:
-    return re.sub(r"\s+", " ", str(value or "")).strip()
+    return mutation_normalize_summary(value)
 
 
 def metadata_search_doc_ids(docs: list[ScopeDoc], doc_id: str, *, title_changed: bool) -> list[str]:
@@ -340,65 +344,6 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
         "summary_text": f"Opened {target.doc_id} source.",
         "dry_run": dry_run,
     }
-
-
-def preview_delete(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
-    docs = load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    target = docs_by_id.get(doc_id)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-
-    children = [
-        {
-            "doc_id": doc.doc_id,
-            "title": doc.title,
-            "path": relative_path(repo_root, doc.path),
-        }
-        for doc in docs
-        if doc.parent_id == target.doc_id
-    ]
-    inbound_refs = find_inbound_refs(repo_root, target, docs)
-    blockers = []
-    warnings = []
-    if children:
-        blockers.append(f"{len(children)} child docs still depend on this parent")
-    if inbound_refs:
-        warnings.append(f"{len(inbound_refs)} inbound markdown references will become broken")
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": target.doc_id,
-        "title": target.title,
-        "path": relative_path(repo_root, target.path),
-        "allowed": not blockers,
-        "blockers": blockers,
-        "warnings": warnings,
-        "children": children,
-        "inbound_refs": inbound_refs,
-    }
-
-
-def find_inbound_refs(repo_root: Path, target: ScopeDoc, docs: list[ScopeDoc]) -> list[Dict[str, str]]:
-    target_filename = target.path.name
-    doc_link_fragment = f"doc={target.doc_id}"
-    refs: list[Dict[str, str]] = []
-    for doc in docs:
-        if doc.doc_id == target.doc_id:
-            continue
-        source = doc.source_text
-        if doc_link_fragment not in source and target_filename not in source:
-            continue
-        refs.append(
-            {
-                "doc_id": doc.doc_id,
-                "title": doc.title,
-                "path": relative_path(repo_root, doc.path),
-            }
-        )
-    refs.sort(key=lambda item: (item["title"].lower(), item["doc_id"]))
-    return refs
 
 
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
@@ -1319,845 +1264,75 @@ def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
     return handle_import_source(repo_root, body, dry_run)
 
 
-def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    docs = load_scope_docs(repo_root, scope)
-    title = str(body.get("title") or "New Doc").strip() or "New Doc"
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    raw_sort_order = body.get("sort_order")
-    after_doc_id = str(body.get("after_doc_id") or "").strip()
-    parent_id = str(body.get("parent_id") or "").strip()
-
-    if after_doc_id:
-        after_doc = docs_by_id.get(after_doc_id)
-        if after_doc is None:
-            raise ValueError(f"Unknown after_doc_id {after_doc_id!r} for scope {scope}")
-        parent_id = after_doc.parent_id
-        sort_order = create_sort_order_after(docs, after_doc)
-    elif parent_id and parent_id not in docs_by_id:
-        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-    elif raw_sort_order in {None, ""}:
-        sort_order = next_sort_order(docs, parent_id)
-    else:
-        try:
-            sort_order = int(raw_sort_order)
-        except (TypeError, ValueError) as exc:
-            raise ValueError("sort_order must be an integer") from exc
-
-    doc_id = ensure_unique_stem(docs, title)
-    target_root = scope_root(repo_root, scope)
-    target_path = target_root / f"{doc_id}.md"
-    timestamp = current_doc_timestamp()
-    front_matter = {
-        "doc_id": doc_id,
-        "title": title,
-        "added_date": timestamp,
-        "last_updated": timestamp,
-        "parent_id": parent_id,
-        "sort_order": sort_order,
-        "published": True,
-        "viewable": default_viewable_for_scope(scope),
-    }
-    source_text = format_source(front_matter, f"# {title}\n")
-
+def execute_management_mutation_plan(repo_root: Path, plan: ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
+    payload = dict(plan.response)
     backup_dir = None
     rebuild = None
-    if not dry_run:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "create",
-            [],
-            {
-                "doc_id": doc_id,
-                "title": title,
-                "path": relative_path(repo_root, target_path),
-                "parent_id": parent_id,
-                "sort_order": sort_order,
-                "after_doc_id": after_doc_id,
-            },
-        )
+
+    if not dry_run and plan.has_source_changes:
+        if plan.backup_operation:
+            backup_dir = make_backup_bundle(
+                repo_root,
+                plan.scope,
+                plan.backup_operation,
+                list(plan.backup_docs),
+                plan.backup_metadata,
+            )
+
+        def write_operation() -> None:
+            for source_write in plan.source_writes:
+                write_text_atomic(source_write.path, source_write.text)
+            for source_delete in plan.source_deletes:
+                source_delete.path.unlink()
+
         rebuild = perform_source_write_and_rebuild(
             repo_root,
-            scope,
-            [target_path],
-            lambda: write_text_atomic(target_path, source_text),
-            suppression_reason="docs-create",
-            search_doc_ids=[doc_id],
+            plan.scope,
+            plan.changed_paths,
+            write_operation,
+            suppression_reason=plan.suppression_reason or "docs-management",
+            search_doc_ids=plan.search_doc_ids,
         )
-        log_event(
-            repo_root,
-            "docs-create",
-            {
-                "scope": scope,
-                "doc_id": doc_id,
-                "path": relative_path(repo_root, target_path),
-            },
-        )
+        if plan.log_event_name:
+            log_event(repo_root, plan.log_event_name, plan.log_details)
 
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": doc_id,
-        "path": relative_path(repo_root, target_path),
-        "record": {
-            "doc_id": doc_id,
-            "title": title,
-            "parent_id": parent_id,
-            "sort_order": sort_order,
-            "published": True,
-            "viewable": default_viewable_for_scope(scope),
-        },
-        "summary_text": f"Created {doc_id}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
-
-
-def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-
-    docs = load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    target = docs_by_id.get(doc_id)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    title = str(body.get("title") or "").strip()
-    if not title:
-        raise ValueError("title is required")
-
-    parent_id = str(body.get("parent_id") or "").strip()
-    if parent_id == target.doc_id:
-        raise ValueError("parent_id cannot be the current doc")
-    if parent_id and parent_id not in docs_by_id:
-        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-    if parent_id and parent_id in descendant_doc_ids(docs, target.doc_id):
-        raise ValueError("parent_id cannot be a child or descendant of the current doc")
-
-    raw_sort_order = body.get("sort_order")
-    raw_sort_order_text = "" if raw_sort_order is None else str(raw_sort_order).strip()
-    if raw_sort_order_text.lower() == "append":
-        remaining_docs = [doc for doc in docs if doc.doc_id != target.doc_id]
-        sort_order = next_sort_order(remaining_docs, parent_id)
-    elif raw_sort_order_text == "":
-        sort_order = None
-    else:
-        try:
-            sort_order = int(raw_sort_order_text)
-        except (TypeError, ValueError) as exc:
-            raise ValueError("sort_order must be an integer, blank, or append") from exc
-        if sort_order < 0:
-            raise ValueError("sort_order must be zero or greater")
-
-    title_changed = title != target.title
-    parent_changed = parent_id != target.parent_id
-    sort_changed = sort_order != target.sort_order
-    summary_was_provided = "summary" in body
-    current_summary = normalize_summary(target.front_matter.get("summary"))
-    summary = normalize_summary(body.get("summary")) if summary_was_provided else current_summary
-    summary_changed = summary_was_provided and summary != current_summary
-    status_was_provided = "ui_status" in body
-    current_ui_status = normalize_ui_status(target.front_matter.get("ui_status"))
-    ui_status = normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
-    status_changed = status_was_provided and ui_status != current_ui_status
-    viewable_was_provided = "viewable" in body
-    current_viewable = target.viewable
-    viewable = front_matter_boolean(body, "viewable", True) if viewable_was_provided else current_viewable
-    viewable_changed = viewable_was_provided and viewable != current_viewable
-    if not (title_changed or parent_changed or sort_changed or summary_changed or status_changed or viewable_changed):
-        return {
-            "ok": True,
-            "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
-            "record": {
-                "doc_id": target.doc_id,
-                "title": target.title,
-                "parent_id": target.parent_id,
-                "sort_order": target.sort_order,
-                "summary": current_summary,
-                "ui_status": current_ui_status,
-                "viewable": current_viewable,
-            },
-            "changes": {
-                "title_changed": False,
-                "parent_changed": False,
-                "sort_changed": False,
-                "summary_changed": False,
-                "status_changed": False,
-                "viewable_changed": False,
-            },
-            "summary_text": f"No metadata changes for {target.doc_id}.",
-            "dry_run": dry_run,
-        }
-
-    timestamp = current_doc_timestamp()
-    updated_front_matter = dict(target.front_matter)
-    updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-    ).strip()
-    updated_front_matter["title"] = title
-    updated_front_matter["last_updated"] = timestamp
-    if summary_was_provided:
-        if summary:
-            updated_front_matter["summary"] = summary
-        else:
-            updated_front_matter.pop("summary", None)
-    if status_was_provided:
-        if ui_status:
-            updated_front_matter["ui_status"] = ui_status
-        else:
-            updated_front_matter.pop("ui_status", None)
-    if viewable_was_provided:
-        updated_front_matter["viewable"] = viewable
-    updated_front_matter["parent_id"] = parent_id
-    if sort_order is None:
-        updated_front_matter.pop("sort_order", None)
-    else:
-        updated_front_matter["sort_order"] = sort_order
-
-    rewritten_source = format_source(updated_front_matter, target.body)
-    backup_dir = None
-    rebuild = None
-    if not dry_run:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "update-metadata",
-            [target],
-            {
-                "doc_id": target.doc_id,
-                "from_title": target.title,
-                "to_title": title,
-                "from_parent_id": target.parent_id,
-                "to_parent_id": parent_id,
-                "from_sort_order": target.sort_order,
-                "to_sort_order": sort_order,
-                "summary_changed": summary_changed,
-                "status_changed": status_changed,
-                "viewable_changed": viewable_changed,
-            },
-        )
-        search_doc_ids = metadata_search_doc_ids(docs, target.doc_id, title_changed=title_changed)
-        if status_changed and not (title_changed or parent_changed or sort_changed or summary_changed or viewable_changed):
-            search_doc_ids = []
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target.path],
-            lambda: write_text_atomic(target.path, rewritten_source),
-            suppression_reason="docs-update-metadata",
-            search_doc_ids=search_doc_ids,
-        )
-        log_event(
-            repo_root,
-            "docs-update-metadata",
-            {
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "title_changed": title_changed,
-                "parent_changed": parent_changed,
-                "sort_changed": sort_changed,
-                "summary_changed": summary_changed,
-                "status_changed": status_changed,
-                "viewable_changed": viewable_changed,
-            },
-        )
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": target.doc_id,
-        "path": relative_path(repo_root, target.path),
-        "record": {
-            "doc_id": target.doc_id,
-            "title": title,
-            "parent_id": parent_id,
-            "sort_order": sort_order,
-            "summary": summary,
-            "ui_status": ui_status,
-            "viewable": viewable,
-        },
-        "changes": {
-            "title_changed": title_changed,
-            "parent_changed": parent_changed,
-            "sort_changed": sort_changed,
-            "summary_changed": summary_changed,
-            "status_changed": status_changed,
-            "viewable_changed": viewable_changed,
-        },
-        "summary_text": f"Updated metadata for {target.doc_id}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
-
-
-def ordered_unique_doc_ids(raw_doc_ids: Any) -> list[str]:
-    if not isinstance(raw_doc_ids, list):
-        raise ValueError("doc_ids must be a list")
-    seen: set[str] = set()
-    doc_ids: list[str] = []
-    for raw_doc_id in raw_doc_ids:
-        doc_id = str(raw_doc_id or "").strip()
-        if not doc_id or doc_id in seen:
-            continue
-        seen.add(doc_id)
-        doc_ids.append(doc_id)
-    if not doc_ids:
-        raise ValueError("doc_ids is required")
-    return doc_ids
-
-
-def expand_viewability_targets(docs: list[ScopeDoc], doc_ids: list[str], include_descendants: bool) -> list[ScopeDoc]:
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    target_ids: list[str] = []
-    seen: set[str] = set()
-
-    def add_doc_id(doc_id: str) -> None:
-        if doc_id not in docs_by_id:
-            raise FileNotFoundError(f"doc {doc_id!r} not found")
-        if doc_id in seen:
-            return
-        seen.add(doc_id)
-        target_ids.append(doc_id)
-
-    for doc_id in doc_ids:
-        add_doc_id(doc_id)
-        if include_descendants:
-            for descendant_id in sorted(descendant_doc_ids(docs, doc_id)):
-                add_doc_id(descendant_id)
-
-    targets = [docs_by_id[doc_id] for doc_id in target_ids]
-    return targets
-
-
-def apply_viewability_update(
-    repo_root: Path,
-    scope: str,
-    targets: list[ScopeDoc],
-    next_viewable: bool,
-    dry_run: bool,
-    *,
-    operation: str,
-    suppression_reason: str,
-    requested_doc_ids: list[str],
-    include_descendants: bool,
-) -> Dict[str, Any]:
-    changed_targets = [target for target in targets if target.viewable != next_viewable]
-    skipped_targets = [target for target in targets if target.viewable == next_viewable]
-    changed_doc_ids = {target.doc_id for target in changed_targets}
-
-    if not changed_targets:
-        return {
-            "ok": True,
-            "scope": scope,
-            "doc_ids": [target.doc_id for target in targets],
-            "changed_doc_ids": [],
-            "skipped_doc_ids": [target.doc_id for target in skipped_targets],
-            "records": [
-                {
-                    "doc_id": target.doc_id,
-                    "viewable": target.viewable,
-                    "path": relative_path(repo_root, target.path),
-                }
-                for target in targets
-            ],
-            "summary_text": f"No viewability changes for {len(targets)} doc{'s' if len(targets) != 1 else ''}.",
-            "dry_run": dry_run,
-        }
-
-    rewritten_sources = {
-        target.doc_id: rewrite_doc_source(target, {"published": True, "viewable": next_viewable})
-        for target in changed_targets
-    }
-    backup_dir = None
-    rebuild = None
-    if not dry_run:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            operation,
-            changed_targets,
-            {
-                "requested_doc_ids": requested_doc_ids,
-                "include_descendants": include_descendants,
-                "target_doc_ids": [target.doc_id for target in targets],
-                "changed_doc_ids": [target.doc_id for target in changed_targets],
-                "skipped_doc_ids": [target.doc_id for target in skipped_targets],
-                "to_viewable": next_viewable,
-            },
-        )
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target.path for target in changed_targets],
-            lambda: [
-                write_text_atomic(target.path, rewritten_sources[target.doc_id])
-                for target in changed_targets
-            ],
-            suppression_reason=suppression_reason,
-            search_doc_ids=[target.doc_id for target in changed_targets],
-        )
-        log_event(
-            repo_root,
-            operation,
-            {
-                "scope": scope,
-                "requested_count": len(requested_doc_ids),
-                "target_count": len(targets),
-                "changed_count": len(changed_targets),
-                "to_viewable": next_viewable,
-            },
-        )
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_ids": [target.doc_id for target in targets],
-        "changed_doc_ids": [target.doc_id for target in changed_targets],
-        "skipped_doc_ids": [target.doc_id for target in skipped_targets],
-        "records": [
-            {
-                "doc_id": target.doc_id,
-                "viewable": next_viewable if target.doc_id in changed_doc_ids else target.viewable,
-                "path": relative_path(repo_root, target.path),
-            }
-            for target in targets
-        ],
-        "summary_text": f"Updated viewability for {len(changed_targets)} doc{'s' if len(changed_targets) != 1 else ''}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
-
-
-def handle_update_viewability_bulk(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    doc_ids = ordered_unique_doc_ids(body.get("doc_ids"))
-    if "viewable" not in body:
-        raise ValueError("viewable is required")
-    next_viewable = front_matter_boolean(body, "viewable", True)
-    include_descendants = bool(body.get("include_descendants"))
-    docs = load_scope_docs(repo_root, scope)
-    targets = expand_viewability_targets(docs, doc_ids, include_descendants)
-    return apply_viewability_update(
-        repo_root,
-        scope,
-        targets,
-        next_viewable,
-        dry_run,
-        operation="update-viewability-bulk",
-        suppression_reason="docs-update-viewability-bulk",
-        requested_doc_ids=doc_ids,
-        include_descendants=include_descendants,
-    )
-
-
-def handle_update_viewability(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-    if "viewable" not in body:
-        raise ValueError("viewable is required")
-
-    next_viewable = front_matter_boolean(body, "viewable", True)
-    docs = load_scope_docs(repo_root, scope)
-    targets = expand_viewability_targets(docs, [doc_id], False)
-    payload = apply_viewability_update(
-        repo_root,
-        scope,
-        targets,
-        next_viewable,
-        dry_run,
-        operation="update-viewability",
-        suppression_reason="docs-update-viewability",
-        requested_doc_ids=[doc_id],
-        include_descendants=False,
-    )
-    target = targets[0]
-    payload["doc_id"] = target.doc_id
-    payload["path"] = relative_path(repo_root, target.path)
-    payload["record"] = {
-        "doc_id": target.doc_id,
-        "viewable": next_viewable if target.viewable != next_viewable else target.viewable,
-    }
-    if target.viewable == next_viewable:
-        payload["summary_text"] = f"No viewability changes for {target.doc_id}."
-    else:
-        payload["summary_text"] = f"Updated viewability for {target.doc_id}."
+    if plan.include_write_result_keys:
+        payload["backup_dir"] = relative_path(repo_root, backup_dir) if backup_dir else ""
+        payload["rebuild"] = rebuild
+    payload["dry_run"] = dry_run
     return payload
 
 
+def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    return execute_management_mutation_plan(repo_root, plan_create(repo_root, body), dry_run)
+
+
+def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    return execute_management_mutation_plan(repo_root, plan_update_metadata(repo_root, body), dry_run)
+
+
+def handle_update_viewability_bulk(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    return execute_management_mutation_plan(repo_root, plan_update_viewability_bulk(repo_root, body), dry_run)
+
+
+def handle_update_viewability(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    return execute_management_mutation_plan(repo_root, plan_update_viewability(repo_root, body), dry_run)
+
+
 def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    target_doc_id = str(body.get("target_doc_id") or "").strip()
-    position = str(body.get("position") or "after").strip().lower()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-    if not target_doc_id:
-        raise ValueError("target_doc_id is required")
-    if position not in {"after", "inside"}:
-        raise ValueError("position must be `after` or `inside`")
-
-    docs = load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    moving_doc = docs_by_id.get(doc_id)
-    target_doc = docs_by_id.get(target_doc_id)
-    if moving_doc is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if target_doc is None:
-        raise FileNotFoundError(f"target_doc_id {target_doc_id!r} not found in scope {scope}")
-    if moving_doc.doc_id == target_doc.doc_id:
-        raise ValueError("doc cannot be moved onto itself")
-    if any(doc.parent_id == moving_doc.doc_id for doc in docs):
-        raise ValueError(f"{moving_doc.doc_id} has child docs and cannot be moved")
-
-    planned_placements = normalized_move_placements(docs, moving_doc, target_doc, position)
-    changed_placements = [
-        (doc, parent_id, sort_order)
-        for doc, parent_id, sort_order in planned_placements
-        if doc.parent_id != parent_id or doc.sort_order != sort_order
-    ]
-    undo_records = [placement_record(doc) for doc, _parent_id, _sort_order in changed_placements]
-    rewrites = [
-        (doc, rewrite_doc_placement_source(doc, parent_id, sort_order))
-        for doc, parent_id, sort_order in changed_placements
-    ]
-    touched_docs = [doc for doc, _parent_id, _sort_order in changed_placements]
-    moved_parent_id = next(parent_id for doc, parent_id, _sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
-    moved_sort_order = next(sort_order for doc, _parent_id, sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
-
-    backup_dir = None
-    rebuild = None
-    if not dry_run and rewrites:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "move",
-            touched_docs,
-            {
-                "doc_id": moving_doc.doc_id,
-                "target_doc_id": target_doc.doc_id,
-                "position": position,
-                "parent_id": moved_parent_id,
-                "sort_order": moved_sort_order,
-                "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-                "undo_records": undo_records,
-            },
-        )
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [doc.path for doc, _rewritten_source in rewrites],
-            lambda: [write_text_atomic(doc.path, rewritten_source) for doc, rewritten_source in rewrites],
-            suppression_reason="docs-move",
-            search_doc_ids=[moving_doc.doc_id],
-        )
-        log_event(
-            repo_root,
-            "docs-move",
-            {
-                "scope": scope,
-                "doc_id": moving_doc.doc_id,
-                "target_doc_id": target_doc.doc_id,
-                "position": position,
-                "parent_id": moved_parent_id,
-                "sort_order": moved_sort_order,
-                "changed_count": len(touched_docs),
-            },
-        )
-
-    moved_record = {
-        "doc_id": moving_doc.doc_id,
-        "parent_id": moved_parent_id,
-        "sort_order": moved_sort_order,
-    }
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": moving_doc.doc_id,
-        "record": moved_record,
-        "undo_records": undo_records,
-        "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-        "summary_text": f"Moved {moving_doc.doc_id}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
-
-
-def parse_restore_sort_order(raw_sort_order: Any) -> Optional[int]:
-    if raw_sort_order is None or raw_sort_order == "":
-        return None
-    try:
-        sort_order = int(str(raw_sort_order).strip())
-    except (TypeError, ValueError) as exc:
-        raise ValueError("restore sort_order must be an integer or blank") from exc
-    if sort_order < 0:
-        raise ValueError("restore sort_order must be zero or greater")
-    return sort_order
+    return execute_management_mutation_plan(repo_root, plan_move(repo_root, body), dry_run)
 
 
 def handle_restore_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    raw_records = body.get("records")
-    if not isinstance(raw_records, list) or not raw_records:
-        raise ValueError("records must be a non-empty list")
-
-    docs = load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    restore_records: list[tuple[ScopeDoc, str, Optional[int]]] = []
-    seen_doc_ids: set[str] = set()
-    for raw_record in raw_records:
-        if not isinstance(raw_record, dict):
-            raise ValueError("each restore record must be an object")
-        doc_id = str(raw_record.get("doc_id") or "").strip()
-        if not doc_id:
-            raise ValueError("restore record doc_id is required")
-        if doc_id in seen_doc_ids:
-            continue
-        seen_doc_ids.add(doc_id)
-        doc = docs_by_id.get(doc_id)
-        if doc is None:
-            raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-
-        parent_id = str(raw_record.get("parent_id") or "").strip()
-        if parent_id == doc.doc_id:
-            raise ValueError("restore parent_id cannot be the current doc")
-        if parent_id and parent_id not in docs_by_id:
-            raise ValueError(f"Unknown restore parent_id {parent_id!r} for scope {scope}")
-        if parent_id and parent_id in descendant_doc_ids(docs, doc.doc_id):
-            raise ValueError("restore parent_id cannot be a child or descendant of the current doc")
-        sort_order = parse_restore_sort_order(raw_record.get("sort_order"))
-        restore_records.append((doc, parent_id, sort_order))
-
-    changed_records = [
-        (doc, parent_id, sort_order)
-        for doc, parent_id, sort_order in restore_records
-        if doc.parent_id != parent_id or doc.sort_order != sort_order
-    ]
-    rewrites = [
-        (doc, rewrite_doc_placement_source(doc, parent_id, sort_order))
-        for doc, parent_id, sort_order in changed_records
-    ]
-    touched_docs = [doc for doc, _parent_id, _sort_order in changed_records]
-
-    backup_dir = None
-    rebuild = None
-    if not dry_run and rewrites:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "restore-move",
-            touched_docs,
-            {
-                "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-                "restore_records": [
-                    {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
-                    for doc, parent_id, sort_order in changed_records
-                ],
-            },
-        )
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [doc.path for doc, _rewritten_source in rewrites],
-            lambda: [write_text_atomic(doc.path, rewritten_source) for doc, rewritten_source in rewrites],
-            suppression_reason="docs-restore-move",
-            search_doc_ids=[doc.doc_id for doc in touched_docs],
-        )
-        log_event(
-            repo_root,
-            "docs-restore-move",
-            {
-                "scope": scope,
-                "changed_count": len(touched_docs),
-                "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-            },
-        )
-
-    focus_doc_id = str(body.get("focus_doc_id") or "").strip()
-    if focus_doc_id and focus_doc_id not in docs_by_id:
-        focus_doc_id = ""
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": focus_doc_id or (restore_records[0][0].doc_id if restore_records else ""),
-        "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-        "records": [
-            {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
-            for doc, parent_id, sort_order in restore_records
-        ],
-        "summary_text": (
-            f"Restored move for {len(touched_docs)} doc{'s' if len(touched_docs) != 1 else ''}."
-            if touched_docs
-            else "Move already restored."
-        ),
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
+    return execute_management_mutation_plan(repo_root, plan_restore_move(repo_root, body), dry_run)
 
 
 def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-
-    docs = load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    target = docs_by_id.get(doc_id)
-    if target is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if "archive" not in docs_by_id:
-        raise ValueError(f"scope {scope} does not define archive doc")
-    if target.doc_id == "archive":
-        return {
-            "ok": True,
-            "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
-            "summary_text": "archive is the archive parent and was not changed.",
-            "dry_run": dry_run,
-        }
-    if target.parent_id == "archive":
-        return {
-            "ok": True,
-            "scope": scope,
-            "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
-            "summary_text": f"{target.doc_id} is already archived.",
-            "dry_run": dry_run,
-        }
-
-    next_order = next_sort_order(docs, "archive")
-    timestamp = current_doc_timestamp()
-    updated_front_matter = dict(target.front_matter)
-    updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-    ).strip()
-    updated_front_matter["last_updated"] = timestamp
-    updated_front_matter["parent_id"] = "archive"
-    updated_front_matter["sort_order"] = next_order
-
-    backup_dir = None
-    rebuild = None
-    if not dry_run:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "archive",
-            [target],
-            {
-                "doc_id": target.doc_id,
-                "from_parent_id": target.parent_id,
-                "to_parent_id": "archive",
-                "from_sort_order": target.sort_order,
-                "to_sort_order": next_order,
-            },
-        )
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target.path],
-            lambda: write_text_atomic(target.path, format_source(updated_front_matter, target.body)),
-            suppression_reason="docs-archive",
-            search_doc_ids=[target.doc_id],
-        )
-        log_event(
-            repo_root,
-            "docs-archive",
-            {
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "path": relative_path(repo_root, target.path),
-            },
-        )
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": target.doc_id,
-        "path": relative_path(repo_root, target.path),
-        "record": {
-            "parent_id": "archive",
-            "sort_order": next_order,
-        },
-        "summary_text": f"Archived {target.doc_id}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
+    return execute_management_mutation_plan(repo_root, plan_archive(repo_root, body), dry_run)
 
 
 def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
-    doc_id = str(body.get("doc_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-    if not body.get("confirm"):
-        raise ValueError("delete apply requires confirm=true")
-
-    preview = preview_delete(repo_root, scope, doc_id)
-    if not preview["allowed"]:
-        raise ValueError("; ".join(preview["blockers"]))
-
-    docs = load_scope_docs(repo_root, scope)
-    target = next(doc for doc in docs if doc.doc_id == doc_id)
-    backup_dir = None
-    rebuild = None
-    if not dry_run:
-        backup_dir = make_backup_bundle(
-            repo_root,
-            scope,
-            "delete",
-            [target],
-            {
-                "doc_id": target.doc_id,
-                "warnings": preview["warnings"],
-                "inbound_ref_count": len(preview["inbound_refs"]),
-            },
-        )
-        rebuild = perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target.path],
-            lambda: target.path.unlink(),
-            suppression_reason="docs-delete",
-            search_doc_ids=[target.doc_id],
-        )
-        log_event(
-            repo_root,
-            "docs-delete",
-            {
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "path": relative_path(repo_root, target.path),
-            },
-        )
-
-    return {
-        "ok": True,
-        "scope": scope,
-        "doc_id": target.doc_id,
-        "path": relative_path(repo_root, target.path),
-        "warnings": preview["warnings"],
-        "inbound_refs": preview["inbound_refs"],
-        "summary_text": f"Deleted {target.doc_id}.",
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "dry_run": dry_run,
-    }
+    return execute_management_mutation_plan(repo_root, plan_delete_apply(repo_root, body), dry_run)
 
 
 class DocsManagementHandler(BaseHTTPRequestHandler):
@@ -2342,7 +1517,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         doc_id = str(body.get("doc_id") or "").strip()
         if not doc_id:
             raise ValueError("doc_id is required")
-        return HTTPStatus.OK, preview_delete(repo_root, scope, doc_id)
+        return HTTPStatus.OK, plan_delete_preview(repo_root, scope, doc_id)
 
     def _handle_delete_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)

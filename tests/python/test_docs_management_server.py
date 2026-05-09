@@ -29,6 +29,7 @@ def load_docs_management_server_module():
 
 
 docs_management_server = load_docs_management_server_module()
+docs_management_mutations = sys.modules["docs_management_mutations"]
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "") -> None:
@@ -210,7 +211,7 @@ def test_archive_doc_viewability_can_be_changed_in_dry_run() -> None:
 def test_archive_parent_delete_is_blocked_only_by_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_server.preview_delete(repo_root, "studio", "archive")
+        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", "archive")
 
     assert result["allowed"] is False
     assert result["blockers"] == ["1 child docs still depend on this parent"]

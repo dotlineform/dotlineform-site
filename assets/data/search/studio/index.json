@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-76890b3d3f40e2aee269fc91d627f061",
-    "generated_at_utc": "2026-05-09T12:15:58Z",
+    "version": "blake2b-c4ce4bbfb99267fad4c488ca9886350b",
+    "generated_at_utc": "2026-05-09T12:33:16Z",
     "count": 203
   },
   "entries": [
@@ -830,10 +830,10 @@
       "kind": "doc",
       "title": "Docs Management Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
-      "last_updated": "2026-05-09 13:15",
+      "last_updated": "2026-05-09 14:20",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 13:15 • Script Structural Review Request",
+      "display_meta": "2026-05-09 14:20 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-docs-management-server",
         "site",
@@ -847,14 +847,14 @@
         "docs management server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 13:15",
+        "2026-05-09 14:20",
         "2026",
         "05",
         "09",
-        "13",
-        "15"
+        "14",
+        "20"
       ],
-      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 13:15 2026 05 09 13 15"
+      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 14:20 2026 05 09 14 20"
     },
     {
       "id": "ui-primitive-input",
@@ -2142,10 +2142,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-09 13:03",
+      "last_updated": "2026-05-09 14:20",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 13:03 • Docs",
+      "display_meta": "2026-05-09 14:20 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2153,14 +2153,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-09 13:03",
+        "2026-05-09 14:20",
         "2026",
         "05",
         "09",
-        "13",
-        "03"
+        "14",
+        "20"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 13:03 2026 05 09 13 03"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 14:20 2026 05 09 14 20"
     },
     {
       "id": "site-request-json-schema-adoption",

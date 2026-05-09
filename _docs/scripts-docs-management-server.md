@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-09 13:03"
+last_updated: "2026-05-09 14:20"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -60,6 +60,7 @@ Current behavior:
 - docs source-model helpers are owned by `scripts/docs/docs_source_model.py`
 - generated Docs Viewer JSON read helpers are owned by `scripts/docs/docs_generated_reads.py`
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
+- management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and source import writes

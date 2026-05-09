@@ -49,6 +49,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/verify_activity_contract.py",
                 "scripts/studio_activity.py",
                 "scripts/docs/docs_activity.py",
+                "scripts/docs/docs_management_mutations.py",
                 "scripts/catalogue_source.py",
                 "scripts/catalogue_cleanup.py",
                 "scripts/catalogue_delete_plans.py",
@@ -63,6 +64,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio/audit_service.py",
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_docs_activity.py",
+                "tests/python/test_docs_management_mutations.py",
                 "tests/python/test_catalogue_cleanup.py",
                 "tests/python/test_catalogue_delete_plans.py",
                 "tests/python/test_catalogue_invalidation.py",
@@ -218,6 +220,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "docs-write-rebuild-tests",
             (sys.executable, "tests/python/test_docs_write_rebuild.py"),
             "Verify Docs Management write/rebuild helper command shapes and watcher suppression.",
+        ),
+        CheckCommand(
+            "docs-management-mutation-tests",
+            (sys.executable, "tests/python/test_docs_management_mutations.py"),
+            "Verify Docs Management mutation planner response, backup, and search-target behavior.",
         ),
         CheckCommand(
             "docs-management-server-tests",
