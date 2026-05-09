@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T13:16:33Z",
+  "generated_at": "2026-05-09T13:24:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -494,7 +494,7 @@
       "doc_id": "site-request-script-structural-review-docs-management-server",
       "title": "Docs Management Server Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 14:15",
+      "last_updated": "2026-05-09 14:23",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 20,
       "published": true,
@@ -502,7 +502,7 @@
       "source_path": "site-request-script-structural-review-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-docs-management-server.json",
-      "content_text_length": 25551
+      "content_text_length": 27206
     },
     {
       "scope": "studio",
@@ -1310,7 +1310,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 14:00",
+      "last_updated": "2026-05-09 14:23",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1318,7 +1318,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 29127
+      "content_text_length": 29436
     },
     {
       "scope": "studio",
@@ -3033,7 +3033,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 82486
+      "content_text_length": 82734
     },
     {
       "scope": "studio",

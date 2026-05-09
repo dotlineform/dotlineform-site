@@ -24,8 +24,9 @@ Archives:
 **Area:** Studio / Docs Viewer / scripts / maintainability
 
 **Summary:**
-Advanced the priority-2 docs-management server sequence in the script structural review through Slice 7.
+Advanced the priority-2 docs-management server sequence in the script structural review through Slice 8 closeout.
 The extracted owners now cover endpoint route inventory, docs source-model helpers, generated Docs Viewer read helpers, docs-specific Studio Activity row construction, write/rebuild follow-through, management mutation planning, and staged source-import orchestration.
+The closeout removed temporary HTML-import wrapper aliases, made server call sites use explicit extracted-module namespaces, and recorded the final boundary between the docs-management server and the separate import/export adapter review.
 
 **Files changed/docs:**
 

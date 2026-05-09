@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 14:15"
+last_updated: "2026-05-09 14:23"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -17,7 +17,7 @@ Status:
 - Slice 5 implemented
 - Slice 6 implemented
 - Slice 7 implemented
-- Slice 8 remains planned closeout
+- Slice 8 implemented
 
 ## Purpose
 
@@ -120,7 +120,7 @@ The remaining sequence now moves into final handler cleanup.
 
 Remaining planned order:
 
-1. Slice 8: final handler body cleanup and closeout.
+1. No remaining Docs Management Server slices.
 
 Importer/exporter note:
 
@@ -450,22 +450,37 @@ Risks:
 
 ### Slice 8: final handler body cleanup and closeout
 
-Status: planned closeout.
+Status: implemented.
+
+The eighth implementation slice closed the Docs Management Server restructuring work without adding another extracted owner.
+The server now imports the previously extracted owner modules as explicit module namespaces, keeps the public `/docs/import-html` and `/docs/import-html-files` compatibility aliases in `scripts/docs/docs_management_routes.py` and the handler dispatch tables, and removed the temporary `handle_import_html(...)` wrapper functions from the server and source-import service.
+Tests that need source-model formatting or write/rebuild stubbing now reach those owners directly instead of treating the server module as a compatibility re-export.
+
+Final module boundary:
+
+- `scripts/docs/docs_management_routes.py`: endpoint path inventory, compatibility aliases, and GET/POST/OPTIONS path sets
+- `scripts/docs/docs_source_model.py`: source front matter, scope loading, source formatting/writes, source tree helpers, and source-model normalization
+- `scripts/docs/docs_generated_reads.py`: generated Docs Viewer JSON reads and manage-mode generated-data safety checks
+- `scripts/docs/docs_activity.py`: docs-specific Studio Activity row construction
+- `scripts/docs/docs_write_rebuild.py`: docs payload/search rebuild command shapes and watcher-suppression follow-through
+- `scripts/docs/docs_management_mutations.py`: management mutation planning for create, metadata, viewability, move, restore, archive, and delete flows
+- `scripts/docs/docs_import_source_service.py`: staged source import preview/apply orchestration for `/studio/docs-import/`
+- `scripts/docs/docs_management_server.py`: localhost HTTP transport, request parsing, response status mapping, dependency binding, backup/log ownership, endpoint timing, and adapter orchestration that has not moved to a separate review
 
 Target ownership:
 
-- remove dead helpers and stale constants
-- verify server call sites use explicit module namespaces
-- refresh script docs and this slice plan with the final module boundary
-- decide whether remaining candidates should be marked `leave` or linked to a separate request
+- dead helpers and stale imports removed
+- server call sites use explicit module namespaces for extracted owner modules
+- script docs and this slice plan refreshed with the final module boundary
+- remaining adapter orchestration marked deferred to the import/export review
 
 Specific closeout checks:
 
-- decide whether the `handle_import_html(...)` wrappers in `scripts/docs/docs_management_server.py` and `scripts/docs/docs_import_source_service.py` are still useful; the endpoint alias should remain public, but dispatch can call the source-import handler directly if no direct wrapper callers remain
-- review small helper duplication such as `relative_path(...)` and `viewer_url_for(...)` now that source-import orchestration has its own service module; leave local copies only when that keeps ownership clearer than another shared helper
-- make an explicit decision on backup/log dependency binding for source import; keep backup helpers server-local unless a concrete second consumer justifies a docs-specific backup/log owner
-- mark structured import/export adapter orchestration as `defer` to the [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review); do not fold `/studio/import/`, `/studio/export/`, `export_import_adapters.py`, `handle_documents_import_preview(...)`, or `handle_documents_import_apply(...)` into the final cleanup
-- remove any unused imports/helpers left by Slices 1-7 and confirm compatibility endpoint aliases are intentional public API rather than temporary re-export layers
+- `handle_import_html(...)` wrappers were removed from `scripts/docs/docs_management_server.py` and `scripts/docs/docs_import_source_service.py`; the public `POST /docs/import-html` alias remains in route dispatch and calls the source-import handler directly
+- small local helpers such as `relative_path(...)` and `viewer_url_for(...)` remain duplicated only where each module owns its own response shaping and no shared helper owner is justified
+- backup/log dependency binding for source import remains server-owned because backup helpers still serve multiple server orchestration flows and do not yet need a dedicated owner
+- structured import/export adapter orchestration is deferred to the [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review); `/studio/import/`, `/studio/export/`, `export_import_adapters.py`, `handle_documents_import_preview(...)`, and `handle_documents_import_apply(...)` stay out of this closeout
+- unused imports/helpers left by Slices 1-7 were removed, and compatibility endpoint aliases are intentional public API in `docs_management_routes` rather than temporary re-export layers
 
 Acceptance checks:
 

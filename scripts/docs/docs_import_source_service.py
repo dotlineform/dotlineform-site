@@ -384,12 +384,3 @@ def handle_import_source(
         "summary_text": f"Created {doc_id} from {staged_filename}.",
         "dry_run": dry_run,
     }
-
-
-def handle_import_html(
-    repo_root: Path,
-    body: Dict[str, Any],
-    dry_run: bool,
-    dependencies: ImportSourceDependencies,
-) -> Dict[str, Any]:
-    return handle_import_source(repo_root, body, dry_run, dependencies)

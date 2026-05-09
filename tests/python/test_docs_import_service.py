@@ -29,6 +29,7 @@ def load_docs_management_module():
 
 docs_management = load_docs_management_module()
 import docs_import_source_service as import_source_service  # noqa: E402
+import docs_source_model as source_model  # noqa: E402
 
 
 def make_repo() -> tempfile.TemporaryDirectory:
@@ -200,7 +201,7 @@ def write_staged_bytes(root: Path, filename: str, payload: bytes) -> None:
 def write_library_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
     lines = ["---"]
     for key, value in front_matter.items():
-        lines.append(f"{key}: {docs_management.format_front_matter_value(value)}")
+        lines.append(f"{key}: {source_model.format_front_matter_value(value)}")
     lines.extend(["---", "", body])
     path = root / "_docs_library" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -208,7 +209,7 @@ def write_library_doc(root: Path, filename: str, front_matter: dict[str, object]
 
 
 def stub_rebuild():
-    original = docs_management.perform_source_write_and_rebuild
+    original = docs_management.write_rebuild.perform_source_write_and_rebuild
 
     def fake_rebuild(repo_root, scope, changed_paths, write_operation, **kwargs):
         write_operation()
@@ -218,21 +219,12 @@ def stub_rebuild():
             "search": {"mode": "targeted", "doc_ids": kwargs.get("search_doc_ids") or []},
         }
 
-    docs_management.perform_source_write_and_rebuild = fake_rebuild
+    docs_management.write_rebuild.perform_source_write_and_rebuild = fake_rebuild
     return original
 
 
 def handle_import_source(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
     return import_source_service.handle_import_source(
-        root,
-        body,
-        dry_run,
-        docs_management.import_source_dependencies(),
-    )
-
-
-def handle_import_html(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    return import_source_service.handle_import_html(
         root,
         body,
         dry_run,
@@ -373,13 +365,13 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             "renderer": "stub",
         }
         try:
-            payload = handle_import_html(
+            payload = handle_import_source(
                 root,
                 {"scope": "library", "staged_filename": "compact-name.html"},
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_path = root / "_docs_library/compact-name.md"
@@ -442,7 +434,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_path = root / "_docs_library/markdown-note.md"
@@ -480,7 +472,7 @@ def test_text_import_autolinks_plain_urls() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/plain-note.md").read_text(encoding="utf-8")
@@ -520,7 +512,7 @@ def test_svg_import_strips_unsafe_content() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/diagram.md").read_text(encoding="utf-8")
@@ -554,7 +546,7 @@ def test_image_import_creates_r2_media_plan_wrapper() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/reference-image.md").read_text(encoding="utf-8")
@@ -597,7 +589,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/inline-diagram.md").read_text(encoding="utf-8")
@@ -638,7 +630,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/inline-note.md").read_text(encoding="utf-8")
@@ -677,7 +669,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/mixed-inline.md").read_text(encoding="utf-8")
@@ -711,7 +703,7 @@ def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "_docs_library/reference-file.md").read_text(encoding="utf-8")
@@ -752,7 +744,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.perform_source_write_and_rebuild = original_rebuild
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_path = root / "_docs_library/reference-file-2.md"
@@ -825,7 +817,7 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
             backup_exists = backup_dir.exists()
             backup_source_exists = (backup_dir / "alpha.md").exists()
     finally:
-        docs_management.perform_source_write_and_rebuild = original_rebuild
+        docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
     assert payload["ok"] is True
     assert payload["summary_apply_written"] is True
@@ -925,7 +917,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
             backup_dir = root / payload["backup_dir"]
             manifest = json.loads((backup_dir / "manifest.json").read_text(encoding="utf-8"))
     finally:
-        docs_management.perform_source_write_and_rebuild = original_rebuild
+        docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
     assert payload["ok"] is True
     assert payload["hierarchy_apply_written"] is True

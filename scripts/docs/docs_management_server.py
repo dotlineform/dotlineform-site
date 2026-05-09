@@ -65,56 +65,13 @@ from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
 from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
-from docs_generated_reads import (  # noqa: E402
-    generated_scope_data_available,
-    generated_search_data_available,
-    read_generated_doc_payload,
-    read_generated_docs_index,
-    read_generated_search_index,
-)
-from docs_activity import (  # noqa: E402
-    maybe_attach_broken_links_activity,
-    maybe_attach_docs_export_activity,
-    maybe_attach_documents_import_apply_activity,
-    maybe_attach_import_source_activity,
-)
+import docs_activity  # noqa: E402
+import docs_generated_reads  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
-from docs_write_rebuild import (  # noqa: E402
-    perform_source_write_and_rebuild,
-    rebuild_all_docs_outputs,
-    rebuild_scope_outputs,
-)
-from docs_import_source_service import (  # noqa: E402
-    ImportSourceDependencies,
-    handle_import_html as handle_import_html_service,
-    handle_import_source as handle_import_source_service,
-    handle_import_source_files,
-)
-from docs_management_mutations import (  # noqa: E402
-    ManagementMutationPlan,
-    normalize_summary as mutation_normalize_summary,
-    plan_archive,
-    plan_create,
-    plan_delete_apply,
-    plan_delete_preview,
-    plan_move,
-    plan_restore_move,
-    plan_update_metadata,
-    plan_update_viewability,
-    plan_update_viewability_bulk,
-)
-from docs_source_model import (  # noqa: E402
-    ScopeDoc,
-    current_doc_timestamp,
-    format_front_matter_value,
-    format_source,
-    load_scope_docs,
-    normalize_scope,
-    normalize_ui_status,
-    scope_root,
-    slugify,
-    write_text_atomic,
-)
+import docs_import_source_service as import_source_service  # noqa: E402
+import docs_management_mutations as mutations  # noqa: E402
+import docs_source_model as source_model  # noqa: E402
+import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
 from docs_scope_config import SCOPE_ROOTS  # noqa: E402
 
@@ -190,14 +147,14 @@ def allowed_origin(origin: str) -> Optional[str]:
 
 
 def normalize_summary(value: Any) -> str:
-    return mutation_normalize_summary(value)
+    return mutations.normalize_summary(value)
 
 
 def make_backup_bundle(
     repo_root: Path,
     scope: str,
     operation: str,
-    docs: list[ScopeDoc],
+    docs: list[source_model.ScopeDoc],
     metadata: Optional[Dict[str, Any]] = None,
 ) -> Path:
     bundle_dir = repo_root / BACKUPS_REL_DIR / f"{backup_stamp_now()}-{scope}-{operation}"
@@ -219,7 +176,7 @@ def make_backup_bundle(
     }
     if metadata:
         manifest["metadata"] = metadata
-    write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    source_model.write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     for doc in docs:
         shutil.copy2(doc.path, bundle_dir / doc.path.name)
     return bundle_dir
@@ -228,10 +185,10 @@ def make_backup_bundle(
 def make_import_overwrite_backup(
     repo_root: Path,
     scope: str,
-    target: ScopeDoc,
+    target: source_model.ScopeDoc,
     metadata: Optional[Dict[str, Any]] = None,
 ) -> Path:
-    bundle_name = f"{dt.datetime.now(dt.timezone.utc).strftime('%Y%m%d')}-{scope}-import-overwrite-{slugify(target.doc_id)}"
+    bundle_name = f"{dt.datetime.now(dt.timezone.utc).strftime('%Y%m%d')}-{scope}-import-overwrite-{source_model.slugify(target.doc_id)}"
     bundle_dir = repo_root / BACKUPS_REL_DIR / bundle_name
     if bundle_dir.exists():
         shutil.rmtree(bundle_dir)
@@ -252,7 +209,7 @@ def make_import_overwrite_backup(
     }
     if metadata:
         manifest["metadata"] = metadata
-    write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    source_model.write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     shutil.copy2(target.path, bundle_dir / target.path.name)
     return bundle_dir
 
@@ -276,7 +233,7 @@ def query_param(handler: BaseHTTPRequestHandler, name: str) -> str:
 
 
 def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
+    scope = source_model.normalize_scope(body.get("scope"))
     doc_id = str(body.get("doc_id") or "").strip()
     editor = str(body.get("editor") or "default").strip().lower()
     if not doc_id:
@@ -284,7 +241,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
     if editor not in {"default", "vscode"}:
         raise ValueError("editor must be `default` or `vscode`")
 
-    docs = load_scope_docs(repo_root, scope)
+    docs = source_model.load_scope_docs(repo_root, scope)
     target = next((doc for doc in docs if doc.doc_id == doc_id), None)
     if target is None:
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
@@ -337,14 +294,14 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     scopes: Dict[str, Any] = {}
     for scope in sorted(SCOPE_ROOTS.keys()):
-        root = scope_root(repo_root, scope)
-        scope_docs = load_scope_docs(repo_root, scope) if root.exists() else []
+        root = source_model.scope_root(repo_root, scope)
+        scope_docs = source_model.load_scope_docs(repo_root, scope) if root.exists() else []
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
             "archive_available": any(doc.doc_id == "archive" for doc in scope_docs),
-            "generated_data_reads": generated_scope_data_available(repo_root, scope),
-            "generated_search_reads": generated_search_data_available(repo_root, scope),
+            "generated_data_reads": docs_generated_reads.generated_scope_data_available(repo_root, scope),
+            "generated_search_reads": docs_generated_reads.generated_search_data_available(repo_root, scope),
             "count": len(scope_docs),
         }
     return {
@@ -403,7 +360,7 @@ def log_event(repo_root: Path, event: str, details: Dict[str, Any]) -> None:
 
 
 def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
-    scope = normalize_scope(body.get("scope"))
+    scope = source_model.normalize_scope(body.get("scope"))
     payload = audit_docs_broken_links(repo_root, scope)
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
     log_event(
@@ -420,7 +377,7 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
 
 def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "export")
-    scope = normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.scope)
     config_id = str(body.get("config_id") or "").strip()
     if not config_id:
         raise ValueError("config_id is required")
@@ -492,7 +449,7 @@ def resolve_documents_adapter(repo_root: Path, data_domain: Any, operation: str)
 
 def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str, Any]:
     adapter = resolve_documents_adapter(repo_root, data_domain, "import_files")
-    scope = normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.scope)
     staging_root = adapter.path("staging_root")
     files = list_staged_import_files(repo_root, scope, staging_root=staging_root)
     log_event(
@@ -517,7 +474,7 @@ def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str
 
 def handle_documents_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "import_preview")
-    scope = normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -641,7 +598,7 @@ def handle_documents_import_summary_apply(
     dry_run: bool,
     adapter: AdapterResolution,
 ) -> Dict[str, Any]:
-    scope = normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -656,13 +613,13 @@ def handle_documents_import_summary_apply(
         staged_file=staged_filename,
         staging_root=adapter.path("staging_root"),
     )
-    docs = load_scope_docs(repo_root, scope)
+    docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     selected_rows, skipped, selected_records = selected_import_records(report, selected_indices)
     errors: list[Dict[str, Any]] = []
     warnings: list[Dict[str, Any]] = []
     updates: list[Dict[str, Any]] = []
-    rewrite_docs: list[ScopeDoc] = []
+    rewrite_docs: list[source_model.ScopeDoc] = []
     rewritten_sources: dict[str, str] = {}
 
     for record_index, record, doc_id in selected_records:
@@ -679,14 +636,14 @@ def handle_documents_import_summary_apply(
             skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "unchanged", "message": "proposed summary matches current source summary"})
             continue
 
-        timestamp = current_doc_timestamp()
+        timestamp = source_model.current_doc_timestamp()
         updated_front_matter = dict(target.front_matter)
         updated_front_matter["added_date"] = str(
             updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
         ).strip()
         updated_front_matter["last_updated"] = timestamp
         updated_front_matter["summary"] = summary
-        rewritten_sources[doc_id] = format_source(updated_front_matter, target.body)
+        rewritten_sources[doc_id] = source_model.format_source(updated_front_matter, target.body)
         rewrite_docs.append(target)
         updates.append(
             {
@@ -715,11 +672,11 @@ def handle_documents_import_summary_apply(
                 "updated_doc_ids": [item["doc_id"] for item in updates],
             },
         )
-        rebuild = perform_source_write_and_rebuild(
+        rebuild = write_rebuild.perform_source_write_and_rebuild(
             repo_root,
             scope,
             [doc.path for doc in rewrite_docs],
-            lambda: [write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
+            lambda: [source_model.write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
             suppression_reason="docs-import-summary-apply",
             search_doc_ids=[item["doc_id"] for item in updates],
         )
@@ -780,7 +737,7 @@ def handle_documents_import_hierarchy_apply(
     dry_run: bool,
     adapter: AdapterResolution,
 ) -> Dict[str, Any]:
-    scope = normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -795,14 +752,14 @@ def handle_documents_import_hierarchy_apply(
         staged_file=staged_filename,
         staging_root=adapter.path("staging_root"),
     )
-    docs = load_scope_docs(repo_root, scope)
+    docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     selected_rows, skipped, selected_records = selected_import_records(report, selected_indices)
     errors: list[Dict[str, Any]] = []
     warnings: list[Dict[str, Any]] = []
     updates: list[Dict[str, Any]] = []
     unchanged: list[Dict[str, Any]] = []
-    rewrite_docs: list[ScopeDoc] = []
+    rewrite_docs: list[source_model.ScopeDoc] = []
     rewritten_sources: dict[str, str] = {}
 
     for record_index, record, doc_id in selected_records:
@@ -820,14 +777,14 @@ def handle_documents_import_hierarchy_apply(
             unchanged.append({"record_index": record_index, "doc_id": doc_id, "parent_id": parent_id, "message": "proposed parent_id matches current source parent_id"})
             continue
 
-        timestamp = current_doc_timestamp()
+        timestamp = source_model.current_doc_timestamp()
         updated_front_matter = dict(target.front_matter)
         updated_front_matter["added_date"] = str(
             updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
         ).strip()
         updated_front_matter["last_updated"] = timestamp
         updated_front_matter["parent_id"] = parent_id
-        rewritten_sources[doc_id] = format_source(updated_front_matter, target.body)
+        rewritten_sources[doc_id] = source_model.format_source(updated_front_matter, target.body)
         rewrite_docs.append(target)
         updates.append(
             {
@@ -857,11 +814,11 @@ def handle_documents_import_hierarchy_apply(
                 "updated_doc_ids": [item["doc_id"] for item in updates],
             },
         )
-        rebuild = perform_source_write_and_rebuild(
+        rebuild = write_rebuild.perform_source_write_and_rebuild(
             repo_root,
             scope,
             [doc.path for doc in rewrite_docs],
-            lambda: [write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
+            lambda: [source_model.write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
             suppression_reason="docs-import-hierarchy-apply",
             search_doc_ids=[item["doc_id"] for item in updates],
         )
@@ -931,24 +888,20 @@ def handle_documents_import_apply(repo_root: Path, body: Dict[str, Any], dry_run
     return handle_documents_import_hierarchy_apply(repo_root, body, dry_run, adapter)
 
 
-def import_source_dependencies() -> ImportSourceDependencies:
-    return ImportSourceDependencies(
+def import_source_dependencies() -> import_source_service.ImportSourceDependencies:
+    return import_source_service.ImportSourceDependencies(
         log_event=log_event,
         make_backup_bundle=make_backup_bundle,
         make_import_overwrite_backup=make_import_overwrite_backup,
-        perform_source_write_and_rebuild=perform_source_write_and_rebuild,
+        perform_source_write_and_rebuild=write_rebuild.perform_source_write_and_rebuild,
     )
 
 
 def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return handle_import_source_service(repo_root, body, dry_run, import_source_dependencies())
+    return import_source_service.handle_import_source(repo_root, body, dry_run, import_source_dependencies())
 
 
-def handle_import_html(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return handle_import_html_service(repo_root, body, dry_run, import_source_dependencies())
-
-
-def execute_management_mutation_plan(repo_root: Path, plan: ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
+def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
     payload = dict(plan.response)
     backup_dir = None
     rebuild = None
@@ -965,11 +918,11 @@ def execute_management_mutation_plan(repo_root: Path, plan: ManagementMutationPl
 
         def write_operation() -> None:
             for source_write in plan.source_writes:
-                write_text_atomic(source_write.path, source_write.text)
+                source_model.write_text_atomic(source_write.path, source_write.text)
             for source_delete in plan.source_deletes:
                 source_delete.path.unlink()
 
-        rebuild = perform_source_write_and_rebuild(
+        rebuild = write_rebuild.perform_source_write_and_rebuild(
             repo_root,
             plan.scope,
             plan.changed_paths,
@@ -988,35 +941,35 @@ def execute_management_mutation_plan(repo_root: Path, plan: ManagementMutationPl
 
 
 def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_create(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_create(repo_root, body), dry_run)
 
 
 def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_update_metadata(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_update_metadata(repo_root, body), dry_run)
 
 
 def handle_update_viewability_bulk(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_update_viewability_bulk(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_update_viewability_bulk(repo_root, body), dry_run)
 
 
 def handle_update_viewability(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_update_viewability(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_update_viewability(repo_root, body), dry_run)
 
 
 def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_move(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_move(repo_root, body), dry_run)
 
 
 def handle_restore_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_restore_move(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_restore_move(repo_root, body), dry_run)
 
 
 def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_archive(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_archive(repo_root, body), dry_run)
 
 
 def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, plan_delete_apply(repo_root, body), dry_run)
+    return execute_management_mutation_plan(repo_root, mutations.plan_delete_apply(repo_root, body), dry_run)
 
 
 class DocsManagementHandler(BaseHTTPRequestHandler):
@@ -1096,25 +1049,25 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         write_response(self, HTTPStatus.OK, capabilities_payload(self.app["repo_root"]))
 
     def _handle_generated_index_get(self) -> None:
-        scope = normalize_scope(query_param(self, "scope"))
-        payload = read_generated_docs_index(self.app["repo_root"], scope)
+        scope = source_model.normalize_scope(query_param(self, "scope"))
+        payload = docs_generated_reads.read_generated_docs_index(self.app["repo_root"], scope)
         write_response(self, HTTPStatus.OK, payload)
 
     def _handle_generated_payload_get(self) -> None:
-        scope = normalize_scope(query_param(self, "scope"))
+        scope = source_model.normalize_scope(query_param(self, "scope"))
         doc_id = query_param(self, "doc_id") or query_param(self, "doc")
         if not doc_id:
             raise ValueError("doc_id is required")
-        payload = read_generated_doc_payload(self.app["repo_root"], scope, doc_id)
+        payload = docs_generated_reads.read_generated_doc_payload(self.app["repo_root"], scope, doc_id)
         write_response(self, HTTPStatus.OK, payload)
 
     def _handle_generated_search_get(self) -> None:
-        scope = normalize_scope(query_param(self, "scope"))
-        payload = read_generated_search_index(self.app["repo_root"], scope)
+        scope = source_model.normalize_scope(query_param(self, "scope"))
+        payload = docs_generated_reads.read_generated_search_index(self.app["repo_root"], scope)
         write_response(self, HTTPStatus.OK, payload)
 
     def _handle_import_source_files_get(self) -> None:
-        write_response(self, HTTPStatus.OK, handle_import_source_files(self.app["repo_root"]))
+        write_response(self, HTTPStatus.OK, import_source_service.handle_import_source_files(self.app["repo_root"]))
 
     def _handle_import_files_get(self) -> None:
         data_domain = query_param(self, "data_domain")
@@ -1140,17 +1093,17 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
 
     def _handle_broken_links_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = handle_broken_links(repo_root, body)
-        maybe_attach_broken_links_activity(repo_root, body, payload)
+        docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
         return HTTPStatus.OK, payload
 
     def _handle_export_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = handle_docs_export(repo_root, body, dry_run)
-        maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
+        docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
 
     def _handle_import_source_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = handle_import_source(repo_root, body, dry_run)
-        maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
+        docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK, payload
 
     def _handle_import_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
@@ -1159,7 +1112,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
 
     def _handle_import_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = handle_documents_import_apply(repo_root, body, dry_run)
-        maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
+        docs_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
 
     def _handle_update_metadata_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
@@ -1175,8 +1128,8 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
 
     def _handle_rebuild_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
-        scope = normalize_scope(body.get("scope"))
-        payload = rebuild_scope_outputs(repo_root, scope)
+        scope = source_model.normalize_scope(body.get("scope"))
+        payload = write_rebuild.rebuild_scope_outputs(repo_root, scope)
         payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
         return HTTPStatus.OK, payload
 
@@ -1190,11 +1143,11 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         return HTTPStatus.OK, handle_archive(repo_root, body, dry_run)
 
     def _handle_delete_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
-        scope = normalize_scope(body.get("scope"))
+        scope = source_model.normalize_scope(body.get("scope"))
         doc_id = str(body.get("doc_id") or "").strip()
         if not doc_id:
             raise ValueError("doc_id is required")
-        return HTTPStatus.OK, plan_delete_preview(repo_root, scope, doc_id)
+        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_id)
 
     def _handle_delete_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)

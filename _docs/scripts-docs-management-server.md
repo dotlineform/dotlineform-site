@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-09 14:00"
+last_updated: "2026-05-09 14:23"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -60,8 +60,10 @@ Current behavior:
 - docs source-model helpers are owned by `scripts/docs/docs_source_model.py`
 - generated Docs Viewer JSON read helpers are owned by `scripts/docs/docs_generated_reads.py`
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
+- docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for `/studio/docs-import/` is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
 - management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
+- structured import/export adapter orchestration remains server-owned for now and is tracked separately from the Docs Management Server restructuring request
 - used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and source import writes
@@ -222,7 +224,7 @@ Import behavior:
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
 - successful create/overwrite writes rebuild the same-scope docs payloads and run targeted docs-search updates for affected ids
 
-`POST /docs/import-html` remains a compatibility alias for older callers and delegates to the same source import handler.
+`POST /docs/import-html` remains a compatibility alias for older callers through route dispatch and delegates to the same source import handler.
 
 `POST /docs/rebuild` expects:
 

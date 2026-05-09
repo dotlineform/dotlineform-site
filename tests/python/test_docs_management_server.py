@@ -30,12 +30,13 @@ def load_docs_management_server_module():
 
 docs_management_server = load_docs_management_server_module()
 docs_management_mutations = sys.modules["docs_management_mutations"]
+docs_source_model = sys.modules["docs_source_model"]
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "") -> None:
     lines = ["---"]
     for key, value in front_matter.items():
-        lines.append(f"{key}: {docs_management_server.format_front_matter_value(value)}")
+        lines.append(f"{key}: {docs_source_model.format_front_matter_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
     path = root / "_docs" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
