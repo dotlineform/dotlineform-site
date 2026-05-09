@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-docs-management-server
 title: Docs Management Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 12:34"
+last_updated: "2026-05-09 12:44"
 parent_id: site-request-script-structural-review
 sort_order: 20
 ---
@@ -11,7 +11,8 @@ sort_order: 20
 Status:
 
 - Slice 1 implemented
-- Slice 2 is the next planned implementation slice
+- Slice 2 implemented
+- Slice 3 is the next planned implementation slice
 - later slices are planned, but should still be reconfirmed before editing
 
 ## Purpose
@@ -69,20 +70,59 @@ Risks:
 - route tables are now part of the service contract; future endpoint additions must update `scripts/docs/docs_management_routes.py` and the handler dispatch table together
 - this slice is structural only and does not reduce the larger source-write, import/apply, or rebuild helper bodies
 
+### Slice 2: docs source model helpers
+
+Status: implemented.
+
+The second implementation slice extracted Docs source-model helpers from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_source_model.py`.
+The server still owns HTTP handlers, request extraction, dry-run decisions, backup timing, rebuild calls, generated-data reads, import/export adapter orchestration, activity append timing, and response assembly.
+The server imports the source-model helpers it still orchestrates so this slice can keep endpoint behavior stable while later slices continue reducing handler-local logic.
+
+Target ownership:
+
+- `ScopeDoc`
+- front matter parsing and formatting
+- atomic source text writes for Docs source files
+- published/viewable boolean interpretation
+- scope normalization and source-root/path enumeration
+- `load_scope_docs(...)` and duplicate/parent validation
+- sort-order helpers, sibling ordering, descendant/direct-child lookup, and placement records
+- source rewrite helpers for metadata and placement updates
+- unique source stem generation
+
+Acceptance checks:
+
+- `tests/python/test_docs_source_model.py` covers front matter parsing/formatting, duplicate ids, unknown-parent behavior, Library's unknown-parent allowance, sort helpers, move placement normalization, descendant cycle support, source rewrite behavior, and unique stem generation
+- `tests/python/test_docs_management_server.py` still passes
+- `tests/python/test_docs_management_routes.py` still passes
+- `tests/python/test_docs_import_service.py` still passes as a compatibility check for source-import flows that use the moved helpers
+- `scripts/docs/docs_management_server.py`, `scripts/docs/docs_source_model.py`, and `tests/python/test_docs_source_model.py` compile with the configured Python interpreter
+
+Benefits:
+
+- gives the highest-reuse Docs source behavior a directly testable module
+- makes later mutation-planner and write/rebuild slices smaller because source tree operations now have a single owner
+- reduces pressure on the HTTP server file as import/export use cases continue growing
+
+Risks:
+
+- the server still calls the moved helpers directly, so file-size reduction is only partial until later handler cleanup
+- front matter formatting remains a source-file contract; future helper changes should keep formatting tests close to the module
+- source-write helpers remain Docs-source-specific until write/rebuild ownership is reviewed in Slice 5
+
 ## Planned Slice Sequence
 
-The next slice is deliberately source-model focused.
-It should make later write, rebuild, and activity work easier without touching importer/exporter internals.
+The next slice is deliberately generated-data focused.
+It should separate local generated-artifact reads from source mutation behavior without touching importer/exporter internals.
 
 Planned order:
 
-1. Slice 2: docs source model helpers.
-2. Slice 3: generated-data read helpers.
-3. Slice 4: docs activity helpers.
-4. Slice 5: rebuild and source-write follow-through helpers.
-5. Slice 6: management mutation planners.
-6. Slice 7: import-source orchestration cleanup, only if still useful.
-7. Slice 8: final handler body cleanup and closeout.
+1. Slice 3: generated-data read helpers.
+2. Slice 4: docs activity helpers.
+3. Slice 5: rebuild and source-write follow-through helpers.
+4. Slice 6: management mutation planners.
+5. Slice 7: import-source orchestration cleanup, only if still useful.
+6. Slice 8: final handler body cleanup and closeout.
 
 Importer/exporter note:
 
@@ -92,9 +132,9 @@ For now, `scripts/docs/docs_export.py`, `scripts/docs/docs_import.py`, and `scri
 The docs-management server should keep only local-service orchestration around those adapters: request validation, dry-run/write decision, response status selection, activity attachment, and rebuild follow-through.
 When adapter use cases expand enough to create their own structural confusion, review those modules as their own request or as a later adapter-specific child doc.
 
-### Slice 2: docs source model helpers
+### Slice 2 original checklist: docs source model helpers
 
-Status: next planned slice.
+Status: implemented; retained here as the original implementation checklist.
 
 Proposed module owner:
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T11:35:11Z",
+  "generated_at": "2026-05-09T11:47:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -493,7 +493,7 @@
       "doc_id": "site-request-script-structural-review-docs-management-server",
       "title": "Docs Management Server Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 12:34",
+      "last_updated": "2026-05-09 12:44",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 20,
       "published": true,
@@ -501,7 +501,7 @@
       "source_path": "site-request-script-structural-review-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-docs-management-server.json",
-      "content_text_length": 15230
+      "content_text_length": 17679
     },
     {
       "scope": "studio",
