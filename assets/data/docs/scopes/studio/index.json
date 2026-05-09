@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T13:24:51Z",
+  "generated_at": "2026-05-09T13:40:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2931,7 +2931,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 14:00",
+      "last_updated": "2026-05-09 14:38",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2939,7 +2939,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 10248,
+      "content_text_length": 10665,
       "ui_status": "in-progress"
     },
     {
@@ -2960,10 +2960,26 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-scripts-directory-organization",
+      "title": "Scripts Directory Organization Request",
+      "added_date": "2026-05-09",
+      "last_updated": "2026-05-09 14:38",
+      "parent_id": "change-requests",
+      "sort_order": 212,
+      "published": true,
+      "viewable": true,
+      "source_path": "site-request-scripts-directory-organization.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
+      "content_text_length": 9957,
+      "ui_status": "proposed"
+    },
+    {
+      "scope": "studio",
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-08",
+      "last_updated": "2026-05-09 14:38",
       "parent_id": "",
       "sort_order": 220,
       "published": true,
@@ -2971,7 +2987,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1638
+      "content_text_length": 1677
     },
     {
       "scope": "studio",

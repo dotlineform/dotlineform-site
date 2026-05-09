@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3c9a264a53dc9ebd56ade6a27ce73bb0",
-    "generated_at_utc": "2026-05-09T13:24:51Z",
-    "count": 204
+    "version": "blake2b-eaa54e7aa4ff6c161b5634ca4949776a",
+    "generated_at_utc": "2026-05-09T13:40:26Z",
+    "count": 205
   },
   "entries": [
     {
@@ -4820,10 +4820,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 14:00",
+      "last_updated": "2026-05-09 14:38",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 14:00 • Change Requests",
+      "display_meta": "2026-05-09 14:38 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4835,14 +4835,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 14:00",
+        "2026-05-09 14:38",
         "2026",
         "05",
         "09",
         "14",
-        "00"
+        "38"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 14:00 2026 05 09 14 00"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 14:38 2026 05 09 14 38"
     },
     {
       "id": "site-request-import-export-system-review",
@@ -4875,23 +4875,54 @@
       "search_text": "site-request-import-export-system-review site request import export system review import/export system review request change requests change requests 2026-05-09 14:15 2026 05 09 14 15"
     },
     {
+      "id": "site-request-scripts-directory-organization",
+      "kind": "doc",
+      "title": "Scripts Directory Organization Request",
+      "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
+      "last_updated": "2026-05-09 14:38",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-09 14:38 • Change Requests",
+      "search_terms": [
+        "site-request-scripts-directory-organization",
+        "site",
+        "request",
+        "scripts",
+        "directory",
+        "organization",
+        "scripts directory organization request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-09 14:38",
+        "2026",
+        "05",
+        "09",
+        "14",
+        "38"
+      ],
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 14:38 2026 05 09 14 38"
+    },
+    {
       "id": "change-requests",
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-08",
-      "display_meta": "2026-05-08",
+      "last_updated": "2026-05-09 14:38",
+      "display_meta": "2026-05-09 14:38",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-08",
+        "2026-05-09 14:38",
         "2026",
         "05",
-        "08"
+        "09",
+        "14",
+        "38"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-08 2026 05 08"
+      "search_text": "change-requests change requests change requests 2026-05-09 14:38 2026 05 09 14 38"
     },
     {
       "id": "library-import-export-v2",

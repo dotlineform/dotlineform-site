@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 14:00"
+last_updated: "2026-05-09 14:38"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 210
@@ -14,7 +14,7 @@ Status:
 
 - in progress
 - Priority 1 catalogue write-server slice sequence complete
-- Priority 2 docs-management server Slice 7 implemented
+- Priority 2 docs-management server Slice 8 closeout implemented
 
 ## Summary
 
@@ -114,8 +114,13 @@ The risk is over-generalizing too early; shared code should be introduced only w
 `scripts/docs/docs_management_server.py` is now the active priority-2 script in this review.
 The detailed implementation record lives in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
 
-Current status: Slices 1-7 extracted endpoint path ownership, docs source-model helpers, generated-data read helpers, docs-specific Studio Activity row construction, write/rebuild follow-through, management mutation planning, and staged source-import orchestration.
+Current status: Slices 1-8 extracted endpoint path ownership, docs source-model helpers, generated-data read helpers, docs-specific Studio Activity row construction, write/rebuild follow-through, management mutation planning, staged source-import orchestration, and final handler closeout.
 The server still owns HTTP transport, request parsing, endpoint orchestration, response status mapping, dependency binding for shared backup/log/rebuild helpers, structured import/export adapter orchestration, and the timing decision for activity append attempts.
+
+## Related Folder Organization Request
+
+The request [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization) tracks whether the completed script ownership work should be reflected directly in the filesystem layout.
+That request is separate from this structural review because it is mostly about package and command-path organization rather than extracting mixed responsibilities inside individual scripts.
 
 Recommended next review questions:
 
