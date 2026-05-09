@@ -2,7 +2,7 @@
 doc_id: studio-config-and-save-flow
 title: Studio Config and Save Flow
 added_date: 2026-04-22
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-09 21:45"
 parent_id: studio
 sort_order: 30
 ---
@@ -125,7 +125,7 @@ Current local save behavior:
 
 Current write-service implementation notes:
 
-- the local service is `scripts/studio/tag_write_server.py`
+- the local service is `scripts/analytics/tag_write_server.py`
 - writes are constrained to Studio-owned JSON files
 - server writes create timestamped backups in `var/studio/backups/`
 - write activity is logged to `var/studio/logs/tag_write_server.log`

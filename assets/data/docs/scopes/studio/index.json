@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T20:30:25Z",
+  "generated_at": "2026-05-09T20:48:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -238,7 +238,7 @@
       "doc_id": "local-studio-server-architecture",
       "title": "Local Studio Server Architecture",
       "added_date": "2026-04-17",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "servers",
       "sort_order": 10,
       "published": true,
@@ -246,7 +246,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 5289
+      "content_text_length": 5298
     },
     {
       "scope": "studio",
@@ -433,7 +433,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "servers",
       "sort_order": 20,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 7614
+      "content_text_length": 7617
     },
     {
       "scope": "studio",
@@ -660,7 +660,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -668,14 +668,14 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4989
+      "content_text_length": 4992
     },
     {
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -683,7 +683,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 10836
+      "content_text_length": 10839
     },
     {
       "scope": "studio",
@@ -963,7 +963,7 @@
       "doc_id": "studio-config-and-save-flow",
       "title": "Studio Config and Save Flow",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "studio",
       "sort_order": 30,
       "published": true,
@@ -971,7 +971,7 @@
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 11769
+      "content_text_length": 11772
     },
     {
       "scope": "studio",
@@ -1023,7 +1023,7 @@
       "doc_id": "scripts-tag-write-server",
       "title": "Tag Write Server",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 17:51",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "servers",
       "sort_order": 30,
       "published": true,
@@ -1031,14 +1031,14 @@
       "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-tag-write-server.json",
-      "content_text_length": 7808
+      "content_text_length": 7971
     },
     {
       "scope": "studio",
       "doc_id": "site-request-script-structural-review-tag-write-server",
       "title": "Tag Write Server Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 18:30",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 30,
       "published": true,
@@ -1046,7 +1046,7 @@
       "source_path": "site-request-script-structural-review-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-tag-write-server.json",
-      "content_text_length": 27046,
+      "content_text_length": 26835,
       "ui_status": "done"
     },
     {
@@ -2980,7 +2980,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2988,7 +2988,7 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 15029,
+      "content_text_length": 15041,
       "ui_status": "done"
     },
     {
@@ -3011,7 +3011,7 @@
       "doc_id": "site-request-scripts-directory-organization",
       "title": "Scripts Directory Organization Request",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3019,7 +3019,7 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 36755,
+      "content_text_length": 37955,
       "ui_status": "in_progress"
     },
     {
@@ -3105,7 +3105,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 21:05",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3113,7 +3113,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 104316
+      "content_text_length": 105491
     },
     {
       "scope": "studio",

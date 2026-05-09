@@ -14,7 +14,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import tag_source_model as source  # noqa: E402
+from analytics import tag_source_model as source  # noqa: E402
 
 
 def assert_equal(actual: Any, expected: Any, label: str) -> None:

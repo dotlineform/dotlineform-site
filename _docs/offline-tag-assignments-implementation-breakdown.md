@@ -2,7 +2,7 @@
 doc_id: offline-tag-assignments-implementation-breakdown
 title: "Offline Tag Assignments Implementation Breakdown"
 added_date: 2026-03-28
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 21:45"
 parent_id: archive
 published: false
 ---
@@ -140,7 +140,7 @@ This page is the session hub.
 
 Primary file:
 
-- `scripts/studio/tag_write_server.py`
+- `scripts/analytics/tag_write_server.py`
 
 Responsibilities:
 

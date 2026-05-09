@@ -13,7 +13,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import tag_write_transactions as transactions  # noqa: E402
+from analytics import tag_write_transactions as transactions  # noqa: E402
 
 
 def write_json(path: Path, payload: dict) -> None:

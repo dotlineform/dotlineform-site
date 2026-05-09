@@ -2,7 +2,7 @@
 doc_id: site-request-scripts-directory-organization
 title: Scripts Directory Organization Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-09 21:45"
 ui_status: in_progress
 parent_id: change-requests
 sort_order: 212
@@ -10,7 +10,7 @@ viewable: true
 ---
 # Scripts Directory Organization Request
 
-Status: slice 2 catalogue package move complete; Analytics tags and Studio runtime boundary is next.
+Status: slice 3 Analytics package move complete; docs and search entrypoint consistency is next.
 
 ## Purpose
 
@@ -288,6 +288,28 @@ Acceptance checks:
 - route migration into `/studio/analytics/...` is already implemented, so script folder ownership can follow the settled Analytics UI domain
 - focused tag tests still pass
 - Studio audit docs still point at the correct path
+
+#### Slice 3 implementation result
+
+Slice 3 moved Analytics tag code into a concrete `analytics` Python package:
+
+- `scripts/analytics/tag_write_server.py`
+- `scripts/analytics/tag_routes.py`
+- `scripts/analytics/tag_activity.py`
+- `scripts/analytics/tag_source_model.py`
+- `scripts/analytics/tag_assignment_service.py`
+- `scripts/analytics/tag_registry_mutations.py`
+- `scripts/analytics/tag_alias_mutations.py`
+- `scripts/analytics/tag_promotion_mutations.py`
+- `scripts/analytics/tag_write_transactions.py`
+
+The service name remains `tag_write_server.py` because the write surface is still tag-specific.
+The broader `analytics_server.py` name remains deferred until non-tag Analytics metadata or scoring writes share the same loopback-service contract.
+
+`bin/dev-studio` now starts the tag write service from `scripts/analytics/tag_write_server.py`.
+The moved modules import each other through the `analytics.*` package boundary, and tag tests import package modules rather than loose top-level `tag_*` modules.
+
+`scripts/studio/audit_service.py` remains under `scripts/studio/` because it is Studio runtime infrastructure: it exposes allowlisted local audit checks for Studio tooling rather than owning Catalogue, Analytics, Docs, or Search data-domain behavior.
 
 ### Slice 4: docs and search entrypoint consistency
 

@@ -10,12 +10,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 STUDIO_SCRIPTS_DIR = SCRIPTS_DIR / "studio"
-for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
+ANALYTICS_SCRIPTS_DIR = SCRIPTS_DIR / "analytics"
+for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import tag_routes as routes  # noqa: E402
-import tag_write_server  # noqa: E402
+from analytics import tag_routes as routes  # noqa: E402
+from analytics import tag_write_server  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:

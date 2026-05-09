@@ -14,8 +14,8 @@ for path in (SCRIPTS_DIR,):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import tag_activity as activity  # noqa: E402
-import tag_routes as routes  # noqa: E402
+from analytics import tag_activity as activity  # noqa: E402
+from analytics import tag_routes as routes  # noqa: E402
 
 
 def assert_equal(actual: Any, expected: Any, label: str) -> None:

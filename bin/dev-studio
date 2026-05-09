@@ -235,7 +235,7 @@ echo
 RUBYOPT="$JEKYLL_RUBYOPT" "$BUNDLE_BIN" exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
 JEKYLL_PID=$!
 
-"$PYTHON_BIN" scripts/studio/tag_write_server.py --port "$TAG_WRITE_PORT" &
+"$PYTHON_BIN" scripts/analytics/tag_write_server.py --port "$TAG_WRITE_PORT" &
 TAG_WRITE_PID=$!
 
 "$PYTHON_BIN" scripts/catalogue/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT" &

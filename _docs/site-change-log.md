@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 21:05"
+last_updated: "2026-05-09 21:45"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,35 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Moved Analytics tag scripts into package boundary
+
+**Status:** implemented
+
+**Area:** scripts / analytics / maintainability
+
+**Summary:**
+Moved the tag write service and extracted tag helper modules into `scripts/analytics/`.
+The service remains named `tag_write_server.py` because the current write surface is still tag-specific; a broader `analytics_server.py` name remains deferred until non-tag Analytics writes share the same local-service contract.
+`bin/dev-studio`, tests, and active script docs now use the new Analytics package path.
+
+**Files changed/docs:**
+
+- `scripts/analytics/tag_write_server.py`
+- `scripts/analytics/tag_routes.py`
+- `scripts/analytics/tag_activity.py`
+- `scripts/analytics/tag_source_model.py`
+- `scripts/analytics/tag_assignment_service.py`
+- `scripts/analytics/tag_registry_mutations.py`
+- `scripts/analytics/tag_alias_mutations.py`
+- `scripts/analytics/tag_promotion_mutations.py`
+- `scripts/analytics/tag_write_transactions.py`
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
+
+**Impact:**
+Analytics tag behavior now has the same concrete package-level ownership as Catalogue.
+`scripts/studio/audit_service.py` stays under Studio runtime because it is not domain-specific write behavior.
 
 ## [2026-05-09] Closed script structural review request
 

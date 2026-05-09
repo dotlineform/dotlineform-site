@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-09 21:45"
 parent_id: servers
 sort_order: 20
 ---
@@ -156,7 +156,7 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 - command:
 
 ```bash
-./scripts/studio/tag_write_server.py --port "$TAG_WRITE_PORT"
+./scripts/analytics/tag_write_server.py --port "$TAG_WRITE_PORT"
 ```
 
 - default URL: `http://127.0.0.1:8787`

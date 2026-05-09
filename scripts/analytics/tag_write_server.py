@@ -3,14 +3,14 @@
 README
 ======
 Run:
-  python3 scripts/studio/tag_write_server.py
-  python3 scripts/studio/tag_write_server.py --port 8787
-  python3 scripts/studio/tag_write_server.py --repo-root /path/to/dotlineform-site
-  python3 scripts/studio/tag_write_server.py --dry-run
+  python3 scripts/analytics/tag_write_server.py
+  python3 scripts/analytics/tag_write_server.py --port 8787
+  python3 scripts/analytics/tag_write_server.py --repo-root /path/to/dotlineform-site
+  python3 scripts/analytics/tag_write_server.py --dry-run
 
 What it does:
   - Exposes a tiny localhost API for Tag Studio.
-  - Endpoint paths are owned by scripts/tag_routes.py.
+  - Endpoint paths are owned by scripts/analytics/tag_routes.py.
   - Updates:
     - assets/studio/data/tag_assignments.json (series and work tag saves)
     - assets/studio/data/tag_registry.json (registry import replace/merge)
@@ -51,14 +51,14 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import script_logging
 import studio_activity
-import tag_activity
-import tag_alias_mutations as tag_aliases
-import tag_assignment_service as tag_assignments
-import tag_promotion_mutations as tag_promotions
-import tag_registry_mutations as tag_registry
-import tag_routes as routes
-import tag_source_model as tag_source
-import tag_write_transactions as tag_transactions
+from analytics import tag_activity
+from analytics import tag_alias_mutations as tag_aliases
+from analytics import tag_assignment_service as tag_assignments
+from analytics import tag_promotion_mutations as tag_promotions
+from analytics import tag_registry_mutations as tag_registry
+from analytics import tag_routes as routes
+from analytics import tag_source_model as tag_source
+from analytics import tag_write_transactions as tag_transactions
 
 
 BACKUPS_REL_DIR = Path("var/studio/backups")

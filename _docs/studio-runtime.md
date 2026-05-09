@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-09 21:45"
 parent_id: studio
 sort_order: 20
 ---
@@ -205,7 +205,7 @@ What it runs before starting long-lived services:
 What it starts:
 
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
-- `scripts/studio/tag_write_server.py`
+- `scripts/analytics/tag_write_server.py`
 - `scripts/catalogue/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
 - `scripts/studio/audit_service.py`

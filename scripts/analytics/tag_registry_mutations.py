@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-import tag_source_model as tag_source
+from analytics import tag_source_model as tag_source
 
 
 MUTATE_ACTIONS = {"edit", "delete"}

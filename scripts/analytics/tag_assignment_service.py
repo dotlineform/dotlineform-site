@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 from typing import Any, Dict
 
-import tag_source_model as tag_source
+from analytics import tag_source_model as tag_source
 
 
 def ensure_assignment_series_row(payload: Dict[str, Any], series_id: str) -> Dict[str, Any]:

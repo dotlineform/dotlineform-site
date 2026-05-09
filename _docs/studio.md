@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-09 21:45"
 parent_id: ""
 sort_order: 20
 ---
@@ -119,7 +119,7 @@ Current runner behavior:
 
 - rebuilds Docs Viewer data from `_docs/`
 - starts Jekyll on `127.0.0.1:4000`
-- starts `scripts/studio/tag_write_server.py`
+- starts `scripts/analytics/tag_write_server.py`
 - starts `scripts/studio/catalogue_write_server.py`
 - starts `scripts/docs/docs_management_server.py`
 - starts `scripts/studio/audit_service.py`

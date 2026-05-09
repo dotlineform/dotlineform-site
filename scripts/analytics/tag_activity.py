@@ -7,8 +7,8 @@ import datetime as dt
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
+from analytics import tag_routes as routes
 from studio_activity import normalize_activity_context_from_contract, studio_activity_entry
-import tag_routes as routes
 
 
 SCRIPT_PURPOSE_SAVE_TAG_DATA = "save-tag-data"

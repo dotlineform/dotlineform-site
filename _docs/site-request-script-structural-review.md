@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review
 title: Script Structural Review Request
 added_date: 2026-05-08
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-09 21:45"
 ui_status: done
 parent_id: change-requests
 sort_order: 210
@@ -50,7 +50,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 |---|---|---|---|
 | 1 | `scripts/catalogue/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
-| 3 | `scripts/studio/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | complete; final boundary recorded in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
+| 3 | `scripts/analytics/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | complete; final boundary recorded in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
 | 4 | `scripts/catalogue/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | complete; final boundary recorded in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
 | 5 | `scripts/catalogue/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | complete; final boundary recorded in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build) |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | deferred; low priority until audit checks become harder to maintain |
@@ -153,11 +153,11 @@ That request is separate from this structural review because it is mostly about 
 
 ## Priority 3 Review: Tag Write Server
 
-Priority 3 was `scripts/studio/tag_write_server.py`.
+Priority 3 was `scripts/analytics/tag_write_server.py`.
 The detailed implementation tracker lives in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
 Tags are conceptually part of Analytics: they are a metadata layer over catalogue works and series, currently surfaced through Studio admin pages because they are not public catalogue UI.
 Slices 1-8 moved route inventory, POST dispatch, tag-specific activity helpers, source-model validation/loading helpers, assignment save/import planners, registry/alias mutation planners, promotion/demotion planners, canonical assignment rewrites, and backup/write transaction helpers into focused module owners.
-`scripts/studio/tag_write_server.py` remains the loopback HTTP orchestration layer for tag writes, including request parsing, route dispatch, response status mapping, endpoint-specific write allowlists, dry-run suppression, local logging timing, and Studio Activity append timing.
+`scripts/analytics/tag_write_server.py` remains the loopback HTTP orchestration layer for tag writes, including request parsing, route dispatch, response status mapping, endpoint-specific write allowlists, dry-run suppression, local logging timing, and Studio Activity append timing.
 The service name remains tag-specific until a separate Analytics metadata or scoring workflow needs the same local-service contract.
 
 ## Remaining Review Queue
@@ -207,7 +207,7 @@ Priority 2 docs-management server slices are tracked in [Docs Management Server 
 That child doc records implemented Slices 1-8 and the final module ownership boundary for `scripts/docs/docs_management_server.py`.
 
 Priority 3 tag write-server slices are tracked in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
-That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, write-transaction, and final handler-body closeout boundary for `scripts/studio/tag_write_server.py`.
+That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, write-transaction, and final handler-body closeout boundary for `scripts/analytics/tag_write_server.py`.
 
 Priority 4 generate-work-pages slices are tracked in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages).
 That child doc records the implemented catalogue record projection, index builder, recent-entry merging, route/file write decision, source update planning, moment artifact building, and final generator orchestration cleanup boundary for `scripts/catalogue/generate_work_pages.py`.

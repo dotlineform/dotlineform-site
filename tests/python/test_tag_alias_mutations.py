@@ -13,7 +13,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-import tag_alias_mutations as aliases  # noqa: E402
+from analytics import tag_alias_mutations as aliases  # noqa: E402
 
 
 NOW = "2026-05-09T12:00:00Z"

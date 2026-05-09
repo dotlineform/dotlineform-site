@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c36cce1d4ed7888c5cff346d700368e8",
-    "generated_at_utc": "2026-05-09T20:30:29Z",
+    "version": "blake2b-b0c48f0c5e2845c5b8c9abcc734d6e4b",
+    "generated_at_utc": "2026-05-09T20:47:33Z",
     "count": 209
   },
   "entries": [
@@ -414,10 +414,10 @@
       "kind": "doc",
       "title": "Local Studio Server Architecture",
       "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 21:28 • Servers",
+      "display_meta": "2026-05-09 21:45 • Servers",
       "search_terms": [
         "local-studio-server-architecture",
         "local",
@@ -426,14 +426,14 @@
         "architecture",
         "local studio server architecture",
         "servers",
-        "2026-05-09 21:28",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
         "21",
-        "28"
+        "45"
       ],
-      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "docs-viewer-overview",
@@ -732,10 +732,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 21:28 • Servers",
+      "display_meta": "2026-05-09 21:45 • Servers",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -744,14 +744,14 @@
         "dev studio runner",
         "runner",
         "servers",
-        "2026-05-09 21:28",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
         "21",
-        "28"
+        "45"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -1105,41 +1105,41 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-09 16:00",
-      "display_meta": "2026-05-09 16:00",
+      "last_updated": "2026-05-09 21:45",
+      "display_meta": "2026-05-09 21:45",
       "search_terms": [
         "studio",
-        "2026-05-09 16:00",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
-        "16",
-        "00"
+        "21",
+        "45"
       ],
-      "search_text": "studio 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "studio 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "studio-runtime",
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 21:28 • Studio",
+      "display_meta": "2026-05-09 21:45 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-09 21:28",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
         "21",
-        "28"
+        "45"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "studio-ui-start",
@@ -1581,10 +1581,10 @@
       "kind": "doc",
       "title": "Studio Config and Save Flow",
       "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-08 19:25 • Studio",
+      "display_meta": "2026-05-09 21:45 • Studio",
       "search_terms": [
         "studio-config-and-save-flow",
         "studio",
@@ -1593,14 +1593,14 @@
         "save",
         "flow",
         "studio config and save flow",
-        "2026-05-08 19:25",
+        "2026-05-09 21:45",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "09",
+        "21",
+        "45"
       ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "studio-data-export",
@@ -1679,10 +1679,10 @@
       "kind": "doc",
       "title": "Tag Write Server",
       "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "last_updated": "2026-05-09 17:51",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 17:51 • Servers",
+      "display_meta": "2026-05-09 21:45 • Servers",
       "search_terms": [
         "scripts-tag-write-server",
         "scripts",
@@ -1691,24 +1691,24 @@
         "server",
         "tag write server",
         "servers",
-        "2026-05-09 17:51",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
-        "17",
-        "51"
+        "21",
+        "45"
       ],
-      "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-09 17:51 2026 05 09 17 51"
+      "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "site-request-script-structural-review-tag-write-server",
       "kind": "doc",
       "title": "Tag Write Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
-      "last_updated": "2026-05-09 18:30",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 18:30 • Script Structural Review Request",
+      "display_meta": "2026-05-09 21:45 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-tag-write-server",
         "site",
@@ -1722,14 +1722,14 @@
         "tag write server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 18:30",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
-        "18",
-        "30"
+        "21",
+        "45"
       ],
-      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 18:30 2026 05 09 18 30"
+      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -4948,10 +4948,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 21:28 • Change Requests",
+      "display_meta": "2026-05-09 21:45 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4963,14 +4963,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 21:28",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
         "21",
-        "28"
+        "45"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "site-request-import-export-system-review",
@@ -5007,10 +5007,10 @@
       "kind": "doc",
       "title": "Scripts Directory Organization Request",
       "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-09 21:45",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 21:28 • Change Requests",
+      "display_meta": "2026-05-09 21:45 • Change Requests",
       "search_terms": [
         "site-request-scripts-directory-organization",
         "site",
@@ -5022,14 +5022,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 21:28",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
         "21",
-        "28"
+        "45"
       ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "site-request-analytics-tag-route-cleanup",
@@ -5166,21 +5166,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-09 21:05",
-      "display_meta": "2026-05-09 21:05",
+      "last_updated": "2026-05-09 21:45",
+      "display_meta": "2026-05-09 21:45",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-09 21:05",
+        "2026-05-09 21:45",
         "2026",
         "05",
         "09",
-        "21"
+        "21",
+        "45"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-09 21:05 2026 05 09 21"
+      "search_text": "site-change-log site change log site change log 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "archive",
