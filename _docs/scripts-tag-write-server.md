@@ -2,7 +2,7 @@
 doc_id: scripts-tag-write-server
 title: Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-09 17:37"
+last_updated: "2026-05-09 17:44"
 parent_id: servers
 sort_order: 30
 ---
@@ -22,6 +22,7 @@ Tag assignment save planning, work override planning, assignment import preview/
 Tag registry import and canonical tag mutation planners are owned by `scripts/tag_registry_mutations.py`.
 Tag alias import, edit/delete, target rewrite, and redundant alias cleanup planners are owned by `scripts/tag_alias_mutations.py`.
 Alias promotion and tag demotion planners are owned by `scripts/tag_promotion_mutations.py`.
+Timestamped backups and atomic JSON write transactions are owned by `scripts/tag_write_transactions.py`.
 
 ## Optional Flags
 
@@ -143,6 +144,7 @@ Tag Aliases behavior:
 - tag registry mutation planners are centralized in `scripts/tag_registry_mutations.py`
 - tag alias mutation and rewrite planners are centralized in `scripts/tag_alias_mutations.py`
 - tag promotion and demotion planners are centralized in `scripts/tag_promotion_mutations.py`
+- tag write transaction helpers are centralized in `scripts/tag_write_transactions.py`
 - timestamped backups are created in `var/studio/backups/`
   - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
   - `tag_registry.json.bak-YYYYMMDD-HHMMSS`

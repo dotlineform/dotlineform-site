@@ -38,10 +38,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
-import os
-import shutil
 import sys
-import tempfile
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -61,6 +58,7 @@ import tag_promotion_mutations as tag_promotions
 import tag_registry_mutations as tag_registry
 import tag_routes as routes
 import tag_source_model as tag_source
+import tag_write_transactions as tag_transactions
 
 
 BACKUPS_REL_DIR = Path("var/studio/backups")
@@ -69,10 +67,6 @@ LOGS_REL_DIR = Path("var/studio/logs")
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def backup_stamp_now() -> str:
-    return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S")
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -218,71 +212,6 @@ def rewrite_assignments_for_tag(
         "work_rows_touched": work_rows_touched,
         "work_tag_refs_rewritten": work_refs_rewritten,
     }
-
-
-def atomic_write(path: Path, payload: Dict[str, Any], backups_dir: Path) -> None:
-    backups_dir.mkdir(parents=True, exist_ok=True)
-    backup_path = backups_dir / f"{path.name}.bak-{backup_stamp_now()}"
-    if path.exists():
-        shutil.copy2(path, backup_path)
-
-    fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
-    temp_path = Path(temp_name)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            json.dump(payload, fh, ensure_ascii=False, indent=2, sort_keys=False)
-            fh.write("\n")
-        os.replace(temp_path, path)
-    finally:
-        if temp_path.exists():
-            try:
-                temp_path.unlink()
-            except OSError:
-                pass
-
-
-def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir: Path) -> None:
-    backups_dir.mkdir(parents=True, exist_ok=True)
-    stamp = backup_stamp_now()
-    backups: Dict[Path, Path] = {}
-    temp_paths: Dict[Path, Path] = {}
-    replaced_paths: list[Path] = []
-
-    try:
-        for path, payload in payloads_by_path.items():
-            if path.exists():
-                backup_path = backups_dir / f"{path.name}.bak-{stamp}"
-                shutil.copy2(path, backup_path)
-                backups[path] = backup_path
-
-            fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
-            temp_path = Path(temp_name)
-            with os.fdopen(fd, "w", encoding="utf-8") as fh:
-                json.dump(payload, fh, ensure_ascii=False, indent=2, sort_keys=False)
-                fh.write("\n")
-            temp_paths[path] = temp_path
-
-        for path, temp_path in temp_paths.items():
-            os.replace(temp_path, path)
-            replaced_paths.append(path)
-    except Exception:
-        for path in reversed(replaced_paths):
-            backup_path = backups.get(path)
-            try:
-                if backup_path and backup_path.exists():
-                    shutil.copy2(backup_path, path)
-                elif path.exists():
-                    path.unlink()
-            except Exception:
-                pass
-        raise
-    finally:
-        for temp_path in temp_paths.values():
-            if temp_path.exists():
-                try:
-                    temp_path.unlink()
-                except OSError:
-                    pass
 
 
 class TagWriteServer(ThreadingHTTPServer):
@@ -450,7 +379,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload, self.server.backups_dir)
+            tag_transactions.atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = would_write
@@ -508,7 +437,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload, self.server.backups_dir)
+            tag_transactions.atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -603,7 +532,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload, self.server.backups_dir)
+            tag_transactions.atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -658,7 +587,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload, self.server.backups_dir)
+            tag_transactions.atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -714,7 +643,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload, self.server.backups_dir)
+            tag_transactions.atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -789,7 +718,7 @@ class Handler(BaseHTTPRequestHandler):
             if should_write:
                 if target_path not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-                atomic_write(target_path, aliases_updated, self.server.backups_dir)
+                tag_transactions.atomic_write(target_path, aliases_updated, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -872,7 +801,7 @@ class Handler(BaseHTTPRequestHandler):
                 if target not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
             if payloads_to_write:
-                atomic_write_many(payloads_to_write, self.server.backups_dir)
+                tag_transactions.atomic_write_many(payloads_to_write, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -959,7 +888,7 @@ class Handler(BaseHTTPRequestHandler):
             for target in payloads_to_write.keys():
                 if target not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-            atomic_write_many(payloads_to_write, self.server.backups_dir)
+            tag_transactions.atomic_write_many(payloads_to_write, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -1103,7 +1032,7 @@ class Handler(BaseHTTPRequestHandler):
             for target in payloads_to_write.keys():
                 if target not in self.server.allowed_write_paths:
                     raise ValueError("write target not allowlisted")
-            atomic_write_many(payloads_to_write, self.server.backups_dir)
+            tag_transactions.atomic_write_many(payloads_to_write, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {

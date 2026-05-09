@@ -55,6 +55,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/tag_promotion_mutations.py",
                 "scripts/tag_registry_mutations.py",
                 "scripts/tag_source_model.py",
+                "scripts/tag_write_transactions.py",
                 "scripts/docs/docs_import_source_service.py",
                 "scripts/docs/docs_live_rebuild_watcher.py",
                 "scripts/docs/docs_management_mutations.py",
@@ -79,6 +80,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_tag_promotion_mutations.py",
                 "tests/python/test_tag_registry_mutations.py",
                 "tests/python/test_tag_source_model.py",
+                "tests/python/test_tag_write_transactions.py",
                 "tests/python/test_docs_live_rebuild_watcher.py",
                 "tests/python/test_docs_management_mutations.py",
                 "tests/python/test_tag_routes.py",
@@ -178,6 +180,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "tag-source-model-tests",
             (sys.executable, "tests/python/test_tag_source_model.py"),
             "Verify tag source artifact validation, normalization, and default loading helpers.",
+        ),
+        CheckCommand(
+            "tag-write-transaction-tests",
+            (sys.executable, "tests/python/test_tag_write_transactions.py"),
+            "Verify tag write backup and atomic JSON transaction helpers.",
         ),
         CheckCommand(
             "catalogue-save-build-tests",

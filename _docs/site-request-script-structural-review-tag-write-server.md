@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-tag-write-server
 title: Tag Write Server Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 17:37"
+last_updated: "2026-05-09 17:44"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 30
@@ -25,7 +25,9 @@ Status:
 - tag registry import add/merge/replace behavior, canonical tag edit/delete planning, registry mutation summary text, alias import add/merge/replace behavior, alias edit/delete planning, alias target rewrite helpers, and alias mutation summary text are now owned by `scripts/tag_registry_mutations.py` and `scripts/tag_alias_mutations.py`
 - Slice 6 implemented
 - alias promotion planning, tag demotion planning, demotion assignment rewrites, cross-artifact promotion/demotion response stats, and promotion/demotion summary text are now owned by `scripts/tag_promotion_mutations.py`
-- next slice: backup and write helpers
+- Slice 7 implemented
+- timestamped backup names, single-file JSON writes with backup, and multi-file JSON writes with backup and rollback are now owned by `scripts/tag_write_transactions.py`
+- next slice: final handler body cleanup and closeout
 
 ## Purpose
 
@@ -375,6 +377,14 @@ Risks:
 - promotion/demotion rewrites touch multiple source files; later write execution must preserve current atomicity and rollback behavior
 
 ### Slice 7: backup and write helpers
+
+Status: implemented.
+
+The seventh implementation slice kept endpoint behavior stable while moving tag write-server transaction mechanics into `scripts/tag_write_transactions.py`.
+The helper now owns timestamped backup names, single-file JSON writes with backup, multi-file JSON writes with shared-stamp backups, temporary-file cleanup, and rollback for replaced or newly created files after simulated multi-file write failures.
+`scripts/studio/tag_write_server.py` still checks endpoint-specific write allowlists, decides which files are written, suppresses writes for preview/dry-run flows, logs local events, and appends Studio Activity after completed writes.
+`tests/python/test_tag_write_transactions.py` pins backup creation, no-existing-file writes, shared multi-file backup stamps, and rollback/backup restore behavior.
+The focused tag write-transaction test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
