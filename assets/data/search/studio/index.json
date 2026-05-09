@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5b76b5d929263096a011a2bd689b2870",
-    "generated_at_utc": "2026-05-09T20:01:03Z",
+    "version": "blake2b-776ffda163c377b6c9fae800eec771e8",
+    "generated_at_utc": "2026-05-09T20:05:54Z",
     "count": 209
   },
   "entries": [
@@ -4931,10 +4931,10 @@
       "kind": "doc",
       "title": "Script Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 20:05",
+      "last_updated": "2026-05-09 21:05",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 20:05 • Change Requests",
+      "display_meta": "2026-05-09 21:05 • Change Requests",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -4946,13 +4946,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 20:05",
+        "2026-05-09 21:05",
         "2026",
         "05",
         "09",
-        "20"
+        "21"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 20:05 2026 05 09 20"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 21:05 2026 05 09 21"
     },
     {
       "id": "site-request-import-export-system-review",
@@ -5048,21 +5048,20 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-09 15:45",
-      "display_meta": "2026-05-09 15:45",
+      "last_updated": "2026-05-09 21:05",
+      "display_meta": "2026-05-09 21:05",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-09 15:45",
+        "2026-05-09 21:05",
         "2026",
         "05",
         "09",
-        "15",
-        "45"
+        "21"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-09 15:45 2026 05 09 15 45"
+      "search_text": "change-requests change requests change requests 2026-05-09 21:05 2026 05 09 21"
     },
     {
       "id": "library-import-export-v2",

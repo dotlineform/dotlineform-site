@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T20:01:02Z",
+  "generated_at": "2026-05-09T20:05:54Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2980,7 +2980,7 @@
       "doc_id": "site-request-script-structural-review",
       "title": "Script Structural Review Request",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-09 20:05",
+      "last_updated": "2026-05-09 21:05",
       "parent_id": "change-requests",
       "sort_order": 210,
       "published": true,
@@ -2988,8 +2988,8 @@
       "source_path": "site-request-script-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review.json",
-      "content_text_length": 13831,
-      "ui_status": "in-progress"
+      "content_text_length": 14974,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3043,7 +3043,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-09 15:45",
+      "last_updated": "2026-05-09 21:05",
       "parent_id": "",
       "sort_order": 220,
       "published": true,
@@ -3113,7 +3113,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 103541
+      "content_text_length": 104316
     },
     {
       "scope": "studio",

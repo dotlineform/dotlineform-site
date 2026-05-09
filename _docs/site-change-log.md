@@ -17,6 +17,25 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-09] Closed script structural review request
+
+**Status:** done
+
+**Area:** scripts / maintainability / planning
+
+**Summary:**
+Closed the parent script structural review request after completing the five high-value tracks: catalogue write server, docs management server, tag write server, generate work pages, and catalogue JSON build.
+The lower-priority audit and docs import/export candidates remain documented as deferred watch-list items rather than active implementation work.
+
+**Files changed/docs:**
+
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+- [Change Requests](/docs/?scope=studio&doc=change-requests)
+
+**Impact:**
+The current structural-review queue is closed without starting broad low-priority refactors.
+Future work should use a narrower request if one of the deferred candidates develops concrete maintenance pain or new requirements.
+
 ## [2026-05-09] Completed catalogue JSON build orchestration cleanup
 
 **Status:** implemented

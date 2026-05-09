@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: "2026-05-09 15:45"
+last_updated: "2026-05-09 21:05"
 parent_id: ""
 sort_order: 220
 ---
@@ -28,7 +28,6 @@ Those still belong in the owning reference docs and change logs.
 
 ## Current Requests
 
-- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
 - [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup)
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
@@ -56,6 +55,7 @@ Those still belong in the owning reference docs and change logs.
 
 ## Completed Requests
 
+- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
 - [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)
 - [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
