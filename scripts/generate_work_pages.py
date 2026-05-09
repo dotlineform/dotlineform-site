@@ -61,12 +61,11 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import os
 import re
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import json
 import sys
@@ -80,7 +79,6 @@ try:
     import catalogue_generation_writes as writes
     from catalogue_generation_common import (
         coerce_int,
-        coerce_numeric,
         coerce_string,
         compact_json_object,
         compute_payload_version,
@@ -99,7 +97,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts import catalogue_generation_writes as writes
     from scripts.catalogue_generation_common import (
         coerce_int,
-        coerce_numeric,
         coerce_string,
         compact_json_object,
         compute_payload_version,
@@ -213,27 +210,6 @@ def parse_work_id_selection(raw: str) -> set[str]:
     return selected
 
 
-def slug_anchor(value: Any) -> str:
-    """
-    Create a stable lowercase slug for anchor/query ids.
-    Mirrors the client-side slug behavior used in work detail section ids.
-    """
-    s = normalize_text(value).lower()
-    s = re.sub(r"[^a-z0-9]+", "-", s)
-    s = re.sub(r"^-+|-+$", "", s)
-    return s
-
-
-def yaml_quote(s: str) -> str:
-    """Quote a string safely for YAML."""
-    s = s.replace("\\", "\\\\").replace('"', '\\"')
-    return f'"{s}"'
-
-
-NUMERIC_KEYS = {"year", "height_cm", "width_cm", "depth_cm", "width_px", "height_px"}
-BOOLEAN_KEYS = set()
-
-
 def log_event(event: str, details: Optional[Dict[str, Any]] = None) -> None:
     try:
         append_script_log(Path(__file__), event=event, details=details or {})
@@ -241,123 +217,6 @@ def log_event(event: str, details: Optional[Dict[str, Any]] = None) -> None:
         # Logging failures must not block generation.
         pass
 
-
-def dump_scalar(key: str, value: Any) -> str:
-    """Dump a scalar YAML key/value with typing rules."""
-    if value is None:
-        if key in BOOLEAN_KEYS:
-            return f"{key}: false"
-        return f"{key}: null"
-
-    if key in BOOLEAN_KEYS:
-        return f"{key}: {'true' if bool(value) else 'false'}"
-
-    if key in NUMERIC_KEYS:
-        # year is an int; dimensions are floats but we render ints without .0
-        if key == "year":
-            iv = coerce_int(value)
-            return f"{key}: {iv}" if iv is not None else f"{key}: null"
-        fv = coerce_numeric(value)
-        if fv is None:
-            return f"{key}: null"
-        if fv.is_integer():
-            return f"{key}: {int(fv)}"
-        return f"{key}: {fv}"
-
-    # Everything else is a quoted string
-    sv = coerce_string(value)
-    return f"{key}: {yaml_quote(sv)}" if sv is not None else f"{key}: null"
-
-
-def dump_list_of_strings(key: str, values: List[str]) -> List[str]:
-    lines: List[str] = [f"{key}:"]
-    for v in values:
-        lines.append(f"  - {yaml_quote(str(v))}")
-    return lines
-
-
-def dump_list_of_dicts(key: str, items: List[Dict[str, Any]], field_order: Optional[List[str]] = None) -> List[str]:
-    """Dump a YAML list of dicts with stable key ordering."""
-    lines: List[str] = [f"{key}:"]
-    for item in items:
-        # First line for each item
-        lines.append("  -")
-        keys = field_order if field_order else list(item.keys())
-        for k in keys:
-            if k not in item:
-                continue
-            # All nested fields here are strings by design; emit as quoted string or null
-            sv = coerce_string(item.get(k))
-            if sv is None:
-                lines.append(f"    {k}: null")
-            else:
-                lines.append(f"    {k}: {yaml_quote(sv)}")
-    return lines
-
-
-
-def build_front_matter(fields: Dict[str, Any]) -> str:
-    """Build YAML front matter in block style (supports lists of dicts)."""
-    # Policy: we intentionally emit explicit empty values to keep the front matter schema stable.
-    # - Empty/blank scalars become `key: null`
-    # - Empty lists become `key: []`
-    # This makes diffs, validation, and layout logic simpler and easier to test.
-    lines: List[str] = ["---"]
-
-    for k, v in fields.items():
-        if isinstance(v, list):
-            if not v:
-                # Emit empty list explicitly (rare; keeps schema predictable)
-                lines.append(f"{k}: []")
-                continue
-
-            # Detect list of dicts vs list of strings
-            if all(isinstance(x, dict) for x in v):
-                lines.extend(dump_list_of_dicts(k, v))
-            else:
-                # List of scalars -> strings
-                lines.extend(dump_list_of_strings(k, [str(x) for x in v if not is_empty(x)]))
-            continue
-
-        # Scalars
-        lines.append(dump_scalar(k, v))
-
-    lines.append("---")
-    return "\n".join(lines) + "\n"
-
-
-def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
-    filename_value = coerce_string(filename)
-    label_value = coerce_string(label)
-    if filename_value is None:
-        raise ValueError("Missing filename")
-    if label_value is None:
-        raise ValueError("Missing label")
-    source_name = Path(filename_value).name
-    stem = Path(source_name).stem
-    suffix = "".join(Path(source_name).suffixes)
-    safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", stem).strip("-._")
-    safe_stem = re.sub(r"-{2,}", "-", safe_stem)
-    if safe_stem == "":
-        safe_stem = "file"
-    return {
-        "source_filename": source_name,
-        "filename": f"{safe_stem}{suffix}",
-        "label": label_value,
-    }
-
-
-def build_link_entry(url: Any, label: Any) -> Dict[str, str]:
-    url_value = coerce_string(url)
-    label_value = coerce_string(label)
-    if url_value is None:
-        raise ValueError("Missing URL")
-    if label_value is None:
-        raise ValueError("Missing label")
-    return {
-        "url": url_value,
-        "label": label_value,
-    }
 
 def load_recent_entries(path: Path) -> List[Dict[str, Any]]:
     if not path.exists():
@@ -384,6 +243,36 @@ def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
     except Exception:
         return None
     return writes.extract_header_scalar_from_json_text(text, key)
+
+
+def write_index_json_payload(
+    *,
+    label: str,
+    path: Path,
+    payload: Dict[str, Any],
+    payload_version: str,
+    write: bool,
+    force: bool,
+    display_path: Callable[[Path | str], str],
+) -> bool:
+    exists = path.exists()
+    existing_version = extract_existing_header_scalar(path, "version") if exists else None
+    decision = writes.decide_json_payload_write(
+        path_exists=exists,
+        existing_version=existing_version,
+        payload_version=payload_version,
+        force=force,
+    )
+    if not decision.should_write:
+        print(f"{label} done. Wrote: 0. Skipped: 1.")
+        return False
+
+    if write:
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"{label} done. Wrote: 1. Skipped: 0. Path: {display_path(path)}")
+    else:
+        print(f"{label} done. Would write: 1. Skipped: 0. Path: {display_path(path)} (overwrite={exists})")
+    return True
 
 
 def render_markdown_with_jekyll(markdown_path: Path) -> str:
@@ -481,32 +370,6 @@ def load_tag_assignments_payload(path: Path) -> Dict[str, Any]:
             row["tags"] = []
         if "works" not in row or not isinstance(row.get("works"), dict):
             row["works"] = {}
-    return payload
-
-
-def load_tag_registry_payload(path: Path) -> Dict[str, Any]:
-    """Load tag registry JSON payload or return a default shape when missing."""
-    if not path.exists():
-        return {
-            "tag_registry_version": "tag_registry_v1",
-            "updated_at_utc": utc_timestamp_now(),
-            "tags": [],
-        }
-
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise SystemExit(f"Failed to parse tag registry JSON: {path} ({exc})")
-
-    if not isinstance(payload, dict):
-        raise SystemExit(f"Invalid tag registry payload (expected object): {path}")
-
-    if not isinstance(payload.get("tags"), list):
-        payload["tags"] = []
-    if not coerce_string(payload.get("tag_registry_version")):
-        payload["tag_registry_version"] = "tag_registry_v1"
-    if not coerce_string(payload.get("updated_at_utc")):
-        payload["updated_at_utc"] = utc_timestamp_now()
     return payload
 
 
@@ -682,13 +545,11 @@ def main() -> None:
 
     run_work_pages = artifact_enabled("work-pages")
     run_series_pages = artifact_enabled("series-pages")
-    run_series_index_json = True
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json") or run_work_pages
     run_works_index_json = True
     run_moments_artifact = artifact_enabled("moments")
     run_moments_index_json = True
-    run_studio_series_pages = False  # retired: use /studio/analytics/series-tag-editor/?series=<id>
 
     needs_projects_base = run_work_details_pages or run_work_json or run_series_pages or run_moments_artifact or run_moments_index_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
@@ -706,10 +567,6 @@ def main() -> None:
     series_out_dir.mkdir(parents=True, exist_ok=True)
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
-    studio_series_out_dir: Optional[Path] = None
-    if run_studio_series_pages:
-        studio_series_out_dir = Path("_studio_series").expanduser()
-        studio_series_out_dir.mkdir(parents=True, exist_ok=True)
 
     tag_assignments_path = Path("assets/studio/data/tag_assignments.json").expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1089,10 +946,6 @@ def main() -> None:
         series_skipped = 0
         series_json_written = 0
         series_json_skipped = 0
-        series_status_updated = 0
-        series_published_date_updated = 0
-        studio_series_written = 0
-        studio_series_skipped = 0
         tag_assignments_payload = load_tag_assignments_payload(tag_assignments_path)
         tag_assignments_series = tag_assignments_payload.get("series", {})
         tag_assignments_changed = False
@@ -1148,7 +1001,7 @@ def main() -> None:
                     if work_status_by_id.get(work_id) == "published"
                 )
                 try:
-                    primary_work_id = indexes.require_series_primary_work_id(
+                    indexes.require_series_primary_work_id(
                         series_id,
                         series_record,
                         ordered_work_ids=series_work_ids_sorted,
@@ -1231,44 +1084,6 @@ def main() -> None:
                         print(f"[Series JSON {s_processed}/{s_total}] DRY-RUN: would write {display_path(out_json_path)} (overwrite={out_exists})")
                         series_json_written += 1
 
-                if run_studio_series_pages:
-                    if studio_series_out_dir is None:
-                        raise RuntimeError("studio_series_out_dir is not initialized")
-                    tsm: Dict[str, Any] = {
-                        "layout": "studio_series",
-                        "series_id": series_id,
-                        "title": series_title,
-                        "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
-                        "year": year,
-                        "year_display": year_display,
-                        "project_folders": series_project_folders_by_id.get(series_id, []),
-                        "notes": coerce_string(series_record.get("notes")),
-                        "primary_work_id": primary_work_id,
-                    }
-                    studio_series_content = build_front_matter(tsm) + "\n"
-                    studio_series_path = studio_series_out_dir / f"{series_id}.md"
-
-                    existing_studio_series_text = None
-                    if studio_series_path.exists():
-                        try:
-                            existing_studio_series_text = studio_series_path.read_text(encoding="utf-8")
-                        except Exception:
-                            existing_studio_series_text = None
-
-                    studio_series_needs_write = (existing_studio_series_text != studio_series_content)
-                    prefix_ts = f"[studio-series {s_processed}/{s_total}] "
-                    if (not studio_series_needs_write) and (not args.force):
-                        print(f"{prefix_ts}SKIP (no change): {studio_series_path}")
-                        studio_series_skipped += 1
-                    else:
-                        if args.write:
-                            studio_series_path.write_text(studio_series_content, encoding="utf-8")
-                            print(f"{prefix_ts}WRITE: {display_path(studio_series_path)}")
-                            studio_series_written += 1
-                        else:
-                            print(f"{prefix_ts}DRY-RUN: would write {display_path(studio_series_path)} (overwrite={studio_series_path.exists()})")
-                            studio_series_written += 1
-
                 if series_id not in tag_assignments_series:
                     tag_assignments_series[series_id] = {
                         "tags": [],
@@ -1320,23 +1135,12 @@ def main() -> None:
             else:
                 print("Tag assignments sync: no missing series entries.")
 
-        if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
-            if series_status_updated > 0:
-                print(f"Updated series status to 'published' for {series_status_updated} row(s).")
-            if series_published_date_updated > 0:
-                print(f"Set series published_date for {series_published_date_updated} row(s).")
         print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
         print(
             f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: "
             f"{series_json_written}. Skipped: {series_json_skipped}."
         )
-        if run_studio_series_pages:
-            print(
-                f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
-                f"{studio_series_written}. Skipped: {studio_series_skipped}."
-            )
-        else:
-            print("Studio series pages retired: skipped.")
+        print("Studio series pages retired: skipped.")
 
     try:
         series_index_payload = indexes.build_series_index_payload(
@@ -1348,29 +1152,15 @@ def main() -> None:
         raise SystemExit(str(exc)) from exc
     series_payload: Dict[str, Dict[str, Any]] = series_index_payload.get("series", {})
     series_version = series_index_payload["header"]["version"]
-
-    exists = series_index_json_path.exists()
-    existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
-    index_decision = writes.decide_json_payload_write(
-        path_exists=exists,
-        existing_version=existing_version,
+    write_index_json_payload(
+        label="Series index JSON",
+        path=series_index_json_path,
+        payload=series_index_payload,
         payload_version=series_version,
+        write=args.write,
         force=args.force,
+        display_path=display_path,
     )
-    if not index_decision.should_write:
-        print("Series index JSON done. Wrote: 0. Skipped: 1.")
-    else:
-        if args.write:
-            series_index_json_path.write_text(
-                json.dumps(series_index_payload, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-            )
-            print(f"Series index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(series_index_json_path)}")
-        else:
-            print(
-                "Series index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {display_path(series_index_json_path)} (overwrite={exists})"
-            )
 
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)
@@ -1653,28 +1443,15 @@ def main() -> None:
         generated_at_utc=utc_timestamp_now(),
     )
     payload_version = payload["header"]["version"]
-    exists = works_index_json_path.exists()
-    existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
-    index_decision = writes.decide_json_payload_write(
-        path_exists=exists,
-        existing_version=existing_version,
+    write_index_json_payload(
+        label="Works index JSON",
+        path=works_index_json_path,
+        payload=payload,
         payload_version=payload_version,
+        write=args.write,
         force=args.force,
+        display_path=display_path,
     )
-    if not index_decision.should_write:
-        print("Works index JSON done. Wrote: 0. Skipped: 1.")
-    else:
-        if args.write:
-            works_index_json_path.write_text(
-                json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-            )
-            print(f"Works index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(works_index_json_path)}")
-        else:
-            print(
-                "Works index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {display_path(works_index_json_path)} (overwrite={exists})"
-            )
 
     recent_entries = recent.build_recent_publication_entries(
         existing_entries=load_recent_entries(recent_index_json_path),
@@ -1693,57 +1470,31 @@ def main() -> None:
         entries=recent_entries,
         generated_at_utc=utc_timestamp_now(),
     )
-    recent_exists = recent_index_json_path.exists()
-    recent_existing_version = extract_existing_header_scalar(recent_index_json_path, "version") if recent_exists else None
     recent_payload_version = recent_index_payload["header"]["version"]
-    recent_decision = writes.decide_json_payload_write(
-        path_exists=recent_exists,
-        existing_version=recent_existing_version,
+    write_index_json_payload(
+        label="Recent index JSON",
+        path=recent_index_json_path,
+        payload=recent_index_payload,
         payload_version=recent_payload_version,
+        write=args.write,
         force=args.force,
+        display_path=display_path,
     )
-    if not recent_decision.should_write:
-        print("Recent index JSON done. Wrote: 0. Skipped: 1.")
-    else:
-        if args.write:
-            recent_index_json_path.write_text(
-                json.dumps(recent_index_payload, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-            )
-            print(f"Recent index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(recent_index_json_path)}")
-        else:
-            print(
-                "Recent index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {display_path(recent_index_json_path)} (overwrite={recent_exists})"
-            )
 
     work_storage_payload_out = indexes.build_work_storage_index_payload(
         works=work_storage_payload,
         generated_at_utc=utc_timestamp_now(),
     )
     work_storage_payload_version = work_storage_payload_out["header"]["version"]
-    work_storage_exists = work_storage_index_json_path.exists()
-    existing_work_storage_version = extract_existing_header_scalar(work_storage_index_json_path, "version") if work_storage_exists else None
-    work_storage_decision = writes.decide_json_payload_write(
-        path_exists=work_storage_exists,
-        existing_version=existing_work_storage_version,
+    write_index_json_payload(
+        label="Work storage index JSON",
+        path=work_storage_index_json_path,
+        payload=work_storage_payload_out,
         payload_version=work_storage_payload_version,
+        write=args.write,
         force=args.force,
+        display_path=display_path,
     )
-    if not work_storage_decision.should_write:
-        print("Work storage index JSON done. Wrote: 0. Skipped: 1.")
-    else:
-        if args.write:
-            work_storage_index_json_path.write_text(
-                json.dumps(work_storage_payload_out, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-            )
-            print(f"Work storage index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(work_storage_index_json_path)}")
-        else:
-            print(
-                "Work storage index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {display_path(work_storage_index_json_path)} (overwrite={work_storage_exists})"
-            )
 
     # ----------------------------
     # Moment page + JSON generation (Moments)
@@ -1975,28 +1726,15 @@ def main() -> None:
         generated_at_utc=utc_timestamp_now(),
     )
     payload_version = payload["header"]["version"]
-    exists = moments_index_json_path.exists()
-    existing_version = extract_existing_header_scalar(moments_index_json_path, "version") if exists else None
-    moments_index_decision = writes.decide_json_payload_write(
-        path_exists=exists,
-        existing_version=existing_version,
+    write_index_json_payload(
+        label="Moments index JSON",
+        path=moments_index_json_path,
+        payload=payload,
         payload_version=payload_version,
+        write=args.write,
         force=args.force,
+        display_path=display_path,
     )
-    if not moments_index_decision.should_write:
-        print("Moments index JSON done. Wrote: 0. Skipped: 1.")
-    else:
-        if args.write:
-            moments_index_json_path.write_text(
-                json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-            )
-            print(f"Moments index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(moments_index_json_path)}")
-        else:
-            print(
-                "Moments index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {display_path(moments_index_json_path)} (overwrite={exists})"
-            )
 
     if args.write:
         validate_source_records_for_writeback()

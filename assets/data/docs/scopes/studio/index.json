@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T18:42:32Z",
+  "generated_at": "2026-05-09T18:50:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1176,7 +1176,7 @@
       "doc_id": "site-request-script-structural-review-generate-work-pages",
       "title": "Generate Work Pages Slices",
       "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 19:41",
+      "last_updated": "2026-05-09 19:49",
       "parent_id": "site-request-script-structural-review",
       "sort_order": 40,
       "published": true,
@@ -1184,7 +1184,7 @@
       "source_path": "site-request-script-structural-review-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-generate-work-pages.json",
-      "content_text_length": 25139,
+      "content_text_length": 25956,
       "ui_status": "in-progress"
     },
     {
@@ -1419,7 +1419,7 @@
       "doc_id": "scripts-generate-work-pages",
       "title": "Generate Work Pages",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-09 19:34",
+      "last_updated": "2026-05-09 19:49",
       "parent_id": "archive",
       "sort_order": 50,
       "published": true,
@@ -1427,7 +1427,7 @@
       "source_path": "scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json",
-      "content_text_length": 14363
+      "content_text_length": 14572
     },
     {
       "scope": "studio",
@@ -3089,7 +3089,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 19:41",
+      "last_updated": "2026-05-09 19:49",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3097,7 +3097,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 98040
+      "content_text_length": 98977
     },
     {
       "scope": "studio",

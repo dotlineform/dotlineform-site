@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 19:41"
+last_updated: "2026-05-09 19:49"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -20,6 +20,7 @@ Status:
 - Slice 4 implemented
 - Slice 5 implemented
 - Slice 6 implemented
+- Slice 7 implemented
 - read-only extraction map recorded
 - record projection helpers extracted
 - series and work index builders extracted
@@ -27,6 +28,7 @@ Status:
 - route-stub and generated JSON write-decision helpers extracted
 - source update planners extracted
 - moment artifact builder extracted
+- generator orchestration cleanup completed
 
 ## Purpose
 
@@ -446,7 +448,7 @@ Risks:
 
 ### Slice 7: generator orchestration cleanup
 
-Status: planned.
+Status: implemented.
 
 Task:
 
@@ -454,6 +456,14 @@ Task:
 - remove nested helpers that have moved
 - make dependency binding and run order visible
 - keep CLI surface and `catalogue_json_build.py` subprocess contract stable
+
+Implementation result:
+
+- removed retired Studio-series route generation and the YAML/front-matter helpers that only supported that dead path
+- removed unused legacy generator-local helpers for download/link entry shaping and tag-registry loading
+- consolidated repeated aggregate JSON write/version decisions for series, works, recent, work-storage, and moments indexes behind a single generator-local orchestration helper
+- kept per-record page and JSON generation in the generator because those paths still bind selection state, Markdown rendering, filesystem paths, and artifact-specific log wording
+- kept generated schemas, output paths, `--only`, `--refresh-published`, `--force`, dry-run behavior, and `catalogue_json_build.py` subprocess arguments unchanged
 
 Tests and checks:
 

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 19:41"
+last_updated: "2026-05-09 19:49"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,26 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-09] Completed generate-work-pages orchestration cleanup
+
+**Status:** implemented
+
+**Area:** catalogue generation / scripts / maintainability
+
+**Summary:**
+Implemented Slice 7 of the generate-work-pages structural review.
+`scripts/generate_work_pages.py` now has a smaller orchestration surface after removing retired Studio-series route generation, removing unused legacy helper functions, and consolidating repeated aggregate JSON version/write decisions behind one generator-local helper.
+
+**Files changed/docs:**
+
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
+
+**Impact:**
+The supported catalogue build contract, generated schemas, output paths, `--only`, `--refresh-published`, `--force`, and dry-run/write behavior are unchanged.
+The generator remains responsible for CLI/path binding, Markdown rendering, source write-back, and artifact-specific reporting while extracted modules own the pure catalogue generation rules.
 
 ## [2026-05-09] Extracted catalogue moment artifact builder
 
