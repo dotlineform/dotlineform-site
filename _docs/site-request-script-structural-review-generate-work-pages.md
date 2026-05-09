@@ -2,7 +2,7 @@
 doc_id: site-request-script-structural-review-generate-work-pages
 title: Generate Work Pages Slices
 added_date: 2026-05-09
-last_updated: "2026-05-09 18:41"
+last_updated: "2026-05-09 18:51"
 ui_status: in-progress
 parent_id: site-request-script-structural-review
 sort_order: 40
@@ -14,8 +14,9 @@ Status:
 
 - initial implementation tracker created
 - Slice 0 implemented
+- Slice 1 implemented
 - read-only extraction map recorded
-- no code extraction slices implemented yet
+- record projection helpers extracted
 
 ## Purpose
 
@@ -172,7 +173,7 @@ First implementation constraint:
 
 ### Slice 1: record projection helpers
 
-Status: planned.
+Status: implemented.
 
 Proposed module owner:
 
@@ -188,6 +189,13 @@ Target ownership:
 - public moment JSON/index record shaping
 - canonical detail record shaping
 - detail section grouping for per-work runtime payloads
+
+Implementation result:
+
+- `scripts/catalogue_generation_records.py` now owns the pure work, series, detail, and moment record projection helpers
+- `scripts/catalogue_generation_common.py` owns the shared coercion, normalization, compaction, and payload-version helpers needed by both the extracted record owner and the generator
+- `scripts/generate_work_pages.py` imports the record owner as `records` and keeps CLI parsing, source loading, selection filters, path binding, prose rendering, file writes, and source write-back orchestration local
+- `tests/python/test_catalogue_generation_records.py` pins projection field ordering, `series_ids` normalization, public record field pruning, canonical detail compaction, moment index thumb selection, and deterministic detail-section grouping
 
 The generator should keep:
 

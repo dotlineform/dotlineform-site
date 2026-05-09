@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fc45a83f48ad4db542015117aa52bda4",
-    "generated_at_utc": "2026-05-09T17:41:43Z",
+    "version": "blake2b-ab0e43a91e9237dd266af970d2e4fa84",
+    "generated_at_utc": "2026-05-09T17:52:06Z",
     "count": 208
   },
   "entries": [
@@ -727,10 +727,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 16:00 • Servers",
+      "display_meta": "2026-05-09 18:17 • Servers",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -739,14 +739,14 @@
         "dev studio runner",
         "runner",
         "servers",
-        "2026-05-09 16:00",
+        "2026-05-09 18:17",
         "2026",
         "05",
         "09",
-        "16",
-        "00"
+        "18",
+        "17"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -1472,10 +1472,10 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-05-08",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-08 • Site Docs",
+      "display_meta": "2026-05-09 18:17 • Site Docs",
       "search_terms": [
         "local-setup",
         "local",
@@ -1484,12 +1484,14 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-08",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "08"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "local-setup local setup local setup site docs site docs 2026-05-08 2026 05 08"
+      "search_text": "local-setup local setup local setup site docs site docs 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "search-field-registry",
@@ -1695,10 +1697,10 @@
       "kind": "doc",
       "title": "Tag Write Server Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server",
-      "last_updated": "2026-05-09 17:51",
+      "last_updated": "2026-05-09 18:30",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 17:51 • Script Structural Review Request",
+      "display_meta": "2026-05-09 18:30 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-tag-write-server",
         "site",
@@ -1712,14 +1714,14 @@
         "tag write server slices",
         "slices",
         "script structural review request",
-        "2026-05-09 17:51",
+        "2026-05-09 18:30",
         "2026",
         "05",
         "09",
-        "17",
-        "51"
+        "18",
+        "30"
       ],
-      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 17:51 2026 05 09 17 51"
+      "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 18:30 2026 05 09 18 30"
     },
     {
       "id": "new-pipeline-web-system-spec",
@@ -1925,10 +1927,10 @@
       "kind": "doc",
       "title": "Generate Work Pages Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages",
-      "last_updated": "2026-05-09 18:41",
+      "last_updated": "2026-05-09 18:51",
       "parent_id": "site-request-script-structural-review",
       "parent_title": "Script Structural Review Request",
-      "display_meta": "2026-05-09 18:41 • Script Structural Review Request",
+      "display_meta": "2026-05-09 18:51 • Script Structural Review Request",
       "search_terms": [
         "site-request-script-structural-review-generate-work-pages",
         "site",
@@ -1942,14 +1944,14 @@
         "generate work pages slices",
         "slices",
         "script structural review request",
-        "2026-05-09 18:41",
+        "2026-05-09 18:51",
         "2026",
         "05",
         "09",
         "18",
-        "41"
+        "51"
       ],
-      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 18:41 2026 05 09 18 41"
+      "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 18:51 2026 05 09 18 51"
     },
     {
       "id": "new-pipeline-implementation-plan",
@@ -2207,10 +2209,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-09 14:23",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 14:23 • Docs",
+      "display_meta": "2026-05-09 18:17 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2218,14 +2220,14 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-09 14:23",
+        "2026-05-09 18:17",
         "2026",
         "05",
         "09",
-        "14",
-        "23"
+        "18",
+        "17"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 14:23 2026 05 09 14 23"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "site-request-json-schema-adoption",
@@ -2332,10 +2334,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "archive",
       "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-09 18:17 • Archive",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -2344,12 +2346,14 @@
         "pages",
         "generate work pages",
         "archive",
-        "2026-05-02",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "02"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-02 2026 05 02"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "import-export",
@@ -2602,10 +2606,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-05-09",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 • Docs",
+      "display_meta": "2026-05-09 18:17 • Docs",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -2614,12 +2618,14 @@
         "rebuild",
         "watcher",
         "docs live rebuild watcher",
-        "2026-05-09",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "09"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-05-09 2026 05 09"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "search-public-ui-contract",
@@ -3450,22 +3456,23 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-08 00:00",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-08 00:00 • Site Docs",
+      "display_meta": "2026-05-09 18:17 • Site Docs",
       "search_terms": [
         "scripts",
         "site docs",
         "site",
         "docs",
-        "2026-05-08 00:00",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "08",
-        "00"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts site docs site docs 2026-05-08 00:00 2026 05 08 00"
+      "search_text": "scripts site docs site docs 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "search-validation-checklist",
@@ -3519,10 +3526,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-09",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 • Docs",
+      "display_meta": "2026-05-09 18:17 • Docs",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -3530,12 +3537,14 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-05-09",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "09"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-09 2026 05 09"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "design",
@@ -3957,10 +3966,10 @@
       "kind": "doc",
       "title": "Publish Media To R2",
       "href": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
-      "last_updated": "2026-05-08 10:03",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-08 10:03 • Studio",
+      "display_meta": "2026-05-09 18:17 • Studio",
       "search_terms": [
         "scripts-publish-media-to-r2",
         "scripts",
@@ -3970,14 +3979,14 @@
         "r2",
         "publish media to r2",
         "studio",
-        "2026-05-08 10:03",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "08",
-        "10",
-        "03"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-05-08 10:03 2026 05 08 10 03"
+      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "ui-pattern-reopenable-command-result",
@@ -4062,10 +4071,10 @@
       "kind": "doc",
       "title": "Srcset Builder",
       "href": "/docs/?scope=studio&doc=scripts-srcset-builder",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-09 18:17 • Catalogue",
       "search_terms": [
         "scripts-srcset-builder",
         "scripts",
@@ -4073,14 +4082,14 @@
         "builder",
         "srcset builder",
         "catalogue",
-        "2026-05-06 20:49",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "site-request-catalogue-series-unified-editor",
@@ -4271,10 +4280,10 @@
       "kind": "doc",
       "title": "Project State Report",
       "href": "/docs/?scope=studio&doc=scripts-project-state-report",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-09 18:17 • Catalogue",
       "search_terms": [
         "scripts-project-state-report",
         "scripts",
@@ -4283,14 +4292,14 @@
         "report",
         "project state report",
         "catalogue",
-        "2026-05-06 20:49",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-project-state-report scripts project state report project state report catalogue 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "scripts-project-state-report scripts project state report project state report catalogue 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "docs-viewer-management",
@@ -4373,10 +4382,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-05-08 00:00",
+      "last_updated": "2026-05-09 18:17",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-08 00:00 • Catalogue",
+      "display_meta": "2026-05-09 18:17 • Catalogue",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -4385,13 +4394,14 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-05-08 00:00",
+        "2026-05-09 18:17",
         "2026",
         "05",
-        "08",
-        "00"
+        "09",
+        "18",
+        "17"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-08 00:00 2026 05 08 00"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -5111,22 +5121,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-09 17:51",
-      "display_meta": "2026-05-09 17:51",
+      "last_updated": "2026-05-09 18:17",
+      "display_meta": "2026-05-09 18:17",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-09 17:51",
+        "2026-05-09 18:17",
         "2026",
         "05",
         "09",
-        "17",
-        "51"
+        "18",
+        "17"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-09 17:51 2026 05 09 17 51"
+      "search_text": "site-change-log site change log site change log 2026-05-09 18:17 2026 05 09 18 17"
     },
     {
       "id": "archive",

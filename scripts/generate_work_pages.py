@@ -61,7 +61,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import math
 import os
 import re
 import shutil
@@ -69,12 +68,36 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import hashlib
 import json
 import sys
 
 RECENT_INDEX_SCHEMA = "recent_index_v1"
 RECENT_INDEX_LIMIT = 50
+
+try:
+    import catalogue_generation_records as records
+    from catalogue_generation_common import (
+        coerce_int,
+        coerce_numeric,
+        coerce_string,
+        compact_json_object,
+        compute_payload_version,
+        is_empty,
+        normalize_text,
+        parse_date,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts import catalogue_generation_records as records
+    from scripts.catalogue_generation_common import (
+        coerce_int,
+        coerce_numeric,
+        coerce_string,
+        compact_json_object,
+        compute_payload_version,
+        is_empty,
+        normalize_text,
+        parse_date,
+    )
 
 try:
     from display_paths import format_display_path
@@ -170,32 +193,6 @@ def require_slug_safe(label: str, raw: Any) -> str:
     return s
 
 
-def parse_date(raw: Any) -> Optional[str]:
-    if raw is None or str(raw).strip() == "":
-        return None
-    if isinstance(raw, dt.datetime):
-        return raw.date().isoformat()
-    if isinstance(raw, dt.date):
-        return raw.isoformat()
-    s = normalize_text(raw)
-    # Accept YYYY-M-D and normalise to YYYY-MM-DD if possible
-    m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})$", s)
-    if m:
-        y, mo, d = map(int, m.groups())
-        return dt.date(y, mo, d).isoformat()
-    # Last resort: leave as-is (but you should fix upstream)
-    return s
-
-
-def parse_list(raw: Any, sep: str = ",") -> List[str]:
-    if raw is None:
-        return []
-    s = normalize_text(raw)
-    if not s:
-        return []
-    return [item.strip() for item in s.split(sep) if item.strip()]
-
-
 def parse_work_id_selection(raw: str) -> set[str]:
     """
     Parse comma-separated work-id selectors supporting individual IDs and ranges.
@@ -222,16 +219,6 @@ def normalize_status(value: Any) -> str:
     if value is None:
         return ""
     return normalize_text(value).lower()
-
-
-def normalize_text(value: Any) -> str:
-    """Normalize source text by trimming and stripping a leading apostrophe prefix."""
-    if value is None:
-        return ""
-    s = str(value).strip()
-    if s.startswith("'") and len(s) > 1:
-        s = s[1:]
-    return s
 
 
 def numeric_aware_sort_key(value: Any, width: int = 3) -> str:
@@ -266,54 +253,12 @@ NUMERIC_KEYS = {"year", "height_cm", "width_cm", "depth_cm", "width_px", "height
 BOOLEAN_KEYS = set()
 
 
-def is_empty(value: Any) -> bool:
-    if value is None:
-        return True
-    if isinstance(value, str) and value.strip() == "":
-        return True
-    return False
-
-
 def log_event(event: str, details: Optional[Dict[str, Any]] = None) -> None:
     try:
         append_script_log(Path(__file__), event=event, details=details or {})
     except Exception:
         # Logging failures must not block generation.
         pass
-
-
-def coerce_numeric(value: Any) -> Optional[float]:
-    """Best-effort numeric coercion for dimension fields; returns None if not parseable."""
-    if is_empty(value):
-        return None
-    if isinstance(value, (int, float)):
-        return float(value)
-    try:
-        return float(str(value).strip())
-    except Exception:
-        return None
-
-
-def coerce_int(value: Any) -> Optional[int]:
-    """Best-effort integer coercion for year; returns None if not parseable."""
-    if is_empty(value):
-        return None
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float) and value.is_integer():
-        return int(value)
-    try:
-        return int(str(value).strip())
-    except Exception:
-        return None
-
-
-def coerce_string(value: Any) -> Optional[str]:
-    """Coerce any non-empty value to a trimmed string (for quoted YAML output)."""
-    if is_empty(value):
-        return None
-    s = normalize_text(value)
-    return s if s != "" else None
 
 
 def dump_scalar(key: str, value: Any) -> str:
@@ -405,59 +350,6 @@ def build_route_stub_content() -> str:
     return build_front_matter({})
 
 
-# ----------------------------
-# Canonical schema (Works source projection)
-# ----------------------------
-# Define the Works source-record projection once so adding a new field is a one-line change.
-# Each entry is: (record_key, source_column_name, coercer)
-WORKS_SCHEMA: List[tuple[str, str, Any]] = [
-    ("artist", "artist", coerce_string),
-    ("title", "title", coerce_string),
-    ("year", "year", coerce_int),
-    ("year_display", "year_display", coerce_string),
-    ("storage", "storage_location", coerce_string),
-    ("medium_type", "medium_type", coerce_string),
-    ("medium_caption", "medium_caption", coerce_string),
-    ("duration", "duration", coerce_string),
-    ("height_cm", "height_cm", coerce_numeric),
-    ("width_cm", "width_cm", coerce_numeric),
-    ("depth_cm", "depth_cm", coerce_numeric),
-    ("width_px", "width_px", coerce_int),
-    ("height_px", "height_px", coerce_int),
-    # tags handled separately (csv list)
-]
-
-
-def build_work_record_projection(work_record: Dict[str, Any]) -> Dict[str, Any]:
-    """Build the scalar portion of the public work record projection."""
-    fm: Dict[str, Any] = {}
-    for fm_key, col_name, coercer in WORKS_SCHEMA:
-        raw = work_record.get(col_name)
-        fm[fm_key] = coercer(raw)
-    return fm
-
-
-def parse_source_list(raw: Any, sep: str = ",") -> List[str]:
-    if isinstance(raw, list):
-        return [str(item).strip() for item in raw if not is_empty(item)]
-    return parse_list(raw, sep=sep)
-
-
-def parse_work_record_series_ids(work_record: Dict[str, Any]) -> List[str]:
-    series_ids: List[str] = []
-    seen_series_ids: set[str] = set()
-    for raw_series_id in parse_source_list(work_record.get("series_ids")):
-        try:
-            sid = normalize_series_id(raw_series_id)
-        except ValueError:
-            continue
-        if sid in seen_series_ids:
-            continue
-        seen_series_ids.add(sid)
-        series_ids.append(sid)
-    return series_ids
-
-
 def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
     filename_value = coerce_string(filename)
     label_value = coerce_string(label)
@@ -490,101 +382,6 @@ def build_link_entry(url: Any, label: Any) -> Dict[str, str]:
         "url": url_value,
         "label": label_value,
     }
-
-
-# ----------------------------
-# Checksum helpers
-# ----------------------------
-
-def compute_work_checksum(record: Dict[str, Any]) -> str:
-    """Compute a deterministic checksum for a generated JSON record."""
-    payload = dict(record)
-    payload.pop("checksum", None)
-
-    # Canonical JSON for hashing (sorted keys ensures deterministic output)
-    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    h = hashlib.blake2b(canonical, digest_size=16)
-    return h.hexdigest()
-
-
-# ----------------------------
-# JSON payload helpers
-# ----------------------------
-
-
-def compute_work_details_hash(work_id: str, sections: List[Dict[str, Any]]) -> str:
-    """Compute deterministic hash for a work-details JSON payload."""
-    payload = {"work_id": work_id, "sections": sections}
-    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    return hashlib.blake2b(canonical, digest_size=16).hexdigest()
-
-
-def canonicalize_for_hash(value: Any) -> Any:
-    """Canonicalize values for deterministic hashing."""
-    if isinstance(value, dict):
-        out: Dict[str, Any] = {}
-        for key in sorted(value.keys(), key=lambda k: str(k)):
-            out[str(key)] = canonicalize_for_hash(value[key])
-        return out
-    if isinstance(value, list):
-        return [canonicalize_for_hash(item) for item in value]
-    if isinstance(value, tuple):
-        return [canonicalize_for_hash(item) for item in value]
-    if isinstance(value, float):
-        if not math.isfinite(value):
-            return value
-        if value == 0.0:
-            return 0
-        if value.is_integer():
-            return int(value)
-        return float(f"{value:.15g}")
-    return value
-
-
-def compute_payload_hash_hex(payload: Any) -> str:
-    """Compute deterministic blake2b hex hash for a canonicalized payload."""
-    canonical = json.dumps(
-        canonicalize_for_hash(payload),
-        sort_keys=True,
-        ensure_ascii=False,
-        separators=(",", ":"),
-        allow_nan=False,
-    ).encode("utf-8")
-    return hashlib.blake2b(canonical, digest_size=16).hexdigest()
-
-
-def compute_payload_version(payload: Any) -> str:
-    """Compute deterministic blake2b content version token."""
-    return f"blake2b-{compute_payload_hash_hex(payload)}"
-
-
-def compact_json_value(value: Any, *, prune_empty_dicts: bool = True) -> Any:
-    """Drop null object fields recursively while preserving empty lists."""
-    if isinstance(value, dict):
-        out: Dict[str, Any] = {}
-        for key, item in value.items():
-            compacted = compact_json_value(item, prune_empty_dicts=prune_empty_dicts)
-            if compacted is None:
-                continue
-            out[key] = compacted
-        if prune_empty_dicts and not out:
-            return None
-        return out
-    if isinstance(value, list):
-        out_list = []
-        for item in value:
-            compacted = compact_json_value(item, prune_empty_dicts=prune_empty_dicts)
-            if compacted is None:
-                continue
-            out_list.append(compacted)
-        return out_list
-    return value
-
-
-def compact_json_object(payload: Dict[str, Any]) -> Dict[str, Any]:
-    compacted = compact_json_value(payload, prune_empty_dicts=False)
-    return compacted if isinstance(compacted, dict) else {}
-
 
 def normalize_recent_entry(entry: Any) -> Optional[Dict[str, Any]]:
     if not isinstance(entry, dict):
@@ -1091,7 +888,7 @@ def main() -> None:
     project_folder_sets_by_series: Dict[str, set[str]] = {}
     for work_record in source_records.works.values():
         folder = coerce_string(work_record.get("project_folder"))
-        series_ids = parse_work_record_series_ids(work_record)
+        series_ids = records.parse_work_record_series_ids(work_record)
         if not series_ids or folder is None:
             continue
         for sid in series_ids:
@@ -1105,7 +902,7 @@ def main() -> None:
     # - sort_fields supports comma-separated keys and optional '-' prefix for descending
     # - 'title' aliases to 'title_sort' for numeric-aware ordering
     # - work_id is always appended as final ascending tiebreaker
-    works_sortable_fields = {fm_key for fm_key, _, _ in WORKS_SCHEMA}
+    works_sortable_fields = {fm_key for fm_key, _, _ in records.WORKS_SCHEMA}
     works_sortable_fields.update({"work_id", "series_title", "title_sort"})
     numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
     work_meta_by_id: Dict[str, Dict[str, Any]] = {}
@@ -1116,9 +913,9 @@ def main() -> None:
         if is_empty(wid_raw):
             continue
         wid = slug_id(wid_raw)
-        meta = build_work_record_projection(work_record)
+        meta = records.build_work_record_projection(work_record)
         work_status_by_id[wid] = normalize_status(work_record.get("status"))
-        series_ids = parse_work_record_series_ids(work_record)
+        series_ids = records.parse_work_record_series_ids(work_record)
         sid = series_ids[0] if series_ids else ""
         meta["work_id"] = wid
         meta["series_ids"] = series_ids
@@ -1222,84 +1019,6 @@ def main() -> None:
     def resolve_series_prose_source_path(series_id: str) -> Path:
         return catalogue_prose_source_root / "series" / f"{series_id}.md"
 
-    works_field_order = [
-        "work_id",
-        "title",
-        "year",
-        "year_display",
-        "series_id",
-        "series_ids",
-        "series_title",
-        "series_sort",
-        "storage",
-        "medium_type",
-        "medium_caption",
-        "duration",
-        "links",
-        "height_cm",
-        "width_cm",
-        "depth_cm",
-        "width_px",
-        "height_px",
-        "downloads",
-        "artist",
-    ]
-
-    def build_canonical_work_record(wid: str) -> Optional[Dict[str, Any]]:
-        base = work_meta_by_id.get(wid)
-        if base is None:
-            return None
-        fm: Dict[str, Any] = {"work_id": wid}
-        fm.update(base)
-        source_work_record = source_records.works.get(wid, {})
-        for key in ["downloads", "links"]:
-            items = source_work_record.get(key)
-            if isinstance(items, list) and items:
-                fm[key] = list(items)
-        raw_series_ids = fm.get("series_ids")
-        series_ids = [coerce_string(item) for item in raw_series_ids] if isinstance(raw_series_ids, list) else []
-        series_ids = [item for item in series_ids if item is not None]
-        sid = series_ids[0] if series_ids else coerce_string(fm.get("series_id"))
-        fm["series_id"] = sid
-        fm["series_ids"] = series_ids
-        fm["series_title"] = series_title_by_id.get(sid) if sid is not None else None
-        fm["series_sort"] = series_sort_by_series_id.get(sid, {}).get(wid, wid) if sid is not None else wid
-
-        fm_ordered: Dict[str, Any] = {}
-        for key in works_field_order:
-            if key in fm:
-                fm_ordered[key] = fm[key]
-        for key, value in fm.items():
-            if key not in fm_ordered:
-                fm_ordered[key] = value
-        fm = fm_ordered
-        fm["checksum"] = compute_work_checksum(fm)
-        return fm
-
-    def build_canonical_detail_record(
-        wid: str,
-        did: str,
-        title: Optional[str],
-        section_id: Optional[str],
-        section_title: Optional[str],
-        sort_order: Optional[int],
-        width_px: Optional[int],
-        height_px: Optional[int],
-    ) -> Dict[str, Any]:
-        detail_uid = f"{wid}-{did}"
-        dfm: Dict[str, Any] = {
-            "work_id": wid,
-            "detail_id": did,
-            "detail_uid": detail_uid,
-            "title": title,
-            "section_id": section_id,
-            "section_title": section_title,
-            "sort_order": sort_order,
-            "width_px": width_px,
-            "height_px": height_px,
-        }
-        return compact_json_object(dfm)
-
     def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
         wid = str(work_record.get("work_id", ""))
         title_value = coerce_string(work_record.get("title"))
@@ -1320,79 +1039,6 @@ def main() -> None:
         return compact_json_object({
             "storage": storage_value,
         })
-
-    def build_work_json_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
-        public_record = dict(work_record)
-        public_record.pop("series_id", None)
-        public_record.pop("series_title", None)
-        public_record.pop("series_sort", None)
-        public_record.pop("title_sort", None)
-        public_record.pop("checksum", None)
-        return compact_json_object(public_record)
-
-    def build_series_json_record(series_record: Dict[str, Any]) -> Dict[str, Any]:
-        public_record = dict(series_record)
-        public_record.pop("layout", None)
-        public_record.pop("checksum", None)
-        public_record.pop("works", None)
-        public_record.pop("primary_work_id", None)
-        return compact_json_object(public_record)
-
-    def build_moment_json_record(moment_record: Dict[str, Any]) -> Dict[str, Any]:
-        public_record = dict(moment_record)
-        public_record.pop("layout", None)
-        public_record.pop("checksum", None)
-        return compact_json_object(public_record)
-
-    def build_moment_index_record(moment_record: Dict[str, Any]) -> Dict[str, Any]:
-        moment_id_value = coerce_string(moment_record.get("moment_id"))
-        title_value = coerce_string(moment_record.get("title"))
-        date_value = coerce_string(moment_record.get("date"))
-        date_display_value = coerce_string(moment_record.get("date_display"))
-        images_value = moment_record.get("images")
-        thumb_id_value = moment_id_value if isinstance(images_value, list) and len(images_value) > 0 else None
-        return compact_json_object({
-            "moment_id": moment_id_value,
-            "title": title_value,
-            "date": date_value,
-            "date_display": date_display_value,
-            "thumb_id": thumb_id_value,
-        })
-
-    def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        section_index: Dict[str, int] = {}
-        sections: List[Dict[str, Any]] = []
-        for detail in detail_records:
-            section_title = coerce_string(detail.get("section_title") or detail.get("project_subfolder")) or ""
-            section_id = coerce_string(detail.get("section_id")) or section_title or "details"
-            sort_order = coerce_int(detail.get("sort_order"))
-            if section_id not in section_index:
-                section_index[section_id] = len(sections)
-                sections.append(
-                    {
-                        "section_id": section_id,
-                        "section_title": section_title,
-                        "sort_order": sort_order,
-                        "details": [],
-                    }
-                )
-            detail_payload = dict(detail)
-            detail_payload.pop("section_id", None)
-            detail_payload.pop("section_title", None)
-            detail_payload.pop("sort_order", None)
-            sections[section_index[section_id]]["details"].append(detail_payload)
-        for sec in sections:
-            details = sec.get("details")
-            if isinstance(details, list):
-                details.sort(key=lambda item: str(item.get("detail_id", "")))
-        sections.sort(
-            key=lambda sec: (
-                1 if sec.get("sort_order") is None else 0,
-                sec.get("sort_order") if sec.get("sort_order") is not None else 0,
-                str(sec.get("section_id", "")),
-            )
-        )
-        return sections
 
     written = 0
     skipped = 0
@@ -1469,7 +1115,7 @@ def main() -> None:
                 if is_empty(raw_work_id):
                     continue
                 wid = slug_id(raw_work_id)
-                series_ids = parse_work_record_series_ids(work_record)
+                series_ids = records.parse_work_record_series_ids(work_record)
                 if any(sid in selected_series_ids for sid in series_ids):
                     selected_ids.add(wid)
         else:
@@ -1548,7 +1194,13 @@ def main() -> None:
 
     canonical_work_record_by_id: Dict[str, Dict[str, Any]] = {}
     for wid in sorted(work_meta_by_id.keys()):
-        record = build_canonical_work_record(wid)
+        record = records.build_canonical_work_record(
+            wid,
+            work_meta_by_id=work_meta_by_id,
+            source_work_record=source_records.works.get(wid, {}),
+            series_title_by_id=series_title_by_id,
+            series_sort_by_series_id=series_sort_by_series_id,
+        )
         if record is not None:
             canonical_work_record_by_id[wid] = record
 
@@ -1592,7 +1244,13 @@ def main() -> None:
             processed += 1
             prefix = f"[{processed}/{total}] "
             if run_work_pages:
-                canonical_work_fm = build_canonical_work_record(wid)
+                canonical_work_fm = records.build_canonical_work_record(
+                    wid,
+                    work_meta_by_id=work_meta_by_id,
+                    source_work_record=source_records.works.get(wid, {}),
+                    series_title_by_id=series_title_by_id,
+                    series_sort_by_series_id=series_sort_by_series_id,
+                )
                 if canonical_work_fm is None:
                     skipped += 1
                     continue
@@ -1766,7 +1424,7 @@ def main() -> None:
                     "project_folders": series_project_folders_by_id.get(series_id, []),
                 })
 
-                public_series_record = build_series_json_record(series_output_record)
+                public_series_record = records.build_series_json_record(series_output_record)
                 source_prose_path = resolve_series_prose_source_path(series_id)
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
@@ -1936,7 +1594,7 @@ def main() -> None:
         if status != "published":
             continue
         wid = slug_id(wid_raw)
-        for sid in parse_work_record_series_ids(work_record):
+        for sid in records.parse_work_record_series_ids(work_record):
             series_sort = series_sort_by_series_id.get(sid, {}).get(wid, wid)
             work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
 
@@ -2210,7 +1868,7 @@ def main() -> None:
 
                 did = slug_id(did_raw, width=3)
                 section_resolution = section_resolution_by_uid.get(detail_uid, {})
-                detail_record = build_canonical_detail_record(
+                detail_record = records.build_canonical_detail_record(
                     wid=wid,
                     did=did,
                     title=coerce_string(detail_source_record.get("title")),
@@ -2234,9 +1892,9 @@ def main() -> None:
 
                 source_prose_path = resolve_work_prose_source_path(wid)
 
-                sections = build_sections_from_detail_records(detail_records_by_work.get(wid, []))
+                sections = records.build_sections_from_detail_records(detail_records_by_work.get(wid, []))
                 details_total = sum(len(s.get("details", [])) for s in sections)
-                work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
+                work_record = records.build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
                 content_html: Optional[str] = None
                 if source_prose_path.exists():
                     content_html = render_markdown_with_jekyll(source_prose_path)
@@ -2727,7 +2385,7 @@ def main() -> None:
                         moments_pages_written += 1
 
                 content_html = render_markdown_with_jekyll(source_prose_path)
-                moment_json_record = build_moment_json_record(moment_record)
+                moment_json_record = records.build_moment_json_record(moment_record)
                 payload_version = compute_payload_version(compact_json_object({"moment": moment_json_record, "content_html": content_html}))
                 payload = compact_json_object({
                     "header": {
@@ -2828,7 +2486,7 @@ def main() -> None:
             "width_px": width_px,
             "height_px": height_px,
         }
-        moments_payload[moment_id] = build_moment_index_record(moment_record)
+        moments_payload[moment_id] = records.build_moment_index_record(moment_record)
 
     version_payload = compact_json_object({
         "schema": "moments_index_v1",
