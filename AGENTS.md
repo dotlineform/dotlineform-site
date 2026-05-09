@@ -4,7 +4,6 @@
 - consider whether edits are implied by the current request. If the request is analysis-only, exploratory, uses words like 'check' or 'confirm', or includes a '?', do not make edits without asking first.
 - when edits are implied, briefly state the intended change set before editing unless the request is trivial or already specific.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
-- a ? in the prompt usually indicates that some analysis is needed on reasons for observed behaviour of code, or clarification of the best course of action.
 
 ## Context and Batching
 
@@ -72,30 +71,7 @@
 ## Safety Defaults
 
 - Prefer dry-run behavior for generators unless explicitly asked to write.
-- Do not overwrite canonical work/series prose in the external `projects/*/<prose_subdir>/*.md` tree, or canonical moment prose in `moments/*.md`, unless explicitly requested.
 - Do not delete generated or source files unless explicitly requested.
-
-## Pipeline Conventions
-
-- Treat `assets/studio/data/catalogue/*.json` as canonical source for catalogue metadata.
-- Treat the configured bulk-import workbook as an import source for new works and new work details only.
-- Do not keep workbook-led scripts or helpers outside the Studio bulk-import path.
-- Do not reintroduce deprecated clean-exit script stubs for retired workbook workflows.
-- Treat `scripts/catalogue_json_build.py` as the live CLI rebuild path for generated catalogue/runtime artifacts.
-- Treat `scripts/generate_work_pages.py` as an internal generator entrypoint, not a user-facing command.
-- Keep generated output deterministic (stable ordering, stable checksums, stable formatting).
-- Canonical series prose is resolved via `Series.primary_work_id -> Works.project_folder -> <prose_subdir> -> Series.series_prose_file`.
-- Keep `_series/*.md` minimal; richer series metadata and prose belong in generated JSON artifacts under `assets/series/index/`.
-
-## Moments-Specific Rules
-
-- Generate `_moments/*.md` from canonical moment metadata in `assets/studio/data/catalogue/moments.json` plus body-only prose in `_docs_src_catalogue/moments/`.
-- Canonical moment prose content lives in `_docs_src_catalogue/moments/<moment_id>.md`.
-- Keep `_moments/*.md` minimal; richer moment metadata belongs in generated JSON artifacts.
-- `/moments/` should read aggregate moment metadata from `assets/data/moments_index.json`.
-- `generate_work_pages.py` should always rebuild aggregate index JSON artifacts for series, works, and moments on every run, even when `--only` scopes page/file artifacts.
-- Moment layout should use srcset variants `800`, `1200`, `1600` only.
-- Do not add a `2400` variant for moments unless explicitly requested.
 
 ## Validation Checklist
 
@@ -133,8 +109,7 @@
 
 ## Security and Sanitization
 
-- Treat sanitization as a targeted pre-finish check, not a mechanical step for every change.
-- Run a sanitization scan when a change touches credential handling, logging, local-service writes, docs/examples with paths or commands, generated docs payloads that may include local output, or any script/doc change with realistic risk of leaking local paths or sensitive values.
+- Treat sanitization not as a mechanical step for every change. Only run a sanitization scan when a change touches credential handling, logging, local-service writes, docs/examples with system paths or commands, generated docs payloads that may include local output, or any script/doc change with realistic risk of leaking local paths or sensitive values.
 - For small low-risk edits, a reasoned no-scan decision is acceptable.
 - When scanning changed files for local path leaks and sensitive terms, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
@@ -145,7 +120,6 @@
 - Keep logs for local write services minimal (ids/counts/status), not full payload/file-content dumps.
 - For local write services, keep explicit write allowlists and do not widen write scope implicitly.
 - Keep local write services bound to loopback and limit CORS to localhost origins only.
-- For overwrite/import flows, create backups before write and document backup location/pattern.
 - If a runtime smoke test is blocked by sandbox restrictions, state that clearly in the final summary.
 
 ## Git and Change Hygiene
@@ -160,7 +134,7 @@
 - Preserve existing Jekyll/Liquid conventions in this repo.
 - Prefer shared JS/CSS logic over duplicated inline logic.
 - When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
-- The primary purpose of refactoring is to improve readability, consistency, and reliability.
+- The primary purpose of refactoring is to improve consistency and reliability of *.css
 - Keep comments concise and implementation-focused.
 - use studio_config.json (ui_text section) to store UI copy such as labels. 
 - For material new changes, new requirements, or refactors, state the main benefits and risks associated with:
@@ -172,13 +146,7 @@
 ## Studio UI Guidance
 
 - `_docs_src/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
-- `_docs_src/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI standards.
-- `_docs_src/studio-ui-framework.md` defines the Studio shared UI contracts.
-- When fixing Studio UI issues, always update `_docs_src/studio-ui-rules.md` with triage and outcome, and promote repeated/shared issues into permanent rules.
-- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, start with `_docs_src/studio-ui-start.md` and then use `_docs_src/studio-ui-framework.md` as the deeper basis.
-- When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, docs-viewer UI, or public-search UI, use `_docs_src/ui-framework.md` as the basis.
-- If site-wide UI defaults change, update `_docs_src/ui-framework.md` in the same change.
-- If Studio UI definitions, scope, or shared naming boundaries change, update `_docs_src/studio-ui-framework.md` in the same change.
+- `_docs_src/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI 
 - Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
@@ -186,37 +154,27 @@
 
 - This is a personal project. The user is effectively fulfilling developer, tester, and product roles together.
 - Optimize for decisions that help the user understand:
-  - clean and elegant UI design
-  - organized, conceptually simple code
-  - evolving or uncertain requirements
-  - best practice and where compromise is justified
-  - how Codex should best be used to implement requirements
-- Performance at large scale is less important than clarity, maintainability, and good product judgment for the current scope.
+- clean and elegant UI design
+- organized, maintainable code
+- evolving or uncertain requirements
+- best practice and where compromise is justified
+- how Codex should best be used to implement requirements
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
 
 ## Studio Documentation
 
-- Docs source is now flat under `_docs_src/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders.
+- Docs source is now flat under `_docs_src/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs_src/.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs_src/` directly.
-- After changing `_docs_src/`, ensure Studio docs-viewer output is updated before treating it as final. If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, prefer relying on the watcher unless deterministic verification is needed.
-- After changing `_docs_library_src/`, ensure library docs-viewer output is updated before treating it as final. If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, prefer relying on the watcher unless deterministic verification is needed.
-- Prefer explicit scope for docs search rebuilds as well:
+- If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, do not rebuild doc payloads.
+- Prefer explicit scope for docs search rebuilds:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
 - Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
-- `_docs_src/studio.md` and its child docs are the central product/behavior docs for Studio features.
-- `_docs_src/search.md` and its child docs are the central product/behavior docs for search.
-- `_docs_src/data-models.md` and its child docs are the central schema and payload-contract docs for generated/runtime data artifacts and source-data records.
-- `_docs_src/studio-implementation-plan.md` is the planning doc for post-Phase-15 workflow refinement and testing preparation.
-- `_docs_src/site-docs.md` plus `_docs_src/site-change-log.md` are the central architecture/history docs for the broader non-search site.
+- `_docs_src/site-change-log.md` is the central change log. Only record changes when UI, build flow, validation, or architecture changes are significant and meaningful. Simple UI changes or minor code changes do not need change log entries. If in doubt, ask if a change log entry is required.
+- For meaningful search changes, update `_docs_src/search-change-log.md` in the same change set as part of normal close-out.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
-- Keep `_docs_src/scripts.md` as the high-level entry point for repo scripts.
-- Keep `_docs_src/scripts-*.md` as the canonical script-specific references for command usage, flags, outputs, and operational notes.
-- When a schema or payload contract changes, update the relevant child docs under `_docs_src/data-models.md` in the same change.
-- Also update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
-- Only split a lower-level data-model child doc out of a scope doc when one artifact family has become too dense to stay readable and maintainable in the parent scope doc.
-- When Studio features are implemented or changed, update Studio docs and relevant scripts docs in the same change.
+- Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
+- Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
+- When features are implemented or changed, update docs in the same change.
 - When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs_src/search.md` in the same change.
-- For meaningful search changes, update `_docs_src/search-change-log.md` in the same change set as part of normal close-out.
-- When non-search site, Studio, or shared pipeline behaviour changes materially, update the relevant child docs under `_docs_src/site-docs.md` and `_docs_src/site-change-log.md` in the same change set as part of normal close-out.
