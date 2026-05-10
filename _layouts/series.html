@@ -56,6 +56,7 @@ layout: default
   </div>
 
   <script src="{{ '/assets/js/swipe-nav.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  <script src="{{ '/assets/js/public-catalogue-runtime.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script>
     (function () {
       var grid = document.getElementById('seriesGrid');
@@ -67,12 +68,14 @@ layout: default
 
       var root = document.getElementById('seriesPageRoot');
       if (!root) return;
+      var runtime = window.__dlfPublicCatalogueRuntime;
+      if (!runtime) return;
       var titleEl = document.getElementById('seriesPageTitle');
       var metaEl = document.getElementById('seriesPageMeta');
       var indexLink = document.getElementById('seriesGridIndexLink');
       var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
 
-      var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+      var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
       var seriesId = String(root.getAttribute('data-series-id') || '').trim().toLowerCase();
       var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '').trim();
       var thumbSizes = [];
@@ -81,11 +84,7 @@ layout: default
       } catch (e) {
         thumbSizes = [];
       }
-      thumbSizes = Array.isArray(thumbSizes) ? thumbSizes.map(function (value) {
-        var n = Number(value);
-        return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
-      }).filter(function (value) { return value > 0; }) : [];
-      if (!thumbSizes.length) thumbSizes = [96, 192];
+      thumbSizes = runtime.normalizePositiveSizes(thumbSizes, [96, 192]);
       var primaryThumbSize = thumbSizes[0];
       var thumbSrcsetSizes = thumbSizes.slice(0, 2);
       if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
@@ -94,8 +93,8 @@ layout: default
       var pageSize = 60;
       var params = new URLSearchParams(window.location.search);
       var rawPage = Number(params.get('series_page') || '0');
-      var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
-      var worksIndexUrl = baseurl + '/assets/data/works_index.json';
+      var seriesIndexUrl = runtime.seriesIndexUrl(baseurl);
+      var worksIndexUrl = runtime.worksIndexUrl(baseurl);
       if (!seriesId) {
         pager.hidden = true;
         grid.textContent = unavailableText;
@@ -105,14 +104,10 @@ layout: default
         indexLink.setAttribute('href', baseurl + '/works/?series=' + encodeURIComponent(seriesId));
       }
 
-      function text(v) {
-        return String(v == null ? '' : v).trim();
-      }
-
       function updateHeaderFromSeries(row) {
         if (!row || typeof row !== 'object') return;
-        var title = text(row.title) || seriesId;
-        var yearTxt = text(row.year_display) || text(row.year);
+        var title = runtime.text(row.title) || seriesId;
+        var yearTxt = runtime.text(row.year_display) || runtime.text(row.year);
         if (titleEl) titleEl.textContent = title;
         if (title) document.title = title + ' | dotlineform';
         if (metaEl) {
@@ -126,28 +121,8 @@ layout: default
         }
       }
 
-      function workUrl(id) {
-        return baseurl + '/works/' + encodeURIComponent(id) + '/';
-      }
-
       function thumbUrl(id, size) {
-        return String(thumbWorksBase || '') + id + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
-      }
-
-      function toAssetUrl(path) {
-        var s = String(path || '').trim();
-        if (!s) return '';
-        if (/^https?:\/\//i.test(s)) return s;
-        if (s.charAt(0) === '/') return baseurl + s;
-        return baseurl + '/' + s.replace(/^\/+/, '');
-      }
-
-      function fetchJson(url) {
-        return fetch(url, { cache: 'default' })
-          .then(function (r) {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.json();
-          });
+        return runtime.thumbUrl(thumbWorksBase, id, thumbSuffix, size, assetFormat);
       }
 
       function renderProse(contentHtml, showError) {
@@ -268,7 +243,7 @@ layout: default
           return {
             work_id: id,
             title: String(wr.title || id),
-            work_url: workUrl(id),
+            work_url: runtime.workUrl(id, baseurl),
             thumb_primary: thumbPrimary,
             thumb_srcset: thumbSrcset
           };
@@ -284,11 +259,11 @@ layout: default
       }
 
       function loadFromSeriesIndex() {
-        return fetchJson(seriesIndexUrl)
+        return runtime.fetchJson(seriesIndexUrl)
           .then(function (seriesIndexData) {
             var workIds = extractWorkIds(seriesIndexData);
             if (!workIds.length) return [];
-            return fetchJson(worksIndexUrl)
+            return runtime.fetchJson(worksIndexUrl)
               .then(function (worksIndexData) {
                 return buildItems(workIds, worksIndexData);
               })
@@ -307,7 +282,7 @@ layout: default
           grid.innerHTML = '';
         });
 
-      fetchJson(baseurl + '/assets/series/index/' + encodeURIComponent(seriesId) + '.json')
+      runtime.fetchJson(runtime.seriesPayloadUrl(seriesId, baseurl))
         .then(function (payload) {
           if (payload && payload.series && typeof payload.series === 'object') {
             updateHeaderFromSeries(payload.series);
@@ -339,7 +314,10 @@ layout: default
       var root = document.getElementById('seriesPageRoot');
       if (!link || !root) return;
 
-      var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+      var runtime = window.__dlfPublicCatalogueRuntime;
+      var baseurl = runtime
+        ? runtime.trimBaseurl(root.getAttribute('data-baseurl'))
+        : String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
       var params = new URLSearchParams(window.location.search);
       var from = String(params.get('from') || '').trim().toLowerCase();
 

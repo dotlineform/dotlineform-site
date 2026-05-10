@@ -170,43 +170,20 @@ layout: default
 </article>
 
 <script src="{{ '/assets/js/swipe-nav.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-<script>
-  (function () {
-    if (window.__dlfGetWorkRecord) return;
-    var cache = {};
-    window.__dlfGetWorkRecord = function (workId, baseurl) {
-      var widLocal = String(workId || '').trim();
-      if (!widLocal) return Promise.resolve(null);
-      if (cache[widLocal]) return cache[widLocal];
-      var base = String(baseurl || '').replace(/\/$/, '');
-      var url = base + '/assets/works/index/' + encodeURIComponent(widLocal) + '.json';
-      cache[widLocal] = fetch(url, { cache: 'default' })
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .catch(function () {
-          return null;
-        });
-      return cache[widLocal];
-    };
-  })();
-</script>
+<script src="{{ '/assets/js/public-catalogue-runtime.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   (function () {
     var root = document.getElementById('workPageRoot');
     if (!root) return;
+    var runtime = window.__dlfPublicCatalogueRuntime;
+    if (!runtime) return;
 
-    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
     var worksFilesBase = String(root.getAttribute('data-media-files-works-base') || '');
     var workId = String(root.getAttribute('data-work-id') || '').trim();
     if (!workId) return;
 
     var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
-
-    function text(v) {
-      return String(v == null ? '' : v).trim();
-    }
 
     function escAttr(v) {
       return String(v == null ? '' : v)
@@ -223,15 +200,10 @@ layout: default
         .replace(/>/g, '&gt;');
     }
 
-    function toNumber(v) {
-      var n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    }
-
     function normalizeSeriesIds(raw) {
       if (!Array.isArray(raw)) return [];
       return raw
-        .map(function (item) { return text(item).toLowerCase(); })
+        .map(function (item) { return runtime.text(item).toLowerCase(); })
         .filter(Boolean);
     }
 
@@ -240,8 +212,8 @@ layout: default
       return raw
         .map(function (item) {
           if (!item || typeof item !== 'object') return null;
-          var filename = text(item.filename);
-          var label = text(item.label);
+          var filename = runtime.text(item.filename);
+          var label = runtime.text(item.label);
           if (!filename || !label) return null;
           return {
             filename: filename,
@@ -256,8 +228,8 @@ layout: default
       return raw
         .map(function (item) {
           if (!item || typeof item !== 'object') return null;
-          var url = text(item.url);
-          var label = text(item.label);
+          var url = runtime.text(item.url);
+          var label = runtime.text(item.label);
           if (!url || !label) return null;
           return {
             url: url,
@@ -271,7 +243,7 @@ layout: default
       var row = document.getElementById(rowId);
       var textEl = document.getElementById(textId);
       if (!row || !textEl) return;
-      var out = text(value);
+      var out = runtime.text(value);
       if (!out) {
         row.hidden = true;
         textEl.textContent = '';
@@ -282,11 +254,11 @@ layout: default
     }
 
     function dimensionsText(meta) {
-      var mediumType = text(meta && meta.medium_type).toLowerCase();
+      var mediumType = runtime.text(meta && meta.medium_type).toLowerCase();
       if (mediumType === 'music') return '';
-      var h = toNumber(meta && meta.height_cm);
-      var w = toNumber(meta && meta.width_cm);
-      var d = toNumber(meta && meta.depth_cm);
+      var h = runtime.toNumber(meta && meta.height_cm);
+      var w = runtime.toNumber(meta && meta.width_cm);
+      var d = runtime.toNumber(meta && meta.depth_cm);
       if (h != null && w != null) {
         var base = String(h) + ' × ' + String(w);
         if (d != null && d > 0) base += ' × ' + String(d);
@@ -308,19 +280,19 @@ layout: default
       var img = document.getElementById('workPrimaryImg');
       if (!mediaLink || !img) return;
 
-      var width = toNumber(meta && meta.width_px);
-      var height = toNumber(meta && meta.height_px);
+      var width = runtime.toNumber(meta && meta.width_px);
+      var height = runtime.toNumber(meta && meta.height_px);
       if (!(width != null && height != null && width > 0 && height > 0)) {
-        width = toNumber(meta && meta.width_cm);
-        height = toNumber(meta && meta.height_cm);
+        width = runtime.toNumber(meta && meta.width_cm);
+        height = runtime.toNumber(meta && meta.height_cm);
       }
       if (width != null && height != null && width > 0 && height > 0) {
         mediaLink.style.setProperty('--work-ar', String(width) + ' / ' + String(height));
       }
 
-      var displaySrc = text(img.getAttribute('data-primary-display-src'));
-      var fullSrc = text(img.getAttribute('data-primary-full-src')) || displaySrc;
-      var srcset = text(img.getAttribute('data-primary-srcset'));
+      var displaySrc = runtime.text(img.getAttribute('data-primary-display-src'));
+      var fullSrc = runtime.text(img.getAttribute('data-primary-full-src')) || displaySrc;
+      var srcset = runtime.text(img.getAttribute('data-primary-srcset'));
       if (!displaySrc) return;
 
       img.setAttribute('src', displaySrc);
@@ -348,14 +320,14 @@ layout: default
 
     function applyMetadata(meta) {
       var record = meta || {};
-      var currentWorkId = text(record.work_id) || workId;
-      var title = text(record.title) || currentWorkId || 'Untitled';
-      var yearDisplay = text(record.year_display) || text(record.year);
-      var mediumCaption = text(record.medium_caption);
-      var duration = text(record.duration);
+      var currentWorkId = runtime.text(record.work_id) || workId;
+      var title = runtime.text(record.title) || currentWorkId || 'Untitled';
+      var yearDisplay = runtime.text(record.year_display) || runtime.text(record.year);
+      var mediumCaption = runtime.text(record.medium_caption);
+      var duration = runtime.text(record.duration);
       var downloads = normalizeDownloads(record.downloads);
       var seriesIds = normalizeSeriesIds(record.series_ids);
-      var seriesId = seriesIds.length ? seriesIds[0] : text(record.series_id).toLowerCase();
+      var seriesId = seriesIds.length ? seriesIds[0] : runtime.text(record.series_id).toLowerCase();
 
       var hiddenTitle = document.getElementById('workTitleHidden');
       var mainTitle = document.getElementById('workTitleMainText');
@@ -421,7 +393,7 @@ layout: default
       updateMedia(record);
     }
 
-    window.__dlfGetWorkRecord(workId, baseurl)
+    runtime.getWorkRecord(workId, baseurl)
       .then(function (payload) {
         var work = (payload && payload.work && typeof payload.work === 'object') ? payload.work : null;
         var contentHtml = (payload && typeof payload.content_html === 'string') ? payload.content_html : null;
@@ -444,7 +416,10 @@ layout: default
     var link = document.getElementById('pageBackLink');
     if (!link) return;
 
-    var baseurl = String(link.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var runtime = window.__dlfPublicCatalogueRuntime;
+    if (!runtime) return;
+
+    var baseurl = runtime.trimBaseurl(link.getAttribute('data-baseurl'));
     var fallback = link.getAttribute('data-fallback') || (baseurl + '/series/');
     var seriesLabel = (link.getAttribute('data-series-label') || 'series').trim();
     var params = new URLSearchParams(window.location.search);
@@ -510,7 +485,10 @@ layout: default
     var workTitle = String(section.getAttribute('data-work-title') || '').trim();
     if (!workId) return;
 
-    var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var runtime = window.__dlfPublicCatalogueRuntime;
+    if (!runtime) return;
+
+    var baseurl = runtime.trimBaseurl(section.getAttribute('data-baseurl'));
     var detailsImgBase = String(section.getAttribute('data-thumb-work-details-base') || '');
     var detailThumbSizes = [];
     try {
@@ -518,11 +496,7 @@ layout: default
     } catch (e) {
       detailThumbSizes = [];
     }
-    detailThumbSizes = Array.isArray(detailThumbSizes) ? detailThumbSizes.map(function (value) {
-      var n = Number(value);
-      return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
-    }).filter(function (value) { return value > 0; }) : [];
-    if (!detailThumbSizes.length) detailThumbSizes = [96, 192];
+    detailThumbSizes = runtime.normalizePositiveSizes(detailThumbSizes, [96, 192]);
     var detailThumbPrimarySize = detailThumbSizes[0];
     var detailThumbSrcset = detailThumbSizes.slice(0, 2);
     if (detailThumbSrcset.length < 2) detailThumbSrcset = [detailThumbPrimarySize, detailThumbPrimarySize];
@@ -545,15 +519,7 @@ layout: default
     var enableHashScroll = String(section.getAttribute('data-enable-hash-scroll') || 'true') !== 'false';
 
     function loadWorkPayload() {
-      if (typeof window.__dlfGetWorkRecord === 'function') {
-        return window.__dlfGetWorkRecord(workId, baseurl);
-      }
-      var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
-      return fetch(jsonUrl, { cache: 'default' })
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        });
+      return runtime.getWorkRecord(workId, baseurl);
     }
 
     function esc(s) {
@@ -563,13 +529,6 @@ layout: default
         .replace(/>/g, '&gt;')
         .replace(/\"/g, '&quot;')
         .replace(/'/g, '&#39;');
-    }
-
-    function slug(s) {
-      return String(s || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
     }
 
     function scrollToHashTarget() {
@@ -589,10 +548,8 @@ layout: default
       details.forEach(function (d) {
         var uid = String((d && d.detail_uid) || '').trim();
         if (!uid) return;
-        var thumbPrimary = detailsImgBase + uid + '-' + detailThumbSuffix + '-' + detailThumbPrimarySize + '.' + assetFormat;
-        var thumbSrcset = detailThumbSrcset.map(function (size) {
-          return detailsImgBase + uid + '-' + detailThumbSuffix + '-' + size + '.' + assetFormat + ' ' + size + 'w';
-        }).join(', ');
+        var thumbPrimary = runtime.thumbUrl(detailsImgBase, uid, detailThumbSuffix, detailThumbPrimarySize, assetFormat);
+        var thumbSrcset = runtime.thumbSrcset(detailsImgBase, uid, detailThumbSrcset, detailThumbSuffix, assetFormat);
         var title = String((d && d.title) || uid).trim();
         var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId) + '&details_section=' + encodeURIComponent(secId) + '&details_page=' + encodeURIComponent(String(currentPage));
         if (currentSeries) href += '&series=' + encodeURIComponent(currentSeries);
@@ -646,7 +603,7 @@ layout: default
         sections.forEach(function (sec) {
           var label = String((sec && (sec.section_title || sec.project_subfolder)) || '').trim();
           var sectionKey = String((sec && sec.section_id) || label || 'details').trim();
-          var secId = slug(sectionKey || 'details');
+          var secId = runtime.slug(sectionKey || 'details');
           var details = (sec && Array.isArray(sec.details)) ? sec.details : [];
           if (!details.length) return;
 

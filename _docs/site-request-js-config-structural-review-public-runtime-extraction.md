@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-public-runtime-extraction
 title: Public Runtime Extraction Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:13"
-ui_status: in-progress
+last_updated: "2026-05-10 17:20"
+ui_status: implemented
 parent_id: site-request-js-config-structural-review
 sort_order: 50
 hidden: false
@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- planning slice created
+- implemented
 
 ## Purpose
 
@@ -66,6 +66,29 @@ Primary generated data consumed by these routes:
 - per-series JSON payloads under public generated data paths
 
 The exact generated paths and record shapes should be confirmed before implementation.
+
+## Implementation Notes
+
+Added `assets/js/public-catalogue-runtime.js` as the public catalogue helper boundary for behavior that was already shared or duplicated across public work, work-detail, series, and work-navigation scripts.
+
+The helper now owns:
+
+- `fetchJson` with the current `cache: "default"` fetch behavior
+- cached per-work payload loading through `getWorkRecord` and the legacy `window.__dlfGetWorkRecord` alias
+- base URL trimming and public generated-data URL construction
+- work, work-detail, series index, works index, and per-series payload URL shaping
+- text trimming, positive-size normalization, numeric parsing, and slug normalization
+- thumbnail URL and `srcset` construction for public catalogue grids
+
+The route templates still own:
+
+- work metadata DOM updates and public prose rendering
+- work details section rendering, paging, hash scrolling, and section-local swipe binding
+- work-detail context hydration, back-link shaping, and detail Prev/Next navigation
+- series grid rendering, pagination state, prose rendering, and page URL replacement
+
+`assets/js/work.js` stays focused on public work/work-detail navigation behavior.
+It now imports shared fetch, URL, and ID normalization behavior from the helper, while retaining series link visibility, series back-link labels, Prev/Next links, and keyboard navigation locally.
 
 ## Target Boundary Questions
 
@@ -136,7 +159,7 @@ Avoid in the first implementation:
 - public series pages still render grid items, pagination, prose, and work links with preserved `series` and `series_page` query context
 - `assets/js/work.js` keeps keyboard navigation behavior intact
 - generated payload schemas and public route URLs are unchanged
-- helper extraction has at least one immediate caller from more than one public route, or a direct browser-test benefit that justifies a single-route helper
+- helper extraction has immediate callers from work, work-detail, series, and `assets/js/work.js`
 
 ## Targeted Verification
 
@@ -152,6 +175,15 @@ For an implementation slice, use focused checks:
 - verify current query parameters survive navigation where expected
 
 Broader checks are only needed if the implementation changes generated data paths, route templates, or public navigation contracts.
+
+Verification run for this slice:
+
+- `node --check assets/js/public-catalogue-runtime.js`
+- `node --check assets/js/work.js`
+- `./scripts/build_docs.rb --scope studio --write`
+- `./scripts/build_search.rb --scope studio --write`
+- Jekyll build to a separate destination because local Studio/Jekyll services may already be running
+- static Playwright smoke for a representative work page, work-detail page, and series page
 
 ## Benefits And Risks
 

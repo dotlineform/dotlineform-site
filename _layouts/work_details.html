@@ -107,19 +107,22 @@ layout: default
 </article>
 
 <script src="{{ '/assets/js/swipe-nav.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/js/public-catalogue-runtime.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   (function () {
     var root = document.getElementById('detailPageRoot');
     var link = document.getElementById('detailBackLink');
     var nav = document.getElementById('detailNav');
     if (!root || !link || !nav) return;
+    var runtime = window.__dlfPublicCatalogueRuntime;
+    if (!runtime) return;
 
     var titleCounter = document.getElementById('detailTitleCounter');
     var prevA = document.getElementById('detailNavPrev');
     var nextA = document.getElementById('detailNavNext');
     if (!prevA || !nextA) return;
 
-    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
     var detailUid = String(root.getAttribute('data-detail-uid') || '').trim();
     var loadingText = String(root.getAttribute('data-loading-text') || 'loading...');
     var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
@@ -155,25 +158,6 @@ layout: default
     ctx.series = series;
     ctx.seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
 
-    function normalize(v) {
-      return String(v == null ? '' : v).trim();
-    }
-
-    function slug(v) {
-      return normalize(v)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    function fetchJson(url) {
-      return fetch(url, { cache: 'default' })
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        });
-    }
-
     function updateTitleAndCat() {
       var hiddenTitle = document.getElementById('detailHiddenTitle');
       var titleText = document.getElementById('detailTitleText');
@@ -193,9 +177,9 @@ layout: default
         mediaLink.style.setProperty('--work-ar', String(ctx.widthPx) + ' / ' + String(ctx.heightPx));
       }
 
-      var displaySrc = normalize(img.getAttribute('data-primary-display-src'));
-      var fullSrc = normalize(img.getAttribute('data-primary-full-src')) || displaySrc;
-      var srcset = normalize(img.getAttribute('data-primary-srcset'));
+      var displaySrc = runtime.text(img.getAttribute('data-primary-display-src'));
+      var fullSrc = runtime.text(img.getAttribute('data-primary-full-src')) || displaySrc;
+      var srcset = runtime.text(img.getAttribute('data-primary-srcset'));
       if (!displaySrc) return;
 
       img.setAttribute('src', displaySrc);
@@ -240,8 +224,8 @@ layout: default
         var details = Array.isArray(sec.details) ? sec.details : [];
         for (var j = 0; j < details.length; j += 1) {
           var d = details[j] || {};
-          if (normalize(d.detail_uid) === ctx.detailUid) {
-            return { detail: d, section_id: slug(sec.section_id || sec.section_title || sec.project_subfolder || 'details') };
+          if (runtime.text(d.detail_uid) === ctx.detailUid) {
+            return { detail: d, section_id: runtime.slug(sec.section_id || sec.section_title || sec.project_subfolder || 'details') };
           }
         }
       }
@@ -260,8 +244,8 @@ layout: default
       if (ctx.section) {
         for (var i = 0; i < sections.length; i += 1) {
           var sec = sections[i] || {};
-          var sectionId = slug(sec.section_id || '');
-          var legacySectionId = slug(sec.section_title || sec.project_subfolder || '');
+          var sectionId = runtime.slug(sec.section_id || '');
+          var legacySectionId = runtime.slug(sec.section_title || sec.project_subfolder || '');
           if (sectionId === ctx.section || legacySectionId === ctx.section) {
             details = Array.isArray(sec.details) ? sec.details : [];
             break;
@@ -276,7 +260,7 @@ layout: default
         }
       }
       var ids = details
-        .map(function (d) { return normalize(d && d.detail_uid); })
+        .map(function (d) { return runtime.text(d && d.detail_uid); })
         .filter(Boolean);
       if (ids.length < 2) {
         nav.hidden = true;
@@ -312,8 +296,7 @@ layout: default
       return;
     }
 
-    var workJsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(ctx.fromWork) + '.json';
-    fetchJson(workJsonUrl)
+    runtime.fetchJson(runtime.workPayloadUrl(ctx.fromWork, baseurl))
       .then(function (workPayload) {
         if (!workPayload || typeof workPayload !== 'object') {
           updateTitleAndCat();
@@ -324,7 +307,7 @@ layout: default
         }
 
         var work = (workPayload.work && typeof workPayload.work === 'object') ? workPayload.work : null;
-        var workTitle = normalize(work && work.title);
+        var workTitle = runtime.text(work && work.title);
         if (!explicitFromWorkTitle && workTitle) {
           ctx.fromWorkTitle = workTitle;
         } else if (!ctx.fromWorkTitle) {
@@ -334,7 +317,7 @@ layout: default
         var detailCtx = findDetailRecord(workPayload);
         var detailRecord = detailCtx.detail;
         if (detailRecord) {
-          var recordTitle = normalize(detailRecord.title);
+          var recordTitle = runtime.text(detailRecord.title);
           if (recordTitle) ctx.title = recordTitle;
           var w = Number(detailRecord.width_px);
           var h = Number(detailRecord.height_px);

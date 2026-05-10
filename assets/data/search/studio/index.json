@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9940ad88b3f67e36ceac7daad4406ab5",
-    "generated_at_utc": "2026-05-10T16:14:14Z",
+    "version": "blake2b-5ac1d2260133ee8e80cdbbbc2397f96b",
+    "generated_at_utc": "2026-05-10T16:21:07Z",
     "count": 219
   },
   "entries": [
@@ -1770,10 +1770,10 @@
       "kind": "doc",
       "title": "Site Shell Runtime",
       "href": "/docs/?scope=studio&doc=site-shell-runtime",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-10 17:20",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-09 16:00 • Architecture",
+      "display_meta": "2026-05-10 17:20 • Architecture",
       "search_terms": [
         "site-shell-runtime",
         "site",
@@ -1781,14 +1781,14 @@
         "runtime",
         "site shell runtime",
         "architecture",
-        "2026-05-09 16:00",
+        "2026-05-10 17:20",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "10",
+        "17",
+        "20"
       ],
-      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-10 17:20 2026 05 10 17 20"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -2752,10 +2752,10 @@
       "kind": "doc",
       "title": "Public Runtime Extraction Slice",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction",
-      "last_updated": "2026-05-10 17:13",
+      "last_updated": "2026-05-10 17:20",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 17:13 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 17:20 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-config-structural-review-public-runtime-extraction",
         "site",
@@ -2773,14 +2773,14 @@
         "javascript",
         "and",
         "browser",
-        "2026-05-10 17:13",
+        "2026-05-10 17:20",
         "2026",
         "05",
         "10",
         "17",
-        "13"
+        "20"
       ],
-      "search_text": "site-request-js-config-structural-review-public-runtime-extraction site request js config structural review public runtime extraction public runtime extraction slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:13 2026 05 10 17 13"
+      "search_text": "site-request-js-config-structural-review-public-runtime-extraction site request js config structural review public runtime extraction public runtime extraction slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:20 2026 05 10 17 20"
     },
     {
       "id": "search-normalisation-rules",
@@ -5318,10 +5318,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 17:13",
+      "last_updated": "2026-05-10 17:20",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 17:13 • Change Requests",
+      "display_meta": "2026-05-10 17:20 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5337,14 +5337,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 17:13",
+        "2026-05-10 17:20",
         "2026",
         "05",
         "10",
         "17",
-        "13"
+        "20"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 17:13 2026 05 10 17 13"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 17:20 2026 05 10 17 20"
     },
     {
       "id": "site-request-scripts-directory-organization",
@@ -5510,22 +5510,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 17:08",
-      "display_meta": "2026-05-10 17:08",
+      "last_updated": "2026-05-10 17:20",
+      "display_meta": "2026-05-10 17:20",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 17:08",
+        "2026-05-10 17:20",
         "2026",
         "05",
         "10",
         "17",
-        "08"
+        "20"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 17:08 2026 05 10 17 08"
+      "search_text": "site-change-log site change log site change log 2026-05-10 17:20 2026 05 10 17 20"
     },
     {
       "id": "archive",

@@ -2,7 +2,7 @@
 doc_id: site-shell-runtime
 title: Site Shell Runtime
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-10 17:20"
 parent_id: architecture
 sort_order: 30
 ---
@@ -15,6 +15,7 @@ Current scope:
 - `_layouts/default.html`
 - `_includes/nav_item.html`
 - `assets/js/theme-toggle.js`
+- `assets/js/public-catalogue-runtime.js`
 - `docs/index.md`
 - `library/index.md`
 - `_includes/docs_viewer_shell.html`
@@ -55,6 +56,8 @@ The active default-layout runtime lives in shared asset files:
 
 - `assets/js/theme-toggle.js`
   - handles the footer theme toggle control
+- `assets/js/public-catalogue-runtime.js`
+  - provides shared public catalogue fetch, generated-data URL, normalization, and thumbnail helpers for work, work-detail, and series routes
 
 Reason:
 
@@ -66,6 +69,9 @@ Notes:
 - the current public header does not render a `nav-more` control
 - `assets/js/site-nav.js` still exists in the repo, but the current default shell does not depend on it for active navigation behavior
 
+`assets/js/public-catalogue-runtime.js` is route-loaded by the public catalogue layouts rather than by `_layouts/default.html`.
+The default shell remains responsible for page chrome; public catalogue routes opt into the helper where their inline bootstraps need generated-data fetches and URL/media helpers.
+
 ## Shared Asset Versioning
 
 The shared default-layout CSS and JS append a lightweight build-version query token derived from `site.time`.
@@ -75,6 +81,7 @@ Current versioned shell assets:
 - `assets/css/main.css`
 - `assets/js/theme-toggle.js`
 - `assets/js/site-nav.js`
+- `assets/js/public-catalogue-runtime.js` when loaded by public catalogue layouts
 
 Reason:
 

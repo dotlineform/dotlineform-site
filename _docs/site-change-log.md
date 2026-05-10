@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 17:08"
+last_updated: "2026-05-10 17:20"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted public catalogue runtime helpers
+
+**Status:** implemented
+
+**Area:** Public site runtime / JavaScript config structural review
+
+**Summary:**
+Added `assets/js/public-catalogue-runtime.js` as the shared helper boundary for public catalogue fetches, generated-data URLs, text/slug/size normalization, work payload caching, and thumbnail URL/srcset construction.
+The public work, work-detail, and series layouts now call the helper while keeping route-specific DOM rendering, pagination, context hydration, and query preservation local.
+`assets/js/work.js` now uses the shared fetch/URL/ID helpers while retaining public work/detail navigation and keyboard behavior.
+
+**Files changed/docs:**
+
+- `assets/js/public-catalogue-runtime.js`
+- `assets/js/work.js`
+- `_layouts/work.html`
+- `_layouts/work_details.html`
+- `_layouts/series.html`
+- [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction)
+- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Public catalogue helper behavior is now testable and cacheable as an asset without converting the public routes into a client-side app.
+Renderer ownership remains route-local, so generated payload schemas, public URLs, and Liquid-rendered media contracts stay unchanged.
 
 ## [2026-05-10] Extracted Studio analysis tag scoring
 

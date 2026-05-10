@@ -4,12 +4,14 @@
   var nav = document.getElementById('seriesNav');
   var seriesLinkWrap = document.getElementById('workSeriesLinkWrap');
   if (!nav && !seriesLinkWrap) return;
+  var runtime = window.__dlfPublicCatalogueRuntime;
+  if (!runtime) return;
 
   var baseurl = '';
   if (nav && nav.dataset && nav.dataset.baseurl) {
     baseurl = String(nav.dataset.baseurl);
   }
-  baseurl = baseurl.replace(/\/$/, '');
+  baseurl = runtime.trimBaseurl(baseurl);
 
   var params = new URLSearchParams(window.location.search);
   var seriesFromQuery = (params.get('series') || '').trim();
@@ -24,17 +26,9 @@
   var backLink = document.getElementById('pageBackLink');
   var seriesIndexData = null;
 
-  function fetchJson(url) {
-    return fetch(url, { cache: 'default' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      });
-  }
-
   function normalizeIds(raw) {
     if (!Array.isArray(raw)) return [];
-    return raw.map(function (id) { return String(id || '').trim(); }).filter(Boolean);
+    return raw.map(function (id) { return runtime.text(id); }).filter(Boolean);
   }
 
   function extractSeriesIndexIds(payload, seriesId) {
@@ -134,8 +128,8 @@
     configureNav(idsForNav, currentId);
   }
 
-  var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
-  fetchJson(seriesIndexUrl)
+  var seriesIndexUrl = runtime.seriesIndexUrl(baseurl);
+  runtime.fetchJson(seriesIndexUrl)
     .then(function (data) {
       seriesIndexData = data;
       // Local cache for fast refresh when work metadata is re-hydrated from JSON.

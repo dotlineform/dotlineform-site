@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:13"
+last_updated: "2026-05-10 17:20"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -27,12 +27,13 @@ Status:
 - Slice 4 child doc created
 - Slice 4 implemented
 - Slice 5 child doc created
+- Slice 5 implemented
 
 ## Active Execution Queue
 
 The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is complete.
 [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
-The active top-level slice is [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction).
+[Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction) is complete.
 
 ## Summary
 
@@ -207,7 +208,7 @@ Likely direction:
 
 ### 5. Public work/series layouts still contain substantial inline JavaScript
 
-Priority: medium.
+Priority: medium. First slice implemented.
 
 Public work pages include route-local inline scripts for work payload caching, metadata rendering, details pagination, details thumbnail URLs, hash scrolling, and swipe bindings, plus `assets/js/work.js`.
 Series and work-detail layouts have similar inline behavior.
@@ -225,6 +226,12 @@ Likely direction:
   - details section renderer and pager
   - shared public catalogue URL/media path helper
 - leave tiny bootstrapping snippets in Liquid when they only pass page data into an asset module
+
+Implemented first slice:
+
+- added `assets/js/public-catalogue-runtime.js` for shared public catalogue fetch, generated-data URL, normalization, and thumbnail helpers
+- updated `_layouts/work.html`, `_layouts/work_details.html`, `_layouts/series.html`, and `assets/js/work.js` to use the helper
+- kept work metadata rendering, work-details grid rendering, work-detail context hydration, series grid rendering, pagination, and route-specific query preservation in the route templates
 
 ### 6. Search has a clear policy split but still does all matching on the main thread
 
