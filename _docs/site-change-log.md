@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 00:25"
+last_updated: "2026-05-11 00:35"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,25 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Closed the Catalogue JavaScript route consistency pass
+
+**Status:** completed
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Recorded the Catalogue route cleanup stop point.
+The Work, Work Detail, Series, and Moment route entries are all below the 1,000-line review threshold and are accepted as route coordinators with route-local form, section, action, selection, and domain helpers where the boundaries are real.
+
+**Files changed/docs:**
+
+- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
+- [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory)
+
+**Impact:**
+Catalogue cleanup no longer blocks the shared Docs Viewer controller work.
+The next runtime priority is the existing Docs Viewer extraction plan, starting with render and management-UI boundaries in `assets/js/docs-viewer.js`.
 
 ## [2026-05-11] Extracted Catalogue Moment Editor selection behavior
 

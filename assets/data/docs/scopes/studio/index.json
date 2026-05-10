@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T23:33:34Z",
+  "generated_at": "2026-05-10T23:37:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2165,7 +2165,7 @@
       "doc_id": "site-request-js-payload-runtime-cleanup-inventory",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-11 00:25",
+      "last_updated": "2026-05-11 00:35",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 70,
       "published": true,
@@ -2174,7 +2174,7 @@
       "source_path": "site-request-js-payload-runtime-cleanup-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup-inventory.json",
-      "content_text_length": 4421,
+      "content_text_length": 4525,
       "ui_status": "draft"
     },
     {
@@ -2375,7 +2375,7 @@
       "doc_id": "site-request-catalogue-js-runtime-consistency",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-11 00:33",
+      "last_updated": "2026-05-11 00:35",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 80,
       "published": true,
@@ -2384,7 +2384,7 @@
       "source_path": "site-request-catalogue-js-runtime-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-js-runtime-consistency.json",
-      "content_text_length": 49460,
+      "content_text_length": 52090,
       "ui_status": "draft"
     },
     {
@@ -3514,7 +3514,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 00:25",
+      "last_updated": "2026-05-11 00:35",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3523,7 +3523,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 133725
+      "content_text_length": 134532
     },
     {
       "scope": "studio",

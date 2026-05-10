@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-11 00:33"
+last_updated: "2026-05-11 00:35"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -30,6 +30,7 @@ Status:
 - Slice D3 implemented for Moment form and section rendering
 - Slice D4 implemented for Moment selection/opening
 - Slice D5 completed; Moment route is an acceptable coordinator and the next Catalogue priority is Slice E stop point
+- Slice E completed; Catalogue route consistency is sufficient to move to the Docs Viewer controller work
 
 ## Implementation Progress
 
@@ -82,6 +83,9 @@ Status:
 - Accepted `assets/studio/js/catalogue-moment-editor.js` as the Moment route coordinator because its remaining responsibilities are lifecycle setup, route-ready/busy state, generated lookup loading, mode construction, dirty-state orchestration, context wiring, and post-import/focused-record coordination.
 - Confirmed import direction remains clear: normal edit writes are in `catalogue-moment-actions.js`, import writes are in `catalogue-moment-import.js`, shared transport stays in `catalogue-editor-service-client.js`, and form/section/selection/field helpers do not own service writes.
 - The next Catalogue priority is Slice E: Catalogue Scope Stop Point.
+- Slice E measured the Catalogue route entries and found no remaining Catalogue route controller over the 1,000-line review threshold.
+- Accepted Work, Work Detail, Series, and Moment as sufficiently consistent route families: route entries coordinate lifecycle/state, route-local helpers own form/section/action/selection/domain concerns, and transport remains behind service-client/write-server boundaries.
+- The next non-Catalogue runtime priority is the shared Docs Viewer controller, starting with its existing extraction plan for render and management-UI boundaries.
 
 ## Purpose
 
@@ -136,13 +140,15 @@ Likewise, do not stop a route split only because the entry module drops below 1,
 
 ## Current Evidence
 
-Post Work Editor cleanup, the remaining Catalogue route controllers over the long-file review threshold are:
+Post Catalogue cleanup, no Catalogue route controller remains over the long-file review threshold.
+The main route entries are:
 
-| File | Current disposition |
-| --- | --- |
-| `assets/studio/js/catalogue-work-detail-editor.js` | selection/opening, form rendering/synchronization, summary/readiness/preview, and action workflow sequencing extractions complete; below long-file review threshold |
-| `assets/studio/js/catalogue-series-editor.js` | membership, action workflow, selection/opening, form rendering, and section/readiness extractions complete; below long-file review threshold and acceptable as route coordinator |
-| `assets/studio/js/catalogue-moment-editor.js` | import, action workflow, form/section display, and selection/opening extractions complete; below long-file review threshold and acceptable as route coordinator |
+| File | Lines | Current disposition |
+| --- | ---: | --- |
+| `assets/studio/js/catalogue-work-editor.js` | 992 | form, section, action, and selection extractions complete; below long-file review threshold and acceptable as route coordinator |
+| `assets/studio/js/catalogue-work-detail-editor.js` | 642 | selection/opening, form rendering/synchronization, summary/readiness/preview, and action workflow sequencing extractions complete; below long-file review threshold and acceptable as route coordinator |
+| `assets/studio/js/catalogue-series-editor.js` | 605 | membership, action workflow, selection/opening, form rendering, and section/readiness extractions complete; below long-file review threshold and acceptable as route coordinator |
+| `assets/studio/js/catalogue-moment-editor.js` | 554 | import, action workflow, form/section display, and selection/opening extractions complete; below long-file review threshold and acceptable as route coordinator |
 
 `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-actions.js`, and `assets/studio/js/catalogue-work-selection.js` are now below the review threshold, but the important outcome is the ownership split, not the number itself.
 
@@ -706,10 +712,34 @@ Acceptance checks:
 
 ### Slice E: Catalogue Scope Stop Point
 
+Status:
+
+- completed
+
 Intent:
 
 - decide when Catalogue route consistency is good enough to move to the Docs Viewer controller
 - update the long-JS inventory with current measured line counts and dispositions
+
+Decision:
+
+- Catalogue route consistency is good enough to stop this request's Catalogue implementation slices
+- no Catalogue route entry currently exceeds the 1,000-line long-file review threshold
+- Work, Work Detail, Series, and Moment now share the same practical ownership model without introducing a generic base controller
+- route entries own lifecycle, generated-data reads, route-ready/busy state, mode construction, validation orchestration, dirty-state orchestration, and explicit helper contexts
+- route-local helpers own form rendering, section/readiness rendering, selection/opening, action workflow sequencing, route-specific domain state, and payload shaping where those boundaries are real
+- Catalogue write/build/publication/prose/import/delete transport stays in `assets/studio/js/catalogue-editor-service-client.js` and the route-local action/import modules rather than in display or selection helpers
+- the long-JS inventory now treats Catalogue route cleanup as complete for this request
+- the next non-Catalogue runtime priority is the shared Docs Viewer controller, with render and management-UI boundaries as the next justified extraction targets
+
+Measured Catalogue route entries:
+
+| File | Lines | Stop-point disposition |
+| --- | ---: | --- |
+| `assets/studio/js/catalogue-work-editor.js` | 992 | acceptable route coordinator after Work form, section, action, and selection splits |
+| `assets/studio/js/catalogue-work-detail-editor.js` | 642 | acceptable route coordinator after Work Detail selection, form, section, and action splits |
+| `assets/studio/js/catalogue-series-editor.js` | 605 | acceptable route coordinator after Series membership, action, selection, form, and section splits |
+| `assets/studio/js/catalogue-moment-editor.js` | 554 | acceptable route coordinator after Moment import, action, form/section, and selection splits |
 
 Acceptance checks:
 
@@ -745,7 +775,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice E: Catalogue Scope Stop Point.
+Switch to the shared Docs Viewer controller cleanup.
 
-The Moment import, action, form/section, and selection/open boundaries are extracted, and the remaining Moment route entry module is an acceptable coordinator.
-The next useful step is to decide whether Catalogue route consistency is sufficient to move from Catalogue cleanup to the next non-Catalogue runtime priority.
+Catalogue route consistency is sufficient for this request.
+The next useful non-Catalogue runtime step is the existing Docs Viewer extraction plan, starting with render and management-UI boundaries in `assets/js/docs-viewer.js`.
