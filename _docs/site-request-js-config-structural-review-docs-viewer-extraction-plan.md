@@ -18,7 +18,7 @@ Status:
 - Slice C implemented
 - Slice D implemented
 - Slice E implemented
-- Slice F to be implemented
+- Slice F implemented
 
 ## Purpose
 
@@ -45,13 +45,13 @@ Target modules:
   docs-management capability reads and POST helpers for create, metadata update, viewability, move, restore move, archive, delete, rebuild, and open-source actions
 - `assets/js/docs-viewer-render.js`
   only after earlier slices: focused rendering helpers for nav rows, metadata, search/recent result rows, status, and pane visibility
+- `assets/js/docs-viewer-drag-drop.js`
+  drag/drop row geometry, drop validation, move undo record normalization, and restore-move payload shaping
 
 Deferred or optional modules:
 
 - `assets/js/docs-viewer-management-ui.js`
   modal, status pills, management toolbar, context menu, and button-state rendering
-- `assets/js/docs-viewer-drag-drop.js`
-  drag/drop geometry, drop validation, move undo normalization, and drag affordance rendering
 
 ## Import Direction
 
@@ -290,20 +290,20 @@ Verification:
 - rebuild request interception smoke
 - delete preview/apply request interception smoke only if scoped narrowly
 
-### Slice F: Management UI Or Drag/Drop Follow-Up
+### Slice F: Drag/Drop Follow-Up
 
-Only start this after the client and pure helpers are stable.
+Status: implemented.
 
-Candidate directions:
+Move drag/drop validation and move undo payload helpers into `docs-viewer-drag-drop.js`.
 
-- status pill and metadata modal rendering helpers
-- context menu rendering helpers
-- drag/drop pure helpers and undo normalization
+Implementation result:
+
+- `assets/js/docs-viewer-drag-drop.js` now owns drag eligibility checks, row drop-position calculation, drop validation, current drop-target derivation, move undo record normalization, changed-record detection, and restore-move payload shaping
+- `assets/js/docs-viewer.js` imports the drag/drop helpers and keeps nav event binding, drag state mutation, drag affordance rendering, management busy-state transitions, status messaging, and move/reload orchestration local
+- drag/drop helpers receive shaped controller options such as the current drag doc id, enabled state, docs map, and child-check callback instead of reading the viewer state singleton
 
 Verification:
 
-- metadata modal open/close smoke
-- status pill write interception smoke
 - drag/drop move interception smoke
 - undo move interception smoke
 

@@ -43,6 +43,16 @@ import {
   updateManagedDocMetadata,
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
+import {
+  canDragDoc,
+  canDropOnDoc,
+  currentDropTargetFromEvent,
+  moveUndoPayloadRecords,
+  moveUndoRecordChanged,
+  normalizeMoveUndoRecords,
+  normalizeSortOrderValue,
+  rowDropPosition
+} from "./docs-viewer-drag-drop.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -993,7 +1003,7 @@ import {
       }
       link.href = viewerUrl(viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
-      if (canDragDoc(doc)) {
+      if (canDragCurrentDoc(doc)) {
         link.draggable = true;
         link.dataset.dragDocId = doc.doc_id;
       }
@@ -1105,49 +1115,17 @@ import {
     return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
   }
 
-  function canDragDoc(doc) {
-    if (!managementDragEnabled() || !doc) return false;
-    return !docHasChildren(doc.doc_id);
-  }
-
-  function dropPositionForRow(row, event) {
-    if (!managementDragEnabled()) return "";
-    if (!row) return "";
-    var docId = row.dataset.docRowId || "";
-    if (!docId || !state.docsById.has(docId)) return "";
-    if (state.dragDocId === docId) return "";
-
-    var rect = row.getBoundingClientRect();
-    var clientY = event && typeof event.clientY === "number" ? event.clientY : rect.top + (rect.height / 2);
-    var afterThresholdY = rect.top + (rect.height * 0.5);
-    if (clientY >= afterThresholdY) {
-      return "after";
-    }
-    return "inside";
-  }
-
-  function canDropOnDoc(docId, position) {
-    if (!state.dragDocId || !managementDragEnabled()) return false;
-    var dragDoc = state.docsById.get(state.dragDocId);
-    var targetDoc = state.docsById.get(docId);
-    if (!dragDoc || !targetDoc) return false;
-    if (!canDragDoc(dragDoc)) return false;
-    if (dragDoc.doc_id === targetDoc.doc_id) return false;
-    return position === "inside" || position === "after";
-  }
-
-  function currentDropTargetFromEvent(event) {
-    var row = event && event.target ? event.target.closest("[data-doc-row-id]") : null;
-    if (row) {
-      return {
-        targetDocId: row.dataset.docRowId || "",
-        position: dropPositionForRow(row, event)
-      };
-    }
+  function dragDropOptions() {
     return {
-      targetDocId: state.dropTargetDocId,
-      position: state.dropPosition
+      dragDocId: state.dragDocId,
+      dragEnabled: managementDragEnabled(),
+      docsById: state.docsById,
+      hasChildren: docHasChildren
     };
+  }
+
+  function canDragCurrentDoc(doc) {
+    return canDragDoc(doc, dragDropOptions());
   }
 
   function clearDragState() {
@@ -1155,46 +1133,6 @@ import {
     state.dropTargetDocId = "";
     state.dropPosition = "";
     updateNavDragState();
-  }
-
-  function normalizeSortOrderValue(value) {
-    return value == null ? "" : String(value);
-  }
-
-  function moveUndoRecordChanged(record, nextRecord) {
-    if (!record || !nextRecord) return false;
-    return (
-      String(record.parent_id || "") !== String(nextRecord.parent_id || "") ||
-      normalizeSortOrderValue(record.sort_order) !== normalizeSortOrderValue(nextRecord.sort_order)
-    );
-  }
-
-  function normalizeMoveUndoRecords(records) {
-    if (!Array.isArray(records)) return [];
-    var seen = new Set();
-    return records.reduce(function (acc, record) {
-      if (!record || !record.doc_id) return acc;
-      var docId = String(record.doc_id || "").trim();
-      if (!docId || seen.has(docId)) return acc;
-      seen.add(docId);
-      acc.push({
-        doc_id: docId,
-        title: String(record.title || docId),
-        parent_id: String(record.parent_id || ""),
-        sort_order: normalizeSortOrderValue(record.sort_order)
-      });
-      return acc;
-    }, []);
-  }
-
-  function moveUndoPayloadRecords(undoRecords) {
-    return undoRecords.map(function (record) {
-      return {
-        doc_id: record.doc_id,
-        parent_id: record.parent_id || "",
-        sort_order: normalizeSortOrderValue(record.sort_order)
-      };
-    });
   }
 
   function contextMenuEnabled() {
@@ -2324,8 +2262,9 @@ import {
         }
 
         var targetDocId = row.dataset.docRowId || "";
-        var nextPosition = dropPositionForRow(row, event);
-        if (!canDropOnDoc(targetDocId, nextPosition)) {
+        var dropOptions = dragDropOptions();
+        var nextPosition = rowDropPosition(row, event, dropOptions);
+        if (!canDropOnDoc(targetDocId, nextPosition, dropOptions)) {
           if (state.dropTargetDocId || state.dropPosition) {
             state.dropTargetDocId = "";
             state.dropPosition = "";
@@ -2347,14 +2286,18 @@ import {
 
       nav.addEventListener("drop", function (event) {
         event.preventDefault();
-        var dropTarget = currentDropTargetFromEvent(event);
+        var dropOptions = dragDropOptions();
+        var dropTarget = currentDropTargetFromEvent(event, {
+          targetDocId: state.dropTargetDocId,
+          position: state.dropPosition
+        }, dropOptions);
         var targetDocId = dropTarget.targetDocId;
         var position = dropTarget.position;
         if ((!targetDocId || !position) && state.dropTargetDocId && state.dropPosition) {
           targetDocId = state.dropTargetDocId;
           position = state.dropPosition;
         }
-        if (!canDropOnDoc(targetDocId, position) || !position) {
+        if (!canDropOnDoc(targetDocId, position, dropOptions) || !position) {
           clearDragState();
           return;
         }
