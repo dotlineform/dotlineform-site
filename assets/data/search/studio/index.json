@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d9e2a0a45b77bfc37b5ec5a4b6d32e86",
-    "generated_at_utc": "2026-05-10T13:36:32Z",
+    "version": "blake2b-b21a29075276202f4b223e06504f90ea",
+    "generated_at_utc": "2026-05-10T13:50:02Z",
     "count": 215
   },
   "entries": [
@@ -974,10 +974,10 @@
       "kind": "doc",
       "title": "Docs Viewer Extraction Plan",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan",
-      "last_updated": "2026-05-10 14:36",
+      "last_updated": "2026-05-10 14:49",
       "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
       "parent_title": "Docs Viewer Boundary Spec Slice",
-      "display_meta": "2026-05-10 14:36 • Docs Viewer Boundary Spec Slice",
+      "display_meta": "2026-05-10 14:49 • Docs Viewer Boundary Spec Slice",
       "search_terms": [
         "site-request-js-config-structural-review-docs-viewer-extraction-plan",
         "site",
@@ -995,14 +995,14 @@
         "boundary",
         "spec",
         "slice",
-        "2026-05-10 14:36",
+        "2026-05-10 14:49",
         "2026",
         "05",
         "10",
         "14",
-        "36"
+        "49"
       ],
-      "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 14:36 2026 05 10 14 36"
+      "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 14:49 2026 05 10 14 49"
     },
     {
       "id": "ui-primitive-input",

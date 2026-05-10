@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:36"
+last_updated: "2026-05-10 14:49"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
@@ -16,7 +16,8 @@ Status:
 - Slice A implemented
 - Slice B implemented
 - Slice C implemented
-- slices D-F to be implemented
+- Slice D implemented
+- slices E-F to be implemented
 
 ## Purpose
 
@@ -215,6 +216,8 @@ Verification:
 
 ### Slice D: Data Fetch Helpers
 
+Status: implemented.
+
 Move asset-version, retry, and generated-read request helpers into `docs-viewer-data.js`.
 
 Candidate functions:
@@ -234,6 +237,13 @@ Candidate functions:
 - `fetchIndexWithRetry`
 - `managementReloadPath`
 - `readAssetVersion`
+
+Implementation result:
+
+- `assets/js/docs-viewer-data.js` now owns asset-version URL handling, reload request shaping, generated-read request options, retry timing, static/generated JSON fetch helpers, expected-doc index validation, index fetch orchestration, management reload path construction, and asset-version meta reads
+- `assets/js/docs-viewer.js` imports the data helpers and keeps capability checks, current reload state, management availability, and selected scope orchestration local
+- data helpers receive controller-provided request options, including reload nonce, expected doc id, management base URL, retry settings, fetch/timer callbacks, and generated-read capability callbacks
+- management write endpoints and capability persistence stay in the entry controller until the management-client slice
 
 Verification:
 

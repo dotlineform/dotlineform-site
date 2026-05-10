@@ -20,6 +20,14 @@ import {
   normalizeBookmarkRecord,
   persistBookmark
 } from "./docs-viewer-favourites.js";
+import {
+  appendAssetVersion,
+  fetchIndexWithRetry,
+  fetchJsonWithRetry,
+  fetchPreferredGeneratedJson,
+  managementReloadPath,
+  readAssetVersion
+} from "./docs-viewer-data.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -95,6 +103,7 @@ import {
   var SIDEBAR_STORAGE_PREFIX = "dotlineform-docs-viewer-sidebar:";
   var bookmarkScope = viewerScope || viewerPathname || "docs";
   var sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
+  var assetVersion = readAssetVersion(document);
 
   var state = {
     allDocs: [],
@@ -175,6 +184,29 @@ import {
     showUpdatedDate: true,
     sidebarCollapsed: readSidebarCollapsedState()
   };
+
+  function dataRequestOptions(overrides) {
+    var settings = overrides || {};
+    return Object.assign({
+      assetVersion: assetVersion,
+      reloadNonce: state.reloadNonce,
+      reloadExpectedDocId: state.reloadExpectedDocId,
+      reloadRetryAttempts: RELOAD_RETRY_ATTEMPTS,
+      reloadRetryDelayMs: RELOAD_RETRY_DELAY_MS,
+      managementAvailable: state.managementAvailable,
+      managementBaseUrl: managementBaseUrl,
+      fetch: function (url, options) {
+        return window.fetch(url, options);
+      },
+      setTimeout: function (resolve, delayMs) {
+        return window.setTimeout(resolve, delayMs);
+      },
+      checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
+      scopeSupportsGeneratedSearchReads: function () {
+        return scopeSupportsGeneratedSearchReads(state.managementCapabilities || {});
+      }
+    }, settings);
+  }
 
   function getCurrentDocId() {
     return new URLSearchParams(window.location.search).get("doc") || "";
@@ -389,7 +421,7 @@ import {
       return Promise.resolve(null);
     }
 
-    state.viewerConfigRequestPromise = fetchJsonWithRetry(studioConfigUrl, "Failed to load Studio config")
+    state.viewerConfigRequestPromise = fetchJsonWithRetry(studioConfigUrl, "Failed to load Studio config", "", dataRequestOptions())
       .then(function (config) {
         applyViewerConfig(config || {});
         return config;
@@ -2270,7 +2302,7 @@ import {
       doc.content_url,
       "Failed to load " + doc.content_url,
       managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
-      false
+      dataRequestOptions({ useSearchCapability: false })
     )
       .then(function (payload) {
         if (state.requestId !== requestId) return;
@@ -2766,7 +2798,10 @@ import {
   }
 
   function loadIndex() {
-    return fetchIndexWithRetry()
+    return fetchIndexWithRetry(dataRequestOptions({
+      indexUrl: indexUrl,
+      viewerScope: viewerScope
+    }))
       .then(function (payload) {
         initializeIndex(payload);
       })
@@ -2794,7 +2829,7 @@ import {
       searchIndexUrl,
       "Failed to load search data",
       managementReloadPath("/docs/generated/search", { scope: viewerScope }),
-      true
+      dataRequestOptions({ useSearchCapability: true })
     )
       .then(function (payload) {
         state.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
@@ -2948,173 +2983,6 @@ import {
   initializeBookmarks();
   initializeManagement();
   loadIndex().catch(function () {});
-
-  function appendAssetVersion(url) {
-    var cleanUrl = String(url || "");
-    if (!cleanUrl) return "";
-
-    var assetVersion = readAssetVersion();
-    if (!assetVersion) return cleanUrl;
-
-    var separator = cleanUrl.indexOf("?") >= 0 ? "&" : "?";
-    return cleanUrl + separator + "v=" + encodeURIComponent(assetVersion);
-  }
-
-  function requestUrl(url) {
-    var nextUrl = appendAssetVersion(url);
-    if (!state.reloadNonce) {
-      return nextUrl;
-    }
-    var separator = nextUrl.indexOf("?") >= 0 ? "&" : "?";
-    return nextUrl + separator + "reload=" + encodeURIComponent(state.reloadNonce);
-  }
-
-  function requestOptions() {
-    return {
-      headers: { Accept: "application/json" },
-      cache: state.reloadNonce ? "no-store" : "default"
-    };
-  }
-
-  function generatedRequestOptions() {
-    return {
-      headers: { Accept: "application/json" },
-      cache: "no-store"
-    };
-  }
-
-  function waitForReloadRetry() {
-    return new Promise(function (resolve) {
-      window.setTimeout(resolve, RELOAD_RETRY_DELAY_MS);
-    });
-  }
-
-  function shouldRetryReload(error, attempt) {
-    if (!state.reloadNonce) return false;
-    if (attempt >= RELOAD_RETRY_ATTEMPTS - 1) return false;
-    if (error && (error.status === 404 || error.status === 500 || error.status === 503)) {
-      return true;
-    }
-    return Boolean(error && /failed to fetch/i.test(String(error.message || "")));
-  }
-
-  function fetchJsonOnce(url, failureLabel, reloadPath) {
-    var fetchUrl = requestUrl(url);
-    var options = requestOptions();
-    if (state.reloadNonce && reloadPath && state.managementAvailable && managementBaseUrl) {
-      fetchUrl = managementBaseUrl + reloadPath;
-      options = {
-        headers: { Accept: "application/json" }
-      };
-    }
-    return window.fetch(fetchUrl, options)
-      .then(function (response) {
-        if (!response.ok) {
-          var httpError = new Error(failureLabel + " (" + response.status + ")");
-          httpError.status = response.status;
-          throw httpError;
-        }
-        return response.json();
-      });
-  }
-
-  function fetchGeneratedJsonOnce(path, failureLabel) {
-    return window.fetch(managementBaseUrl + path, generatedRequestOptions())
-      .then(function (response) {
-        if (!response.ok) {
-          var httpError = new Error(failureLabel + " (" + response.status + ")");
-          httpError.status = response.status;
-          throw httpError;
-        }
-        return response.json();
-      });
-  }
-
-  function fetchJsonWithRetry(url, failureLabel, reloadPath, attempt) {
-    var currentAttempt = typeof attempt === "number" ? attempt : 0;
-    return fetchJsonOnce(url, failureLabel, reloadPath).catch(function (error) {
-      if (!shouldRetryReload(error, currentAttempt)) {
-        throw error;
-      }
-      return waitForReloadRetry().then(function () {
-        return fetchJsonWithRetry(url, failureLabel, reloadPath, currentAttempt + 1);
-      });
-    });
-  }
-
-  function fetchGeneratedJsonWithRetry(path, failureLabel, attempt) {
-    var currentAttempt = typeof attempt === "number" ? attempt : 0;
-    return fetchGeneratedJsonOnce(path, failureLabel).catch(function (error) {
-      if (!shouldRetryReload(error, currentAttempt)) {
-        throw error;
-      }
-      return waitForReloadRetry().then(function () {
-        return fetchGeneratedJsonWithRetry(path, failureLabel, currentAttempt + 1);
-      });
-    });
-  }
-
-  function fetchPreferredGeneratedJson(staticUrl, failureLabel, generatedPath, useSearchCapability, attempt) {
-    return checkGeneratedDataReadCapability().then(function (available) {
-      var capabilities = state.managementCapabilities || {};
-      var generatedAvailable = useSearchCapability
-        ? scopeSupportsGeneratedSearchReads(capabilities)
-        : available;
-      if (generatedAvailable) {
-        return fetchGeneratedJsonWithRetry(generatedPath, failureLabel, attempt);
-      }
-      return fetchJsonWithRetry(staticUrl, failureLabel, "", attempt);
-    });
-  }
-
-  function indexIncludesExpectedDoc(payload) {
-    if (!state.reloadExpectedDocId) return true;
-    var docs = payload && Array.isArray(payload.docs) ? payload.docs : [];
-    return docs.some(function (doc) {
-      return doc && doc.doc_id === state.reloadExpectedDocId;
-    });
-  }
-
-  function fetchIndexWithRetry(attempt) {
-    var currentAttempt = typeof attempt === "number" ? attempt : 0;
-    return fetchPreferredGeneratedJson(
-      indexUrl,
-      "Failed to load docs index",
-      managementReloadPath("/docs/generated/index", { scope: viewerScope }),
-      false,
-      currentAttempt
-    )
-      .then(function (payload) {
-        if (indexIncludesExpectedDoc(payload)) {
-          return payload;
-        }
-        if (!state.reloadNonce || currentAttempt >= RELOAD_RETRY_ATTEMPTS - 1) {
-          var missingError = new Error("Updated docs index is missing " + state.reloadExpectedDocId + ".");
-          missingError.status = 404;
-          throw missingError;
-        }
-        return waitForReloadRetry().then(function () {
-          return fetchIndexWithRetry(currentAttempt + 1);
-        });
-      });
-  }
-
-  function managementReloadPath(path, params) {
-    if (!path || !params) return "";
-    var query = [];
-    Object.keys(params).forEach(function (key) {
-      var value = String(params[key] || "").trim();
-      if (!value) return;
-      query.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
-    });
-    return query.length ? path + "?" + query.join("&") : path;
-  }
-
-  function readAssetVersion() {
-    var meta = document.querySelector('meta[name="dlf-asset-version"]');
-    if (!meta) return "";
-    return String(meta.getAttribute("content") || "").trim();
-  }
 
   function escapeHtml(value) {
     return String(value || "")
