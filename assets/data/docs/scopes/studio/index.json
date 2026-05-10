@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T22:30:14Z",
+  "generated_at": "2026-05-10T23:09:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -788,7 +788,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 23:23",
+      "last_updated": "2026-05-11 00:07",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -797,7 +797,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 13213
+      "content_text_length": 13487
     },
     {
       "scope": "studio",
@@ -2165,7 +2165,7 @@
       "doc_id": "site-request-js-payload-runtime-cleanup-inventory",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 21:19",
+      "last_updated": "2026-05-11 00:07",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 70,
       "published": true,
@@ -2174,7 +2174,7 @@
       "source_path": "site-request-js-payload-runtime-cleanup-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup-inventory.json",
-      "content_text_length": 4346,
+      "content_text_length": 4374,
       "ui_status": "draft"
     },
     {
@@ -2375,7 +2375,7 @@
       "doc_id": "site-request-catalogue-js-runtime-consistency",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 23:14",
+      "last_updated": "2026-05-11 00:07",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 80,
       "published": true,
@@ -2384,7 +2384,7 @@
       "source_path": "site-request-catalogue-js-runtime-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-js-runtime-consistency.json",
-      "content_text_length": 39670,
+      "content_text_length": 42191,
       "ui_status": "draft"
     },
     {
@@ -3162,7 +3162,7 @@
       "doc_id": "catalogue-moment-editor",
       "title": "Catalogue Moment Editor",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-10 23:23",
+      "last_updated": "2026-05-11 00:07",
       "parent_id": "user-guide",
       "sort_order": 182,
       "published": true,
@@ -3171,7 +3171,7 @@
       "source_path": "catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json",
-      "content_text_length": 6880
+      "content_text_length": 7128
     },
     {
       "scope": "studio",
@@ -3514,7 +3514,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 23:23",
+      "last_updated": "2026-05-11 00:07",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3523,7 +3523,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 130511
+      "content_text_length": 131605
     },
     {
       "scope": "studio",

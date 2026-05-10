@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: "Catalogue Moment Editor"
 added_date: 2026-04-27
-last_updated: "2026-05-10 23:23"
+last_updated: "2026-05-11 00:07"
 parent_id: user-guide
 sort_order: 182
 ---
@@ -92,7 +92,8 @@ The import flow:
 
 Runtime ownership:
 
-- `assets/studio/js/catalogue-moment-editor.js` owns route bootstrap, generated moment lookup reads, service availability, normal edit state, search/open behavior, post-import opening, dirty-state orchestration, save/build/publication/delete/prose/media commands, and route-ready state.
+- `assets/studio/js/catalogue-moment-editor.js` owns route bootstrap, generated moment lookup reads, service availability, normal edit state, search/open behavior, post-import opening, dirty-state orchestration, edit summary/readiness rendering, and route-ready state.
+- `assets/studio/js/catalogue-moment-actions.js` owns normal edit action workflow sequencing for save, build preview refresh, publication, delete, staged prose import, media refresh, activity context shaping, confirmation formatting, and public-update outcome handling.
 - `assets/studio/js/catalogue-moment-import.js` owns staged-file query state, import metadata reads, preview metadata seeding, import preview/apply transport sequencing, import summary/detail rendering, stale preview clearing, import control availability, and import activity context.
 - `assets/studio/js/catalogue-moment-fields.js` owns field definitions, id/filename normalization, draft reads, source-record shaping, and validation.
 

@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup-inventory
 title: JavaScript Payload And Runtime Cleanup Inventory
 added_date: 2026-05-10
-last_updated: "2026-05-10 21:19"
+last_updated: "2026-05-11 00:07"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -51,7 +51,7 @@ find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
 | `assets/studio/js/tag-aliases.js` | 1,708 | 62.3 KiB | 11.3 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete; next slice should target modal view-models and list rendering before more alias workflow is added. |
 | `assets/studio/js/tag-registry.js` | 1,625 | 58.3 KiB | 11.2 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete; next slice should target modal view-models, delete-impact rendering, and import-result rendering. |
 | `assets/studio/js/catalogue-series-editor.js` | 1,625 | 68.3 KiB | 12.9 KiB | mixed route controller | medium | low | Keep route-local short term; revisit with work/detail section-renderer results because series has fewer section types and less immediate extraction pressure. |
-| `assets/studio/js/catalogue-moment-editor.js` | 1,371 | 58.4 KiB | 11.2 KiB | mixed route controller | medium | low | Keep route-local short term; future extraction should focus on import/prose/media workflow helpers rather than line-count reduction. |
+| `assets/studio/js/catalogue-moment-editor.js` | 736 | 30.4 KiB | 6.6 KiB | route coordinator | low | low | Below the long-file threshold after the Moment import and action workflow extractions; use the Catalogue runtime consistency request for optional D3 display/form review rather than treating this as payload priority. |
 | `assets/studio/js/data-import.js` | 1,133 | 39.8 KiB | 7.8 KiB | mixed route controller | medium | low | Explicitly allowed to stay large for now because it is barely over threshold and still owns one coherent import workflow; split preview-list rendering or docs-management apply transport if it grows further. |
 
 ## Current Priority
@@ -61,8 +61,7 @@ find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
 3. `assets/studio/js/tag-studio.js`
 4. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
 5. `assets/studio/js/catalogue-series-editor.js`
-6. `assets/studio/js/catalogue-moment-editor.js`
-7. `assets/studio/js/data-import.js`
+6. `assets/studio/js/data-import.js`
 
 ## Notes
 

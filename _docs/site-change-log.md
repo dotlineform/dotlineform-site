@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 23:23"
+last_updated: "2026-05-11 00:07"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Extracted Catalogue Moment Editor action workflows
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-moment-actions.js` as the route-local action workflow module for the Catalogue Moment Editor.
+The module now owns save, build-preview refresh, publication, delete, staged prose import, media refresh, service transport sequencing, confirmation formatting, activity context shaping, and public-update outcome handling.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-moment-actions.js`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
+
+**Impact:**
+The Moment route entry module keeps route bootstrap, generated moment lookup reads, service availability, form rendering, search/open behavior, import-mode coordination, post-import opening, edit summary/readiness rendering, dirty-state orchestration, and route-ready state.
+Normal edit action workflows now follow the same route-context module pattern used by Work and Series.
 
 ## [2026-05-10] Removed standalone Catalogue Moment Import bridge
 

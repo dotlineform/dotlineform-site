@@ -8,16 +8,7 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
-  applyCatalogueBuild,
-  applyCatalogueDelete,
-  applyCatalogueProseImport,
-  applyCataloguePublication,
-  previewCatalogueBuild,
-  previewCatalogueDelete,
-  previewCatalogueMoment,
-  previewCatalogueProseImport,
-  previewCataloguePublication,
-  saveCatalogueMoment
+  previewCatalogueMoment
 } from "./catalogue-editor-service-client.js";
 import {
   catalogueGeneratedStatusText,
@@ -31,9 +22,7 @@ import {
   recordsEqual
 } from "./catalogue-editor-records.js";
 import {
-  formatCatalogueBuildPreview,
-  formatCatalogueDeletePreview,
-  formatCataloguePublicationPreview
+  formatCatalogueBuildPreview
 } from "./catalogue-editor-modal-formatters.js";
 import {
   catalogueDeleteDisabled,
@@ -42,7 +31,6 @@ import {
 import {
   MOMENT_EDITABLE_FIELDS as EDITABLE_FIELDS,
   MOMENT_READONLY_FIELDS as READONLY_FIELDS,
-  buildSaveMomentPayload,
   normalizeMomentId,
   normalizeMomentRecord,
   normalizeText,
@@ -63,8 +51,17 @@ import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { buildSaveModeText, utcTimestamp } from "./tag-studio-save.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
+import { buildSaveModeText } from "./tag-studio-save.js";
+import {
+  applyPublicationChange,
+  currentMomentIsDraft,
+  currentMomentIsPublished,
+  deleteCurrentMoment,
+  importMomentProse,
+  refreshBuildPreview as refreshMomentActionBuildPreview,
+  refreshMomentMedia,
+  saveCurrentMoment
+} from "./catalogue-moment-actions.js";
 
 const SEARCH_LIMIT = 20;
 
@@ -129,24 +126,28 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_moment_editor.${key}`, fallback, tokens);
 }
 
-function buildMomentActivityContext(actionId, controlId, controlSelector, momentId) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-moment",
-    actionId,
-    route: "/studio/catalogue-moment/",
-    controlId,
-    controlSelector,
-    recordIdField: "moment_id",
-    recordId: momentId
-  });
-}
-
 function buildImportContext(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     setTextWithState,
     syncRouteBusyState: () => syncRouteBusyState(state),
     completeImport: ({ momentId, record }) => completeMomentImport(state, momentId, record)
+  };
+}
+
+function buildActionContext(state) {
+  return {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    setTextWithState,
+    getFieldNodeValue,
+    readDraft: () => readDraft(state),
+    validateDraft: () => validateDraft(state),
+    draftHasChanges: () => draftHasChanges(state),
+    updateEditorState: () => updateDirtyState(state),
+    previewMoment: (momentId) => previewMoment(state, momentId),
+    renderSummary: () => renderSummary(state),
+    renderBuildImpact: () => renderBuildImpact(state),
+    fillForm: (record) => fillForm(state, record)
   };
 }
 
@@ -415,18 +416,11 @@ async function completeMomentImport(state, momentId, record) {
   await openMoment(state, momentId);
 }
 
-function currentMomentIsPublished(state) {
-  return normalizeText(readDraft(state).status).toLowerCase() === "published";
-}
-
-function currentMomentIsDraft(state) {
-  return normalizeText(readDraft(state).status).toLowerCase() === "draft";
-}
-
 function updatePublicationControls(state, { dirty, validation }) {
   const hasRecord = Boolean(state.currentRecord);
-  const canPublish = hasRecord && currentMomentIsDraft(state);
-  const canUnpublish = hasRecord && currentMomentIsPublished(state);
+  const actionContext = buildActionContext(state);
+  const canPublish = hasRecord && currentMomentIsDraft(state, actionContext);
+  const canUnpublish = hasRecord && currentMomentIsPublished(state, actionContext);
   const label = canUnpublish
     ? t(state, "unpublish_button", "Unpublish")
     : t(state, "publish_button", "Publish");
@@ -461,19 +455,6 @@ function updateDirtyState(state) {
   updatePublicationControls(state, { dirty, validation });
   renderReadiness(state);
   updateImportState(state, buildImportContext(state));
-}
-
-function applySaveBuildOutcome(state, payload) {
-  if (!currentMomentIsPublished(state)) {
-    state.needsBuild = false;
-    return payload && payload.changed ? "saved_unpublished" : "unchanged";
-  }
-  if (payload && payload.build && !payload.build.ok) {
-    state.needsBuild = true;
-    return "partial";
-  }
-  state.needsBuild = false;
-  return payload && payload.changed ? "applied" : "unchanged";
 }
 
 function onFieldInput(state) {
@@ -543,7 +524,7 @@ async function openMoment(state, momentId, options = {}) {
 }
 
 function renderBuildImpact(state) {
-  if (!currentMomentIsPublished(state)) {
+  if (!currentMomentIsPublished(state, buildActionContext(state))) {
     state.buildImpactNode.textContent = t(state, "build_preview_unpublished", "Public update unavailable while the moment is not published.");
     return;
   }
@@ -557,325 +538,6 @@ function renderBuildImpact(state) {
     fallbackMomentId: state.currentMomentId,
     defaultTemplate: "Public update preview: moment {moment_ids}; catalogue search {search_rebuild}."
   });
-}
-
-async function refreshBuildPreview(state) {
-  if (!state.currentMomentId || !state.serverAvailable) return;
-  if (!currentMomentIsPublished(state)) {
-    state.buildPreview = null;
-    renderBuildImpact(state);
-    renderSummary(state);
-    return;
-  }
-  try {
-    const payload = await previewCatalogueBuild({ moment_id: state.currentMomentId });
-    state.buildPreview = payload.build || null;
-    renderBuildImpact(state);
-    renderSummary(state);
-  } catch (error) {
-    console.warn("catalogue_moment_editor: build preview failed", error);
-    state.buildImpactNode.textContent = t(state, "build_preview_failed", "Build preview unavailable.");
-  }
-}
-
-async function saveMoment(state) {
-  if (!state.currentRecord || state.isSaving) return;
-  const validation = validateDraft(state);
-  if (!validation.valid) {
-    setTextWithState(state.statusNode, t(state, "save_status_validation_error", "Fix validation errors before saving."), "error");
-    return;
-  }
-  if (!draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."), "warning");
-    setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
-    return;
-  }
-
-  state.isSaving = true;
-  updateDirtyState(state);
-  const applyBuild = currentMomentIsPublished(state);
-  setTextWithState(
-    state.statusNode,
-    applyBuild ? t(state, "save_status_saving_and_updating", "Saving source record and updating public moment...") : t(state, "save_status_saving", "Saving source record..."),
-    "pending"
-  );
-  try {
-    const payload = await saveCatalogueMoment({
-      ...buildSaveMomentPayload(state, {
-        draft: validation.draft,
-        applyBuild,
-        getFieldNodeValue
-      }),
-      activity_context: buildMomentActivityContext("save-moment", "catalogueMomentSave", "#catalogueMomentSave", state.currentMomentId)
-    });
-    state.currentRecord = payload.record || validation.draft;
-    state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
-    state.moments.set(state.currentMomentId, state.currentRecord);
-    const outcome = applySaveBuildOutcome(state, payload);
-    if (outcome === "partial") {
-      setTextWithState(state.resultNode, t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "warning");
-    } else if (outcome === "applied") {
-      setTextWithState(state.resultNode, t(state, "save_result_success_applied", "Saved source changes and updated the public moment at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
-    } else if (outcome === "saved_unpublished") {
-      setTextWithState(state.resultNode, t(state, "save_result_success_unpublished", "Source saved at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
-    } else {
-      setTextWithState(state.resultNode, t(state, "save_result_success", "Source saved at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
-    }
-    setTextWithState(state.statusNode, "Saved.", "success");
-    await previewMoment(state, state.currentMomentId);
-    renderSummary(state);
-  } catch (error) {
-    if (error && error.status === 409) {
-      setTextWithState(state.statusNode, t(state, "save_status_conflict", "Source record changed since this page loaded. Reload the moment before saving again."), "error");
-    } else {
-      setTextWithState(state.statusNode, `${t(state, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-    }
-  } finally {
-    state.isSaving = false;
-    updateDirtyState(state);
-  }
-}
-
-async function applyPublicationChange(state) {
-  if (!state.currentRecord || !state.currentMomentId || !state.serverAvailable || state.isBuilding) return;
-  const action = currentMomentIsPublished(state) ? "unpublish" : currentMomentIsDraft(state) ? "publish" : "";
-  if (!action) {
-    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published moments."), "error");
-    return;
-  }
-  if (action === "publish" && draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
-    return;
-  }
-  if (action === "publish") {
-    const validation = validateDraft(state);
-    if (!validation.valid) {
-      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
-      updateDirtyState(state);
-      return;
-    }
-  }
-  state.isBuilding = true;
-  updateDirtyState(state);
-  setTextWithState(
-    state.statusNode,
-    action === "publish"
-      ? t(state, "publication_preview_publish_running", "Preparing publish preview...")
-      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview..."),
-    "pending"
-  );
-  setTextWithState(state.resultNode, "");
-  try {
-    const request = {
-      kind: "moment",
-      action,
-      moment_id: state.currentMomentId,
-      expected_record_hash: state.expectedRecordHash,
-      activity_context: buildMomentActivityContext(`${action}-moment`, "catalogueMomentPublication", "#catalogueMomentPublication", state.currentMomentId)
-    };
-    const previewResponse = await previewCataloguePublication(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    if ((preview && preview.blocked) || blockers.length) {
-      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
-      setTextWithState(state.statusNode, message, "error");
-      return;
-    }
-    if (action === "unpublish") {
-      const summary = formatCataloguePublicationPreview(preview, {
-        text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-        defaultText: "Unpublish this moment?",
-        includeDirtyNote: draftHasChanges(state)
-      });
-      if (!window.confirm(summary)) {
-        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."), "warning");
-        return;
-      }
-    }
-
-    setTextWithState(
-      state.statusNode,
-      action === "publish"
-        ? t(state, "publication_publish_running", "Publishing moment...")
-        : t(state, "publication_unpublish_running", "Unpublishing moment..."),
-      "pending"
-    );
-    const payload = await applyCataloguePublication(request);
-    const record = payload && payload.record && typeof payload.record === "object" ? payload.record : null;
-    if (!record) throw new Error("publication response missing record");
-    state.currentRecord = normalizeMomentRecord(state.currentMomentId, record);
-    state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
-    state.moments.set(state.currentMomentId, state.currentRecord);
-    const row = state.momentRows.find((item) => item.moment_id === state.currentMomentId);
-    if (row) {
-      Object.assign(row, state.currentRecord, {
-        search: `${state.currentMomentId} ${normalizeText(state.currentRecord.title).toLowerCase()}`
-      });
-    }
-    fillForm(state, state.currentRecord);
-    state.needsBuild = payload.status === "public_update_failed";
-    await previewMoment(state, state.currentMomentId);
-    renderSummary(state);
-    if (payload.status === "public_update_failed") {
-      const error = normalizeText(payload.public_update && payload.public_update.error);
-      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
-      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warning");
-      return;
-    }
-    if (action === "publish") {
-      setTextWithState(state.statusNode, t(state, "publication_status_published", "Moment published."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_published", "Moment is published and public output has been updated."), "success");
-    } else {
-      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Moment unpublished."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Moment is draft again and public output has been cleaned up."), "success");
-    }
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
-      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-  } finally {
-    state.isBuilding = false;
-    updateDirtyState(state);
-  }
-}
-
-function countMediaItems(media, group) {
-  const values = media && media[group] && typeof media[group] === "object" ? media[group] : {};
-  return Object.values(values).reduce((total, items) => total + (Array.isArray(items) ? items.length : 0), 0);
-}
-
-async function refreshMomentMedia(state) {
-  if (!state.currentMomentId || !state.serverAvailable || state.isBuilding || draftHasChanges(state)) return;
-  state.isBuilding = true;
-  updateDirtyState(state);
-  setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media..."), "pending");
-  setTextWithState(state.resultNode, "");
-  try {
-    const payload = await applyCatalogueBuild({
-      moment_id: state.currentMomentId,
-      media_only: true,
-      force: true
-    });
-    const blockedCount = countMediaItems(payload && payload.media, "blocked");
-    await previewMoment(state, state.currentMomentId);
-    renderSummary(state);
-    if (blockedCount > 0) {
-      setTextWithState(state.statusNode, t(state, "media_refresh_status_blocked", "Media refresh blocked."), "error");
-      setTextWithState(state.resultNode, normalizeText(payload && payload.media && payload.media.summary), "error");
-      return;
-    }
-    setTextWithState(state.statusNode, t(state, "media_refresh_status_success", "Media refresh completed."), "success");
-    setTextWithState(state.resultNode, t(state, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
-  } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-  } finally {
-    state.isBuilding = false;
-    updateDirtyState(state);
-  }
-}
-
-async function importMomentProse(state) {
-  if (!state.currentMomentId || draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "dirty_warning", "Unsaved source changes."), "error");
-    return;
-  }
-  state.isBuilding = true;
-  updateDirtyState(state);
-  setTextWithState(state.statusNode, t(state, "prose_import_preview_running", "Previewing staged prose..."), "pending");
-  try {
-    const preview = await previewCatalogueProseImport({
-      target_kind: "moment",
-      moment_id: state.currentMomentId
-    });
-    if (!preview.valid) {
-      const errors = Array.isArray(preview.errors) ? preview.errors.join("; ") : "";
-      throw new Error(errors || t(state, "prose_import_preview_invalid", "Staged prose is not ready to import."));
-    }
-    if (preview.overwrite_required) {
-      const confirmed = window.confirm(t(
-        state,
-        "prose_import_confirm_overwrite",
-        "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
-        { target_path: preview.target_path, staging_path: preview.staging_path }
-      ));
-      if (!confirmed) {
-        setTextWithState(state.statusNode, t(state, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
-        return;
-      }
-    }
-    setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing staged prose..."), "pending");
-    const payload = await applyCatalogueProseImport({
-      target_kind: "moment",
-      moment_id: state.currentMomentId,
-      confirm_overwrite: Boolean(preview.overwrite_required)
-    });
-    state.needsBuild = Boolean(payload.changed);
-    setTextWithState(state.statusNode, t(state, "prose_import_status_success", "Prose import completed."), "success");
-    setTextWithState(
-      state.resultNode,
-      t(state, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
-        target_path: payload.target_path,
-        completed_at: payload.imported_at_utc || utcTimestamp()
-      }),
-      "success"
-    );
-    await previewMoment(state, state.currentMomentId);
-    renderSummary(state);
-  } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-  } finally {
-    state.isBuilding = false;
-    updateDirtyState(state);
-  }
-}
-
-async function deleteMoment(state) {
-  if (!state.currentRecord || !state.serverAvailable || state.isDeleting) return;
-  state.isDeleting = true;
-  updateDirtyState(state);
-  setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview..."), "pending");
-  setTextWithState(state.resultNode, "");
-  try {
-    const request = {
-      kind: "moment",
-      moment_id: state.currentMomentId,
-      expected_record_hash: state.expectedRecordHash,
-      activity_context: buildMomentActivityContext("delete-moment", "catalogueMomentDelete", "#catalogueMomentDelete", state.currentMomentId)
-    };
-    const previewResponse = await previewCatalogueDelete(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
-    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
-      const message = blockers[0] || validationErrors[0] || t(state, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(state.statusNode, message, "error");
-      state.isDeleting = false;
-      updateDirtyState(state);
-      return;
-    }
-    const summary = formatCatalogueDeletePreview(preview, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultText: "Delete this source record?"
-    });
-    if (!window.confirm(summary)) {
-      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."), "warning");
-      state.isDeleting = false;
-      updateDirtyState(state);
-      return;
-    }
-    setTextWithState(state.statusNode, t(state, "delete_status_deleting", "Deleting source record..."), "pending");
-    await applyCatalogueDelete(request);
-    const route = getStudioRoute(state.config, "catalogue_status");
-    window.location.assign(route);
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
-      : `${t(state, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-    state.isDeleting = false;
-    updateDirtyState(state);
-  }
 }
 
 function buildMomentRows(payload) {
@@ -910,9 +572,9 @@ function bindEvents(state) {
     openMoment(state, match || value).catch((error) => console.warn("catalogue_moment_editor: open failed", error));
   });
   state.newButton.addEventListener("click", () => enterImportMode(state));
-  state.saveButton.addEventListener("click", () => saveMoment(state));
-  state.publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => console.warn("catalogue_moment_editor: publication failed", error)));
-  state.deleteButton.addEventListener("click", () => deleteMoment(state).catch((error) => console.warn("catalogue_moment_editor: delete failed", error)));
+  state.saveButton.addEventListener("click", () => saveCurrentMoment(state, buildActionContext(state)));
+  state.publicationButton.addEventListener("click", () => applyPublicationChange(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: publication failed", error)));
+  state.deleteButton.addEventListener("click", () => deleteCurrentMoment(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: delete failed", error)));
   state.importFileNode.addEventListener("input", () => {
     writeRequestedImportFile(state.importFileNode.value);
     setTextWithState(state.importWarningNode, "");
@@ -928,12 +590,12 @@ function bindEvents(state) {
   state.readinessNode.addEventListener("click", (event) => {
     const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
     if (mediaButton) {
-      refreshMomentMedia(state).catch((error) => console.warn("catalogue_moment_editor: media refresh failed", error));
+      refreshMomentMedia(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: media refresh failed", error));
       return;
     }
     const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
     if (!button) return;
-    importMomentProse(state).catch((error) => console.warn("catalogue_moment_editor: prose import failed", error));
+    importMomentProse(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: prose import failed", error));
   });
 }
 
@@ -1061,7 +723,7 @@ async function init() {
     }
     updateDirtyState(state);
     updateImportState(state, buildImportContext(state));
-    await refreshBuildPreview(state).catch((error) => console.warn("catalogue_moment_editor: initial build preview failed", error));
+    await refreshMomentActionBuildPreview(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: initial build preview failed", error));
     markRouteReady(state, true);
   } catch (error) {
     console.warn("catalogue_moment_editor: init failed", error);
