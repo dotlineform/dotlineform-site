@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-11 00:25"
+last_updated: "2026-05-11 00:33"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -29,6 +29,7 @@ Status:
 - Slice D2 implemented for Moment action workflow sequencing
 - Slice D3 implemented for Moment form and section rendering
 - Slice D4 implemented for Moment selection/opening
+- Slice D5 completed; Moment route is an acceptable coordinator and the next Catalogue priority is Slice E stop point
 
 ## Implementation Progress
 
@@ -77,6 +78,10 @@ Status:
 - Added `assets/studio/js/catalogue-moment-selection.js` for Moment search matching, popup rendering, Open button behavior, popup click handling, and initial route selection.
 - Kept normal edit mode construction, preview refresh, post-import opening, empty-mode copy, and import-mode setup behind route callbacks in `assets/studio/js/catalogue-moment-editor.js`.
 - Measured `assets/studio/js/catalogue-moment-editor.js` at 554 lines after D4; the next useful Moment slice is the stop/continue decision.
+- Slice D5 measured the Moment helper set after D1-D4 and found no remaining Moment-specific extraction with enough value to justify another split.
+- Accepted `assets/studio/js/catalogue-moment-editor.js` as the Moment route coordinator because its remaining responsibilities are lifecycle setup, route-ready/busy state, generated lookup loading, mode construction, dirty-state orchestration, context wiring, and post-import/focused-record coordination.
+- Confirmed import direction remains clear: normal edit writes are in `catalogue-moment-actions.js`, import writes are in `catalogue-moment-import.js`, shared transport stays in `catalogue-editor-service-client.js`, and form/section/selection/field helpers do not own service writes.
+- The next Catalogue priority is Slice E: Catalogue Scope Stop Point.
 
 ## Purpose
 
@@ -137,7 +142,7 @@ Post Work Editor cleanup, the remaining Catalogue route controllers over the lon
 | --- | --- |
 | `assets/studio/js/catalogue-work-detail-editor.js` | selection/opening, form rendering/synchronization, summary/readiness/preview, and action workflow sequencing extractions complete; below long-file review threshold |
 | `assets/studio/js/catalogue-series-editor.js` | membership, action workflow, selection/opening, form rendering, and section/readiness extractions complete; below long-file review threshold and acceptable as route coordinator |
-| `assets/studio/js/catalogue-moment-editor.js` | import, action workflow, form/section display, and selection/opening extractions complete; below long-file review threshold |
+| `assets/studio/js/catalogue-moment-editor.js` | import, action workflow, form/section display, and selection/opening extractions complete; below long-file review threshold and acceptable as route coordinator |
 
 `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-actions.js`, and `assets/studio/js/catalogue-work-selection.js` are now below the review threshold, but the important outcome is the ownership split, not the number itself.
 
@@ -674,13 +679,24 @@ D4 measured state:
 
 Status:
 
-- proposed after D4
+- completed
 
 Scope:
 
 - measure `catalogue-moment-editor.js` and the Moment helper modules after the implemented Moment slices
 - either document why the remaining route entry file is an acceptable coordinator or define one final Moment-specific extraction
 - decide whether Catalogue route consistency is sufficient to proceed to Slice E or whether another Moment slice is justified
+
+Decision:
+
+- no further Moment-specific extraction is justified in this request
+- `assets/studio/js/catalogue-moment-editor.js` is an acceptable route coordinator at 554 lines
+- the remaining entry-module responsibilities are route lifecycle setup, DOM/state assembly, route-ready and busy-state attributes, generated moment lookup loading, normal/import mode construction, dirty-state orchestration, post-import opening, focused-record preview refresh, and explicit context wiring for action/import/selection/section/form helpers
+- action writes remain isolated in `assets/studio/js/catalogue-moment-actions.js`
+- import preview/apply writes remain isolated in `assets/studio/js/catalogue-moment-import.js`
+- transport endpoint calls remain behind `assets/studio/js/catalogue-editor-service-client.js`, except for health and generated lookup reads that are route bootstrap concerns
+- `assets/studio/js/catalogue-moment-selection.js`, `assets/studio/js/catalogue-moment-form.js`, `assets/studio/js/catalogue-moment-sections.js`, and `assets/studio/js/catalogue-moment-fields.js` do not own write transport
+- Catalogue route consistency is sufficient to proceed to Slice E
 
 Acceptance checks:
 
@@ -729,7 +745,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice D5: Moment Stop/Continue Decision.
+Start with Slice E: Catalogue Scope Stop Point.
 
-The Moment import, action, form/section, and selection/open boundaries are now extracted.
-The next useful step is to decide whether the remaining Moment route entry module is an acceptable coordinator and whether Catalogue route consistency is sufficient to move to the stop-point slice.
+The Moment import, action, form/section, and selection/open boundaries are extracted, and the remaining Moment route entry module is an acceptable coordinator.
+The next useful step is to decide whether Catalogue route consistency is sufficient to move from Catalogue cleanup to the next non-Catalogue runtime priority.
