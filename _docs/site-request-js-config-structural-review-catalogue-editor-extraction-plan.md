@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:19"
+last_updated: "2026-05-10 16:34"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
@@ -17,7 +17,8 @@ Status:
 - Slice B implemented
 - Slice C implemented
 - Slice D implemented
-- next executable slice: Slice E
+- Slice E implemented
+- next executable slice: reassess Slice F only if dirty-state reuse pressure justifies it
 
 ## Purpose
 
@@ -43,7 +44,7 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 | B | implemented | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
 | C | implemented | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
 | D | implemented | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
-| E | planned next | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
+| E | implemented | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
 | F | deferred | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
 | G | deferred | `catalogue-editor-embedded-items.js` | Work file/link embedded item helpers only if another route needs the pattern |
 
@@ -248,7 +249,7 @@ Targeted verification:
 
 Status:
 
-- planned
+- implemented
 
 Target file:
 
@@ -265,6 +266,24 @@ Acceptance checks:
 - moment editor loads a selected moment and reaches ready state
 - moment save payload is unchanged when intercepted
 - moment import mode still previews and applies through the existing route-local workflow
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-moment-fields.js` now owns moment field definitions, moment id and filename normalization, record normalization, draft reads, save payload shaping, and draft validation.
+- `assets/studio/js/catalogue-moment-editor.js` imports the moment field module while keeping import-mode workflow control, service calls, route state, readiness rendering, and publication/delete behavior local.
+- Moment record shaping preserves the existing default source-image behavior: an explicit `source_image_file` is omitted when it matches `{moment_id}.jpg`.
+- The save request is still assembled by the route controller with the same activity context; the field module shapes only the moment-specific payload fields.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-moment-fields.js` and `assets/studio/js/catalogue-moment-editor.js`.
+- `node --check` also passed for the other catalogue editor controllers: work, work-detail, and series.
+- A targeted search found no remaining local `normalizeRecord`, `DATE_RE`, `normalizeText`, `normalizeMomentId`, or `normalizeMomentFilename` definitions in the moment editor controller.
+- A direct module check confirmed moment id and filename normalization, default source-image omission, save payload shaping, and validation behavior for a representative published moment draft.
+- Studio docs payloads were rebuilt for the Studio scope and the Studio search index rebuild was checked.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for the built moment editor selected-record route; `?moment=keys` reached `single` mode with `recordLoaded` true, no page errors, and no failed Studio JS module requests.
+- The first Playwright launch failed inside the Codex sandbox; the same check passed when rerun with escalated permissions as required by the local validation guidance.
 
 ## Slice F: Dirty State
 
@@ -326,16 +345,16 @@ Use this map proportionally after runtime extraction slices:
 
 ## Current Recommendation
 
-Execute Slice E next.
+Pause before Slice F unless another catalogue route needs shared dirty-state behavior.
 
 Benefits:
 
-- aligns the moment editor with the work, work-detail, and series field-module ownership pattern
-- moves moment-specific field definitions, draft shaping, payload shaping, and validation out of the route controller
-- reduces the risk of over-sharing dirty-state behavior before moment field ownership is clear
+- Slice E now aligns the moment editor with the work, work-detail, and series field-module ownership pattern.
+- The moment editor route controller is smaller without changing route orchestration, import workflow control, or service boundaries.
+- Deferring Slice F avoids over-sharing dirty-state behavior until the remaining duplication is clearly worth a shared helper.
 
 Risks:
 
-- moment import mode is still route-specific and should not be moved into the field module
-- save payload equivalence should be checked carefully because moment currently keeps field rules inline
-- the field-module extraction will touch validation and draft shaping, so route-level smoke coverage matters more than it did for pure formatter extraction
+- moment import mode remains route-specific and should stay out of shared catalogue editor helpers
+- save payload equivalence should continue to be checked if dirty-state or validation helpers are extracted later
+- Slice F would touch control enablement and dirty-field behavior, so it should be treated as higher risk than the field-module extraction

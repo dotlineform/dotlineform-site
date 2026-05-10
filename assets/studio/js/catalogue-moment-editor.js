@@ -38,6 +38,17 @@ import {
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
 import {
+  MOMENT_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  MOMENT_READONLY_FIELDS as READONLY_FIELDS,
+  buildSaveMomentPayload,
+  normalizeMomentFilename,
+  normalizeMomentId,
+  normalizeMomentRecord,
+  normalizeText,
+  readMomentDraft,
+  validateMomentDraft
+} from "./catalogue-moment-fields.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -45,26 +56,7 @@ import {
 import { buildSaveModeText, utcTimestamp } from "./tag-studio-save.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
-const EDITABLE_FIELDS = [
-  { key: "title", label: "title", type: "text" },
-  { key: "status", label: "status", type: "text", readonly: true },
-  { key: "date", label: "date", type: "date" },
-  { key: "date_display", label: "date display", type: "text" },
-  { key: "published_date", label: "published date", type: "date" },
-  { key: "source_image_file", label: "source image file", type: "text" },
-  { key: "image_alt", label: "image alt", type: "text" }
-];
-
-const READONLY_FIELDS = [
-  { key: "moment_id", label: "moment id" }
-];
-
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SEARCH_LIMIT = 20;
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -73,16 +65,6 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function normalizeMomentId(value) {
-  return normalizeText(value).toLowerCase().replace(/\.md$/, "");
-}
-
-function normalizeMomentFilename(value) {
-  const raw = normalizeText(value).toLowerCase();
-  if (!raw) return "";
-  return raw.endsWith(".md") ? raw : `${raw}.md`;
 }
 
 function setFieldNodeValue(node, value) {
@@ -149,30 +131,8 @@ function buildMomentActivityContext(actionId, controlId, controlSelector, moment
   });
 }
 
-function normalizeRecord(momentId, record) {
-  const out = {
-    moment_id: normalizeMomentId(record && (record.moment_id || momentId)),
-    title: normalizeText(record && record.title),
-    status: normalizeText(record && record.status).toLowerCase() || "draft",
-    published_date: normalizeText(record && record.published_date) || null,
-    date: normalizeText(record && record.date) || null,
-    date_display: normalizeText(record && record.date_display) || null,
-    image_alt: normalizeText(record && record.image_alt) || null
-  };
-  const sourceImageFile = normalizeText(record && record.source_image_file);
-  if (sourceImageFile && sourceImageFile !== `${out.moment_id}.jpg`) {
-    out.source_image_file = sourceImageFile;
-  }
-  return out;
-}
-
 function readDraft(state) {
-  const record = { moment_id: state.currentMomentId };
-  EDITABLE_FIELDS.forEach((field) => {
-    const node = state.fieldNodes.get(field.key);
-    record[field.key] = node ? normalizeText(getFieldNodeValue(node)) : "";
-  });
-  return normalizeRecord(state.currentMomentId, record);
+  return readMomentDraft(state, { getFieldNodeValue });
 }
 
 function draftHasChanges(state) {
@@ -287,24 +247,14 @@ function clearFieldMessages(state) {
 function validateDraft(state) {
   clearFieldMessages(state);
   const draft = readDraft(state);
-  const errors = [];
-  if (!draft.title) errors.push(["title", t(state, "field_required_title", "Enter a title.")]);
-  if (!draft.date) errors.push(["date", t(state, "field_required_date", "Enter a date.")]);
-  ["date", "published_date"].forEach((key) => {
-    const value = normalizeText(draft[key]);
-    if (value && !DATE_RE.test(value)) errors.push([key, t(state, "field_invalid_date", "Use YYYY-MM-DD or leave blank.")]);
+  const errors = validateMomentDraft(draft, {
+    t: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
-  if (!["draft", "published"].includes(draft.status)) {
-    errors.push(["status", t(state, "field_invalid_status", "Use draft or published.")]);
-  }
-  if (draft.status === "published" && !draft.published_date) {
-    errors.push(["published_date", t(state, "field_required_published_date", "Published moments require a published date.")]);
-  }
-  errors.forEach(([key, message]) => {
+  errors.forEach((message, key) => {
     const node = state.fieldStatusNodes.get(key);
     if (node) setTextWithState(node, message, "error");
   });
-  return { valid: !errors.length, draft };
+  return { valid: !errors.size, draft };
 }
 
 function renderReadiness(state) {
@@ -645,7 +595,7 @@ function clearRequestedImportFile() {
 }
 
 function upsertMomentRow(state, momentId, record) {
-  const normalized = normalizeRecord(momentId, record);
+  const normalized = normalizeMomentRecord(momentId, record);
   state.moments.set(normalized.moment_id, normalized);
   const row = state.momentRows.find((item) => item.moment_id === normalized.moment_id);
   const nextRow = {
@@ -731,7 +681,7 @@ async function applyMomentImport(state) {
     state.importBuild = response && response.build ? response.build : state.importBuild;
     state.importSteps = Array.isArray(response && response.steps) ? response.steps : [];
     const importedMomentId = normalizeMomentId(response && response.moment_id ? response.moment_id : state.importPreview && state.importPreview.moment_id);
-    const importedRecord = normalizeRecord(importedMomentId, {
+    const importedRecord = normalizeMomentRecord(importedMomentId, {
       ...metadata,
       moment_id: importedMomentId,
       status: "draft"
@@ -852,7 +802,7 @@ async function openMoment(state, momentId, options = {}) {
   setEditModeChrome(state);
   clearImportPreview(state);
   state.currentMomentId = normalizedId;
-  state.currentRecord = normalizeRecord(normalizedId, record);
+  state.currentRecord = normalizeMomentRecord(normalizedId, record);
   state.expectedRecordHash = await computeRecordHash(state.currentRecord);
   state.preview = null;
   state.previewReadiness = null;
@@ -934,10 +884,11 @@ async function saveMoment(state) {
   );
   try {
     const payload = await saveCatalogueMoment({
-      moment_id: state.currentMomentId,
-      expected_record_hash: state.expectedRecordHash,
-      record: validation.draft,
-      apply_build: applyBuild,
+      ...buildSaveMomentPayload(state, {
+        draft: validation.draft,
+        applyBuild,
+        getFieldNodeValue
+      }),
       activity_context: buildMomentActivityContext("save-moment", "catalogueMomentSave", "#catalogueMomentSave", state.currentMomentId)
     });
     state.currentRecord = payload.record || validation.draft;
@@ -1035,7 +986,7 @@ async function applyPublicationChange(state) {
     const payload = await applyCataloguePublication(request);
     const record = payload && payload.record && typeof payload.record === "object" ? payload.record : null;
     if (!record) throw new Error("publication response missing record");
-    state.currentRecord = normalizeRecord(state.currentMomentId, record);
+    state.currentRecord = normalizeMomentRecord(state.currentMomentId, record);
     state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
     state.moments.set(state.currentMomentId, state.currentRecord);
     const row = state.momentRows.find((item) => item.moment_id === state.currentMomentId);
@@ -1213,7 +1164,7 @@ async function deleteMoment(state) {
 function buildMomentRows(payload) {
   const moments = payload && payload.moments && typeof payload.moments === "object" ? payload.moments : {};
   return Object.entries(moments).map(([momentId, record]) => {
-    const normalized = normalizeRecord(momentId, record);
+    const normalized = normalizeMomentRecord(momentId, record);
     return {
       ...normalized,
       search: `${normalized.moment_id} ${normalizeText(normalized.title).toLowerCase()}`

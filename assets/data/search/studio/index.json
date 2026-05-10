@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fe35795f8df215c37a416dade2f2706a",
-    "generated_at_utc": "2026-05-10T15:20:04Z",
+    "version": "blake2b-d5d4f0e99e02918bd4381042cfd088f4",
+    "generated_at_utc": "2026-05-10T15:34:56Z",
     "count": 217
   },
   "entries": [
@@ -750,10 +750,10 @@
       "kind": "doc",
       "title": "Catalogue Editor Extraction Plan",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan",
-      "last_updated": "2026-05-10 16:19",
+      "last_updated": "2026-05-10 16:34",
       "parent_id": "site-request-js-config-structural-review-catalogue-editor-boundary",
       "parent_title": "Catalogue Editor Boundary Spec Slice",
-      "display_meta": "2026-05-10 16:19 • Catalogue Editor Boundary Spec Slice",
+      "display_meta": "2026-05-10 16:34 • Catalogue Editor Boundary Spec Slice",
       "search_terms": [
         "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
         "site",
@@ -771,14 +771,14 @@
         "boundary",
         "spec",
         "slice",
-        "2026-05-10 16:19",
+        "2026-05-10 16:34",
         "2026",
         "05",
         "10",
         "16",
-        "19"
+        "34"
       ],
-      "search_text": "site-request-js-config-structural-review-catalogue-editor-extraction-plan site request js config structural review catalogue editor extraction plan catalogue editor extraction plan catalogue editor boundary spec slice boundary spec slice 2026-05-10 16:19 2026 05 10 16 19"
+      "search_text": "site-request-js-config-structural-review-catalogue-editor-extraction-plan site request js config structural review catalogue editor extraction plan catalogue editor extraction plan catalogue editor boundary spec slice boundary spec slice 2026-05-10 16:34 2026 05 10 16 34"
     },
     {
       "id": "data-models-catalogue",
@@ -5249,10 +5249,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 16:19",
+      "last_updated": "2026-05-10 16:34",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 16:19 • Change Requests",
+      "display_meta": "2026-05-10 16:34 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5268,14 +5268,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 16:19",
+        "2026-05-10 16:34",
         "2026",
         "05",
         "10",
         "16",
-        "19"
+        "34"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 16:19 2026 05 10 16 19"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 16:34 2026 05 10 16 34"
     },
     {
       "id": "site-request-scripts-directory-organization",
