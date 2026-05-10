@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 19:23"
+last_updated: "2026-05-10 19:30"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,24 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Recorded long JavaScript file policy and inventory
+
+**Status:** implemented
+
+**Area:** Studio runtime / JavaScript architecture / maintainability
+
+**Summary:**
+Added a long-file policy for browser JavaScript modules over 1,000 lines and recorded the current inventory of over-threshold route controllers.
+The inventory classifies each file by responsibility, separates maintenance risk from transfer-size risk, and sets the next extraction priority order.
+
+**Files changed/docs:**
+
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+
+**Impact:**
+The slice changes documentation and architecture policy only.
+No runtime payload or startup JSON behavior changed, but future refactors now have an explicit standard for when a long mixed route controller needs an extraction slice or a written reason to stay large.
 
 ## [2026-05-10] Removed Catalogue Work Editor full source startup read
 

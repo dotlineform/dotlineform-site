@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 19:23"
+last_updated: "2026-05-10 19:30"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -15,6 +15,7 @@ Status:
 - request captured
 - Slice A implemented
 - Slice B implemented
+- Slice C implemented
 
 ## Purpose
 
@@ -167,7 +168,7 @@ Targeted verification:
 
 ### Slice C: Long JS File Policy And Inventory
 
-Status: not started.
+Status: implemented.
 
 Intent:
 
@@ -175,23 +176,78 @@ Intent:
 - classify each one as route shell, mixed route controller, domain module, or generated/runtime utility
 - require a short justification or extraction plan for each long mixed controller
 
-Initial candidates:
-
-- `assets/studio/js/catalogue-work-editor.js`
-- `assets/js/docs-viewer.js`
-- `assets/studio/js/tag-studio.js`
-- `assets/studio/js/catalogue-work-detail-editor.js`
-- `assets/studio/js/tag-aliases.js`
-- `assets/studio/js/catalogue-series-editor.js`
-- `assets/studio/js/tag-registry.js`
-- `assets/studio/js/catalogue-moment-editor.js`
-- `assets/studio/js/data-import.js`
-
 Acceptance checks:
 
 - each file over 1,000 lines has either an extraction slice or an explicit reason to stay large
 - mixed route controllers are prioritized ahead of pure domain modules
 - the inventory distinguishes maintenance risk from transfer-size risk
+
+Policy:
+
+- Any browser JavaScript file over 1,000 lines must be classified as one of:
+  - route shell
+  - mixed route controller
+  - domain module
+  - generated/runtime utility
+- Any mixed route controller over 1,000 lines must have either:
+  - a named extraction slice in the owning request or implementation plan
+  - an explicit reason to stay large for the next implementation period
+- Prioritize long mixed controllers that combine mutation orchestration, modal composition, generated-data reads, and rendering.
+- Treat transfer-size risk separately from maintenance risk. A large file is not automatically a runtime problem unless it is eagerly loaded on a high-traffic route or brings avoidable transitive payload.
+- Re-run the inventory after material Studio or Docs Viewer JavaScript refactors.
+
+Inventory command:
+
+```bash
+find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
+```
+
+Measured inventory:
+
+| File | Lines | Raw | Gzip | Classification | Maintenance risk | Transfer-size risk | Disposition |
+| --- | ---: | ---: | ---: | --- | --- | --- | --- |
+| `assets/studio/js/catalogue-work-editor.js` | 3,100 | 122.3 KiB | 22.3 KiB | mixed route controller | high | medium | Extraction continues with Slice D for route section renderer boundaries. |
+| `assets/js/docs-viewer.js` | 2,912 | 99.9 KiB | 18.8 KiB | mixed shared viewer runtime controller | high | medium | Existing Docs Viewer extraction plan remains active; render and management-UI boundaries are the next justified targets. |
+| `assets/studio/js/tag-studio.js` | 1,886 | 63.2 KiB | 13.2 KiB | mixed route controller | high | low | Continue the existing Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind named route-local helpers only after current catalogue cleanup. |
+| `assets/studio/js/catalogue-work-detail-editor.js` | 1,806 | 75.5 KiB | 14.0 KiB | mixed route controller | high | low | Pair with the work-editor Slice D findings; extract detail section rendering only where the helper boundary is clearer than route-local ownership. |
+| `assets/studio/js/tag-aliases.js` | 1,708 | 62.3 KiB | 11.3 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete; next slice should target modal view-models and list rendering before more alias workflow is added. |
+| `assets/studio/js/tag-registry.js` | 1,625 | 58.3 KiB | 11.2 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete; next slice should target modal view-models, delete-impact rendering, and import-result rendering. |
+| `assets/studio/js/catalogue-series-editor.js` | 1,625 | 68.3 KiB | 12.9 KiB | mixed route controller | medium | low | Keep route-local short term; revisit with work/detail section-renderer results because series has fewer section types and less immediate extraction pressure. |
+| `assets/studio/js/catalogue-moment-editor.js` | 1,371 | 58.4 KiB | 11.2 KiB | mixed route controller | medium | low | Keep route-local short term; future extraction should focus on import/prose/media workflow helpers rather than line-count reduction. |
+| `assets/studio/js/data-import.js` | 1,133 | 39.8 KiB | 7.8 KiB | mixed route controller | medium | low | Explicitly allowed to stay large for now because it is barely over threshold and still owns one coherent import workflow; split preview-list rendering or docs-management apply transport if it grows further. |
+
+Current priority:
+
+1. `assets/studio/js/catalogue-work-editor.js`
+2. `assets/js/docs-viewer.js`
+3. `assets/studio/js/catalogue-work-detail-editor.js`
+4. `assets/studio/js/tag-studio.js`
+5. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
+6. `assets/studio/js/catalogue-series-editor.js`
+7. `assets/studio/js/catalogue-moment-editor.js`
+8. `assets/studio/js/data-import.js`
+
+Runtime measurement:
+
+- This slice changed docs only.
+- Transitive JS payload before/after: unchanged.
+- Startup JSON payloads before/after: unchanged.
+- Route-ready behavior online/offline: unchanged; no route runtime code was edited.
+- Maintenance risk changed because the long-file policy and priority order are now explicit.
+- Runtime cost did not change.
+
+Implementation notes:
+
+- The inventory found no over-threshold pure domain modules and no over-threshold generated/runtime utilities.
+- All over-threshold files are mixed route or shared viewer controllers, so the cleanup priority is maintenance-driven rather than payload-size-driven.
+- The nine over-threshold files total about 647.8 KiB raw and 122.8 KiB gzip, but no route loads all nine together.
+- The largest transfer-size risk remains the work-editor entry module because it is the largest file and owns the route already targeted by this request.
+
+Targeted verification:
+
+- Inventory command was run against `assets/**/*.js`.
+- Raw and gzip byte measurements were recorded for each file over 1,000 lines.
+- Studio docs payloads and Studio docs search were rebuilt after this docs update.
 
 ### Slice D: Route Section Renderer Boundaries
 
@@ -236,7 +292,6 @@ For Slice B, fetch verification should specifically prove whether `catalogue_wor
 
 ## Recommended Next Step
 
-Start with Slice A.
+Proceed to Slice D.
 
-`init` is the lowest-risk cleanup because it can be split without changing payload contracts.
-Then run Slice B while the startup data-loading boundary is fresh and easy to measure.
+Use the work-editor section renderer review to decide which rendering responsibilities can move out of the route entry module without hiding save/build/publication sequencing.

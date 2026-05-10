@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T18:23:42Z",
+  "generated_at": "2026-05-10T18:31:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2197,7 +2197,7 @@
       "doc_id": "site-request-js-payload-runtime-cleanup",
       "title": "JavaScript Payload And Runtime Cleanup Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 19:23",
+      "last_updated": "2026-05-10 19:30",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 70,
       "published": true,
@@ -2206,7 +2206,7 @@
       "source_path": "site-request-js-payload-runtime-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup.json",
-      "content_text_length": 10911,
+      "content_text_length": 15217,
       "ui_status": "draft"
     },
     {
@@ -3512,7 +3512,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 19:23",
+      "last_updated": "2026-05-10 19:30",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3521,7 +3521,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 121843
+      "content_text_length": 122638
     },
     {
       "scope": "studio",
