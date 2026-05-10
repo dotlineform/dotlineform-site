@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-68c8a2fe0cc94002e5eef36163ae63bd",
-    "generated_at_utc": "2026-05-10T14:28:15Z",
-    "count": 216
+    "version": "blake2b-1d205e34e5a88a8ef7ef5ed252b610d8",
+    "generated_at_utc": "2026-05-10T14:37:34Z",
+    "count": 217
   },
   "entries": [
     {
@@ -744,6 +744,41 @@
         "28"
       ],
       "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-05-09 21:28 2026 05 09 21 28"
+    },
+    {
+      "id": "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
+      "kind": "doc",
+      "title": "Catalogue Editor Extraction Plan",
+      "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan",
+      "last_updated": "2026-05-10 15:36",
+      "parent_id": "site-request-js-config-structural-review-catalogue-editor-boundary",
+      "parent_title": "Catalogue Editor Boundary Spec Slice",
+      "display_meta": "2026-05-10 15:36 • Catalogue Editor Boundary Spec Slice",
+      "search_terms": [
+        "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
+        "site",
+        "request",
+        "js",
+        "config",
+        "structural",
+        "review",
+        "catalogue",
+        "editor",
+        "extraction",
+        "plan",
+        "catalogue editor extraction plan",
+        "catalogue editor boundary spec slice",
+        "boundary",
+        "spec",
+        "slice",
+        "2026-05-10 15:36",
+        "2026",
+        "05",
+        "10",
+        "15",
+        "36"
+      ],
+      "search_text": "site-request-js-config-structural-review-catalogue-editor-extraction-plan site request js config structural review catalogue editor extraction plan catalogue editor extraction plan catalogue editor boundary spec slice boundary spec slice 2026-05-10 15:36 2026 05 10 15 36"
     },
     {
       "id": "data-models-catalogue",
@@ -1498,10 +1533,10 @@
       "kind": "doc",
       "title": "Catalogue Editor Boundary Spec Slice",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-boundary",
-      "last_updated": "2026-05-10 15:24",
+      "last_updated": "2026-05-10 15:36",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 15:24 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 15:36 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-config-structural-review-catalogue-editor-boundary",
         "site",
@@ -1520,14 +1555,14 @@
         "javascript",
         "and",
         "browser",
-        "2026-05-10 15:24",
+        "2026-05-10 15:36",
         "2026",
         "05",
         "10",
         "15",
-        "24"
+        "36"
       ],
-      "search_text": "site-request-js-config-structural-review-catalogue-editor-boundary site request js config structural review catalogue editor boundary catalogue editor boundary spec slice spec slice javascript and browser config structural review request javascript and browser 2026-05-10 15:24 2026 05 10 15 24"
+      "search_text": "site-request-js-config-structural-review-catalogue-editor-boundary site request js config structural review catalogue editor boundary catalogue editor boundary spec slice spec slice javascript and browser config structural review request javascript and browser 2026-05-10 15:36 2026 05 10 15 36"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",
@@ -5214,10 +5249,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 15:20",
+      "last_updated": "2026-05-10 15:36",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 15:20 • Change Requests",
+      "display_meta": "2026-05-10 15:36 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5233,14 +5268,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 15:20",
+        "2026-05-10 15:36",
         "2026",
         "05",
         "10",
         "15",
-        "20"
+        "36"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 15:20 2026 05 10 15 20"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 15:36 2026 05 10 15 36"
     },
     {
       "id": "site-request-scripts-directory-organization",

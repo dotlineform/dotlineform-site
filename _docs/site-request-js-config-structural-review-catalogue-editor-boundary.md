@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-boundary
 title: Catalogue Editor Boundary Spec Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:27"
+last_updated: "2026-05-10 15:36"
 ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 30
@@ -20,6 +20,8 @@ This child doc tracks the third implementation slice from the [JavaScript And Br
 
 The goal is to define stable ownership boundaries for the catalogue editor route controllers before extracting shared runtime code.
 This slice should start with `assets/studio/js/catalogue-work-editor.js`, then compare the work-detail, series, and moment editors for reusable domain and workflow helpers.
+
+The executable follow-up sequence now lives in the [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan).
 
 ## Problem
 
@@ -192,6 +194,8 @@ Avoid:
 ## First Extraction Slice
 
 Slice A should be `catalogue-editor-service-client.js`.
+
+The detailed Slice A-G queue is tracked in the [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan).
 
 Scope:
 
