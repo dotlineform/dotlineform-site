@@ -40,6 +40,13 @@ This request should become a spec and implementation plan if the priority areas 
 - do not change route URLs, local service endpoint contracts, generated JSON schemas, or existing user workflows as part of the review
 - do not fold the existing [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review) into this request; treat it as a related owner for that workflow
 
+## Implementation Principles
+
+- JS folder moves should follow an ownership boundary identified by an implementation slice.
+- Do not make a standalone directory cleanup whose main result is changed import paths.
+- When a slice extracts or moves JS, place new modules where the domain owner is obvious, such as shared Studio runtime, Catalogue, Analytics, Docs, Import/Export, Search, or public-site runtime.
+- Keep route entry modules easy to find unless the slice deliberately changes the route-loading contract.
+
 ## Current Surface
 
 Primary browser code:

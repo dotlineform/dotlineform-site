@@ -2,10 +2,11 @@
 doc_id: site-request-js-config-structural-review-module-versioning
 title: Studio Module Asset Versioning Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10"
+last_updated: "2026-05-10 12:15"
+ui_status: in-progress
 parent_id: site-request-js-config-structural-review
 sort_order: 10
-viewable: true
+hidden: false
 ---
 # Studio Module Asset Versioning Slice
 
