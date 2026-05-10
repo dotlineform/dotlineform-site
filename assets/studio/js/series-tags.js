@@ -1,12 +1,14 @@
 import {
-  buildStudioRagTooltip,
-  computeStudioRag,
-  computeStudioTagMetrics,
   getStudioGroups,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  buildStudioRagTooltip,
+  computeStudioRag,
+  computeStudioTagMetrics
+} from "./analysis-tag-scoring.js";
 import {
   buildStudioGroupDescriptionMap,
   buildStudioRegistryLookup,

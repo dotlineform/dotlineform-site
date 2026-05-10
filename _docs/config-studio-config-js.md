@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Studio Config Loader JS
 added_date: 2026-04-01
-last_updated: "2026-05-06 21:15"
+last_updated: "2026-05-10 17:01"
 parent_id: studio
 sort_order: 100
 ---
@@ -59,7 +59,10 @@ Current responsibilities include:
   - search policy path
   - Studio route paths
   - Studio UI text
-- computing current Studio tag metrics and RAG state from config-backed rules
+- exposing Studio analysis group accessors used by tag-management routes
+
+Analysis tag metric and RAG scoring now lives in `assets/studio/js/analysis-tag-scoring.js`.
+That module still reads analysis policy from the loaded Studio config, but the config loader no longer owns the scoring behavior.
 
 ## Current boundaries
 
@@ -67,10 +70,12 @@ What stays here:
 
 - defaulting and path-resolution logic shared by multiple browser modules
 - reusable config accessors
-- shared config-backed Studio analysis helpers
+- shared config-backed Studio analysis group accessors
 
 What does not stay here:
 
+- Studio tag metric and RAG scoring
+  that lives in `assets/studio/js/analysis-tag-scoring.js`
 - dedicated `/search/` policy parsing
   that lives in `assets/js/search/search-policy.js`
 - local write transport

@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:56"
+last_updated: "2026-05-10 17:08"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -25,11 +25,13 @@ Status:
 - Catalogue editor Slice G implemented
 - Catalogue editor execution sequence complete
 - Slice 4 child doc created
+- Slice 4 implemented
 
 ## Active Execution Queue
 
 The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is complete.
-The active top-level slice is [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership).
+[Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
+The next top-level slice should be Slice 5: Public Runtime Extraction.
 
 ## Summary
 
@@ -308,6 +310,8 @@ Status: implemented.
 Detailed planning tasks are tracked in [Catalogue Editor Boundary Spec Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-boundary).
 
 ### Slice 4: Config Ownership Cleanup
+
+Status: implemented.
 
 - document `studio_config.json` as root manifest plus UI-copy store, not a catch-all domain policy file
 - move analysis tag scoring helpers out of `studio-config.js`

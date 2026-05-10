@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-07 21:52"
+last_updated: "2026-05-10 17:01"
 parent_id: studio
 sort_order: 90
 ---
@@ -29,6 +29,10 @@ Current responsibilities include:
 - catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
 - Studio-owned UI text, including search-shell text that is shared through the same loader
+
+The file is the root browser manifest plus shared UI-copy store.
+Domain behavior should live with the domain runtime that uses the config.
+For example, Studio analysis scoring code lives in `assets/studio/js/analysis-tag-scoring.js`; `studio_config.json` only supplies the current scoring policy values.
 
 ## What calls it
 
@@ -80,9 +84,12 @@ What stays here:
 - shared Docs Viewer status emoji config under `docs_viewer.ui_statuses_by_scope`
 - catalogue UI option lists such as `catalogue.series_type_options`, currently used by the series editor as a client-side dropdown while the write server remains permissive
 - shared Studio UI text
-- shared Studio analysis policy used by current tag metrics/RAG helpers
+- shared Studio analysis policy values used by the analytics scoring runtime
 - the lookup path for dedicated search policy and scope-owned search indexes
 - the lookup path for generated docs indexes used by Studio pages, such as the Library export selector
+
+Do not add domain workflows, service endpoint contracts, generated payload schemas, or scoring implementations to `studio_config.json`.
+If a domain needs behavior, place that behavior in the owning runtime module and keep this file to paths, policy values, options, and browser-facing copy.
 
 ## Data export page
 

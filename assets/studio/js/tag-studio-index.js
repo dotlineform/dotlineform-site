@@ -1,9 +1,11 @@
 import {
-  buildStudioRagTooltip,
-  computeStudioRag,
-  computeStudioTagMetrics,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  buildStudioRagTooltip,
+  computeStudioRag,
+  computeStudioTagMetrics
+} from "./analysis-tag-scoring.js";
 import {
   buildStudioRegistryLookup,
   getSeriesAssignmentTagIds,

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 16:50"
+last_updated: "2026-05-10 17:08"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Studio analysis tag scoring
+
+**Status:** implemented
+
+**Area:** Studio runtime / JavaScript config ownership / analytics
+
+**Summary:**
+Added `assets/studio/js/analysis-tag-scoring.js` as the analytics-owned module for Studio tag metrics, RAG rule evaluation, and compact RAG tooltip text.
+`studio-config.js` now remains focused on config loading, default merging, path resolution, text lookup, and analysis group accessors.
+The series tags page and tag Studio index import scoring helpers from the analytics module directly.
+
+**Files changed/docs:**
+
+- `assets/studio/js/analysis-tag-scoring.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/series-tags.js`
+- `assets/studio/js/tag-studio-index.js`
+- [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Analysis scoring behavior now has a clear runtime owner while `studio_config.json` keeps the existing policy payload shape.
+Docs Viewer and catalogue editor UI copy remain in shared `ui_text` until there is a concrete ownership or payload-size reason to split them.
 
 ## [2026-05-10] Extracted Catalogue editor embedded item helpers
 

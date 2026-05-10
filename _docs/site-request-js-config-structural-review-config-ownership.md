@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-config-ownership
 title: Config Ownership Cleanup Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:56"
-ui_status: in-progress
+last_updated: "2026-05-10 17:08"
+ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 40
 hidden: false
@@ -13,6 +13,7 @@ hidden: false
 Status:
 
 - planning slice created
+- implemented
 
 ## Purpose
 
@@ -29,6 +30,14 @@ It has also started to hold domain policy, especially Studio analysis tag scorin
 `assets/studio/js/studio-config.js` has the same mixed shape.
 It is the correct owner for loading, defaulting, merging, path resolution, and small config accessors, but it also computes Studio tag metrics, RAG status, and analysis tooltip text.
 Those scoring helpers are domain behavior, not generic config loading.
+
+Implementation result:
+
+- `assets/studio/js/analysis-tag-scoring.js` now owns Studio tag metric calculation, RAG rule evaluation, and compact RAG tooltip text.
+- `assets/studio/js/studio-config.js` remains the config loader/accessor owner and keeps analysis group accessors used by tag-management routes.
+- `assets/studio/js/tag-studio-index.js` and `assets/studio/js/series-tags.js` import scoring helpers from the new analytics module.
+- `studio_config.json` path keys, route keys, UI text keys, and analysis policy payload shape stayed unchanged.
+- Docs Viewer and catalogue editor copy remain in shared `ui_text`; splitting them is deferred until payload size, independent release cadence, or route ownership pressure creates a concrete benefit.
 
 ## Current Ownership
 
@@ -66,22 +75,22 @@ This slice should answer:
 5. Do Docs Viewer and catalogue editor copy remain in `studio_config.json` for now, or should either area define a future scoped copy file?
 6. What checks prove that tag analytics, series tag RAG indicators, public search, Docs Viewer, and catalogue editor routes still boot after the boundary change?
 
-## Recommended Decisions
+## Decisions
 
-Start with a conservative implementation:
+The implementation used the conservative path:
 
 - keep `studio_config.json` as the root browser manifest and UI-copy store
 - keep existing `analysis` policy values in `studio_config.json` for the first extraction so payload paths do not change
 - move analysis metric/RAG/tooltip helpers out of `studio-config.js` into an analytics-owned module
-- keep `studio-config.js` exports as thin compatibility wrappers only if that avoids a wide call-site change in the first pass
+- update the two direct scoring consumers to import the new module directly, without keeping scoring re-exports in `studio-config.js`
 - do not split Docs Viewer or catalogue editor copy yet; document the criteria for doing so later
 
 This avoids turning a cleanup slice into a config-file migration.
-The first source change should clarify runtime ownership without changing loaded JSON paths or visible UI behavior.
+The source change clarified runtime ownership without changing loaded JSON paths or visible UI behavior.
 
 ## Candidate Module Boundary
 
-Likely new module:
+New module:
 
 - `assets/studio/js/analysis-tag-scoring.js`
 
@@ -142,7 +151,7 @@ Avoid:
 
 ## Targeted Verification
 
-For a source-change slice, use focused checks:
+Focused checks for this slice:
 
 - `node --check` for changed JavaScript files and direct consumers
 - targeted search for retired imports or duplicated scoring helpers
@@ -153,6 +162,14 @@ For a source-change slice, use focused checks:
 - Studio docs payload rebuild and Studio search rebuild after docs updates
 
 Jekyll build is useful if route script tags or generated docs payloads change, but this slice should not require a broad run-checks profile unless the implementation grows beyond analysis scoring extraction.
+
+Results:
+
+- `node --check` passed for `assets/studio/js/analysis-tag-scoring.js`, `assets/studio/js/studio-config.js`, `assets/studio/js/tag-studio-index.js`, and `assets/studio/js/series-tags.js`.
+- Targeted search confirmed `computeStudioTagMetrics`, `computeStudioRag`, and `buildStudioRagTooltip` are defined only in `analysis-tag-scoring.js` and imported by the two scoring consumers.
+- Studio docs payloads and Studio search index were rebuilt.
+- Jekyll build passed to `/tmp/dlf-jekyll-build` because local `bin/dev-studio` was already running.
+- Static Playwright smoke against the temp build passed for the series tags page, catalogue work editor page, and direct `tag-studio-index.js` module import; `analysis-tag-scoring.js` loaded with HTTP 200, the series tags page rendered 138 RAG indicators, and no page errors or failed local requests were reported.
 
 ## Benefits And Risks
 

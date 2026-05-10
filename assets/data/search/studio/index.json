@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ea114d819c0e9fd9d75d207c50af8fca",
-    "generated_at_utc": "2026-05-10T15:57:22Z",
+    "version": "blake2b-dcd6a8f8bb8d888a5ab980de52256ccb",
+    "generated_at_utc": "2026-05-10T16:10:17Z",
     "count": 218
   },
   "entries": [
@@ -2132,10 +2132,10 @@
       "kind": "doc",
       "title": "Config Ownership Cleanup Slice",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership",
-      "last_updated": "2026-05-10 16:56",
+      "last_updated": "2026-05-10 17:08",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 16:56 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 17:08 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-config-structural-review-config-ownership",
         "site",
@@ -2152,14 +2152,14 @@
         "javascript",
         "and",
         "browser",
-        "2026-05-10 16:56",
+        "2026-05-10 17:08",
         "2026",
         "05",
         "10",
-        "16",
-        "56"
+        "17",
+        "08"
       ],
-      "search_text": "site-request-js-config-structural-review-config-ownership site request js config structural review ownership config ownership cleanup slice cleanup slice javascript and browser config structural review request javascript and browser 2026-05-10 16:56 2026 05 10 16 56"
+      "search_text": "site-request-js-config-structural-review-config-ownership site request js config structural review ownership config ownership cleanup slice cleanup slice javascript and browser config structural review request javascript and browser 2026-05-10 17:08 2026 05 10 17 08"
     },
     {
       "id": "docs-viewer",
@@ -3941,24 +3941,24 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-10 17:01",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-07 21:52 • Studio",
+      "display_meta": "2026-05-10 17:01 • Studio",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-07 21:52",
+        "2026-05-10 17:01",
         "2026",
         "05",
-        "07",
-        "21",
-        "52"
+        "10",
+        "17",
+        "01"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-07 21:52 2026 05 07 21 52"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-10 17:01 2026 05 10 17 01"
     },
     {
       "id": "site-request-work-owned-files-links",
@@ -4046,10 +4046,10 @@
       "kind": "doc",
       "title": "Studio Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-05-06 21:15",
+      "last_updated": "2026-05-10 17:01",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-06 21:15 • Studio",
+      "display_meta": "2026-05-10 17:01 • Studio",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -4057,14 +4057,14 @@
         "js",
         "studio config loader js",
         "loader",
-        "2026-05-06 21:15",
+        "2026-05-10 17:01",
         "2026",
         "05",
-        "06",
-        "21",
-        "15"
+        "10",
+        "17",
+        "01"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-06 21:15 2026 05 06 21 15"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-10 17:01 2026 05 10 17 01"
     },
     {
       "id": "tiered-dimension-policy",
@@ -5283,10 +5283,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 16:56",
+      "last_updated": "2026-05-10 17:08",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 16:56 • Change Requests",
+      "display_meta": "2026-05-10 17:08 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5302,14 +5302,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 16:56",
+        "2026-05-10 17:08",
         "2026",
         "05",
         "10",
-        "16",
-        "56"
+        "17",
+        "08"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 16:56 2026 05 10 16 56"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 17:08 2026 05 10 17 08"
     },
     {
       "id": "site-request-scripts-directory-organization",
@@ -5475,22 +5475,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 16:50",
-      "display_meta": "2026-05-10 16:50",
+      "last_updated": "2026-05-10 17:08",
+      "display_meta": "2026-05-10 17:08",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 16:50",
+        "2026-05-10 17:08",
         "2026",
         "05",
         "10",
-        "16",
-        "50"
+        "17",
+        "08"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 16:50 2026 05 10 16 50"
+      "search_text": "site-change-log site change log site change log 2026-05-10 17:08 2026 05 10 17 08"
     },
     {
       "id": "archive",
