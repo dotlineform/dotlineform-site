@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T15:07:52Z",
+  "generated_at": "2026-05-10T15:20:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -463,7 +463,7 @@
       "doc_id": "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
       "title": "Catalogue Editor Extraction Plan",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 16:04",
+      "last_updated": "2026-05-10 16:19",
       "parent_id": "site-request-js-config-structural-review-catalogue-editor-boundary",
       "sort_order": 20,
       "published": true,
@@ -472,7 +472,7 @@
       "source_path": "site-request-js-config-structural-review-catalogue-editor-extraction-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-catalogue-editor-extraction-plan.json",
-      "content_text_length": 12313,
+      "content_text_length": 14225,
       "ui_status": "in-progress"
     },
     {
@@ -3327,7 +3327,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 15:52",
+      "last_updated": "2026-05-10 16:19",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3336,7 +3336,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 16402,
+      "content_text_length": 16475,
       "ui_status": "in-progress"
     },
     {
@@ -3444,7 +3444,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 16:04",
+      "last_updated": "2026-05-10 16:19",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3453,7 +3453,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 113300
+      "content_text_length": 114434
     },
     {
       "scope": "studio",

@@ -30,6 +30,11 @@ import {
   displayValue
 } from "./catalogue-editor-records.js";
 import {
+  formatCatalogueBuildPreview,
+  formatCatalogueDeletePreview,
+  formatCataloguePublicationPreview
+} from "./catalogue-editor-modal-formatters.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -597,38 +602,6 @@ function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
   };
 }
 
-function formatBuildPreview(state, build) {
-  if (!build || typeof build !== "object") return "";
-  const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
-  const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
-  const localMedia = build.local_media && typeof build.local_media === "object" ? build.local_media : null;
-  const localCounts = localMedia && typeof localMedia.counts === "object" ? localMedia.counts : null;
-  const workText = workIds.length ? workIds.join(", ") : "none";
-  const seriesText = seriesIds.length ? seriesIds.join(", ") : "none";
-  const searchText = build.rebuild_search ? t(state, "build_preview_search_yes", "yes") : t(state, "build_preview_search_no", "no");
-  const baseText = t(
-    state,
-    "build_preview_template",
-    "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
-    {
-      work_ids: workText,
-      series_ids: seriesText,
-      search_rebuild: searchText
-    }
-  );
-  if (!localCounts) return baseText;
-  const pending = Number(localCounts.pending) || 0;
-  const blocked = Number(localCounts.blocked) || 0;
-  const unavailable = Number(localCounts.unavailable) || 0;
-  const current = Number(localCounts.current) || 0;
-  const mediaParts = [];
-  if (pending) mediaParts.push(`local media pending ${pending}`);
-  if (blocked) mediaParts.push(`local media blocked ${blocked}`);
-  if (unavailable) mediaParts.push(`local media unavailable ${unavailable}`);
-  if (!pending && !blocked && !unavailable && current) mediaParts.push(`local media current ${current}`);
-  return mediaParts.length ? `${baseText} ${mediaParts.join("; ")}.` : baseText;
-}
-
 function syncUrl(detailValue, options = {}) {
   const url = new URL(window.location.href);
   if (normalizeText(options.mode).toLowerCase() === "new") {
@@ -1017,7 +990,10 @@ async function refreshBuildPreview(state) {
       detail_uid: state.currentDetailUid
     });
     state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    setTextWithState(state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultTemplate: "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
+    }));
     renderCurrentPreview(state);
     renderReadiness(state);
   } catch (error) {
@@ -1363,9 +1339,12 @@ async function applyPublicationChange(state) {
     }
 
     if (action === "unpublish") {
-      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this detail?");
-      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
-      if (!window.confirm(`${summary}${dirtyNote}`)) {
+      const summary = formatCataloguePublicationPreview(preview, {
+        text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+        defaultText: "Unpublish this detail?",
+        includeDirtyNote: draftHasChanges(state)
+      });
+      if (!window.confirm(summary)) {
         setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
@@ -1484,7 +1463,10 @@ async function deleteCurrentDetail(state) {
       updateEditorState(state);
       return;
     }
-    const summary = normalizeText(preview && preview.summary) || t(state, "delete_confirm_default", "Delete this source record?");
+    const summary = formatCatalogueDeletePreview(preview, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultText: "Delete this source record?"
+    });
     if (!window.confirm(summary)) {
       setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."));
       state.isDeleting = false;

@@ -36,6 +36,12 @@ import {
   displayValue
 } from "./catalogue-editor-records.js";
 import {
+  formatCatalogueBuildPreview,
+  formatCatalogueBuildPreviewModalHtml,
+  formatCatalogueDeletePreview,
+  formatCataloguePublicationPreview
+} from "./catalogue-editor-modal-formatters.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -1363,83 +1369,6 @@ function updateSummary(state) {
   renderReadiness(state);
 }
 
-function formatBuildPreview(state, build) {
-  if (!build || typeof build !== "object") return "";
-  const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
-  const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
-  const localMedia = build.local_media && typeof build.local_media === "object" ? build.local_media : null;
-  const localCounts = localMedia && typeof localMedia.counts === "object" ? localMedia.counts : null;
-  const workText = workIds.length ? workIds.join(", ") : "none";
-  const seriesText = seriesIds.length ? seriesIds.join(", ") : "none";
-  const searchText = build.rebuild_search ? t(state, "build_preview_search_yes", "yes") : t(state, "build_preview_search_no", "no");
-  const baseText = t(
-    state,
-    "build_preview_template",
-    "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
-    {
-      work_ids: workText,
-      series_ids: seriesText,
-      search_rebuild: searchText
-    }
-  );
-  if (!localCounts) return baseText;
-  const pending = Number(localCounts.pending) || 0;
-  const blocked = Number(localCounts.blocked) || 0;
-  const unavailable = Number(localCounts.unavailable) || 0;
-  const current = Number(localCounts.current) || 0;
-  const mediaParts = [];
-  if (pending) mediaParts.push(`local media pending ${pending}`);
-  if (blocked) mediaParts.push(`local media blocked ${blocked}`);
-  if (unavailable) mediaParts.push(`local media unavailable ${unavailable}`);
-  if (!pending && !blocked && !unavailable && current) mediaParts.push(`local media current ${current}`);
-  return mediaParts.length ? `${baseText} ${mediaParts.join("; ")}.` : baseText;
-}
-
-function fieldPlanList(value) {
-  return Array.isArray(value) && value.length ? value.map((item) => normalizeText(item)).filter(Boolean).join(", ") : "none";
-}
-
-function formatBuildPreviewModalHtml(state, response, changedFields) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  const fieldPlan = response && response.field_plan && typeof response.field_plan === "object"
-    ? response.field_plan
-    : build && build.field_plan && typeof build.field_plan === "object"
-      ? build.field_plan
-      : null;
-  const summary = formatBuildPreview(state, build) || t(state, "build_preview_no_result", "No public update work selected.");
-  const rules = fieldPlan ? fieldPlanList(fieldPlan.rule_ids) : "none";
-  const artifacts = fieldPlan ? fieldPlanList(fieldPlan.artifacts) : "none";
-  const explanations = fieldPlan && Array.isArray(fieldPlan.explanations) ? fieldPlan.explanations : [];
-  const explanationGroups = new Map();
-  explanations.forEach((row) => {
-    const artifact = normalizeText(row && row.artifact);
-    const reason = normalizeText(row && row.reason);
-    if (!artifact && !reason) return;
-    const key = reason || "selected by registry rule";
-    const current = explanationGroups.get(key) || [];
-    if (artifact) current.push(artifact);
-    explanationGroups.set(key, current);
-  });
-  const explanationLines = Array.from(explanationGroups.entries()).map(([reason, groupedArtifacts]) => {
-    const artifactText = groupedArtifacts.length ? fieldPlanList(groupedArtifacts) : "artifact";
-    return `${artifactText}: ${reason}`;
-  });
-  const details = [
-    t(state, "build_preview_modal_changed_fields", "Changed fields: {fields}.", { fields: fieldPlanList(changedFields) }),
-    t(state, "build_preview_modal_rules", "Rules: {rules}.", { rules }),
-    t(state, "build_preview_modal_artifacts", "Artifacts: {artifacts}.", { artifacts })
-  ];
-  const reasonsText = explanationLines.length
-    ? `${t(state, "build_preview_modal_reasons_heading", "Reasons:")}\n${explanationLines.map((line) => `- ${line}`).join("\n")}`
-    : "";
-
-  return `
-    <p class="tagStudioForm__impact">${escapeHtml(summary)}</p>
-    ${details.map((line) => `<p class="tagStudioModal__label">${escapeHtml(line)}</p>`).join("")}
-    ${reasonsText ? `<pre class="tagStudioModal__pre catalogueWorkBuildPreview__reasons">${escapeHtml(reasonsText)}</pre>` : ""}
-  `;
-}
-
 function closeBuildPreviewModal(state) {
   closeEntryModal(state);
 }
@@ -1452,7 +1381,11 @@ function openBuildPreviewModal(state, response, changedFields) {
     titleId: "catalogueWorkBuildPreviewModalTitle",
     modalRole: "build-preview-modal",
     backdropRole: "build-preview-modal-close",
-    bodyHtml: formatBuildPreviewModalHtml(state, response, changedFields),
+    bodyHtml: formatCatalogueBuildPreviewModalHtml(response, changedFields, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultTemplate: "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
+      reasonsClass: "catalogueWorkBuildPreview__reasons"
+    }),
     actions: [
       { role: "build-preview-modal-close", label: t(state, "build_preview_modal_close", "Close") }
     ]
@@ -2336,7 +2269,10 @@ async function refreshBuildPreview(state) {
       extra_series_ids: state.pendingBuildExtraSeriesIds
     });
     state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    setTextWithState(state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultTemplate: "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
+    }));
     renderCurrentPreview(state);
     renderReadiness(state);
   } catch (error) {
@@ -2574,9 +2510,12 @@ async function applyPublicationChange(state) {
     }
 
     if (action === "unpublish") {
-      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this work?");
-      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
-      if (!window.confirm(`${summary}${dirtyNote}`)) {
+      const summary = formatCataloguePublicationPreview(preview, {
+        text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+        defaultText: "Unpublish this work?",
+        includeDirtyNote: draftHasChanges(state)
+      });
+      if (!window.confirm(summary)) {
         setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
@@ -2700,7 +2639,10 @@ async function deleteCurrentWork(state) {
       setTextWithState(state.statusNode, message, "error");
       return;
     }
-    const summary = normalizeText(preview && preview.summary) || t(state, "delete_confirm_default", "Delete this source record?");
+    const summary = formatCatalogueDeletePreview(preview, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultText: "Delete this source record?"
+    });
     if (!window.confirm(summary)) {
       state.isDeleting = false;
       updateEditorState(state);

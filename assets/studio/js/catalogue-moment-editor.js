@@ -33,6 +33,11 @@ import {
   recordsEqual
 } from "./catalogue-editor-records.js";
 import {
+  formatCatalogueBuildPreview,
+  formatCatalogueDeletePreview,
+  formatCataloguePublicationPreview
+} from "./catalogue-editor-modal-formatters.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -879,16 +884,12 @@ function renderBuildImpact(state) {
     state.buildImpactNode.textContent = "";
     return;
   }
-  const momentIds = Array.isArray(state.buildPreview.moment_ids) ? state.buildPreview.moment_ids.join(", ") : state.currentMomentId;
-  const search = state.buildPreview.rebuild_search
-    ? t(state, "build_preview_search_yes", "yes")
-    : t(state, "build_preview_search_no", "no");
-  state.buildImpactNode.textContent = t(
-    state,
-    "build_preview_template",
-    "Public update preview: moment {moment_ids}; catalogue search {search_rebuild}.",
-    { moment_ids: momentIds || "none", search_rebuild: search }
-  );
+  state.buildImpactNode.textContent = formatCatalogueBuildPreview(state.buildPreview, {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    target: "moment",
+    fallbackMomentId: state.currentMomentId,
+    defaultTemplate: "Public update preview: moment {moment_ids}; catalogue search {search_rebuild}."
+  });
 }
 
 async function refreshBuildPreview(state) {
@@ -1013,9 +1014,12 @@ async function applyPublicationChange(state) {
       return;
     }
     if (action === "unpublish") {
-      const summary = normalizeText(preview && preview.summary) || t(state, "unpublish_confirm_default", "Unpublish this moment?");
-      const dirtyNote = draftHasChanges(state) ? `\n\n${t(state, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")}` : "";
-      if (!window.confirm(`${summary}${dirtyNote}`)) {
+      const summary = formatCataloguePublicationPreview(preview, {
+        text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+        defaultText: "Unpublish this moment?",
+        includeDirtyNote: draftHasChanges(state)
+      });
+      if (!window.confirm(summary)) {
         setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."), "warning");
         return;
       }
@@ -1182,7 +1186,10 @@ async function deleteMoment(state) {
       updateDirtyState(state);
       return;
     }
-    const summary = normalizeText(preview && preview.summary) || t(state, "delete_confirm_default", "Delete this source record?");
+    const summary = formatCatalogueDeletePreview(preview, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultText: "Delete this source record?"
+    });
     if (!window.confirm(summary)) {
       setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."), "warning");
       state.isDeleting = false;

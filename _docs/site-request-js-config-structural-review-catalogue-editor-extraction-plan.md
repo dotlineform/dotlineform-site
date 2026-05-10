@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:04"
+last_updated: "2026-05-10 16:19"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
@@ -16,7 +16,8 @@ Status:
 - Slice A implemented
 - Slice B implemented
 - Slice C implemented
-- next executable slice: Slice D
+- Slice D implemented
+- next executable slice: Slice E
 
 ## Purpose
 
@@ -41,8 +42,8 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 | A | implemented | `catalogue-editor-service-client.js` | Local-service wrapper functions over existing catalogue write endpoints |
 | B | implemented | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
 | C | implemented | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
-| D | planned next | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
-| E | planned | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
+| D | implemented | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
+| E | planned next | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
 | F | deferred | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
 | G | deferred | `catalogue-editor-embedded-items.js` | Work file/link embedded item helpers only if another route needs the pattern |
 
@@ -200,7 +201,7 @@ Targeted verification:
 
 Status:
 
-- planned
+- implemented
 
 Target file:
 
@@ -225,6 +226,23 @@ Acceptance checks:
 - build-preview modal output remains equivalent for representative work and detail records
 - publish/delete confirmations still show the same target labels and warning text
 - formatter functions do not call write endpoints or mutate route state
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-modal-formatters.js` now owns pure formatting for catalogue build-preview summary text, work build-preview modal HTML, field-plan lists, unpublish confirmation text, and delete confirmation text.
+- Work, work-detail, series, and moment editors import the formatter helpers while keeping modal shell rendering, `window.confirm`, request payloads, route state mutation, and write endpoint calls in the route controllers.
+- The formatter module receives a route text callback so existing `studio_config.json` UI copy remains the source for labels and confirmation text.
+- Moment build-preview formatting keeps its moment-specific `moment_ids` template through an explicit formatter target option.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-editor-modal-formatters.js` and the four migrated catalogue editor controllers.
+- A targeted search found no remaining local `formatBuildPreview`, `fieldPlanList`, or `formatBuildPreviewModalHtml` helper definitions in the migrated route controllers.
+- Formatter extraction stayed pure: the new module does not call catalogue service endpoints, `window.confirm`, or route-state mutation helpers.
+- Studio docs payloads and the Studio search index were rebuilt.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build` because local `bin/dev-studio` was already running.
+- Static Playwright smoke passed for work, work-detail, series, and moment editor routes against the built site; all four reached route-ready state with no page errors and no failed Studio JS module requests.
+- The first Playwright launch failed inside the Codex sandbox; the same check passed when rerun with escalated permissions as required by the local validation guidance.
 
 ## Slice E: Moment Field Module
 
@@ -308,16 +326,16 @@ Use this map proportionally after runtime extraction slices:
 
 ## Current Recommendation
 
-Execute Slice B next.
+Execute Slice E next.
 
 Benefits:
 
-- moves repeated build/readiness item helpers behind a pure route-agnostic boundary
-- keeps DOM rendering route-local while reducing duplicated status normalization
-- builds on the service-client extraction without changing write behavior
+- aligns the moment editor with the work, work-detail, and series field-module ownership pattern
+- moves moment-specific field definitions, draft shaping, payload shaping, and validation out of the route controller
+- reduces the risk of over-sharing dirty-state behavior before moment field ownership is clear
 
 Risks:
 
-- readiness copy and fallback text differ slightly by route, so text lookup should stay injected
-- extracting too much render behavior in this slice would make it harder to verify equivalence
-- build-preview routes should still be smoke-tested because readiness output is user-visible
+- moment import mode is still route-specific and should not be moved into the field module
+- save payload equivalence should be checked carefully because moment currently keeps field rules inline
+- the field-module extraction will touch validation and draft shaping, so route-level smoke coverage matters more than it did for pure formatter extraction

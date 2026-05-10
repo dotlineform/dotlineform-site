@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 16:04"
+last_updated: "2026-05-10 16:19"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue editor modal formatters
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-editor-modal-formatters.js` as the fourth runtime extraction from the Catalogue editor boundary plan.
+The work, work-detail, series, and moment editor controllers now share pure build-preview summary formatting, confirmation summary formatting, and field-plan modal text helpers.
+Route controllers still own modal shell rendering, confirmation prompts, write requests, and state transitions.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-editor-modal-formatters.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Catalogue confirmation and build-preview copy now has a shared formatter boundary without moving route workflows or service calls.
+Slice E can focus on giving the moment editor a route-local field module.
 
 ## [2026-05-10] Extracted Catalogue editor record helpers
 
