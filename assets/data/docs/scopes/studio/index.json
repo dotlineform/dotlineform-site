@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T22:07:24Z",
+  "generated_at": "2026-05-10T22:15:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -804,7 +804,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 22:16",
+      "last_updated": "2026-05-10 23:14",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -813,7 +813,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 12866
+      "content_text_length": 13403
     },
     {
       "scope": "studio",
@@ -1600,7 +1600,7 @@
       "doc_id": "catalogue-moment-import",
       "title": "Catalogue Moment Import",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-10 23:14",
       "parent_id": "catalogue",
       "sort_order": 50,
       "published": true,
@@ -1609,7 +1609,7 @@
       "source_path": "catalogue-moment-import.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-import.json",
-      "content_text_length": 4036
+      "content_text_length": 4139
     },
     {
       "scope": "studio",
@@ -2407,7 +2407,7 @@
       "doc_id": "site-request-catalogue-js-runtime-consistency",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 23:06",
+      "last_updated": "2026-05-10 23:14",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 80,
       "published": true,
@@ -2416,7 +2416,7 @@
       "source_path": "site-request-catalogue-js-runtime-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-js-runtime-consistency.json",
-      "content_text_length": 38141,
+      "content_text_length": 39670,
       "ui_status": "draft"
     },
     {
@@ -3194,7 +3194,7 @@
       "doc_id": "catalogue-moment-editor",
       "title": "Catalogue Moment Editor",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-10 23:14",
       "parent_id": "user-guide",
       "sort_order": 182,
       "published": true,
@@ -3203,7 +3203,7 @@
       "source_path": "catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json",
-      "content_text_length": 6154
+      "content_text_length": 6884
     },
     {
       "scope": "studio",
@@ -3546,7 +3546,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 22:16",
+      "last_updated": "2026-05-10 23:14",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3555,7 +3555,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 128359
+      "content_text_length": 129552
     },
     {
       "scope": "studio",

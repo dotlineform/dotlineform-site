@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-10 22:16"
+last_updated: "2026-05-10 23:14"
 parent_id: studio
 sort_order: 20
 ---
@@ -134,6 +134,10 @@ Shared Studio runtime and wiring currently live in:
   provides Catalogue Series Editor route-local field definitions, id normalization, draft shaping, payload shaping, and validation
 - `assets/studio/js/catalogue-series-membership.js`
   provides Catalogue Series Editor route-local member-list state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, member row/list rendering, and add/remove/make-primary mutations
+- `assets/studio/js/catalogue-moment-fields.js`
+  provides Catalogue Moment Editor route-local field definitions, id/filename normalization, draft shaping, source-record payload shaping, and validation
+- `assets/studio/js/catalogue-moment-import.js`
+  provides Catalogue Moment Editor route-local staged-file URL state, import metadata reads, preview seeding, import preview/apply sequencing, import detail rendering, and import control state
 
 Current page controllers:
 
@@ -187,6 +191,10 @@ Controller splits that are already live:
   - `catalogue-series-editor.js`
   - `catalogue-series-fields.js`
   - `catalogue-series-membership.js`
+- Catalogue Moment Editor:
+  - `catalogue-moment-editor.js`
+  - `catalogue-moment-fields.js`
+  - `catalogue-moment-import.js`
 
 ## Route Ready State
 

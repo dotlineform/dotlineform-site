@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 22:16"
+last_updated: "2026-05-10 23:14"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue Moment Editor import behavior
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Replaced the retired standalone `assets/studio/js/catalogue-moment-import.js` script with a route-local import helper for the Catalogue Moment Editor.
+The helper now owns staged-file query state, import metadata reads, preview metadata seeding, import preview/apply sequencing, import summary/detail rendering, stale preview clearing, import control state, and import activity context.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-moment-import.js`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
+
+**Impact:**
+The Moment route entry module keeps route bootstrap, generated moment lookup reads, service availability, normal edit state, search/open behavior, post-import opening, dirty-state orchestration, save/build/publication/delete/prose/media command sequencing, and route-ready state.
+Import-specific transport, rendering, URL, and control behavior now has a focused owner, setting up the next Moment action workflow review.
 
 ## [2026-05-10] Extracted Catalogue Series Editor membership behavior
 

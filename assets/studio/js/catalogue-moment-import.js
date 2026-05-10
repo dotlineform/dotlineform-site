@@ -1,17 +1,17 @@
 import {
-  getStudioText,
-  loadStudioConfigWithText
-} from "./studio-config.js";
+  applyCatalogueMomentImport,
+  previewCatalogueMomentImport
+} from "./catalogue-editor-service-client.js";
+import { catalogueGeneratedStatusText } from "./catalogue-editor-readiness.js";
+import { displayValue } from "./catalogue-editor-records.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
-  postJson,
-  probeCatalogueHealth
-} from "./studio-transport.js";
-import { buildSaveModeText } from "./tag-studio-save.js";
-
-function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
-}
+  MOMENT_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  normalizeMomentFilename,
+  normalizeMomentId,
+  normalizeMomentRecord,
+  normalizeText
+} from "./catalogue-moment-fields.js";
+import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -22,61 +22,67 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function setTextWithState(node, text, state = "") {
+function text(context, key, fallback, tokens = null) {
+  if (context && typeof context.text === "function") {
+    return context.text(key, fallback, tokens);
+  }
+  if (!tokens) return fallback;
+  return Object.entries(tokens).reduce((value, [token, replacement]) => {
+    return value.replace(new RegExp(`\\{${token}\\}`, "g"), () => replacement == null ? "" : String(replacement));
+  }, fallback);
+}
+
+function setTextWithState(context, node, value, state = "") {
+  if (context && typeof context.setTextWithState === "function") {
+    context.setTextWithState(node, value, state);
+    return;
+  }
   if (!node) return;
-  node.textContent = text || "";
+  node.textContent = value || "";
   if (state) node.dataset.state = state;
   else delete node.dataset.state;
 }
 
-function t(state, key, fallback, tokens = null) {
-  return getStudioText(state.config, `catalogue_moment_import.${key}`, fallback, tokens);
+function setFieldNodeValue(node, value) {
+  if (!node) return;
+  const normalized = normalizeText(value);
+  if ("value" in node) {
+    node.value = normalized;
+  } else {
+    node.textContent = displayValue(normalized, { emptyText: "-" });
+  }
 }
 
-function normalizeMomentFilename(value) {
-  const raw = normalizeText(value).toLowerCase();
-  if (!raw) return "";
-  return raw.endsWith(".md") ? raw : `${raw}.md`;
+function getFieldNodeValue(node) {
+  if (!node) return "";
+  if ("value" in node) return node.value;
+  return normalizeText(node.textContent);
 }
 
-function currentMomentFile(state) {
-  return normalizeText(state.fileNode && state.fileNode.value);
+function buildImportActivityContext(momentId) {
+  return buildStudioActivityContext({
+    pageId: "catalogue-moment",
+    actionId: "import-moment",
+    route: "/studio/catalogue-moment/",
+    controlId: "catalogueMomentImportApply",
+    controlSelector: "#catalogueMomentImportApply",
+    recordIdField: "moment_id",
+    recordId: momentId
+  });
 }
 
-const METADATA_FIELDS = [
-  { key: "title", type: "text", fallback: "title" },
-  { key: "status", type: "text", readonly: true, fallback: "status" },
-  { key: "date", type: "date", fallback: "date" },
-  { key: "date_display", type: "text", fallback: "date display" },
-  { key: "published_date", type: "date", fallback: "published date" },
-  { key: "source_image_file", type: "text", fallback: "source image file" },
-  { key: "image_alt", type: "text", fallback: "image alt" }
-];
-
-function readMetadata(state) {
-  const metadata = {};
-  if (!state.metadataNodes) return metadata;
-  state.metadataNodes.forEach((node, key) => {
-    metadata[key] = readMetadataNode(node);
+function readImportMetadata(state) {
+  const metadata = { moment_id: normalizeMomentId(currentImportMomentFile(state)) };
+  EDITABLE_FIELDS.forEach((field) => {
+    const node = state.fieldNodes.get(field.key);
+    metadata[field.key] = node ? normalizeText(getFieldNodeValue(node)) : "";
   });
   metadata.status = "draft";
   return metadata;
 }
 
-function readMetadataNode(node) {
-  if (!node) return "";
-  return "value" in node ? normalizeText(node.value) : normalizeText(node.textContent);
-}
-
-function writeMetadataNode(node, value) {
-  if (!node) return;
-  const text = normalizeText(value);
-  if ("value" in node) node.value = text;
-  else node.textContent = text || "draft";
-}
-
-function fillMetadataFromPreview(state, preview) {
-  if (!preview || !state.metadataNodes) return;
+function fillImportMetadataFromPreview(state, preview) {
+  if (!preview) return;
   const mapping = {
     title: preview.title,
     status: preview.status,
@@ -87,95 +93,47 @@ function fillMetadataFromPreview(state, preview) {
     image_alt: preview.image_alt
   };
   Object.entries(mapping).forEach(([key, value]) => {
-    const node = state.metadataNodes.get(key);
-    if (node && !readMetadataNode(node) && normalizeText(value)) {
-      writeMetadataNode(node, key === "status" ? "draft" : value);
+    const node = state.fieldNodes.get(key);
+    if (node && (!normalizeText(getFieldNodeValue(node)) || key === "status") && normalizeText(value)) {
+      setFieldNodeValue(node, key === "status" ? "draft" : value);
     }
   });
 }
 
-function buildMetadataFields(state, container) {
-  state.metadataNodes = new Map();
-  container.innerHTML = "";
-  METADATA_FIELDS.forEach((field) => {
-    const wrapper = document.createElement(field.readonly ? "div" : "label");
-    wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-    if (!field.readonly) wrapper.setAttribute("for", `catalogueMomentImportMetadata-${field.key}`);
-
-    const label = document.createElement("span");
-    label.className = "tagStudioForm__label";
-    label.textContent = t(state, `metadata_field_${field.key}`, field.fallback);
-    wrapper.appendChild(label);
-
-    let input;
-    if (field.readonly) {
-      input = document.createElement("span");
-      input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-      input.textContent = "draft";
-    } else if (field.type === "select") {
-      input = document.createElement("select");
-      input.className = "tagStudio__input";
-      field.options.forEach((optionValue) => {
-        const option = document.createElement("option");
-        option.value = optionValue;
-        option.textContent = optionValue;
-        input.appendChild(option);
-      });
-    } else {
-      input = document.createElement("input");
-      input.className = "tagStudio__input";
-      input.type = field.type === "date" ? "date" : "text";
-      input.spellcheck = false;
-      input.autocomplete = "off";
-    }
-    input.id = `catalogueMomentImportMetadata-${field.key}`;
-    input.dataset.field = field.key;
-    if (field.key === "status") writeMetadataNode(input, "draft");
-    if (!field.readonly) {
-      input.addEventListener("input", () => clearPreview(state));
-      input.addEventListener("change", () => clearPreview(state));
-    }
-    wrapper.appendChild(input);
-    container.appendChild(wrapper);
-    state.metadataNodes.set(field.key, input);
+function importGeneratedStatusText(context, preview) {
+  return catalogueGeneratedStatusText(preview, {
+    includeIndex: false,
+    missingText: text(context, "import_preview_missing_value", "none")
   });
 }
 
-function generatedStatusText(state, preview) {
-  if (!preview) return t(state, "preview_missing_value", "none");
-  const parts = [];
-  parts.push(preview.generated_page_exists ? "page yes" : "page no");
-  parts.push(preview.generated_json_exists ? "json yes" : "json no");
-  return parts.join(" / ");
-}
-
-function buildSummaryHtml(state, preview) {
+function buildImportSummaryHtml(state, context, preview) {
   if (!preview) {
     return `
-      <p class="tagStudioForm__meta">${escapeHtml(t(state, "empty_state", "Preview a source file to inspect the resolved moment metadata."))}</p>
+      <p class="tagStudioForm__meta">${escapeHtml(text(context, "import_empty_state", "Preview a source file to inspect the resolved moment metadata."))}</p>
     `;
   }
 
   const fields = [
-    { label: t(state, "preview_field_moment_id", "moment id"), value: preview.moment_id },
-    { label: t(state, "preview_field_title", "title"), value: preview.title },
-    { label: t(state, "preview_field_status", "status"), value: preview.status },
-    { label: t(state, "preview_field_date", "date"), value: preview.date },
-    { label: t(state, "preview_field_date_display", "date display"), value: preview.date_display },
-    { label: t(state, "preview_field_published_date", "published date"), value: preview.published_date },
-    { label: t(state, "preview_field_image_file", "image file"), value: preview.image_file },
+    { label: text(context, "import_preview_field_moment_id", "moment id"), value: preview.moment_id },
+    { label: text(context, "import_preview_field_title", "title"), value: preview.title },
+    { label: text(context, "import_preview_field_status", "status"), value: preview.status },
+    { label: text(context, "import_preview_field_date", "date"), value: preview.date },
+    { label: text(context, "import_preview_field_date_display", "date display"), value: preview.date_display },
+    { label: text(context, "import_preview_field_published_date", "published date"), value: preview.published_date },
+    { label: text(context, "import_preview_field_image_file", "image file"), value: preview.image_file },
     {
-      label: t(state, "preview_field_image_status", "image status"),
+      label: text(context, "import_preview_field_image_status", "image status"),
       value: preview.source_image_exists
-        ? t(state, "preview_image_present", "source image found")
-        : t(state, "preview_image_missing", "no source image found; public page will render without a hero image")
+        ? text(context, "import_preview_image_present", "source image found")
+        : text(context, "import_preview_image_missing", "no source image found; media generation will be blocked")
     },
     {
-      label: t(state, "preview_field_generated_status", "generated status"),
-      value: generatedStatusText(state, preview)
+      label: text(context, "import_preview_field_generated_status", "generated status"),
+      value: importGeneratedStatusText(context, preview)
     },
     {
-      label: t(state, "preview_field_source_path", "source path"),
+      label: text(context, "import_preview_field_source_path", "source path"),
       value: preview.source_path
     }
   ];
@@ -183,12 +141,12 @@ function buildSummaryHtml(state, preview) {
   return fields.map((field) => `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-      <span class="tagStudio__input tagStudioForm__readonly">${escapeHtml(normalizeText(field.value) || t(state, "preview_missing_value", "none"))}</span>
+      <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(normalizeText(field.value) || text(context, "import_preview_missing_value", "none"))}</span>
     </div>
   `).join("");
 }
 
-function buildStepRows(steps) {
+function buildImportStepRows(steps) {
   if (!Array.isArray(steps) || !steps.length) return "";
   return `
     <div class="catalogueWorkDetails__rows">
@@ -202,20 +160,19 @@ function buildStepRows(steps) {
   `;
 }
 
-function buildDetailSections(state) {
-  const preview = state.preview;
+function buildImportDetailSections(state, context) {
+  const preview = state.importPreview;
   if (!preview) {
     return `
-      <p class="tagStudioForm__meta">${escapeHtml(t(state, "empty_state", "Preview a source file to inspect the resolved moment metadata."))}</p>
+      <p class="tagStudioForm__meta">${escapeHtml(text(context, "import_empty_state", "Preview a source file to inspect the resolved moment metadata."))}</p>
     `;
   }
 
   const sections = [];
   const errors = Array.isArray(preview.errors) ? preview.errors : [];
-  const build = state.build || {};
-  const publicUrl = normalizeText(preview.status).toLowerCase() === "published" ? normalizeText(state.publicUrl || preview.public_url) : "";
+  const build = state.importBuild || {};
   const sourceResultSummary = normalizeText(build.summary || preview.summary)
-    || t(state, "source_result_summary", "Import writes draft prose and metadata only. Publish from the Moment editor when ready.");
+    || text(context, "import_source_result_summary", "Import writes draft prose and metadata only. Publish from this editor when ready.");
 
   sections.push(`
     <section class="catalogueWorkDetails__section">
@@ -223,7 +180,7 @@ function buildDetailSections(state) {
         <h3 class="tagStudioForm__key">validation</h3>
       </div>
       ${errors.length ? `
-        <p class="tagStudioForm__meta">${escapeHtml(t(state, "preview_errors_intro", "Source file issues:"))}</p>
+        <p class="tagStudioForm__meta">${escapeHtml(text(context, "import_preview_errors_intro", "Source file issues:"))}</p>
         <div class="catalogueWorkDetails__rows">
           ${errors.map((error) => `
             <div class="catalogueWorkDetails__row">
@@ -233,7 +190,7 @@ function buildDetailSections(state) {
           `).join("")}
         </div>
       ` : `
-        <p class="tagStudioForm__meta">${escapeHtml(t(state, "preview_status_ready", "Moment source preview ready."))}</p>
+        <p class="tagStudioForm__meta">${escapeHtml(text(context, "import_preview_status_ready", "Moment source preview ready."))}</p>
       `}
     </section>
   `);
@@ -244,21 +201,16 @@ function buildDetailSections(state) {
         <h3 class="tagStudioForm__key">source result</h3>
       </div>
       <p class="tagStudioForm__meta">${escapeHtml(sourceResultSummary)}</p>
-      ${publicUrl ? `
-        <p class="tagStudioForm__meta">
-          <a href="${escapeHtml(publicUrl)}">${escapeHtml(t(state, "import_result_success_link", "Open public moment"))}</a>
-        </p>
-      ` : ""}
     </section>
   `);
 
-  if (Array.isArray(state.steps) && state.steps.length) {
+  if (Array.isArray(state.importSteps) && state.importSteps.length) {
     sections.push(`
       <section class="catalogueWorkDetails__section">
         <div class="tagStudio__headingRow">
-        <h3 class="tagStudioForm__key">import steps</h3>
+          <h3 class="tagStudioForm__key">import steps</h3>
         </div>
-        ${buildStepRows(state.steps)}
+        ${buildImportStepRows(state.importSteps)}
       </section>
     `);
   }
@@ -266,107 +218,44 @@ function buildDetailSections(state) {
   return sections.join("");
 }
 
-function updateState(state) {
-  const fileValue = currentMomentFile(state);
-  const preview = state.preview;
+export function currentImportMomentFile(state) {
+  return normalizeText(state.importFileNode && state.importFileNode.value);
+}
+
+export function updateImportState(state, context = {}) {
+  if (!state.isImportMode) {
+    state.importPreviewButton.hidden = true;
+    state.importApplyButton.hidden = true;
+    state.importSourceNode.hidden = true;
+    state.importSourceSummaryNode.textContent = "";
+    state.importImageGuidanceNode.textContent = "";
+    if (context && typeof context.syncRouteBusyState === "function") context.syncRouteBusyState();
+    return;
+  }
+  const fileValue = currentImportMomentFile(state);
+  const preview = state.importPreview;
   const previewMatchesInput = preview && normalizeMomentFilename(preview.moment_file) === normalizeMomentFilename(fileValue);
-  state.previewButton.disabled = state.isBusy || !state.serverAvailable || !fileValue;
-  state.applyButton.disabled = state.isBusy || !state.serverAvailable || !preview || !previewMatchesInput || !preview.valid;
-  state.summaryNode.innerHTML = buildSummaryHtml(state, preview);
-  state.detailsNode.innerHTML = buildDetailSections(state);
+  const editorBusy = state.isSaving || state.isBuilding || state.isDeleting;
+  state.importPreviewButton.hidden = false;
+  state.importApplyButton.hidden = false;
+  state.importSourceNode.hidden = false;
+  state.importSourceSummaryNode.textContent = text(context, "import_source_summary", "Moment prose is imported as body-only Markdown. Metadata is stored in catalogue source JSON, not prose front matter.");
+  state.importImageGuidanceNode.textContent = text(context, "import_image_guidance", "Missing images are acceptable in this phase. The public moment page handles missing hero images cleanly.");
+  state.importPreviewButton.disabled = state.importIsBusy || editorBusy || !state.serverAvailable || !fileValue;
+  state.importApplyButton.disabled = state.importIsBusy || editorBusy || !state.serverAvailable || !preview || !previewMatchesInput || !preview.valid;
+  state.summaryNode.innerHTML = buildImportSummaryHtml(state, context, preview);
+  state.readinessNode.innerHTML = buildImportDetailSections(state, context);
+  if (context && typeof context.syncRouteBusyState === "function") context.syncRouteBusyState();
 }
 
-function clearPreview(state) {
-  state.preview = null;
-  state.build = null;
-  state.steps = [];
-  state.publicUrl = "";
-  updateState(state);
+export function clearImportPreview(state, context = {}) {
+  state.importPreview = null;
+  state.importBuild = null;
+  state.importSteps = [];
+  updateImportState(state, context);
 }
 
-async function runPreview(state) {
-  const momentFile = currentMomentFile(state);
-  if (!momentFile) {
-    setTextWithState(state.statusNode, t(state, "file_required", "Enter a moment markdown filename."), "error");
-    return;
-  }
-
-  state.isBusy = true;
-  updateState(state);
-  setTextWithState(state.statusNode, t(state, "preview_status_loading", "Loading moment source preview…"));
-  setTextWithState(state.warningNode, "");
-  setTextWithState(state.resultNode, "");
-  try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewMomentImport, { moment_file: momentFile, metadata: readMetadata(state) });
-    state.preview = response && response.preview ? response.preview : null;
-    fillMetadataFromPreview(state, state.preview);
-    state.build = response && response.build ? response.build : null;
-    state.steps = [];
-    state.publicUrl = normalizeText(response && response.preview && response.preview.status).toLowerCase() === "published"
-      ? normalizeText(response && response.preview && response.preview.public_url)
-      : "";
-    if (state.preview && state.preview.valid) {
-      setTextWithState(state.statusNode, t(state, "preview_status_ready", "Moment source preview ready."), "success");
-    } else {
-      setTextWithState(state.statusNode, t(state, "preview_status_invalid", "Fix source-file issues before importing the moment."), "warn");
-    }
-  } catch (error) {
-    state.preview = error && error.payload && error.payload.preview ? error.payload.preview : null;
-    state.build = null;
-    state.steps = [];
-    state.publicUrl = "";
-    setTextWithState(state.statusNode, `${t(state, "preview_status_failed", "Moment source preview failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-  } finally {
-    state.isBusy = false;
-    updateState(state);
-  }
-}
-
-async function applyImport(state) {
-  const preview = state.preview;
-  const momentFile = currentMomentFile(state);
-  if (!preview || normalizeMomentFilename(preview.moment_file) !== normalizeMomentFilename(momentFile)) {
-    setTextWithState(state.statusNode, t(state, "import_result_missing_preview", "Preview the source file before importing."), "error");
-    return;
-  }
-  if (!preview.valid) {
-    setTextWithState(state.statusNode, t(state, "preview_status_invalid", "Fix source-file issues before importing the moment."), "error");
-    return;
-  }
-
-  state.isBusy = true;
-  updateState(state);
-  setTextWithState(state.statusNode, t(state, "import_status_running", "Importing draft moment source…"));
-  setTextWithState(state.warningNode, "");
-  setTextWithState(state.resultNode, "");
-  try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, { moment_file: momentFile, metadata: readMetadata(state) });
-    state.preview = response && response.preview ? response.preview : state.preview;
-    state.build = response && response.build ? response.build : state.build;
-    state.steps = Array.isArray(response && response.steps) ? response.steps : [];
-    state.publicUrl = normalizeText(response && response.public_url);
-    setTextWithState(state.statusNode, t(state, "import_status_success", "Moment import completed."), "success");
-    setTextWithState(
-      state.resultNode,
-      t(state, "import_result_success", "Imported draft moment {moment_id}. Open the Moment editor to review and publish it.", {
-        moment_id: normalizeText(response && response.moment_id) || normalizeText(state.preview && state.preview.moment_id)
-      }),
-      "success"
-    );
-  } catch (error) {
-    const payload = error && error.payload ? error.payload : null;
-    state.preview = payload && payload.preview ? payload.preview : state.preview;
-    state.build = payload && payload.build ? payload.build : state.build;
-    state.steps = Array.isArray(payload && payload.steps) ? payload.steps : [];
-    state.publicUrl = normalizeText(payload && payload.public_url);
-    setTextWithState(state.statusNode, `${t(state, "import_status_failed", "Moment import failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-  } finally {
-    state.isBusy = false;
-    updateState(state);
-  }
-}
-
-function readRequestedFile() {
+export function readRequestedImportFile() {
   try {
     const url = new URL(window.location.href);
     return normalizeText(url.searchParams.get("file"));
@@ -375,7 +264,7 @@ function readRequestedFile() {
   }
 }
 
-function writeRequestedFile(momentFile) {
+export function writeRequestedImportFile(momentFile) {
   if (!window.history || !window.history.replaceState) return;
   const nextFile = normalizeText(momentFile);
   try {
@@ -384,97 +273,111 @@ function writeRequestedFile(momentFile) {
     else url.searchParams.delete("file");
     window.history.replaceState({}, "", url.toString());
   } catch (error) {
-    // no-op
+    // URL updates are progressive enhancement only.
   }
 }
 
-async function init() {
-  const root = document.getElementById("catalogueMomentImportRoot");
-  const loadingNode = document.getElementById("catalogueMomentImportLoading");
-  const emptyNode = document.getElementById("catalogueMomentImportEmpty");
-  const saveModeNode = document.getElementById("catalogueMomentImportSaveMode");
-  const contextNode = document.getElementById("catalogueMomentImportContext");
-  const statusNode = document.getElementById("catalogueMomentImportStatus");
-  const warningNode = document.getElementById("catalogueMomentImportWarning");
-  const resultNode = document.getElementById("catalogueMomentImportResult");
-  const fileLabelNode = document.getElementById("catalogueMomentImportFileLabel");
-  const fileNode = document.getElementById("catalogueMomentImportFile");
-  const fileDescriptionNode = document.getElementById("catalogueMomentImportFileDescription");
-  const metadataFieldsNode = document.getElementById("catalogueMomentImportMetadataFields");
-  const sourceSummaryNode = document.getElementById("catalogueMomentImportSourceSummary");
-  const imageGuidanceNode = document.getElementById("catalogueMomentImportImageGuidance");
-  const previewButton = document.getElementById("catalogueMomentImportPreview");
-  const applyButton = document.getElementById("catalogueMomentImportApply");
-  const summaryNode = document.getElementById("catalogueMomentImportSummary");
-  const detailsNode = document.getElementById("catalogueMomentImportDetails");
-  if (!root || !loadingNode || !emptyNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !fileLabelNode || !fileNode || !fileDescriptionNode || !metadataFieldsNode || !sourceSummaryNode || !imageGuidanceNode || !previewButton || !applyButton || !summaryNode || !detailsNode) {
+function clearRequestedImportFile() {
+  if (!window.history || !window.history.replaceState) return;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("file");
+    window.history.replaceState({}, "", url.toString());
+  } catch (error) {
+    // URL updates are progressive enhancement only.
+  }
+}
+
+export async function previewMomentImport(state, context = {}) {
+  const momentFile = currentImportMomentFile(state);
+  if (!momentFile) {
+    setTextWithState(context, state.importStatusNode, text(context, "import_file_required", "Enter a moment markdown filename."), "error");
     return;
   }
 
-  const state = {
-    config: null,
-    preview: null,
-    build: null,
-    steps: [],
-    publicUrl: "",
-    serverAvailable: false,
-    isBusy: false,
-    fileNode,
-    statusNode,
-    warningNode,
-    resultNode,
-    previewButton,
-    applyButton,
-    summaryNode,
-    detailsNode,
-    metadataNodes: new Map()
-  };
-
+  state.importIsBusy = true;
+  updateImportState(state, context);
+  setTextWithState(context, state.importStatusNode, text(context, "import_preview_status_loading", "Loading moment source preview..."), "pending");
+  setTextWithState(context, state.importWarningNode, "");
+  setTextWithState(context, state.importResultNode, "");
   try {
-    const config = await loadStudioConfigWithText("catalogue_moment_import");
-    state.config = config;
-    state.serverAvailable = Boolean(await probeCatalogueHealth());
-    saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_moment_import.${key}`, fallback, tokens));
-    fileLabelNode.textContent = t(state, "file_label", "moment file");
-    fileNode.placeholder = t(state, "file_placeholder", "keys.md");
-    previewButton.textContent = t(state, "preview_button", "Preview Source File");
-    applyButton.textContent = t(state, "import_button", "Import");
-    buildMetadataFields(state, metadataFieldsNode);
-    setTextWithState(contextNode, t(state, "context_hint", "Enter a staged moment markdown filename and the moment metadata. This page imports body-only prose as draft source."));
-    fileDescriptionNode.textContent = t(state, "file_description", "filename only; the source file is resolved from var/docs/catalogue/import-staging/moments/");
-    sourceSummaryNode.textContent = t(state, "source_summary", "Moment prose is imported as body-only Markdown. Metadata is stored in catalogue source JSON, not prose front matter.");
-    imageGuidanceNode.textContent = t(state, "image_guidance", "Missing images are acceptable in this phase. The public moment page already handles missing hero images cleanly.");
-    if (!state.serverAvailable) {
-      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Moment import is disabled."), "warn");
-    }
-
-    fileNode.value = readRequestedFile();
-
-    fileNode.addEventListener("input", () => {
-      writeRequestedFile(fileNode.value);
-      setTextWithState(state.warningNode, "");
-      setTextWithState(state.resultNode, "");
-      clearPreview(state);
+    const response = await previewCatalogueMomentImport({
+      moment_file: momentFile,
+      metadata: readImportMetadata(state)
     });
-    previewButton.addEventListener("click", () => {
-      runPreview(state).catch((error) => console.warn("catalogue_moment_import: unexpected preview failure", error));
-    });
-    applyButton.addEventListener("click", () => {
-      applyImport(state).catch((error) => console.warn("catalogue_moment_import: unexpected apply failure", error));
-    });
-
-    updateState(state);
-    root.hidden = false;
-    loadingNode.hidden = true;
-    emptyNode.hidden = true;
-
-    if (currentMomentFile(state) && state.serverAvailable) {
-      runPreview(state).catch((error) => console.warn("catalogue_moment_import: initial preview failed", error));
+    state.importPreview = response && response.preview ? response.preview : null;
+    fillImportMetadataFromPreview(state, state.importPreview);
+    state.importBuild = response && response.build ? response.build : null;
+    state.importSteps = [];
+    if (state.importPreview && state.importPreview.valid) {
+      setTextWithState(context, state.importStatusNode, text(context, "import_preview_status_ready", "Moment source preview ready."), "success");
+    } else {
+      setTextWithState(context, state.importStatusNode, text(context, "import_preview_status_invalid", "Fix source-file issues before importing the moment."), "warning");
     }
   } catch (error) {
-    console.warn("catalogue_moment_import: init failed", error);
-    loadingNode.textContent = "Failed to load moment import.";
+    state.importPreview = error && error.payload && error.payload.preview ? error.payload.preview : null;
+    state.importBuild = null;
+    state.importSteps = [];
+    setTextWithState(context, state.importStatusNode, `${text(context, "import_preview_status_failed", "Moment source preview failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+  } finally {
+    state.importIsBusy = false;
+    updateImportState(state, context);
   }
 }
 
-init();
+export async function applyMomentImport(state, context = {}) {
+  const preview = state.importPreview;
+  const momentFile = currentImportMomentFile(state);
+  if (!preview || normalizeMomentFilename(preview.moment_file) !== normalizeMomentFilename(momentFile)) {
+    setTextWithState(context, state.importStatusNode, text(context, "import_result_missing_preview", "Preview the source file before importing."), "error");
+    return;
+  }
+  if (!preview.valid) {
+    setTextWithState(context, state.importStatusNode, text(context, "import_preview_status_invalid", "Fix source-file issues before importing the moment."), "error");
+    return;
+  }
+
+  state.importIsBusy = true;
+  updateImportState(state, context);
+  setTextWithState(context, state.importStatusNode, text(context, "import_status_running", "Importing draft moment source..."), "pending");
+  setTextWithState(context, state.importWarningNode, "");
+  setTextWithState(context, state.importResultNode, "");
+  try {
+    const metadata = readImportMetadata(state);
+    const momentId = normalizeMomentId(normalizeMomentFilename(momentFile).replace(/\.md$/i, ""));
+    const response = await applyCatalogueMomentImport({
+      moment_file: momentFile,
+      metadata,
+      activity_context: buildImportActivityContext(momentId)
+    });
+    state.importPreview = response && response.preview ? response.preview : state.importPreview;
+    state.importBuild = response && response.build ? response.build : state.importBuild;
+    state.importSteps = Array.isArray(response && response.steps) ? response.steps : [];
+    const importedMomentId = normalizeMomentId(response && response.moment_id ? response.moment_id : state.importPreview && state.importPreview.moment_id);
+    const importedRecord = normalizeMomentRecord(importedMomentId, {
+      ...metadata,
+      moment_id: importedMomentId,
+      status: "draft"
+    });
+    clearRequestedImportFile();
+    if (context && typeof context.completeImport === "function") {
+      await context.completeImport({ momentId: importedMomentId, record: importedRecord });
+    }
+    setTextWithState(context, state.statusNode, text(context, "import_status_success", "Moment import completed."), "success");
+    setTextWithState(
+      context,
+      state.resultNode,
+      text(context, "import_result_success", "Imported draft moment {moment_id}.", { moment_id: importedMomentId }),
+      "success"
+    );
+  } catch (error) {
+    const payload = error && error.payload ? error.payload : null;
+    state.importPreview = payload && payload.preview ? payload.preview : state.importPreview;
+    state.importBuild = payload && payload.build ? payload.build : state.importBuild;
+    state.importSteps = Array.isArray(payload && payload.steps) ? payload.steps : [];
+    setTextWithState(context, state.importStatusNode, `${text(context, "import_status_failed", "Moment import failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+  } finally {
+    state.importIsBusy = false;
+    updateImportState(state, context);
+  }
+}

@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 23:06"
+last_updated: "2026-05-10 23:14"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -25,6 +25,7 @@ Status:
 - Slice C4 implemented for Series form and section rendering
 - Slice C5 completed; Series route is an acceptable coordinator and the next Catalogue priority is Moment Editor boundary review
 - Slice D completed for Moment Editor; first extraction should be Moment import mode
+- Slice D1 implemented for Moment import mode
 
 ## Implementation Progress
 
@@ -60,6 +61,9 @@ Status:
 - Proposed `assets/studio/js/catalogue-moment-import.js` as the route-local owner for staged moment file query state, import metadata reads, preview metadata seeding, import preview/apply workflow sequencing, import summary/detail rendering, and import-mode control state.
 - Kept save/build/publication/delete/prose/media workflows in `assets/studio/js/catalogue-moment-editor.js` until the import module has a stable route callback API.
 - Added proposed post-D1 Moment slices so follow-on sessions can evaluate action workflow extraction, display/form extraction, selection extraction, and the Moment stop/continue decision explicitly rather than rediscovering the same candidates.
+- Replaced the retired standalone `assets/studio/js/catalogue-moment-import.js` implementation with a Moment Editor route-local import helper for staged-file query state, import metadata reads, preview metadata seeding, preview/apply service sequencing, import summary/detail rendering, stale preview clearing, import control state, and import activity context.
+- Kept `assets/studio/js/catalogue-moment-editor.js` responsible for route bootstrap, generated moment lookup reads, service availability, normal edit state, search/open behavior, post-import opening, dirty-state orchestration, save/build/publication/delete/prose/media command sequencing, and route-ready state.
+- Measured `assets/studio/js/catalogue-moment-editor.js` at 1,074 lines and `assets/studio/js/catalogue-moment-import.js` at 383 lines after D1; the next useful Moment slice is action workflow review.
 
 ## Purpose
 
@@ -496,7 +500,7 @@ Recommended next extraction:
 
 Status:
 
-- proposed
+- implemented
 
 Target file:
 
@@ -515,7 +519,15 @@ Acceptance checks:
 - import preview still renders metadata, validation errors, source result summary, generated status, and source path
 - import apply still writes through the same service endpoint, updates the moment lookup row, clears the requested file query parameter, opens the imported moment, and preserves status/result copy
 - changing the import filename or import metadata still clears stale preview/build/steps state
-- save/build/publication/delete/prose/media workflows remain callable from the route entry module or a named action helper
+- save/build/publication/delete/prose/media workflows remain callable from the route entry module
+
+D1 measured state:
+
+| File | Lines | Current disposition |
+| --- | ---: | --- |
+| `assets/studio/js/catalogue-moment-editor.js` | 1,074 | owns route lifecycle, form rendering, selection/opening, normal edit summary/readiness rendering, save/build/publication/delete/prose/media workflows, and post-import opening |
+| `assets/studio/js/catalogue-moment-import.js` | 383 | owns import query state, import metadata reads, preview seeding, preview/apply sequencing, import rendering, stale preview clearing, import control state, and import activity context |
+| `assets/studio/js/catalogue-moment-fields.js` | 127 | owns Moment field definitions, normalization, payload shaping, draft reads, and validation |
 
 ### Slice D2: Moment Action Workflow Review
 

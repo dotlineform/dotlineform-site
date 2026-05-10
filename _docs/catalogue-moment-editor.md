@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: "Catalogue Moment Editor"
 added_date: 2026-04-27
-last_updated: "2026-05-08 18:20"
+last_updated: "2026-05-10 23:14"
 parent_id: user-guide
 sort_order: 182
 ---
@@ -89,6 +89,12 @@ The import flow:
 4. preview the staged prose and resolved metadata with `POST /catalogue/moment/import-preview`
 5. apply the import with `POST /catalogue/moment/import-apply`
 6. open the imported draft in the editor immediately after a successful apply
+
+Runtime ownership:
+
+- `assets/studio/js/catalogue-moment-editor.js` owns route bootstrap, generated moment lookup reads, service availability, normal edit state, search/open behavior, post-import opening, dirty-state orchestration, save/build/publication/delete/prose/media commands, and route-ready state.
+- `assets/studio/js/catalogue-moment-import.js` owns staged-file query state, import metadata reads, preview metadata seeding, import preview/apply transport sequencing, import summary/detail rendering, stale preview clearing, import control availability, and import activity context.
+- `assets/studio/js/catalogue-moment-fields.js` owns field definitions, id/filename normalization, draft reads, source-record shaping, and validation.
 
 Apply writes:
 

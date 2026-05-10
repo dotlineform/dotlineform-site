@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-import
 title: Catalogue Moment Import
 added_date: 2026-04-18
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-10 23:14"
 parent_id: catalogue
 sort_order: 50
 ---
@@ -37,6 +37,7 @@ The current single-page flow is implemented by:
 
 - `studio/catalogue-moment/index.md`
 - `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-moment-import.js`
 
 The legacy bridge route is:
 
@@ -44,8 +45,9 @@ The legacy bridge route is:
 
 Shared runtime dependencies:
 
+- `assets/studio/js/catalogue-moment-fields.js`
 - `assets/studio/js/studio-config.js`
-- `assets/studio/js/studio-transport.js`
+- `assets/studio/js/catalogue-editor-service-client.js`
 - `scripts/studio/catalogue_write_server.py`
 
 Current page flow:
