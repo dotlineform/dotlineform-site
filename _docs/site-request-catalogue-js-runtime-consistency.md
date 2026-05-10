@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 22:00"
+last_updated: "2026-05-10 22:10"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -18,6 +18,7 @@ Status:
 - Slice B second extraction completed for Work Detail form rendering/synchronization
 - Slice B third extraction completed for Work Detail summary/readiness/preview rendering
 - Slice B fourth extraction completed for Work Detail action workflow sequencing
+- Slice C boundary review completed for Series Editor
 
 ## Implementation Progress
 
@@ -31,6 +32,9 @@ Status:
 - Added `assets/studio/js/catalogue-work-detail-sections.js` for current-detail preview rendering, readiness rows, new/single/bulk summary rendering, and shared Work Detail selection-list formatting.
 - Added `assets/studio/js/catalogue-work-detail-actions.js` for save/create/build/publication/media/delete workflow sequencing, status/result messaging, build preview refresh, publication controls, activity context, and service transport coordination.
 - Kept route-owned validation, loaded-record replacement, and post-create opening behind explicit callbacks so the action helper does not take over route state ownership.
+- Series Editor boundary review chose membership editing as the first useful extraction because it is the route's distinctive domain boundary and it currently feeds dirty-state comparison, validation, save deltas, rendered member rows, and saved lookup rebuilding.
+- Proposed `assets/studio/js/catalogue-series-membership.js` as the route-local owner for member list state, member row rendering, add/remove/primary mutations, membership dirty checks, changed-work update shaping, and saved lookup membership shaping.
+- Kept Series save/create/build/publication/delete/prose workflows in `assets/studio/js/catalogue-series-editor.js` for the next slice so the membership API can settle before extracting action sequencing.
 
 ## Purpose
 
@@ -145,17 +149,69 @@ Likely candidates:
 
 ### Slice C: Series Editor Boundary Review
 
+Status:
+
+- completed
+
 Intent:
 
 - compare `catalogue-series-editor.js` to the Work Editor splits without forcing identical modules
 - focus on membership editing, save/build/publication, prose import, and selection behavior
 - decide whether a route-local action helper or membership renderer is the first useful boundary
 
+Review outcome:
+
+- use membership editing as the first Series extraction boundary
+- add `assets/studio/js/catalogue-series-membership.js`
+- keep action workflow sequencing in `catalogue-series-editor.js` until membership deltas and lookup rebuilding have a clearer route-local API
+- defer search/open extraction because Series selection is simpler than Work Detail selection and is not the current risk center
+- defer form/summary extraction because Series field definitions and payload shaping already live in `catalogue-series-fields.js`, while the membership save contract still crosses more responsibilities
+
+Proposed membership module responsibilities:
+
+- derive stored work `series_ids` from work-search lookup records
+- expose editable and current-member entry lists
+- compare current membership against the baseline for dirty-state checks
+- initialize member state from a focused series lookup record
+- shape changed work membership updates with expected record hashes
+- shape saved focused-series lookup membership data after save/publication responses
+- render capped member rows and member search results
+- manage member-list disabled state and summary metadata
+- apply add, remove, and make-primary mutations while preserving `series_ids` order
+- preserve the first-member auto-fill rule for blank `primary_work_id`
+- block removal of the current primary work until `primary_work_id` changes
+
+Keep route-owned during the membership extraction:
+
+- route bootstrap, generated lookup reads, and route-ready state
+- `?series=<series_id>` and `?mode=new` query handling
+- `setLoadedSeries`, `setNewSeriesMode`, and `setEmptySearchMode`
+- save/create/build/publication/delete/prose orchestration
+- validation orchestration and field status rendering
+- public build preview and readiness refresh
+- service-client calls and activity context construction
+- final status/result copy for command outcomes
+
 Acceptance checks:
 
 - series membership behavior remains easy to trace
 - create/edit mode and route query behavior remain stable
 - public build preview/update behavior remains stable
+
+Implementation acceptance checks:
+
+- `node --check` passes for `assets/studio/js/catalogue-series-editor.js` and `assets/studio/js/catalogue-series-membership.js`
+- empty, focused `?series=<series_id>`, and `?mode=new` route modes still reach `data-studio-ready="true"`
+- adding the first member work still fills blank `primary_work_id`
+- adding later member works does not overwrite an existing `primary_work_id`
+- make-primary preserves the work's `series_ids` order except for moving the current series to the front
+- removing the current primary work is still blocked until `primary_work_id` changes
+- save payload interception shows only changed work membership rows in `work_updates`
+- published-series save/build preview still includes removed-member extra work ids when a public update remains pending
+
+Recommended next extraction:
+
+- Slice C1: Series Membership Module
 
 ### Slice D: Moment Editor Boundary Review
 
@@ -212,6 +268,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice A: Work Detail Editor Boundary Review.
+Start with Slice C1: Series Membership Module.
 
-The Work Detail Editor is closest to the Work Editor route and is the highest-priority remaining Catalogue controller in the long-JS inventory.
+The Series Editor boundary review found membership editing to be the clearest next boundary.
+That extraction should land before a Series action workflow module because save/build/publication behavior depends on membership deltas and affected work hashes.
