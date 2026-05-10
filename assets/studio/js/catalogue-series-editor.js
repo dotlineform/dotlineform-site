@@ -8,18 +8,6 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
-  applyCatalogueBuild,
-  applyCatalogueDelete,
-  applyCatalogueProseImport,
-  applyCataloguePublication,
-  createCatalogueSeries,
-  previewCatalogueBuild,
-  previewCatalogueDelete,
-  previewCatalogueProseImport,
-  previewCataloguePublication,
-  saveCatalogueSeries
-} from "./catalogue-editor-service-client.js";
-import {
   catalogueReadinessItems,
   catalogueReadinessItemSummary,
   catalogueReadinessTone
@@ -35,25 +23,16 @@ import {
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
 import {
-  formatCatalogueBuildPreview,
-  formatCatalogueDeletePreview,
-  formatCataloguePublicationPreview
-} from "./catalogue-editor-modal-formatters.js";
-import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
-  buildSaveModeText,
-  utcTimestamp
+  buildSaveModeText
 } from "./tag-studio-save.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
   SERIES_READONLY_FIELDS as READONLY_FIELDS,
-  buildCreateSeriesPayload,
-  buildSaveSeriesPayload,
   buildSeriesDraftFromRecord,
   getSeriesTypeOptions,
   normalizeSeriesId,
@@ -65,8 +44,6 @@ import {
 } from "./catalogue-series-fields.js";
 import {
   addSeriesMember,
-  buildChangedSeriesWorkUpdates,
-  buildSavedSeriesMembershipLookup,
   getCurrentSeriesMemberEntries,
   initializeSeriesMembershipState,
   makeSeriesMemberPrimary,
@@ -74,6 +51,15 @@ import {
   seriesMembershipHasChanges,
   updateSeriesMemberList
 } from "./catalogue-series-membership.js";
+import {
+  applyPublicationChange,
+  currentSeriesIsDraft,
+  currentSeriesIsPublished,
+  deleteCurrentSeries,
+  importSeriesProse,
+  refreshBuildPreview as refreshSeriesActionBuildPreview,
+  saveCurrentSeries
+} from "./catalogue-series-actions.js";
 
 const SEARCH_LIMIT = 20;
 
@@ -416,34 +402,6 @@ function setModeFieldAvailability(state) {
   });
 }
 
-function buildPayload(state, workUpdates) {
-  return {
-    ...buildSaveSeriesPayload(state, workUpdates),
-    apply_build: currentSeriesIsPublished(state),
-    activity_context: buildSeriesActivityContext("save-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.currentSeriesId)
-  };
-}
-
-function buildSeriesActivityContext(actionId, controlId, controlSelector, seriesId) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-series",
-    actionId,
-    route: "/studio/catalogue-series/",
-    controlId,
-    controlSelector,
-    recordIdField: "series_id",
-    recordId: seriesId
-  });
-}
-
-function currentSeriesIsPublished(state) {
-  return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
-}
-
-function currentSeriesIsDraft(state) {
-  return normalizeText(state.draft && state.draft.status).toLowerCase() === "draft";
-}
-
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
   const canPublish = hasRecord && state.mode !== "new" && currentSeriesIsDraft(state);
   const canUnpublish = hasRecord && state.mode !== "new" && currentSeriesIsPublished(state);
@@ -459,29 +417,6 @@ function updatePublishControls(state, { hasRecord, dirty, errors }) {
     || state.isBuilding
     || state.isDeleting
     || !state.serverAvailable;
-}
-
-function applySaveBuildOutcome(state, response) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  if (!currentSeriesIsPublished(state)) {
-    state.rebuildPending = false;
-    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (!response || !response.build_requested || !build) {
-    state.rebuildPending = Boolean(response && response.changed);
-    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (build.ok) {
-    state.rebuildPending = false;
-    state.pendingBuildExtraWorkIds = [];
-    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
-  }
-  state.rebuildPending = true;
-  return {
-    kind: "saved_update_failed",
-    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
-    error: normalizeText(build.error)
-  };
 }
 
 function syncUrl(seriesId, mode = "") {
@@ -705,452 +640,25 @@ function setEmptySearchMode(state, options = {}) {
   updateEditorState(state);
 }
 
-async function refreshBuildPreview(state) {
-  if (!state.currentSeriesId || !state.serverAvailable || !currentSeriesIsPublished(state)) {
-    state.buildPreview = null;
-    setTextWithState(state.buildImpactNode, "");
-    renderReadiness(state);
-    return;
-  }
-  try {
-    const response = await previewCatalogueBuild({
-      series_id: state.currentSeriesId,
-      extra_work_ids: state.pendingBuildExtraWorkIds
-    });
-    state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultTemplate: "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
-    }));
-    renderReadiness(state);
-  } catch (error) {
-    state.buildPreview = null;
-    setTextWithState(state.buildImpactNode, `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(), "error");
-    renderReadiness(state);
-  }
+function buildSeriesActionContext(state) {
+  return {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    setTextWithState,
+    draftHasChanges: () => draftHasChanges(state),
+    validateDraft: () => validateDraft(state),
+    updateFieldMessages: (errors) => updateFieldMessages(state, errors),
+    updateEditorState: () => updateEditorState(state),
+    syncRouteBusyState: () => syncRouteBusyState(state),
+    renderReadiness: () => renderReadiness(state),
+    setLoadedSeries: (seriesId, record, options = {}) => {
+      setLoadedSeries(state, seriesId, record, options);
+    },
+    openSeriesById: (seriesId) => openSeriesById(state, seriesId)
+  };
 }
 
-async function importSeriesProse(state) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  if (draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "prose_import_save_first", "Save source changes before importing prose."), "error");
-    return;
-  }
-
-  state.isBuilding = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "prose_import_preview_running", "Previewing staged prose…"));
-  setTextWithState(state.resultNode, "");
-  try {
-    const preview = await previewCatalogueProseImport({
-      target_kind: "series",
-      series_id: state.currentSeriesId
-    });
-    if (!preview.valid) {
-      const errors = Array.isArray(preview.errors) ? preview.errors.join(" ") : "";
-      throw new Error(errors || t(state, "prose_import_preview_invalid", "Staged prose is not ready to import."));
-    }
-    let confirmOverwrite = false;
-    if (preview.overwrite_required) {
-      const message = t(
-        state,
-        "prose_import_confirm_overwrite",
-        "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
-        {
-          target_path: normalizeText(preview.target_path),
-          staging_path: normalizeText(preview.staging_path)
-        }
-      );
-      confirmOverwrite = window.confirm(message);
-      if (!confirmOverwrite) {
-        setTextWithState(state.statusNode, t(state, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
-        return;
-      }
-    }
-    setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing staged prose…"));
-    const importResponse = await applyCatalogueProseImport({
-      target_kind: "series",
-      series_id: state.currentSeriesId,
-      confirm_overwrite: confirmOverwrite
-    });
-    await refreshBuildPreview(state);
-    const completedAt = normalizeText(importResponse.imported_at_utc || utcTimestamp());
-    setTextWithState(
-      state.resultNode,
-      t(state, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
-        completed_at: completedAt,
-        target_path: normalizeText(importResponse.target_path)
-      }),
-      "success"
-    );
-    setTextWithState(state.statusNode, t(state, "prose_import_status_success", "Prose import completed."), "success");
-  } catch (error) {
-    setTextWithState(
-      state.statusNode,
-      `${t(state, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isBuilding = false;
-    updateEditorState(state);
-  }
-}
-
-async function saveCurrentSeries(state) {
-  if (state.mode === "new") {
-    await createCurrentSeries(state);
-    return;
-  }
-  if (!state.currentRecord) return;
-  const errors = validateDraft(state);
-  updateFieldMessages(state, errors);
-  if (errors.size > 0) {
-    setTextWithState(state.statusNode, t(state, "save_status_validation_error", "Fix validation errors before saving."), "error");
-    updateEditorState(state);
-    return;
-  }
-  if (!draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
-    setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
-    updateEditorState(state);
-    return;
-  }
-
-  state.isSaving = true;
-  updateEditorState(state);
-  setTextWithState(
-    state.statusNode,
-    currentSeriesIsPublished(state)
-      ? t(state, "save_status_saving_and_updating", "Saving source record and updating site…")
-      : t(state, "save_status_saving", "Saving source record…")
-  );
-  setTextWithState(state.resultNode, "");
-
-  try {
-    const previousMembers = new Set(Array.from(state.baselineMemberSeriesIdsByWorkId.keys()).filter((workId) => (state.baselineMemberSeriesIdsByWorkId.get(workId) || []).includes(state.currentSeriesId)));
-    const currentMembers = new Set(getCurrentSeriesMemberEntries(state).map((entry) => entry.workId));
-    const response = await saveCatalogueSeries(buildPayload(state, await buildChangedSeriesWorkUpdates(state)));
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!record) throw new Error("save response missing record");
-    state.seriesById.set(state.currentSeriesId, {
-      series_id: state.currentSeriesId,
-      title: normalizeText(record.title),
-      status: normalizeText(record.status),
-      primary_work_id: normalizeText(record.primary_work_id),
-      record_hash: normalizeText(response.record_hash)
-    });
-    const workRecords = Array.isArray(response.work_records) ? response.work_records : [];
-    workRecords.forEach((entry) => {
-      if (!entry || typeof entry !== "object") return;
-      const workId = normalizeWorkId(entry.work_id);
-      const workRecord = entry.record;
-      if (!workId || !workRecord || typeof workRecord !== "object") return;
-      state.workSearchById.set(workId, {
-        work_id: workId,
-        title: normalizeText(workRecord.title),
-        year_display: normalizeText(workRecord.year_display),
-        status: normalizeText(workRecord.status),
-        series_ids: Array.isArray(workRecord.series_ids) ? workRecord.series_ids.slice() : [],
-        record_hash: entry.record_hash || state.workSearchById.get(workId)?.record_hash || ""
-      });
-    });
-    const outcome = applySaveBuildOutcome(state, response);
-    let pendingBuildExtraWorkIds = [];
-    if (response.changed && currentSeriesIsPublished(state) && outcome.kind !== "saved_and_updated") {
-      pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
-    }
-    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    setLoadedSeries(state, state.currentSeriesId, record, {
-      recordHash,
-      keepResult: true,
-      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash),
-      pendingBuildExtraWorkIds
-    });
-    await refreshBuildPreview(state);
-    if (outcome.kind === "saved_and_updated") {
-      setTextWithState(
-        state.resultNode,
-        t(state, "save_result_success_applied", "Saved source changes and updated the public catalogue at {saved_at}.", { saved_at: outcome.stamp }),
-        "success"
-      );
-      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-    } else if (outcome.kind === "saved_update_failed") {
-      setTextWithState(
-        state.resultNode,
-        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
-        "warn"
-      );
-      setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
-    } else if (outcome.kind === "saved_unpublished") {
-      setTextWithState(
-        state.resultNode,
-        t(state, "save_result_success_unpublished", "Source saved at {saved_at}. Public update is unavailable while the series is not published.", { saved_at: outcome.stamp }),
-        "success"
-      );
-      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
-    } else {
-      setTextWithState(
-        state.resultNode,
-        response.changed
-          ? t(state, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", { saved_at: outcome.stamp })
-          : t(state, "save_result_unchanged", "Source already matches the current form values."),
-        response.changed ? "success" : ""
-      );
-      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
-    }
-  } catch (error) {
-    const isConflict = Number(error && error.status) === 409;
-    const message = isConflict
-      ? t(state, "save_status_conflict", "Source record changed since this page loaded. Reload the series before saving again.")
-      : `${t(state, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-  } finally {
-    state.isSaving = false;
-    updateEditorState(state);
-  }
-}
-
-async function createCurrentSeries(state) {
-  if (state.mode !== "new") return;
-  state.draft.series_id = normalizeSeriesId(state.searchNode.value);
-  const errors = validateDraft(state);
-  updateFieldMessages(state, errors);
-  if (errors.size > 0) {
-    const seriesIdError = errors.get("series_id") || "";
-    setTextWithState(
-      state.statusNode,
-      seriesIdError || t(state, "create_status_validation_error", "Fix validation errors before creating the draft series."),
-      "error"
-    );
-    updateEditorState(state);
-    return;
-  }
-
-  state.isSaving = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "create_status_saving", "Creating draft series..."));
-  setTextWithState(state.resultNode, "");
-
-  try {
-    const response = await createCatalogueSeries({
-      ...buildCreateSeriesPayload(state.draft),
-      activity_context: buildSeriesActivityContext("create-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.draft.series_id)
-    });
-    const seriesId = normalizeSeriesId(response && response.series_id);
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!seriesId) {
-      throw new Error("create response missing series id");
-    }
-    if (record) {
-      state.seriesById.set(seriesId, {
-        series_id: seriesId,
-        title: normalizeText(record.title),
-        status: normalizeText(record.status),
-        primary_work_id: normalizeText(record.primary_work_id),
-        record_hash: normalizeText(response.record_hash)
-      });
-    }
-    state.isSaving = false;
-    syncRouteBusyState(state);
-    await openSeriesById(state, seriesId);
-    setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft series {series_id}. Opening edit mode...", { series_id: seriesId }), "success");
-    setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft series {series_id}.", { series_id: seriesId }), "success");
-  } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "create_status_failed", "Draft series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-    state.isSaving = false;
-    updateEditorState(state);
-  }
-}
-
-async function buildCurrentSeries(state) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  if (!currentSeriesIsPublished(state)) {
-    state.rebuildPending = false;
-    updateEditorState(state);
-    return;
-  }
-  state.isBuilding = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));
-  setTextWithState(state.resultNode, "");
-  try {
-    const response = await applyCatalogueBuild({
-      series_id: state.currentSeriesId,
-      extra_work_ids: state.pendingBuildExtraWorkIds
-    });
-    state.rebuildPending = false;
-    state.pendingBuildExtraWorkIds = [];
-    await refreshBuildPreview(state);
-    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(state.resultNode, t(state, "build_result_success", "Public catalogue updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }), "success");
-    setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-  } catch (error) {
-    setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-  } finally {
-    state.isBuilding = false;
-    updateEditorState(state);
-  }
-}
-
-async function applyPublicationChange(state) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  const action = currentSeriesIsPublished(state) ? "unpublish" : currentSeriesIsDraft(state) ? "publish" : "";
-  if (!action) {
-    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published series."), "error");
-    return;
-  }
-  if (action === "publish" && draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
-    return;
-  }
-
-  if (action === "publish") {
-    const errors = validateDraft(state);
-    updateFieldMessages(state, errors);
-    if (errors.size > 0) {
-      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
-      updateEditorState(state);
-      return;
-    }
-  }
-
-  state.isBuilding = true;
-  updateEditorState(state);
-  setTextWithState(
-    state.statusNode,
-    action === "publish"
-      ? t(state, "publication_preview_publish_running", "Preparing publish preview…")
-      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview…")
-  );
-  setTextWithState(state.resultNode, "");
-
-  try {
-    const request = {
-      kind: "series",
-      action,
-      series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildSeriesActivityContext(`${action}-series`, "catalogueSeriesPublication", "#catalogueSeriesPublication", state.currentSeriesId)
-    };
-    const previewResponse = await previewCataloguePublication(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    if ((preview && preview.blocked) || blockers.length) {
-      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
-      setTextWithState(state.statusNode, message, "error");
-      return;
-    }
-
-    if (action === "unpublish") {
-      const summary = formatCataloguePublicationPreview(preview, {
-        text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-        defaultText: "Unpublish this series?",
-        includeDirtyNote: draftHasChanges(state)
-      });
-      if (!window.confirm(summary)) {
-        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
-        return;
-      }
-    }
-
-    setTextWithState(
-      state.statusNode,
-      action === "publish"
-        ? t(state, "publication_publish_running", "Publishing series…")
-        : t(state, "publication_unpublish_running", "Unpublishing series…")
-    );
-    const response = await applyCataloguePublication(request);
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!record) throw new Error("publication response missing record");
-
-    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    state.seriesById.set(state.currentSeriesId, {
-      series_id: state.currentSeriesId,
-      title: normalizeText(record.title),
-      status: normalizeText(record.status),
-      primary_work_id: normalizeText(record.primary_work_id),
-      record_hash: recordHash
-    });
-    state.rebuildPending = response.status === "public_update_failed";
-    state.pendingBuildExtraWorkIds = [];
-    setLoadedSeries(state, state.currentSeriesId, record, {
-      recordHash,
-      keepResult: true,
-      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash)
-    });
-    await refreshBuildPreview(state);
-
-    if (response.status === "public_update_failed") {
-      const error = normalizeText(response.public_update && response.public_update.error);
-      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
-      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
-      return;
-    }
-
-    if (action === "publish") {
-      setTextWithState(state.statusNode, t(state, "publication_status_published", "Series published."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_published", "Series and attached draft works are published, and public catalogue output has been updated."), "success");
-    } else {
-      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Series unpublished."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Series is draft again and public catalogue output has been cleaned up."), "success");
-    }
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
-      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-  } finally {
-    state.isBuilding = false;
-    updateEditorState(state);
-  }
-}
-
-async function deleteCurrentSeries(state) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  state.isDeleting = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview…"));
-  setTextWithState(state.resultNode, "");
-  try {
-    const request = {
-      kind: "series",
-      series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildSeriesActivityContext("delete-series", "catalogueSeriesDelete", "#catalogueSeriesDelete", state.currentSeriesId)
-    };
-    const previewResponse = await previewCatalogueDelete(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
-    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
-      const message = blockers[0] || validationErrors[0] || t(state, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(state.statusNode, message, "error");
-      state.isDeleting = false;
-      updateEditorState(state);
-      return;
-    }
-    const summary = formatCatalogueDeletePreview(preview, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultText: "Delete this source record?"
-    });
-    if (!window.confirm(summary)) {
-      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."));
-      state.isDeleting = false;
-      updateEditorState(state);
-      return;
-    }
-    setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
-    await applyCatalogueDelete(request);
-    const route = getStudioRoute(state.config, "catalogue_status");
-    window.location.assign(route);
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
-      : `${t(state, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-    state.isDeleting = false;
-    updateEditorState(state);
-  }
+function refreshBuildPreview(state) {
+  return refreshSeriesActionBuildPreview(state, buildSeriesActionContext(state));
 }
 
 async function openSeriesById(state, requestedSeriesId) {
@@ -1349,7 +857,7 @@ async function init() {
       if (event.key !== "Enter") return;
       event.preventDefault();
       if (state.mode === "new") {
-        saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected create failure", error));
+        saveCurrentSeries(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected create failure", error));
         return;
       }
       const matches = getSearchMatches(state, searchNode.value);
@@ -1376,12 +884,12 @@ async function init() {
     readinessNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
       if (!button) return;
-      importSeriesProse(state).catch((error) => console.warn("catalogue_series_editor: unexpected prose import failure", error));
+      importSeriesProse(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected prose import failure", error));
     });
     newButton.addEventListener("click", () => setNewSeriesMode(state));
-    saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
-    publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => console.warn("catalogue_series_editor: unexpected publication failure", error)));
-    deleteButton.addEventListener("click", () => deleteCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
+    saveButton.addEventListener("click", () => saveCurrentSeries(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
+    publicationButton.addEventListener("click", () => applyPublicationChange(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected publication failure", error)));
+    deleteButton.addEventListener("click", () => deleteCurrentSeries(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
     memberSearchNode.addEventListener("input", () => updateSeriesMemberList(state, membershipOptions(state)));
     memberAddButton.addEventListener("click", () => {
       if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);

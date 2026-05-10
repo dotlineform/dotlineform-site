@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 22:16"
+last_updated: "2026-05-10 22:32"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -20,6 +20,7 @@ Status:
 - Slice B fourth extraction completed for Work Detail action workflow sequencing
 - Slice C boundary review completed for Series Editor
 - Slice C1 implemented for Series membership editing
+- Slice C2 implemented for Series action workflow sequencing
 
 ## Implementation Progress
 
@@ -39,6 +40,9 @@ Status:
 - Added `assets/studio/js/catalogue-series-membership.js` for stored membership reads, current-member entry shaping, membership dirty checks, focused lookup membership shaping, changed-work update shaping, member row/list rendering, add/remove/make-primary mutations, and first-member `primary_work_id` autofill.
 - Kept Series route bootstrap, query handling, mode transitions, validation orchestration, save/create/build/publication/delete/prose command sequencing, public build preview, and final status/result copy in `assets/studio/js/catalogue-series-editor.js`.
 - `assets/studio/js/catalogue-series-editor.js` is still above the long-file review threshold after C1, so the next useful Series slice is action workflow extraction rather than stopping at the first split.
+- Added `assets/studio/js/catalogue-series-actions.js` for Series save/create/build preview/build/publication/delete/prose import workflow sequencing, public update outcome handling, activity context shaping, service transport coordination, and save-result status copy.
+- Kept Series route state transitions, initial route selection, field rendering, validation ownership, and membership mutation UI in `assets/studio/js/catalogue-series-editor.js`, with the action module using route callbacks for those responsibilities.
+- `assets/studio/js/catalogue-series-editor.js` is now below the long-file review threshold after C2; the next useful decision is whether Series selection/opening is still noisy enough to justify Slice C3 before moving toward Moment Editor.
 
 ## Purpose
 
@@ -253,7 +257,7 @@ Targeted verification:
 
 Status:
 
-- next
+- implemented
 
 Target file:
 
@@ -272,6 +276,19 @@ Acceptance checks:
 - published-series save still performs the internal public update and preserves pending removed-member build targets on partial update failure
 - publish/unpublish/delete confirmations and request payloads remain equivalent
 - staged prose import still requires a clean saved series and refreshes build preview after import
+
+Implementation notes:
+
+- `catalogue-series-actions.js` now owns Series save/create/build-preview/build/publication/delete/prose-import sequencing.
+- The action module builds Series activity contexts and calls the Catalogue service client directly, keeping service transport out of the route controller.
+- The route controller supplies callbacks for text lookup, validation, field-message rendering, dirty checks, mode reloads, route-busy sync, and readiness rendering.
+- Membership update shaping still flows through `catalogue-series-membership.js`; the action module calls the membership helper rather than recreating membership comparison rules.
+- The controller keeps initial route selection, search/open behavior, new/edit mode transitions, field rendering, and membership row mutations.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-series-editor.js` and `assets/studio/js/catalogue-series-actions.js`.
+- Static route smoke passed for empty, focused `?series=001`, and `?mode=new` Series Editor routes against the running local Studio route after a separate Jekyll build succeeded.
 
 ### Slice C3: Series Selection/Open Module
 
