@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:49"
+last_updated: "2026-05-10 15:01"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
@@ -17,7 +17,8 @@ Status:
 - Slice B implemented
 - Slice C implemented
 - Slice D implemented
-- slices E-F to be implemented
+- Slice E implemented
+- Slice F to be implemented
 
 ## Purpose
 
@@ -255,6 +256,8 @@ Verification:
 
 ### Slice E: Management Client
 
+Status: implemented.
+
 Move management endpoint transport and action-specific POST wrappers into `docs-viewer-management-client.js`.
 
 Candidate functions:
@@ -264,6 +267,13 @@ Candidate functions:
 - `scopeSupportsGeneratedSearchReads`
 - capability read helpers
 - wrappers for `/docs/create`, `/docs/update-metadata`, `/docs/update-viewability-bulk`, `/docs/move`, `/docs/restore-move`, `/docs/archive`, `/docs/delete-preview`, `/docs/delete-apply`, `/docs/rebuild`, and `/docs/open-source`
+
+Implementation result:
+
+- `assets/js/docs-viewer-management-client.js` now owns management JSON transport, scope capability checks, capability reads, and named wrappers for create, metadata update, viewability, move, restore move, archive, delete preview/apply, rebuild, and open-source actions
+- `assets/js/docs-viewer.js` imports named management-client helpers and keeps prompts, confirms, busy-state transitions, modal interactions, status rendering, undo-state normalization, and docs index reload orchestration local
+- management request wrappers add the active scope from controller-provided options, so mutation endpoint paths and transport details no longer live in the event handlers
+- generated-data capability predicates moved with the management client because they interpret docs-management capability payloads
 
 Keep in entry controller for this slice:
 

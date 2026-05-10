@@ -28,6 +28,21 @@ import {
   managementReloadPath,
   readAssetVersion
 } from "./docs-viewer-data.js";
+import {
+  applyManagedDocDelete,
+  archiveManagedDoc,
+  createManagedDoc,
+  moveManagedDoc,
+  openManagedDocSource,
+  previewManagedDocDelete,
+  readManagementCapabilities,
+  rebuildManagedDocs,
+  restoreManagedDocMove,
+  scopeSupportsGeneratedDataReads,
+  scopeSupportsGeneratedSearchReads,
+  updateManagedDocMetadata,
+  updateManagedDocsViewability
+} from "./docs-viewer-management-client.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -203,9 +218,20 @@ import {
       },
       checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
       scopeSupportsGeneratedSearchReads: function () {
-        return scopeSupportsGeneratedSearchReads(state.managementCapabilities || {});
+        return scopeSupportsGeneratedSearchReads(state.managementCapabilities || {}, viewerScope);
       }
     }, settings);
+  }
+
+  function managementClientOptions() {
+    return {
+      baseUrl: managementBaseUrl,
+      scope: viewerScope,
+      serverNotConfiguredError: state.managementText.serverNotConfiguredError,
+      fetch: function (url, options) {
+        return window.fetch(url, options);
+      }
+    };
   }
 
   function getCurrentDocId() {
@@ -1059,28 +1085,6 @@ import {
     return state.managementCapabilities.scopes[viewerScope] || null;
   }
 
-  function scopeSupportsGeneratedDataReads(capabilities) {
-    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[viewerScope] : null;
-    return Boolean(
-      capabilities &&
-      capabilities.generated_data_reads &&
-      scopeCaps &&
-      scopeCaps.available &&
-      scopeCaps.generated_data_reads
-    );
-  }
-
-  function scopeSupportsGeneratedSearchReads(capabilities) {
-    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[viewerScope] : null;
-    return Boolean(
-      capabilities &&
-      capabilities.generated_data_reads &&
-      scopeCaps &&
-      scopeCaps.available &&
-      scopeCaps.generated_search_reads
-    );
-  }
-
   function currentSelectedDoc() {
     return state.docsById.get(state.selectedDocId) || null;
   }
@@ -1570,34 +1574,6 @@ import {
     renderStatusPills();
   }
 
-  function fetchManagementJson(path, method, payload) {
-    if (!managementBaseUrl) {
-      return Promise.reject(new Error(state.managementText.serverNotConfiguredError));
-    }
-
-    var options = {
-      method: method || "GET",
-      headers: {
-        Accept: "application/json"
-      }
-    };
-    if (payload !== undefined) {
-      options.headers["Content-Type"] = "application/json";
-      options.body = JSON.stringify(payload);
-    }
-
-    return window.fetch(managementBaseUrl + path, options).then(function (response) {
-      return response.json().catch(function () {
-        throw new Error("HTTP " + response.status);
-      }).then(function (responsePayload) {
-        if (!response.ok || !responsePayload || !responsePayload.ok) {
-          throw new Error(responsePayload && responsePayload.error ? responsePayload.error : "HTTP " + response.status);
-        }
-        return responsePayload;
-      });
-    });
-  }
-
   function checkGeneratedDataReadCapability() {
     if (!managementBaseUrl) {
       state.generatedDataReadChecked = true;
@@ -1611,10 +1587,10 @@ import {
       return state.generatedDataReadRequestPromise;
     }
 
-    state.generatedDataReadRequestPromise = fetchManagementJson("/capabilities", "GET")
+    state.generatedDataReadRequestPromise = readManagementCapabilities(managementClientOptions())
       .then(function (payload) {
         state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities);
+        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities, viewerScope);
         state.generatedDataReadChecked = true;
         return state.generatedDataReadAvailable;
       })
@@ -1647,14 +1623,14 @@ import {
   }
 
   function checkManagementCapabilities(attempt, checkId) {
-    fetchManagementJson("/capabilities", "GET")
+    readManagementCapabilities(managementClientOptions())
       .then(function (payload) {
         if (checkId !== state.managementCapabilityCheckId) return;
         var scopeCaps = payload && payload.capabilities && payload.capabilities.scopes
           ? payload.capabilities.scopes[viewerScope]
           : null;
         state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities);
+        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities, viewerScope);
         state.generatedDataReadChecked = true;
         state.managementChecked = true;
         state.managementAvailable = Boolean(scopeCaps && scopeCaps.available);
@@ -1711,11 +1687,10 @@ import {
     setManagementMessage("Creating doc...", false);
     setStatus("Creating doc...", false);
 
-    fetchManagementJson("/docs/create", "POST", {
-      scope: viewerScope,
+    createManagedDoc({
       title: title,
       after_doc_id: currentDoc ? currentDoc.doc_id : ""
-    })
+    }, managementClientOptions())
       .then(function (payload) {
         setManagementMessage(payload.summary_text || "Doc created.", false);
         return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc created.");
@@ -1739,7 +1714,6 @@ import {
 
     var title = String(titleInput || "").trim() || "New Doc";
     var payload = {
-      scope: viewerScope,
       title: title
     };
     if (kind === "child") {
@@ -1753,7 +1727,7 @@ import {
     setManagementMessage("Creating doc...", false);
     setStatus("Creating doc...", false);
 
-    fetchManagementJson("/docs/create", "POST", payload)
+    createManagedDoc(payload, managementClientOptions())
       .then(function (response) {
         setManagementMessage(response.summary_text || "Doc created.", false);
         return reloadDocsIndex(response.doc_id, response.summary_text || "Doc created.");
@@ -1800,7 +1774,6 @@ import {
     }
     var selectedStatus = String(metadataStatusInput.value || "").trim();
     var payload = {
-      scope: viewerScope,
       doc_id: doc.doc_id,
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
@@ -1814,7 +1787,7 @@ import {
     setManagementMessage("Saving metadata for " + doc.title + "...", false);
     setStatus("Saving metadata for " + doc.title + "...", false);
 
-    fetchManagementJson("/docs/update-metadata", "POST", payload)
+    updateManagedDocMetadata(payload, managementClientOptions())
       .then(function (response) {
         closeMetadataModal();
         setManagementMessage(response.summary_text || "Metadata saved.", false);
@@ -1832,7 +1805,6 @@ import {
 
   function metadataPayloadForStatus(doc, uiStatus) {
     return {
-      scope: viewerScope,
       doc_id: doc.doc_id,
       title: String(doc.title || "").trim(),
       summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
@@ -1857,7 +1829,7 @@ import {
     setStatus(savingText, false);
     renderStatusPills();
 
-    fetchManagementJson("/docs/update-metadata", "POST", metadataPayloadForStatus(doc, nextStatus))
+    updateManagedDocMetadata(metadataPayloadForStatus(doc, nextStatus), managementClientOptions())
       .then(function (response) {
         var savedText = response.summary_text || state.managementText.statusPillSaved;
         setManagementMessage(savedText, false);
@@ -1880,9 +1852,7 @@ import {
     setManagementMessage("Rebuilding docs...", false);
     setStatus("Rebuilding docs...", false);
 
-    fetchManagementJson("/docs/rebuild", "POST", {
-      scope: viewerScope
-    })
+    rebuildManagedDocs(managementClientOptions())
       .then(function (payload) {
         var targetDocId = state.selectedDocId || defaultRouteDocId || defaultDocId();
         setManagementMessage(payload.summary_text || "Docs rebuilt.", false);
@@ -1907,10 +1877,7 @@ import {
     setManagementMessage("Archiving " + doc.title + "...", false);
     setStatus("Archiving " + doc.title + "...", false);
 
-    fetchManagementJson("/docs/archive", "POST", {
-      scope: viewerScope,
-      doc_id: doc.doc_id
-    })
+    archiveManagedDoc(doc.doc_id, managementClientOptions())
       .then(function (payload) {
         setManagementMessage(payload.summary_text || "Doc archived.", false);
         return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc archived.");
@@ -1955,10 +1922,7 @@ import {
     setManagementMessage("Checking delete impact for " + doc.title + "...", false);
     setStatus("Checking delete impact for " + doc.title + "...", false);
 
-    fetchManagementJson("/docs/delete-preview", "POST", {
-      scope: viewerScope,
-      doc_id: doc.doc_id
-    })
+    previewManagedDocDelete(doc.doc_id, managementClientOptions())
       .then(function (preview) {
         if (!preview.allowed) {
           var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
@@ -1973,11 +1937,7 @@ import {
         }
         setManagementMessage("Deleting " + doc.title + "...", false);
         setStatus("Deleting " + doc.title + "...", false);
-        return fetchManagementJson("/docs/delete-apply", "POST", {
-          scope: viewerScope,
-          doc_id: doc.doc_id,
-          confirm: true
-        });
+        return applyManagedDocDelete(doc.doc_id, managementClientOptions());
       })
       .then(function (payload) {
         if (!payload) return;
@@ -2006,11 +1966,7 @@ import {
     setManagementMessage("Showing " + countText + "...", false);
     setStatus("Showing " + countText + "...", false);
 
-    fetchManagementJson("/docs/update-viewability-bulk", "POST", {
-      scope: viewerScope,
-      doc_ids: targetDocIds,
-      hidden: false
-    })
+    updateManagedDocsViewability(targetDocIds, false, managementClientOptions())
       .then(function (payload) {
         setManagementMessage(payload.summary_text || "Doc shown.", false);
         return reloadDocsIndex(doc.doc_id, payload.summary_text || "Doc shown.");
@@ -2060,12 +2016,7 @@ import {
     setManagementMessage("Moving " + movingDoc.title + "...", false);
     setStatus("Moving " + movingDoc.title + "...", false);
 
-    fetchManagementJson("/docs/move", "POST", {
-      scope: viewerScope,
-      doc_id: movingDoc.doc_id,
-      target_doc_id: targetDoc.doc_id,
-      position: position
-    })
+    moveManagedDoc(movingDoc.doc_id, targetDoc.doc_id, position, managementClientOptions())
       .then(function (payload) {
         var undoRecords = normalizeMoveUndoRecords(payload.undo_records);
         if (undoRecords.length) {
@@ -2121,11 +2072,7 @@ import {
     setManagementMessage(state.managementText.undoMoveStatus, false);
     setStatus(state.managementText.undoMoveStatus, false);
 
-    fetchManagementJson("/docs/restore-move", "POST", {
-      scope: viewerScope,
-      focus_doc_id: focusDocId,
-      records: moveUndoPayloadRecords(undoRecords)
-    })
+    restoreManagedDocMove(focusDocId, moveUndoPayloadRecords(undoRecords), managementClientOptions())
       .then(function (response) {
         state.moveUndo = null;
         setManagementMessage(response.summary_text || "Move undone.", false);
@@ -2151,11 +2098,7 @@ import {
     setManagementMessage("Opening source for " + doc.title + "...", false);
     setStatus("Opening source for " + doc.title + "...", false);
 
-    fetchManagementJson("/docs/open-source", "POST", {
-      scope: viewerScope,
-      doc_id: doc.doc_id,
-      editor: editor === "vscode" ? "vscode" : "default"
-    })
+    openManagedDocSource(doc.doc_id, editor, managementClientOptions())
       .then(function () {
         setManagementMessage("", false);
         setStatus("", false);
