@@ -31,10 +31,16 @@ import {
   catalogueReadinessTone
 } from "./catalogue-editor-readiness.js";
 import {
-  buildChangedFieldNames,
   computeRecordHash,
   displayValue
 } from "./catalogue-editor-records.js";
+import {
+  catalogueDeleteDisabled,
+  catalogueDirtyWarningText,
+  catalogueDraftChangedFieldNames,
+  catalogueDraftHasChanges,
+  catalogueSaveDisabled
+} from "./catalogue-editor-dirty-state.js";
 import {
   formatCatalogueBuildPreview,
   formatCatalogueBuildPreviewModalHtml,
@@ -124,7 +130,7 @@ function normalizeDetailUid(value, currentWorkId = "") {
 
 function changedWorkFieldNames(state) {
   if (state.mode !== "single" || !state.baselineDraft) return [];
-  return buildChangedFieldNames({
+  return catalogueDraftChangedFieldNames({
     fields: EDITABLE_FIELDS,
     draft: state.draft,
     baselineDraft: state.baselineDraft,
@@ -1420,21 +1426,28 @@ function syncUrl(workValue, mode = "") {
 }
 
 function draftHasChanges(state) {
-  if (state.mode === "new") {
-    return Boolean(
+  return catalogueDraftHasChanges({
+    mode: state.mode,
+    fields: EDITABLE_FIELDS,
+    draft: state.draft,
+    baselineDraft: state.baselineDraft,
+    touchedFields: state.bulkTouchedFields,
+    canonicalizeScalar,
+    newModeChanged: () => Boolean(
       normalizeWorkId(state.draft.work_id) ||
       EDITABLE_FIELDS.some((field) => normalizeText(state.draft[field.key]))
-    );
-  }
-  if (state.mode === "bulk") {
-    return state.bulkTouchedFields.size > 0;
-  }
-  if (!state.baselineDraft) return false;
-  return (
-    EDITABLE_FIELDS.some((field) => canonicalizeScalar(field, state.draft[field.key]) !== canonicalizeScalar(field, state.baselineDraft[field.key])) ||
-    !embeddedEntriesEqual(state.draft.downloads, state.baselineDraft.downloads, DOWNLOAD_FIELDS) ||
-    !embeddedEntriesEqual(state.draft.links, state.baselineDraft.links, LINK_FIELDS)
-  );
+    ),
+    extraComparisons: [
+      {
+        key: "downloads",
+        changed: ({ draft, baselineDraft }) => !embeddedEntriesEqual(draft.downloads, baselineDraft.downloads, DOWNLOAD_FIELDS)
+      },
+      {
+        key: "links",
+        changed: ({ draft, baselineDraft }) => !embeddedEntriesEqual(draft.links, baselineDraft.links, LINK_FIELDS)
+      }
+    ]
+  });
 }
 
 function validateDraft(state) {
@@ -1950,7 +1963,11 @@ function updateEditorState(state) {
   }
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, dirty && state.mode !== "new" ? t(state, "dirty_warning", "Unsaved source changes.") : "");
+  setTextWithState(state.warningNode, catalogueDirtyWarningText({
+    dirty,
+    mode: state.mode,
+    message: t(state, "dirty_warning", "Unsaved source changes.")
+  }));
   if (state.mode === "new" && !state.resultNode.textContent) {
     setTextWithState(
       state.statusNode,
@@ -1969,8 +1986,21 @@ function updateEditorState(state) {
   state.saveButton.textContent = state.mode === "new"
     ? t(state, "create_button", "Create")
     : t(state, "save_button", "Save");
-  state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
-  state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  state.saveButton.disabled = catalogueSaveDisabled({
+    hasRecord,
+    isSaving: state.isSaving,
+    hasErrors: errors.size > 0,
+    dirty,
+    serverAvailable: state.serverAvailable
+  });
+  state.deleteButton.disabled = catalogueDeleteDisabled({
+    hasRecord: Boolean(state.currentRecord),
+    mode: state.mode,
+    isSaving: state.isSaving,
+    isBuilding: state.isBuilding,
+    isDeleting: state.isDeleting,
+    serverAvailable: state.serverAvailable
+  });
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
   syncRouteBusyState(state);

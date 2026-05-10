@@ -30,6 +30,12 @@ import {
   stableStringify
 } from "./catalogue-editor-records.js";
 import {
+  catalogueDeleteDisabled,
+  catalogueDirtyWarningText,
+  catalogueDraftHasChanges,
+  catalogueSaveDisabled
+} from "./catalogue-editor-dirty-state.js";
+import {
   formatCatalogueBuildPreview,
   formatCatalogueDeletePreview,
   formatCataloguePublicationPreview
@@ -376,11 +382,18 @@ function membershipHasChanges(state) {
 }
 
 function draftHasChanges(state) {
-  if (state.mode === "new") {
-    return true;
-  }
-  if (!state.baselineDraft) return false;
-  return EDITABLE_FIELDS.some((field) => normalizeText(state.draft[field.key]) !== normalizeText(state.baselineDraft[field.key])) || membershipHasChanges(state);
+  return catalogueDraftHasChanges({
+    mode: state.mode,
+    fields: EDITABLE_FIELDS,
+    draft: state.draft,
+    baselineDraft: state.baselineDraft,
+    extraComparisons: [
+      {
+        key: "members",
+        changed: () => membershipHasChanges(state)
+      }
+    ]
+  });
 }
 
 function validateDraft(state) {
@@ -642,7 +655,11 @@ function updateEditorState(state) {
   if (!hasRecord) setTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
-  setTextWithState(state.warningNode, dirty && state.mode !== "new" ? t(state, "dirty_warning", "Unsaved source changes.") : "");
+  setTextWithState(state.warningNode, catalogueDirtyWarningText({
+    dirty,
+    mode: state.mode,
+    message: t(state, "dirty_warning", "Unsaved source changes.")
+  }));
   if (state.mode === "new" && !state.resultNode.textContent) {
     const firstError = errors.size ? Array.from(errors.values()).find(Boolean) : "";
     setTextWithState(
@@ -657,8 +674,21 @@ function updateEditorState(state) {
   state.saveButton.textContent = state.mode === "new"
     ? t(state, "create_button", "Create")
     : t(state, "save_button", "Save");
-  state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
-  state.deleteButton.disabled = !Boolean(state.currentRecord) || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  state.saveButton.disabled = catalogueSaveDisabled({
+    hasRecord,
+    isSaving: state.isSaving,
+    hasErrors: errors.size > 0,
+    dirty,
+    serverAvailable: state.serverAvailable
+  });
+  state.deleteButton.disabled = catalogueDeleteDisabled({
+    hasRecord: Boolean(state.currentRecord),
+    mode: state.mode,
+    isSaving: state.isSaving,
+    isBuilding: state.isBuilding,
+    isDeleting: state.isDeleting,
+    serverAvailable: state.serverAvailable
+  });
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
   syncRouteBusyState(state);

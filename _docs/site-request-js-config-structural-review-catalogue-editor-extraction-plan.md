@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:34"
+last_updated: "2026-05-10 16:40"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
@@ -18,7 +18,8 @@ Status:
 - Slice C implemented
 - Slice D implemented
 - Slice E implemented
-- next executable slice: reassess Slice F only if dirty-state reuse pressure justifies it
+- Slice F implemented
+- next executable slice: keep Slice G deferred unless work-file/link embedded item reuse pressure appears
 
 ## Purpose
 
@@ -45,7 +46,7 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 | C | implemented | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
 | D | implemented | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
 | E | implemented | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
-| F | deferred | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
+| F | implemented | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
 | G | deferred | `catalogue-editor-embedded-items.js` | Work file/link embedded item helpers only if another route needs the pattern |
 
 ## Slice A: Service Client
@@ -289,7 +290,7 @@ Targeted verification:
 
 Status:
 
-- deferred
+- implemented
 
 Target file:
 
@@ -307,6 +308,22 @@ Acceptance checks:
 - safe field edits mark the expected fields dirty
 - bulk drafts produce the same changed-field summaries
 - save/build/publish controls keep their existing enabled/disabled behavior
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-dirty-state.js` now owns pure dirty-field comparison, shared new/bulk/single dirty-state branching, dirty-warning text shaping, and common save/delete disabled-state predicates.
+- Work, work-detail, and series editors import the helper for draft dirty checks, warning copy, and save/delete control state while keeping field normalization, validation, payload shaping, build-preview behavior, and publication rules route-local.
+- Work editor still injects embedded downloads/links comparison, and series editor still injects membership comparison, so route-specific semantics remain outside the shared helper.
+- Moment editor uses only the shared warning/delete predicates because moment save enablement intentionally remains route-specific.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-editor-dirty-state.js` and the four catalogue editor controllers.
+- A direct module check confirmed unchanged single-record drafts stay clean, changed drafts become dirty, touched bulk fields become dirty, warning text is suppressed only for new mode, and common save/delete disabled predicates preserve representative enabled/disabled outcomes.
+- Studio docs payloads and the Studio search index were rebuilt for the Studio scope.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for work, work-detail, series, and moment editor routes against the built site on desktop and mobile viewports; all routes reached route-ready state with no page errors and no failed Studio JS module requests.
+- The first Playwright launch failed inside the Codex sandbox; the same checks passed when rerun with escalated permissions as required by the local validation guidance.
 
 ## Slice G: Embedded Items
 
@@ -345,16 +362,16 @@ Use this map proportionally after runtime extraction slices:
 
 ## Current Recommendation
 
-Pause before Slice F unless another catalogue route needs shared dirty-state behavior.
+Pause before Slice G unless another catalogue route needs shared embedded work-file/link behavior.
 
 Benefits:
 
-- Slice E now aligns the moment editor with the work, work-detail, and series field-module ownership pattern.
-- The moment editor route controller is smaller without changing route orchestration, import workflow control, or service boundaries.
-- Deferring Slice F avoids over-sharing dirty-state behavior until the remaining duplication is clearly worth a shared helper.
+- Slice F now gives repeated dirty-state and control-disable predicates one pure helper without moving validation, payload shaping, or route orchestration.
+- Work, work-detail, and series dirty-state behavior has a shared owner while route-specific embedded and membership semantics remain injected.
+- Deferring Slice G avoids moving work-editor embedded item behavior before another route needs that pattern.
 
 Risks:
 
 - moment import mode remains route-specific and should stay out of shared catalogue editor helpers
-- save payload equivalence should continue to be checked if dirty-state or validation helpers are extracted later
-- Slice F would touch control enablement and dirty-field behavior, so it should be treated as higher risk than the field-module extraction
+- save payload equivalence should continue to be checked if validation helpers are extracted later
+- embedded work files and links should stay route-local unless a second caller appears

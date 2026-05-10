@@ -38,6 +38,10 @@ import {
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
 import {
+  catalogueDeleteDisabled,
+  catalogueDirtyWarningText
+} from "./catalogue-editor-dirty-state.js";
+import {
   MOMENT_EDITABLE_FIELDS as EDITABLE_FIELDS,
   MOMENT_READONLY_FIELDS as READONLY_FIELDS,
   buildSaveMomentPayload,
@@ -738,9 +742,19 @@ function updateDirtyState(state) {
   const dirty = draftHasChanges(state);
   const validation = state.currentRecord ? validateDraft(state) : { valid: true, draft: null };
   if (!state.currentRecord) clearFieldMessages(state);
-  setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "", dirty ? "warning" : "");
+  setTextWithState(state.warningNode, catalogueDirtyWarningText({
+    dirty,
+    mode: "single",
+    message: t(state, "dirty_warning", "Unsaved source changes.")
+  }), dirty ? "warning" : "");
   state.saveButton.disabled = !state.serverAvailable || state.isSaving || state.isDeleting || !state.currentRecord;
-  state.deleteButton.disabled = !state.serverAvailable || state.isSaving || state.isBuilding || state.isDeleting || !state.currentRecord;
+  state.deleteButton.disabled = catalogueDeleteDisabled({
+    hasRecord: Boolean(state.currentRecord),
+    isSaving: state.isSaving,
+    isBuilding: state.isBuilding,
+    isDeleting: state.isDeleting,
+    serverAvailable: state.serverAvailable
+  });
   updatePublicationControls(state, { dirty, validation });
   renderReadiness(state);
   updateImportState(state);

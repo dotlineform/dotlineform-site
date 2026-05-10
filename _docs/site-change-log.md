@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 16:19"
+last_updated: "2026-05-10 16:40"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue editor dirty-state helpers
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-editor-dirty-state.js` as the sixth runtime extraction from the Catalogue editor boundary plan.
+The work, work-detail, and series editor controllers now share pure draft dirty-state checks, dirty-warning text shaping, and common save/delete disabled-state predicates.
+Moment editor uses only the shared warning/delete predicates because its save enablement remains route-specific.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-editor-dirty-state.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Dirty-state behavior now has a shared pure helper boundary without moving validation, field normalization, payload shaping, modal rendering, or service calls.
+Slice G remains deferred until embedded work-file/link behavior has a second caller.
 
 ## [2026-05-10] Extracted Catalogue editor modal formatters
 
