@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-10 13:05"
+last_updated: "2026-05-10 19:44"
 parent_id: studio
 sort_order: 20
 ---
@@ -122,6 +122,8 @@ Shared Studio runtime and wiring currently live in:
   wires the docs rebuild action beside the Studio docs search input
 - `assets/studio/js/catalogue-work-fields.js`
   provides shared work-editor field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers for work create/edit surfaces
+- `assets/studio/js/catalogue-work-sections.js`
+  provides Catalogue Work Editor route-local rendering for the current-record preview, readiness panel, detail sections, work-owned file/link sections, and summary rail
 
 Current page controllers:
 
@@ -164,6 +166,10 @@ Controller splits that are already live:
   - `tag-aliases-domain.js`
   - `tag-aliases-save.js`
   - `tag-aliases-service.js`
+- Catalogue Work Editor:
+  - `catalogue-work-editor.js`
+  - `catalogue-work-fields.js`
+  - `catalogue-work-sections.js`
 
 ## Route Ready State
 

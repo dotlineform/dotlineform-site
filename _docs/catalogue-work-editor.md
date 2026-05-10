@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: 2026-05-02
+last_updated: "2026-05-10 19:44"
 parent_id: user-guide
 sort_order: 30
 ---
@@ -15,6 +15,21 @@ Route:
 - new draft mode uses `?mode=new`
 
 This page edits canonical work source records from `assets/studio/data/catalogue/works.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
+
+## Browser Modules
+
+The route entry module is `assets/studio/js/catalogue-work-editor.js`.
+It owns route startup, focused lookup reads, draft state, validation, dirty state, save/build/publish/delete orchestration, modal sequencing, route-ready state, and local-service coordination.
+
+Route-local helpers:
+
+- `assets/studio/js/catalogue-work-fields.js`
+  owns work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers.
+- `assets/studio/js/catalogue-work-sections.js`
+  owns current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail.
+
+The section renderer receives route-owned callbacks for text lookup, dirty-state checks, changed-field detection, publication-state checks, and build-preview activation.
+It does not call write services directly.
 
 ## Current Scope
 
@@ -154,8 +169,8 @@ Current action labels:
 
 Current save/publication flow:
 
-1. page loads work search, series search, and the editable work source map through `GET /catalogue/read`
-2. opening a work fetches one focused work lookup record through `GET /catalogue/read?key=catalogue_lookup_work_base&record_id=<work_id>` for generated runtime context, but the editable form baseline comes from the canonical source record
+1. page loads work search and series search lookup payloads through `GET /catalogue/read`
+2. opening a work fetches one focused work lookup record through `GET /catalogue/read?key=catalogue_lookup_work_base&record_id=<work_id>`; that focused payload carries the editable record plus generated runtime context
 3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
 5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`

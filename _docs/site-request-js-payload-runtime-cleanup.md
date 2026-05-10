@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 19:30"
+last_updated: "2026-05-10 19:44"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -16,6 +16,7 @@ Status:
 - Slice A implemented
 - Slice B implemented
 - Slice C implemented
+- Slice D implemented
 
 ## Purpose
 
@@ -251,7 +252,7 @@ Targeted verification:
 
 ### Slice D: Route Section Renderer Boundaries
 
-Status: not started.
+Status: implemented.
 
 Intent:
 
@@ -263,6 +264,40 @@ Acceptance checks:
 - extracted render helpers accept plain state slices or option objects where practical
 - section modules do not perform service writes
 - modal opening and save/build sequencing remain easy to trace from the route entry module
+
+Target:
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-sections.js`
+
+Implementation notes:
+
+- Added `assets/studio/js/catalogue-work-sections.js` as the work-editor route-local section renderer module.
+- Moved current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, summary rail rendering, detail grouping/search helpers, and compact work-summary helpers out of the route entry controller.
+- Kept create/save/bulk-save/build/publish/delete/prose/media orchestration in `catalogue-work-editor.js`.
+- Kept build-preview modal opening and confirmation modal sequencing in `catalogue-work-editor.js`.
+- The section module receives route-owned behavior through a small option object: text lookup, dirty-state checks, changed-field detection, publication-state checks, build-preview activation, and `setTextWithState`.
+- Section helpers perform DOM rendering and event binding for rendered section controls, but do not call write services.
+
+Runtime measurement:
+
+- `assets/studio/js/catalogue-work-editor.js` changed from 3,100 lines, 125,204 bytes raw, and about 22,636 bytes gzip to 2,622 lines, 101,094 bytes raw, and about 17,879 bytes gzip.
+- New `assets/studio/js/catalogue-work-sections.js` is 582 lines, 27,973 bytes raw, and about 5,768 bytes gzip.
+- The work-editor transitive JS module count changed from 16 to 17.
+- The measured work-editor transitive JS payload changed from about 211,997 bytes raw / 44,472 bytes gzip to about 215,860 bytes raw / 45,483 bytes gzip.
+- Startup JSON payloads are unchanged.
+- Route-ready behavior should be unchanged because initial data loading and route-state marking remain in the route entry controller.
+- This slice primarily reduces maintenance risk. Transfer-size cost increases slightly because the section renderer is a new module transfer without a bundler.
+
+Targeted verification:
+
+- `node --check assets/studio/js/catalogue-work-editor.js` passed.
+- `node --check assets/studio/js/catalogue-work-sections.js` passed.
+- Work-editor transitive JS payload was measured before and after the extraction.
+- Studio docs payloads and Studio docs search were rebuilt after this docs update.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for the work editor empty route with the catalogue service blocked.
+- Static Playwright smoke passed with the existing catalogue service available for `?work=00001`, `?mode=new`, and `?work=00001,00002`.
 
 ## Runtime Measurement Requirements
 
@@ -292,6 +327,6 @@ For Slice B, fetch verification should specifically prove whether `catalogue_wor
 
 ## Recommended Next Step
 
-Proceed to Slice D.
+Use the Slice D boundary for future work-editor changes.
 
-Use the work-editor section renderer review to decide which rendering responsibilities can move out of the route entry module without hiding save/build/publication sequencing.
+If another cleanup slice is opened, start from `assets/studio/js/catalogue-work-detail-editor.js` or the Docs Viewer render/management-UI boundaries rather than splitting by line count alone.

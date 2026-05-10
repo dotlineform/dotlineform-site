@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 19:30"
+last_updated: "2026-05-10 19:44"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue Work Editor section renderers
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-work-sections.js` as the route-local renderer module for the Catalogue Work Editor.
+The module now owns current-record preview rendering, readiness rendering, work-detail sections, work-owned file/link sections, and summary rail rendering.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-sections.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+
+**Impact:**
+The work editor route entry module keeps data loading, route state, validation, save/build/publish/delete orchestration, and modal sequencing.
+Section rendering is now isolated behind injected route callbacks, reducing controller maintenance risk while adding one small module transfer to the route.
 
 ## [2026-05-10] Recorded long JavaScript file policy and inventory
 
