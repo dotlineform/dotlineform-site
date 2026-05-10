@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T17:39:12Z",
+  "generated_at": "2026-05-10T18:04:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2194,6 +2194,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-js-payload-runtime-cleanup",
+      "title": "JavaScript Payload And Runtime Cleanup Request",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 19:05",
+      "parent_id": "site-request-js-config-structural-review",
+      "sort_order": 70,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-payload-runtime-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup.json",
+      "content_text_length": 8142,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
       "doc_id": "registry-driven-scoring-architecture",
       "title": "Registry-Driven Scoring Architecture",
       "added_date": "2026-04-16",
@@ -3378,7 +3395,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 18:39",
+      "last_updated": "2026-05-10 19:05",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3387,7 +3404,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 23971,
+      "content_text_length": 24166,
       "ui_status": "done"
     },
     {

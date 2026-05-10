@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 18:39"
+last_updated: "2026-05-10 19:05"
 ui_status: done
 parent_id: change-requests
 sort_order: 212
@@ -31,6 +31,7 @@ Status:
 - Slice 6 child doc created
 - Slice 6 implemented
 - Follow-on Slice 7 implemented: scoped runtime config and UI text payloads
+- Follow-on payload/runtime cleanup request created
 
 ## Active Execution Queue
 
@@ -39,6 +40,7 @@ The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-c
 [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction) is complete.
 [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation) is complete.
 The scoped runtime config slice is complete.
+[JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup) is the next aggressive cleanup request for long route controllers and avoidable startup payloads.
 
 ## Implementation Summary
 
