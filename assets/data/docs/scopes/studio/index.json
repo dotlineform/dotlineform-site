@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T16:28:12Z",
+  "generated_at": "2026-05-10T16:39:11Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -708,7 +708,7 @@
       "doc_id": "search-overview",
       "title": "Search Overview",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "sort_order": 20,
       "published": true,
@@ -717,7 +717,7 @@
       "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
-      "content_text_length": 6945
+      "content_text_length": 7218
     },
     {
       "scope": "studio",
@@ -1971,7 +1971,7 @@
       "doc_id": "site-request-js-config-structural-review-search-performance-instrumentation",
       "title": "Search Performance Instrumentation Slice",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 17:27",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 60,
       "published": true,
@@ -1980,15 +1980,15 @@
       "source_path": "site-request-js-config-structural-review-search-performance-instrumentation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-search-performance-instrumentation.json",
-      "content_text_length": 5797,
-      "ui_status": "in-progress"
+      "content_text_length": 7876,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "sort_order": 60,
       "published": true,
@@ -1997,7 +1997,7 @@
       "source_path": "search-ui-behaviour.md",
       "viewer_url": "/docs/?scope=studio&doc=search-ui-behaviour",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-ui-behaviour.json",
-      "content_text_length": 11566
+      "content_text_length": 12748
     },
     {
       "scope": "studio",
@@ -2438,7 +2438,7 @@
       "doc_id": "search-validation-checklist",
       "title": "Search Validation Checklist",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "sort_order": 80,
       "published": true,
@@ -2447,7 +2447,7 @@
       "source_path": "search-validation-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-validation-checklist.json",
-      "content_text_length": 7938
+      "content_text_length": 8370
     },
     {
       "scope": "studio",
@@ -2550,7 +2550,7 @@
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 17:01",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "studio",
       "sort_order": 90,
       "published": true,
@@ -2559,7 +2559,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 8301
+      "content_text_length": 8386
     },
     {
       "scope": "studio",
@@ -3378,7 +3378,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 17:27",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3387,7 +3387,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 17572,
+      "content_text_length": 17567,
       "ui_status": "in-progress"
     },
     {
@@ -3543,7 +3543,7 @@
       "doc_id": "search-change-log",
       "title": "Search Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "sort_order": 1010,
       "published": true,
@@ -3552,7 +3552,7 @@
       "source_path": "search-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=search-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
-      "content_text_length": 41462
+      "content_text_length": 42742
     },
     {
       "scope": "studio",

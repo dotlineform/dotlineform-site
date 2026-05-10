@@ -2,7 +2,7 @@
 doc_id: search-ui-behaviour
 title: "Search UI Behaviour"
 added_date: 2026-03-31
-last_updated: "2026-05-05"
+last_updated: "2026-05-10 17:35"
 parent_id: search
 sort_order: 60
 ---
@@ -153,6 +153,38 @@ If loading fails:
 - no separate retry UI is currently shown
 
 The current implementation is eager-load on page entry, not lazy-load on focus.
+
+## Opt-In Performance Instrumentation
+
+The dedicated `/search/` route has local-only performance instrumentation for search runtime review.
+
+Default behaviour:
+
+- instrumentation is disabled
+- the debug panel is hidden
+- the normal static search-index loader remains in use
+- no analytics are sent
+- no search payload content is logged
+
+Enablement:
+
+- `/search/?scope=catalogue&searchPerf=1` shows the debug panel
+- `/search/?scope=catalogue&debug=search-performance` shows the debug panel
+- `/search/?scope=catalogue&searchPerf=console` writes compact snapshots to the console
+- local storage key `dlf.search.performance` may be set to `1`, `panel`, or `console` for repeat local testing
+
+Measured phases:
+
+- dependency/config/policy load timing
+- per-scope search payload load timing
+- payload byte estimate when instrumentation is enabled
+- JSON parse timing when instrumentation is enabled
+- entry normalization timing
+- raw and normalized entry counts
+- query evaluation, sort, render, total duration, match count, and visible count
+
+The debug panel intentionally reports counts, timings, scope names, source type, and error messages only.
+It must not dump full search entries, local filesystem paths, credentials, or query payloads.
 
 ## Result display behaviour
 

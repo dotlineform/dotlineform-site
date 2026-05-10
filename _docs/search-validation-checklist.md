@@ -2,7 +2,7 @@
 doc_id: search-validation-checklist
 title: "Search Validation Checklist"
 added_date: 2026-04-01
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-10 17:35"
 parent_id: search
 sort_order: 80
 ---
@@ -116,8 +116,12 @@ Suggested current examples:
 - [ ] Confirm a no-results query returns the empty state
 - [ ] Confirm a large result set shows the `more` control
 - [ ] Confirm `more` reveals the next batch without resetting the query
+- [ ] Confirm the performance debug panel is hidden by default
+- [ ] Open `/search/?scope=catalogue&searchPerf=1`
+- [ ] Confirm the performance debug panel appears and reports scope payload/load/normalization and query/render timing after a representative query
+- [ ] Confirm enabling instrumentation does not change result count or first-result ordering for the representative query
 - [ ] Open `/search/` without `scope`
-- [ ] Confirm the input is disabled and the page shows the missing-scope message
+- [ ] Confirm the aggregate search input is enabled and loads enabled dedicated-route scopes
 
 ## G. Docs-Viewer Search Checks
 
@@ -152,7 +156,7 @@ Suggested current examples:
 
 ## Current known validation gaps
 
-- [ ] No automated benchmark query set is implemented yet
+- [ ] No automated benchmark query set is implemented yet; the current performance instrumentation is manual and opt-in
 - [ ] No dedicated build-time schema assertion pass exists yet
 - [ ] No payload-budget enforcement exists yet
 - [ ] No automated browser interaction test exists yet

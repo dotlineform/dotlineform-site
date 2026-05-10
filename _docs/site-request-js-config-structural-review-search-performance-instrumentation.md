@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-search-performance-instrumentation
 title: Search Performance Instrumentation Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:27"
-ui_status: in-progress
+last_updated: "2026-05-10 17:35"
+ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 60
 hidden: false
@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- planning slice created
+- implemented
 
 ## Purpose
 
@@ -103,26 +103,44 @@ Keep in `search-policy.js`:
 - policy parsing and scope eligibility decisions
 - defaults for public search behavior
 
-## Recommended First Slice
+## Implementation
 
-Start with measurement only.
+Implemented as measurement only.
 
-Scope:
+Changed files:
 
-- inventory current search page load, index fetch, normalization, query, and render phases
-- add opt-in instrumentation that is off by default
-- record per-scope index load duration and entry count
-- record query evaluation duration and render duration for a representative search
-- expose the report in a low-noise way suitable for local debugging
-- document observed measurements and whether they justify a follow-up implementation slice
+- `assets/js/search/search-performance.js`
+- `assets/js/search/search-page.js`
+- `search/index.md`
+- `assets/css/main.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
 
-Avoid in the first implementation:
+The new helper owns:
 
-- worker extraction
-- changing when scopes load
-- changing ranking or matching behavior
-- changing generated search artifacts
-- introducing persistent analytics or remote reporting
+- opt-in instrumentation state
+- timing helpers based on `performance.now()`
+- static/docs-management search payload byte estimates when instrumentation is enabled
+- per-scope load, parse, normalization, raw-entry, and normalized-entry records
+- recent query evaluation, sort, render, total-duration, result-count, and visible-count records
+- compact debug-panel formatting with no full payload dumps
+
+`assets/js/search/search-page.js` still owns:
+
+- route bootstrapping
+- search policy and config loading
+- scope loading orchestration
+- query matching, scoring, sorting, and rendering
+- docs-management fallback behavior for local docs-domain scope reads
+
+Instrumentation is enabled only when explicitly requested:
+
+- `?searchPerf=1` or `?debug=search-performance` shows the debug panel
+- `?searchPerf=console` writes compact snapshots to the console
+- local storage key `dlf.search.performance` can be set to `1`, `panel`, or `console` for local repeat testing
+
+Normal public browsing leaves the panel hidden and does not switch the static JSON loader onto the byte-counting fetch path.
+No analytics are sent and no search payload content is logged.
 
 ## Acceptance Checks
 
@@ -145,6 +163,33 @@ For an implementation slice, use focused checks:
 - rebuild Studio docs payloads and Studio docs search after updating this doc
 
 Broader checks are only needed if the implementation changes generated search schemas, search ranking, search policy parsing, or public search route behavior.
+
+## Follow-Up Thresholds
+
+Use the collected timings to justify later slices rather than guessing:
+
+- worker extraction becomes worth revisiting if query evaluation or sort time is consistently visible on representative devices
+- lazy or staged aggregate loading becomes worth revisiting if aggregate scope load time dominates the first usable page state
+- index slimming becomes worth revisiting if catalogue payload bytes or normalization time dominate the report
+- docs-management/static fallback behavior should stay unchanged unless failed-attempt counts hide a real local-development issue
+
+This slice does not set hard budgets yet because the first goal is local measurement coverage.
+
+## Initial Local Smoke Observation
+
+Against a static Jekyll build on `2026-05-10`, a representative `/search/?scope=catalogue&searchPerf=1` query for `body` reported:
+
+- catalogue payload: `1679324` bytes
+- raw/normalized entries: `2135/2135`
+- static payload load: about `10ms`
+- JSON parse: about `6ms`
+- normalization: about `13ms`
+- query total: about `8ms`
+
+An aggregate `/search/?searchPerf=1` query for `search` loaded catalogue plus Library, Studio, and Analysis scopes and reported `2368` total normalized entries with a query total of about `7ms`.
+
+These local measurements do not justify worker extraction by themselves.
+Keep collecting measurements on lower-powered devices or after search payload growth before choosing workers, lazy aggregate loading, or index slimming.
 
 ## Benefits And Risks
 

@@ -1,5 +1,11 @@
+import {
+  createSearchPerformanceInstrumentation,
+  estimatePayloadBytes
+} from "./search-performance.js";
+
 let getStudioTextFn = (_config, _key, fallback = "") => fallback;
 let getSearchPolicyPathFn = () => "";
+let getSearchScopeDataPathFn = null;
 let loadStudioConfigFn = null;
 let loadSearchIndexJsonFn = null;
 let loadSearchPolicyFn = null;
@@ -28,16 +34,33 @@ async function initSearchPage() {
   const status = document.getElementById("studioSearchStatus");
   const results = document.getElementById("studioSearchResults");
   const more = document.getElementById("studioSearchMore");
+  const performancePanel = document.getElementById("studioSearchPerformance");
+  const performanceSummary = document.getElementById("studioSearchPerformanceSummary");
+  const performanceReport = document.getElementById("studioSearchPerformanceReport");
   if (!input || !status || !results || !more) return;
 
+  const instrumentation = createSearchPerformanceInstrumentation({
+    panel: performancePanel,
+    summary: performanceSummary,
+    report: performanceReport
+  });
   let config = null;
   let policy = null;
 
   try {
+    const depsTimer = instrumentation.timer();
     await loadSearchDeps();
+    instrumentation.markPhase("dependencies", depsTimer.end());
+
+    const configTimer = instrumentation.timer();
     config = await loadStudioConfigFn();
+    instrumentation.markPhase("config", configTimer.end());
+    applyPerformanceText({ config, performanceSummary });
     status.textContent = searchText(config, "loading", "loading search index…");
+
+    const policyTimer = instrumentation.timer();
     policy = await loadSearchPolicyFn(getSearchPolicyPathFn(config));
+    instrumentation.markPhase("policy", policyTimer.end());
 
     const requestedScope = resolveScope();
     const scope = requestedScope || "all";
@@ -58,8 +81,8 @@ async function initSearchPage() {
     }
 
     const entries = scope === "all"
-      ? await loadAggregateSearchEntries(config, policy)
-      : await loadScopedSearchEntries(config, scopePolicy);
+      ? await loadAggregateSearchEntries(config, policy, instrumentation)
+      : await loadScopedSearchEntries(config, scopePolicy, instrumentation);
     const state = {
       config,
       scope,
@@ -74,7 +97,8 @@ async function initSearchPage() {
       filterKind: "all",
       queryText: "",
       debounceId: null,
-      visibleCount: runtimePolicy.initialBatchSize
+      visibleCount: runtimePolicy.initialBatchSize,
+      instrumentation
     };
     wireEvents(state);
     renderResults(state);
@@ -87,28 +111,93 @@ async function initSearchPage() {
   }
 }
 
-async function loadScopedSearchEntries(config, scopePolicy) {
-  const payload = await loadSearchIndexPayload(config, scopePolicy);
-  return normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : [], scopePolicy);
+async function loadScopedSearchEntries(config, scopePolicy, instrumentation) {
+  const scope = scopePolicy ? scopePolicy.scope : "";
+  try {
+    const payloadResult = await loadSearchIndexPayload(config, scopePolicy, instrumentation);
+    const payload = payloadResult.payload;
+    const rawEntries = payload && Array.isArray(payload.entries) ? payload.entries : [];
+    const normalizeTimer = instrumentation.timer();
+    const entries = normalizeEntries(rawEntries, scopePolicy);
+    const normalizeMs = normalizeTimer.end();
+    instrumentation.recordScope({
+      scope,
+      source: payloadResult.source,
+      status: "loaded",
+      payloadBytes: payloadResult.payloadBytes,
+      loadMs: payloadResult.loadMs,
+      parseMs: payloadResult.parseMs,
+      normalizeMs,
+      rawEntries: rawEntries.length,
+      normalizedEntries: entries.length
+    });
+    return entries;
+  } catch (error) {
+    instrumentation.recordScope({
+      scope,
+      source: "unknown",
+      status: "failed",
+      error
+    });
+    throw error;
+  }
 }
 
-async function loadSearchIndexPayload(config, scopePolicy) {
+async function loadSearchIndexPayload(config, scopePolicy, instrumentation) {
   if (shouldUseDocsManagementSearch(scopePolicy.scope)) {
     try {
-      return await loadDocsManagementSearchIndex(scopePolicy.scope);
+      return await loadDocsManagementSearchIndex(scopePolicy.scope, instrumentation);
     } catch (error) {
+      instrumentation.recordScope({
+        scope: scopePolicy.scope,
+        source: "docs-management",
+        status: "failed",
+        error
+      });
       console.warn("search: docs-management search read failed", scopePolicy.scope, error);
     }
   }
-  return loadSearchIndexJsonFn(config, scopePolicy.scope);
+  if (!instrumentation.enabled || typeof getSearchScopeDataPathFn !== "function") {
+    const loadTimer = instrumentation.timer();
+    const payload = await loadSearchIndexJsonFn(config, scopePolicy.scope);
+    return {
+      payload,
+      source: "static",
+      payloadBytes: 0,
+      loadMs: loadTimer.end(),
+      parseMs: 0
+    };
+  }
+  return loadStaticSearchIndexPayload(config, scopePolicy, instrumentation);
 }
 
-async function loadDocsManagementSearchIndex(scope) {
+async function loadStaticSearchIndexPayload(config, scopePolicy, instrumentation) {
+  const url = getSearchScopeDataPathFn(config, scopePolicy.scope, "index");
+  const loadTimer = instrumentation.timer();
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}${url ? ` for ${url}` : ""}`);
+  }
+  const text = await response.text();
+  const loadMs = loadTimer.end();
+  const parseTimer = instrumentation.timer();
+  const payload = JSON.parse(text);
+  return {
+    payload,
+    source: "static",
+    payloadBytes: estimatePayloadBytes(text),
+    loadMs,
+    parseMs: parseTimer.end()
+  };
+}
+
+async function loadDocsManagementSearchIndex(scope, instrumentation) {
   const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedSearch);
   url.searchParams.set("scope", scope);
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), DOCS_SEARCH_SERVICE_TIMEOUT_MS);
   try {
+    const loadTimer = instrumentation.timer();
     const response = await fetch(url.toString(), {
       cache: "no-store",
       signal: controller.signal
@@ -116,7 +205,26 @@ async function loadDocsManagementSearchIndex(scope) {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
-    return response.json();
+    if (!instrumentation.enabled) {
+      return {
+        payload: await response.json(),
+        source: "docs-management",
+        payloadBytes: 0,
+        loadMs: loadTimer.end(),
+        parseMs: 0
+      };
+    }
+    const text = await response.text();
+    const loadMs = loadTimer.end();
+    const parseTimer = instrumentation.timer();
+    const payload = JSON.parse(text);
+    return {
+      payload,
+      source: "docs-management",
+      payloadBytes: estimatePayloadBytes(text),
+      loadMs,
+      parseMs: parseTimer.end()
+    };
   } finally {
     window.clearTimeout(timer);
   }
@@ -136,9 +244,9 @@ function isLocalSearchHost() {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname.endsWith(".localhost");
 }
 
-async function loadAggregateSearchEntries(config, policy) {
+async function loadAggregateSearchEntries(config, policy, instrumentation) {
   const scopePolicies = getAggregateSearchScopePolicies(policy);
-  const batches = await Promise.allSettled(scopePolicies.map((scopePolicy) => loadScopedSearchEntries(config, scopePolicy)));
+  const batches = await Promise.allSettled(scopePolicies.map((scopePolicy) => loadScopedSearchEntries(config, scopePolicy, instrumentation)));
   const entries = [];
   batches.forEach((result, index) => {
     if (result.status === "fulfilled") {
@@ -171,6 +279,7 @@ async function loadSearchDeps() {
     ]).then(([configModule, dataModule, policyModule, transportModule]) => {
       getStudioTextFn = configModule.getStudioText;
       getSearchPolicyPathFn = configModule.getSearchPolicyPath;
+      getSearchScopeDataPathFn = configModule.getSearchScopeDataPath;
       loadStudioConfigFn = configModule.loadStudioConfig;
       loadSearchIndexJsonFn = dataModule.loadSearchIndexJson;
       loadSearchPolicyFn = policyModule.loadSearchPolicy;
@@ -263,6 +372,7 @@ function normalizeEntries(entries, scopePolicy) {
 }
 
 function renderResults(state) {
+  const totalTimer = state.instrumentation.timer();
   const query = normalize(String(state.queryText || state.input.value || ""));
   state.queryText = query;
 
@@ -275,26 +385,41 @@ function renderResults(state) {
   }
 
   const matches = [];
+  const evaluateTimer = state.instrumentation.timer();
   for (const entry of state.entries) {
     if (state.filterKind !== "all" && entry.kind !== state.filterKind) continue;
     const score = scoreEntry(entry, query);
     if (score == null) continue;
     matches.push({ entry, score });
   }
+  const evaluateMs = evaluateTimer.end();
 
+  const sortTimer = state.instrumentation.timer();
   matches.sort((a, b) => {
     if (a.score !== b.score) return b.score - a.score;
     const titleCmp = a.entry.title.localeCompare(b.entry.title, undefined, { sensitivity: "base", numeric: true });
     if (titleCmp !== 0) return titleCmp;
     return a.entry.id.localeCompare(b.entry.id, undefined, { sensitivity: "base", numeric: true });
   });
+  const sortMs = sortTimer.end();
 
   const visible = matches.slice(0, state.visibleCount);
+  const renderTimer = state.instrumentation.timer();
   if (!visible.length) {
     state.status.dataset.state = "";
     state.status.textContent = searchText(state.config, "no_results", "No results.");
     state.results.innerHTML = "";
     state.more.innerHTML = "";
+    state.instrumentation.recordQuery({
+      queryLength: query.length,
+      entryCount: state.entries.length,
+      matchCount: matches.length,
+      visibleCount: 0,
+      evaluateMs,
+      sortMs,
+      renderMs: renderTimer.end(),
+      totalMs: totalTimer.end()
+    });
     return;
   }
 
@@ -311,6 +436,16 @@ function renderResults(state) {
   state.more.innerHTML = matches.length > visible.length
     ? `<button type="button" class="studioSearch__moreBtn" data-role="more">${escapeHtml(searchText(state.config, "load_more", "more"))}</button>`
     : "";
+  state.instrumentation.recordQuery({
+    queryLength: query.length,
+    entryCount: state.entries.length,
+    matchCount: matches.length,
+    visibleCount: visible.length,
+    evaluateMs,
+    sortMs,
+    renderMs: renderTimer.end(),
+    totalMs: totalTimer.end()
+  });
 }
 
 function scoreEntry(entry, query) {
@@ -465,6 +600,11 @@ function applyNavScopeState(scope) {
 
   activeItem.classList.add("is-active");
   activeItem.setAttribute("aria-current", "page");
+}
+
+function applyPerformanceText({ config, performanceSummary }) {
+  if (!performanceSummary) return;
+  performanceSummary.textContent = searchText(config, "performance_summary", "Search performance");
 }
 
 function showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy }) {

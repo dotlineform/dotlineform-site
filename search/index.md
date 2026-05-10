@@ -27,6 +27,10 @@ section: search
   </div>
 
   <p class="studioSearch__status" id="studioSearchStatus">loading search index…</p>
+  <details class="studioSearch__performance" id="studioSearchPerformance" hidden>
+    <summary class="studioSearch__performanceSummary" id="studioSearchPerformanceSummary">Search performance</summary>
+    <pre class="studioSearch__performanceReport" id="studioSearchPerformanceReport"></pre>
+  </details>
   <ol class="studioSearch__results" id="studioSearchResults"></ol>
   <div class="studioSearch__more" id="studioSearchMore"></div>
 </div>

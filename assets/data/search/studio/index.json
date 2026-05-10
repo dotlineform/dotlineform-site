@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e3e73a28f7c83d181eed5e8e2f041e27",
-    "generated_at_utc": "2026-05-10T16:28:19Z",
+    "version": "blake2b-3a4e19031a935b4c16984ea4c2affd6d",
+    "generated_at_utc": "2026-05-10T16:36:46Z",
     "count": 220
   },
   "entries": [
@@ -1159,23 +1159,23 @@
       "kind": "doc",
       "title": "Search Overview",
       "href": "/docs/?scope=studio&doc=search-overview",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-09 21:28 • Search",
+      "display_meta": "2026-05-10 17:35 • Search",
       "search_terms": [
         "search-overview",
         "search",
         "overview",
         "search overview",
-        "2026-05-09 21:28",
+        "2026-05-10 17:35",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "10",
+        "17",
+        "35"
       ],
-      "search_text": "search-overview search overview search overview 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "search-overview search overview search overview 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "data-models-shared",
@@ -3129,10 +3129,10 @@
       "kind": "doc",
       "title": "Search Performance Instrumentation Slice",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation",
-      "last_updated": "2026-05-10 17:27",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 17:27 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 17:35 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-config-structural-review-search-performance-instrumentation",
         "site",
@@ -3150,35 +3150,38 @@
         "javascript",
         "and",
         "browser",
-        "2026-05-10 17:27",
+        "2026-05-10 17:35",
         "2026",
         "05",
         "10",
         "17",
-        "27"
+        "35"
       ],
-      "search_text": "site-request-js-config-structural-review-search-performance-instrumentation site request js config structural review search performance instrumentation search performance instrumentation slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:27 2026 05 10 17 27"
+      "search_text": "site-request-js-config-structural-review-search-performance-instrumentation site request js config structural review search performance instrumentation search performance instrumentation slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "search-ui-behaviour",
       "kind": "doc",
       "title": "Search UI Behaviour",
       "href": "/docs/?scope=studio&doc=search-ui-behaviour",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-05 • Search",
+      "display_meta": "2026-05-10 17:35 • Search",
       "search_terms": [
         "search-ui-behaviour",
         "search",
         "ui",
         "behaviour",
         "search ui behaviour",
-        "2026-05-05",
+        "2026-05-10 17:35",
         "2026",
-        "05"
+        "05",
+        "10",
+        "17",
+        "35"
       ],
-      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-05 2026 05"
+      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "series-tags",
@@ -3843,24 +3846,24 @@
       "kind": "doc",
       "title": "Search Validation Checklist",
       "href": "/docs/?scope=studio&doc=search-validation-checklist",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-09 21:28 • Search",
+      "display_meta": "2026-05-10 17:35 • Search",
       "search_terms": [
         "search-validation-checklist",
         "search",
         "validation",
         "checklist",
         "search validation checklist",
-        "2026-05-09 21:28",
+        "2026-05-10 17:35",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "10",
+        "17",
+        "35"
       ],
-      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "scripts-studio-backup-retention",
@@ -4011,24 +4014,24 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-10 17:01",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-10 17:01 • Studio",
+      "display_meta": "2026-05-10 17:35 • Studio",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-10 17:01",
+        "2026-05-10 17:35",
         "2026",
         "05",
         "10",
         "17",
-        "01"
+        "35"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-10 17:01 2026 05 10 17 01"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "site-request-work-owned-files-links",
@@ -5353,10 +5356,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 17:27",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 17:27 • Change Requests",
+      "display_meta": "2026-05-10 17:35 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5372,14 +5375,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 17:27",
+        "2026-05-10 17:35",
         "2026",
         "05",
         "10",
         "17",
-        "27"
+        "35"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 17:27 2026 05 10 17 27"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "site-request-scripts-directory-organization",
@@ -5608,21 +5611,24 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-10 17:35",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-05 • Search",
+      "display_meta": "2026-05-10 17:35 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-05-05",
+        "2026-05-10 17:35",
         "2026",
-        "05"
+        "05",
+        "10",
+        "17",
+        "35"
       ],
-      "search_text": "search-change-log search change log search change log 2026-05-05 2026 05"
+      "search_text": "search-change-log search change log search change log 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
       "id": "config-search-policy-json",

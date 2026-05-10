@@ -916,7 +916,8 @@ const DEFAULT_STUDIO_CONFIG = {
       result_kind_work: "work",
       result_kind_series: "series",
       result_kind_moment: "moment",
-      result_kind_doc: "doc"
+      result_kind_doc: "doc",
+      performance_summary: "Search performance"
     }
   }
 };

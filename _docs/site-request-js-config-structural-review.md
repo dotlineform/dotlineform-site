@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:27"
+last_updated: "2026-05-10 17:35"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -29,13 +29,14 @@ Status:
 - Slice 5 child doc created
 - Slice 5 implemented
 - Slice 6 child doc created
+- Slice 6 implemented
 
 ## Active Execution Queue
 
 The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is complete.
 [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
 [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction) is complete.
-The active top-level slice is [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation).
+[Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation) is complete.
 
 ## Summary
 
@@ -341,7 +342,7 @@ Detailed planning tasks are tracked in [Public Runtime Extraction Slice](/docs/?
 
 ### Slice 6: Search Performance Instrumentation
 
-Status: child doc created.
+Status: implemented.
 
 - add lightweight timing and payload-size reporting behind a local/debug flag
 - use measurements to decide whether workers, per-scope lazy loading, or index slimming are justified

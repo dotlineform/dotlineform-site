@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: "Search Overview"
 added_date: 2026-03-31
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-10 17:35"
 parent_id: search
 sort_order: 20
 ---
@@ -42,6 +42,7 @@ It is based on:
 - a dedicated search-owned Library search artifact: `assets/data/search/library/index.json`
 - a dedicated search-owned Analysis search artifact: `assets/data/search/analysis/index.json`
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
+- opt-in dedicated-route performance instrumentation in `assets/js/search/search-performance.js`
 - a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio and Library docs search
 - no third-party search libraries, plugins, or external search services
 - a search-owned builder entrypoint for all live scopes at `scripts/build_search.rb`
@@ -103,6 +104,7 @@ The file-level config boundary is documented in the new **[Config](/docs/?scope=
 ### 4. Search engine
 
 The client runtime loads the search index, normalizes the loaded values into runtime-friendly fields, evaluates query matches, assigns score tiers, sorts matches, and returns an ordered result set.
+The dedicated `/search/` route can also expose opt-in local performance instrumentation for payload load, normalization, query, and render timings without changing search semantics.
 
 ### 5. Search UI
 

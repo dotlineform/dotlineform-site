@@ -2,12 +2,44 @@
 doc_id: search-change-log
 title: "Search Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-05"
+last_updated: "2026-05-10 17:35"
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-05-10] Added dedicated search performance instrumentation
+
+**Status:** implemented
+
+**Area:** public search runtime
+
+**Summary:**
+Added opt-in instrumentation for the dedicated `/search/` route.
+The runtime can now report scope payload bytes, load timing, parse timing, normalization timing, entry counts, query evaluation timing, sort timing, render timing, match counts, and visible counts.
+
+**Reason:**
+Future worker extraction, lazy aggregate loading, or index slimming should be based on observed browser cost rather than assumptions about payload size.
+
+**Effect:**
+Instrumentation is disabled by default.
+`?searchPerf=1` or `?debug=search-performance` shows a compact debug panel, while `?searchPerf=console` writes compact snapshots to the browser console.
+When instrumentation is enabled, static index reads use a local byte-counting fetch path so payload bytes and JSON parse timing can be measured.
+Search ranking, matching, generated index schemas, URL behavior, and normal public browsing output are unchanged.
+
+**Affected files/docs:**
+
+- `assets/js/search/search-performance.js`
+- `assets/js/search/search-page.js`
+- `search/index.md`
+- `assets/css/main.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
 
 ## [2026-05-05] Added aggregate dedicated search
 

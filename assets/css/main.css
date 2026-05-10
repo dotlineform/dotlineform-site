@@ -917,6 +917,33 @@ th{ background: var(--panel-2); }
   color: var(--text);
 }
 
+.studioSearch__performance{
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: var(--font-caption);
+  line-height: var(--line-snug);
+}
+
+.studioSearch__performance[hidden]{
+  display: none;
+}
+
+.studioSearch__performanceSummary{
+  cursor: pointer;
+  color: var(--text);
+}
+
+.studioSearch__performanceReport{
+  margin: 0.55rem 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font: inherit;
+  line-height: var(--line-snug);
+}
+
 .studioSearch__results{
   list-style: none;
   margin: 0;

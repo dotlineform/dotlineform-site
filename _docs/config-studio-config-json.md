@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-10 17:01"
+last_updated: "2026-05-10 17:35"
 parent_id: studio
 sort_order: 90
 ---
@@ -86,6 +86,7 @@ What stays here:
 - shared Studio UI text
 - shared Studio analysis policy values used by the analytics scoring runtime
 - the lookup path for dedicated search policy and scope-owned search indexes
+- dedicated search-shell UI copy, including the opt-in performance-panel summary label
 - the lookup path for generated docs indexes used by Studio pages, such as the Library export selector
 
 Do not add domain workflows, service endpoint contracts, generated payload schemas, or scoring implementations to `studio_config.json`.
