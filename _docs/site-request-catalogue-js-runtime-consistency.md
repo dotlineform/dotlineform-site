@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 22:59"
+last_updated: "2026-05-10 23:01"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -23,6 +23,7 @@ Status:
 - Slice C2 implemented for Series action workflow sequencing
 - Slice C3 implemented for Series selection/opening
 - Slice C4 implemented for Series form and section rendering
+- Slice C5 completed; Series route is an acceptable coordinator and the next Catalogue priority is Moment Editor boundary review
 
 ## Implementation Progress
 
@@ -52,6 +53,8 @@ Status:
 - Added `assets/studio/js/catalogue-series-form.js` for Series field DOM construction, type-option refresh, field value reads/writes, readonly value refresh, mode-specific field availability, and validation message rendering.
 - Added `assets/studio/js/catalogue-series-sections.js` for Series record summaries, new/edit summary rendering, runtime/build impact display updates, and prose readiness rendering.
 - Kept `assets/studio/js/catalogue-series-fields.js` as the owner for field definitions, normalization, payload shaping, and validation, while `assets/studio/js/catalogue-series-editor.js` remains the route coordinator for lifecycle, state transitions, service reads, validation orchestration, membership coordination, and action/selection contexts.
+- Slice C5 measured `assets/studio/js/catalogue-series-editor.js` at 605 lines after C4 and found the remaining responsibilities are intentional route coordination rather than an unresolved domain boundary.
+- Decided not to add another Series-specific extraction before moving on; the next Catalogue priority is Slice D for Moment Editor boundary review.
 
 ## Purpose
 
@@ -111,7 +114,7 @@ Post Work Editor cleanup, the remaining Catalogue route controllers over the lon
 | File | Current disposition |
 | --- | --- |
 | `assets/studio/js/catalogue-work-detail-editor.js` | selection/opening, form rendering/synchronization, summary/readiness/preview, and action workflow sequencing extractions complete; below long-file review threshold |
-| `assets/studio/js/catalogue-series-editor.js` | medium priority; series has fewer sections but owns membership, save/build/publication, and prose workflows |
+| `assets/studio/js/catalogue-series-editor.js` | membership, action workflow, selection/opening, form rendering, and section/readiness extractions complete; below long-file review threshold and acceptable as route coordinator |
 | `assets/studio/js/catalogue-moment-editor.js` | medium priority; focus on import/prose/media/action workflow boundaries rather than line-count reduction |
 
 `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-actions.js`, and `assets/studio/js/catalogue-work-selection.js` are now below the review threshold, but the important outcome is the ownership split, not the number itself.
@@ -375,7 +378,7 @@ Targeted verification:
 
 Status:
 
-- proposed
+- completed
 
 Scope:
 
@@ -388,6 +391,35 @@ Acceptance checks:
 - remaining Series route responsibilities are named and intentional
 - helper modules have clear import direction and no transport writes outside action/service layers
 - next Catalogue priority is explicit
+
+Decision:
+
+- stop Series extraction work for now; no final Series-specific helper is justified before Moment review
+- keep `catalogue-series-editor.js` as the route coordinator for lifecycle, generated lookup loading, mode transitions, validation orchestration, membership event coordination, action context wiring, selection context wiring, route-ready state, and URL synchronization
+- keep `catalogue-series-fields.js` as the domain field/payload/validation owner
+- keep `catalogue-series-form.js` and `catalogue-series-sections.js` as display helpers only
+- keep `catalogue-series-membership.js` as the membership state/mutation/rendering owner
+- keep `catalogue-series-actions.js` as the only Series helper that calls Catalogue service-client write/build/publication/prose operations
+- keep `catalogue-series-selection.js` as selection/search/opening behavior owner, with route state changes still delegated back to the controller through callbacks
+- proceed to Slice D: Moment Editor Boundary Review
+
+Measured state after C4:
+
+| File | Lines | Responsibility |
+| --- | ---: | --- |
+| `assets/studio/js/catalogue-series-editor.js` | 605 | route lifecycle, state transitions, validation orchestration, lookup loading, event/context wiring |
+| `assets/studio/js/catalogue-series-actions.js` | 556 | save/create/build/publication/delete/prose workflow sequencing and service-client calls |
+| `assets/studio/js/catalogue-series-membership.js` | 254 | membership state, member rendering, add/remove/primary mutations, membership delta shaping |
+| `assets/studio/js/catalogue-series-fields.js` | 236 | field definitions, normalization, payload shaping, validation |
+| `assets/studio/js/catalogue-series-selection.js` | 190 | search matching, popup rendering, focused open behavior, initial route selection |
+| `assets/studio/js/catalogue-series-form.js` | 186 | field DOM, field value sync, readonly display, field availability, field messages |
+| `assets/studio/js/catalogue-series-sections.js` | 134 | summary and readiness rendering |
+
+Targeted verification:
+
+- `wc -l` measured the Series modules listed above.
+- Import/responsibility scan found Catalogue write/build/publication/prose service calls only in `catalogue-series-actions.js` and transport/probe/read ownership only in the route/service layers.
+- No JavaScript code changed in C5, so no separate route smoke was needed beyond the C4 implementation checks.
 
 ### Slice D: Moment Editor Boundary Review
 
@@ -444,7 +476,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice C5: Series Stop/Continue Decision.
+Start with Slice D: Moment Editor Boundary Review.
 
-The Series membership, action, selection, form, and section extractions are now in place.
-The next useful step is to decide whether the remaining Series route controller is an acceptable coordinator or whether one final Series-specific extraction is justified before moving to Moment Editor.
+The Series membership, action, selection, form, and section extractions are now in place, and C5 records the remaining Series route controller as an acceptable coordinator.
+The next useful Catalogue slice is to compare `catalogue-moment-editor.js` to the established Work Detail and Series ownership pattern, focusing on import, prose, media, and action workflow boundaries before any line-count-driven split.
