@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:08"
+last_updated: "2026-05-10 17:13"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -26,12 +26,13 @@ Status:
 - Catalogue editor execution sequence complete
 - Slice 4 child doc created
 - Slice 4 implemented
+- Slice 5 child doc created
 
 ## Active Execution Queue
 
 The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is complete.
 [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
-The next top-level slice should be Slice 5: Public Runtime Extraction.
+The active top-level slice is [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction).
 
 ## Summary
 
@@ -324,6 +325,8 @@ Detailed planning tasks are tracked in [Config Ownership Cleanup Slice](/docs/?s
 - extract only the work-page helper code that is reused or difficult to test inline
 - preserve current Liquid-rendered media URLs and page shell
 - keep generated payload schemas stable
+
+Detailed planning tasks are tracked in [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction).
 
 ### Slice 6: Search Performance Instrumentation
 
