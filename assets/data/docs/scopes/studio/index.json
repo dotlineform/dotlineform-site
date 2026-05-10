@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T23:37:14Z",
+  "generated_at": "2026-05-10T23:39:04Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2375,7 +2375,7 @@
       "doc_id": "site-request-catalogue-js-runtime-consistency",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-11 00:35",
+      "last_updated": "2026-05-11 00:39",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 80,
       "published": true,
@@ -2385,7 +2385,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-js-runtime-consistency.json",
       "content_text_length": 52090,
-      "ui_status": "draft"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
