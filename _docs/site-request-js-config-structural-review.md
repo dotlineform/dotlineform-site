@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:53"
+last_updated: "2026-05-10 18:12"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -30,6 +30,7 @@ Status:
 - Slice 5 implemented
 - Slice 6 child doc created
 - Slice 6 implemented
+- Follow-on Slice 7 proposed: scoped runtime config and UI text payloads
 
 ## Active Execution Queue
 
@@ -37,6 +38,7 @@ The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-c
 [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
 [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction) is complete.
 [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation) is complete.
+The next follow-on config slice should make runtime payload size a first-order constraint rather than only improving authoring organization.
 
 ## Implementation Summary
 
@@ -53,7 +55,7 @@ Completed outcomes:
 
 Config remains intentionally open.
 The first cleanup moved analysis scoring to an owner module and documented `studio_config.json` as the root manifest plus shared UI-copy store, but Docs Viewer and catalogue editor copy still live under shared `ui_text`.
-That split should stay deferred until payload size, independent release cadence, or route ownership pressure creates a concrete benefit.
+That earlier conservative position should now be superseded by a performance-first follow-on slice: route/domain copy should not stay in the bootstrap payload simply because the runtime can tolerate it.
 
 Remaining follow-up decisions should be handled as separate requests rather than reopened inside this broad review:
 
@@ -62,6 +64,7 @@ Remaining follow-up decisions should be handled as separate requests rather than
 - whether public route renderers should move out of Liquid templates
 - whether search measurements justify workers, lazy aggregate loading, or index slimming
 - whether more non-viewer Studio pages need a docs-management service client
+- how to split `ui_text` and route policy into scoped runtime payloads without adding boot complexity or regressions
 
 ## Summary
 
@@ -309,6 +312,7 @@ Likely direction:
 4. Split analysis tag scoring out of `studio-config.js` and clarify config ownership.
 5. Extract public work route inline JavaScript where it creates reuse or testability value.
 6. Add search performance instrumentation before considering workers or index reshaping.
+7. Split oversized shared UI text/config into scoped runtime payloads so routes load only what they need.
 
 ## Draft Implementation Slices
 
@@ -373,6 +377,64 @@ Status: implemented.
 - use measurements to decide whether workers, per-scope lazy loading, or index slimming are justified
 
 Detailed planning tasks are tracked in [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation).
+
+### Slice 7: Scoped Runtime Config And UI Text Payloads
+
+Status: proposed follow-on.
+
+Problem:
+
+- `ui_text` in `assets/studio/data/studio_config.json` is now over 1,200 lines.
+- The full browser-facing config payload is about 86 KB before transfer compression.
+- Many routes load copy and route policy for unrelated domains before they can boot.
+- Treating this only as an authoring problem would preserve the same unnecessary runtime cost.
+
+Principle:
+
+- runtime performance should take precedence over convenience once a shared payload becomes broad
+- `studio_config.json` should become a small bootstrap manifest, not the delivery vehicle for every route's UI copy
+- each route/domain should load only the config and text it needs
+- public pages should not fetch Studio-wide config when a smaller public-domain policy file can satisfy the route
+
+Target shape:
+
+- keep `assets/studio/data/studio_config.json` for route paths, data paths, shared bootstrap settings, and genuinely cross-route defaults
+- move route/domain copy to scoped payloads such as:
+  - `assets/studio/data/ui_text/catalogue-work-editor.json`
+  - `assets/studio/data/ui_text/catalogue-work-detail-editor.json`
+  - `assets/studio/data/ui_text/catalogue-series-editor.json`
+  - `assets/studio/data/ui_text/catalogue-moment-editor.json`
+  - `assets/studio/data/ui_text/tag-registry.json`
+  - `assets/studio/data/ui_text/tag-aliases.json`
+  - `assets/studio/data/ui_text/data-import.json`
+  - `assets/studio/data/ui_text/data-export.json`
+  - `assets/studio/data/ui_text/docs-viewer.json`
+- move public search labels/messages/index paths into `assets/data/search/policy.json` or another public search-owned payload so `/search/` no longer needs the Studio manifest for normal operation
+
+Implementation direction:
+
+- add a scoped text/config loader with route-level caching and fallback handling
+- migrate the largest `ui_text` groups first: catalogue editors, tag registry/aliases, import/export, and Docs Viewer
+- update route controllers to request their text bundle before first render
+- preserve existing `getStudioText(...)` fallback behavior during migration, but make fallback use visible in local/debug checks
+- add payload-budget checks for `studio_config.json` and per-route text bundles
+- document route ownership for each scoped text/config payload
+
+Acceptance checks:
+
+- `studio_config.json` shrinks materially and no longer carries the largest route-owned copy blocks
+- each migrated route loads only its own text/config bundle plus the small bootstrap manifest
+- missing scoped text files fail visibly in local development but keep a controlled fallback path where needed
+- public `/search/` can boot without fetching `assets/studio/data/studio_config.json`
+- payload-budget checks report or fail when bootstrap/config files exceed agreed limits
+- representative migrated routes pass browser smoke checks with no visible copy regressions
+
+Risks:
+
+- splitting too aggressively can add fetch sequencing bugs before route initialization
+- fallback behavior can hide missing bundle keys if not surfaced in local/debug checks
+- public search independence from Studio config may require moving a small amount of path resolution currently supplied by `studio-config.js`
+- route-level payloads need clear ownership to avoid recreating one large catch-all file under a different name
 
 ## Acceptance Criteria
 
