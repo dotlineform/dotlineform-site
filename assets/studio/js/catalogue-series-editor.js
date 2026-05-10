@@ -13,7 +13,6 @@ import {
   catalogueReadinessTone
 } from "./catalogue-editor-readiness.js";
 import {
-  computeRecordHash,
   displayValue
 } from "./catalogue-editor-records.js";
 import {
@@ -60,8 +59,12 @@ import {
   refreshBuildPreview as refreshSeriesActionBuildPreview,
   saveCurrentSeries
 } from "./catalogue-series-actions.js";
-
-const SEARCH_LIMIT = 20;
+import {
+  applyInitialSeriesRouteSelection,
+  bindSeriesSelectionControls,
+  openSeriesById as openSeriesSelectionById,
+  setSeriesSelectionPopupVisibility
+} from "./catalogue-series-selection.js";
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -110,12 +113,6 @@ function renderReadiness(state) {
   }).join("");
 }
 
-function buildSearchToken(value) {
-  const text = normalizeText(value);
-  if (!text) return "";
-  return text.toLowerCase();
-}
-
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -148,10 +145,6 @@ function syncRouteBusyState(state) {
 
 function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
-}
-
-function setPopupVisibility(state, visible) {
-  state.popupNode.hidden = !visible;
 }
 
 function setOpenInputMode(state) {
@@ -283,41 +276,6 @@ function membershipOptions(state) {
     setTextWithState,
     setFieldNodeValue
   };
-}
-
-function getSearchMatches(state, rawQuery) {
-  const query = buildSearchToken(rawQuery);
-  if (!query) return [];
-  const matches = [];
-  for (const [seriesId, record] of state.seriesById.entries()) {
-    const title = normalizeText(record && record.title).toLowerCase();
-    if (seriesId.includes(query) || title.includes(query)) {
-      matches.push({ seriesId, record });
-    }
-  }
-  matches.sort((a, b) => a.seriesId.localeCompare(b.seriesId, undefined, { numeric: true, sensitivity: "base" }));
-  return matches.slice(0, SEARCH_LIMIT);
-}
-
-function renderSearchMatches(state, matches, message = "") {
-  if (!matches.length && !message) {
-    state.popupListNode.innerHTML = "";
-    setPopupVisibility(state, false);
-    return;
-  }
-  if (!matches.length) {
-    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
-    setPopupVisibility(state, true);
-    return;
-  }
-  const rows = matches.map(({ seriesId, record }) => `
-    <button type="button" class="tagStudioSuggest__workButton" data-series-id="${escapeHtml(seriesId)}">
-      <span class="tagStudioSuggest__workId">${escapeHtml(seriesId)}</span>
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
-    </button>
-  `);
-  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
-  setPopupVisibility(state, true);
 }
 
 async function loadSeriesLookupRecord(state, seriesId) {
@@ -594,7 +552,7 @@ function setNewSeriesMode(state, options = {}) {
     const node = state.readonlyNodes.get(field.key);
     if (node) node.textContent = "—";
   });
-  setPopupVisibility(state, false);
+  setSeriesSelectionPopupVisibility(state, false);
   syncUrl("", "new");
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
@@ -629,7 +587,7 @@ function setEmptySearchMode(state, options = {}) {
     const node = state.readonlyNodes.get(field.key);
     if (node) node.textContent = "—";
   });
-  setPopupVisibility(state, false);
+  setSeriesSelectionPopupVisibility(state, false);
   syncUrl("");
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
@@ -661,32 +619,24 @@ function refreshBuildPreview(state) {
   return refreshSeriesActionBuildPreview(state, buildSeriesActionContext(state));
 }
 
-async function openSeriesById(state, requestedSeriesId) {
-  const seriesId = normalizeSeriesId(requestedSeriesId);
-  if (!seriesId) {
-    renderSearchMatches(state, [], t(state, "search_empty", "Enter a series title or id."));
-    return;
-  }
-  const searchRecord = state.seriesById.get(seriesId);
-  if (!searchRecord) {
-    const matches = getSearchMatches(state, requestedSeriesId);
-    if (matches.length) renderSearchMatches(state, matches);
-    else renderSearchMatches(state, [], t(state, "unknown_series_error", "Unknown series id: {series_id}.", { series_id }));
-    return;
-  }
-  state.searchNode.value = `${seriesId} ${normalizeText(searchRecord.title)}`.trim();
-  setPopupVisibility(state, false);
-  state.rebuildPending = false;
-  const lookup = await loadSeriesLookupRecord(state, seriesId);
-  const record = lookup && lookup.series && typeof lookup.series === "object" ? lookup.series : null;
-  if (!record) {
-    throw new Error(`series lookup missing record for ${seriesId}`);
-  }
-  setLoadedSeries(state, seriesId, record, {
-    recordHash: normalizeText(lookup.record_hash) || normalizeText(searchRecord.record_hash) || await computeRecordHash(record),
-    lookup
-  });
-  await refreshBuildPreview(state);
+function buildSeriesSelectionContext(state) {
+  return {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    loadSeriesLookupRecord: (seriesId) => loadSeriesLookupRecord(state, seriesId),
+    setLoadedSeries: (seriesId, record, options = {}) => {
+      setLoadedSeries(state, seriesId, record, options);
+    },
+    refreshBuildPreview: () => refreshBuildPreview(state),
+    updateEditorState: () => updateEditorState(state),
+    saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
+    setEmptySearchMode: (options = {}) => setEmptySearchMode(state, options),
+    setNewSeriesMode: (options = {}) => setNewSeriesMode(state, options),
+    setTextWithState
+  };
+}
+
+function openSeriesById(state, requestedSeriesId) {
+  return openSeriesSelectionById(state, requestedSeriesId, buildSeriesSelectionContext(state));
 }
 
 async function init() {
@@ -756,6 +706,7 @@ async function init() {
     searchNode,
     popupNode,
     popupListNode,
+    openButton,
     newButton,
     saveButton,
     publicationButton,
@@ -833,54 +784,7 @@ async function init() {
       if (!workId) return;
       state.workSearchById.set(workId, record);
     });
-    searchNode.addEventListener("input", () => {
-      if (state.mode === "new") {
-        state.draft.series_id = normalizeSeriesId(searchNode.value);
-        setPopupVisibility(state, false);
-        updateEditorState(state);
-        return;
-      }
-      const query = searchNode.value;
-      if (!normalizeText(query)) {
-        renderSearchMatches(state, [], "");
-        return;
-      }
-      const matches = getSearchMatches(state, query);
-      if (!matches.length) {
-        renderSearchMatches(state, [], t(state, "search_no_match", "No matching series records."));
-        return;
-      }
-      renderSearchMatches(state, matches);
-    });
-
-    searchNode.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter") return;
-      event.preventDefault();
-      if (state.mode === "new") {
-        saveCurrentSeries(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected create failure", error));
-        return;
-      }
-      const matches = getSearchMatches(state, searchNode.value);
-      if (matches[0]) {
-        openSeriesById(state, matches[0].seriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
-      }
-    });
-
-    popupListNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-series-id]") : null;
-      if (!button) return;
-      openSeriesById(state, button.getAttribute("data-series-id")).catch((error) => console.warn("catalogue_series_editor: failed to open selected series", error));
-    });
-
-    openButton.addEventListener("click", () => {
-      if (state.mode === "new") {
-        setEmptySearchMode(state, { keepSearchValue: true });
-      }
-      const matches = getSearchMatches(state, searchNode.value);
-      if (matches[0]) {
-        openSeriesById(state, matches[0].seriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
-      }
-    });
+    bindSeriesSelectionControls(state, buildSeriesSelectionContext(state));
     readinessNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
       if (!button) return;
@@ -911,28 +815,7 @@ async function init() {
       }
     });
 
-    document.addEventListener("click", (event) => {
-      if (event.target === searchNode || popupNode.contains(event.target)) return;
-      setPopupVisibility(state, false);
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    const requestedSeriesId = normalizeSeriesId(params.get("series"));
-    const requestedMode = normalizeText(params.get("mode")).toLowerCase();
-    if (requestedSeriesId && state.seriesById.has(requestedSeriesId)) {
-      await openSeriesById(state, requestedSeriesId).catch((error) => {
-        console.warn("catalogue_series_editor: failed to open requested series", error);
-        setTextWithState(
-          state.statusNode,
-          `${t(state, "load_requested_series_failed", "Failed to load the requested series.")} ${normalizeText(error && error.message)}`.trim(),
-          "error"
-        );
-      });
-    } else if (requestedMode === "new") {
-      setNewSeriesMode(state, { seriesId: requestedSeriesId });
-    } else {
-      setEmptySearchMode(state);
-    }
+    await applyInitialSeriesRouteSelection(state, buildSeriesSelectionContext(state));
 
     root.hidden = false;
     loadingNode.hidden = true;

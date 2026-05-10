@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 22:32"
+last_updated: "2026-05-10 22:41"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -21,6 +21,7 @@ Status:
 - Slice C boundary review completed for Series Editor
 - Slice C1 implemented for Series membership editing
 - Slice C2 implemented for Series action workflow sequencing
+- Slice C3 implemented for Series selection/opening
 
 ## Implementation Progress
 
@@ -43,6 +44,9 @@ Status:
 - Added `assets/studio/js/catalogue-series-actions.js` for Series save/create/build preview/build/publication/delete/prose import workflow sequencing, public update outcome handling, activity context shaping, service transport coordination, and save-result status copy.
 - Kept Series route state transitions, initial route selection, field rendering, validation ownership, and membership mutation UI in `assets/studio/js/catalogue-series-editor.js`, with the action module using route callbacks for those responsibilities.
 - `assets/studio/js/catalogue-series-editor.js` is now below the long-file review threshold after C2; the next useful decision is whether Series selection/opening is still noisy enough to justify Slice C3 before moving toward Moment Editor.
+- Added `assets/studio/js/catalogue-series-selection.js` for Series title/id search matching, popup result rendering, search-input behavior, open-button behavior, popup-click behavior, focused-series opening, and initial route selection.
+- Kept new-mode state construction in `assets/studio/js/catalogue-series-editor.js` and save/create sequencing in `assets/studio/js/catalogue-series-actions.js`, with the selection module calling route callbacks for those transitions.
+- `?mode=new` now takes precedence during initial route selection and uses the optional `?series=<series_id>` value as the draft `series_id`, matching the C3 acceptance target.
 
 ## Purpose
 
@@ -294,7 +298,7 @@ Targeted verification:
 
 Status:
 
-- proposed
+- implemented
 
 Target file:
 
@@ -311,6 +315,17 @@ Acceptance checks:
 - focused mode still opens from `?series=<series_id>`, the search popup, Enter, and the Open button
 - `?mode=new` still routes to create mode and treats the top input as the new `series_id`
 - unknown ids still show the same popup/status feedback
+
+Implementation notes:
+
+- `catalogue-series-selection.js` now owns Series title/id search matching, search suggestion rendering, focused-series opening, and selection control event binding.
+- Initial route selection moved into the selection module, with new-mode query handling kept as a route callback to `setNewSeriesMode`.
+- The route still owns field rendering, validation, mode construction, membership UI coordination, readiness rendering, and action workflow callback construction.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-series-editor.js`, `assets/studio/js/catalogue-series-selection.js`, and `assets/studio/js/catalogue-series-actions.js`.
+- Static route smoke passed for empty, focused `?series=001`, `?mode=new&series=777`, popup click, Enter-open, Open-button, and unknown `?series=zzzzzz` feedback against the running local Studio route after a separate Jekyll build succeeded.
 
 ### Slice C4: Series Form And Section Rendering Review
 

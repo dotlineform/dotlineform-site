@@ -49,8 +49,9 @@ Series prose is no longer edited through a source filename field. Use `Import st
 
 The Series Editor route is split into route orchestration, action workflows, field rules, and membership behavior:
 
-- `assets/studio/js/catalogue-series-editor.js` owns route bootstrap, generated lookup reads, create/edit mode transitions, `?series=<series_id>` and `?mode=new` query behavior, validation orchestration, field rendering, search/open behavior, and membership UI coordination.
+- `assets/studio/js/catalogue-series-editor.js` owns route bootstrap, generated lookup reads, create/edit mode transitions, validation orchestration, field rendering, and membership UI coordination.
 - `assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete/prose-import sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
+- `assets/studio/js/catalogue-series-selection.js` owns title/id search matching, popup result rendering, search-input behavior, Open-button behavior, popup-click behavior, focused-series opening, and initial route selection.
 - `assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
 - `assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
 
@@ -86,6 +87,7 @@ Draft/publish rule:
 In new mode:
 
 - the top input is the new `series_id` input
+- when `?mode=new` and `?series=<series_id>` are both present, the `series` value is treated as the draft `series_id`
 - the suggested next id is prefilled
 - `series_type` renders as a config-backed select using `catalogue.series_type_options`
 - `series_type` defaults to `primary`
