@@ -110,6 +110,7 @@ import {
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
   var studioConfigUrl = String(root.dataset.studioConfigUrl || "").trim();
+  var uiTextUrl = String(root.dataset.uiTextUrl || "").trim();
   var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
   var managementBaseUrl = String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "");
   var SEARCH_BATCH_SIZE = 50;
@@ -457,9 +458,13 @@ import {
       return Promise.resolve(null);
     }
 
-    state.viewerConfigRequestPromise = fetchJsonWithRetry(studioConfigUrl, "Failed to load Studio config", "", dataRequestOptions())
-      .then(function (config) {
-        applyViewerConfig(config || {});
+    state.viewerConfigRequestPromise = Promise.all([
+      fetchJsonWithRetry(studioConfigUrl, "Failed to load Studio config", "", dataRequestOptions()),
+      loadDocsViewerText()
+    ])
+      .then(function (results) {
+        var config = mergeDocsViewerText(results[0] || {}, results[1]);
+        applyViewerConfig(config);
         return config;
       })
       .catch(function () {
@@ -470,6 +475,25 @@ import {
         state.viewerConfigRequestPromise = null;
       });
     return state.viewerConfigRequestPromise;
+  }
+
+  function loadDocsViewerText() {
+    if (!uiTextUrl) return Promise.resolve(null);
+    return fetchJsonWithRetry(appendAssetVersion(uiTextUrl), "Failed to load Docs Viewer UI text", "", dataRequestOptions())
+      .catch(function (error) {
+        console.warn("docs_viewer: scoped UI text unavailable; using fallback copy", error);
+        return null;
+      });
+  }
+
+  function mergeDocsViewerText(config, text) {
+    if (!text || typeof text !== "object" || Array.isArray(text)) return config || {};
+    var target = config && typeof config === "object" ? config : {};
+    if (!target.ui_text || typeof target.ui_text !== "object" || Array.isArray(target.ui_text)) {
+      target.ui_text = {};
+    }
+    target.ui_text.docs_viewer = text;
+    return target;
   }
 
   function getScopeBookmarks() {

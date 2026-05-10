@@ -1,7 +1,7 @@
 import {
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
 import {
@@ -1666,7 +1666,7 @@ async function init() {
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("catalogue_work_detail_editor");
     state.config = config;
     applyFieldLabels(state);
     searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
@@ -1795,7 +1795,7 @@ async function init() {
   } catch (error) {
     console.warn("catalogue_work_detail_editor: init failed", error);
     try {
-      const config = await loadStudioConfig();
+      const config = await loadStudioConfigWithText("catalogue_work_detail_editor");
       loadingNode.textContent = getStudioText(config, "catalogue_work_detail_editor.load_failed_error", "Failed to load catalogue source data for the work detail editor.");
     } catch (_configError) {
       loadingNode.textContent = "Failed to load catalogue source data for the work detail editor.";

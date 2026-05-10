@@ -1,7 +1,7 @@
 import {
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
 import {
@@ -1461,7 +1461,7 @@ async function init() {
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("catalogue_series_editor");
     state.config = config;
     state.seriesTypeOptions = getSeriesTypeOptions(config);
     refreshSeriesTypeOptions(state);
@@ -1614,7 +1614,7 @@ async function init() {
   } catch (error) {
     console.warn("catalogue_series_editor: init failed", error);
     try {
-      const config = await loadStudioConfig();
+      const config = await loadStudioConfigWithText("catalogue_series_editor");
       loadingNode.textContent = getStudioText(config, "catalogue_series_editor.load_failed_error", "Failed to load catalogue source data for the series editor.");
     } catch (_configError) {
       loadingNode.textContent = "Failed to load catalogue source data for the series editor.";

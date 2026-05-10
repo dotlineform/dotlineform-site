@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T17:13:20Z",
+  "generated_at": "2026-05-10T17:25:50Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2550,7 +2550,7 @@
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 17:35",
+      "last_updated": "2026-05-10 18:45",
       "parent_id": "studio",
       "sort_order": 90,
       "published": true,
@@ -2559,7 +2559,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 8386
+      "content_text_length": 8793
     },
     {
       "scope": "studio",
@@ -2616,7 +2616,7 @@
       "doc_id": "config-studio-config-js",
       "title": "Studio Config Loader JS",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-10 17:01",
+      "last_updated": "2026-05-10 18:45",
       "parent_id": "studio",
       "sort_order": 100,
       "published": true,
@@ -2625,7 +2625,7 @@
       "source_path": "config-studio-config-js.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json",
-      "content_text_length": 2299
+      "content_text_length": 2544
     },
     {
       "scope": "studio",
@@ -3378,7 +3378,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 18:12",
+      "last_updated": "2026-05-10 18:45",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3387,7 +3387,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 22980,
+      "content_text_length": 24052,
       "ui_status": "in-progress"
     },
     {
@@ -3495,7 +3495,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 17:20",
+      "last_updated": "2026-05-10 18:45",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3504,7 +3504,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 118974
+      "content_text_length": 120156
     },
     {
       "scope": "studio",
@@ -3543,7 +3543,7 @@
       "doc_id": "search-change-log",
       "title": "Search Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 17:35",
+      "last_updated": "2026-05-10 18:45",
       "parent_id": "search",
       "sort_order": 1010,
       "published": true,
@@ -3552,14 +3552,14 @@
       "source_path": "search-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=search-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
-      "content_text_length": 42742
+      "content_text_length": 43419
     },
     {
       "scope": "studio",
       "doc_id": "config-search-policy-json",
       "title": "Search Policy JSON",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 21:12",
+      "last_updated": "2026-05-10 18:45",
       "parent_id": "search",
       "sort_order": 1020,
       "published": true,
@@ -3568,7 +3568,7 @@
       "source_path": "config-search-policy-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-policy-json.json",
-      "content_text_length": 1607
+      "content_text_length": 1917
     },
     {
       "scope": "studio",

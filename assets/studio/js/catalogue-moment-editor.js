@@ -1,7 +1,7 @@
 import {
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
 import {
@@ -1239,7 +1239,7 @@ async function init() {
   const loadingNode = document.getElementById("catalogueMomentLoading");
   const emptyNode = document.getElementById("catalogueMomentEmpty");
   const state = {
-    config: await loadStudioConfig(),
+    config: await loadStudioConfigWithText("catalogue_moment_editor"),
     root,
     loadingNode,
     emptyNode,

@@ -1,4 +1,4 @@
-import { getStudioDataPath, getStudioText, loadStudioConfig } from "./studio-config.js";
+import { getStudioDataPath, getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
   DOCS_MANAGEMENT_ENDPOINTS,
   getJson,
@@ -959,7 +959,7 @@ async function init() {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadStudioConfig();
+    state.config = await loadStudioConfigWithText("data_import");
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "import_files", WORKFLOW_SCOPES);
     state.summaryApplyScopes = workflowDomainsForOperation(adapterRegistry, "summary_apply", []);

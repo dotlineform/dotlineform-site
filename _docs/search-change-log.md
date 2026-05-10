@@ -2,12 +2,33 @@
 doc_id: search-change-log
 title: "Search Change Log"
 added_date: 2026-04-24
-last_updated: "2026-05-10 17:35"
+last_updated: "2026-05-10 18:45"
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-05-10] Made public search policy self-contained
+
+**Status:** implemented
+
+**Area:** public search runtime / config payloads
+
+**Summary:**
+Moved public search labels, result messages, back-link hrefs, and static scope index paths into `assets/data/search/policy.json`.
+The dedicated `/search/` runtime now loads that policy directly and no longer imports `assets/studio/js/studio-config.js` for normal operation.
+
+**Reason:**
+Public search should not pay the Studio bootstrap payload cost just to resolve public search copy and index paths.
+
+**Affected files/docs:**
+
+- `assets/js/search/search-page.js`
+- `assets/js/search/search-policy.js`
+- `assets/data/search/policy.json`
+- [Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
 
 ## [2026-05-10] Added dedicated search performance instrumentation
 

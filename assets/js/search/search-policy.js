@@ -25,6 +25,8 @@ const DEFAULT_SEARCH_POLICY = {
       scope_label: "catalogue",
       back_label: "← works",
       back_route_key: "series_page_base",
+      back_href: "/series/",
+      index: "/assets/data/search/catalogue/index.json",
       input_aria_label: "Search works, series, and moments",
       input_placeholder: "search works, series, moments"
     },
@@ -33,6 +35,8 @@ const DEFAULT_SEARCH_POLICY = {
       scope_label: "library",
       back_label: "← library",
       back_route_key: "library_page",
+      back_href: "/library/",
+      index: "/assets/data/search/library/index.json",
       input_aria_label: "Search Library documents",
       input_placeholder: "search library"
     },
@@ -41,6 +45,8 @@ const DEFAULT_SEARCH_POLICY = {
       scope_label: "studio",
       back_label: "← docs",
       back_route_key: "docs_page",
+      back_href: "/docs/",
+      index: "/assets/data/search/studio/index.json",
       input_aria_label: "Search Studio documents",
       input_placeholder: "search studio docs"
     },
@@ -49,13 +55,29 @@ const DEFAULT_SEARCH_POLICY = {
       scope_label: "analysis",
       back_label: "← analysis",
       back_route_key: "analysis_page",
+      back_href: "/analysis/",
+      index: "/assets/data/search/analysis/index.json",
       input_aria_label: "Search Analysis documents",
       input_placeholder: "search analysis"
     }
   },
   messages: {
     missing_scope_error: "Search is unavailable without a valid search scope.",
-    unsupported_scope_error: "Search is not yet available for this scope."
+    unsupported_scope_error: "Search is not yet available for this scope.",
+    load_failed_error: "Failed to load search data.",
+    loading: "loading search index…",
+    prompt: "Enter a search query.",
+    no_results: "No results.",
+    results_count: "{count} results",
+    results_count_one: "1 result",
+    results_count_visible: "Showing {visible} of {count} results",
+    load_more: "more",
+    result_meta_separator: " • ",
+    result_kind_work: "work",
+    result_kind_series: "series",
+    result_kind_moment: "moment",
+    result_kind_doc: "doc",
+    performance_summary: "Search performance"
   }
 };
 
@@ -111,7 +133,9 @@ export function getSearchScopePolicy(policy, scope) {
     backLabel: sanitizeText(raw.back_label, ""),
     backRouteKey: sanitizeText(raw.back_route_key, ""),
     inputAriaLabel: sanitizeText(raw.input_aria_label, "Search"),
-    inputPlaceholder: sanitizeText(raw.input_placeholder, "")
+    inputPlaceholder: sanitizeText(raw.input_placeholder, ""),
+    backHref: sanitizeText(raw.back_href, ""),
+    indexPath: sanitizeText(raw.index, "")
   };
 }
 

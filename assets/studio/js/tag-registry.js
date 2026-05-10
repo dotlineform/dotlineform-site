@@ -2,7 +2,7 @@ import {
   getStudioGroups,
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   buildStudioGroupDescriptionMap,
@@ -109,7 +109,7 @@ async function initTagRegistryPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfig();
+    config = await loadStudioConfigWithText("tag_registry");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag registry config.</div>`;
     setStudioRouteReady(mount, true, {

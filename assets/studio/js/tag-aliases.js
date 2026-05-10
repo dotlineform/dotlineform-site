@@ -2,7 +2,7 @@ import {
   getStudioGroups,
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   loadStudioAliasesJson,
@@ -110,7 +110,7 @@ async function initTagAliasesPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfig();
+    config = await loadStudioConfigWithText("tag_aliases");
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag aliases config.</div>`;
     setStudioRouteReady(mount, true, {

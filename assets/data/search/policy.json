@@ -26,7 +26,9 @@
       "back_label": "← works",
       "back_route_key": "series_page_base",
       "input_aria_label": "Search works, series, and moments",
-      "input_placeholder": "search works, series, moments"
+      "input_placeholder": "search works, series, moments",
+      "index": "/assets/data/search/catalogue/index.json",
+      "back_href": "/series/"
     },
     "library": {
       "enabled": true,
@@ -34,7 +36,9 @@
       "back_label": "← library",
       "back_route_key": "library_page",
       "input_aria_label": "Search Library documents",
-      "input_placeholder": "search library"
+      "input_placeholder": "search library",
+      "index": "/assets/data/search/library/index.json",
+      "back_href": "/library/"
     },
     "studio": {
       "enabled": true,
@@ -42,7 +46,9 @@
       "back_label": "← docs",
       "back_route_key": "docs_page",
       "input_aria_label": "Search Studio documents",
-      "input_placeholder": "search studio docs"
+      "input_placeholder": "search studio docs",
+      "index": "/assets/data/search/studio/index.json",
+      "back_href": "/docs/"
     },
     "analysis": {
       "enabled": true,
@@ -50,11 +56,27 @@
       "back_label": "← analysis",
       "back_route_key": "analysis_page",
       "input_aria_label": "Search Analysis documents",
-      "input_placeholder": "search analysis"
+      "input_placeholder": "search analysis",
+      "index": "/assets/data/search/analysis/index.json",
+      "back_href": "/analysis/"
     }
   },
   "messages": {
     "missing_scope_error": "Search is unavailable without a valid search scope.",
-    "unsupported_scope_error": "Search is not yet available for this scope."
+    "unsupported_scope_error": "Search is not yet available for this scope.",
+    "load_failed_error": "Failed to load search data.",
+    "loading": "loading search index…",
+    "prompt": "Enter a search query.",
+    "no_results": "No results.",
+    "results_count": "{count} results",
+    "results_count_one": "1 result",
+    "results_count_visible": "Showing {visible} of {count} results",
+    "load_more": "more",
+    "result_meta_separator": " • ",
+    "result_kind_work": "work",
+    "result_kind_series": "series",
+    "result_kind_moment": "moment",
+    "result_kind_doc": "doc",
+    "performance_summary": "Search performance"
   }
 }

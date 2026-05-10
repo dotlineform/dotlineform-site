@@ -7,7 +7,7 @@ import {
   getDocsScopeDataPath,
   getStudioDataPath,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   initializeStudioRouteState,
@@ -760,7 +760,7 @@ async function init() {
 
   try {
     markBusy(state, true);
-    state.config = await loadStudioConfig();
+    state.config = await loadStudioConfigWithText("data_export");
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "export", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
