@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T17:34:42Z",
+  "generated_at": "2026-05-10T17:39:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3378,7 +3378,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 19:05",
+      "last_updated": "2026-05-10 18:39",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3388,7 +3388,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
       "content_text_length": 23971,
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
