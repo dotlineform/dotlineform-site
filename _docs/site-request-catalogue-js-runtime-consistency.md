@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 22:10"
+last_updated: "2026-05-10 22:16"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -19,6 +19,7 @@ Status:
 - Slice B third extraction completed for Work Detail summary/readiness/preview rendering
 - Slice B fourth extraction completed for Work Detail action workflow sequencing
 - Slice C boundary review completed for Series Editor
+- Slice C1 implemented for Series membership editing
 
 ## Implementation Progress
 
@@ -35,6 +36,9 @@ Status:
 - Series Editor boundary review chose membership editing as the first useful extraction because it is the route's distinctive domain boundary and it currently feeds dirty-state comparison, validation, save deltas, rendered member rows, and saved lookup rebuilding.
 - Proposed `assets/studio/js/catalogue-series-membership.js` as the route-local owner for member list state, member row rendering, add/remove/primary mutations, membership dirty checks, changed-work update shaping, and saved lookup membership shaping.
 - Kept Series save/create/build/publication/delete/prose workflows in `assets/studio/js/catalogue-series-editor.js` for the next slice so the membership API can settle before extracting action sequencing.
+- Added `assets/studio/js/catalogue-series-membership.js` for stored membership reads, current-member entry shaping, membership dirty checks, focused lookup membership shaping, changed-work update shaping, member row/list rendering, add/remove/make-primary mutations, and first-member `primary_work_id` autofill.
+- Kept Series route bootstrap, query handling, mode transitions, validation orchestration, save/create/build/publication/delete/prose command sequencing, public build preview, and final status/result copy in `assets/studio/js/catalogue-series-editor.js`.
+- `assets/studio/js/catalogue-series-editor.js` is still above the long-file review threshold after C1, so the next useful Series slice is action workflow extraction rather than stopping at the first split.
 
 ## Purpose
 
@@ -213,6 +217,126 @@ Recommended next extraction:
 
 - Slice C1: Series Membership Module
 
+### Slice C1: Series Membership Module
+
+Status:
+
+- implemented
+
+Target file:
+
+- `assets/studio/js/catalogue-series-membership.js`
+
+Scope:
+
+- extract member-list state, current-member entry derivation, member row/list rendering, membership dirty checks, changed-work update shaping, focused lookup membership shaping, and add/remove/make-primary mutations
+- preserve `series_ids` order exactly as edited
+- preserve first-member `primary_work_id` autofill and current-primary removal blocking
+- keep route mode transitions, validation orchestration, service calls, build preview, and action workflow sequencing route-owned
+
+Implementation notes:
+
+- `catalogue-series-membership.js` now owns membership state derivation from focused series lookups and work-search lookup records.
+- The module returns only changed work membership rows for save payloads, including expected record hashes from lookup records or computed record hashes.
+- The module renders the capped member list and member search results while preserving the existing row actions and work-editor links.
+- The route controller calls the module through a small text/status/field-value context and still decides when to refresh validation, dirty state, summary, and route busy state.
+- `catalogue-series-editor.js` now imports the membership module but still owns create/edit query behavior and all command workflow sequencing.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-series-editor.js` and `assets/studio/js/catalogue-series-membership.js`.
+- Focused module checks covered current-member derivation, dirty membership detection, first-member `primary_work_id` autofill, make-primary ordering, primary removal blocking, changed-work update shaping, saved focused lookup shaping, and capped member-list rendering.
+- Static route smoke passed for empty, focused `?series=<series_id>`, and `?mode=new` Series Editor routes against a separate Jekyll build destination.
+- Studio docs payloads and Studio search were rebuilt for the Studio scope after documentation updates.
+
+### Slice C2: Series Action Workflow Module
+
+Status:
+
+- next
+
+Target file:
+
+- `assets/studio/js/catalogue-series-actions.js`
+
+Scope:
+
+- extract Series save/create/build-preview/build/publication/delete/prose-import sequencing after the membership API has been established
+- keep route state transitions, initial route selection, form rendering, and membership mutations out of the action module
+- pass membership update shaping into the action module through the membership helper rather than duplicating membership rules
+
+Acceptance checks:
+
+- save payloads remain equivalent for clean metadata edits, membership-only edits, and mixed metadata plus membership edits
+- create mode still opens the created series in normal edit mode
+- published-series save still performs the internal public update and preserves pending removed-member build targets on partial update failure
+- publish/unpublish/delete confirmations and request payloads remain equivalent
+- staged prose import still requires a clean saved series and refreshes build preview after import
+
+### Slice C3: Series Selection/Open Module
+
+Status:
+
+- proposed
+
+Target file:
+
+- `assets/studio/js/catalogue-series-selection.js`
+
+Scope:
+
+- extract title/id search matching, popup rendering, open-button behavior, search-keyboard behavior, popup click handling, and initial `?series=<series_id>` route selection if the controller remains noisy after C2
+- keep new-mode query handling and created-series opening in the route or action context unless the extraction shows a clean shared boundary
+
+Acceptance checks:
+
+- empty mode still renders after `/studio/catalogue-series/`
+- focused mode still opens from `?series=<series_id>`, the search popup, Enter, and the Open button
+- `?mode=new` still routes to create mode and treats the top input as the new `series_id`
+- unknown ids still show the same popup/status feedback
+
+### Slice C4: Series Form And Section Rendering Review
+
+Status:
+
+- proposed
+
+Target files:
+
+- `assets/studio/js/catalogue-series-form.js`
+- `assets/studio/js/catalogue-series-sections.js`
+
+Scope:
+
+- review whether editable field rendering, readonly field rendering, summary rendering, and readiness rendering still create a real controller boundary after C1-C3
+- extract only if the remaining route controller still mixes display concerns with route orchestration
+- keep `catalogue-series-fields.js` as the owner for field definitions, normalization, payload shaping, and validation
+
+Acceptance checks:
+
+- field values, readonly status display, field availability, and validation messages remain unchanged
+- new-mode summary and focused-series summary remain equivalent
+- readiness rows still show staged prose import availability and disabled-state notes correctly
+- no generic Series/Work form abstraction is introduced unless a real shared contract appears
+
+### Slice C5: Series Stop/Continue Decision
+
+Status:
+
+- proposed
+
+Scope:
+
+- measure the Series controller after C2-C4
+- either document why the remaining route entry file is an acceptable coordinator or define one final Series-specific extraction
+- decide whether to proceed to Moment Editor or complete one more Series slice first
+
+Acceptance checks:
+
+- remaining Series route responsibilities are named and intentional
+- helper modules have clear import direction and no transport writes outside action/service layers
+- next Catalogue priority is explicit
+
 ### Slice D: Moment Editor Boundary Review
 
 Intent:
@@ -268,7 +392,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice C1: Series Membership Module.
+Start with Slice C2: Series Action Workflow Module.
 
-The Series Editor boundary review found membership editing to be the clearest next boundary.
-That extraction should land before a Series action workflow module because save/build/publication behavior depends on membership deltas and affected work hashes.
+The Series membership extraction is in place.
+The next risk center is action workflow sequencing because save, create, build preview, publication, prose import, and delete still sit in the route controller beside mode and rendering coordination.

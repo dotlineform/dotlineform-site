@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-10 21:10"
+last_updated: "2026-05-10 22:16"
 parent_id: studio
 sort_order: 20
 ---
@@ -130,6 +130,10 @@ Shared Studio runtime and wiring currently live in:
   provides Catalogue Work Editor route-local save, create, build-preview, build, prose import, publication, media-refresh, and delete workflow orchestration
 - `assets/studio/js/catalogue-work-selection.js`
   provides Catalogue Work Editor route-local work-id parsing, search matching, suggestion rendering, selection control binding, initial URL selection, and selected-record opening orchestration
+- `assets/studio/js/catalogue-series-fields.js`
+  provides Catalogue Series Editor route-local field definitions, id normalization, draft shaping, payload shaping, and validation
+- `assets/studio/js/catalogue-series-membership.js`
+  provides Catalogue Series Editor route-local member-list state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, member row/list rendering, and add/remove/make-primary mutations
 
 Current page controllers:
 
@@ -179,6 +183,10 @@ Controller splits that are already live:
   - `catalogue-work-sections.js`
   - `catalogue-work-actions.js`
   - `catalogue-work-selection.js`
+- Catalogue Series Editor:
+  - `catalogue-series-editor.js`
+  - `catalogue-series-fields.js`
+  - `catalogue-series-membership.js`
 
 ## Route Ready State
 

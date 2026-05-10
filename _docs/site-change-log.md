@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 21:10"
+last_updated: "2026-05-10 22:16"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue Series Editor membership behavior
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-series-membership.js` as the route-local membership module for the Catalogue Series Editor.
+The module now owns focused membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-series-membership.js`
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
+
+**Impact:**
+The Series route entry module keeps route bootstrap, query handling, mode transitions, validation orchestration, command workflow sequencing, public build preview, and final status/result copy.
+Membership-specific source and work-update rules now have a focused owner, setting up a later Series action workflow extraction.
 
 ## [2026-05-10] Extracted Catalogue Work Editor search and selection
 

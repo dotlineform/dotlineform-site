@@ -26,8 +26,7 @@ import {
 } from "./catalogue-editor-readiness.js";
 import {
   computeRecordHash,
-  displayValue,
-  stableStringify
+  displayValue
 } from "./catalogue-editor-records.js";
 import {
   catalogueDeleteDisabled,
@@ -64,9 +63,19 @@ import {
   validateCreateSeriesDraft,
   validateSeriesDraft
 } from "./catalogue-series-fields.js";
+import {
+  addSeriesMember,
+  buildChangedSeriesWorkUpdates,
+  buildSavedSeriesMembershipLookup,
+  getCurrentSeriesMemberEntries,
+  initializeSeriesMembershipState,
+  makeSeriesMemberPrimary,
+  removeSeriesMember,
+  seriesMembershipHasChanges,
+  updateSeriesMemberList
+} from "./catalogue-series-membership.js";
 
 const SEARCH_LIMIT = 20;
-const MEMBER_LIST_LIMIT = 10;
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -282,6 +291,14 @@ function buildRecordSummary(record) {
   return title || "—";
 }
 
+function membershipOptions(state) {
+  return {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    setTextWithState,
+    setFieldNodeValue
+  };
+}
+
 function getSearchMatches(state, rawQuery) {
   const query = buildSearchToken(rawQuery);
   if (!query) return [];
@@ -341,46 +358,6 @@ function applyReadonly(state) {
   });
 }
 
-function getStoredWorkSeriesIds(state, workId) {
-  const record = state.workSearchById.get(workId);
-  const values = record && Array.isArray(record.series_ids) ? record.series_ids : [];
-  return values.map((seriesId) => normalizeSeriesId(seriesId)).filter(Boolean);
-}
-
-function getEditableMembershipEntries(state) {
-  return Array.from(state.memberSeriesIdsByWorkId.entries())
-    .map(([workId, seriesIds]) => ({ workId, seriesIds: seriesIds.slice() }))
-    .sort((a, b) => a.workId.localeCompare(b.workId, undefined, { numeric: true, sensitivity: "base" }));
-}
-
-function getCurrentMemberEntries(state) {
-  return getEditableMembershipEntries(state)
-    .filter(({ seriesIds }) => seriesIds.includes(state.currentSeriesId))
-    .map(({ workId, seriesIds }) => {
-      const record = state.workSearchById.get(workId) || {};
-      const position = seriesIds.indexOf(state.currentSeriesId);
-      return {
-        workId,
-        seriesIds,
-        position,
-        record,
-      };
-    });
-}
-
-function membershipHasChanges(state) {
-  const allWorkIds = new Set([
-    ...Array.from(state.memberSeriesIdsByWorkId.keys()),
-    ...Array.from(state.baselineMemberSeriesIdsByWorkId.keys())
-  ]);
-  for (const workId of allWorkIds) {
-    const current = state.memberSeriesIdsByWorkId.get(workId) || [];
-    const baseline = state.baselineMemberSeriesIdsByWorkId.get(workId) || [];
-    if (stableStringify(current) !== stableStringify(baseline)) return true;
-  }
-  return false;
-}
-
 function draftHasChanges(state) {
   return catalogueDraftHasChanges({
     mode: state.mode,
@@ -390,7 +367,7 @@ function draftHasChanges(state) {
     extraComparisons: [
       {
         key: "members",
-        changed: () => membershipHasChanges(state)
+        changed: () => seriesMembershipHasChanges(state)
       }
     ]
   });
@@ -408,7 +385,7 @@ function validateDraft(state) {
     );
   }
   return validateSeriesDraft(state.draft, {
-    currentMemberWorkIds: new Set(getCurrentMemberEntries(state).map((entry) => entry.workId)),
+    currentMemberWorkIds: new Set(getCurrentSeriesMemberEntries(state).map((entry) => entry.workId)),
     t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
   });
 }
@@ -507,22 +484,6 @@ function applySaveBuildOutcome(state, response) {
   };
 }
 
-async function buildChangedWorkUpdates(state) {
-  const updates = [];
-  for (const [workId, seriesIds] of state.memberSeriesIdsByWorkId.entries()) {
-    const baseline = state.baselineMemberSeriesIdsByWorkId.get(workId) || [];
-    if (stableStringify(seriesIds) === stableStringify(baseline)) continue;
-    const currentRecord = state.workSearchById.get(workId);
-    if (!currentRecord) continue;
-    updates.push({
-      work_id: workId,
-      series_ids: seriesIds,
-      expected_record_hash: normalizeText(currentRecord.record_hash) || await computeRecordHash(currentRecord)
-    });
-  }
-  return updates;
-}
-
 function syncUrl(seriesId, mode = "") {
   const url = new URL(window.location.href);
   if (seriesId) url.searchParams.set("series", seriesId);
@@ -558,7 +519,7 @@ function updateSummary(state) {
   const record = state.currentRecord;
   state.metaNode.textContent = record ? `${record.series_id} · ${buildRecordSummary(record)}` : "";
   const publicHref = record ? `${getStudioRoute(state.config, "series_page_base")}${encodeURIComponent(record.series_id)}/` : "";
-  const memberCount = getCurrentMemberEntries(state).length;
+  const memberCount = getCurrentSeriesMemberEntries(state).length;
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_public_link", "Open public series page"))}</span>
@@ -577,73 +538,6 @@ function updateSummary(state) {
   renderReadiness(state);
 }
 
-function renderMemberRows(state, entries) {
-  const workEditorBase = getStudioRoute(state.config, "catalogue_work_editor");
-  return entries.map((entry) => {
-    const workId = entry.workId;
-    const title = displayValue(entry.record && entry.record.title);
-    const isPrimary = entry.position === 0;
-    const workHref = `${workEditorBase}?work=${encodeURIComponent(workId)}`;
-    const positionText = t(state, "members_position", "position {position}", { position: String(entry.position + 1) });
-    return `
-      <div class="catalogueSeriesMembers__row">
-        <div class="catalogueSeriesMembers__meta">
-          <a class="catalogueSeriesMembers__link" href="${escapeHtml(workHref)}">${escapeHtml(workId)}</a>
-          <span class="catalogueSeriesMembers__title">${escapeHtml(title)}</span>
-          <span class="tagStudioForm__meta">${escapeHtml(positionText)}</span>
-          ${isPrimary ? `<span class="tagStudioForm__meta">${escapeHtml(t(state, "members_primary_badge", "primary"))}</span>` : ""}
-        </div>
-        <div class="catalogueSeriesMembers__actions">
-          ${isPrimary ? "" : `<button type="button" class="tagStudio__button" data-member-primary="${escapeHtml(workId)}">${escapeHtml(t(state, "members_action_primary", "Make primary"))}</button>`}
-          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-member-remove="${escapeHtml(workId)}">${escapeHtml(t(state, "members_action_remove", "Remove"))}</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function updateMemberList(state) {
-  const memberEditingEnabled = Boolean(state.currentRecord) && !state.isSaving && !state.isBuilding && !state.isDeleting;
-  state.memberSearchNode.disabled = !memberEditingEnabled;
-  state.memberAddNode.disabled = !memberEditingEnabled;
-  state.memberAddButton.disabled = !memberEditingEnabled;
-  const members = getCurrentMemberEntries(state);
-  const truncated = members.length > MEMBER_LIST_LIMIT;
-  const query = normalizeWorkId(state.memberSearchNode.value) || normalizeText(state.memberSearchNode.value).toLowerCase();
-  const matches = query
-    ? members.filter((entry) => entry.workId.includes(query) || normalizeText(entry.record && entry.record.title).toLowerCase().includes(String(query).toLowerCase()))
-    : [];
-  const moreText = truncated
-    ? t(state, "members_more_count", "showing {visible} of {total}", { visible: String(MEMBER_LIST_LIMIT), total: String(members.length) })
-    : "";
-
-  const blocks = [];
-  if (query) {
-    if (matches.length) {
-      blocks.push(`<section class="catalogueSeriesMembers__section"><div class="catalogueSeriesMembers__rows">${renderMemberRows(state, matches)}</div></section>`);
-    } else {
-      blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(t(state, "members_search_no_match", "No matching member work ids."))}</p>`);
-    }
-  }
-
-  if (!members.length) {
-    blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(t(state, "members_empty", "No works currently belong to this series."))}</p>`);
-  } else {
-    const visible = members.slice(0, MEMBER_LIST_LIMIT);
-    blocks.push(`
-      <section class="catalogueSeriesMembers__section">
-        <div class="catalogueSeriesMembers__rows">${renderMemberRows(state, visible)}</div>
-      </section>
-    `);
-  }
-
-  state.memberSearchRowNode.hidden = !truncated;
-  state.memberSearchMetaNode.textContent = moreText;
-  if (!truncated && state.memberSearchNode.value) state.memberSearchNode.value = "";
-  state.membersMetaNode.textContent = members.length ? `${members.length} total` : "";
-  state.membersResultsNode.innerHTML = blocks.join("");
-}
-
 function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
@@ -651,7 +545,7 @@ function updateEditorState(state) {
   updateFieldMessages(state, errors);
   setModeFieldAvailability(state);
   updateSummary(state);
-  updateMemberList(state);
+  updateSeriesMemberList(state, membershipOptions(state));
   if (!hasRecord) setTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
@@ -713,34 +607,6 @@ function onFieldInput(state, fieldKey) {
   updateEditorState(state);
 }
 
-function initializeMembershipState(state, seriesId) {
-  state.memberSeriesIdsByWorkId = new Map();
-  state.baselineMemberSeriesIdsByWorkId = new Map();
-  const members = state.currentLookup && Array.isArray(state.currentLookup.member_works) ? state.currentLookup.member_works : [];
-  for (const member of members) {
-    const workId = normalizeWorkId(member && member.work_id);
-    if (!workId) continue;
-    const seriesIds = Array.isArray(member && member.series_ids)
-      ? member.series_ids.map((seriesId) => normalizeSeriesId(seriesId)).filter(Boolean)
-      : getStoredWorkSeriesIds(state, workId);
-    if (!seriesIds.includes(seriesId)) continue;
-    state.memberSeriesIdsByWorkId.set(workId, seriesIds.slice());
-    state.baselineMemberSeriesIdsByWorkId.set(workId, seriesIds.slice());
-  }
-}
-
-function buildSavedSeriesLookup(state, record, recordHash) {
-  return {
-    ...(state.currentLookup || {}),
-    series: record,
-    record_hash: recordHash,
-    member_works: getCurrentMemberEntries(state).map((entry) => ({
-      work_id: entry.workId,
-      series_ids: entry.seriesIds.slice()
-    }))
-  };
-}
-
 function setLoadedSeries(state, seriesId, record, options = {}) {
   state.mode = "single";
   state.currentSeriesId = seriesId;
@@ -749,7 +615,7 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   state.baselineDraft = buildSeriesDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
-  initializeMembershipState(state, seriesId);
+  initializeSeriesMembershipState(state, seriesId);
   applyDraftToInputs(state);
   applyReadonly(state);
   syncUrl(seriesId);
@@ -930,56 +796,6 @@ async function importSeriesProse(state) {
   }
 }
 
-function addWorkToSeries(state) {
-  if (!state.currentSeriesId) return;
-  const workId = normalizeWorkId(state.memberAddNode.value);
-  if (!workId) {
-    setTextWithState(state.membersStatusNode, t(state, "members_add_missing", "Enter a work id to add."), "error");
-    return;
-  }
-  const workRecord = state.workSearchById.get(workId);
-  if (!workRecord) {
-    setTextWithState(state.membersStatusNode, t(state, "members_add_unknown", "Unknown work id: {work_id}.", { work_id }), "error");
-    return;
-  }
-  const current = state.memberSeriesIdsByWorkId.get(workId) || getStoredWorkSeriesIds(state, workId);
-  if (current.includes(state.currentSeriesId)) {
-    setTextWithState(state.membersStatusNode, t(state, "members_add_exists", "Work {work_id} is already in this series.", { work_id: workId }), "error");
-    return;
-  }
-  const currentMemberCount = getCurrentMemberEntries(state).length;
-  state.memberSeriesIdsByWorkId.set(workId, [...current, state.currentSeriesId]);
-  if (!currentMemberCount && !normalizeWorkId(state.draft.primary_work_id)) {
-    state.draft.primary_work_id = workId;
-    const primaryNode = state.fieldNodes.get("primary_work_id");
-    if (primaryNode) setFieldNodeValue(primaryNode, workId);
-  }
-  state.memberAddNode.value = "";
-  setTextWithState(state.membersStatusNode, "");
-  updateEditorState(state);
-}
-
-function makeMemberPrimary(state, workId) {
-  const current = state.memberSeriesIdsByWorkId.get(workId);
-  if (!current || !current.includes(state.currentSeriesId)) return;
-  const next = [state.currentSeriesId, ...current.filter((seriesId) => seriesId !== state.currentSeriesId)];
-  state.memberSeriesIdsByWorkId.set(workId, next);
-  updateEditorState(state);
-}
-
-function removeMember(state, workId) {
-  const currentPrimary = normalizeWorkId(state.draft.primary_work_id);
-  if (currentPrimary === workId) {
-    setTextWithState(state.membersStatusNode, t(state, "members_remove_blocked", "Change primary_work_id before removing work {work_id}.", { work_id }), "error");
-    return;
-  }
-  const current = state.memberSeriesIdsByWorkId.get(workId);
-  if (!current) return;
-  state.memberSeriesIdsByWorkId.set(workId, current.filter((seriesId) => seriesId !== state.currentSeriesId));
-  setTextWithState(state.membersStatusNode, "");
-  updateEditorState(state);
-}
-
 async function saveCurrentSeries(state) {
   if (state.mode === "new") {
     await createCurrentSeries(state);
@@ -1012,8 +828,8 @@ async function saveCurrentSeries(state) {
 
   try {
     const previousMembers = new Set(Array.from(state.baselineMemberSeriesIdsByWorkId.keys()).filter((workId) => (state.baselineMemberSeriesIdsByWorkId.get(workId) || []).includes(state.currentSeriesId)));
-    const currentMembers = new Set(getCurrentMemberEntries(state).map((entry) => entry.workId));
-    const response = await saveCatalogueSeries(buildPayload(state, await buildChangedWorkUpdates(state)));
+    const currentMembers = new Set(getCurrentSeriesMemberEntries(state).map((entry) => entry.workId));
+    const response = await saveCatalogueSeries(buildPayload(state, await buildChangedSeriesWorkUpdates(state)));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
     state.seriesById.set(state.currentSeriesId, {
@@ -1047,7 +863,7 @@ async function saveCurrentSeries(state) {
     setLoadedSeries(state, state.currentSeriesId, record, {
       recordHash,
       keepResult: true,
-      lookup: buildSavedSeriesLookup(state, record, recordHash),
+      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash),
       pendingBuildExtraWorkIds
     });
     await refreshBuildPreview(state);
@@ -1260,7 +1076,7 @@ async function applyPublicationChange(state) {
     setLoadedSeries(state, state.currentSeriesId, record, {
       recordHash,
       keepResult: true,
-      lookup: buildSavedSeriesLookup(state, record, recordHash)
+      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash)
     });
     await refreshBuildPreview(state);
 
@@ -1566,22 +1382,24 @@ async function init() {
     saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
     publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => console.warn("catalogue_series_editor: unexpected publication failure", error)));
     deleteButton.addEventListener("click", () => deleteCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
-    memberSearchNode.addEventListener("input", () => updateMemberList(state));
-    memberAddButton.addEventListener("click", () => addWorkToSeries(state));
+    memberSearchNode.addEventListener("input", () => updateSeriesMemberList(state, membershipOptions(state)));
+    memberAddButton.addEventListener("click", () => {
+      if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);
+    });
     memberAddNode.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
-      addWorkToSeries(state);
+      if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);
     });
     membersResultsNode.addEventListener("click", (event) => {
       const primaryButton = event.target && event.target.closest ? event.target.closest("[data-member-primary]") : null;
       if (primaryButton) {
-        makeMemberPrimary(state, normalizeWorkId(primaryButton.getAttribute("data-member-primary")));
+        if (makeSeriesMemberPrimary(state, normalizeWorkId(primaryButton.getAttribute("data-member-primary")))) updateEditorState(state);
         return;
       }
       const removeButton = event.target && event.target.closest ? event.target.closest("[data-member-remove]") : null;
       if (removeButton) {
-        removeMember(state, normalizeWorkId(removeButton.getAttribute("data-member-remove")));
+        if (removeSeriesMember(state, normalizeWorkId(removeButton.getAttribute("data-member-remove")), membershipOptions(state))) updateEditorState(state);
       }
     });
 

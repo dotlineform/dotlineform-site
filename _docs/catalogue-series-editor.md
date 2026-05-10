@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: "Catalogue Series Editor"
 added_date: 2026-04-22
-last_updated: 2026-05-03
+last_updated: 2026-05-10
 parent_id: user-guide
 sort_order: 70
 ---
@@ -44,6 +44,17 @@ The first implementation covers:
 - delete one series source record and remove its membership from affected works
 
 Series prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_catalogue/series/<series_id>.md`; the generator reads that ID-derived source file for public prose.
+
+## Runtime Ownership
+
+The Series Editor route is split into route orchestration, field rules, and membership behavior:
+
+- `assets/studio/js/catalogue-series-editor.js` owns route bootstrap, generated lookup reads, create/edit mode transitions, `?series=<series_id>` and `?mode=new` query behavior, validation orchestration, public build preview, and save/create/build/publication/delete/prose command sequencing.
+- `assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
+- `assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
+
+Membership remains route-local to the Series Editor because it edits affected work `series_ids` arrays as part of the series workflow.
+It is not a generic Catalogue membership controller.
 
 ## Route Ready State
 
