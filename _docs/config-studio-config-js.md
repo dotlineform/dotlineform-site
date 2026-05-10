@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Studio Config Loader JS
 added_date: 2026-04-01
-last_updated: "2026-05-10 18:45"
+last_updated: "2026-05-10 19:05"
 parent_id: studio
 sort_order: 100
 ---
@@ -41,7 +41,7 @@ Its exported helpers are also used indirectly through:
 
 - when a Studio page imports the module during page boot
 - when `loadStudioConfig()` is first called on that page
-- when a migrated route calls `loadStudioConfigWithText(...)` or `loadScopedStudioText(...)`
+- when a route calls `loadStudioConfigWithText(...)` or `loadScopedStudioText(...)`
 - when accessor helpers such as `getStudioRoute(...)` or `getStudioUiTextPath(...)` are used after config load
 
 ## Current responsibilities
@@ -60,7 +60,7 @@ Current responsibilities include:
   - search policy path
   - scoped UI-text bundle paths
   - Studio route paths
-  - Studio UI text
+  - Studio UI text from loaded scoped bundles
 - exposing Studio analysis group accessors used by tag-management routes
 
 Analysis tag metric and RAG scoring now lives in `assets/studio/js/analysis-tag-scoring.js`.
@@ -72,7 +72,7 @@ What stays here:
 
 - defaulting and path-resolution logic shared by multiple browser modules
 - reusable config accessors
-- scoped UI-text loading and fallback warnings
+- scoped UI-text loading, route-level caching, and fallback warnings
 - shared config-backed Studio analysis group accessors
 
 What does not stay here:

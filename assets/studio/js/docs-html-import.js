@@ -1,4 +1,4 @@
-import { getStudioText, loadStudioConfig } from "./studio-config.js";
+import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
   DOCS_MANAGEMENT_ENDPOINTS,
   postJson,
@@ -634,7 +634,7 @@ async function init() {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadStudioConfig();
+    state.config = await loadStudioConfigWithText("docs_html_import");
     const serviceAvailable = await probeDocsManagementHealth();
     state.serviceAvailable = Boolean(serviceAvailable);
 

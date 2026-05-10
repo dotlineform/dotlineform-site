@@ -1,7 +1,7 @@
 import {
   getDocsScopeDataPath,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   initializeStudioRouteState,
@@ -298,7 +298,7 @@ async function initLibraryDocumentsPage() {
   };
 
   try {
-    const config = await loadStudioConfig().catch(() => null);
+    const config = await loadStudioConfigWithText("library_documents").catch(() => null);
     state.config = config;
     const payload = await loadDocsIndex(state.config, DOCS_SCOPE);
     state.docs = Array.isArray(payload && payload.docs)

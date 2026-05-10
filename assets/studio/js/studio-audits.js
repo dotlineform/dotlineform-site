@@ -1,4 +1,4 @@
-import { getStudioText, loadStudioConfig } from "./studio-config.js";
+import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
   AUDIT_SERVICE_ENDPOINTS,
   getJson,
@@ -239,7 +239,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "studio-audits", mode: "summary" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("studio_audits");
     const serviceAvailable = await probeAuditServiceHealth();
     const audits = await loadAudits(serviceAvailable);
     const state = {

@@ -1,6 +1,6 @@
 import {
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import { loadStudioServerReadJson } from "./studio-data.js";
 import { openNoticeModal } from "./studio-modal.js";
@@ -192,7 +192,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "studio-activity" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("activity_log");
     const payload = await loadFeed();
     const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
     metaNode.textContent = entries.length === 1
@@ -243,7 +243,7 @@ async function init() {
   } catch (error) {
     console.warn("activity_log: load failed", error);
     try {
-      const config = await loadStudioConfig();
+      const config = await loadStudioConfigWithText("activity_log");
       statusNode.textContent = getStudioText(config, "activity_log.load_failed_error", "Failed to load Studio activity.");
     } catch (_configError) {
       statusNode.textContent = "Failed to load Studio activity.";

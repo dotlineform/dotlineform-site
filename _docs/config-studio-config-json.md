@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-10 18:45"
+last_updated: "2026-05-10 19:05"
 parent_id: studio
 sort_order: 90
 ---
@@ -26,12 +26,12 @@ Current responsibilities include:
 - route and data paths for catalogue status, unified activity, project-state reporting, and catalogue editor pages
 - route and data paths for the shared Studio data export/import pages
 - scoped UI-text bundle paths under `paths.data.ui_text`
-- the Studio Audits route path and UI text
+- the Studio Audits route path and scoped UI-text bundle path
 - catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
-- Studio-owned UI text that is genuinely shared or not yet split into a scoped bundle
 
-The file is the root browser manifest plus a small shared UI-copy store.
+The file is the root browser manifest.
+It does not own visible UI text directly; Studio UI copy belongs in scoped payloads under `assets/studio/data/ui_text/`.
 Domain behavior should live with the domain runtime that uses the config.
 For example, Studio analysis scoring code lives in `assets/studio/js/analysis-tag-scoring.js`; `studio_config.json` only supplies the current scoring policy values.
 
@@ -65,7 +65,6 @@ It also feeds shared path resolution used by:
 
 - `assets/studio/js/studio-data.js`
 
-The data export/import route text includes fallback shared data-workflow labels and unavailable-state copy.
 The active data-domain list and capability status come from `assets/studio/data/export_import_adapters.json`.
 Per-domain export configs and import apply contracts still live in the owning workflow docs and service code.
 
@@ -82,25 +81,40 @@ What stays here:
 - shared Docs Viewer UI settings such as `docs_viewer.recently_added_limit`
 - shared Docs Viewer status emoji config under `docs_viewer.ui_statuses_by_scope`
 - catalogue UI option lists such as `catalogue.series_type_options`, currently used by the series editor as a client-side dropdown while the write server remains permissive
-- shared Studio UI text that has not moved to a route-owned scoped bundle
 - shared Studio analysis policy values used by the analytics scoring runtime
 - the lookup path for generated docs indexes used by Studio pages, such as the Library export selector
+- lookup paths for scoped Studio UI-text payloads
 
-Route-owned UI copy should use scoped payloads under `assets/studio/data/ui_text/`.
-The current split bundles are:
+Visible Studio UI copy must use scoped payloads under `assets/studio/data/ui_text/`.
+Current bundles:
 
+- `activity-log.json`
+- `bulk-add-work.json`
+- `catalogue-field-registry-review.json`
+- `catalogue-moment-import.json`
 - `catalogue-work-editor.json`
 - `catalogue-work-detail-editor.json`
 - `catalogue-series-editor.json`
 - `catalogue-moment-editor.json`
-- `tag-registry.json`
-- `tag-aliases.json`
+- `catalogue-status.json`
 - `data-import.json`
 - `data-export.json`
+- `docs-broken-links.json`
+- `docs-html-import.json`
 - `docs-viewer.json`
+- `library-documents.json`
+- `project-state.json`
+- `series-tag-editor.json`
+- `series-tags.json`
+- `site-series-index.json`
+- `studio-audits.json`
+- `studio-works.json`
+- `tag-aliases.json`
+- `tag-groups.json`
+- `tag-registry.json`
 
 Do not add domain workflows, service endpoint contracts, generated payload schemas, or scoring implementations to `studio_config.json`.
-If a domain needs behavior, place that behavior in the owning runtime module and keep this file to paths, policy values, options, and browser-facing copy.
+If a domain needs behavior, place that behavior in the owning runtime module and keep this file to paths, policy values, options, and scoped payload lookup.
 
 ## Data export page
 

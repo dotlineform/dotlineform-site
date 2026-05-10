@@ -1,0 +1,12 @@
+{
+  "intro": "Run local Studio maintenance audits.",
+  "run_button": "Run audit",
+  "running_button": "Running...",
+  "idle_status": "Select an audit to run.",
+  "service_unavailable": "Audit service unavailable. Start bin/dev-studio to run audits.",
+  "status_running": "Running audit...",
+  "status_passed": "Audit passed.",
+  "status_failed": "Audit failed.",
+  "status_request_failed": "Audit request failed.",
+  "output_label": "output"
+}

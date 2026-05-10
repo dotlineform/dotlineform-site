@@ -1,7 +1,7 @@
 import {
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   loadStudioLookupJson
@@ -224,7 +224,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "catalogue-status" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("catalogue_status");
     const serverAvailable = await probeCatalogueHealth();
     if (!serverAvailable) {
       loadingNode.textContent = getStudioText(config, "catalogue_status.server_unavailable_hint", "Local catalogue server unavailable. Catalogue drafts are disabled.");
@@ -287,7 +287,7 @@ async function init() {
   } catch (error) {
     console.warn("catalogue_status: load failed", error);
     try {
-      const config = await loadStudioConfig();
+      const config = await loadStudioConfigWithText("catalogue_status");
       loadingNode.textContent = getStudioText(config, "catalogue_status.load_failed_error", "Failed to load catalogue drafts.");
     } catch (_configError) {
       loadingNode.textContent = "Failed to load catalogue drafts.";

@@ -1,0 +1,18 @@
+{
+  "intro": "Run a docs-viewer broken-link audit for Studio or Library docs.",
+  "scope_label": "scope",
+  "scope_option_studio": "studio",
+  "scope_option_library": "library",
+  "run_button": "Run broken links",
+  "idle_status": "Select a scope and run the audit.",
+  "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run the audit.",
+  "status_running": "Running docs broken-links audit…",
+  "status_success": "Audit complete.",
+  "status_success_empty": "No broken links found.",
+  "status_failed": "Failed to run docs broken-links audit.",
+  "empty_state": "No broken links found for this scope.",
+  "column_problem": "problem",
+  "column_linked_page": "linked page",
+  "column_link": "link",
+  "column_from_page": "from page"
+}

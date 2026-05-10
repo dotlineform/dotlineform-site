@@ -1,4 +1,4 @@
-import { getStudioText, loadStudioConfig } from "./studio-config.js";
+import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
   DOCS_MANAGEMENT_ENDPOINTS,
   postJson,
@@ -296,7 +296,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "docs-broken-links" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("docs_broken_links");
     const serviceAvailable = await probeDocsManagementHealth();
 
     setText(

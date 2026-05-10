@@ -1,7 +1,7 @@
 import {
   getStudioGroups,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   loadSiteSeriesIndexJson,
@@ -108,7 +108,7 @@ async function initTagStudio() {
 
   let config = null;
   try {
-    config = await loadStudioConfig();
+    config = await loadStudioConfigWithText("series_tag_editor");
   } catch (error) {
     renderFatalError(mount, "Failed to load tag editor config.");
     setStudioRouteReady(routeRoot, true, {

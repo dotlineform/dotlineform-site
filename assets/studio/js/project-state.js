@@ -1,6 +1,6 @@
 import {
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
@@ -179,7 +179,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "project-state" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("project_state");
     const catalogueServerAvailable = Boolean(await probeCatalogueHealth());
     const docsServerAvailable = Boolean(await probeDocsManagementHealth());
     const state = {

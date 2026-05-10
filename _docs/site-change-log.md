@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 18:45"
+last_updated: "2026-05-10 19:05"
 parent_id: ""
 sort_order: 270
 ---
@@ -24,8 +24,8 @@ Archives:
 **Area:** Studio runtime / JavaScript config structural review
 
 **Summary:**
-Reduced `assets/studio/data/studio_config.json` to a smaller bootstrap manifest by moving the largest route-owned UI-copy groups into scoped payloads under `assets/studio/data/ui_text/`.
-The Studio config loader now has scoped text loading and route-level caching, and migrated catalogue editor, tag registry/aliases, data import/export, and Docs Viewer routes request their own text bundle before first render.
+Reduced `assets/studio/data/studio_config.json` to a small bootstrap manifest by moving Studio UI-copy groups into scoped payloads under `assets/studio/data/ui_text/`.
+The Studio config loader now has scoped text loading and route-level caching, and config-backed Studio routes request their own text bundle before first render.
 
 **Files changed/docs:**
 
@@ -40,7 +40,8 @@ The Studio config loader now has scoped text loading and route-level caching, an
 - [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
 
 **Impact:**
-Studio routes no longer receive catalogue editor, tag-management, import/export, or Docs Viewer copy in the bootstrap payload unless they request that scoped bundle.
+Studio routes no longer receive UI copy in the bootstrap payload.
+`studio_config.json` owns scoped text paths but no direct `ui_text` payload.
 Missing scoped bundles log visible fallback warnings while preserving existing `getStudioText(...)` fallback behavior.
 
 ## [2026-05-10] Extracted public catalogue runtime helpers

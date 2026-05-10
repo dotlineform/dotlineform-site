@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a5b4f7091d8e59eda311ae772530d13d",
-    "generated_at_utc": "2026-05-10T17:23:37Z",
+    "version": "blake2b-b76146d7c80bbf725694adb1234f496d",
+    "generated_at_utc": "2026-05-10T17:34:02Z",
     "count": 220
   },
   "entries": [
@@ -4014,24 +4014,23 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-10 18:45",
+      "last_updated": "2026-05-10 19:05",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-10 18:45 • Studio",
+      "display_meta": "2026-05-10 19:05 • Studio",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-10 18:45",
+        "2026-05-10 19:05",
         "2026",
         "05",
         "10",
-        "18",
-        "45"
+        "19"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-10 18:45 2026 05 10 18 45"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-10 19:05 2026 05 10 19"
     },
     {
       "id": "site-request-work-owned-files-links",
@@ -4119,10 +4118,10 @@
       "kind": "doc",
       "title": "Studio Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-05-10 18:45",
+      "last_updated": "2026-05-10 19:05",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-10 18:45 • Studio",
+      "display_meta": "2026-05-10 19:05 • Studio",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -4130,14 +4129,13 @@
         "js",
         "studio config loader js",
         "loader",
-        "2026-05-10 18:45",
+        "2026-05-10 19:05",
         "2026",
         "05",
         "10",
-        "18",
-        "45"
+        "19"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-10 18:45 2026 05 10 18 45"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-10 19:05 2026 05 10 19"
     },
     {
       "id": "tiered-dimension-policy",
@@ -5356,10 +5354,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 18:45",
+      "last_updated": "2026-05-10 19:05",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 18:45 • Change Requests",
+      "display_meta": "2026-05-10 19:05 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5375,14 +5373,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 18:45",
+        "2026-05-10 19:05",
         "2026",
         "05",
         "10",
-        "18",
-        "45"
+        "19"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 18:45 2026 05 10 18 45"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 19:05 2026 05 10 19"
     },
     {
       "id": "site-request-scripts-directory-organization",
@@ -5548,22 +5545,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 18:45",
-      "display_meta": "2026-05-10 18:45",
+      "last_updated": "2026-05-10 19:05",
+      "display_meta": "2026-05-10 19:05",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 18:45",
+        "2026-05-10 19:05",
         "2026",
         "05",
         "10",
-        "18",
-        "45"
+        "19"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 18:45 2026 05 10 18 45"
+      "search_text": "site-change-log site change log site change log 2026-05-10 19:05 2026 05 10 19"
     },
     {
       "id": "archive",

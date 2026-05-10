@@ -3,7 +3,7 @@ import {
 } from "./studio-data.js";
 import {
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   initializeStudioRouteState,
@@ -459,7 +459,7 @@ function initStudioWorksPage() {
   }
 
   Promise.all([
-    loadStudioConfig().catch(() => null),
+    loadStudioConfigWithText("studio_works").catch(() => null),
     fetchJson(worksIndexUrl),
     workStorageIndexUrl ? fetchJson(workStorageIndexUrl).catch(() => null) : Promise.resolve(null),
     fetchJson(seriesIndexUrl).catch(() => null)

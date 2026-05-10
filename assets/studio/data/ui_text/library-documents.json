@@ -1,0 +1,7 @@
+{
+  "filter_viewable": "viewable [{count}]",
+  "filter_parent": "parent [{count}]",
+  "status": "{count} documents",
+  "status_one": "1 document",
+  "load_failed": "Failed to load Library documents."
+}

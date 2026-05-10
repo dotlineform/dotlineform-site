@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 18:45"
+last_updated: "2026-05-10 19:05"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -52,11 +52,11 @@ Completed outcomes:
 - Analysis tag scoring moved out of the generic Studio config loader.
 - Public catalogue route helpers moved into a shared public runtime module where there was immediate reuse.
 - Dedicated public search now has opt-in local performance instrumentation for payload, normalization, query, and render timing.
-- `studio_config.json` is now a smaller bootstrap manifest with large route-owned UI-copy groups split into scoped payloads.
+- `studio_config.json` is now a smaller bootstrap manifest with Studio UI-copy groups split into scoped payloads.
 - Public `/search/` now reads labels, messages, back links, and static index paths from `assets/data/search/policy.json` without fetching the Studio manifest.
 
 Config remains intentionally open for future narrow slices.
-The first cleanup moved analysis scoring to an owner module, and Slice 7 then reduced bootstrap payload size by moving the largest route-owned copy groups out of `ui_text`.
+The first cleanup moved analysis scoring to an owner module, and Slice 7 then reduced bootstrap payload size by moving Studio UI copy out of `ui_text`.
 
 Remaining follow-up decisions should be handled as separate requests rather than reopened inside this broad review:
 
@@ -65,7 +65,7 @@ Remaining follow-up decisions should be handled as separate requests rather than
 - whether public route renderers should move out of Liquid templates
 - whether search measurements justify workers, lazy aggregate loading, or index slimming
 - whether more non-viewer Studio pages need a docs-management service client
-- whether the remaining smaller `ui_text` groups should move only when there is concrete payload or ownership pressure
+- whether any non-text route policy should move out of the bootstrap manifest when route ownership or payload pressure justifies it
 
 ## Summary
 
@@ -423,18 +423,18 @@ Implementation direction:
 
 Implementation result:
 
-- `assets/studio/data/studio_config.json` now keeps scoped UI-text bundle paths under `paths.data.ui_text` and no longer carries the largest catalogue editor, tag registry/aliases, import/export, or Docs Viewer copy groups.
-- `assets/studio/data/ui_text/*.json` owns route/domain UI copy for the migrated routes.
+- `assets/studio/data/studio_config.json` now keeps scoped UI-text bundle paths under `paths.data.ui_text` and no longer carries direct `ui_text` payloads.
+- `assets/studio/data/ui_text/*.json` owns route/domain UI copy for config-backed Studio routes.
 - `assets/studio/js/studio-config.js` now exposes scoped text loading through `loadScopedStudioText(...)`, `loadStudioConfigWithText(...)`, and `getStudioUiTextPath(...)`.
-- migrated Studio route controllers call `loadStudioConfigWithText(...)` before first render, preserving `getStudioText(...)` fallback behavior while logging missing-bundle fallbacks.
+- config-backed Studio route controllers call `loadStudioConfigWithText(...)` before first render, preserving `getStudioText(...)` fallback behavior while logging missing-bundle fallbacks.
 - Docs Viewer receives a `data-ui-text-url` shell attribute and merges `docs-viewer.json` with the bootstrap config before applying visible copy.
 - `assets/data/search/policy.json` now owns public search labels/messages, back links, and static index paths, so `assets/js/search/search-page.js` no longer imports `studio-config.js`.
 - `scripts/checks/check_runtime_payload_budgets.py` checks the bootstrap config, public search policy, and scoped UI-text bundle sizes.
 
 Acceptance checks:
 
-- `studio_config.json` shrinks materially and no longer carries the largest route-owned copy blocks
-- each migrated route loads only its own text/config bundle plus the small bootstrap manifest
+- `studio_config.json` shrinks materially and no longer carries route-owned copy blocks
+- each config-backed route loads only its own text/config bundle plus the small bootstrap manifest
 - missing scoped text files fail visibly in local development but keep a controlled fallback path where needed
 - public `/search/` can boot without fetching `assets/studio/data/studio_config.json`
 - payload-budget checks report or fail when bootstrap/config files exceed agreed limits

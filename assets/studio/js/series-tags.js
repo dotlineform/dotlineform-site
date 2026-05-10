@@ -2,7 +2,7 @@ import {
   getStudioGroups,
   getStudioRoute,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   buildStudioRagTooltip,
@@ -100,7 +100,7 @@ async function initSeriesTagsPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfig();
+    config = await loadStudioConfigWithText("series_tags");
     STUDIO_GROUPS = getStudioGroups(config);
     GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
   } catch (error) {

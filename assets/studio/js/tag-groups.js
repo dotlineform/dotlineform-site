@@ -1,7 +1,7 @@
 import {
   getStudioGroups,
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   loadStudioGroupsJson,
@@ -33,7 +33,7 @@ async function initTagGroupsPage() {
   initializeStudioRouteState(root, { route: "tag-groups", mode: "list" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("tag_groups");
     STUDIO_GROUPS = getStudioGroups(config);
     const data = await loadStudioGroupsJson(config);
     const groups = normalizeStudioGroups(data, STUDIO_GROUPS);

@@ -1,6 +1,6 @@
 import {
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
@@ -310,7 +310,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "bulk-add-work" });
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("bulk_add_work");
     state.config = config;
     state.serverAvailable = Boolean(await probeCatalogueHealth());
     pageHeadingNode.textContent = t(state, "page_heading", "bulk add work");

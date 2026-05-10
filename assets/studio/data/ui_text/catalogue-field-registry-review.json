@@ -1,0 +1,12 @@
+{
+  "page_heading": "catalogue field registry",
+  "context_hint": "Read-only view of the active field-to-artifact registry used by catalogue build planning.",
+  "loading": "loading catalogue field registry...",
+  "empty_state": "",
+  "search_placeholder": "field name",
+  "output_label": "registry extract",
+  "status_loaded": "Registry loaded.",
+  "meta_all": "Showing full registry.",
+  "meta_exact": "Showing {count} exact rule match(es) for field `{field}`.",
+  "meta_partial": "Showing {count} partial rule match(es) for field search `{field}`."
+}

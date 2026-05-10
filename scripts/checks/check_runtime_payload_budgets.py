@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 DEFAULT_BUDGETS = {
-    "assets/studio/data/studio_config.json": 45_000,
+    "assets/studio/data/studio_config.json": 12_000,
     "assets/data/search/policy.json": 8_000,
 }
 UI_TEXT_GLOB = "assets/studio/data/ui_text/*.json"

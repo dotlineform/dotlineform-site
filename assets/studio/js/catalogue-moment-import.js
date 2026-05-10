@@ -1,6 +1,6 @@
 import {
   getStudioText,
-  loadStudioConfig
+  loadStudioConfigWithText
 } from "./studio-config.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
@@ -431,7 +431,7 @@ async function init() {
   };
 
   try {
-    const config = await loadStudioConfig();
+    const config = await loadStudioConfigWithText("catalogue_moment_import");
     state.config = config;
     state.serverAvailable = Boolean(await probeCatalogueHealth());
     saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_moment_import.${key}`, fallback, tokens));
