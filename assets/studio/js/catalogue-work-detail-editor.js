@@ -1,5 +1,4 @@
 import {
-  getStudioRoute,
   getStudioText,
   loadStudioConfigWithText
 } from "./studio-config.js";
@@ -8,57 +7,40 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
-  applyCatalogueBuild,
-  applyCatalogueDelete,
-  applyCataloguePublication,
-  createCatalogueWorkDetail,
-  previewCatalogueBuild,
-  previewCatalogueDelete,
-  previewCataloguePublication,
-  saveCatalogueBulkRecords,
-  saveCatalogueWorkDetail
-} from "./catalogue-editor-service-client.js";
-import {
-  computeRecordHash
-} from "./catalogue-editor-records.js";
-import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
   catalogueDraftHasChanges,
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
 import {
-  formatCatalogueBuildPreview,
-  formatCatalogueDeletePreview,
-  formatCataloguePublicationPreview
-} from "./catalogue-editor-modal-formatters.js";
-import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
-  buildSaveModeText,
-  utcTimestamp
+  buildSaveModeText
 } from "./tag-studio-save.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
   WORK_DETAIL_STATUS_OPTIONS as STATUS_OPTIONS,
-  buildCreateWorkDetailPayload,
-  buildSaveWorkDetailPayload,
   buildWorkDetailDraftFromRecord,
   canonicalizeWorkDetailScalar as canonicalizeScalar,
-  normalizeDetailId,
-  normalizeDetailUid,
   normalizeText,
   normalizeWorkId,
   suggestNextDetailId,
   validateCreateWorkDetailDraft
 } from "./catalogue-work-detail-fields.js";
+import {
+  deleteCurrentDetail,
+  refreshWorkDetailBuildPreview,
+  refreshWorkDetailMedia,
+  saveCurrentDetail,
+  applyWorkDetailPublicationChange,
+  updateWorkDetailPublishControls
+} from "./catalogue-work-detail-actions.js";
 import {
   WORK_DETAIL_FORM_FIELDS as FORM_FIELDS,
   applyWorkDetailDraftToInputs,
@@ -164,141 +146,6 @@ async function loadDetailLookupRecord(state, detailUid) {
     cache: "no-store",
     catalogueServerAvailable: state.serverAvailable
   });
-}
-
-function buildPayload(state) {
-  if (state.mode === "bulk") {
-    const setFields = {};
-    EDITABLE_FIELDS.forEach((field) => {
-      if (!state.bulkTouchedFields.has(field.key)) return;
-      setFields[field.key] = field.key === "status"
-        ? normalizeText(state.draft[field.key]).toLowerCase() || null
-        : normalizeText(state.draft[field.key]) || null;
-    });
-    const expectedRecordHashes = {};
-    state.bulkDetailUids.forEach((detailUid) => {
-      expectedRecordHashes[detailUid] = state.bulkRecordHashes.get(detailUid) || "";
-    });
-    return {
-      kind: "work_details",
-      ids: state.bulkDetailUids.slice(),
-      expected_record_hashes: expectedRecordHashes,
-      apply_build: bulkSelectionHasPublishedRecords(state),
-      set_fields: setFields
-    };
-  }
-
-  const draft = state.draft;
-  return {
-    ...buildSaveWorkDetailPayload({ ...state, draft, applyBuild: currentDetailIsPublished(state) }),
-    activity_context: buildWorkDetailActivityContext("save-work-detail", "catalogueWorkDetailSave", "#catalogueWorkDetailSave", state.currentDetailUid)
-  };
-}
-
-function buildWorkDetailActivityContext(actionId, controlId, controlSelector, detailUid) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-work-detail",
-    actionId,
-    route: "/studio/catalogue-work-detail/",
-    controlId,
-    controlSelector,
-    recordIdField: "detail_uid",
-    recordId: detailUid
-  });
-}
-
-function currentDetailIsPublished(state) {
-  return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
-}
-
-function currentDetailIsDraft(state) {
-  return normalizeText(state.draft && state.draft.status).toLowerCase() === "draft";
-}
-
-function bulkSelectionHasPublishedRecords(state) {
-  if (state.mode !== "bulk") return false;
-  return state.bulkDetailUids.some((detailUid) => {
-    const record = state.bulkRecords.get(detailUid);
-    return normalizeText(record && record.status).toLowerCase() === "published";
-  });
-}
-
-function bulkPublishedBuildTargets(state) {
-  return state.bulkDetailUids
-    .filter((detailUid) => {
-      const record = state.bulkRecords.get(detailUid);
-      return normalizeText(record && record.status).toLowerCase() === "published";
-    })
-    .map((detailUid) => {
-      const record = state.bulkRecords.get(detailUid);
-      return { work_id: normalizeWorkId(record && record.work_id), extra_series_ids: [] };
-    })
-    .filter((target) => target.work_id);
-}
-
-function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const canPublish = state.mode === "single" && hasRecord && currentDetailIsDraft(state);
-  const canUnpublish = state.mode === "single" && hasRecord && currentDetailIsPublished(state);
-  const label = canUnpublish
-    ? t(state, "unpublish_button", "Unpublish")
-    : t(state, "publish_button", "Publish");
-  state.publicationButton.textContent = label;
-  state.publicationButton.hidden = !(canPublish || canUnpublish);
-  state.publicationButton.disabled = !(canPublish || canUnpublish)
-    || (canPublish && dirty)
-    || (canPublish && errors.size > 0)
-    || state.isSaving
-    || state.isBuilding
-    || state.isDeleting
-    || !state.serverAvailable;
-}
-
-function applySingleSaveBuildOutcome(state, response) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  if (!currentDetailIsPublished(state)) {
-    state.rebuildPending = false;
-    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (!response || !response.build_requested || !build) {
-    state.rebuildPending = Boolean(response && response.changed);
-    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (build.ok) {
-    state.rebuildPending = false;
-    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
-  }
-  state.rebuildPending = true;
-  return {
-    kind: "saved_update_failed",
-    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
-    error: normalizeText(build.error)
-  };
-}
-
-function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  if (!bulkSelectionHasPublishedRecords(state)) {
-    state.rebuildPending = false;
-    state.bulkBuildTargets = [];
-    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (!response || !response.build_requested || !build) {
-    state.rebuildPending = Boolean(response && response.changed);
-    state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : fallbackBuildTargets;
-    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (build.ok) {
-    state.rebuildPending = false;
-    state.bulkBuildTargets = [];
-    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
-  }
-  state.rebuildPending = true;
-  state.bulkBuildTargets = Array.isArray(build.remaining_targets) ? build.remaining_targets : fallbackBuildTargets;
-  return {
-    kind: "saved_update_failed",
-    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
-    error: normalizeText(build.error)
-  };
 }
 
 function syncUrl(detailValue, options = {}) {
@@ -533,7 +380,7 @@ function updateEditorState(state) {
     isDeleting: state.isDeleting,
     serverAvailable: state.serverAvailable
   });
-  updatePublishControls(state, { hasRecord, dirty, errors });
+  updateWorkDetailPublishControls(state, buildWorkDetailActionContext(state), { hasRecord, dirty, errors });
   renderReadiness(state);
   syncRouteBusyState(state);
 }
@@ -585,6 +432,33 @@ function buildWorkDetailFormContext(state) {
   };
 }
 
+function buildWorkDetailActionContext(state) {
+  return {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    setTextWithState,
+    draftHasChanges: () => draftHasChanges(state),
+    validateDraft: () => validateDraft(state),
+    updateFieldMessages: (errors) => updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state)),
+    updateEditorState: () => updateEditorState(state),
+    syncRouteBusyState: () => syncRouteBusyState(state),
+    renderCurrentPreview: () => renderCurrentPreview(state),
+    renderReadiness: () => renderReadiness(state),
+    setLoadedBulkDetails: (detailUids, recordsById, recordHashes, options = {}) => {
+      setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, options);
+    },
+    setLoadedRecord: (detailUid, record, options = {}) => {
+      setLoadedRecord(state, detailUid, record, options);
+    },
+    buildDetailSearchRecord,
+    loadDetailLookupRecord: (detailUid) => loadDetailLookupRecord(state, detailUid),
+    openDetailByUid: (detailUid) => openWorkDetailByUid(state, detailUid, buildWorkDetailSelectionContext(state))
+  };
+}
+
+function refreshBuildPreview(state) {
+  return refreshWorkDetailBuildPreview(state, buildWorkDetailActionContext(state));
+}
+
 function buildWorkDetailSelectionContext(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
@@ -603,540 +477,6 @@ function buildWorkDetailSelectionContext(state) {
     updateSummary: () => updateSummary(state),
     updateEditorState: () => updateEditorState(state)
   };
-}
-
-async function refreshBuildPreview(state) {
-  if (state.mode === "bulk") {
-    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
-      ? state.bulkBuildTargets
-      : bulkPublishedBuildTargets(state);
-    state.buildPreview = null;
-    setTextWithState(
-      state.buildImpactNode,
-      previewTargets.length
-        ? t(state, "bulk_build_preview", "Build preview: {count} parent work scopes will be rebuilt.", {
-          count: String(previewTargets.length)
-        })
-        : ""
-    );
-    renderCurrentPreview(state);
-    return;
-  }
-  if (!state.currentWorkId || !state.serverAvailable) {
-    state.buildPreview = null;
-    setTextWithState(state.buildImpactNode, "");
-    renderCurrentPreview(state);
-    renderReadiness(state);
-    return;
-  }
-  if (!currentDetailIsPublished(state)) {
-    state.buildPreview = null;
-    setTextWithState(state.buildImpactNode, t(state, "build_preview_unpublished", "Public update unavailable while the detail is not published."));
-    renderCurrentPreview(state);
-    renderReadiness(state);
-    return;
-  }
-  try {
-    const response = await previewCatalogueBuild({
-      work_id: state.currentWorkId,
-      detail_uid: state.currentDetailUid
-    });
-    state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultTemplate: "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
-    }));
-    renderCurrentPreview(state);
-    renderReadiness(state);
-  } catch (error) {
-    state.buildPreview = null;
-    setTextWithState(
-      state.buildImpactNode,
-      `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-    renderCurrentPreview(state);
-    renderReadiness(state);
-  }
-}
-
-async function saveCurrentDetail(state) {
-  if (state.mode === "new") {
-    await createCurrentDetail(state);
-    return;
-  }
-  if (state.mode === "bulk") {
-    if (!state.bulkDetailUids.length) return;
-  } else if (!state.currentRecord) {
-    return;
-  }
-  const errors = validateDraft(state);
-  updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
-  if (errors.size > 0) {
-    setTextWithState(state.statusNode, t(state, "save_status_validation_error", "Fix validation errors before saving."), "error");
-    updateEditorState(state);
-    return;
-  }
-
-  if (!draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "save_status_no_changes", "No changes to save."));
-    setTextWithState(state.resultNode, t(state, "save_result_unchanged", "Source already matches the current form values."));
-    updateEditorState(state);
-    return;
-  }
-
-  state.isSaving = true;
-  state.saveButton.disabled = true;
-  syncRouteBusyState(state);
-  setTextWithState(
-    state.statusNode,
-    (state.mode === "bulk" ? bulkSelectionHasPublishedRecords(state) : currentDetailIsPublished(state))
-      ? t(state, "save_status_saving_and_updating", "Saving source record and updating parent work output…")
-      : t(state, "save_status_saving", "Saving source record…")
-  );
-  setTextWithState(state.resultNode, "");
-
-  try {
-    if (state.mode === "bulk") {
-      const response = await saveCatalogueBulkRecords(buildPayload(state));
-      const changedRecords = Array.isArray(response && response.records) ? response.records : [];
-      changedRecords.forEach((item) => {
-        const detailUid = normalizeDetailUid(item && item.detail_uid);
-        const record = item && item.record && typeof item.record === "object" ? item.record : null;
-        if (!detailUid || !record) return;
-        state.bulkRecords.set(detailUid, record);
-        state.bulkRecordHashes.set(detailUid, normalizeText(item.record_hash) || "");
-        state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
-      });
-      const fallbackBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
-      const outcome = applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets);
-      setLoadedBulkDetails(state, state.bulkDetailUids, state.bulkRecords, state.bulkRecordHashes, {
-        keepResult: true,
-        buildTargets: state.bulkBuildTargets
-      });
-      if (outcome.kind === "saved_and_updated") {
-        setTextWithState(
-          state.resultNode,
-          t(state, "bulk_save_result_success_applied", "Saved {count} detail records and updated the parent work output at {saved_at}.", {
-            count: String(response.changed_count || 0),
-            saved_at: outcome.stamp
-          }),
-          "success"
-        );
-        setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-      } else if (outcome.kind === "saved_update_failed") {
-        setTextWithState(
-          state.resultNode,
-          t(state, "bulk_save_result_success_partial", "Saved {count} detail records at {saved_at}, but the public update failed.", {
-            count: String(response.changed_count || 0),
-            saved_at: outcome.stamp
-          }),
-          "warn"
-        );
-        setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
-      } else if (outcome.kind === "saved_unpublished") {
-        setTextWithState(
-          state.resultNode,
-          response.changed
-            ? t(state, "bulk_save_result_success_unpublished", "Saved {count} draft detail records at {saved_at}.", {
-              count: String(response.changed_count || 0),
-              saved_at: outcome.stamp
-            })
-            : t(state, "save_result_unchanged", "Source already matches the current form values."),
-          response.changed ? "success" : ""
-        );
-        setTextWithState(
-          state.statusNode,
-          t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
-          response.changed ? "success" : ""
-        );
-      } else {
-        setTextWithState(
-          state.resultNode,
-          response.changed
-            ? t(state, "bulk_save_result_success", "Saved {count} detail records at {saved_at}. Parent-work update still pending.", {
-              count: String(response.changed_count || 0),
-              saved_at: outcome.stamp
-            })
-            : t(state, "save_result_unchanged", "Source already matches the current form values."),
-          response.changed ? "success" : ""
-        );
-        setTextWithState(
-          state.statusNode,
-          t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
-          response.changed ? "success" : ""
-        );
-      }
-      return;
-    }
-
-    const response = await saveCatalogueWorkDetail(buildPayload(state));
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!record) throw new Error("save response missing record");
-    state.detailSearchByUid.set(state.currentDetailUid, buildDetailSearchRecord(state.currentDetailUid, record));
-    const outcome = applySingleSaveBuildOutcome(state, response);
-    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    setLoadedRecord(state, state.currentDetailUid, record, {
-      recordHash,
-      keepResult: true,
-      lookup: {
-        work_detail: record,
-        record_hash: recordHash
-      }
-    });
-    await refreshBuildPreview(state);
-    if (outcome.kind === "saved_and_updated") {
-      setTextWithState(
-        state.resultNode,
-        t(state, "save_result_success_applied", "Saved source changes and updated the parent work output at {saved_at}.", { saved_at: outcome.stamp }),
-        "success"
-      );
-      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-    } else if (outcome.kind === "saved_update_failed") {
-      setTextWithState(
-        state.resultNode,
-        t(state, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
-        "warn"
-      );
-      setTextWithState(state.statusNode, `${t(state, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
-    } else if (outcome.kind === "saved_unpublished") {
-      setTextWithState(
-        state.resultNode,
-        t(state, "save_result_success_unpublished", "Source saved at {saved_at}.", { saved_at: outcome.stamp }),
-        response.changed ? "success" : ""
-      );
-      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
-    } else {
-      setTextWithState(
-        state.resultNode,
-        response.changed
-          ? t(state, "save_result_success", "Source saved at {saved_at}. Parent-work update still pending.", { saved_at: outcome.stamp })
-          : t(state, "save_result_unchanged", "Source already matches the current form values."),
-        response.changed ? "success" : ""
-      );
-      setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
-    }
-  } catch (error) {
-    const isConflict = Number(error && error.status) === 409;
-    const message = isConflict
-      ? t(state, "save_status_conflict", "Source record changed since this page loaded. Reload the detail before saving again.")
-      : `${t(state, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-  } finally {
-    state.isSaving = false;
-    updateEditorState(state);
-  }
-}
-
-async function createCurrentDetail(state) {
-  if (state.mode !== "new") return;
-  const errors = validateDraft(state);
-  updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
-  if (errors.size > 0) {
-    const workIdError = errors.get("work_id") || "";
-    setTextWithState(
-      state.statusNode,
-      workIdError || t(state, "create_status_validation_error", "Fix validation errors before creating the draft detail."),
-      "error"
-    );
-    updateEditorState(state);
-    return;
-  }
-
-  state.isSaving = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "create_status_saving", "Creating draft detail..."));
-  setTextWithState(state.resultNode, "");
-
-  try {
-    const requestedDetailUid = normalizeDetailUid(`${normalizeWorkId(state.draft.work_id)}-${normalizeDetailId(state.draft.detail_id)}`);
-    const response = await createCatalogueWorkDetail({
-      ...buildCreateWorkDetailPayload(state.draft),
-      activity_context: buildWorkDetailActivityContext("create-work-detail", "catalogueWorkDetailSave", "#catalogueWorkDetailSave", requestedDetailUid)
-    });
-    const detailUid = normalizeDetailUid(response && response.detail_uid);
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!detailUid) {
-      throw new Error("create response missing detail id");
-    }
-    if (record) {
-      state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
-    }
-    state.isSaving = false;
-    syncRouteBusyState(state);
-    await openWorkDetailByUid(state, detailUid, buildWorkDetailSelectionContext(state));
-    setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft detail {detail_uid}. Opening edit mode...", { detail_uid: detailUid }), "success");
-    setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft detail {detail_uid}.", { detail_uid: detailUid }), "success");
-  } catch (error) {
-    const message = `${t(state, "create_status_failed", "Draft detail create failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-    setTextWithState(state.resultNode, message, "error");
-    state.isSaving = false;
-    updateEditorState(state);
-  }
-}
-
-async function buildCurrentDetail(state) {
-  if (state.mode === "bulk") {
-    if (!state.bulkDetailUids.length || !state.serverAvailable) return;
-  } else if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) {
-    return;
-  }
-  state.isBuilding = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));
-  setTextWithState(state.resultNode, "");
-  try {
-    if (state.mode === "bulk") {
-      const buildTargets = state.rebuildPending && state.bulkBuildTargets.length
-        ? state.bulkBuildTargets
-        : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
-          const record = state.bulkRecords.get(detailUid);
-          return normalizeWorkId(record && record.work_id);
-        }).filter(Boolean))).map((workId) => ({ work_id: workId, extra_series_ids: [] }));
-      for (const target of buildTargets) {
-        await applyCatalogueBuild({
-          work_id: target.work_id,
-          extra_series_ids: Array.isArray(target.extra_series_ids) ? target.extra_series_ids : []
-        });
-      }
-      state.rebuildPending = false;
-      state.bulkBuildTargets = [];
-      await refreshBuildPreview(state);
-      const completedAt = utcTimestamp();
-      setTextWithState(
-        state.resultNode,
-        t(state, "bulk_build_result_success", "Updated {count} parent work scopes at {completed_at}. Studio Activity updated.", {
-          count: String(buildTargets.length),
-          completed_at: completedAt
-        }),
-        "success"
-      );
-      setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-      return;
-    }
-
-    const response = await applyCatalogueBuild({
-      work_id: state.currentWorkId,
-      detail_uid: state.currentDetailUid
-    });
-    state.rebuildPending = false;
-    await refreshBuildPreview(state);
-    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(
-      state.resultNode,
-      t(state, "build_result_success", "Parent work output updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
-      "success"
-    );
-    setTextWithState(state.statusNode, t(state, "build_status_success", "Site update completed."), "success");
-  } catch (error) {
-    setTextWithState(
-      state.statusNode,
-      `${t(state, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isBuilding = false;
-    updateEditorState(state);
-  }
-}
-
-async function applyPublicationChange(state) {
-  if (state.mode !== "single" || !state.currentRecord || !state.currentDetailUid || !state.serverAvailable) return;
-  const action = currentDetailIsPublished(state) ? "unpublish" : currentDetailIsDraft(state) ? "publish" : "";
-  if (!action) {
-    setTextWithState(state.statusNode, t(state, "publication_status_invalid", "Publication is available only for draft or published details."), "error");
-    return;
-  }
-  if (action === "publish" && draftHasChanges(state)) {
-    setTextWithState(state.statusNode, t(state, "publication_save_first", "Save source changes before publishing."), "error");
-    return;
-  }
-
-  if (action === "publish") {
-    const errors = validateDraft(state);
-    updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
-    if (errors.size > 0) {
-      setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
-      updateEditorState(state);
-      return;
-    }
-  }
-
-  state.isBuilding = true;
-  updateEditorState(state);
-  setTextWithState(
-    state.statusNode,
-    action === "publish"
-      ? t(state, "publication_preview_publish_running", "Preparing publish preview…")
-      : t(state, "publication_preview_unpublish_running", "Preparing unpublish preview…")
-  );
-  setTextWithState(state.resultNode, "");
-
-  try {
-    const request = {
-      kind: "work_detail",
-      action,
-      detail_uid: state.currentDetailUid,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildWorkDetailActivityContext(`${action}-work-detail`, "catalogueWorkDetailPublication", "#catalogueWorkDetailPublication", state.currentDetailUid)
-    };
-    const previewResponse = await previewCataloguePublication(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    if ((preview && preview.blocked) || blockers.length) {
-      const message = blockers[0] || t(state, "publication_status_blocked", "Publication change is blocked.");
-      setTextWithState(state.statusNode, message, "error");
-      return;
-    }
-
-    if (action === "unpublish") {
-      const summary = formatCataloguePublicationPreview(preview, {
-        text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-        defaultText: "Unpublish this detail?",
-        includeDirtyNote: draftHasChanges(state)
-      });
-      if (!window.confirm(summary)) {
-        setTextWithState(state.statusNode, t(state, "publication_status_cancelled", "Publication change cancelled."));
-        return;
-      }
-    }
-
-    setTextWithState(
-      state.statusNode,
-      action === "publish"
-        ? t(state, "publication_publish_running", "Publishing detail…")
-        : t(state, "publication_unpublish_running", "Unpublishing detail…")
-    );
-    const response = await applyCataloguePublication(request);
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!record) throw new Error("publication response missing record");
-
-    const detailUid = state.currentDetailUid;
-    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    state.detailSearchByUid.set(detailUid, buildDetailSearchRecord(detailUid, record));
-    state.rebuildPending = response.status === "public_update_failed";
-    const lookup = await loadDetailLookupRecord(state, detailUid).catch(() => null);
-    setLoadedRecord(state, detailUid, record, {
-      recordHash,
-      keepResult: true,
-      lookup: lookup || {
-        work_detail: record,
-        record_hash: recordHash
-      }
-    });
-    await refreshBuildPreview(state);
-
-    if (response.status === "public_update_failed") {
-      const error = normalizeText(response.public_update && response.public_update.error);
-      setTextWithState(state.statusNode, `${t(state, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
-      setTextWithState(state.resultNode, t(state, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
-      return;
-    }
-
-    if (action === "publish") {
-      setTextWithState(state.statusNode, t(state, "publication_status_published", "Detail published."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_published", "Detail is published and parent work output has been updated."), "success");
-    } else {
-      setTextWithState(state.statusNode, t(state, "publication_status_unpublished", "Detail unpublished."), "success");
-      setTextWithState(state.resultNode, t(state, "publication_result_unpublished", "Detail is draft again and public output has been cleaned up."), "success");
-    }
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
-      : `${t(state, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-  } finally {
-    state.isBuilding = false;
-    updateEditorState(state);
-  }
-}
-
-function countMediaItems(media, group) {
-  const values = media && media[group] && typeof media[group] === "object" ? media[group] : {};
-  return Object.values(values).reduce((total, items) => total + (Array.isArray(items) ? items.length : 0), 0);
-}
-
-async function refreshDetailMedia(state) {
-  if (!state.currentRecord || !state.currentWorkId || !state.currentDetailUid || !state.serverAvailable || draftHasChanges(state)) return;
-  state.isBuilding = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media…"));
-  setTextWithState(state.resultNode, "");
-  try {
-    const response = await applyCatalogueBuild({
-      work_id: state.currentWorkId,
-      detail_uid: state.currentDetailUid,
-      media_only: true,
-      force: true
-    });
-    const blockedCount = countMediaItems(response && response.media, "blocked");
-    await refreshBuildPreview(state);
-    if (blockedCount > 0) {
-      setTextWithState(state.statusNode, t(state, "media_refresh_status_blocked", "Media refresh blocked."), "error");
-      setTextWithState(state.resultNode, normalizeText(response && response.media && response.media.summary), "error");
-      return;
-    }
-    setTextWithState(state.statusNode, t(state, "media_refresh_status_success", "Media refresh completed."), "success");
-    setTextWithState(state.resultNode, t(state, "media_refresh_result_success", "Thumbnails updated; primary variants staged for publishing."), "success");
-  } catch (error) {
-    setTextWithState(
-      state.statusNode,
-      `${t(state, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isBuilding = false;
-    updateEditorState(state);
-  }
-}
-
-async function deleteCurrentDetail(state) {
-  if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
-  state.isDeleting = true;
-  updateEditorState(state);
-  setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview…"));
-  setTextWithState(state.resultNode, "");
-  try {
-    const request = {
-      kind: "work_detail",
-      detail_uid: state.currentDetailUid,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildWorkDetailActivityContext("delete-work-detail", "catalogueWorkDetailDelete", "#catalogueWorkDetailDelete", state.currentDetailUid)
-    };
-    const previewResponse = await previewCatalogueDelete(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
-    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
-      const message = blockers[0] || validationErrors[0] || t(state, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(state.statusNode, message, "error");
-      state.isDeleting = false;
-      updateEditorState(state);
-      return;
-    }
-    const summary = formatCatalogueDeletePreview(preview, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultText: "Delete this source record?"
-    });
-    if (!window.confirm(summary)) {
-      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."));
-      state.isDeleting = false;
-      updateEditorState(state);
-      return;
-    }
-    setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
-    await applyCatalogueDelete(request);
-    const route = getStudioRoute(state.config, "catalogue_work_editor");
-    window.location.assign(`${route}?work=${encodeURIComponent(state.currentWorkId)}`);
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
-      : `${t(state, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(state.statusNode, message, "error");
-    state.isDeleting = false;
-    updateEditorState(state);
-  }
 }
 
 async function init() {
@@ -1264,21 +604,22 @@ async function init() {
       state.workSearchById.set(workId, record);
     });
     const selectionContext = buildWorkDetailSelectionContext(state);
+    const actionContext = buildWorkDetailActionContext(state);
     bindWorkDetailSelectionControls(state, selectionContext);
     readinessNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
       if (!button) return;
-      refreshDetailMedia(state).catch((error) => {
+      refreshWorkDetailMedia(state, actionContext).catch((error) => {
         console.warn("catalogue_work_detail_editor: unexpected media refresh failure", error);
       });
     });
-    saveButton.addEventListener("click", () => saveCurrentDetail(state).catch((error) => {
+    saveButton.addEventListener("click", () => saveCurrentDetail(state, actionContext).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected save failure", error);
     }));
-    publicationButton.addEventListener("click", () => applyPublicationChange(state).catch((error) => {
+    publicationButton.addEventListener("click", () => applyWorkDetailPublicationChange(state, actionContext).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected publication failure", error);
     }));
-    deleteButton.addEventListener("click", () => deleteCurrentDetail(state).catch((error) => {
+    deleteButton.addEventListener("click", () => deleteCurrentDetail(state, actionContext).catch((error) => {
       console.warn("catalogue_work_detail_editor: unexpected delete failure", error);
     }));
 
