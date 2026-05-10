@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 21:38"
+last_updated: "2026-05-10 21:47"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -16,6 +16,7 @@ Status:
 - Slice A completed for Work Detail Editor
 - Slice B first extraction completed for Work Detail selection/opening
 - Slice B second extraction completed for Work Detail form rendering/synchronization
+- Slice B third extraction completed for Work Detail summary/readiness/preview rendering
 
 ## Implementation Progress
 
@@ -26,7 +27,8 @@ Status:
 - Added `assets/studio/js/catalogue-work-detail-form.js` for form field rendering, readonly field rendering, field label refresh, field value synchronization, field availability, and validation message rendering.
 - Kept `assets/studio/js/catalogue-work-detail-editor.js` responsible for route bootstrap, state assembly, field rendering, summary/readiness rendering, and save/build/publication/delete workflows.
 - Kept form input mutation and validation decisions in the route controller so save/build/publication contracts remain unchanged.
-- Deferred Work Detail summary/readiness and action workflow extraction to later slices so this change does not alter save/build/publication contracts.
+- Added `assets/studio/js/catalogue-work-detail-sections.js` for current-detail preview rendering, readiness rows, new/single/bulk summary rendering, and shared Work Detail selection-list formatting.
+- Kept Work Detail action workflow sequencing in the route controller for the next review slice because those paths still coordinate service responses, record hashes, route state, and status messaging.
 
 ## Purpose
 
@@ -85,7 +87,7 @@ Post Work Editor cleanup, the remaining Catalogue route controllers over the lon
 
 | File | Current disposition |
 | --- | --- |
-| `assets/studio/js/catalogue-work-detail-editor.js` | selection/opening and form rendering/synchronization extractions complete; remaining review areas are summary/readiness rendering and action workflow sequencing |
+| `assets/studio/js/catalogue-work-detail-editor.js` | selection/opening, form rendering/synchronization, and summary/readiness/preview extractions complete; remaining review area is action workflow sequencing |
 | `assets/studio/js/catalogue-series-editor.js` | medium priority; series has fewer sections but owns membership, save/build/publication, and prose workflows |
 | `assets/studio/js/catalogue-moment-editor.js` | medium priority; focus on import/prose/media/action workflow boundaries rather than line-count reduction |
 

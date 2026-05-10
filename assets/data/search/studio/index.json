@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2eed1fc88b71991c13f52d3980d5a188",
-    "generated_at_utc": "2026-05-10T20:39:09Z",
+    "version": "blake2b-ab4f4ec8117ee3f90ae6c4358dcee6fa",
+    "generated_at_utc": "2026-05-10T20:47:16Z",
     "count": 223
   },
   "entries": [
@@ -3811,10 +3811,10 @@
       "kind": "doc",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
-      "last_updated": "2026-05-10 21:38",
+      "last_updated": "2026-05-10 21:47",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 21:38 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 21:47 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-catalogue-js-runtime-consistency",
         "site",
@@ -3831,14 +3831,14 @@
         "config",
         "structural",
         "review",
-        "2026-05-10 21:38",
+        "2026-05-10 21:47",
         "2026",
         "05",
         "10",
         "21",
-        "38"
+        "47"
       ],
-      "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-10 21:38 2026 05 10 21 38"
+      "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-10 21:47 2026 05 10 21 47"
     },
     {
       "id": "css-refactor",
