@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 19:05"
+last_updated: "2026-05-10 19:18"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -13,7 +13,8 @@ hidden: false
 Status:
 
 - request captured
-- implementation slices not started
+- Slice A implemented
+- Slice B not started
 
 ## Purpose
 
@@ -87,7 +88,7 @@ If the work search payload can support open/search/existence checks and per-reco
 
 ### Slice A: Work Editor Init Split
 
-Status: not started.
+Status: implemented.
 
 Target:
 
@@ -106,6 +107,22 @@ Acceptance checks:
 - new mode remains routable
 - bulk selection still parses and loads selected records
 - no visible UI copy, button state, or ready-state behavior changes
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-editor.js` now keeps `init` as a short route orchestrator.
+- DOM collection, initial state creation, initial field rendering, config/text binding, server probing, startup data loading, event binding, initial route selection, loaded-state marking, and init error rendering are named helpers.
+- This slice intentionally preserves the existing startup data contract, including the full `catalogue_works` read, so Slice B can address payload behavior separately.
+- `init` dropped from about 330 lines to 28 lines.
+
+Targeted verification:
+
+- `node --check assets/studio/js/catalogue-work-editor.js` passed.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed against the temporary build with the catalogue service blocked; the work editor reached ready state with `service=unavailable`.
+- Static Playwright smoke passed against the temporary build with the existing catalogue service available; `?work=00001` loaded as `mode=single` with `recordLoaded=true`.
+- Focused Playwright checks passed for `?mode=new` and `?work=00001,00002`, confirming new mode and bulk mode still become route-ready.
+- Runtime payload was effectively unchanged by design: the route still loads 16 transitive JS modules, about 212 KB raw and 45 KB gzip, and the `catalogue_works` startup read remains for Slice B.
 
 ### Slice B: Remove Full `catalogue_works` Startup Read
 

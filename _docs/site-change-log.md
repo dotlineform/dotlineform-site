@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 19:05"
+last_updated: "2026-05-10 19:18"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,26 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Split Catalogue Work Editor init orchestration
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Split the Catalogue Work Editor bootstrap into named helpers for DOM collection, state creation, field rendering, config/text binding, server probing, startup data loading, event binding, initial route selection, loaded-state marking, and init error rendering.
+The route `init` function now stays focused on orchestration while preserving existing user workflow behavior.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+
+**Impact:**
+This is a behavior-preserving Slice A refactor.
+It reduces the main `init` function from about 330 lines to 28 lines without changing the current startup data contract.
+The full `catalogue_works` startup read remains intentionally in place for the next payload-focused slice.
 
 ## [2026-05-10] Split Studio runtime UI text into scoped payloads
 

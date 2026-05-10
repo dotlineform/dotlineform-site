@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 19:05"
-ui_status: done
+last_updated: "2026-05-10 19:10"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
 hidden: false
