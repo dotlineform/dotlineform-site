@@ -80,4 +80,4 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-moment-editor
 <p class="tagStudio__status" id="catalogueMomentLoading">loading catalogue moment editor...</p>
 <p class="tagStudio__empty" id="catalogueMomentEmpty" hidden></p>
 
-<script type="module" src="{{ '/assets/studio/js/catalogue-moment-editor.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/catalogue-moment-editor.js' %}

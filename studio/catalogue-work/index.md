@@ -151,4 +151,4 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
 <p class="tagStudio__status" id="catalogueWorkLoading">loading catalogue work editor…</p>
 <p class="tagStudio__empty" id="catalogueWorkEmpty" hidden></p>
 
-<script type="module" src="{{ '/assets/studio/js/catalogue-work-editor.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/catalogue-work-editor.js' %}

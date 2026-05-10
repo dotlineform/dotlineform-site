@@ -41,4 +41,4 @@ studio_page_doc: /docs/?scope=studio&doc=library-documents
 
 <p class="tagStudio__status" id="libraryDocumentsBootStatus">loading Library documents...</p>
 
-<script type="module" src="{{ '/assets/studio/js/library-documents.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/library-documents.js' %}

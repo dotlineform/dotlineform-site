@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 22:35"
+last_updated: "2026-05-10 13:05"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Versioned Studio route module entries
+
+**Status:** implemented
+
+**Area:** Studio runtime / JavaScript config / maintainability
+
+**Summary:**
+Added `_includes/studio_module_script.html` as the shared Jekyll helper for Studio ES module entry scripts.
+All Studio route pages that load `assets/studio/js/*.js` now use the helper, which appends the same `site.time`-derived asset-version query used by the default layout's classic scripts and CSS.
+
+**Files changed/docs:**
+
+- `_includes/studio_module_script.html`
+- `studio/**/index.md`
+- `scripts/checks/audit_studio_ready_state.py`
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Audit Studio Ready State](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Studio Module Asset Versioning Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning)
+
+**Impact:**
+The route/template layer now owns Studio entry-module cache busting.
+Route controllers keep their existing import paths and behavior, while route entry requests are less likely to reuse stale browser-cached modules after local builds or deploys.
 
 ## [2026-05-09] Closed scripts directory organization request
 

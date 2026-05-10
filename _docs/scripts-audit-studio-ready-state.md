@@ -31,6 +31,7 @@ The audit keeps the shared Studio ready-state contract from drifting as pages ev
 - every ready root starts with `data-studio-ready="false"` and `data-studio-busy="false"`
 - static routes declare `data-studio-static-route` and load `studio-static-route.js`
 - dashboard routes declare `data-studio-dashboard-route` and load `studio-dashboard.js`
+- Studio module entry scripts can be declared either as direct module script tags or through `_includes/studio_module_script.html`
 - a route does not mix static and dashboard ready markers
 - static routes do not expose dashboard metric markers
 - strict mode fails when a static route loads another module script

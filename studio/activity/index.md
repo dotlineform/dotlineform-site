@@ -25,4 +25,4 @@ studio_page_doc: /docs/?scope=studio&doc=studio-activity
 <p class="buildActivityPage__status" id="studioActivityStatus">loading Studio activity...</p>
 <p class="buildActivityPage__empty" id="studioActivityEmpty" hidden>No Studio activity yet.</p>
 
-<script type="module" src="{{ '/assets/studio/js/activity-log.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/activity-log.js' %}

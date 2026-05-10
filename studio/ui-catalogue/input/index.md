@@ -161,4 +161,4 @@ ui_catalogue_primitive: input
   </section>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/studio-static-route.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/studio-static-route.js' %}

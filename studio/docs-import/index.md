@@ -115,4 +115,4 @@ studio_page_doc: /docs/?scope=studio&doc=user-guide-docs-html-import
 
 <p class="tagStudio__status" id="docsHtmlImportBootStatus">loading docs import…</p>
 
-<script type="module" src="{{ '/assets/studio/js/docs-html-import.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/docs-html-import.js' %}

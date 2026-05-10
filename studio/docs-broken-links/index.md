@@ -34,4 +34,4 @@ studio_page_doc: /docs/?scope=studio&doc=docs-broken-links
 
 <p class="tagStudio__status" id="docsBrokenLinksBootStatus">loading docs broken links…</p>
 
-<script type="module" src="{{ '/assets/studio/js/docs-broken-links.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/docs-broken-links.js' %}

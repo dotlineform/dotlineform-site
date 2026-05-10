@@ -70,4 +70,4 @@ studio_page_doc: /docs/?scope=studio&doc=bulk-add-work
 <p class="tagStudio__status" id="bulkAddWorkLoading">loading bulk add work…</p>
 <p class="tagStudio__empty" id="bulkAddWorkEmpty" hidden></p>
 
-<script type="module" src="{{ '/assets/studio/js/bulk-add-work.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/bulk-add-work.js' %}

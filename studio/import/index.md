@@ -56,4 +56,4 @@ studio_page_doc: /docs/?scope=studio&doc=studio-data-import
 
 <p class="tagStudio__status" id="dataImportBootStatus">loading import...</p>
 
-<script type="module" src="{{ '/assets/studio/js/data-import.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/data-import.js' %}

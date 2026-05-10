@@ -57,4 +57,4 @@ studio_page_doc: /docs/?scope=studio&doc=studio-data-export
 
 <p class="tagStudio__status" id="dataExportBootStatus">loading export...</p>
 
-<script type="module" src="{{ '/assets/studio/js/data-export.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/data-export.js' %}

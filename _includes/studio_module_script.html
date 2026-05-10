@@ -1,0 +1,5 @@
+{%- assign studio_module_src = include.src | default: include.path | default: "" -%}
+{%- assign studio_module_version = site.time | date: "%s" -%}
+{%- if studio_module_src != "" -%}
+<script type="module" src="{{ studio_module_src | relative_url }}?v={{ studio_module_version }}"></script>
+{%- endif -%}

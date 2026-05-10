@@ -45,4 +45,4 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-field-registry-review
 <p class="tagStudio__status" id="fieldRegistryReviewLoading">loading catalogue field registry...</p>
 <p class="tagStudio__empty" id="fieldRegistryReviewEmpty" hidden></p>
 
-<script type="module" src="{{ '/assets/studio/js/catalogue-field-registry-review.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/catalogue-field-registry-review.js' %}

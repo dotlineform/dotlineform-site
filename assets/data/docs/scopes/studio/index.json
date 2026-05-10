@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T11:24:19Z",
+  "generated_at": "2026-05-10T12:52:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -333,7 +333,7 @@
       "doc_id": "site-request-js-config-structural-review-module-versioning",
       "title": "Studio Module Asset Versioning Slice",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 12:15",
+      "last_updated": "2026-05-10 13:55",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 10,
       "published": true,
@@ -342,8 +342,8 @@
       "source_path": "site-request-js-config-structural-review-module-versioning.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-module-versioning.json",
-      "content_text_length": 4879,
-      "ui_status": "in-progress"
+      "content_text_length": 6237,
+      "ui_status": "implemented"
     },
     {
       "scope": "studio",
@@ -736,7 +736,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-10 13:05",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -745,7 +745,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 10839
+      "content_text_length": 11256
     },
     {
       "scope": "studio",
@@ -2118,7 +2118,7 @@
       "source_path": "scripts-audit-studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-studio-ready-state.json",
-      "content_text_length": 1596
+      "content_text_length": 1723
     },
     {
       "scope": "studio",
@@ -3359,7 +3359,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-10 13:05",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3368,7 +3368,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 107547
+      "content_text_length": 108432
     },
     {
       "scope": "studio",

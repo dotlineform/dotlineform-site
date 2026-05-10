@@ -20,4 +20,4 @@ studio_page_doc: /docs/?scope=studio&doc=series-tags
   </div>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/series-tags.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/series-tags.js' %}

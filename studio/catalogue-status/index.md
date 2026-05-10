@@ -38,4 +38,4 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-status
 <p class="tagStudio__status" id="catalogueStatusLoading">loading catalogue drafts…</p>
 <p class="tagStudio__empty" id="catalogueStatusEmpty" hidden>No draft catalogue source records.</p>
 
-<script type="module" src="{{ '/assets/studio/js/catalogue-status.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/catalogue-status.js' %}

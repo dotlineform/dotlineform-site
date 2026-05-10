@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-09 21:45"
+last_updated: "2026-05-10 13:05"
 parent_id: studio
 sort_order: 20
 ---
@@ -45,6 +45,15 @@ The `i` link is the page-to-doc bridge for Studio. Each page now points to a sco
 ```
 
 This keeps Studio implementation notes in the shared `/docs/` module rather than on page-local routes.
+
+Studio route entry modules are loaded through `_includes/studio_module_script.html`, for example:
+
+```liquid
+{% include studio_module_script.html src='/assets/studio/js/catalogue-work-editor.js' %}
+```
+
+The include appends the same `site.time`-derived asset-version query used by the default layout's shared assets.
+Route pages own which entry module they load; route controllers do not own cache-busting for their own entry script.
 
 ## Studio Pages
 

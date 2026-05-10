@@ -57,4 +57,4 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
   <p><a href="{{ '/studio/docs-broken-links/' | relative_url }}">Docs broken links</a></p>
 </section>
 
-<script type="module" src="{{ '/assets/studio/js/studio-static-route.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/studio-static-route.js' %}

@@ -16,4 +16,4 @@ studio_page_doc: /docs/?scope=studio&doc=tag-groups
   </div>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/tag-groups.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/tag-groups.js' %}

@@ -58,4 +58,4 @@ studio_page_doc: /docs/?scope=studio&doc=studio-works
 </div>
 <p id="worksStudioEmpty" hidden>no studio works yet</p>
 
-<script type="module" src="{{ '/assets/studio/js/studio-works.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/studio-works.js' %}

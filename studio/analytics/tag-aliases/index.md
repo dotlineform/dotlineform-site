@@ -36,4 +36,4 @@ studio_page_doc: /docs/?scope=studio&doc=tag-aliases
   </div>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/tag-aliases.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/tag-aliases.js' %}

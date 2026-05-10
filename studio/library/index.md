@@ -39,4 +39,4 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
   </section>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/studio-dashboard.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/studio-dashboard.js' %}

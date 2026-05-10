@@ -63,4 +63,4 @@ studio_page_doc: /docs/?scope=studio&doc=project-state-page
 <p class="tagStudio__status" id="projectStateLoading">loading project state…</p>
 <p class="tagStudio__empty" id="projectStateEmpty" hidden></p>
 
-<script type="module" src="{{ '/assets/studio/js/project-state.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/project-state.js' %}

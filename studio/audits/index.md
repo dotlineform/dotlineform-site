@@ -25,4 +25,4 @@ studio_page_doc: /docs/?scope=studio&doc=studio-audits
 
 <p class="tagStudio__status" id="studioAuditsBootStatus">loading Studio audits...</p>
 
-<script type="module" src="{{ '/assets/studio/js/studio-audits.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/studio-audits.js' %}

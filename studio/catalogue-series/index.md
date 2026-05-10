@@ -104,4 +104,4 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
 <p class="tagStudio__status" id="catalogueSeriesLoading">loading catalogue series editor…</p>
 <p class="tagStudio__empty" id="catalogueSeriesEmpty" hidden></p>
 
-<script type="module" src="{{ '/assets/studio/js/catalogue-series-editor.js' | relative_url }}"></script>
+{% include studio_module_script.html src='/assets/studio/js/catalogue-series-editor.js' %}

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5464f1f5aad82a27e273ba2be0bbf550",
-    "generated_at_utc": "2026-05-10T11:24:25Z",
+    "version": "blake2b-b4ad1fcf82dfd29a79459dad51941b8b",
+    "generated_at_utc": "2026-05-10T12:52:45Z",
     "count": 212
   },
   "entries": [
@@ -533,10 +533,10 @@
       "kind": "doc",
       "title": "Studio Module Asset Versioning Slice",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning",
-      "last_updated": "2026-05-10 12:15",
+      "last_updated": "2026-05-10 13:55",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 12:15 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 13:55 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-config-structural-review-module-versioning",
         "site",
@@ -555,14 +555,14 @@
         "javascript",
         "and",
         "browser",
-        "2026-05-10 12:15",
+        "2026-05-10 13:55",
         "2026",
         "05",
         "10",
-        "12",
-        "15"
+        "13",
+        "55"
       ],
-      "search_text": "site-request-js-config-structural-review-module-versioning site request js config structural review module versioning studio module asset versioning slice studio asset slice javascript and browser config structural review request javascript and browser 2026-05-10 12:15 2026 05 10 12 15"
+      "search_text": "site-request-js-config-structural-review-module-versioning site request js config structural review module versioning studio module asset versioning slice studio asset slice javascript and browser config structural review request javascript and browser 2026-05-10 13:55 2026 05 10 13 55"
     },
     {
       "id": "data-models-studio",
@@ -1159,23 +1159,22 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-10 13:05",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 21:45 • Studio",
+      "display_meta": "2026-05-10 13:05 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-09 21:45",
+        "2026-05-10 13:05",
         "2026",
         "05",
-        "09",
-        "21",
-        "45"
+        "10",
+        "13"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-10 13:05 2026 05 10 13"
     },
     {
       "id": "studio-ui-start",
@@ -5263,22 +5262,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-09 22:35",
-      "display_meta": "2026-05-09 22:35",
+      "last_updated": "2026-05-10 13:05",
+      "display_meta": "2026-05-10 13:05",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-09 22:35",
+        "2026-05-10 13:05",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "10",
+        "13"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "site-change-log site change log site change log 2026-05-10 13:05 2026 05 10 13"
     },
     {
       "id": "archive",

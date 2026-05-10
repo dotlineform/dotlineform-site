@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-module-versioning
 title: Studio Module Asset Versioning Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10 12:15"
-ui_status: in-progress
+last_updated: "2026-05-10 13:55"
+ui_status: implemented
 parent_id: site-request-js-config-structural-review
 sort_order: 10
 hidden: false
@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- planned
+- implemented
 
 ## Purpose
 
@@ -39,13 +39,27 @@ The effect is easy to experience as inconsistent Studio behavior but hard to dia
 
 The versioning contract should be owned by the route/template layer, not by individual route controllers.
 
-Likely owners:
+Owner:
 
-- a shared include such as `_includes/studio_module_script.html`
-- or a small layout-level helper pattern used by every Studio route page
+- `_includes/studio_module_script.html`
 
 Route controllers under `assets/studio/js/` should not own their own entry-script cache busting.
 They can continue to read the `dlf-asset-version` meta tag for dynamic imports where needed.
+
+## Implementation Notes
+
+This slice added `_includes/studio_module_script.html` and replaced every direct Studio route entry script tag under `studio/**/index.md` with that include.
+The include accepts a project-local `src` value, resolves it through `relative_url`, and appends a `site.time`-derived `?v=` query that matches the default layout's asset-version contract.
+The Studio ready-state audit now recognizes both direct module script tags and the shared include when checking static and dashboard route shells.
+
+The inventory found Studio route entry scripts only in `studio/**/index.md`.
+No public route, Docs Viewer shell, `_layouts/`, or other `_includes/` template was found directly loading `assets/studio/js/*.js` as a module entry script.
+
+Static ES imports remain normal browser module specifiers.
+The version query is applied to each route entry module; deeper static imports are not rewritten in this slice because no route behavior change is intended and route controllers already use the asset-version meta value for dynamic imports where that contract exists.
+
+Browser smoke testing confirmed `/studio/` and `/studio/catalogue-status/` both request their entry modules with `?v=...` and reach `data-studio-ready="true"`.
+The same smoke test confirmed static imports such as `studio-route-state.js` remain unversioned, so follow-up dynamic-import wrapping should be considered only if stale imported dependencies remain a practical problem after entry-module versioning.
 
 ## Implementation Tasks
 
