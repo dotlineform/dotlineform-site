@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:21:30Z",
+  "generated_at": "2026-05-10T14:24:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -949,7 +949,7 @@
       "doc_id": "site-request-js-config-structural-review-catalogue-editor-boundary",
       "title": "Catalogue Editor Boundary Spec Slice",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 15:20",
+      "last_updated": "2026-05-10 15:24",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 30,
       "published": true,
@@ -959,7 +959,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-catalogue-editor-boundary.json",
       "content_text_length": 6202,
-      "ui_status": "planned"
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",

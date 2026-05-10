@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-boundary
 title: Catalogue Editor Boundary Spec Slice
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:20"
-ui_status: planned
+last_updated: "2026-05-10 15:24"
+ui_status: in-progress
 parent_id: site-request-js-config-structural-review
 sort_order: 30
 hidden: false
