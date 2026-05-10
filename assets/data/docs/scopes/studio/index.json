@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T10:44:02Z",
+  "generated_at": "2026-05-10T11:09:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -327,6 +327,22 @@
       "viewer_url": "/docs/?scope=studio&doc=site-docs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-docs.json",
       "content_text_length": 1540
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-module-versioning",
+      "title": "Studio Module Asset Versioning Slice",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10",
+      "parent_id": "site-request-js-config-structural-review",
+      "sort_order": 10,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-module-versioning.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-module-versioning.json",
+      "content_text_length": 4879
     },
     {
       "scope": "studio",
@@ -3225,7 +3241,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10",
+      "last_updated": "2026-05-10 12:09",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3234,7 +3250,8 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 14690
+      "content_text_length": 15319,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",

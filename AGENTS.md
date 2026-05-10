@@ -58,6 +58,7 @@
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- Before relying on, starting, stopping, or interrupting local `bin/dev-studio` services for verification, tell the user whether they need to start or stop those services. Do not assume running local Studio services are available for tests; they may only be running so the user can read docs.
 - After changing `_docs/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - After changing `_docs_library/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - When docs search output must be kept live with docs changes, rebuild the matching scope explicitly:

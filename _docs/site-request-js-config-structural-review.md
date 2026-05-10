@@ -2,10 +2,11 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10"
+last_updated: "2026-05-10 12:09"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
-viewable: true
+hidden: false
 ---
 # JavaScript And Browser Config Structural Review Request
 
@@ -155,6 +156,11 @@ Priority: medium-high.
 That single payload is fetched by most Studio routes, the public search page, and Docs Viewer even when a page needs only a small subset.
 The loader module also owns Studio tag metrics and RAG computation, which is analysis-domain behavior rather than config-loading behavior.
 
+The practical editing pain is already visible.
+Simple UI-copy changes can require searching a roughly 1,400-line config file when the exact key name is not known.
+That makes background ownership problems show up as slow, uncertain editing work: the maintainer has to scan unrelated route text, domain policy, data paths, and shared viewer/search settings just to find one UI label or status message.
+Splitting UI text by domain or page would therefore be a useful side effect of the wider refactor, even before considering runtime payload size.
+
 Risk:
 
 - config ownership becomes unclear as new domains add copy, policy, paths, and options
@@ -250,6 +256,8 @@ Likely direction:
 - append the same asset version query used by `assets/js/*`
 - verify a representative Studio route loads versioned entry scripts
 - run a small browser smoke test on one static Studio route and one async Studio route
+
+Detailed implementation tasks are tracked in [Studio Module Asset Versioning Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning).
 
 ### Slice 2: Docs Viewer Boundary Spec
 

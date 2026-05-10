@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dd6e56236eb131350636fd590f1a79a6",
-    "generated_at_utc": "2026-05-10T10:44:02Z",
-    "count": 211
+    "version": "blake2b-e428ec32c19113ac97b64fc59805fb5a",
+    "generated_at_utc": "2026-05-10T11:06:39Z",
+    "count": 212
   },
   "entries": [
     {
@@ -527,6 +527,40 @@
         "19"
       ],
       "search_text": "site-docs site docs site docs 2026-05-09 12:19 2026 05 09 12 19"
+    },
+    {
+      "id": "site-request-js-config-structural-review-module-versioning",
+      "kind": "doc",
+      "title": "Studio Module Asset Versioning Slice",
+      "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning",
+      "last_updated": "2026-05-10",
+      "parent_id": "site-request-js-config-structural-review",
+      "parent_title": "JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 • JavaScript And Browser Config Structural Review Request",
+      "search_terms": [
+        "site-request-js-config-structural-review-module-versioning",
+        "site",
+        "request",
+        "js",
+        "config",
+        "structural",
+        "review",
+        "module",
+        "versioning",
+        "studio module asset versioning slice",
+        "studio",
+        "asset",
+        "slice",
+        "javascript and browser config structural review request",
+        "javascript",
+        "and",
+        "browser",
+        "2026-05-10",
+        "2026",
+        "05",
+        "10"
+      ],
+      "search_text": "site-request-js-config-structural-review-module-versioning site request js config structural review module versioning studio module asset versioning slice studio asset slice javascript and browser config structural review request javascript and browser 2026-05-10 2026 05 10"
     },
     {
       "id": "data-models-studio",
