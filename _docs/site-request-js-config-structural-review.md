@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:40"
+last_updated: "2026-05-10 16:50"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -22,11 +22,13 @@ Status:
 - Catalogue editor Slice D implemented
 - Catalogue editor Slice E implemented
 - Catalogue editor Slice F implemented
+- Catalogue editor Slice G implemented
+- Catalogue editor execution sequence complete
 
 ## Active Execution Queue
 
-The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is the active queue for executing the catalogue editor boundary spec.
-The next runtime slice should keep Slice G deferred unless shared embedded work-file/link behavior becomes useful outside the work editor.
+The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is complete.
+The next top-level slice should be Slice 4: Config Ownership Cleanup.
 
 ## Summary
 
@@ -295,7 +297,7 @@ Detailed planning tasks are tracked in [Docs Viewer Boundary Spec Slice](/docs/?
 
 ### Slice 3: Catalogue Editor Boundary Spec
 
-Status: planned.
+Status: implemented.
 
 - inventory work, work-detail, series, and moment editor overlap
 - define which helpers are Catalogue domain, Studio shell, transport, modal formatting, and route composition

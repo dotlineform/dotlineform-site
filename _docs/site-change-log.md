@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 16:40"
+last_updated: "2026-05-10 16:50"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue editor embedded item helpers
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-editor-embedded-items.js` as the final runtime extraction from the Catalogue editor boundary plan.
+The helper now owns work download/link field definitions, embedded row formatting, modal descriptor construction, add/edit entry shaping, delete-confirmation copy, and embedded item validation.
+The work editor keeps DOM section ownership, modal host rendering, event wiring, draft assignment, dirty-state updates, and save/build behavior.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-editor-embedded-items.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Work file/link embedded item behavior now has a focused helper boundary without creating a generic cross-route workflow.
+The Catalogue editor extraction sequence is complete; the parent structural-review request can move to config ownership cleanup.
 
 ## [2026-05-10] Extracted Catalogue editor dirty-state helpers
 

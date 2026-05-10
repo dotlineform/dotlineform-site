@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 16:40"
-ui_status: in-progress
+last_updated: "2026-05-10 16:50"
+ui_status: done
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
 hidden: false
@@ -19,7 +19,8 @@ Status:
 - Slice D implemented
 - Slice E implemented
 - Slice F implemented
-- next executable slice: keep Slice G deferred unless work-file/link embedded item reuse pressure appears
+- Slice G implemented
+- catalogue editor extraction sequence complete
 
 ## Purpose
 
@@ -47,7 +48,7 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 | D | implemented | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
 | E | implemented | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
 | F | implemented | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
-| G | deferred | `catalogue-editor-embedded-items.js` | Work file/link embedded item helpers only if another route needs the pattern |
+| G | implemented | `catalogue-editor-embedded-items.js` | Work file/link embedded item helpers only if another route needs the pattern |
 
 ## Slice A: Service Client
 
@@ -329,7 +330,7 @@ Targeted verification:
 
 Status:
 
-- deferred
+- implemented
 
 Target file:
 
@@ -344,6 +345,22 @@ Acceptance checks:
 
 - no extraction unless there is a second caller or a meaningful reduction in work-editor complexity
 - embedded work files and links preserve current add/edit/delete behavior
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-embedded-items.js` now owns work download/link field definitions, row HTML formatting, modal descriptor construction, add/edit entry shaping, delete-confirmation text shaping, and embedded download/link validation.
+- `assets/studio/js/catalogue-work-editor.js` imports the helper while keeping DOM section ownership, modal host rendering, keyboard/click event wiring, draft assignment, dirty-state updates, and save/build behavior route-local.
+- The helper imports the existing work field normalization utilities so embedded entry normalization stays consistent with work source payload shaping.
+- No other route currently consumes the work file/link pattern; the extraction was kept work-owned and did not introduce a generic catalogue embedded-item workflow.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-editor-embedded-items.js` and the four catalogue editor controllers.
+- A direct module check confirmed download/link modal descriptors, row action attributes, disabled row actions, add-entry shaping, validation messages, delete-confirmation copy, and embedded validation error keys.
+- Studio docs payloads and the Studio search index were rebuilt for the Studio scope.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for work, work-detail, series, and moment editor routes against the built site; all routes reached route-ready state with no page errors and no failed Studio JS module requests, and the work editor loaded `catalogue-editor-embedded-items.js`.
+- Focused mobile Playwright smoke passed for the work editor route, including `catalogue-editor-embedded-items.js` loading.
 
 ## Runtime Smoke Map
 
@@ -362,16 +379,17 @@ Use this map proportionally after runtime extraction slices:
 
 ## Current Recommendation
 
-Pause before Slice G unless another catalogue route needs shared embedded work-file/link behavior.
+Catalogue editor extraction is complete.
+Return to the parent [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review) for the next top-level slice.
 
 Benefits:
 
-- Slice F now gives repeated dirty-state and control-disable predicates one pure helper without moving validation, payload shaping, or route orchestration.
-- Work, work-detail, and series dirty-state behavior has a shared owner while route-specific embedded and membership semantics remain injected.
-- Deferring Slice G avoids moving work-editor embedded item behavior before another route needs that pattern.
+- Slice G removes work file/link embedded item formatting and validation details from the route controller without changing modal or save orchestration.
+- The work editor keeps route-specific ownership where it matters: DOM sections, modal host lifecycle, draft mutation timing, and dirty-state updates.
+- The full Catalogue editor extraction sequence now has explicit owners for service calls, readiness, record helpers, modal formatters, moment fields, dirty state, and embedded work items.
 
 Risks:
 
 - moment import mode remains route-specific and should stay out of shared catalogue editor helpers
 - save payload equivalence should continue to be checked if validation helpers are extracted later
-- embedded work files and links should stay route-local unless a second caller appears
+- embedded work files and links should remain work-owned unless a second caller appears

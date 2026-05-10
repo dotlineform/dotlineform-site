@@ -48,6 +48,17 @@ import {
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
 import {
+  WORK_DOWNLOAD_FIELDS as DOWNLOAD_FIELDS,
+  WORK_LINK_FIELDS as LINK_FIELDS,
+  buildWorkEmbeddedDeleteConfirmation,
+  buildWorkEmbeddedEntry,
+  buildWorkEmbeddedModalDescriptor,
+  getWorkEmbeddedItems,
+  renderWorkEmbeddedItemRows,
+  validateWorkEmbeddedEntryValues,
+  validateWorkEmbeddedItems
+} from "./catalogue-editor-embedded-items.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -79,10 +90,8 @@ import {
   buildWorkDraftFromRecord,
   buildWorkRecordFromDraft,
   canonicalizeWorkScalar as canonicalizeScalar,
-  cloneEmbeddedEntries,
   dedupeSeriesIds,
   embeddedEntriesEqual,
-  normalizeEmbeddedEntries,
   normalizeSeriesId,
   normalizeText,
   normalizeWorkId,
@@ -94,8 +103,6 @@ import {
 const SEARCH_LIMIT = 20;
 const DETAIL_LIST_LIMIT = 10;
 const BULK_PREVIEW_LIMIT = 12;
-const DOWNLOAD_FIELDS = ["filename", "label"];
-const LINK_FIELDS = ["url", "label"];
 const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
 
 function escapeHtml(value) {
@@ -942,52 +949,6 @@ function renderDetailRows(state, details) {
   }).join("");
 }
 
-function getWorkFiles(state, workId) {
-  if (!state.currentRecord || state.currentWorkId !== workId) return [];
-  return cloneEmbeddedEntries(state.draft.downloads, DOWNLOAD_FIELDS);
-}
-
-function getWorkLinks(state, workId) {
-  if (!state.currentRecord || state.currentWorkId !== workId) return [];
-  return cloneEmbeddedEntries(state.draft.links, LINK_FIELDS);
-}
-
-function renderWorkFileRows(state, items) {
-  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
-  return items.map((item, index) => {
-    const filename = displayValue(item && item.filename);
-    const label = displayValue(item && item.label);
-    return `
-      <div class="tagStudioList__row tagStudioList__row--start catalogueWorkDetails__row catalogueWorkDetails__row--metadata">
-        <span class="tagStudioList__cell catalogueWorkDetails__link">${escapeHtml(filename)}</span>
-        <span class="tagStudioList__cell catalogueWorkDetails__title">${escapeHtml(label)}</span>
-        <span class="tagStudioList__cell catalogueWorkDetails__rowActions">
-          <button type="button" class="tagStudio__button" data-download-edit="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "files_edit_button", "Edit"))}</button>
-          <button type="button" class="tagStudio__button" data-download-delete="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "files_delete_button", "Delete"))}</button>
-        </span>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderWorkLinkRows(state, items) {
-  const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
-  return items.map((item, index) => {
-    const url = displayValue(item && item.url);
-    const label = displayValue(item && item.label);
-    return `
-      <div class="tagStudioList__row tagStudioList__row--start catalogueWorkDetails__row catalogueWorkDetails__row--metadata">
-        <span class="tagStudioList__cell catalogueWorkDetails__link">${escapeHtml(label)}</span>
-        <span class="tagStudioList__cell catalogueWorkDetails__title">${escapeHtml(url)}</span>
-        <span class="tagStudioList__cell catalogueWorkDetails__rowActions">
-          <button type="button" class="tagStudio__button" data-link-edit="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "links_edit_button", "Edit"))}</button>
-          <button type="button" class="tagStudio__button" data-link-delete="${escapeHtml(String(index))}" ${actionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "links_delete_button", "Delete"))}</button>
-        </span>
-      </div>
-    `;
-  }).join("");
-}
-
 function updateDetailSections(state) {
   if (!state.detailsResultsNode || !state.detailsMetaNode || !state.detailSearchRowNode) return;
   if (!state.currentWorkId) {
@@ -1063,7 +1024,7 @@ function updateWorkFilesSection(state) {
     state.filesResultsNode.innerHTML = "";
     return;
   }
-  const items = getWorkFiles(state, state.currentWorkId);
+  const items = state.currentRecord ? getWorkEmbeddedItems(state.draft, "download") : [];
   const error = state.validationErrors.get("downloads") || "";
   if (error) state.filesMetaNode.dataset.state = "error";
   else delete state.filesMetaNode.dataset.state;
@@ -1075,7 +1036,10 @@ function updateWorkFilesSection(state) {
   state.filesMetaNode.textContent = error || `${items.length} total`;
   state.filesResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkFileRows(state, items)}</div>
+      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkEmbeddedItemRows("download", items, {
+        actionDisabled: state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk",
+        text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+      })}</div>
     </section>
   `;
 }
@@ -1087,7 +1051,7 @@ function updateWorkLinksSection(state) {
     state.linksResultsNode.innerHTML = "";
     return;
   }
-  const items = getWorkLinks(state, state.currentWorkId);
+  const items = state.currentRecord ? getWorkEmbeddedItems(state.draft, "link") : [];
   const error = state.validationErrors.get("links") || "";
   if (error) state.linksMetaNode.dataset.state = "error";
   else delete state.linksMetaNode.dataset.state;
@@ -1099,7 +1063,10 @@ function updateWorkLinksSection(state) {
   state.linksMetaNode.textContent = error || `${items.length} total`;
   state.linksResultsNode.innerHTML = `
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkLinkRows(state, items)}</div>
+      <div class="tagStudioList catalogueWorkDetails__rows">${renderWorkEmbeddedItemRows("link", items, {
+        actionDisabled: state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk",
+        text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+      })}</div>
     </section>
   `;
 }
@@ -1121,36 +1088,27 @@ function modalFieldHtml({ fieldId, label, value, type = "text" }) {
 
 function openEmbeddedEntryModal(state, kind, index = null) {
   if (!state.currentRecord || state.mode === "bulk") return;
-  const isDownload = kind === "download";
-  const entriesKey = isDownload ? "downloads" : "links";
-  const fields = isDownload ? DOWNLOAD_FIELDS : LINK_FIELDS;
-  const entries = cloneEmbeddedEntries(state.draft[entriesKey], fields);
-  const editing = Number.isInteger(index) && index >= 0 && index < entries.length;
-  const current = editing ? entries[index] : {};
-  const title = isDownload
-    ? (editing ? t(state, "files_edit_modal_title", "Edit download") : t(state, "files_add_modal_title", "Add download"))
-    : (editing ? t(state, "links_edit_modal_title", "Edit link") : t(state, "links_add_modal_title", "Add link"));
-  const firstField = isDownload
-    ? { fieldId: "catalogueWorkDownloadFilename", label: t(state, "files_filename_label", "filename"), key: "filename", value: current.filename || "" }
-    : { fieldId: "catalogueWorkLinkUrl", label: t(state, "links_url_label", "URL"), key: "url", value: current.url || "", type: "url" };
-  const secondField = isDownload
-    ? { fieldId: "catalogueWorkDownloadLabel", label: t(state, "files_label_label", "label"), key: "label", value: current.label || "" }
-    : { fieldId: "catalogueWorkLinkLabel", label: t(state, "links_label_label", "label"), key: "label", value: current.label || "" };
-  const statusId = isDownload ? "catalogueWorkDownloadModalStatus" : "catalogueWorkLinkModalStatus";
+  const descriptor = buildWorkEmbeddedModalDescriptor(kind, index, {
+    draft: state.draft,
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+  });
+  if (!descriptor) return;
+  const firstField = descriptor.fields[0];
+  const secondField = descriptor.fields[1];
 
   closeEntryModal(state);
   state.modalHost.innerHTML = renderStudioModalFrame({
     hidden: false,
-    title,
-    titleId: isDownload ? "catalogueWorkDownloadModalTitle" : "catalogueWorkLinkModalTitle",
-    modalRole: isDownload ? "download-modal" : "link-modal",
+    title: descriptor.title,
+    titleId: descriptor.titleId,
+    modalRole: descriptor.modalRole,
     backdropRole: "entry-modal-cancel",
     bodyHtml: `
       <div class="tagStudioForm__fields">
         ${modalFieldHtml(firstField)}
         ${modalFieldHtml(secondField)}
       </div>
-      <p class="tagStudioForm__status" id="${escapeHtml(statusId)}"></p>
+      <p class="tagStudioForm__status" id="${escapeHtml(descriptor.statusId)}"></p>
     `,
     actions: [
       { role: "entry-modal-save", label: t(state, "entry_modal_save_button", "Save") },
@@ -1160,7 +1118,7 @@ function openEmbeddedEntryModal(state, kind, index = null) {
 
   const firstNode = state.modalHost.querySelector(`#${firstField.fieldId}`);
   const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
-  const statusNode = state.modalHost.querySelector(`#${statusId}`);
+  const statusNode = state.modalHost.querySelector(`#${descriptor.statusId}`);
   const saveNode = state.modalHost.querySelector('[data-role="entry-modal-save"]');
   const cancelNodes = state.modalHost.querySelectorAll('[data-role="entry-modal-cancel"]');
 
@@ -1177,27 +1135,20 @@ function openEmbeddedEntryModal(state, kind, index = null) {
   const submit = () => {
     const firstValue = normalizeText(firstNode && firstNode.value);
     const secondValue = normalizeText(secondNode && secondNode.value);
-    if (!firstValue) {
-      setModalStatus(isDownload
-        ? t(state, "files_invalid_filename", "Each download needs a filename.")
-        : t(state, "links_invalid_url", "Each link needs a URL."));
+    const validationMessage = validateWorkEmbeddedEntryValues(kind, firstValue, secondValue, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+    });
+    if (validationMessage) {
+      setModalStatus(validationMessage);
       return;
     }
-    if (!secondValue) {
-      setModalStatus(isDownload
-        ? t(state, "files_invalid_label", "Each download needs a label.")
-        : t(state, "links_invalid_label", "Each link needs a label."));
-      return;
-    }
-    const nextEntry = isDownload
-      ? { filename: firstValue, label: secondValue }
-      : { url: firstValue, label: secondValue };
-    if (editing) {
-      entries[index] = nextEntry;
+    const nextEntry = buildWorkEmbeddedEntry(kind, firstValue, secondValue);
+    if (descriptor.editing) {
+      descriptor.entries[index] = nextEntry;
     } else {
-      entries.push(nextEntry);
+      descriptor.entries.push(nextEntry);
     }
-    state.draft[entriesKey] = entries;
+    state.draft[descriptor.entriesKey] = descriptor.entries;
     closeEntryModal(state);
     updateEditorState(state);
   };
@@ -1220,26 +1171,20 @@ function openEmbeddedEntryModal(state, kind, index = null) {
 
 async function deleteEmbeddedEntry(state, kind, index) {
   if (!state.currentRecord || state.mode === "bulk") return;
-  const isDownload = kind === "download";
-  const entriesKey = isDownload ? "downloads" : "links";
-  const fields = isDownload ? DOWNLOAD_FIELDS : LINK_FIELDS;
-  const entries = cloneEmbeddedEntries(state.draft[entriesKey], fields);
-  if (!Number.isInteger(index) || index < 0 || index >= entries.length) return;
-  const label = isDownload
-    ? normalizeText(entries[index].label || entries[index].filename)
-    : normalizeText(entries[index].label || entries[index].url);
+  const confirmation = buildWorkEmbeddedDeleteConfirmation(kind, state.draft, index, {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+  });
+  if (!confirmation) return;
   const result = await openConfirmModal({
     root: state.root,
-    title: isDownload ? t(state, "files_delete_modal_title", "Delete download") : t(state, "links_delete_modal_title", "Delete link"),
-    body: isDownload
-      ? t(state, "files_delete_modal_body", "Delete download {label}?", { label })
-      : t(state, "links_delete_modal_body", "Delete link {label}?", { label }),
+    title: confirmation.title,
+    body: confirmation.body,
     primaryLabel: t(state, "entry_modal_delete_button", "Delete"),
     cancelLabel: t(state, "entry_modal_cancel_button", "Cancel")
   });
   if (!result || !result.confirmed) return;
-  entries.splice(index, 1);
-  state.draft[entriesKey] = entries;
+  confirmation.entries.splice(index, 1);
+  state.draft[confirmation.entriesKey] = confirmation.entries;
   updateEditorState(state);
 }
 
@@ -1596,20 +1541,10 @@ function validateDraft(state) {
     }
   }
 
-  normalizeEmbeddedEntries(state.draft.downloads, DOWNLOAD_FIELDS).forEach((item, index) => {
-    if (!normalizeText(item.filename)) {
-      errors.set("downloads", t(state, "files_invalid_filename", "Each download needs a filename."));
-    } else if (!normalizeText(item.label)) {
-      errors.set("downloads", t(state, "files_invalid_label", "Each download needs a label."));
-    }
-  });
-
-  normalizeEmbeddedEntries(state.draft.links, LINK_FIELDS).forEach((item, index) => {
-    if (!normalizeText(item.url)) {
-      errors.set("links", t(state, "links_invalid_url", "Each link needs a URL."));
-    } else if (!normalizeText(item.label)) {
-      errors.set("links", t(state, "links_invalid_label", "Each link needs a label."));
-    }
+  validateWorkEmbeddedItems(state.draft, {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+  }).forEach((message, key) => {
+    errors.set(key, message);
   });
 
   return errors;
