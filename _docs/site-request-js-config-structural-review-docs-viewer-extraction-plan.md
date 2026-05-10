@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:45"
-ui_status: done
+last_updated: "2026-05-10 14:18"
+ui_status: in-progress
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
 hidden: false
@@ -12,7 +12,8 @@ hidden: false
 
 Status:
 
-- completed
+- completed plan
+- slices A-F to be implemented
 
 ## Purpose
 

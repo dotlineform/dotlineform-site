@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T13:14:03Z",
+  "generated_at": "2026-05-10T13:19:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -594,7 +594,7 @@
       "doc_id": "site-request-js-config-structural-review-docs-viewer-extraction-plan",
       "title": "Docs Viewer Extraction Plan",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 14:45",
+      "last_updated": "2026-05-10 14:18",
       "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
       "sort_order": 20,
       "published": true,
@@ -603,8 +603,8 @@
       "source_path": "site-request-js-config-structural-review-docs-viewer-extraction-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-extraction-plan.json",
-      "content_text_length": 9538,
-      "ui_status": "done"
+      "content_text_length": 9572,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
