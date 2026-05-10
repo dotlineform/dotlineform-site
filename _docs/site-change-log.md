@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 19:18"
+last_updated: "2026-05-10 19:23"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,25 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Removed Catalogue Work Editor full source startup read
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / performance
+
+**Summary:**
+Stopped the Catalogue Work Editor from loading the full `catalogue_works` source payload during initial startup.
+The route now uses `catalogue_lookup_work_search` for search, known-id, duplicate-id, and next-id behavior, while single and bulk record opens continue to load editable records from per-work lookup payloads.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+
+**Impact:**
+Initial work-editor startup no longer requests `assets/studio/data/catalogue/works.json`, removing an avoidable payload of about 1.29 MB raw before transfer compression.
+The route still preserves per-record load, new mode, bulk mode, save, publish, delete, and build-preview behavior.
 
 ## [2026-05-10] Split Catalogue Work Editor init orchestration
 

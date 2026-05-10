@@ -793,17 +793,6 @@ function renderSearchMatches(state, matches, message = "") {
   setPopupVisibility(state, true);
 }
 
-function buildSourceWorkMap(payload) {
-  const works = payload && typeof payload.works === "object" && payload.works !== null ? payload.works : {};
-  const out = new Map();
-  Object.entries(works).forEach(([workId, record]) => {
-    const normalizedId = normalizeWorkId(workId);
-    if (!normalizedId || !record || typeof record !== "object") return;
-    out.set(normalizedId, record);
-  });
-  return out;
-}
-
 function buildDraftFromRecord(record) {
   return buildWorkDraftFromRecord(record, {
     fields: EDITABLE_FIELDS,
@@ -2898,9 +2887,8 @@ async function configureWorkEditorRuntime(state, elements) {
 
 async function loadInitialWorkEditorData(state) {
   const serverReadOptions = { cache: "no-store", catalogueServerAvailable: state.serverAvailable };
-  const [worksPayload, worksSourcePayload, seriesPayload] = await Promise.all([
+  const [worksPayload, seriesPayload] = await Promise.all([
     loadStudioLookupJson(state.config, "catalogue_lookup_work_search", serverReadOptions),
-    loadStudioLookupJson(state.config, "catalogue_works", serverReadOptions),
     loadStudioLookupJson(state.config, "catalogue_lookup_series_search", serverReadOptions)
   ]);
 
@@ -2912,7 +2900,6 @@ async function loadInitialWorkEditorData(state) {
     if (!workId) return;
     state.workSearchById.set(workId, record);
   });
-  state.sourceWorkRecordsById = buildSourceWorkMap(worksSourcePayload);
   const seriesItems = Array.isArray(seriesPayload && seriesPayload.items) ? seriesPayload.items : [];
   seriesItems.forEach((record) => {
     if (!record || typeof record !== "object") return;

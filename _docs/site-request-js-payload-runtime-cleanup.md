@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 19:18"
+last_updated: "2026-05-10 19:23"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -14,7 +14,7 @@ Status:
 
 - request captured
 - Slice A implemented
-- Slice B not started
+- Slice B implemented
 
 ## Purpose
 
@@ -61,7 +61,7 @@ Recent local review found:
 - The Catalogue Work Editor route loads 16 transitive JS modules, about 212 KB raw and 45 KB gzip.
 - The largest remaining blocks in the work editor are `init`, `saveCurrentWork`, `validateDraft`, `updateSummary`, and `applyPublicationChange`.
 - `init` is a clear cleanup target because it combines DOM lookup, state construction, config/text application, server probing, initial data loading, event binding, route-query handling, and fallback error handling.
-- The work editor startup currently reads `catalogue_lookup_work_search`, full `catalogue_works`, and `catalogue_lookup_series_search`.
+- Before Slice B, the work editor startup read `catalogue_lookup_work_search`, full `catalogue_works`, and `catalogue_lookup_series_search`.
 - `assets/studio/data/catalogue/works.json` is about 1.29 MB raw before transfer compression.
 
 The `catalogue_works` startup read needs to be addressed.
@@ -126,7 +126,7 @@ Targeted verification:
 
 ### Slice B: Remove Full `catalogue_works` Startup Read
 
-Status: not started.
+Status: implemented.
 
 Target:
 
@@ -147,6 +147,23 @@ Acceptance checks:
 - bulk open still loads all requested records
 - duplicate-id validation in new mode remains reliable
 - save, publish, delete, and build-preview flows still refresh the correct generated lookup data
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-editor.js` no longer loads `catalogue_works` during initial route startup.
+- Startup now reads `catalogue_lookup_work_search` for known-id, search, duplicate-id, and next-id behavior, plus `catalogue_lookup_series_search` for series picker behavior.
+- Opening a single work or bulk selection continues to fetch per-work lookup payloads through `catalogue_lookup_work_base`; those payloads provide the editable work records.
+- Session-local save/create/publish responses still update `sourceWorkRecordsById`, so refreshed records remain available after writes without a full source reload.
+- The removed startup payload is about 1.29 MB raw before transfer compression.
+
+Targeted verification:
+
+- `node --check assets/studio/js/catalogue-work-editor.js` passed.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright network check against the temporary build confirmed initial `/studio/catalogue-work/` startup fetched no `catalogue_works` / `works.json` payload.
+- Static Playwright smoke passed with the catalogue service blocked; the work editor reached ready state with `service=unavailable`.
+- Static Playwright smoke passed with the existing catalogue service available; `?work=00001` loaded as `mode=single` with `recordLoaded=true`.
+- Focused Playwright checks passed for `?mode=new` and `?work=00001,00002`, confirming new mode and bulk mode still become route-ready.
 
 ### Slice C: Long JS File Policy And Inventory
 
