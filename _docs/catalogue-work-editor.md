@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: "2026-05-10 20:55"
+last_updated: "2026-05-10 21:10"
 parent_id: user-guide
 sort_order: 30
 ---
@@ -31,6 +31,8 @@ Route-local helpers:
   owns current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail.
 - `assets/studio/js/catalogue-work-actions.js`
   owns save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route.
+- `assets/studio/js/catalogue-work-selection.js`
+  owns work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route.
 
 The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
 It does not call write services directly.
@@ -40,6 +42,9 @@ It does not call write services directly.
 
 The action workflow module receives route-owned callbacks for text lookup, status writing, validation, route-state transitions, current-preview rendering, build-preview modal opening, and create-mode record opening.
 It keeps local-service transport in `catalogue-editor-service-client.js` and does not import route globals.
+
+The selection module receives route-owned callbacks for text lookup, focused lookup reads, route-state transitions, build-preview refresh, and create-mode save/open behavior.
+It does not read generated lookup JSON directly and does not own route-state mutation.
 
 ## Current Scope
 

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 20:55"
+last_updated: "2026-05-10 21:10"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue Work Editor search and selection
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-work-selection.js` as the route-local search and selection module for the Catalogue Work Editor.
+The module now owns work-id parsing, numeric range parsing, search-token matching, suggestion rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-selection.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+- [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory)
+
+**Impact:**
+The work editor route entry module is now below the 1,000-line long-file policy threshold.
+Record lookup transport, route-state mutation, and build-preview refresh remain delegated through explicit route callbacks while search and selection behavior has a focused owner.
 
 ## [2026-05-10] Extracted Catalogue Work Editor action workflows
 

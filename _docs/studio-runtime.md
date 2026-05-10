@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-10 20:55"
+last_updated: "2026-05-10 21:10"
 parent_id: studio
 sort_order: 20
 ---
@@ -128,6 +128,8 @@ Shared Studio runtime and wiring currently live in:
   provides Catalogue Work Editor route-local rendering for the current-record preview, readiness panel, detail sections, work-owned file/link sections, and summary rail
 - `assets/studio/js/catalogue-work-actions.js`
   provides Catalogue Work Editor route-local save, create, build-preview, build, prose import, publication, media-refresh, and delete workflow orchestration
+- `assets/studio/js/catalogue-work-selection.js`
+  provides Catalogue Work Editor route-local work-id parsing, search matching, suggestion rendering, selection control binding, initial URL selection, and selected-record opening orchestration
 
 Current page controllers:
 
@@ -176,6 +178,7 @@ Controller splits that are already live:
   - `catalogue-work-form.js`
   - `catalogue-work-sections.js`
   - `catalogue-work-actions.js`
+  - `catalogue-work-selection.js`
 
 ## Route Ready State
 

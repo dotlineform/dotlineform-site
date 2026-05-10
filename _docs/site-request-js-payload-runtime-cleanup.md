@@ -2,10 +2,10 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 20:55"
-ui_status: draft
+last_updated: "2026-05-10 21:19"
+ui_status: done
 parent_id: site-request-js-config-structural-review
-sort_order: 70
+sort_order: 80
 hidden: false
 ---
 # JavaScript Payload And Runtime Cleanup Request
@@ -20,7 +20,7 @@ Status:
 - Slice E implemented
 - Slice F implemented
 - Slice G implemented
-- follow-on work-editor slice H documented
+- Slice H implemented
 
 ## Purpose
 
@@ -450,7 +450,7 @@ Targeted verification:
 
 ### Slice H: Work Search And Selection Boundary
 
-Status: planned.
+Status: implemented.
 
 Intent:
 
@@ -475,6 +475,35 @@ Risk removed:
 
 - search and bulk-selection behavior becomes testable and reusable without reading the save/build/publish controller flow
 - future selection improvements can be made without touching form rendering or write orchestration
+
+Implementation notes:
+
+- Added `assets/studio/js/catalogue-work-selection.js` as the work-editor route-local search and selection module.
+- Moved work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior out of `catalogue-work-editor.js`.
+- Kept lookup transport in the route entry module through a `loadWorkLookupRecord` callback.
+- Kept route-state transitions delegated through callbacks that call the Slice F route-state helpers.
+- Kept build-preview refresh delegated through the Slice G action context after selected records load.
+- `catalogue-work-editor.js` is now under the long-file policy threshold after the planned work-editor slices.
+
+Runtime measurement:
+
+- `assets/studio/js/catalogue-work-editor.js` changed from 1,231 lines, 45,068 bytes raw, and about 9,096 bytes gzip to 992 lines, 36,823 bytes raw, and about 7,414 bytes gzip.
+- New `assets/studio/js/catalogue-work-selection.js` is 300 lines, 10,569 bytes raw, and about 2,778 bytes gzip.
+- The work-editor transitive JS module count changed from 20 to 21.
+- The measured work-editor transitive JS payload changed from about 224,499 bytes raw / 48,885 bytes gzip to about 226,823 bytes raw / 49,981 bytes gzip.
+- Startup JSON payloads are unchanged, and static smoke confirmed initial startup still does not fetch `assets/studio/data/catalogue/works.json`.
+- Route-ready behavior is unchanged for empty, single work, new mode, and bulk routes.
+- This slice reduces maintenance risk. Transfer-size cost increases slightly because the selection helper is a new module transfer without a bundler.
+
+Targeted verification:
+
+- `node --check assets/studio/js/catalogue-work-editor.js` passed.
+- `node --check assets/studio/js/catalogue-work-selection.js` passed.
+- `node --check assets/studio/js/catalogue-work-actions.js` passed.
+- Work-editor transitive JS payload was measured after the extraction.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for empty, `?work=00001`, `?mode=new`, and `?work=00001,00002`, including route-ready state, expected search input values, no page errors, and no full `works.json` startup fetch.
+- Focused Playwright smoke passed for suggestion rendering, invalid-id messaging, and opening `00001-00002` through the `Open` button into bulk mode.
 
 ## Runtime Measurement Requirements
 
@@ -504,7 +533,6 @@ For Slice B, fetch verification should specifically prove whether `catalogue_wor
 
 ## Recommended Next Step
 
-Implement Slice H next.
-It should extract work-id parsing, bulk range parsing, search-token matching, search result rendering, open-selection, and open-by-id helpers into a focused route-local module while keeping record loading delegated through the current route-state and action boundaries.
+Return to the broader [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory) for the next priority outside the Catalogue Work Editor.
 
-After Slices E-H, return to the broader [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory) for the next priority outside the Catalogue Work Editor.
+The highest-priority remaining over-threshold file is now the shared Docs Viewer controller.

@@ -2,10 +2,10 @@
 doc_id: site-request-js-payload-runtime-cleanup-inventory
 title: JavaScript Payload And Runtime Cleanup Inventory
 added_date: 2026-05-10
-last_updated: "2026-05-10 20:55"
+last_updated: "2026-05-10 21:19"
 ui_status: draft
-parent_id: site-request-js-payload-runtime-cleanup
-sort_order: 10
+parent_id: site-request-js-config-structural-review
+sort_order: 70
 hidden: false
 ---
 # JavaScript Payload And Runtime Cleanup Inventory
@@ -45,7 +45,6 @@ find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
 
 | File | Lines | Raw | Gzip | Classification | Maintenance risk | Transfer-size risk | Disposition |
 | --- | ---: | ---: | ---: | --- | --- | --- | --- |
-| `assets/studio/js/catalogue-work-editor.js` | 1,231 | 44.0 KiB | 8.9 KiB | mixed route controller | medium | low | Extraction continues in the parent request. Slices D-G are implemented; Slice H covers search/selection. `catalogue-work-actions.js` is intentionally below the 1,000-line threshold after action workflow extraction. |
 | `assets/js/docs-viewer.js` | 2,912 | 99.9 KiB | 18.8 KiB | mixed shared viewer runtime controller | high | medium | Existing Docs Viewer extraction plan remains active; render and management-UI boundaries are the next justified targets. |
 | `assets/studio/js/tag-studio.js` | 1,886 | 63.2 KiB | 13.2 KiB | mixed route controller | high | low | Continue the existing Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind named route-local helpers only after current catalogue cleanup. |
 | `assets/studio/js/catalogue-work-detail-editor.js` | 1,806 | 75.5 KiB | 14.0 KiB | mixed route controller | high | low | Pair with the work-editor section-renderer findings; extract detail section rendering only where the helper boundary is clearer than route-local ownership. |
@@ -57,19 +56,18 @@ find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
 
 ## Current Priority
 
-1. `assets/studio/js/catalogue-work-editor.js`
-2. `assets/js/docs-viewer.js`
-3. `assets/studio/js/catalogue-work-detail-editor.js`
-4. `assets/studio/js/tag-studio.js`
-5. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
-6. `assets/studio/js/catalogue-series-editor.js`
-7. `assets/studio/js/catalogue-moment-editor.js`
-8. `assets/studio/js/data-import.js`
+1. `assets/js/docs-viewer.js`
+2. `assets/studio/js/catalogue-work-detail-editor.js`
+3. `assets/studio/js/tag-studio.js`
+4. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
+5. `assets/studio/js/catalogue-series-editor.js`
+6. `assets/studio/js/catalogue-moment-editor.js`
+7. `assets/studio/js/data-import.js`
 
 ## Notes
 
 - The inventory found no over-threshold pure domain modules and no over-threshold generated/runtime utilities.
 - All over-threshold files are mixed route or shared viewer controllers, so the cleanup priority is maintenance-driven rather than payload-size-driven.
-- The nine over-threshold files total about 569.6 KiB raw and 108.3 KiB gzip, but no route loads all nine together.
+- The eight over-threshold files total about 525.6 KiB raw and 99.4 KiB gzip, but no route loads all eight together.
 - The largest transfer-size risk is now the shared Docs Viewer controller because it is the largest remaining over-threshold JavaScript file and is eagerly loaded by docs-viewer routes.
-- The work-editor measured line count reflects the post-Slice G state; the parent request records the per-slice measurements.
+- `assets/studio/js/catalogue-work-editor.js` is now below the 1,000-line policy threshold after Slice H; `catalogue-work-actions.js` and `catalogue-work-selection.js` are also below the threshold.

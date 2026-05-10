@@ -9,7 +9,6 @@ import {
 import {
   probeCatalogueHealth
 } from "./studio-transport.js";
-import { computeRecordHash } from "./catalogue-editor-records.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
@@ -30,7 +29,6 @@ import {
   validateWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
 import {
-  buildWorkRecordSummary as buildRecordSummary,
   renderWorkCurrentPreview,
   renderWorkReadiness,
   updateWorkDetailSections,
@@ -71,6 +69,12 @@ import {
   saveCurrentWork
 } from "./catalogue-work-actions.js";
 import {
+  applyInitialWorkRouteSelection,
+  bindWorkSelectionControls,
+  openWorkById,
+  setWorkSelectionPopupVisibility
+} from "./catalogue-work-selection.js";
+import {
   buildSaveModeText
 } from "./tag-studio-save.js";
 import {
@@ -96,7 +100,6 @@ import {
   suggestNextWorkId
 } from "./catalogue-work-fields.js";
 
-const SEARCH_LIMIT = 20;
 const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
 
 function escapeHtml(value) {
@@ -128,54 +131,6 @@ function changedWorkFieldNames(state) {
   });
 }
 
-function buildSearchToken(value) {
-  const text = normalizeText(value);
-  if (!text) return "";
-  const digits = text.replace(/\D/g, "");
-  return digits || text.toLowerCase();
-}
-
-function parseWorkSelection(rawValue) {
-  const text = normalizeText(rawValue);
-  if (!text) return [];
-  const tokens = text.split(",").map((item) => normalizeText(item)).filter(Boolean);
-  const workIds = [];
-  const seen = new Set();
-  tokens.forEach((token) => {
-    const rangeMatch = token.match(/^(\d{1,5})\s*-\s*(\d{1,5})$/);
-    if (rangeMatch) {
-      const start = Number(normalizeWorkId(rangeMatch[1]));
-      const end = Number(normalizeWorkId(rangeMatch[2]));
-      if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) {
-        throw new Error(`Invalid work id range: ${token}`);
-      }
-      for (let value = start; value <= end; value += 1) {
-        const workId = String(value).padStart(5, "0");
-        if (seen.has(workId)) continue;
-        seen.add(workId);
-        workIds.push(workId);
-      }
-      return;
-    }
-    const workId = normalizeWorkId(token);
-    if (!workId) {
-      throw new Error(`Invalid work id: ${token}`);
-    }
-    if (seen.has(workId)) return;
-    seen.add(workId);
-    workIds.push(workId);
-  });
-  return workIds;
-}
-
-function isWorkBulkQuery(rawValue) {
-  try {
-    return parseWorkSelection(rawValue).length > 1;
-  } catch (_error) {
-    return false;
-  }
-}
-
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -186,53 +141,9 @@ function setTextWithState(node, text, state = "") {
   }
 }
 
-function setPopupVisibility(state, visible) {
-  state.popupNode.hidden = !visible;
-}
-
 function setOpenInputMode(state) {
   state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
   state.searchNode.setAttribute("aria-label", t(state, "search_label", "Find work by id"));
-}
-
-function getSearchMatches(state, rawQuery) {
-  const query = buildSearchToken(rawQuery);
-  if (!query) return [];
-  const matches = [];
-  for (const [workId, record] of state.workSearchById.entries()) {
-    if (workId.includes(query)) {
-      matches.push({ workId, record });
-      continue;
-    }
-    if (normalizeWorkId(query) && workId === normalizeWorkId(query)) {
-      matches.push({ workId, record });
-    }
-  }
-  matches.sort((a, b) => a.workId.localeCompare(b.workId, undefined, { numeric: true, sensitivity: "base" }));
-  return matches.slice(0, SEARCH_LIMIT);
-}
-
-function renderSearchMatches(state, matches, message = "") {
-  if (!matches.length && !message) {
-    state.popupListNode.innerHTML = "";
-    setPopupVisibility(state, false);
-    return;
-  }
-
-  if (!matches.length) {
-    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
-    setPopupVisibility(state, true);
-    return;
-  }
-
-  const rows = matches.map(({ workId, record }) => `
-    <button type="button" class="tagStudioSuggest__workButton" data-work-id="${escapeHtml(workId)}">
-      <span class="tagStudioSuggest__workId">${escapeHtml(workId)}</span>
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
-    </button>
-  `);
-  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
-  setPopupVisibility(state, true);
 }
 
 async function loadWorkLookupRecord(state, workId) {
@@ -240,13 +151,6 @@ async function loadWorkLookupRecord(state, workId) {
     cache: "no-store",
     catalogueServerAvailable: state.serverAvailable
   });
-}
-
-function getSourceWorkRecord(state, workId, fallbackRecord = null) {
-  const sourceRecord = state.sourceWorkRecordsById.get(workId);
-  if (sourceRecord && typeof sourceRecord === "object") return sourceRecord;
-  if (fallbackRecord && typeof fallbackRecord === "object") return fallbackRecord;
-  return null;
 }
 
 function closeEntryModal(state) {
@@ -702,12 +606,31 @@ function workRouteStateOptions(state, overrides = {}) {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     setTextWithState,
     setOpenInputMode: () => setOpenInputMode(state),
-    setPopupVisibility: (visible) => setPopupVisibility(state, visible),
+    setPopupVisibility: (visible) => setWorkSelectionPopupVisibility(state, visible),
     applyDraftToInputs: () => applyDraftToInputs(state, workFormOptions(state)),
     applyReadonly: () => applyReadonly(state),
     clearReadonlyFields: () => clearReadonlyFields(state),
     updateEditorState: () => updateEditorState(state),
     ...overrides
+  };
+}
+
+function workSelectionOptions(state) {
+  return {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    loadWorkLookupRecord: (workId) => loadWorkLookupRecord(state, workId),
+    setLoadedBulkWorks: (workIds, recordsById, recordHashes) => {
+      setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
+    },
+    setLoadedWorkRecord: (workId, record, options = {}) => {
+      setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, options));
+    },
+    refreshBuildPreview: () => refreshBuildPreview(state, workActionOptions(state)),
+    updateEditorState: () => updateEditorState(state),
+    saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
+    setTextWithState,
+    setEmptySearchMode: (overrides = {}) => setEmptySearchMode(state, workRouteStateOptions(state, overrides)),
+    setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state))
   };
 }
 
@@ -725,7 +648,7 @@ function workActionOptions(state) {
     renderCurrentPreview: () => renderCurrentPreview(state),
     renderReadiness: () => renderReadiness(state),
     openBuildPreviewModal: (response, changedFields) => openBuildPreviewModal(state, response, changedFields),
-    openWorkById: (workId) => openWorkById(state, workId)
+    openWorkById: (workId) => openWorkById(state, workId, workSelectionOptions(state))
   };
 }
 
@@ -754,89 +677,6 @@ function updateDetailSections(state) {
 
 function updateSummary(state) {
   updateWorkSummary(state, workSectionOptions(state));
-}
-
-async function openWorkSelection(state, requestedValue) {
-  let workIds;
-  try {
-    workIds = parseWorkSelection(requestedValue);
-  } catch (error) {
-    renderSearchMatches(state, [], normalizeText(error && error.message) || t(state, "search_empty", "Enter a work id."));
-    return;
-  }
-
-  if (!workIds.length) {
-    renderSearchMatches(state, [], t(state, "search_empty", "Enter a work id."));
-    return;
-  }
-  if (workIds.length === 1) {
-    await openWorkById(state, workIds[0]);
-    return;
-  }
-
-  const unknown = workIds.find((workId) => !state.workSearchById.has(workId));
-  if (unknown) {
-    renderSearchMatches(state, [], t(state, "unknown_work_error", "Unknown work id: {work_id}.", { work_id: unknown }));
-    return;
-  }
-
-  state.searchNode.value = workIds.join(", ");
-  state.detailSearchNode.value = "";
-  setPopupVisibility(state, false);
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
-  const lookups = await Promise.all(workIds.map((workId) => loadWorkLookupRecord(state, workId)));
-  const recordsById = new Map();
-  const recordHashes = new Map();
-  for (let index = 0; index < workIds.length; index += 1) {
-    const workId = workIds[index];
-    const lookup = lookups[index];
-    const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-    const record = getSourceWorkRecord(state, workId, fallbackRecord);
-    if (!record) {
-      throw new Error(`work source missing record for ${workId}`);
-    }
-    recordsById.set(workId, record);
-    recordHashes.set(workId, await computeRecordHash(record));
-  }
-  setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
-  await refreshBuildPreview(state, workActionOptions(state));
-}
-
-async function openWorkById(state, requestedWorkId) {
-  const workId = normalizeWorkId(requestedWorkId);
-  if (!workId) {
-    renderSearchMatches(state, [], t(state, "search_empty", "Enter a work id."));
-    return;
-  }
-
-  const searchRecord = state.workSearchById.get(workId);
-  if (!searchRecord) {
-    const matches = getSearchMatches(state, requestedWorkId);
-    if (matches.length) {
-      renderSearchMatches(state, matches);
-    } else {
-      renderSearchMatches(state, [], t(state, "unknown_work_error", "Unknown work id: {work_id}.", { work_id }));
-    }
-    return;
-  }
-
-  state.searchNode.value = workId;
-  state.detailSearchNode.value = "";
-  setPopupVisibility(state, false);
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
-  const lookup = await loadWorkLookupRecord(state, workId);
-  const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-  const record = getSourceWorkRecord(state, workId, fallbackRecord);
-  if (!record) {
-    throw new Error(`work source missing record for ${workId}`);
-  }
-  setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, {
-    recordHash: await computeRecordHash(record),
-    lookup
-  }));
-  await refreshBuildPreview(state, workActionOptions(state));
 }
 
 function collectWorkEditorElements() {
@@ -1041,43 +881,7 @@ async function loadInitialWorkEditorData(state) {
 }
 
 function bindWorkEditorEvents(state) {
-  state.searchNode.addEventListener("input", () => {
-    const query = state.searchNode.value;
-    if (state.mode === "new") {
-      state.draft.work_id = normalizeWorkId(query);
-      setPopupVisibility(state, false);
-      updateEditorState(state);
-      return;
-    }
-    if (!normalizeText(query)) {
-      renderSearchMatches(state, [], "");
-      return;
-    }
-    if (isWorkBulkQuery(query)) {
-      renderSearchMatches(state, [], "");
-      return;
-    }
-    const matches = getSearchMatches(state, query);
-    if (!matches.length) {
-      renderSearchMatches(state, [], t(state, "search_no_match", "No matching work ids."));
-      return;
-    }
-    renderSearchMatches(state, matches);
-  });
-
-  state.searchNode.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter") return;
-    event.preventDefault();
-    if (state.mode === "new") {
-      saveCurrentWork(state, workActionOptions(state)).catch((error) => {
-        console.warn("catalogue_work_editor: unexpected create failure", error);
-      });
-      return;
-    }
-    openWorkSelection(state, state.searchNode.value).catch((error) => {
-      console.warn("catalogue_work_editor: failed to open requested work selection", error);
-    });
-  });
+  bindWorkSelectionControls(state, workSelectionOptions(state));
 
   state.detailSearchNode.addEventListener("input", () => {
     updateDetailSections(state);
@@ -1114,22 +918,6 @@ function bindWorkEditorEvents(state) {
     }
   });
 
-  state.popupListNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-work-id]") : null;
-    if (!button) return;
-    openWorkById(state, button.getAttribute("data-work-id")).catch((error) => {
-      console.warn("catalogue_work_editor: failed to open selected work", error);
-    });
-  });
-
-  state.openButton.addEventListener("click", () => {
-    if (state.mode === "new") {
-      setEmptySearchMode(state, workRouteStateOptions(state, { keepSearchValue: true }));
-    }
-    openWorkSelection(state, state.searchNode.value).catch((error) => {
-      console.warn("catalogue_work_editor: failed to open requested work selection", error);
-    });
-  });
   state.newButton.addEventListener("click", () => {
     setNewWorkMode(state, workRouteStateOptions(state));
   });
@@ -1157,33 +945,6 @@ function bindWorkEditorEvents(state) {
     console.warn("catalogue_work_editor: unexpected delete failure", error);
   }));
 
-  document.addEventListener("click", (event) => {
-    if (event.target === state.searchNode || state.popupNode.contains(event.target)) return;
-    setPopupVisibility(state, false);
-  });
-}
-
-async function applyInitialRouteSelection(state) {
-  const params = new URLSearchParams(window.location.search);
-  const requestedMode = normalizeText(params.get("mode")).toLowerCase();
-  const requestedWorkValue = normalizeText(params.get("work"));
-  if (requestedWorkValue) {
-    try {
-      await openWorkSelection(state, requestedWorkValue);
-    } catch (error) {
-      console.warn("catalogue_work_editor: failed to open requested work selection", error);
-      setEmptySearchMode(state, workRouteStateOptions(state, { keepSearchValue: true }));
-      setTextWithState(
-        state.statusNode,
-        `${t(state, "load_requested_work_failed", "Failed to load the requested work.")} ${normalizeText(error && error.message)}`.trim(),
-        "error"
-      );
-    }
-  } else if (requestedMode === "new") {
-    setNewWorkMode(state, workRouteStateOptions(state));
-  } else {
-    setEmptySearchMode(state, workRouteStateOptions(state));
-  }
 }
 
 function markWorkEditorLoaded(state, elements) {
@@ -1220,7 +981,7 @@ async function init() {
 
     await loadInitialWorkEditorData(state);
     bindWorkEditorEvents(state);
-    await applyInitialRouteSelection(state);
+    await applyInitialWorkRouteSelection(state, workSelectionOptions(state));
     markWorkEditorLoaded(state, elements);
   } catch (error) {
     console.warn("catalogue_work_editor: init failed", error);
