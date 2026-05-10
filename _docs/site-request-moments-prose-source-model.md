@@ -32,14 +32,14 @@ The desired end state is:
 - public moment pages keep reading generated runtime payloads from `assets/moments/index/<moment_id>.json`
 - `/moments/` keeps reading aggregate card metadata from `assets/data/moments_index.json`
 - moment source-image lookup can continue to use the configured external media/source image roots
-- moment metadata is entered through `/studio/catalogue-moment-import/`, not through prose front matter
+- moment metadata is entered through `/studio/catalogue-moment/`, not through prose front matter
 - moment prose Markdown is body-only source under `_docs_catalogue/moments/`
 
 ## Current Workflow
 
 Current moment source flow:
 
-- `/studio/catalogue-moment-import/` asks for one explicit moment Markdown filename
+- `/studio/catalogue-moment/?file=<filename>` asks for one explicit moment Markdown filename
 - the write server resolves that file under the canonical external moments source folder
 - the source filename stem becomes `moment_id`
 - moment metadata lives in the source file front matter
@@ -81,7 +81,7 @@ Use a moment staging root:
 
 Staged imports should read only from that staging root. They should not support direct import from the current external moments folder.
 
-Moment prose source files should be body-only Markdown. Metadata should be entered on `/studio/catalogue-moment-import/` and owned outside the prose Markdown source.
+Moment prose source files should be body-only Markdown. Metadata should be entered on `/studio/catalogue-moment/` and owned outside the prose Markdown source.
 
 Publish-state writes should not update moment source front matter. A publishable moment requires a source prose file.
 
@@ -102,7 +102,7 @@ The generator should read moment prose from the repo-local source root once migr
 Resolved decisions:
 
 1. Repo-local moment Markdown becomes body-only prose.
-2. Moment metadata is entered on `/studio/catalogue-moment-import/`, not stored in prose front matter.
+2. Moment metadata is entered on `/studio/catalogue-moment/`, not stored in prose front matter.
 3. Permanent moment prose source root is `_docs_catalogue/moments/`.
 4. Permanent source filenames are ID-derived: `<moment_id>.md`.
 5. Staged imports read from `var/docs/catalogue/import-staging/moments/` only.
@@ -173,7 +173,7 @@ Defined:
 - staging root: `var/docs/catalogue/import-staging/moments/`
 - source filename rule: `<moment_id>.md`
 - front matter policy: body-only prose, no canonical metadata front matter
-- metadata entry surface: `/studio/catalogue-moment-import/`
+- metadata entry surface: `/studio/catalogue-moment/`
 - missing-prose behavior: source prose file is required for a publishable moment
 - source-image lookup boundary
 - media image import/edit/srcset work deferred to a future shared work/moment mechanism
@@ -191,7 +191,7 @@ Add or adapt a moment import path that:
 - validates the ID-derived filename
 - rejects canonical metadata front matter in the permanent prose source
 - accepts existing `<pre class="moment-text">...</pre>` wrappers during migration
-- collects required moment metadata through `/studio/catalogue-moment-import/`
+- collects required moment metadata through `/studio/catalogue-moment/`
 - rejects unsafe paths
 - avoids silent overwrite
 - writes the permanent repo-local source file
@@ -234,7 +234,7 @@ Status:
 
 - complete
 
-Update `/studio/catalogue-moment-import/` so the UI reflects the new source model.
+Update `/studio/catalogue-moment/` so the UI reflects the new source model.
 
 The UI should:
 
@@ -285,7 +285,7 @@ Update relevant docs after implementation.
 
 Likely docs:
 
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
@@ -312,7 +312,7 @@ Manual checks should include:
 
 - import one moment source document from staging
 - verify ID-based staged filenames are detected
-- verify moment metadata is entered through `/studio/catalogue-moment-import/`
+- verify moment metadata is entered through `/studio/catalogue-moment/`
 - verify permanent moment prose source has no canonical metadata front matter
 - verify existing public `/moments/<moment_id>/` still renders title, date, image, and prose
 - verify `/moments/` card metadata is unchanged except for intentional updates
@@ -345,7 +345,7 @@ That future work should cover:
 ## Related References
 
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - `_docs/moments-json-migration-plan.md`

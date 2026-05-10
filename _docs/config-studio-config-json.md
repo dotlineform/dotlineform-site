@@ -91,7 +91,6 @@ Current bundles:
 - `activity-log.json`
 - `bulk-add-work.json`
 - `catalogue-field-registry-review.json`
-- `catalogue-moment-import.json`
 - `catalogue-work-editor.json`
 - `catalogue-work-detail-editor.json`
 - `catalogue-series-editor.json`

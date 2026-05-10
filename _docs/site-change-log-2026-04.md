@@ -376,7 +376,7 @@ The Moment editor now has a `New` command beside `Open`. `New` switches the shar
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 
@@ -405,7 +405,7 @@ The moment status field is now a non-input Readonly Display surface. `Save` neve
 - `assets/studio/js/studio-config.js`
 - `scripts/studio/catalogue_write_server.py`
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
@@ -1414,7 +1414,7 @@ Moments were the remaining catalogue image path still excluded from the new loca
 - `scripts/catalogue_json_build.py`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 
@@ -1470,7 +1470,7 @@ The moment import page now collects metadata fields, previews staged body-only p
 - `assets/studio/data/studio_config.json`
 - `studio/catalogue-moment-import/index.md`
 - [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
@@ -2575,7 +2575,6 @@ Studio audit docs are now explicitly living records until a page is settled. Pos
 **Affected files/docs:**
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [UI Audits](/docs/?scope=studio&doc=ui-audits)
-- [UI Audit: Catalogue Moment Import (2026-04-21)](/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 
 ## [2026-04-21] Lightened Studio default-text treatment for inputs
@@ -3471,7 +3470,7 @@ The moment import UI now supports explicit source-file preview/apply, targeted m
 
 **Affected files/docs:**
 - `/studio/catalogue-moment-import/`
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 
 **Notes:**
 This was Phase 2 of the Studio implementation sequence.

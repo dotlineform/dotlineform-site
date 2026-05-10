@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-moment-editor
 title: Catalogue Moment Editor Request
 added_date: 2026-04-27
-last_updated: 2026-05-02
+last_updated: 2026-05-10 23:43
 ui_status: done
 parent_id: change-requests
 sort_order: 70
@@ -51,25 +51,25 @@ The target workflow should feel consistent with the current work, work-detail, a
 
 Current moment workflows:
 
-- `/studio/catalogue-moment-import/` creates or updates a moment from one explicit staged Markdown file plus submitted metadata
+- `/studio/catalogue-moment/?file=<moment_id>.md` opens import mode for one explicit staged Markdown file plus submitted metadata
 - moment import writes body-only prose into `_docs_catalogue/moments/`
 - moment import writes metadata into `assets/studio/data/catalogue/moments.json`
 - `catalogue_json_build.py --moment-file <moment_id>.md` rebuilds the moment, media, and catalogue search
-- `/studio/catalogue/` links to `Import Moment`
+- `/studio/catalogue/` links to the Catalogue Moment editor
 
-Current gap:
+Current gap at request time:
 
-- there is no `/studio/catalogue-moment/` route
-- the dashboard has no `Edit Moment` entry
-- existing moments cannot be reopened in a purpose-built editor
-- metadata edits require the import page or direct JSON editing
-- prose/media readiness is not visible for an existing moment outside the import flow
+- there was no `/studio/catalogue-moment/` route
+- the dashboard had no `Edit Moment` entry
+- existing moments could not be reopened in a purpose-built editor
+- metadata edits required the import page or direct JSON editing
+- prose/media readiness was not visible for an existing moment outside the import flow
 
 ## Proposed Direction
 
 Create a dedicated moment editor rather than stretching the import page.
 
-The import page should remain the workflow for introducing or replacing a moment from a staged prose file. The edit page should be the workflow for routine maintenance of a moment that already exists in canonical metadata.
+The old standalone import page has since been retired. The editor route now owns both routine maintenance of existing moments and import mode for introducing or replacing a moment from a staged prose file.
 
 The first implementation should not add browser-side prose editing. Prose changes should use the same explicit staged import pattern already established for work, series, and moment imports.
 

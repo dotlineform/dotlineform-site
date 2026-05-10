@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8393a078ab8c0aa2321c8c3c4f046b8d",
-    "generated_at_utc": "2026-05-10T22:15:40Z",
-    "count": 223
+    "version": "blake2b-f0b749b7d89f19237cd006901d2733e8",
+    "generated_at_utc": "2026-05-10T22:30:15Z",
+    "count": 221
   },
   "entries": [
     {
@@ -623,33 +623,6 @@
         "51"
       ],
       "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
-    },
-    {
-      "id": "ui-audit-catalogue-moment-import-20260421",
-      "kind": "doc",
-      "title": "UI Audit: Catalogue Moment Import (2026-04-21)",
-      "href": "/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421",
-      "last_updated": "2026-04-21",
-      "parent_id": "ui-audits",
-      "parent_title": "UI Audits",
-      "display_meta": "2026-04-21 • UI Audits",
-      "search_terms": [
-        "ui-audit-catalogue-moment-import-20260421",
-        "ui",
-        "audit",
-        "catalogue",
-        "moment",
-        "import",
-        "20260421",
-        "ui audit: catalogue moment import (2026-04-21)",
-        "2026",
-        "04",
-        "21",
-        "ui audits",
-        "audits",
-        "2026-04-21"
-      ],
-      "search_text": "ui-audit-catalogue-moment-import-20260421 ui audit catalogue moment import 20260421 ui audit: catalogue moment import (2026-04-21) 2026 04 21 ui audits audits 2026-04-21"
     },
     {
       "id": "ui-framework",
@@ -1300,23 +1273,22 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-10 23:14",
+      "last_updated": "2026-05-10 23:23",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-10 23:14 • Studio",
+      "display_meta": "2026-05-10 23:23 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-10 23:14",
+        "2026-05-10 23:23",
         "2026",
         "05",
         "10",
-        "23",
-        "14"
+        "23"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-10 23:14 2026 05 10 23 14"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-10 23:23 2026 05 10 23"
     },
     {
       "id": "studio-ui-start",
@@ -2551,30 +2523,6 @@
       "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
-      "id": "catalogue-moment-import",
-      "kind": "doc",
-      "title": "Catalogue Moment Import",
-      "href": "/docs/?scope=studio&doc=catalogue-moment-import",
-      "last_updated": "2026-05-10 23:14",
-      "parent_id": "catalogue",
-      "parent_title": "Catalogue",
-      "display_meta": "2026-05-10 23:14 • Catalogue",
-      "search_terms": [
-        "catalogue-moment-import",
-        "catalogue",
-        "moment",
-        "import",
-        "catalogue moment import",
-        "2026-05-10 23:14",
-        "2026",
-        "05",
-        "10",
-        "23",
-        "14"
-      ],
-      "search_text": "catalogue-moment-import catalogue moment import catalogue moment import 2026-05-10 23:14 2026 05 10 23 14"
-    },
-    {
       "id": "catalogue-work-detail-editor",
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
@@ -3411,10 +3359,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-10 23:43",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
+      "display_meta": "2026-05-10 23:43 • Change Requests",
       "search_terms": [
         "site-request-catalogue-moment-editor",
         "site",
@@ -3426,12 +3374,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-02",
+        "2026-05-10 23:43",
         "2026",
         "05",
-        "02"
+        "10",
+        "23",
+        "43"
       ],
-      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request change requests change requests 2026-05-10 23:43 2026 05 10 23 43"
     },
     {
       "id": "catalogue-series-editor",
@@ -5066,10 +5016,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-05-10 23:14",
+      "last_updated": "2026-05-10 23:23",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-10 23:14 • User Guide",
+      "display_meta": "2026-05-10 23:23 • User Guide",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -5079,14 +5029,13 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-10 23:14",
+        "2026-05-10 23:23",
         "2026",
         "05",
         "10",
-        "23",
-        "14"
+        "23"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-10 23:14 2026 05 10 23 14"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-10 23:23 2026 05 10 23"
     },
     {
       "id": "library-export",
@@ -5652,22 +5601,21 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 23:14",
-      "display_meta": "2026-05-10 23:14",
+      "last_updated": "2026-05-10 23:23",
+      "display_meta": "2026-05-10 23:23",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 23:14",
+        "2026-05-10 23:23",
         "2026",
         "05",
         "10",
-        "23",
-        "14"
+        "23"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 23:14 2026 05 10 23 14"
+      "search_text": "site-change-log site change log site change log 2026-05-10 23:23 2026 05 10 23"
     },
     {
       "id": "archive",

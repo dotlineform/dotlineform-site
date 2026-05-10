@@ -1,6 +1,6 @@
 const DEFAULT_STUDIO_CONFIG = {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-08T16:08:10Z",
+  "updated_at_utc": "2026-05-10T22:25:58Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -18,7 +18,6 @@ const DEFAULT_STUDIO_CONFIG = {
       "catalogue_status": "/studio/catalogue-status/",
       "activity": "/studio/activity/",
       "bulk_add_work": "/studio/bulk-add-work/",
-      "catalogue_moment_import": "/studio/catalogue-moment/",
       "catalogue_moment_editor": "/studio/catalogue-moment/",
       "catalogue_work_editor": "/studio/catalogue-work/",
       "catalogue_work_detail_editor": "/studio/catalogue-work-detail/",
@@ -100,7 +99,6 @@ const DEFAULT_STUDIO_CONFIG = {
         "activity_log": "/assets/studio/data/ui_text/activity-log.json",
         "bulk_add_work": "/assets/studio/data/ui_text/bulk-add-work.json",
         "catalogue_field_registry_review": "/assets/studio/data/ui_text/catalogue-field-registry-review.json",
-        "catalogue_moment_import": "/assets/studio/data/ui_text/catalogue-moment-import.json",
         "catalogue_status": "/assets/studio/data/ui_text/catalogue-status.json",
         "docs_broken_links": "/assets/studio/data/ui_text/docs-broken-links.json",
         "docs_html_import": "/assets/studio/data/ui_text/docs-html-import.json",

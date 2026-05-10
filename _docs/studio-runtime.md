@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-10 23:14"
+last_updated: "2026-05-10 23:23"
 parent_id: studio
 sort_order: 20
 ---
@@ -70,7 +70,6 @@ Current route inventory:
 - `studio/docs-import/index.md`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment/index.md`
-- `studio/catalogue-moment-import/index.md` compatibility bridge to `/studio/catalogue-moment/`
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-work-detail/index.md`
 - `studio/catalogue-series/index.md`
@@ -90,7 +89,6 @@ Current page-level doc links:
 - Docs Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
-- Catalogue Moment Import -> `/docs/?scope=studio&doc=catalogue-moment-import` compatibility route note
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`

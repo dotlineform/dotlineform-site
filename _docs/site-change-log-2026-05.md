@@ -1287,7 +1287,7 @@ The Studio implementation plan now frames the old Phase 2 source model as supers
 
 - [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
 - [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
 - [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -1381,7 +1381,7 @@ Moment build previews and Studio staged prose imports no longer call the moment 
 - `scripts/catalogue_json_build.py`
 - `scripts/studio/catalogue_write_server.py`
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)
 - [Inventory](/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory)

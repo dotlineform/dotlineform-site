@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T22:15:40Z",
+  "generated_at": "2026-05-10T22:30:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -231,7 +231,7 @@
       "source_path": "site-request-moment-source-cleanup-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moment-source-cleanup-inventory.json",
-      "content_text_length": 11494
+      "content_text_length": 11419
     },
     {
       "scope": "studio",
@@ -377,22 +377,6 @@
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-studio.json",
       "content_text_length": 8859
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-audit-catalogue-moment-import-20260421",
-      "title": "UI Audit: Catalogue Moment Import (2026-04-21)",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-04-21",
-      "parent_id": "ui-audits",
-      "sort_order": 10,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "ui-audit-catalogue-moment-import-20260421.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audit-catalogue-moment-import-20260421.json",
-      "content_text_length": 5450
     },
     {
       "scope": "studio",
@@ -797,14 +781,14 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4992
+      "content_text_length": 4933
     },
     {
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 23:14",
+      "last_updated": "2026-05-10 23:23",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -813,7 +797,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 13403
+      "content_text_length": 13213
     },
     {
       "scope": "studio",
@@ -1105,7 +1089,7 @@
       "source_path": "site-change-log-2026-04.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
-      "content_text_length": 190530
+      "content_text_length": 190483
     },
     {
       "scope": "studio",
@@ -1137,7 +1121,7 @@
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 11779
+      "content_text_length": 11753
     },
     {
       "scope": "studio",
@@ -1597,22 +1581,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "catalogue-moment-import",
-      "title": "Catalogue Moment Import",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-05-10 23:14",
-      "parent_id": "catalogue",
-      "sort_order": 50,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "catalogue-moment-import.md",
-      "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-import",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-import.json",
-      "content_text_length": 4139
-    },
-    {
-      "scope": "studio",
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
       "added_date": "2026-04-22",
@@ -1721,7 +1689,7 @@
       "source_path": "site-request-moments-prose-source-model.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moments-prose-source-model.json",
-      "content_text_length": 13410,
+      "content_text_length": 13370,
       "ui_status": "done"
     },
     {
@@ -1787,7 +1755,7 @@
       "source_path": "studio-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json",
-      "content_text_length": 52244
+      "content_text_length": 52260
     },
     {
       "scope": "studio",
@@ -1803,7 +1771,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 167670
+      "content_text_length": 167516
     },
     {
       "scope": "studio",
@@ -2148,7 +2116,7 @@
       "doc_id": "site-request-catalogue-moment-editor",
       "title": "Catalogue Moment Editor Request",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-10 23:43",
       "parent_id": "change-requests",
       "sort_order": 70,
       "published": true,
@@ -2157,7 +2125,7 @@
       "source_path": "site-request-catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-moment-editor.json",
-      "content_text_length": 10843,
+      "content_text_length": 10864,
       "ui_status": "done"
     },
     {
@@ -2610,7 +2578,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 8999
+      "content_text_length": 8970
     },
     {
       "scope": "studio",
@@ -2939,7 +2907,7 @@
       "source_path": "site-request-catalogue-publication-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-publication-workflow.json",
-      "content_text_length": 16500,
+      "content_text_length": 16470,
       "ui_status": "done"
     },
     {
@@ -3072,7 +3040,7 @@
       "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
-      "content_text_length": 8866
+      "content_text_length": 8842
     },
     {
       "scope": "studio",
@@ -3194,7 +3162,7 @@
       "doc_id": "catalogue-moment-editor",
       "title": "Catalogue Moment Editor",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-10 23:14",
+      "last_updated": "2026-05-10 23:23",
       "parent_id": "user-guide",
       "sort_order": 182,
       "published": true,
@@ -3203,7 +3171,7 @@
       "source_path": "catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json",
-      "content_text_length": 6884
+      "content_text_length": 6880
     },
     {
       "scope": "studio",
@@ -3546,7 +3514,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 23:14",
+      "last_updated": "2026-05-10 23:23",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3555,7 +3523,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 129552
+      "content_text_length": 130511
     },
     {
       "scope": "studio",

@@ -184,7 +184,7 @@ Deliverables:
 
 Delivered:
 
-1. Added `/studio/catalogue-moment-import/` as the first moments-focused Studio route; this route now redirects into `/studio/catalogue-moment/`.
+1. Added `/studio/catalogue-moment-import/` as the first moments-focused Studio route; this route was later retired after import moved into `/studio/catalogue-moment/`.
 2. Implemented filename-only preview/apply flow for staged body-only Markdown.
 3. Added local write-service endpoints for moment import preview and apply.
 4. Added targeted rebuild support in `catalogue_json_build.py` for `--moment-file`.
@@ -266,7 +266,7 @@ UI elements should mirror existing site pages rather than introduce new patterns
 Task list:
 
 1. Rework the Catalogue dashboard entry area from card panels into grouped directional link lists, with labels such as `Work Editor`, `Series Editor`, and `Import Moment`.
-2. Audit all current Catalogue routes and make sure every live page is reachable from the dashboard, including direct signposts to routes such as `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-status/`, `/studio/activity/`, `/studio/activity/`, `/studio/bulk-add-work/`, and `/studio/catalogue-moment-import/`.
+2. Audit all current Catalogue routes and make sure every live page is reachable from the dashboard, including direct signposts to routes such as `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-status/`, `/studio/activity/`, `/studio/activity/`, `/studio/bulk-add-work/`, and `/studio/catalogue-moment/`.
 3. Define one shared pattern for Catalogue page headers so each page consistently shows the page title, current context, status/result messaging, and directional links back to the dashboard or next likely action.
 4. Normalize action wording across Catalogue pages so create, save, rebuild, import, preview, delete, and navigation actions use one consistent verb set and button hierarchy.
 5. Refactor metadata forms to a single-column vertical stack, with labels aligned on the left and input controls using shared widths, heights, and spacing.

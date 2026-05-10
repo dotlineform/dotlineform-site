@@ -738,22 +738,20 @@ When a rule becomes stable, move or summarize it in the relevant target doc, lea
 ## UI Rule Log 2026-04-29 / UI-063
 
 - status: adopted
-- route: `/studio/catalogue-moment/`, `/studio/catalogue-moment-import/`
+- route: `/studio/catalogue-moment/`
 - issue: the Moment editor still exposed publication through a save-time `Update site now` checkbox plus a follow-up update button, while the Moment import flow implied public publication by running the scoped public update during import.
 - triage: command model / publication workflow
 - reasoning: moment source import, metadata saves, and public visibility changes are separate user intentions. Existing moments should use the same `Save`, `Publish`, and `Unpublish` model as other first-class catalogue records, while file-driven imports should create draft source data until the user explicitly publishes from the editor.
 - permanent rule: moment publication state changes happen through the single publication command on the Moment editor. `Save` does not change status; saved published moments run the internal public update; saved draft moments remain source-only; `Publish` moves a clean draft moment to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated moment output, moments index entries, and catalogue search records. Moment staged-file import is source-only and belongs on the same editor page as a `New` mode that reuses the shared metadata fields.
-- outcome: removed visible moment save-time public update controls, added a config-backed `Publish` / `Unpublish` command for existing moment records, made status a non-input Readonly Display field, routed moment publication through the shared preview/apply endpoints, and folded file-driven moment import into the Moment editor as a `New` mode that writes draft source/prose without running the scoped public update. The old import route now bridges to the editor.
+- outcome: removed visible moment save-time public update controls, added a config-backed `Publish` / `Unpublish` command for existing moment records, made status a non-input Readonly Display field, routed moment publication through the shared preview/apply endpoints, and folded file-driven moment import into the Moment editor as a `New` mode that writes draft source/prose without running the scoped public update. The old import route was later retired.
 - files changed:
   - `studio/catalogue-moment/index.md`
-  - `studio/catalogue-moment-import/index.md`
   - `assets/studio/js/catalogue-moment-editor.js`
   - `assets/studio/js/catalogue-moment-import.js`
   - `assets/studio/data/studio_config.json`
   - `assets/studio/js/studio-config.js`
   - `scripts/studio/catalogue_write_server.py`
   - `_docs/catalogue-moment-editor.md`
-  - `_docs/catalogue-moment-import.md`
   - `_docs/site-request-catalogue-publication-workflow.md`
 - verification:
   - open `/studio/catalogue-moment/?moment=<draft_moment_id>` and confirm a saved draft shows `Publish`, no `Update site now` checkbox, and a non-input Readonly Display status field
@@ -1743,7 +1741,6 @@ Add new entries at the top of this section.
 - files changed:
   - `_docs/studio-ui-conformance.md`
   - `_docs/ui-audits.md`
-  - `_docs/ui-audit-catalogue-moment-import-20260421.md`
   - `_docs/studio-ui-rules.md`
   - `_docs/site-change-log.md`
 - local verification:
@@ -1769,7 +1766,7 @@ Add new entries at the top of this section.
   - `_docs/site-change-log.md`
 - local verification:
   - confirm search placeholders on `/studio/catalogue-work/` are visibly lighter than entered text
-  - confirm the file placeholder on `/studio/catalogue-moment-import/` uses the same lighter default-text treatment
+  - confirm the file placeholder on `/studio/catalogue-moment/?file=<moment_id>.md` uses the same lighter default-text treatment
   - confirm the input primitive page still demonstrates muted default text clearly
 - follow-up:
   - none

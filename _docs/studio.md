@@ -64,7 +64,6 @@ Read this section in this order:
 	   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
    - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
-   - **[Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)** compatibility route note
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
    - **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
@@ -98,7 +97,7 @@ Current workflow/detail routes:
 - `/studio/bulk-add-work/`
 - `/studio/catalogue-moment/`
 - `/studio/catalogue-moment/?moment=<moment_id>`
-- `/studio/catalogue-moment-import/` compatibility redirect
+- `/studio/catalogue-moment/?file=<moment_id>.md`
 - `/studio/catalogue-work/?work=<work_id>`
 - `/studio/analytics/tag-groups/`
 - `/studio/analytics/tag-registry/`

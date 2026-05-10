@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 23:14"
+last_updated: "2026-05-10 23:23"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Removed standalone Catalogue Moment Import bridge
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor routes / cleanup
+
+**Summary:**
+Removed the obsolete `/studio/catalogue-moment-import/` compatibility bridge, standalone Catalogue Moment Import doc, and unused `catalogue_moment_import` route/text config.
+Moment import now lives only inside the Catalogue Moment Editor, with staged-file links using `/studio/catalogue-moment/?file=<filename>`.
+
+**Files changed/docs:**
+
+- `studio/catalogue-moment-import/index.md`
+- `_docs/catalogue-moment-import.md`
+- `_docs/ui-audit-catalogue-moment-import-20260421.md`
+- `assets/studio/data/ui_text/catalogue-moment-import.json`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+
+**Impact:**
+There is no longer a separate route, doc, or UI-text bundle for Moment import.
+Old direct links to `/studio/catalogue-moment-import/` no longer redirect; use `/studio/catalogue-moment/?file=<filename>` instead.
 
 ## [2026-05-10] Extracted Catalogue Moment Editor import behavior
 
@@ -32,7 +57,6 @@ The helper now owns staged-file query state, import metadata reads, preview meta
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-moment-import.js`
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
 

@@ -188,6 +188,5 @@ It keeps the current source/public-update boundary narrow:
 
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Studio Activity](/docs/?scope=studio&doc=studio-activity)
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)

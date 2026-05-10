@@ -283,7 +283,7 @@ Moment implementation:
 - moment `Publish` / `Unpublish` uses the shared publication preview/apply endpoints and surfaces blockers before apply
 - `/studio/catalogue-moment/` now includes `New` beside `Open`; `New` reuses the shared metadata fields for staged-file import
 - import creates draft source metadata and draft prose only, then opens the imported draft in the same editor
-- `/studio/catalogue-moment-import/` is retained only as a compatibility bridge to the Moment editor and no longer owns a separate workflow
+- `/studio/catalogue-moment-import/` was retired after the import workflow moved into the Moment editor
 
 ### Task 6. Update Docs And E2E Checklist
 
@@ -309,7 +309,7 @@ Acceptance checks:
 - `Publish` and `Unpublish` use the shared publication preview/apply endpoints.
 - `Unpublish` changes status to `draft`, ignores unsaved form edits after confirmation, reloads from the apply response, and cleans public output for the target record family.
 - Catalogue Drafts is the recovery queue for draft series, works, work details, and moments.
-- Moment import is merged into `/studio/catalogue-moment/` as `New`; `/studio/catalogue-moment-import/` remains a compatibility redirect.
+- Moment import is merged into `/studio/catalogue-moment/` as `New`; staged-file links should use `/studio/catalogue-moment/?file=<filename>`.
 
 ## Resolved Decisions
 

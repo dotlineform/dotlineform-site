@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: "Catalogue Moment Editor"
 added_date: 2026-04-27
-last_updated: "2026-05-10 23:14"
+last_updated: "2026-05-10 23:23"
 parent_id: user-guide
 sort_order: 182
 ---
@@ -104,7 +104,7 @@ Apply writes:
 Import always forces source status to `draft`. It does not publish the moment and does not run the scoped public update. Use `Publish` on the opened draft record when the moment is ready.
 Successful apply also appends a unified Studio activity row for the `import moment` action with script purpose `import source data`.
 
-The legacy `/studio/catalogue-moment-import/` route redirects to this editor and preserves `?file=<filename>` for staged-file links.
+The old standalone `/studio/catalogue-moment-import/` route is retired. Open `/studio/catalogue-moment/?file=<filename>` directly for staged-file links.
 
 ## Delete
 
@@ -135,6 +135,5 @@ Importing prose does not change `moments.json`. Publish the moment or save an al
 
 ## Related References
 
-- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
