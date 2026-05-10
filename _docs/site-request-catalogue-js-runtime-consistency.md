@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-11 00:16"
+last_updated: "2026-05-11 00:25"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -26,6 +26,9 @@ Status:
 - Slice C5 completed; Series route is an acceptable coordinator and the next Catalogue priority is Moment Editor boundary review
 - Slice D completed for Moment Editor; first extraction should be Moment import mode
 - Slice D1 implemented for Moment import mode
+- Slice D2 implemented for Moment action workflow sequencing
+- Slice D3 implemented for Moment form and section rendering
+- Slice D4 implemented for Moment selection/opening
 
 ## Implementation Progress
 
@@ -71,6 +74,9 @@ Status:
 - Added `assets/studio/js/catalogue-moment-sections.js` for Moment normal edit summary rendering, readiness rendering, and build-impact text rendering.
 - Kept route bootstrap, generated-data reads, service availability, search/open behavior, import mode coordination, post-import opening, dirty-state orchestration, display/action/import context wiring, and route-ready state in `assets/studio/js/catalogue-moment-editor.js`.
 - Measured `assets/studio/js/catalogue-moment-editor.js` at 599 lines after D3; the next useful Moment slice is selection/open boundary review.
+- Added `assets/studio/js/catalogue-moment-selection.js` for Moment search matching, popup rendering, Open button behavior, popup click handling, and initial route selection.
+- Kept normal edit mode construction, preview refresh, post-import opening, empty-mode copy, and import-mode setup behind route callbacks in `assets/studio/js/catalogue-moment-editor.js`.
+- Measured `assets/studio/js/catalogue-moment-editor.js` at 554 lines after D4; the next useful Moment slice is the stop/continue decision.
 
 ## Purpose
 
@@ -131,7 +137,7 @@ Post Work Editor cleanup, the remaining Catalogue route controllers over the lon
 | --- | --- |
 | `assets/studio/js/catalogue-work-detail-editor.js` | selection/opening, form rendering/synchronization, summary/readiness/preview, and action workflow sequencing extractions complete; below long-file review threshold |
 | `assets/studio/js/catalogue-series-editor.js` | membership, action workflow, selection/opening, form rendering, and section/readiness extractions complete; below long-file review threshold and acceptable as route coordinator |
-| `assets/studio/js/catalogue-moment-editor.js` | medium priority; focus on import/prose/media/action workflow boundaries rather than line-count reduction |
+| `assets/studio/js/catalogue-moment-editor.js` | import, action workflow, form/section display, and selection/opening extractions complete; below long-file review threshold |
 
 `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-actions.js`, and `assets/studio/js/catalogue-work-selection.js` are now below the review threshold, but the important outcome is the ownership split, not the number itself.
 
@@ -627,7 +633,7 @@ D3 measured state:
 
 Status:
 
-- proposed after D1, and after D2/D3 if they are implemented
+- implemented
 
 Scope:
 
@@ -639,6 +645,12 @@ Possible target file:
 
 - `assets/studio/js/catalogue-moment-selection.js`
 
+Implementation outcome:
+
+- moved Moment search matching, popup rendering, Open button behavior, popup click handling, and initial route selection into `assets/studio/js/catalogue-moment-selection.js`
+- kept normal edit mode construction, record hash setup, build-preview refresh, post-import opening, empty-mode copy, and import-mode setup in `assets/studio/js/catalogue-moment-editor.js` through explicit callbacks
+- kept generated moment lookup shaping in the route entry module so data-loading remains colocated with route bootstrap
+
 Acceptance checks:
 
 - empty mode still renders after `/studio/catalogue-moment/`
@@ -646,11 +658,23 @@ Acceptance checks:
 - unknown ids still show the same status feedback
 - import `?file=<moment_file>` mode still takes precedence over empty mode and remains owned by the import helper/route callback boundary
 
+D4 measured state:
+
+| File | Lines | Current disposition |
+| --- | ---: | --- |
+| `assets/studio/js/catalogue-moment-editor.js` | 554 | owns route lifecycle, generated-data reads, service availability, normal edit construction, import mode coordination, dirty-state orchestration, post-import opening, display/action/import/selection context wiring, and route-ready state |
+| `assets/studio/js/catalogue-moment-selection.js` | 107 | owns search matching, popup rendering, selection control binding, Open button resolution, and initial route selection |
+| `assets/studio/js/catalogue-moment-actions.js` | 393 | owns save/build preview, publication, delete, staged prose import, media refresh, activity context shaping, confirmation formatting, service transport sequencing, and action-result copy |
+| `assets/studio/js/catalogue-moment-import.js` | 383 | owns import query state, import metadata reads, preview seeding, preview/apply sequencing, import rendering, stale preview clearing, import control state, and import activity context |
+| `assets/studio/js/catalogue-moment-form.js` | 146 | owns field DOM construction, field value reads/writes, readonly display, readonly clearing, and validation message rendering |
+| `assets/studio/js/catalogue-moment-sections.js` | 116 | owns normal edit summary, readiness, and build-impact rendering |
+| `assets/studio/js/catalogue-moment-fields.js` | 127 | owns Moment field definitions, normalization, payload shaping, draft reads, and validation |
+
 ### Slice D5: Moment Stop/Continue Decision
 
 Status:
 
-- proposed after D1 and any implemented D2-D4 slices
+- proposed after D4
 
 Scope:
 
@@ -705,7 +729,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice D1: Moment Import Module.
+Start with Slice D5: Moment Stop/Continue Decision.
 
-The Moment Editor boundary review is complete.
-The first useful extraction is import mode because it is the most distinctive Moment-specific workflow and currently mixes import transport, import rendering, URL state, metadata seeding, mode chrome, and post-import routing inside the route controller.
+The Moment import, action, form/section, and selection/open boundaries are now extracted.
+The next useful step is to decide whether the remaining Moment route entry module is an acceptable coordinator and whether Catalogue route consistency is sufficient to move to the stop-point slice.

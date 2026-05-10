@@ -25,6 +25,11 @@ import {
   validateMomentDraft
 } from "./catalogue-moment-fields.js";
 import {
+  applyInitialMomentRouteSelection,
+  bindMomentSelectionControls,
+  setMomentSelectionPopupVisibility
+} from "./catalogue-moment-selection.js";
+import {
   applyMomentImport,
   clearImportPreview,
   currentImportMomentFile,
@@ -63,17 +68,6 @@ import {
   refreshMomentMedia,
   saveCurrentMoment
 } from "./catalogue-moment-actions.js";
-
-const SEARCH_LIMIT = 20;
-
-function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
 function getFieldNodeValue(node) {
   return getMomentFieldNodeValue(node);
@@ -126,6 +120,22 @@ function buildImportContext(state) {
   };
 }
 
+function buildSelectionContext(state) {
+  return {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    setTextWithState,
+    openMoment: (momentId, options = {}) => openMoment(state, momentId, options),
+    enterImportMode: (momentFile) => enterImportMode(state, momentFile),
+    currentImportFile: () => currentImportMomentFile(state),
+    previewImport: () => previewMomentImport(state, buildImportContext(state)),
+    setEmptyMode: () => {
+      state.emptyNode.hidden = false;
+      state.emptyNode.textContent = t(state, "missing_moment_param", "Search for a moment by id or title.");
+      setTextWithState(state.statusNode, t(state, "missing_moment_param", "Search for a moment by id or title."));
+    }
+  };
+}
+
 function buildActionContext(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
@@ -159,32 +169,8 @@ function draftHasChanges(state) {
   return !recordsEqual(readDraft(state), state.currentRecord);
 }
 
-function buildSearchRows(state, query) {
-  const needle = normalizeText(query).toLowerCase();
-  if (!needle) return [];
-  return state.momentRows
-    .filter((row) => row.search.includes(needle))
-    .slice(0, SEARCH_LIMIT);
-}
-
 function setPopupVisibility(state, visible) {
-  state.popupNode.hidden = !visible;
-}
-
-function renderPopup(state) {
-  const rows = buildSearchRows(state, state.searchNode.value);
-  if (!rows.length) {
-    state.popupListNode.innerHTML = `<p class="tagStudio__popupEmpty">${escapeHtml(t(state, "search_no_match", "No matching moment records."))}</p>`;
-    setPopupVisibility(state, Boolean(normalizeText(state.searchNode.value)));
-    return;
-  }
-  state.popupListNode.innerHTML = rows.map((row) => `
-    <button type="button" class="tagStudio__popupItem" data-moment-id="${escapeHtml(row.moment_id)}">
-      <span class="tagStudio__popupTitle">${escapeHtml(row.title || row.moment_id)}</span>
-      <span class="tagStudio__popupMeta">${escapeHtml(row.moment_id)}</span>
-    </button>
-  `).join("");
-  setPopupVisibility(state, true);
+  setMomentSelectionPopupVisibility(state, visible);
 }
 
 function fillForm(state, record) {
@@ -413,25 +399,7 @@ function buildMomentRows(payload) {
 }
 
 function bindEvents(state) {
-  state.searchNode.addEventListener("input", () => renderPopup(state));
-  state.searchNode.addEventListener("focus", () => renderPopup(state));
-  state.popupListNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-moment-id]") : null;
-    if (!button) return;
-    state.searchNode.value = button.dataset.momentId || "";
-    setPopupVisibility(state, false);
-    openMoment(state, state.searchNode.value).catch((error) => console.warn("catalogue_moment_editor: open failed", error));
-  });
-  state.openButton.addEventListener("click", () => {
-    const value = normalizeMomentId(state.searchNode.value);
-    if (!value) {
-      setTextWithState(state.statusNode, t(state, "search_empty", "Enter a moment id or title."), "warning");
-      return;
-    }
-    const exact = state.moments.has(value) ? value : "";
-    const match = exact || (buildSearchRows(state, value)[0] || {}).moment_id || "";
-    openMoment(state, match || value).catch((error) => console.warn("catalogue_moment_editor: open failed", error));
-  });
+  bindMomentSelectionControls(state, buildSelectionContext(state));
   state.newButton.addEventListener("click", () => enterImportMode(state));
   state.saveButton.addEventListener("click", () => saveCurrentMoment(state, buildActionContext(state)));
   state.publicationButton.addEventListener("click", () => applyPublicationChange(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: publication failed", error)));
@@ -570,20 +538,7 @@ async function init() {
 
     loadingNode.hidden = true;
     root.hidden = false;
-    const initialMoment = normalizeMomentId(new URLSearchParams(window.location.search).get("moment"));
-    const initialImportFile = currentImportMomentFile(state);
-    if (initialMoment) {
-      state.searchNode.value = initialMoment;
-      await openMoment(state, initialMoment, { skipUrl: true });
-    } else if (initialImportFile) {
-      emptyNode.hidden = true;
-      enterImportMode(state, initialImportFile);
-      await previewMomentImport(state, buildImportContext(state));
-    } else {
-      emptyNode.hidden = false;
-      emptyNode.textContent = t(state, "missing_moment_param", "Search for a moment by id or title.");
-      setTextWithState(state.statusNode, t(state, "missing_moment_param", "Search for a moment by id or title."));
-    }
+    await applyInitialMomentRouteSelection(state, buildSelectionContext(state));
     updateDirtyState(state);
     updateImportState(state, buildImportContext(state));
     await refreshMomentActionBuildPreview(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: initial build preview failed", error));

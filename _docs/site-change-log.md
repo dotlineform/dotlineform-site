@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 00:16"
+last_updated: "2026-05-11 00:25"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Extracted Catalogue Moment Editor selection behavior
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-moment-selection.js` as the route-local selection module for the Catalogue Moment Editor.
+The module owns Moment search matching, popup rendering, Open button resolution, popup click handling, and initial route selection.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-moment-selection.js`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
+
+**Impact:**
+The Moment route entry module keeps generated-data reads, normal edit construction, preview refresh, import-mode setup, post-import opening, dirty-state orchestration, context wiring, and route-ready state.
+Selection behavior now follows the same route-local module pattern as Work and Series without moving edit-mode construction out of the route coordinator.
 
 ## [2026-05-11] Extracted Catalogue Moment Editor display and form modules
 
