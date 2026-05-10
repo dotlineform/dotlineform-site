@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T12:52:40Z",
+  "generated_at": "2026-05-10T13:14:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -170,6 +170,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-docs-viewer-inventory",
+      "title": "Docs Viewer Function Inventory",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 14:45",
+      "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
+      "sort_order": 10,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-docs-viewer-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-inventory.json",
+      "content_text_length": 17659,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-field-aware-build-scoping-inventory",
       "title": "Field-Aware Build Scoping Inventory",
       "added_date": "2026-04-30",
@@ -333,7 +350,7 @@
       "doc_id": "site-request-js-config-structural-review-module-versioning",
       "title": "Studio Module Asset Versioning Slice",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 13:55",
+      "last_updated": "2026-05-10 14:07",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 10,
       "published": true,
@@ -343,7 +360,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-module-versioning.json",
       "content_text_length": 6237,
-      "ui_status": "implemented"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -553,6 +570,40 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-docs-management-server.json",
       "content_text_length": 27206,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-docs-viewer-boundary",
+      "title": "Docs Viewer Boundary Spec Slice",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 14:45",
+      "parent_id": "site-request-js-config-structural-review",
+      "sort_order": 20,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-docs-viewer-boundary.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-boundary",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-boundary.json",
+      "content_text_length": 7484,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-docs-viewer-extraction-plan",
+      "title": "Docs Viewer Extraction Plan",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 14:45",
+      "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
+      "sort_order": 20,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-docs-viewer-extraction-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-extraction-plan.json",
+      "content_text_length": 9538,
       "ui_status": "done"
     },
     {
@@ -3242,7 +3293,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 12:09",
+      "last_updated": "2026-05-10 14:10",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3251,7 +3302,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 15820,
+      "content_text_length": 15893,
       "ui_status": "in-progress"
     },
     {

@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 12:09"
+last_updated: "2026-05-10 14:10"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -272,6 +272,8 @@ Detailed implementation tasks are tracked in [Studio Module Asset Versioning Sli
 - decide the target module list and public internal contracts
 - identify tests or smoke checks for read-only docs, search, bookmarks, manage mode, metadata save, move undo, and generated-data reads
 - write a follow-up task list before extraction
+
+Detailed planning tasks are tracked in [Docs Viewer Boundary Spec Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-boundary).
 
 ### Slice 3: Catalogue Editor Boundary Spec
 
