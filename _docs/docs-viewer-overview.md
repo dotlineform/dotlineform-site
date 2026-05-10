@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: "2026-05-07 21:52"
+last_updated: "2026-05-10 14:23"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -64,12 +64,17 @@ It also passes the current scope configuration into the DOM through `data-*` att
 
 ### 3. Shared runtime
 
-The viewer behavior is implemented in:
+The viewer behavior is coordinated by:
 
 - `assets/js/docs-viewer.js`
 
+The entry module imports focused helper modules as responsibilities are extracted.
+Current helper modules:
+
+- `assets/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
+
 This runtime is shared across the current docs scopes.
-It reads the shell configuration, loads the generated JSON for the active scope, builds the tree navigation, loads document payloads, and switches between document and search modes.
+It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and switches between document and search modes.
 
 When the configured localhost docs-management server advertises generated-data read capability, the runtime reads the active scope index, document payloads, and docs-search index through that server. Public/static routes still use the generated JSON asset URLs directly when the local server is unavailable.
 

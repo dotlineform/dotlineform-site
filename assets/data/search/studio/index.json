@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-434175047f4f86bf61b07a93312fa5ff",
-    "generated_at_utc": "2026-05-10T13:19:33Z",
+    "version": "blake2b-763dd5c441df9f4f7664233131ffad10",
+    "generated_at_utc": "2026-05-10T13:23:44Z",
     "count": 215
   },
   "entries": [
@@ -475,23 +475,23 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-07 21:52 • Docs",
+      "display_meta": "2026-05-10 14:23 • Docs",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
-        "2026-05-07 21:52",
+        "2026-05-10 14:23",
         "2026",
         "05",
-        "07",
-        "21",
-        "52"
+        "10",
+        "14",
+        "23"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview 2026-05-07 21:52 2026 05 07 21 52"
+      "search_text": "docs-viewer-overview docs viewer overview 2026-05-10 14:23 2026 05 10 14 23"
     },
     {
       "id": "pipeline-use-cases",
@@ -974,10 +974,10 @@
       "kind": "doc",
       "title": "Docs Viewer Extraction Plan",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan",
-      "last_updated": "2026-05-10 14:18",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
       "parent_title": "Docs Viewer Boundary Spec Slice",
-      "display_meta": "2026-05-10 14:18 • Docs Viewer Boundary Spec Slice",
+      "display_meta": "2026-05-10 14:23 • Docs Viewer Boundary Spec Slice",
       "search_terms": [
         "site-request-js-config-structural-review-docs-viewer-extraction-plan",
         "site",
@@ -995,14 +995,14 @@
         "boundary",
         "spec",
         "slice",
-        "2026-05-10 14:18",
+        "2026-05-10 14:23",
         "2026",
         "05",
         "10",
         "14",
-        "18"
+        "23"
       ],
-      "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 14:18 2026 05 10 14 18"
+      "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 14:23 2026 05 10 14 23"
     },
     {
       "id": "ui-primitive-input",
@@ -1574,10 +1574,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-04-25 • Docs",
+      "display_meta": "2026-05-10 14:23 • Docs",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -1585,12 +1585,14 @@
         "runtime",
         "boundary",
         "docs viewer runtime boundary",
-        "2026-04-25",
+        "2026-05-10 14:23",
         "2026",
-        "04",
-        "25"
+        "05",
+        "10",
+        "14",
+        "23"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary 2026-04-25 2026 04 25"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary 2026-05-10 14:23 2026 05 10 14 23"
     },
     {
       "id": "ui-primitive-list",
@@ -2059,20 +2061,20 @@
       "kind": "doc",
       "title": "Docs",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-10 14:23",
+      "display_meta": "2026-05-10 14:23",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
-        "2026-05-06 20:49",
+        "2026-05-10 14:23",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "10",
+        "14",
+        "23"
       ],
-      "search_text": "docs-viewer docs viewer 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "docs-viewer docs viewer 2026-05-10 14:23 2026 05 10 14 23"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",
@@ -5367,21 +5369,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 13:05",
-      "display_meta": "2026-05-10 13:05",
+      "last_updated": "2026-05-10 14:23",
+      "display_meta": "2026-05-10 14:23",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 13:05",
+        "2026-05-10 14:23",
         "2026",
         "05",
         "10",
-        "13"
+        "14",
+        "23"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 13:05 2026 05 10 13"
+      "search_text": "site-change-log site change log site change log 2026-05-10 14:23 2026 05 10 14 23"
     },
     {
       "id": "archive",

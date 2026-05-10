@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T13:19:33Z",
+  "generated_at": "2026-05-10T13:23:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -286,7 +286,7 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "docs-viewer",
       "sort_order": 10,
       "published": true,
@@ -295,7 +295,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 6501
+      "content_text_length": 6742
     },
     {
       "scope": "studio",
@@ -594,7 +594,7 @@
       "doc_id": "site-request-js-config-structural-review-docs-viewer-extraction-plan",
       "title": "Docs Viewer Extraction Plan",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 14:18",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
       "sort_order": 20,
       "published": true,
@@ -603,7 +603,7 @@
       "source_path": "site-request-js-config-structural-review-docs-viewer-extraction-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-extraction-plan.json",
-      "content_text_length": 9572,
+      "content_text_length": 10174,
       "ui_status": "in-progress"
     },
     {
@@ -998,7 +998,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "docs-viewer",
       "sort_order": 30,
       "published": true,
@@ -1007,7 +1007,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 3719
+      "content_text_length": 4003
     },
     {
       "scope": "studio",
@@ -1305,7 +1305,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1314,7 +1314,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 1899
+      "content_text_length": 2006
     },
     {
       "scope": "studio",
@@ -3410,7 +3410,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 13:05",
+      "last_updated": "2026-05-10 14:23",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3419,7 +3419,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 108432
+      "content_text_length": 109349
     },
     {
       "scope": "studio",

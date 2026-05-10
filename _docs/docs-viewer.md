@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs
 added_date: 2026-04-24
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-10 14:23"
 parent_id: ""
 sort_order: 40
 ---
@@ -14,12 +14,14 @@ It currently serves these scopes:
 
 - Studio docs at `/docs/`
 - Library docs at `/library/`
+- Analysis docs at `/analysis/`
 
 The current implementation uses:
 
 - scope-specific route shells to define the route, scope, and generated data URLs
 - one shared shell include in `_includes/docs_viewer_shell.html`
-- one shared runtime in `assets/js/docs-viewer.js`
+- one shared runtime entry module in `assets/js/docs-viewer.js`
+- pure tree and visibility helpers in `assets/js/docs-viewer-tree.js`
 - shared Docs Viewer settings in `assets/studio/data/studio_config.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 

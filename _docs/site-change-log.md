@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 13:05"
+last_updated: "2026-05-10 14:23"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Started Docs Viewer helper extraction
+
+**Status:** implemented
+
+**Area:** Docs Viewer runtime / JavaScript config / maintainability
+
+**Summary:**
+Split the first pure Docs Viewer helper boundary out of the shared entry controller.
+Document sorting, children-map construction, hidden/viewable checks, and doc-id set normalization now live in `assets/js/docs-viewer-tree.js`, while `assets/js/docs-viewer.js` remains the route, state, rendering, and lifecycle coordinator.
+
+**Files changed/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/js/docs-viewer.js`
+- `assets/js/docs-viewer-tree.js`
+- [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Docs Viewer Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan)
+
+**Impact:**
+The Docs Viewer shell now loads the shared runtime as an ES module.
+This gives later extraction slices a stable import direction while keeping the current URL, rendering, management, search, and generated-data behaviors in the entry controller.
 
 ## [2026-05-10] Versioned Studio route module entries
 

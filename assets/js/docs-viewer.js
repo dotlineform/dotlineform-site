@@ -1,3 +1,11 @@
+import {
+  buildChildrenMap,
+  compareDocs,
+  isDocHidden,
+  isDocViewable,
+  normalizeDocIdSet
+} from "./docs-viewer-tree.js";
+
 (function () {
   var root = document.getElementById("docsViewerRoot");
   if (!root) return;
@@ -153,25 +161,6 @@
     showUpdatedDate: true,
     sidebarCollapsed: readSidebarCollapsedState()
   };
-
-  function sortKey(doc) {
-    return [
-      doc.sort_order == null ? 1 : 0,
-      doc.sort_order == null ? 0 : doc.sort_order,
-      String(doc.title || "").toLowerCase(),
-      String(doc.doc_id || "")
-    ];
-  }
-
-  function compareDocs(left, right) {
-    var leftKey = sortKey(left);
-    var rightKey = sortKey(right);
-    for (var i = 0; i < leftKey.length; i += 1) {
-      if (leftKey[i] < rightKey[i]) return -1;
-      if (leftKey[i] > rightKey[i]) return 1;
-    }
-    return 0;
-  }
 
   function getCurrentDocId() {
     return new URLSearchParams(window.location.search).get("doc") || "";
@@ -814,39 +803,6 @@
     return url.pathname + url.search + url.hash;
   }
 
-  function buildChildrenMap(docs) {
-    var childrenByParent = new Map();
-    var visibleDocIds = new Set(docs.map(function (doc) {
-      return doc.doc_id;
-    }));
-    docs.forEach(function (doc) {
-      var parentId = doc.parent_id || "";
-      if (state.managementMode && !state.showHidden && parentId && !visibleDocIds.has(parentId)) {
-        parentId = "";
-      }
-      if (!childrenByParent.has(parentId)) {
-        childrenByParent.set(parentId, []);
-      }
-      childrenByParent.get(parentId).push(doc);
-    });
-    childrenByParent.forEach(function (group) {
-      group.sort(compareDocs);
-    });
-    return childrenByParent;
-  }
-
-  function isDocViewable(doc) {
-    return !isDocHidden(doc);
-  }
-
-  function isDocHidden(doc) {
-    if (!doc) return false;
-    if (Object.prototype.hasOwnProperty.call(doc, "hidden")) {
-      return doc.hidden === true;
-    }
-    return doc.viewable === false;
-  }
-
   function isManageOnlyTreeDoc(doc) {
     if (!doc || state.manageOnlyTreeRootIds.size === 0) return false;
     var visited = new Set();
@@ -877,7 +833,10 @@
         return [doc.doc_id, doc];
       })
     );
-    state.childrenByParent = buildChildrenMap(state.docs);
+    state.childrenByParent = buildChildrenMap(state.docs, {
+      managementMode: state.managementMode,
+      showHidden: state.showHidden
+    });
   }
 
   function findAllDocById(docId) {
@@ -1385,7 +1344,10 @@
   function metadataParentOptions(doc) {
     var blockedIds = collectAllDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
     var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
-    var docsByParent = buildChildrenMap(state.allDocs);
+    var docsByParent = buildChildrenMap(state.allDocs, {
+      managementMode: state.managementMode,
+      showHidden: state.showHidden
+    });
     function pushChildren(parentId, depth) {
       (docsByParent.get(parentId) || []).forEach(function (candidate) {
         if (!blockedIds.has(candidate.doc_id)) {
@@ -3332,16 +3294,6 @@
       .replace(/[^a-z0-9]+/g, " ")
       .replace(/\s+/g, " ")
       .trim();
-  }
-
-  function normalizeDocIdSet(values, fallback) {
-    var source = Array.isArray(values) ? values : fallback;
-    var ids = Array.isArray(source) ? source : [];
-    return new Set(
-      ids
-        .map(function (value) { return String(value || "").trim(); })
-        .filter(Boolean)
-    );
   }
 
   function escapeHtml(value) {

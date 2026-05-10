@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:18"
+last_updated: "2026-05-10 14:23"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
@@ -13,7 +13,8 @@ hidden: false
 Status:
 
 - completed plan
-- slices A-F to be implemented
+- Slice A implemented
+- slices B-F to be implemented
 
 ## Purpose
 
@@ -118,6 +119,8 @@ Render helpers:
 
 ### Slice A: Tree And Visibility Helpers
 
+Status: implemented.
+
 Move the lowest-risk pure document-tree helpers into `docs-viewer-tree.js`.
 
 Candidate functions:
@@ -128,6 +131,13 @@ Candidate functions:
 - `isDocHidden`
 - `isDocViewable`
 - `normalizeDocIdSet`
+
+Implementation result:
+
+- `assets/js/docs-viewer-tree.js` now owns the pure sort, children-map, viewability, hidden-state, and doc-id set helpers
+- `assets/js/docs-viewer.js` imports the tree helpers and keeps route state, management flags, visibility filtering, rendering, and lifecycle orchestration local
+- `_includes/docs_viewer_shell.html` now loads the Docs Viewer entry script as an ES module so the extracted helper can be statically imported
+- `buildChildrenMap` receives management visibility options from the entry controller instead of reading viewer state directly
 
 Verification:
 
