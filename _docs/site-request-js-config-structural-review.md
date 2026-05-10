@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:20"
+last_updated: "2026-05-10 17:27"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -28,12 +28,14 @@ Status:
 - Slice 4 implemented
 - Slice 5 child doc created
 - Slice 5 implemented
+- Slice 6 child doc created
 
 ## Active Execution Queue
 
 The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is complete.
 [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
 [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction) is complete.
+The active top-level slice is [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation).
 
 ## Summary
 
@@ -329,6 +331,8 @@ Detailed planning tasks are tracked in [Config Ownership Cleanup Slice](/docs/?s
 
 ### Slice 5: Public Runtime Extraction
 
+Status: implemented.
+
 - extract only the work-page helper code that is reused or difficult to test inline
 - preserve current Liquid-rendered media URLs and page shell
 - keep generated payload schemas stable
@@ -337,8 +341,12 @@ Detailed planning tasks are tracked in [Public Runtime Extraction Slice](/docs/?
 
 ### Slice 6: Search Performance Instrumentation
 
+Status: child doc created.
+
 - add lightweight timing and payload-size reporting behind a local/debug flag
 - use measurements to decide whether workers, per-scope lazy loading, or index slimming are justified
+
+Detailed planning tasks are tracked in [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation).
 
 ## Acceptance Criteria
 

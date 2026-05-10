@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T16:21:06Z",
+  "generated_at": "2026-05-10T16:28:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1729,7 +1729,7 @@
       "doc_id": "site-request-js-config-structural-review-public-runtime-extraction",
       "title": "Public Runtime Extraction Slice",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 17:20",
+      "last_updated": "2026-05-10 17:25",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 50,
       "published": true,
@@ -1739,7 +1739,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-public-runtime-extraction.json",
       "content_text_length": 8369,
-      "ui_status": "implemented"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1965,6 +1965,23 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json",
       "content_text_length": 1874
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-search-performance-instrumentation",
+      "title": "Search Performance Instrumentation Slice",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 17:27",
+      "parent_id": "site-request-js-config-structural-review",
+      "sort_order": 60,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-search-performance-instrumentation.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-search-performance-instrumentation.json",
+      "content_text_length": 5797,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -3361,7 +3378,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 17:20",
+      "last_updated": "2026-05-10 17:27",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3370,7 +3387,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 17343,
+      "content_text_length": 17572,
       "ui_status": "in-progress"
     },
     {
