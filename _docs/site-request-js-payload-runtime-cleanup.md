@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 20:28"
+last_updated: "2026-05-10 20:39"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -18,7 +18,8 @@ Status:
 - Slice C implemented
 - Slice D implemented
 - Slice E implemented
-- follow-on work-editor slices E-H documented
+- Slice F implemented
+- follow-on work-editor slices G-H documented
 
 ## Purpose
 
@@ -333,7 +334,7 @@ Targeted verification:
 
 ### Slice F: Work Route Mode State Boundary
 
-Status: planned.
+Status: implemented.
 
 Intent:
 
@@ -358,6 +359,36 @@ Risk removed:
 
 - route mode transitions stop being implicit side effects scattered through the controller
 - future workflow actions can reuse named state transitions instead of mutating route state directly
+
+Implementation notes:
+
+- Added `assets/studio/js/catalogue-work-route-state.js` as the route-local state transition module.
+- Moved route-ready detail calculation, route busy/ready synchronization, URL synchronization, single-work loaded state, bulk-work loaded state, new-work mode, empty-search mode, and bulk draft aggregation out of `catalogue-work-editor.js`.
+- Kept service fetching, lookup selection, validation, dirty-state interpretation, rendering refresh, and save/build/publish/delete orchestration in `catalogue-work-editor.js`.
+- The route-state module receives route-owned behavior through a small callback object for UI text, status text updates, popup visibility, form synchronization, read-only field refresh, and editor-state refresh.
+- Save/create/publication outcomes now re-enter loaded state through the route-state helper, leaving action workflow extraction prepared for Slice G.
+
+Runtime measurement:
+
+- `assets/studio/js/catalogue-work-editor.js` changed from 2,266 lines, 86,929 bytes raw, and about 15,461 bytes gzip to 2,061 lines, 80,247 bytes raw, and about 14,502 bytes gzip.
+- New `assets/studio/js/catalogue-work-route-state.js` is 270 lines, 9,132 bytes raw, and about 2,254 bytes gzip.
+- The work-editor transitive JS module count changed from 18 to 19.
+- The measured work-editor transitive JS payload changed from about 217,776 bytes raw / 46,540 bytes gzip to about 220,226 bytes raw / 47,628 bytes gzip.
+- Startup JSON payloads are unchanged, and static smoke confirmed initial startup still does not fetch `assets/studio/data/catalogue/works.json`.
+- Route-ready behavior is unchanged for offline empty, single work, new mode, and bulk routes.
+- This slice reduces maintenance risk. Transfer-size cost increases slightly because the route-state helper is a new module transfer without a bundler.
+
+Targeted verification:
+
+- `node --check assets/studio/js/catalogue-work-editor.js` passed.
+- `node --check assets/studio/js/catalogue-work-route-state.js` passed.
+- Work-editor transitive JS payload was measured after the extraction.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for the work editor empty route with the catalogue service blocked.
+- Static Playwright smoke passed with the existing catalogue service available for `?work=00001`, including route state `mode=single` and `recordLoaded=true`.
+- Static Playwright smoke passed for `?mode=new`, including a seeded suggested work id.
+- Static Playwright smoke passed for `?work=00001,00002`, including route state `mode=bulk` and `recordLoaded=true`.
+- All smoke checks confirmed no `assets/studio/data/catalogue/works.json` startup fetch.
 
 ### Slice G: Work Action Workflow Boundary
 
@@ -443,7 +474,7 @@ For Slice B, fetch verification should specifically prove whether `catalogue_wor
 
 ## Recommended Next Step
 
-Implement Slice E next.
-It is the safest meaningful maintenance-risk reduction because it moves dense DOM form construction without touching service writes, route loading, or publication/build behavior.
+Implement Slice G next.
+It should extract save, create, build preview, build, prose import, publish/unpublish, media refresh, and delete workflows now that route-mode transitions have a named helper boundary.
 
 After Slices E-H, return to the broader [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory) for the next priority outside the Catalogue Work Editor.

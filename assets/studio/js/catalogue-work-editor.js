@@ -48,7 +48,6 @@ import {
 } from "./catalogue-editor-embedded-items.js";
 import {
   buildWorkRecordSummary as buildRecordSummary,
-  formatWorkSelectionList as formatSelectionList,
   renderWorkCurrentPreview,
   renderWorkReadiness,
   updateWorkDetailSections,
@@ -66,10 +65,14 @@ import {
   updateFieldMessages
 } from "./catalogue-work-form.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
-} from "./studio-route-state.js";
+  initializeWorkRouteState,
+  markWorkRouteReady,
+  setEmptySearchMode,
+  setLoadedBulkWorks,
+  setLoadedWorkRecord,
+  setNewWorkMode,
+  syncWorkRouteBusyState
+} from "./catalogue-work-route-state.js";
 import {
   buildSaveModeText,
   utcTimestamp
@@ -90,7 +93,6 @@ import {
   WORK_SERIES_ID_RE as SERIES_ID_RE,
   WORK_STATUS_OPTIONS as STATUS_OPTIONS,
   buildCreateWorkPayload,
-  buildWorkDraftFromRecord,
   buildWorkRecordFromDraft,
   canonicalizeWorkScalar as canonicalizeScalar,
   dedupeSeriesIds,
@@ -191,24 +193,6 @@ function isWorkBulkQuery(rawValue) {
   }
 }
 
-function buildBulkDraftFromRecords(records) {
-  const drafts = records.map((record) => buildDraftFromRecord(record));
-  const draft = {};
-  const mixedFields = new Set();
-  EDITABLE_FIELDS.forEach((field) => {
-    const values = drafts.map((item) => canonicalizeScalar(field, item[field.key]));
-    const first = values[0] || "";
-    const allSame = values.every((value) => value === first);
-    if (allSame) {
-      draft[field.key] = drafts[0][field.key];
-    } else {
-      draft[field.key] = "";
-      mixedFields.add(field.key);
-    }
-  });
-  return { draft, mixedFields };
-}
-
 function parseBulkSeriesOperation(value) {
   const text = normalizeText(value);
   if (!text) {
@@ -248,40 +232,6 @@ function setTextWithState(node, text, state = "") {
   } else {
     delete node.dataset.state;
   }
-}
-
-function routeModeForState(state) {
-  if (state.mode === "new") return "new";
-  if (state.mode === "bulk") return "bulk";
-  if (state.currentRecord) return "single";
-  return "empty";
-}
-
-function routeRecordLoadedForState(state) {
-  if (state.mode === "bulk") return state.bulkWorkIds.length > 0;
-  if (state.mode === "single") return Boolean(state.currentRecord);
-  return false;
-}
-
-function routeStateDetail(state) {
-  return {
-    route: "catalogue-work",
-    mode: routeModeForState(state),
-    service: state.serverAvailable ? "available" : "unavailable",
-    recordLoaded: routeRecordLoadedForState(state)
-  };
-}
-
-function syncRouteBusyState(state) {
-  setStudioRouteBusy(
-    state.root,
-    Boolean(state.isSaving || state.isBuilding || state.isPreviewingBuild || state.isDeleting),
-    routeStateDetail(state)
-  );
-}
-
-function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 function setPopupVisibility(state, visible) {
@@ -331,14 +281,6 @@ function renderSearchMatches(state, matches, message = "") {
   `);
   state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
   setPopupVisibility(state, true);
-}
-
-function buildDraftFromRecord(record) {
-  return buildWorkDraftFromRecord(record, {
-    fields: EDITABLE_FIELDS,
-    downloadFields: DOWNLOAD_FIELDS,
-    linkFields: LINK_FIELDS
-  });
 }
 
 async function loadWorkLookupRecord(state, workId) {
@@ -505,21 +447,6 @@ function openBuildPreviewModal(state, response, changedFields) {
   closeNodes.forEach((button) => button.addEventListener("click", () => closeBuildPreviewModal(state)));
   const closeButton = state.modalHost.querySelector('[data-role="build-preview-modal-close"]');
   if (closeButton) closeButton.focus();
-}
-
-function syncUrl(workValue, mode = "") {
-  const url = new URL(window.location.href);
-  if (mode === "new") {
-    url.searchParams.delete("work");
-    url.searchParams.set("mode", "new");
-  } else if (workValue) {
-    url.searchParams.delete("mode");
-    url.searchParams.set("work", workValue);
-  } else {
-    url.searchParams.delete("mode");
-    url.searchParams.delete("work");
-  }
-  window.history.replaceState({}, "", url.toString());
 }
 
 function draftHasChanges(state) {
@@ -858,152 +785,6 @@ function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
   };
 }
 
-function setLoadedRecord(state, workId, record, options = {}) {
-  state.mode = "single";
-  state.currentWorkId = workId;
-  state.currentRecord = record;
-  state.currentLookup = options.lookup || state.currentLookup;
-  state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
-  state.bulkWorkIds = [];
-  state.bulkRecords = new Map();
-  state.bulkRecordHashes = new Map();
-  state.bulkMixedFields = new Set();
-  state.bulkTouchedFields = new Set();
-  state.bulkBuildTargets = [];
-  state.baselineDraft = buildDraftFromRecord(record);
-  state.draft = { ...state.baselineDraft };
-  setOpenInputMode(state);
-  applyDraftToInputs(state, workFormOptions(state));
-  applyReadonly(state);
-  syncUrl(workId);
-  setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for work {work_id}.", { work_id: workId }));
-  setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: workId }));
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) {
-    setTextWithState(state.resultNode, "");
-  }
-  updateEditorState(state);
-}
-
-function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options = {}) {
-  state.mode = "bulk";
-  state.currentWorkId = "";
-  state.currentRecord = null;
-  state.currentLookup = null;
-  state.currentRecordHash = "";
-  state.bulkWorkIds = workIds.slice();
-  state.bulkRecords = new Map(recordsById);
-  state.bulkRecordHashes = new Map(recordHashes);
-  state.bulkBuildTargets = Array.isArray(options.buildTargets) ? options.buildTargets.slice() : [];
-  const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
-  const bulkDraft = buildBulkDraftFromRecords(records);
-  state.baselineDraft = { ...bulkDraft.draft };
-  state.draft = { ...bulkDraft.draft };
-  state.bulkMixedFields = bulkDraft.mixedFields;
-  state.bulkTouchedFields = new Set();
-  setOpenInputMode(state);
-  applyDraftToInputs(state, workFormOptions(state));
-  clearReadonlyFields(state);
-  syncUrl(workIds.join(","));
-  setTextWithState(
-    state.contextNode,
-    t(state, "bulk_context_loaded", "Bulk editing {count} work records: {work_ids}.", {
-      count: String(workIds.length),
-      work_ids: formatSelectionList(workIds)
-    })
-  );
-  setTextWithState(
-    state.statusNode,
-    t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(workIds.length) })
-  );
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) {
-    setTextWithState(state.resultNode, "");
-  }
-  updateEditorState(state);
-}
-
-function setNewWorkMode(state, options = {}) {
-  state.mode = "new";
-  state.currentWorkId = "";
-  state.currentRecord = null;
-  state.currentLookup = null;
-  state.currentRecordHash = "";
-  state.bulkWorkIds = [];
-  state.bulkRecords = new Map();
-  state.bulkRecordHashes = new Map();
-  state.bulkMixedFields = new Set();
-  state.bulkTouchedFields = new Set();
-  state.bulkBuildTargets = [];
-  state.baselineDraft = {};
-  state.draft = {};
-  EDITABLE_FIELDS.forEach((field) => {
-    state.draft[field.key] = "";
-  });
-  state.draft.status = "draft";
-  state.draft.published_date = "";
-  state.draft.downloads = [];
-  state.draft.links = [];
-  state.draft.work_id = normalizeWorkId(options.workId) || state.nextSuggestedWorkId || suggestNextWorkId(Array.from(state.workSearchById.values()));
-  state.searchNode.value = state.draft.work_id;
-  state.searchNode.placeholder = t(state, "new_work_id_placeholder", "new work id");
-  state.searchNode.setAttribute("aria-label", t(state, "new_work_id_label", "New work id"));
-  state.detailSearchNode.value = "";
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
-  state.buildPreview = null;
-  applyDraftToInputs(state, workFormOptions(state));
-  clearReadonlyFields(state);
-  setPopupVisibility(state, false);
-  syncUrl("", "new");
-  setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft work source record."));
-  setTextWithState(state.statusNode, "");
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) {
-    setTextWithState(state.resultNode, "");
-  }
-  updateEditorState(state);
-}
-
-function setEmptySearchMode(state, options = {}) {
-  state.mode = "single";
-  state.currentWorkId = "";
-  state.currentRecord = null;
-  state.currentLookup = null;
-  state.currentRecordHash = "";
-  state.bulkWorkIds = [];
-  state.bulkRecords = new Map();
-  state.bulkRecordHashes = new Map();
-  state.bulkMixedFields = new Set();
-  state.bulkTouchedFields = new Set();
-  state.bulkBuildTargets = [];
-  state.baselineDraft = null;
-  state.draft = {};
-  EDITABLE_FIELDS.forEach((field) => {
-    state.draft[field.key] = "";
-  });
-  state.draft.downloads = [];
-  state.draft.links = [];
-  state.detailSearchNode.value = "";
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
-  state.buildPreview = null;
-  setOpenInputMode(state);
-  if (!options.keepSearchValue) {
-    state.searchNode.value = "";
-  }
-  applyDraftToInputs(state, workFormOptions(state));
-  clearReadonlyFields(state);
-  setPopupVisibility(state, false);
-  syncUrl("");
-  setTextWithState(state.contextNode, t(state, "missing_work_param", "Search for a work by work id."));
-  setTextWithState(state.warningNode, "");
-  if (!options.keepResult) {
-    setTextWithState(state.resultNode, "");
-  }
-  updateEditorState(state);
-}
-
 function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
@@ -1066,7 +847,7 @@ function updateEditorState(state) {
   });
   updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
-  syncRouteBusyState(state);
+  syncWorkRouteBusyState(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -1100,6 +881,20 @@ function workFormOptions(state) {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
     onStateChange: () => updateEditorState(state)
+  };
+}
+
+function workRouteStateOptions(state, overrides = {}) {
+  return {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    setTextWithState,
+    setOpenInputMode: () => setOpenInputMode(state),
+    setPopupVisibility: (visible) => setPopupVisibility(state, visible),
+    applyDraftToInputs: () => applyDraftToInputs(state, workFormOptions(state)),
+    applyReadonly: () => applyReadonly(state),
+    clearReadonlyFields: () => clearReadonlyFields(state),
+    updateEditorState: () => updateEditorState(state),
+    ...overrides
   };
 }
 
@@ -1187,10 +982,10 @@ async function saveCurrentWork(state) {
       });
       const fallbackBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
       const outcome = applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets);
-      setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, {
+      setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, workRouteStateOptions(state, {
         keepResult: true,
         buildTargets: state.bulkBuildTargets
-      });
+      }));
       if (outcome.kind === "saved_and_updated") {
         setTextWithState(
           state.resultNode,
@@ -1257,11 +1052,11 @@ async function saveCurrentWork(state) {
       ]).filter((seriesId) => !nextSeriesIds.includes(seriesId));
     }
     const lookup = await loadWorkLookupRecord(state, state.currentWorkId);
-    setLoadedRecord(state, state.currentWorkId, record, {
+    setLoadedWorkRecord(state, state.currentWorkId, record, workRouteStateOptions(state, {
       recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
       keepResult: true,
       lookup
-    });
+    }));
     await refreshBuildPreview(state);
     if (outcome.kind === "saved_and_updated") {
       setTextWithState(
@@ -1673,11 +1468,11 @@ async function applyPublicationChange(state) {
     state.rebuildPending = response.status === "public_update_failed";
     state.pendingBuildExtraSeriesIds = [];
     const lookup = await loadWorkLookupRecord(state, workId).catch(() => null);
-    setLoadedRecord(state, workId, record, {
+    setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, {
       recordHash,
       keepResult: true,
       lookup
-    });
+    }));
     await refreshBuildPreview(state);
 
     if (response.status === "public_update_failed") {
@@ -1834,7 +1629,7 @@ async function openWorkSelection(state, requestedValue) {
     recordsById.set(workId, record);
     recordHashes.set(workId, await computeRecordHash(record));
   }
-  setLoadedBulkWorks(state, workIds, recordsById, recordHashes);
+  setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
   await refreshBuildPreview(state);
 }
 
@@ -1867,10 +1662,10 @@ async function openWorkById(state, requestedWorkId) {
   if (!record) {
     throw new Error(`work source missing record for ${workId}`);
   }
-  setLoadedRecord(state, workId, record, {
+  setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, {
     recordHash: await computeRecordHash(record),
     lookup
-  });
+  }));
   await refreshBuildPreview(state);
 }
 
@@ -2159,14 +1954,14 @@ function bindWorkEditorEvents(state) {
 
   state.openButton.addEventListener("click", () => {
     if (state.mode === "new") {
-      setEmptySearchMode(state, { keepSearchValue: true });
+      setEmptySearchMode(state, workRouteStateOptions(state, { keepSearchValue: true }));
     }
     openWorkSelection(state, state.searchNode.value).catch((error) => {
       console.warn("catalogue_work_editor: failed to open requested work selection", error);
     });
   });
   state.newButton.addEventListener("click", () => {
-    setNewWorkMode(state);
+    setNewWorkMode(state, workRouteStateOptions(state));
   });
   state.readinessNode.addEventListener("click", (event) => {
     const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
@@ -2207,7 +2002,7 @@ async function applyInitialRouteSelection(state) {
       await openWorkSelection(state, requestedWorkValue);
     } catch (error) {
       console.warn("catalogue_work_editor: failed to open requested work selection", error);
-      setEmptySearchMode(state, { keepSearchValue: true });
+      setEmptySearchMode(state, workRouteStateOptions(state, { keepSearchValue: true }));
       setTextWithState(
         state.statusNode,
         `${t(state, "load_requested_work_failed", "Failed to load the requested work.")} ${normalizeText(error && error.message)}`.trim(),
@@ -2215,16 +2010,16 @@ async function applyInitialRouteSelection(state) {
       );
     }
   } else if (requestedMode === "new") {
-    setNewWorkMode(state);
+    setNewWorkMode(state, workRouteStateOptions(state));
   } else {
-    setEmptySearchMode(state);
+    setEmptySearchMode(state, workRouteStateOptions(state));
   }
 }
 
 function markWorkEditorLoaded(state, elements) {
   state.root.hidden = false;
   elements.loadingNode.hidden = true;
-  markRouteReady(state, true);
+  markWorkRouteReady(state, true);
 }
 
 async function showWorkEditorInitError(loadingNode) {
@@ -2240,7 +2035,7 @@ async function init() {
   const elements = collectWorkEditorElements();
   if (!elements) return;
 
-  initializeStudioRouteState(elements.root, { route: "catalogue-work" });
+  initializeWorkRouteState(elements.root);
   const state = createWorkEditorState(elements);
   renderWorkEditorFields(state, elements, workFormOptions(state));
 

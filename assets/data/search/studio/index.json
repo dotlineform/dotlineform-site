@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-10b77f282d0061323d1073d2983c48a2",
-    "generated_at_utc": "2026-05-10T19:29:38Z",
+    "version": "blake2b-e052dcb29e6df7fff69112b5d873b1dc",
+    "generated_at_utc": "2026-05-10T19:39:51Z",
     "count": 222
   },
   "entries": [
@@ -3519,10 +3519,10 @@
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Request",
       "href": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup",
-      "last_updated": "2026-05-10 20:28",
+      "last_updated": "2026-05-10 20:39",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 20:28 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 20:39 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-payload-runtime-cleanup",
         "site",
@@ -3539,14 +3539,14 @@
         "config",
         "structural",
         "review",
-        "2026-05-10 20:28",
+        "2026-05-10 20:39",
         "2026",
         "05",
         "10",
         "20",
-        "28"
+        "39"
       ],
-      "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 20:28 2026 05 10 20 28"
+      "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 20:39 2026 05 10 20 39"
     },
     {
       "id": "registry-driven-scoring-architecture",
