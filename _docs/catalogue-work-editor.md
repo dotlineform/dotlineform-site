@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: "2026-05-10 20:28"
+last_updated: "2026-05-10 20:55"
 parent_id: user-guide
 sort_order: 30
 ---
@@ -19,7 +19,7 @@ This page edits canonical work source records from `assets/studio/data/catalogue
 ## Browser Modules
 
 The route entry module is `assets/studio/js/catalogue-work-editor.js`.
-It owns route startup, focused lookup reads, draft state, validation, dirty state, save/build/publish/delete orchestration, modal sequencing, route-ready state, and local-service coordination.
+It owns route startup, focused lookup reads, draft state, validation, dirty state interpretation, modal sequencing, route-ready state, and local-service coordination.
 
 Route-local helpers:
 
@@ -29,12 +29,17 @@ Route-local helpers:
   owns editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering.
 - `assets/studio/js/catalogue-work-sections.js`
   owns current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail.
+- `assets/studio/js/catalogue-work-actions.js`
+  owns save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route.
 
 The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
 It does not call write services directly.
 
 The section renderer receives route-owned callbacks for text lookup, dirty-state checks, changed-field detection, publication-state checks, and build-preview activation.
 It does not call write services directly.
+
+The action workflow module receives route-owned callbacks for text lookup, status writing, validation, route-state transitions, current-preview rendering, build-preview modal opening, and create-mode record opening.
+It keeps local-service transport in `catalogue-editor-service-client.js` and does not import route globals.
 
 ## Current Scope
 

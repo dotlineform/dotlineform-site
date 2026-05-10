@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 20:28"
+last_updated: "2026-05-10 20:55"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue Work Editor action workflows
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-work-actions.js` as the route-local action workflow module for the Catalogue Work Editor.
+The module now owns save, create, build-preview refresh, field-aware build preview, build, prose import, publish/unpublish, media refresh, and delete orchestration.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-actions.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+- [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory)
+
+**Impact:**
+The work editor route entry module keeps route startup, validation display, modal composition, route-state option construction, search/open behavior, and rendering refresh.
+Write and build workflow sequencing now sits behind an explicit route context, reducing controller maintenance risk while adding one module transfer to the route.
 
 ## [2026-05-10] Extracted Catalogue Work Editor form rendering
 
