@@ -23,10 +23,7 @@ import {
   saveCatalogueBulkRecords,
   saveCatalogueWork
 } from "./catalogue-editor-service-client.js";
-import {
-  computeRecordHash,
-  displayValue
-} from "./catalogue-editor-records.js";
+import { computeRecordHash } from "./catalogue-editor-records.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
@@ -58,6 +55,17 @@ import {
   updateWorkSummary
 } from "./catalogue-work-sections.js";
 import {
+  applyDraftToInputs,
+  applyReadonly,
+  applyWorkFormText,
+  clearReadonlyFields,
+  getFieldNodeValue,
+  renderWorkEditorFields,
+  setFieldNodeValue,
+  setModeFieldAvailability,
+  updateFieldMessages
+} from "./catalogue-work-form.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -79,7 +87,6 @@ import {
   WORK_DATE_RE as DATE_RE,
   WORK_DIMENSION_FIELD_KEYS,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  WORK_READONLY_FIELDS as READONLY_FIELDS,
   WORK_SERIES_ID_RE as SERIES_ID_RE,
   WORK_STATUS_OPTIONS as STATUS_OPTIONS,
   buildCreateWorkPayload,
@@ -92,7 +99,6 @@ import {
   normalizeText,
   normalizeWorkId,
   parseSeriesIds,
-  seriesIdsToText,
   suggestNextWorkId
 } from "./catalogue-work-fields.js";
 
@@ -234,320 +240,6 @@ function parseBulkSeriesOperation(value) {
   };
 }
 
-function seriesDisplayTitle(state, seriesId) {
-  const record = state.seriesById.get(seriesId);
-  return normalizeText(record && record.title) || seriesId;
-}
-
-function formatSeriesChoice(state, seriesId) {
-  const title = seriesDisplayTitle(state, seriesId);
-  return title === seriesId ? seriesId : `${title} (${seriesId})`;
-}
-
-function seriesSearchMatches(state, queryText) {
-  const query = normalizeText(queryText).toLowerCase();
-  const selected = new Set(parseSeriesIds(state.draft && state.draft.series_ids));
-  if (!query) return [];
-  return Array.from(state.seriesById.entries())
-    .filter(([seriesId, record]) => {
-      if (selected.has(seriesId)) return false;
-      const title = normalizeText(record && record.title).toLowerCase();
-      return seriesId.includes(query) || title.includes(query);
-    })
-    .sort((a, b) => {
-      const titleA = normalizeText(a[1] && a[1].title);
-      const titleB = normalizeText(b[1] && b[1].title);
-      return titleA.localeCompare(titleB, undefined, { numeric: true, sensitivity: "base" });
-    })
-    .slice(0, 12);
-}
-
-function setSeriesDraftIds(state, seriesIds) {
-  state.draft.series_ids = seriesIdsToText(dedupeSeriesIds(seriesIds.map((item) => normalizeSeriesId(item)).filter(Boolean)));
-  const node = state.fieldNodes.get("series_ids");
-  if (node) node.value = state.draft.series_ids;
-  if (state.seriesPicker && state.seriesPicker.bulkInput) {
-    state.seriesPicker.bulkInput.value = state.draft.series_ids;
-  }
-  if (state.mode === "bulk") {
-    state.bulkTouchedFields.add("series_ids");
-  }
-  renderSeriesPicker(state);
-  updateEditorState(state);
-}
-
-function addSeriesDraftId(state, seriesId) {
-  const normalizedId = normalizeSeriesId(seriesId);
-  if (!normalizedId) return;
-  const seriesIds = parseSeriesIds(state.draft.series_ids);
-  if (!seriesIds.includes(normalizedId)) seriesIds.push(normalizedId);
-  setSeriesDraftIds(state, seriesIds);
-}
-
-function removeSeriesDraftId(state, seriesId) {
-  const normalizedId = normalizeSeriesId(seriesId);
-  if (!normalizedId) return;
-  setSeriesDraftIds(state, parseSeriesIds(state.draft.series_ids).filter((item) => item !== normalizedId));
-}
-
-function renderSeriesPickerMatches(state) {
-  if (!state.seriesPicker) return;
-  const matches = seriesSearchMatches(state, state.seriesPicker.searchInput.value);
-  if (!matches.length) {
-    state.seriesPicker.popupNode.hidden = true;
-    state.seriesPicker.popupNode.innerHTML = "";
-    return;
-  }
-  state.seriesPicker.popupNode.innerHTML = matches.map(([seriesId]) => `
-    <button type="button" class="tagStudioSuggest__workButton catalogueWorkSeriesPicker__option" data-series-id="${escapeHtml(seriesId)}">
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
-      <span class="tagStudioSuggest__workMeta">${escapeHtml(seriesId)}</span>
-    </button>
-  `).join("");
-  state.seriesPicker.popupNode.hidden = false;
-}
-
-function renderSeriesPicker(state) {
-  if (!state.seriesPicker) return;
-  const seriesIds = parseSeriesIds(state.draft && state.draft.series_ids);
-  state.seriesPicker.hiddenInput.value = seriesIdsToText(seriesIds);
-  state.seriesPicker.chipsNode.innerHTML = seriesIds.length
-    ? seriesIds.map((seriesId) => `
-      <span class="tagStudio__chip catalogueWorkSeriesPicker__chip">
-        <span class="tagStudio__chipText">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
-        <span class="catalogueWorkSeriesPicker__chipId">${escapeHtml(seriesId)}</span>
-        <button type="button" class="tagStudio__chipRemove" data-remove-series-id="${escapeHtml(seriesId)}" aria-label="${escapeHtml(`Remove ${formatSeriesChoice(state, seriesId)}`)}">×</button>
-      </span>
-    `).join("")
-    : `<span class="tagStudioForm__meta">${escapeHtml(t(state, "series_picker_empty", "No series selected."))}</span>`;
-}
-
-function detailSectionLabel(state, sectionKey) {
-  return normalizeText(sectionKey) || t(state, "details_section_blank", "root");
-}
-
-function renderField(field, fieldsNode, state) {
-  if (field.key === "series_ids") {
-    renderSeriesField(field, fieldsNode, state);
-    return;
-  }
-
-  const wrapper = document.createElement(field.readonly ? "div" : "label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
-  if (!field.readonly) wrapper.htmlFor = `catalogueWorkField-${field.key}`;
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  let input;
-  if (field.readonly) {
-    input = document.createElement("span");
-    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  } else if (field.type === "textarea") {
-    input = document.createElement("textarea");
-    input.className = "tagStudio__input tagStudioForm__descriptionInput";
-    input.rows = 4;
-  } else if (field.type === "select") {
-    input = document.createElement("select");
-    input.className = "tagStudio__input";
-    field.options.forEach((optionValue) => {
-      const option = document.createElement("option");
-      option.value = optionValue;
-      option.textContent = optionValue || "(blank)";
-      input.appendChild(option);
-    });
-  } else {
-    input = document.createElement("input");
-    input.className = "tagStudio__input";
-    input.type = field.type === "date" ? "date" : "text";
-    if (field.type === "number") {
-      input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";
-    }
-  }
-
-  input.id = `catalogueWorkField-${field.key}`;
-  input.dataset.field = field.key;
-  if (field.description) {
-    input.setAttribute("aria-describedby", `catalogueWorkFieldHelp-${field.key}`);
-  }
-  wrapper.appendChild(input);
-
-  if (field.description) {
-    const help = document.createElement("span");
-    help.className = "tagStudioForm__meta catalogueWorkForm__fieldMeta";
-    help.id = `catalogueWorkFieldHelp-${field.key}`;
-    help.textContent = field.description;
-    wrapper.appendChild(help);
-  }
-
-  const message = document.createElement("span");
-  message.className = "catalogueWorkForm__fieldStatus";
-  message.dataset.fieldStatus = field.key;
-  wrapper.appendChild(message);
-
-  if (!field.readonly) {
-    input.addEventListener("input", () => onFieldInput(state, field.key));
-    input.addEventListener("change", () => onFieldInput(state, field.key));
-  }
-  fieldsNode.appendChild(wrapper);
-  state.fieldNodes.set(field.key, input);
-  state.fieldStatusNodes.set(field.key, message);
-}
-
-function setFieldNodeValue(node, value) {
-  const text = normalizeText(value);
-  if ("value" in node) {
-    node.value = text;
-  } else {
-    node.textContent = displayValue(text);
-  }
-}
-
-function getFieldNodeValue(node) {
-  if ("value" in node) return node.value;
-  return normalizeText(node.textContent);
-}
-
-function renderSeriesField(field, fieldsNode, state) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueWorkForm__field--topAligned catalogueWorkSeriesPicker";
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  const hiddenInput = document.createElement("input");
-  hiddenInput.type = "hidden";
-  hiddenInput.id = `catalogueWorkField-${field.key}`;
-  hiddenInput.dataset.field = field.key;
-  wrapper.appendChild(hiddenInput);
-
-  const pickerNode = document.createElement("div");
-  pickerNode.className = "catalogueWorkSeriesPicker__control";
-
-  const chipsNode = document.createElement("div");
-  chipsNode.className = "catalogueWorkSeriesPicker__chips";
-  pickerNode.appendChild(chipsNode);
-
-  const searchWrap = document.createElement("div");
-  searchWrap.className = "catalogueWorkSeriesPicker__searchWrap";
-  const searchInput = document.createElement("input");
-  searchInput.className = "tagStudio__input catalogueWorkSeriesPicker__search";
-  searchInput.type = "text";
-  searchInput.autocomplete = "off";
-  searchInput.placeholder = t(state, "series_picker_placeholder", "find series by title");
-  searchInput.setAttribute("aria-label", t(state, "series_picker_label", "Find series by title"));
-  const popupNode = document.createElement("div");
-  popupNode.className = "tagStudio__popupInner catalogueWorkSeriesPicker__popup";
-  popupNode.hidden = true;
-  searchWrap.appendChild(searchInput);
-  searchWrap.appendChild(popupNode);
-  pickerNode.appendChild(searchWrap);
-
-  const bulkInput = document.createElement("input");
-  bulkInput.className = "tagStudio__input catalogueWorkSeriesPicker__bulkInput";
-  bulkInput.type = "text";
-  bulkInput.autocomplete = "off";
-  bulkInput.placeholder = "+009, -010";
-  pickerNode.appendChild(bulkInput);
-
-  wrapper.appendChild(pickerNode);
-
-  if (field.description) {
-    const help = document.createElement("span");
-    help.className = "tagStudioForm__meta catalogueWorkForm__fieldMeta";
-    help.textContent = field.description;
-    wrapper.appendChild(help);
-  }
-
-  const message = document.createElement("span");
-  message.className = "catalogueWorkForm__fieldStatus";
-  message.dataset.fieldStatus = field.key;
-  wrapper.appendChild(message);
-
-  searchInput.addEventListener("input", () => renderSeriesPickerMatches(state));
-  searchInput.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter") return;
-    const matches = seriesSearchMatches(state, searchInput.value);
-    if (!matches.length) return;
-    event.preventDefault();
-    addSeriesDraftId(state, matches[0][0]);
-    searchInput.value = "";
-    popupNode.hidden = true;
-  });
-  popupNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-series-id]") : null;
-    if (!button) return;
-    addSeriesDraftId(state, button.getAttribute("data-series-id"));
-    searchInput.value = "";
-    popupNode.hidden = true;
-    searchInput.focus();
-  });
-  chipsNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-remove-series-id]") : null;
-    if (!button) return;
-    removeSeriesDraftId(state, button.getAttribute("data-remove-series-id"));
-  });
-  bulkInput.addEventListener("input", () => {
-    state.draft.series_ids = bulkInput.value;
-    hiddenInput.value = bulkInput.value;
-    if (state.mode === "bulk") state.bulkTouchedFields.add("series_ids");
-    updateEditorState(state);
-  });
-
-  fieldsNode.appendChild(wrapper);
-  state.seriesPicker = { wrapper, pickerNode, chipsNode, searchWrap, searchInput, popupNode, bulkInput, hiddenInput };
-  state.fieldNodes.set(field.key, hiddenInput);
-  state.fieldStatusNodes.set(field.key, message);
-}
-
-function renderReadonlyField(field, readonlyNode, state) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  const value = document.createElement("div");
-  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  value.dataset.readonlyField = field.key;
-  value.textContent = "—";
-  wrapper.appendChild(value);
-
-  readonlyNode.appendChild(wrapper);
-  state.readonlyNodes.set(field.key, value);
-}
-
-function setModeFieldAvailability(state) {
-  const statusNode = state.fieldNodes.get("status");
-  if (statusNode) {
-    if ("disabled" in statusNode) statusNode.disabled = false;
-    if ("readOnly" in statusNode) statusNode.readOnly = true;
-  }
-  const publishedDateNode = state.fieldNodes.get("published_date");
-  if (publishedDateNode) {
-    publishedDateNode.disabled = state.mode === "new";
-  }
-  if (state.seriesPicker) {
-    const isBulk = state.mode === "bulk";
-    state.seriesPicker.pickerNode.hidden = false;
-    state.seriesPicker.chipsNode.hidden = isBulk;
-    state.seriesPicker.searchWrap.hidden = isBulk;
-    state.seriesPicker.bulkInput.hidden = !isBulk;
-    state.seriesPicker.searchInput.disabled = isBulk || state.isSaving || state.isBuilding || state.isDeleting;
-    state.seriesPicker.bulkInput.disabled = !isBulk || state.isSaving || state.isBuilding || state.isDeleting;
-    if (isBulk) {
-      state.seriesPicker.popupNode.hidden = true;
-    }
-  }
-}
-
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -646,30 +338,6 @@ function buildDraftFromRecord(record) {
     fields: EDITABLE_FIELDS,
     downloadFields: DOWNLOAD_FIELDS,
     linkFields: LINK_FIELDS
-  });
-}
-
-function applyDraftToInputs(state) {
-  EDITABLE_FIELDS.forEach((field) => {
-    const node = state.fieldNodes.get(field.key);
-    if (!node) return;
-    if (field.key === "series_ids") {
-      node.value = normalizeText(state.draft[field.key]);
-      if (state.seriesPicker && state.seriesPicker.bulkInput) {
-        state.seriesPicker.bulkInput.value = normalizeText(state.draft[field.key]);
-      }
-      renderSeriesPicker(state);
-      return;
-    }
-    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
-  });
-}
-
-function applyReadonly(state) {
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (!node) return;
-    node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
   });
 }
 
@@ -1034,21 +702,6 @@ function validateDraft(state) {
   return errors;
 }
 
-function updateFieldMessages(state, errors) {
-  EDITABLE_FIELDS.forEach((field) => {
-    const messageNode = state.fieldStatusNodes.get(field.key);
-    if (!messageNode) return;
-    let message = errors.get(field.key) || "";
-    if (!message && state.mode === "bulk" && state.bulkMixedFields.has(field.key) && !state.bulkTouchedFields.has(field.key)) {
-      message = field.key === "series_ids"
-        ? t(state, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
-        : t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
-    }
-    messageNode.textContent = message;
-    messageNode.hidden = !message;
-  });
-}
-
 function buildWorkSaveActivityContext(state) {
   return buildWorkActivityContext("save-work", "catalogueWorkSave", "#catalogueWorkSave", state.currentWorkId);
 }
@@ -1220,7 +873,7 @@ function setLoadedRecord(state, workId, record, options = {}) {
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   setOpenInputMode(state);
-  applyDraftToInputs(state);
+  applyDraftToInputs(state, workFormOptions(state));
   applyReadonly(state);
   syncUrl(workId);
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for work {work_id}.", { work_id: workId }));
@@ -1249,11 +902,8 @@ function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options =
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
   setOpenInputMode(state);
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
-  });
+  applyDraftToInputs(state, workFormOptions(state));
+  clearReadonlyFields(state);
   syncUrl(workIds.join(","));
   setTextWithState(
     state.contextNode,
@@ -1302,11 +952,8 @@ function setNewWorkMode(state, options = {}) {
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
-  });
+  applyDraftToInputs(state, workFormOptions(state));
+  clearReadonlyFields(state);
   setPopupVisibility(state, false);
   syncUrl("", "new");
   setTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft work source record."));
@@ -1345,11 +992,8 @@ function setEmptySearchMode(state, options = {}) {
   if (!options.keepSearchValue) {
     state.searchNode.value = "";
   }
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
-  });
+  applyDraftToInputs(state, workFormOptions(state));
+  clearReadonlyFields(state);
   setPopupVisibility(state, false);
   syncUrl("");
   setTextWithState(state.contextNode, t(state, "missing_work_param", "Search for a work by work id."));
@@ -1364,7 +1008,7 @@ function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
-  updateFieldMessages(state, errors);
+  updateFieldMessages(state, errors, workFormOptions(state));
   setModeFieldAvailability(state);
   updateSummary(state);
   if (!hasRecord) {
@@ -1451,6 +1095,14 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_editor.${key}`, fallback, tokens);
 }
 
+function workFormOptions(state) {
+  return {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
+    onStateChange: () => updateEditorState(state)
+  };
+}
+
 function workSectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
@@ -1489,7 +1141,7 @@ async function saveCurrentWork(state) {
     return;
   }
   const errors = validateDraft(state);
-  updateFieldMessages(state, errors);
+  updateFieldMessages(state, errors, workFormOptions(state));
   if (errors.size > 0) {
     setTextWithState(state.statusNode, t(state, "save_status_validation_error", "Fix validation errors before saving."), "error");
     updateEditorState(state);
@@ -1657,7 +1309,7 @@ async function saveCurrentWork(state) {
 async function createCurrentWork(state) {
   if (state.mode !== "new") return;
   const errors = validateDraft(state);
-  updateFieldMessages(state, errors);
+  updateFieldMessages(state, errors, workFormOptions(state));
   if (errors.size > 0) {
     const workIdError = errors.get("work_id") || "";
     setTextWithState(
@@ -1950,7 +1602,7 @@ async function applyPublicationChange(state) {
 
   if (action === "publish") {
     const errors = validateDraft(state);
-    updateFieldMessages(state, errors);
+    updateFieldMessages(state, errors, workFormOptions(state));
     if (errors.size > 0) {
       setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
       updateEditorState(state);
@@ -2372,17 +2024,9 @@ function createWorkEditorState(elements) {
   };
 }
 
-function renderWorkEditorFields(state, elements) {
-  EDITABLE_FIELDS.forEach((field) => renderField(field, elements.fieldsNode, state));
-  READONLY_FIELDS.forEach((field) => renderReadonlyField(field, elements.readonlyNode, state));
-}
-
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
-  if (state.seriesPicker) {
-    state.seriesPicker.searchInput.placeholder = t(state, "series_picker_placeholder", "find series by title");
-    state.seriesPicker.searchInput.setAttribute("aria-label", t(state, "series_picker_label", "Find series by title"));
-  }
+  applyWorkFormText(state, workFormOptions(state));
   elements.detailsHeadingNode.textContent = t(state, "details_heading", "work details");
   elements.newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
   elements.detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
@@ -2598,7 +2242,7 @@ async function init() {
 
   initializeStudioRouteState(elements.root, { route: "catalogue-work" });
   const state = createWorkEditorState(elements);
-  renderWorkEditorFields(state, elements);
+  renderWorkEditorFields(state, elements, workFormOptions(state));
 
   try {
     const serverAvailable = await configureWorkEditorRuntime(state, elements);

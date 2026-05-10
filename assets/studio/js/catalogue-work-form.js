@@ -1,0 +1,408 @@
+import { displayValue } from "./catalogue-editor-records.js";
+import {
+  WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
+  WORK_READONLY_FIELDS as READONLY_FIELDS,
+  dedupeSeriesIds,
+  normalizeSeriesId,
+  normalizeText,
+  parseSeriesIds,
+  seriesIdsToText
+} from "./catalogue-work-fields.js";
+
+function escapeHtml(value) {
+  return normalizeText(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function formText(options, key, fallback, tokens = null) {
+  if (options && typeof options.text === "function") {
+    return options.text(key, fallback, tokens);
+  }
+  if (!tokens) return fallback;
+  return Object.entries(tokens).reduce((text, [token, value]) => {
+    return text.replace(new RegExp(`\\{${token}\\}`, "g"), value);
+  }, fallback);
+}
+
+function notifyFieldInput(options, fieldKey) {
+  if (options && typeof options.onFieldInput === "function") {
+    options.onFieldInput(fieldKey);
+  }
+}
+
+function notifyStateChange(options) {
+  if (options && typeof options.onStateChange === "function") {
+    options.onStateChange();
+  }
+}
+
+function seriesDisplayTitle(state, seriesId) {
+  const record = state.seriesById.get(seriesId);
+  return normalizeText(record && record.title) || seriesId;
+}
+
+function formatSeriesChoice(state, seriesId) {
+  const title = seriesDisplayTitle(state, seriesId);
+  return title === seriesId ? seriesId : `${title} (${seriesId})`;
+}
+
+function seriesSearchMatches(state, queryText) {
+  const query = normalizeText(queryText).toLowerCase();
+  const selected = new Set(parseSeriesIds(state.draft && state.draft.series_ids));
+  if (!query) return [];
+  return Array.from(state.seriesById.entries())
+    .filter(([seriesId, record]) => {
+      if (selected.has(seriesId)) return false;
+      const title = normalizeText(record && record.title).toLowerCase();
+      return seriesId.includes(query) || title.includes(query);
+    })
+    .sort((a, b) => {
+      const titleA = normalizeText(a[1] && a[1].title);
+      const titleB = normalizeText(b[1] && b[1].title);
+      return titleA.localeCompare(titleB, undefined, { numeric: true, sensitivity: "base" });
+    })
+    .slice(0, 12);
+}
+
+function setSeriesDraftIds(state, seriesIds, options) {
+  state.draft.series_ids = seriesIdsToText(dedupeSeriesIds(seriesIds.map((item) => normalizeSeriesId(item)).filter(Boolean)));
+  const node = state.fieldNodes.get("series_ids");
+  if (node) node.value = state.draft.series_ids;
+  if (state.seriesPicker && state.seriesPicker.bulkInput) {
+    state.seriesPicker.bulkInput.value = state.draft.series_ids;
+  }
+  if (state.mode === "bulk") {
+    state.bulkTouchedFields.add("series_ids");
+  }
+  renderSeriesPicker(state, options);
+  notifyStateChange(options);
+}
+
+function addSeriesDraftId(state, seriesId, options) {
+  const normalizedId = normalizeSeriesId(seriesId);
+  if (!normalizedId) return;
+  const seriesIds = parseSeriesIds(state.draft.series_ids);
+  if (!seriesIds.includes(normalizedId)) seriesIds.push(normalizedId);
+  setSeriesDraftIds(state, seriesIds, options);
+}
+
+function removeSeriesDraftId(state, seriesId, options) {
+  const normalizedId = normalizeSeriesId(seriesId);
+  if (!normalizedId) return;
+  setSeriesDraftIds(state, parseSeriesIds(state.draft.series_ids).filter((item) => item !== normalizedId), options);
+}
+
+function renderSeriesPickerMatches(state, options) {
+  if (!state.seriesPicker) return;
+  const matches = seriesSearchMatches(state, state.seriesPicker.searchInput.value);
+  if (!matches.length) {
+    state.seriesPicker.popupNode.hidden = true;
+    state.seriesPicker.popupNode.innerHTML = "";
+    return;
+  }
+  state.seriesPicker.popupNode.innerHTML = matches.map(([seriesId]) => `
+    <button type="button" class="tagStudioSuggest__workButton catalogueWorkSeriesPicker__option" data-series-id="${escapeHtml(seriesId)}">
+      <span class="tagStudioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
+      <span class="tagStudioSuggest__workMeta">${escapeHtml(seriesId)}</span>
+    </button>
+  `).join("");
+  state.seriesPicker.popupNode.hidden = false;
+}
+
+function renderSeriesPicker(state, options = {}) {
+  if (!state.seriesPicker) return;
+  const seriesIds = parseSeriesIds(state.draft && state.draft.series_ids);
+  state.seriesPicker.hiddenInput.value = seriesIdsToText(seriesIds);
+  state.seriesPicker.chipsNode.innerHTML = seriesIds.length
+    ? seriesIds.map((seriesId) => `
+      <span class="tagStudio__chip catalogueWorkSeriesPicker__chip">
+        <span class="tagStudio__chipText">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
+        <span class="catalogueWorkSeriesPicker__chipId">${escapeHtml(seriesId)}</span>
+        <button type="button" class="tagStudio__chipRemove" data-remove-series-id="${escapeHtml(seriesId)}" aria-label="${escapeHtml(`Remove ${formatSeriesChoice(state, seriesId)}`)}">×</button>
+      </span>
+    `).join("")
+    : `<span class="tagStudioForm__meta">${escapeHtml(formText(options, "series_picker_empty", "No series selected."))}</span>`;
+}
+
+function renderField(field, fieldsNode, state, options) {
+  if (field.key === "series_ids") {
+    renderSeriesField(field, fieldsNode, state, options);
+    return;
+  }
+
+  const wrapper = document.createElement(field.readonly ? "div" : "label");
+  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
+  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
+  if (!field.readonly) wrapper.htmlFor = `catalogueWorkField-${field.key}`;
+
+  const label = document.createElement("span");
+  label.className = "tagStudioForm__label";
+  label.textContent = field.label;
+  wrapper.appendChild(label);
+
+  let input;
+  if (field.readonly) {
+    input = document.createElement("span");
+    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  } else if (field.type === "textarea") {
+    input = document.createElement("textarea");
+    input.className = "tagStudio__input tagStudioForm__descriptionInput";
+    input.rows = 4;
+  } else if (field.type === "select") {
+    input = document.createElement("select");
+    input.className = "tagStudio__input";
+    field.options.forEach((optionValue) => {
+      const option = document.createElement("option");
+      option.value = optionValue;
+      option.textContent = optionValue || "(blank)";
+      input.appendChild(option);
+    });
+  } else {
+    input = document.createElement("input");
+    input.className = "tagStudio__input";
+    input.type = field.type === "date" ? "date" : "text";
+    if (field.type === "number") {
+      input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";
+    }
+  }
+
+  input.id = `catalogueWorkField-${field.key}`;
+  input.dataset.field = field.key;
+  if (field.description) {
+    input.setAttribute("aria-describedby", `catalogueWorkFieldHelp-${field.key}`);
+  }
+  wrapper.appendChild(input);
+
+  if (field.description) {
+    const help = document.createElement("span");
+    help.className = "tagStudioForm__meta catalogueWorkForm__fieldMeta";
+    help.id = `catalogueWorkFieldHelp-${field.key}`;
+    help.textContent = field.description;
+    wrapper.appendChild(help);
+  }
+
+  const message = document.createElement("span");
+  message.className = "catalogueWorkForm__fieldStatus";
+  message.dataset.fieldStatus = field.key;
+  wrapper.appendChild(message);
+
+  if (!field.readonly) {
+    input.addEventListener("input", () => notifyFieldInput(options, field.key));
+    input.addEventListener("change", () => notifyFieldInput(options, field.key));
+  }
+  fieldsNode.appendChild(wrapper);
+  state.fieldNodes.set(field.key, input);
+  state.fieldStatusNodes.set(field.key, message);
+}
+
+function renderSeriesField(field, fieldsNode, state, options) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueWorkForm__field--topAligned catalogueWorkSeriesPicker";
+
+  const label = document.createElement("span");
+  label.className = "tagStudioForm__label";
+  label.textContent = field.label;
+  wrapper.appendChild(label);
+
+  const hiddenInput = document.createElement("input");
+  hiddenInput.type = "hidden";
+  hiddenInput.id = `catalogueWorkField-${field.key}`;
+  hiddenInput.dataset.field = field.key;
+  wrapper.appendChild(hiddenInput);
+
+  const pickerNode = document.createElement("div");
+  pickerNode.className = "catalogueWorkSeriesPicker__control";
+
+  const chipsNode = document.createElement("div");
+  chipsNode.className = "catalogueWorkSeriesPicker__chips";
+  pickerNode.appendChild(chipsNode);
+
+  const searchWrap = document.createElement("div");
+  searchWrap.className = "catalogueWorkSeriesPicker__searchWrap";
+  const searchInput = document.createElement("input");
+  searchInput.className = "tagStudio__input catalogueWorkSeriesPicker__search";
+  searchInput.type = "text";
+  searchInput.autocomplete = "off";
+  searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
+  searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
+  const popupNode = document.createElement("div");
+  popupNode.className = "tagStudio__popupInner catalogueWorkSeriesPicker__popup";
+  popupNode.hidden = true;
+  searchWrap.appendChild(searchInput);
+  searchWrap.appendChild(popupNode);
+  pickerNode.appendChild(searchWrap);
+
+  const bulkInput = document.createElement("input");
+  bulkInput.className = "tagStudio__input catalogueWorkSeriesPicker__bulkInput";
+  bulkInput.type = "text";
+  bulkInput.autocomplete = "off";
+  bulkInput.placeholder = "+009, -010";
+  pickerNode.appendChild(bulkInput);
+
+  wrapper.appendChild(pickerNode);
+
+  if (field.description) {
+    const help = document.createElement("span");
+    help.className = "tagStudioForm__meta catalogueWorkForm__fieldMeta";
+    help.textContent = field.description;
+    wrapper.appendChild(help);
+  }
+
+  const message = document.createElement("span");
+  message.className = "catalogueWorkForm__fieldStatus";
+  message.dataset.fieldStatus = field.key;
+  wrapper.appendChild(message);
+
+  searchInput.addEventListener("input", () => renderSeriesPickerMatches(state, options));
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    const matches = seriesSearchMatches(state, searchInput.value);
+    if (!matches.length) return;
+    event.preventDefault();
+    addSeriesDraftId(state, matches[0][0], options);
+    searchInput.value = "";
+    popupNode.hidden = true;
+  });
+  popupNode.addEventListener("click", (event) => {
+    const button = event.target && event.target.closest ? event.target.closest("[data-series-id]") : null;
+    if (!button) return;
+    addSeriesDraftId(state, button.getAttribute("data-series-id"), options);
+    searchInput.value = "";
+    popupNode.hidden = true;
+    searchInput.focus();
+  });
+  chipsNode.addEventListener("click", (event) => {
+    const button = event.target && event.target.closest ? event.target.closest("[data-remove-series-id]") : null;
+    if (!button) return;
+    removeSeriesDraftId(state, button.getAttribute("data-remove-series-id"), options);
+  });
+  bulkInput.addEventListener("input", () => {
+    state.draft.series_ids = bulkInput.value;
+    hiddenInput.value = bulkInput.value;
+    if (state.mode === "bulk") state.bulkTouchedFields.add("series_ids");
+    notifyStateChange(options);
+  });
+
+  fieldsNode.appendChild(wrapper);
+  state.seriesPicker = { wrapper, pickerNode, chipsNode, searchWrap, searchInput, popupNode, bulkInput, hiddenInput };
+  state.fieldNodes.set(field.key, hiddenInput);
+  state.fieldStatusNodes.set(field.key, message);
+}
+
+function renderReadonlyField(field, readonlyNode, state) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "tagStudioForm__field";
+
+  const label = document.createElement("span");
+  label.className = "tagStudioForm__label";
+  label.textContent = field.label;
+  wrapper.appendChild(label);
+
+  const value = document.createElement("div");
+  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  value.dataset.readonlyField = field.key;
+  value.textContent = "—";
+  wrapper.appendChild(value);
+
+  readonlyNode.appendChild(wrapper);
+  state.readonlyNodes.set(field.key, value);
+}
+
+export function renderWorkEditorFields(state, elements, options = {}) {
+  EDITABLE_FIELDS.forEach((field) => renderField(field, elements.fieldsNode, state, options));
+  READONLY_FIELDS.forEach((field) => renderReadonlyField(field, elements.readonlyNode, state));
+}
+
+export function applyWorkFormText(state, options = {}) {
+  if (!state.seriesPicker) return;
+  state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
+  state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
+}
+
+export function setFieldNodeValue(node, value) {
+  const text = normalizeText(value);
+  if ("value" in node) {
+    node.value = text;
+  } else {
+    node.textContent = displayValue(text);
+  }
+}
+
+export function getFieldNodeValue(node) {
+  if ("value" in node) return node.value;
+  return normalizeText(node.textContent);
+}
+
+export function applyDraftToInputs(state, options = {}) {
+  EDITABLE_FIELDS.forEach((field) => {
+    const node = state.fieldNodes.get(field.key);
+    if (!node) return;
+    if (field.key === "series_ids") {
+      node.value = normalizeText(state.draft[field.key]);
+      if (state.seriesPicker && state.seriesPicker.bulkInput) {
+        state.seriesPicker.bulkInput.value = normalizeText(state.draft[field.key]);
+      }
+      renderSeriesPicker(state, options);
+      return;
+    }
+    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
+  });
+}
+
+export function applyReadonly(state) {
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (!node) return;
+    node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
+  });
+}
+
+export function clearReadonlyFields(state) {
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+}
+
+export function setModeFieldAvailability(state) {
+  const statusNode = state.fieldNodes.get("status");
+  if (statusNode) {
+    if ("disabled" in statusNode) statusNode.disabled = false;
+    if ("readOnly" in statusNode) statusNode.readOnly = true;
+  }
+  const publishedDateNode = state.fieldNodes.get("published_date");
+  if (publishedDateNode) {
+    publishedDateNode.disabled = state.mode === "new";
+  }
+  if (state.seriesPicker) {
+    const isBulk = state.mode === "bulk";
+    state.seriesPicker.pickerNode.hidden = false;
+    state.seriesPicker.chipsNode.hidden = isBulk;
+    state.seriesPicker.searchWrap.hidden = isBulk;
+    state.seriesPicker.bulkInput.hidden = !isBulk;
+    state.seriesPicker.searchInput.disabled = isBulk || state.isSaving || state.isBuilding || state.isDeleting;
+    state.seriesPicker.bulkInput.disabled = !isBulk || state.isSaving || state.isBuilding || state.isDeleting;
+    if (isBulk) {
+      state.seriesPicker.popupNode.hidden = true;
+    }
+  }
+}
+
+export function updateFieldMessages(state, errors, options = {}) {
+  EDITABLE_FIELDS.forEach((field) => {
+    const messageNode = state.fieldStatusNodes.get(field.key);
+    if (!messageNode) return;
+    let message = errors.get(field.key) || "";
+    if (!message && state.mode === "bulk" && state.bulkMixedFields.has(field.key) && !state.bulkTouchedFields.has(field.key)) {
+      message = field.key === "series_ids"
+        ? formText(options, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
+        : formText(options, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
+    }
+    messageNode.textContent = message;
+    messageNode.hidden = !message;
+  });
+}

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 20:15"
+last_updated: "2026-05-10 20:28"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue Work Editor form rendering
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-work-form.js` as the route-local form module for the Catalogue Work Editor.
+The module now owns editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-form.js`
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
+
+**Impact:**
+The work editor route entry module keeps validation rules, route mode decisions, generated-data reads, write orchestration, and modal sequencing.
+Form rendering and form-control event wiring now sit behind injected route callbacks, reducing maintenance risk while adding one small module transfer to the route.
 
 ## [2026-05-10] Split JavaScript cleanup inventory from work-editor slices
 

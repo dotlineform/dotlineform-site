@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: "Catalogue Work Editor"
 added_date: 2026-04-22
-last_updated: "2026-05-10 19:44"
+last_updated: "2026-05-10 20:28"
 parent_id: user-guide
 sort_order: 30
 ---
@@ -25,8 +25,13 @@ Route-local helpers:
 
 - `assets/studio/js/catalogue-work-fields.js`
   owns work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers.
+- `assets/studio/js/catalogue-work-form.js`
+  owns editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering.
 - `assets/studio/js/catalogue-work-sections.js`
   owns current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail.
+
+The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
+It does not call write services directly.
 
 The section renderer receives route-owned callbacks for text lookup, dirty-state checks, changed-field detection, publication-state checks, and build-preview activation.
 It does not call write services directly.

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7655eeb9047e53b4aa99b2ac06c9e696",
-    "generated_at_utc": "2026-05-10T19:17:21Z",
+    "version": "blake2b-10b77f282d0061323d1073d2983c48a2",
+    "generated_at_utc": "2026-05-10T19:29:38Z",
     "count": 222
   },
   "entries": [
@@ -1331,23 +1331,23 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-10 19:44",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-10 19:44 • Studio",
+      "display_meta": "2026-05-10 20:28 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-10 19:44",
+        "2026-05-10 20:28",
         "2026",
         "05",
         "10",
-        "19",
-        "44"
+        "20",
+        "28"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-10 19:44 2026 05 10 19 44"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-10 20:28 2026 05 10 20 28"
     },
     {
       "id": "studio-ui-start",
@@ -1628,10 +1628,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-05-10 19:44",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-10 19:44 • User Guide",
+      "display_meta": "2026-05-10 20:28 • User Guide",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -1641,14 +1641,14 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-10 19:44",
+        "2026-05-10 20:28",
         "2026",
         "05",
         "10",
-        "19",
-        "44"
+        "20",
+        "28"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-10 19:44 2026 05 10 19 44"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-10 20:28 2026 05 10 20 28"
     },
     {
       "id": "scripts-copy-draft-media",
@@ -3519,10 +3519,10 @@
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Request",
       "href": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup",
-      "last_updated": "2026-05-10 20:15",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-10 20:15 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-10 20:28 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-payload-runtime-cleanup",
         "site",
@@ -3539,14 +3539,14 @@
         "config",
         "structural",
         "review",
-        "2026-05-10 20:15",
+        "2026-05-10 20:28",
         "2026",
         "05",
         "10",
         "20",
-        "15"
+        "28"
       ],
-      "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 20:15 2026 05 10 20 15"
+      "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 20:28 2026 05 10 20 28"
     },
     {
       "id": "registry-driven-scoring-architecture",
@@ -5613,22 +5613,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 20:15",
-      "display_meta": "2026-05-10 20:15",
+      "last_updated": "2026-05-10 20:28",
+      "display_meta": "2026-05-10 20:28",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 20:15",
+        "2026-05-10 20:28",
         "2026",
         "05",
         "10",
         "20",
-        "15"
+        "28"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 20:15 2026 05 10 20 15"
+      "search_text": "site-change-log site change log site change log 2026-05-10 20:28 2026 05 10 20 28"
     },
     {
       "id": "archive",

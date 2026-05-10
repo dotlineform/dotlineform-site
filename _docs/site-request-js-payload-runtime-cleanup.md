@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 20:15"
+last_updated: "2026-05-10 20:28"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -17,6 +17,7 @@ Status:
 - Slice B implemented
 - Slice C implemented
 - Slice D implemented
+- Slice E implemented
 - follow-on work-editor slices E-H documented
 
 ## Purpose
@@ -276,7 +277,7 @@ Targeted verification:
 
 ### Slice E: Work Form Renderer Boundary
 
-Status: planned.
+Status: implemented.
 
 Intent:
 
@@ -301,6 +302,34 @@ Risk removed:
 
 - the densest remaining DOM-construction block leaves the route controller without changing service writes or route loading
 - future form-field additions have a clear owner and do not need to modify route orchestration code
+
+Implementation notes:
+
+- Added `assets/studio/js/catalogue-work-form.js` as the work-editor route-local form module.
+- Moved scalar field rendering, read-only field rendering, series picker DOM/event behavior, form text synchronization, field value get/set helpers, draft-to-input synchronization, read-only clearing, mode-specific field availability, and field validation message rendering out of `catalogue-work-editor.js`.
+- Kept validation rules, dirty-state interpretation, route mode decisions, generated-data reads, save/build/publish/delete orchestration, and modal sequencing in `catalogue-work-editor.js`.
+- The form module receives route-owned behavior through a small callback object for UI text lookup, field input handling, and route state refresh.
+
+Runtime measurement:
+
+- `assets/studio/js/catalogue-work-editor.js` changed from 2,622 lines, 101,094 bytes raw, and about 17,879 bytes gzip to 2,266 lines, 86,929 bytes raw, and about 15,461 bytes gzip.
+- New `assets/studio/js/catalogue-work-form.js` is 408 lines, 16,081 bytes raw, and about 3,475 bytes gzip.
+- The work-editor transitive JS module count changed from 17 to 18.
+- The measured work-editor transitive JS payload changed from about 215,860 bytes raw / 45,483 bytes gzip to about 217,776 bytes raw / 46,540 bytes gzip.
+- Startup JSON payloads are unchanged.
+- Route-ready behavior is unchanged for offline empty, single work, new mode, and bulk routes.
+- This slice reduces maintenance risk. Transfer-size cost increases slightly because the form renderer is a new module transfer without a bundler.
+
+Targeted verification:
+
+- `node --check assets/studio/js/catalogue-work-editor.js` passed.
+- `node --check assets/studio/js/catalogue-work-form.js` passed.
+- Work-editor transitive JS payload was measured after the extraction.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static Playwright smoke passed for the work editor empty route with the catalogue service blocked.
+- Static Playwright smoke passed with the existing catalogue service available for `?work=00001`, including rendered title value and selected series chip.
+- Static Playwright smoke passed for `?mode=new`, including field-input validation message refresh for an invalid year.
+- Static Playwright smoke passed for `?work=00001,00002`, including visible bulk `series_ids` input update.
 
 ### Slice F: Work Route Mode State Boundary
 

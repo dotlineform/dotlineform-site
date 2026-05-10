@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T19:17:21Z",
+  "generated_at": "2026-05-10T19:29:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -821,7 +821,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 19:44",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -830,7 +830,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 11567
+      "content_text_length": 11801
     },
     {
       "scope": "studio",
@@ -1017,7 +1017,7 @@
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-10 19:44",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "user-guide",
       "sort_order": 30,
       "published": true,
@@ -1026,7 +1026,7 @@
       "source_path": "catalogue-work-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json",
-      "content_text_length": 14008
+      "content_text_length": 14404
     },
     {
       "scope": "studio",
@@ -2214,7 +2214,7 @@
       "doc_id": "site-request-js-payload-runtime-cleanup",
       "title": "JavaScript Payload And Runtime Cleanup Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 20:15",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 70,
       "published": true,
@@ -2223,7 +2223,7 @@
       "source_path": "site-request-js-payload-runtime-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup.json",
-      "content_text_length": 20269,
+      "content_text_length": 22589,
       "ui_status": "draft"
     },
     {
@@ -3529,7 +3529,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 20:15",
+      "last_updated": "2026-05-10 20:28",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3538,7 +3538,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 124256
+      "content_text_length": 125243
     },
     {
       "scope": "studio",
