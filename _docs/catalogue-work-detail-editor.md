@@ -2,7 +2,7 @@
 doc_id: catalogue-work-detail-editor
 title: "Catalogue Work Detail Editor"
 added_date: 2026-04-22
-last_updated: "2026-05-10 21:31"
+last_updated: "2026-05-10 21:38"
 parent_id: user-guide
 sort_order: 50
 ---
@@ -47,6 +47,7 @@ The public update remains work-scoped. Saving a published detail updates the par
 Implementation notes:
 
 - `assets/studio/js/catalogue-work-detail-editor.js` owns route bootstrap, state assembly, form and summary rendering, and save/build/publication/delete workflow coordination.
+- `assets/studio/js/catalogue-work-detail-form.js` owns form field rendering, readonly field rendering, label refresh, field value synchronization, enabled/disabled state, and field validation message rendering.
 - `assets/studio/js/catalogue-work-detail-selection.js` owns detail query parsing, search suggestions, single/bulk open flows, and initial `?detail=` / `?mode=new` route selection.
 - the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
 

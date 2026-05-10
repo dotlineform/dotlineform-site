@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T20:32:44Z",
+  "generated_at": "2026-05-10T20:39:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1616,7 +1616,7 @@
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-10 21:31",
+      "last_updated": "2026-05-10 21:38",
       "parent_id": "user-guide",
       "sort_order": 50,
       "published": true,
@@ -1625,7 +1625,7 @@
       "source_path": "catalogue-work-detail-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-detail-editor.json",
-      "content_text_length": 7931
+      "content_text_length": 8139
     },
     {
       "scope": "studio",
@@ -2407,7 +2407,7 @@
       "doc_id": "site-request-catalogue-js-runtime-consistency",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 21:31",
+      "last_updated": "2026-05-10 21:38",
       "parent_id": "site-request-js-config-structural-review",
       "sort_order": 80,
       "published": true,
@@ -2416,7 +2416,7 @@
       "source_path": "site-request-catalogue-js-runtime-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-js-runtime-consistency.json",
-      "content_text_length": 8793,
+      "content_text_length": 9219,
       "ui_status": "draft"
     },
     {

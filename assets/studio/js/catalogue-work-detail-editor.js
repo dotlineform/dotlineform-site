@@ -57,8 +57,6 @@ import {
 } from "./catalogue-media-preview.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  WORK_DETAIL_FIELD_DEFINITIONS,
-  WORK_DETAIL_READONLY_FIELDS as READONLY_FIELDS,
   WORK_DETAIL_STATUS_OPTIONS as STATUS_OPTIONS,
   buildCreateWorkDetailPayload,
   buildSaveWorkDetailPayload,
@@ -72,17 +70,25 @@ import {
   validateCreateWorkDetailDraft
 } from "./catalogue-work-detail-fields.js";
 import {
+  WORK_DETAIL_FORM_FIELDS as FORM_FIELDS,
+  applyWorkDetailDraftToInputs,
+  applyWorkDetailFieldLabels,
+  applyWorkDetailReadonly,
+  getWorkDetailFieldNodeValue,
+  renderWorkDetailEditorFields,
+  renderWorkDetailReadonlyFields,
+  setWorkDetailFieldNodeValue,
+  setWorkDetailModeFieldAvailability,
+  setWorkDetailReadonlyValues,
+  updateWorkDetailFieldMessages
+} from "./catalogue-work-detail-form.js";
+import {
   applyInitialWorkDetailRouteSelection,
   bindWorkDetailSelectionControls,
   openWorkDetailByUid,
   setWorkDetailSelectionPopupVisibility
 } from "./catalogue-work-detail-selection.js";
 
-const FORM_FIELDS = Object.freeze([
-  WORK_DETAIL_FIELD_DEFINITIONS.work_id,
-  WORK_DETAIL_FIELD_DEFINITIONS.detail_id,
-  ...EDITABLE_FIELDS
-]);
 const BULK_PREVIEW_LIMIT = 12;
 
 function escapeHtml(value) {
@@ -187,20 +193,6 @@ function buildBulkDraftFromRecords(records) {
   return { draft, mixedFields };
 }
 
-function setFieldNodeValue(node, value) {
-  const text = normalizeText(value);
-  if ("value" in node) {
-    node.value = text;
-  } else {
-    node.textContent = displayValue(text);
-  }
-}
-
-function getFieldNodeValue(node) {
-  if ("value" in node) return node.value;
-  return normalizeText(node.textContent);
-}
-
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -242,84 +234,6 @@ function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
-function renderField(field, fieldsNode, state) {
-  const wrapper = document.createElement(field.readonly ? "div" : "label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  if (!field.readonly) wrapper.htmlFor = `catalogueWorkDetailField-${field.key}`;
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.dataset.fieldLabel = field.key;
-  label.textContent = t(state, `field_label_${field.key}`, field.label);
-  wrapper.appendChild(label);
-
-  let input;
-  if (field.readonly) {
-    input = document.createElement("span");
-    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  } else if (field.type === "select") {
-    input = document.createElement("select");
-    input.className = "tagStudio__input";
-    field.options.forEach((optionValue) => {
-      const option = document.createElement("option");
-      option.value = optionValue;
-      option.textContent = optionValue || "(blank)";
-      input.appendChild(option);
-    });
-  } else {
-    input = document.createElement("input");
-    input.className = "tagStudio__input";
-    input.type = "text";
-  }
-
-  input.id = `catalogueWorkDetailField-${field.key}`;
-  input.dataset.field = field.key;
-  wrapper.appendChild(input);
-
-  const message = document.createElement("span");
-  message.className = "catalogueWorkForm__fieldStatus";
-  message.dataset.fieldStatus = field.key;
-  wrapper.appendChild(message);
-
-  if (!field.readonly) {
-    input.addEventListener("input", () => onFieldInput(state, field.key));
-    input.addEventListener("change", () => onFieldInput(state, field.key));
-  }
-  fieldsNode.appendChild(wrapper);
-  state.fieldWrappers.set(field.key, wrapper);
-  state.fieldNodes.set(field.key, input);
-  state.fieldStatusNodes.set(field.key, message);
-}
-
-function renderReadonlyField(field, readonlyNode, state) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.dataset.fieldLabel = field.key;
-  label.textContent = t(state, `field_label_${field.key}`, field.label);
-  wrapper.appendChild(label);
-
-  const value = document.createElement("div");
-  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  value.dataset.readonlyField = field.key;
-  value.textContent = "—";
-  wrapper.appendChild(value);
-
-  readonlyNode.appendChild(wrapper);
-  state.readonlyNodes.set(field.key, value);
-}
-
-function applyFieldLabels(state) {
-  [...FORM_FIELDS, ...READONLY_FIELDS].forEach((field) => {
-    const labels = document.querySelectorAll(`[data-field-label="${field.key}"]`);
-    labels.forEach((label) => {
-      label.textContent = t(state, `field_label_${field.key}`, field.label);
-    });
-  });
-}
-
 function buildRecordSummary(record) {
   const title = normalizeText(record && record.title);
   const section = normalizeText(record && record.section_title);
@@ -354,36 +268,6 @@ async function loadDetailLookupRecord(state, detailUid) {
   return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_detail_base", detailUid, {
     cache: "no-store",
     catalogueServerAvailable: state.serverAvailable
-  });
-}
-
-function applyDraftToInputs(state) {
-  FORM_FIELDS.forEach((field) => {
-    const node = state.fieldNodes.get(field.key);
-    if (!node) return;
-    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
-  });
-}
-
-function applyReadonly(state) {
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (!node) return;
-    node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
-  });
-}
-
-function setModeFieldAvailability(state) {
-  FORM_FIELDS.forEach((field) => {
-    const wrapper = state.fieldWrappers.get(field.key);
-    const node = state.fieldNodes.get(field.key);
-    const newModeOnly = field.key === "work_id" || field.key === "detail_id";
-    if (wrapper) wrapper.hidden = newModeOnly && state.mode !== "new";
-    if (!node) return;
-    if ("disabled" in node) node.disabled = state.isSaving || state.isBuilding || state.isDeleting;
-    if (state.mode === "new" && (field.key === "work_id" || field.key === "status")) {
-      if ("disabled" in node) node.disabled = true;
-    }
   });
 }
 
@@ -583,19 +467,6 @@ function validateDraft(state) {
   return errors;
 }
 
-function updateFieldMessages(state, errors) {
-  FORM_FIELDS.forEach((field) => {
-    const messageNode = state.fieldStatusNodes.get(field.key);
-    if (!messageNode) return;
-    let message = errors.get(field.key) || "";
-    if (!message && state.mode === "bulk" && state.bulkMixedFields.has(field.key) && !state.bulkTouchedFields.has(field.key)) {
-      message = t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
-    }
-    messageNode.textContent = message;
-    messageNode.hidden = !message;
-  });
-}
-
 function updateSummary(state) {
   if (state.mode === "new") {
     const workId = normalizeWorkId(state.draft.work_id);
@@ -703,8 +574,8 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   state.bulkBuildTargets = [];
   state.baselineDraft = buildWorkDetailDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
-  applyDraftToInputs(state);
-  applyReadonly(state);
+  applyWorkDetailDraftToInputs(state);
+  applyWorkDetailReadonly(state);
   syncUrl(detailUid);
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for detail {detail_uid}.", { detail_uid: detailUid }));
   setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: detailUid }));
@@ -737,11 +608,8 @@ function setNewDetailMode(state, workId, options = {}) {
   state.draft.status = "draft";
   state.rebuildPending = false;
   state.buildPreview = null;
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = field.key === "work_id" ? displayValue(normalizedWorkId) : "—";
-  });
+  applyWorkDetailDraftToInputs(state);
+  setWorkDetailReadonlyValues(state, (field) => field.key === "work_id" ? normalizedWorkId : "");
   state.searchNode.value = "";
   setWorkDetailSelectionPopupVisibility(state, false);
   syncUrl("", { mode: "new", workId: normalizedWorkId });
@@ -777,11 +645,8 @@ function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, opti
   state.draft = { ...bulkDraft.draft };
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
-  });
+  applyWorkDetailDraftToInputs(state);
+  setWorkDetailReadonlyValues(state, "");
   syncUrl(detailUids.join(","));
   setTextWithState(
     state.contextNode,
@@ -803,8 +668,8 @@ function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkDetailUids.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
-  updateFieldMessages(state, errors);
-  setModeFieldAvailability(state);
+  updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
+  setWorkDetailModeFieldAvailability(state);
   updateSummary(state);
   if (!hasRecord) {
     setTextWithState(state.buildImpactNode, "");
@@ -875,11 +740,11 @@ function onFieldInput(state, fieldKey) {
   if (!node) return;
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
-    setFieldNodeValue(node, "draft");
+    setWorkDetailFieldNodeValue(node, "draft");
     updateEditorState(state);
     return;
   }
-  state.draft[fieldKey] = getFieldNodeValue(node);
+  state.draft[fieldKey] = getWorkDetailFieldNodeValue(node);
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
   }
@@ -888,6 +753,13 @@ function onFieldInput(state, fieldKey) {
 
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_detail_editor.${key}`, fallback, tokens);
+}
+
+function buildWorkDetailFormContext(state) {
+  return {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    onFieldInput: (fieldKey) => onFieldInput(state, fieldKey)
+  };
 }
 
 function buildWorkDetailSelectionContext(state) {
@@ -976,7 +848,7 @@ async function saveCurrentDetail(state) {
     return;
   }
   const errors = validateDraft(state);
-  updateFieldMessages(state, errors);
+  updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
   if (errors.size > 0) {
     setTextWithState(state.statusNode, t(state, "save_status_validation_error", "Fix validation errors before saving."), "error");
     updateEditorState(state);
@@ -1136,7 +1008,7 @@ async function saveCurrentDetail(state) {
 async function createCurrentDetail(state) {
   if (state.mode !== "new") return;
   const errors = validateDraft(state);
-  updateFieldMessages(state, errors);
+  updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
   if (errors.size > 0) {
     const workIdError = errors.get("work_id") || "";
     setTextWithState(
@@ -1260,7 +1132,7 @@ async function applyPublicationChange(state) {
 
   if (action === "publish") {
     const errors = validateDraft(state);
-    updateFieldMessages(state, errors);
+    updateWorkDetailFieldMessages(state, errors, buildWorkDetailFormContext(state));
     if (errors.size > 0) {
       setTextWithState(state.statusNode, t(state, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
       updateEditorState(state);
@@ -1522,13 +1394,14 @@ async function init() {
   };
   initializeStudioRouteState(root, { route: "catalogue-work-detail" });
 
-  FORM_FIELDS.forEach((field) => renderField(field, fieldsNode, state));
-  READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
+  const formContext = buildWorkDetailFormContext(state);
+  renderWorkDetailEditorFields(fieldsNode, state, formContext);
+  renderWorkDetailReadonlyFields(readonlyNode, state, formContext);
 
   try {
     const config = await loadStudioConfigWithText("catalogue_work_detail_editor");
     state.config = config;
-    applyFieldLabels(state);
+    applyWorkDetailFieldLabels(state, formContext);
     searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save");
