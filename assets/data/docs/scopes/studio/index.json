@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T15:52:55Z",
+  "generated_at": "2026-05-10T15:57:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1333,6 +1333,23 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json",
       "content_text_length": 9203
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-config-ownership",
+      "title": "Config Ownership Cleanup Slice",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 16:56",
+      "parent_id": "site-request-js-config-structural-review",
+      "sort_order": 40,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-config-ownership.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-config-ownership.json",
+      "content_text_length": 7287,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -3327,7 +3344,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 16:50",
+      "last_updated": "2026-05-10 16:56",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3336,7 +3353,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 16573,
+      "content_text_length": 16664,
       "ui_status": "in-progress"
     },
     {
