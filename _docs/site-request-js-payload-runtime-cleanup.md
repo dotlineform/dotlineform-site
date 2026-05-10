@@ -2,7 +2,7 @@
 doc_id: site-request-js-payload-runtime-cleanup
 title: JavaScript Payload And Runtime Cleanup Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 19:44"
+last_updated: "2026-05-10 20:15"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 70
@@ -17,6 +17,7 @@ Status:
 - Slice B implemented
 - Slice C implemented
 - Slice D implemented
+- follow-on work-editor slices E-H documented
 
 ## Purpose
 
@@ -197,36 +198,9 @@ Policy:
 - Treat transfer-size risk separately from maintenance risk. A large file is not automatically a runtime problem unless it is eagerly loaded on a high-traffic route or brings avoidable transitive payload.
 - Re-run the inventory after material Studio or Docs Viewer JavaScript refactors.
 
-Inventory command:
+Inventory:
 
-```bash
-find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
-```
-
-Measured inventory:
-
-| File | Lines | Raw | Gzip | Classification | Maintenance risk | Transfer-size risk | Disposition |
-| --- | ---: | ---: | ---: | --- | --- | --- | --- |
-| `assets/studio/js/catalogue-work-editor.js` | 3,100 | 122.3 KiB | 22.3 KiB | mixed route controller | high | medium | Extraction continues with Slice D for route section renderer boundaries. |
-| `assets/js/docs-viewer.js` | 2,912 | 99.9 KiB | 18.8 KiB | mixed shared viewer runtime controller | high | medium | Existing Docs Viewer extraction plan remains active; render and management-UI boundaries are the next justified targets. |
-| `assets/studio/js/tag-studio.js` | 1,886 | 63.2 KiB | 13.2 KiB | mixed route controller | high | low | Continue the existing Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind named route-local helpers only after current catalogue cleanup. |
-| `assets/studio/js/catalogue-work-detail-editor.js` | 1,806 | 75.5 KiB | 14.0 KiB | mixed route controller | high | low | Pair with the work-editor Slice D findings; extract detail section rendering only where the helper boundary is clearer than route-local ownership. |
-| `assets/studio/js/tag-aliases.js` | 1,708 | 62.3 KiB | 11.3 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete; next slice should target modal view-models and list rendering before more alias workflow is added. |
-| `assets/studio/js/tag-registry.js` | 1,625 | 58.3 KiB | 11.2 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete; next slice should target modal view-models, delete-impact rendering, and import-result rendering. |
-| `assets/studio/js/catalogue-series-editor.js` | 1,625 | 68.3 KiB | 12.9 KiB | mixed route controller | medium | low | Keep route-local short term; revisit with work/detail section-renderer results because series has fewer section types and less immediate extraction pressure. |
-| `assets/studio/js/catalogue-moment-editor.js` | 1,371 | 58.4 KiB | 11.2 KiB | mixed route controller | medium | low | Keep route-local short term; future extraction should focus on import/prose/media workflow helpers rather than line-count reduction. |
-| `assets/studio/js/data-import.js` | 1,133 | 39.8 KiB | 7.8 KiB | mixed route controller | medium | low | Explicitly allowed to stay large for now because it is barely over threshold and still owns one coherent import workflow; split preview-list rendering or docs-management apply transport if it grows further. |
-
-Current priority:
-
-1. `assets/studio/js/catalogue-work-editor.js`
-2. `assets/js/docs-viewer.js`
-3. `assets/studio/js/catalogue-work-detail-editor.js`
-4. `assets/studio/js/tag-studio.js`
-5. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
-6. `assets/studio/js/catalogue-series-editor.js`
-7. `assets/studio/js/catalogue-moment-editor.js`
-8. `assets/studio/js/data-import.js`
+- [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory)
 
 Runtime measurement:
 
@@ -243,6 +217,7 @@ Implementation notes:
 - All over-threshold files are mixed route or shared viewer controllers, so the cleanup priority is maintenance-driven rather than payload-size-driven.
 - The nine over-threshold files total about 647.8 KiB raw and 122.8 KiB gzip, but no route loads all nine together.
 - The largest transfer-size risk remains the work-editor entry module because it is the largest file and owns the route already targeted by this request.
+- The measured inventory now lives in a separate child doc so the work-editor implementation slices can stay focused while the broader priority list remains available.
 
 Targeted verification:
 
@@ -299,6 +274,118 @@ Targeted verification:
 - Static Playwright smoke passed for the work editor empty route with the catalogue service blocked.
 - Static Playwright smoke passed with the existing catalogue service available for `?work=00001`, `?mode=new`, and `?work=00001,00002`.
 
+### Slice E: Work Form Renderer Boundary
+
+Status: planned.
+
+Intent:
+
+- move editable field rendering, read-only field rendering, series picker UI, field value get/set helpers, and field-message rendering out of the route controller
+- keep validation rules, dirty-state interpretation, route mode decisions, and save/build orchestration in the route controller or existing domain modules
+- make the editor entry module read as route flow rather than form construction
+
+Acceptance checks:
+
+- scalar work fields render with the same labels, values, disabled states, and validation message placement
+- series picker search, selected-series chips, add/remove behavior, and bulk raw `series_ids` behavior remain unchanged
+- read-only fields keep the same display and mode availability behavior
+- `node --check` passes for the route entry module and the new form module
+- work-editor route-ready smoke checks pass for empty/offline, single work, new mode, and bulk mode
+
+Target:
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-form.js`
+
+Risk removed:
+
+- the densest remaining DOM-construction block leaves the route controller without changing service writes or route loading
+- future form-field additions have a clear owner and do not need to modify route orchestration code
+
+### Slice F: Work Route Mode State Boundary
+
+Status: planned.
+
+Intent:
+
+- extract single-work, bulk-work, new-work, and empty-search loaded-state transitions into a route-local state module
+- keep service fetching and URL synchronization in the route controller unless the extraction exposes a cleaner narrow boundary
+- make mode transitions explicit enough that later action modules can call them without duplicating state mutation
+
+Acceptance checks:
+
+- opening a single work still sets `mode=single`, `recordLoaded=true`, baseline draft, source record, and URL state correctly
+- bulk open still records selected ids, mixed fields, record hashes, and unavailable ids correctly
+- new mode still seeds the suggested id and draft status correctly
+- empty/offline mode still reaches route-ready with the same unavailable-service messaging
+- save/create outcomes can still re-enter the correct loaded state
+
+Target:
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-route-state.js`
+
+Risk removed:
+
+- route mode transitions stop being implicit side effects scattered through the controller
+- future workflow actions can reuse named state transitions instead of mutating route state directly
+
+### Slice G: Work Action Workflow Boundary
+
+Status: planned.
+
+Intent:
+
+- extract save, create, build preview, build, prose import, publish/unpublish, media refresh, and delete workflows into a route-local action module
+- keep low-level HTTP calls in `catalogue-editor-service-client.js`
+- keep route state transitions delegated through the route-mode helper introduced by Slice F
+
+Acceptance checks:
+
+- single save, bulk save, create, build preview, build, publish, unpublish, prose import, media refresh, and delete behavior remain traceable from the route entry module
+- action helpers receive an explicit route context rather than importing route globals
+- confirmation modal sequencing and activity context remain unchanged
+- service success and failure messages still update the same status nodes and dirty-state controls
+- focused Playwright smoke covers at least non-mutating build-preview availability plus route-ready checks; mutating paths use the existing local-service preview/dry-run behavior where possible
+
+Target:
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-actions.js`
+
+Risk removed:
+
+- write orchestration becomes a named boundary instead of interleaving with rendering and route bootstrap
+- future write workflows have one route-local owner while the service client remains transport-only
+
+### Slice H: Work Search And Selection Boundary
+
+Status: planned.
+
+Intent:
+
+- extract work-id parsing, bulk range parsing, search-token matching, search result rendering, open-selection, and open-by-id helpers into a focused route-local module
+- keep actual record loading delegated back to the route controller or route-state helper so search remains a selection concern
+- preserve static generated-data fallback behavior and known-id checks from the Slice B payload cleanup
+
+Acceptance checks:
+
+- comma lists, numeric ranges, duplicate ids, invalid ids, and single ids parse exactly as before
+- search results still cap at the configured limit and open the selected work
+- new-mode duplicate-id validation still uses the same known-id source
+- bulk open still reports unavailable ids correctly
+- startup still avoids fetching full `catalogue_works`
+
+Target:
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-selection.js`
+
+Risk removed:
+
+- search and bulk-selection behavior becomes testable and reusable without reading the save/build/publish controller flow
+- future selection improvements can be made without touching form rendering or write orchestration
+
 ## Runtime Measurement Requirements
 
 Each implementation slice should record:
@@ -327,6 +414,7 @@ For Slice B, fetch verification should specifically prove whether `catalogue_wor
 
 ## Recommended Next Step
 
-Use the Slice D boundary for future work-editor changes.
+Implement Slice E next.
+It is the safest meaningful maintenance-risk reduction because it moves dense DOM form construction without touching service writes, route loading, or publication/build behavior.
 
-If another cleanup slice is opened, start from `assets/studio/js/catalogue-work-detail-editor.js` or the Docs Viewer render/management-UI boundaries rather than splitting by line count alone.
+After Slices E-H, return to the broader [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory) for the next priority outside the Catalogue Work Editor.
