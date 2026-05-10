@@ -71,13 +71,18 @@ import {
   suggestNextDetailId,
   validateCreateWorkDetailDraft
 } from "./catalogue-work-detail-fields.js";
+import {
+  applyInitialWorkDetailRouteSelection,
+  bindWorkDetailSelectionControls,
+  openWorkDetailByUid,
+  setWorkDetailSelectionPopupVisibility
+} from "./catalogue-work-detail-selection.js";
 
 const FORM_FIELDS = Object.freeze([
   WORK_DETAIL_FIELD_DEFINITIONS.work_id,
   WORK_DETAIL_FIELD_DEFINITIONS.detail_id,
   ...EDITABLE_FIELDS
 ]);
-const SEARCH_LIMIT = 20;
 const BULK_PREVIEW_LIMIT = 12;
 
 function escapeHtml(value) {
@@ -155,48 +160,6 @@ function renderReadiness(state) {
       </div>
     `;
   }).join("");
-}
-
-function parseDetailSelection(rawValue) {
-  const text = normalizeText(rawValue);
-  if (!text) return [];
-  const tokens = text.split(",").map((item) => normalizeText(item)).filter(Boolean);
-  const detailUids = [];
-  const seen = new Set();
-  tokens.forEach((token) => {
-    const rangeMatch = token.match(/^(\d{5})-(\d{3})-(\d{3})$/);
-    if (rangeMatch) {
-      const workId = normalizeWorkId(rangeMatch[1]);
-      const start = Number(rangeMatch[2]);
-      const end = Number(rangeMatch[3]);
-      if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) {
-        throw new Error(`Invalid detail range: ${token}`);
-      }
-      for (let value = start; value <= end; value += 1) {
-        const detailUid = `${workId}-${String(value).padStart(3, "0")}`;
-        if (seen.has(detailUid)) continue;
-        seen.add(detailUid);
-        detailUids.push(detailUid);
-      }
-      return;
-    }
-    const detailUid = normalizeDetailUid(token);
-    if (!detailUid) {
-      throw new Error(`Invalid detail id: ${token}`);
-    }
-    if (seen.has(detailUid)) return;
-    seen.add(detailUid);
-    detailUids.push(detailUid);
-  });
-  return detailUids;
-}
-
-function isDetailBulkQuery(rawValue) {
-  try {
-    return parseDetailSelection(rawValue).length > 1;
-  } catch (_error) {
-    return false;
-  }
 }
 
 function formatSelectionList(items) {
@@ -277,10 +240,6 @@ function syncRouteBusyState(state) {
 
 function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
-}
-
-function setPopupVisibility(state, visible) {
-  state.popupNode.hidden = !visible;
 }
 
 function renderField(field, fieldsNode, state) {
@@ -389,51 +348,6 @@ function buildDetailSearchRecord(detailUid, record) {
     project_filename: normalizeText(record && record.project_filename),
     status: normalizeText(record && record.status)
   };
-}
-
-function getSearchMatches(state, rawQuery) {
-  const query = normalizeText(rawQuery).toLowerCase();
-  const normalizedUid = normalizeDetailUid(rawQuery);
-  const normalizedDetailId = normalizeDetailId(rawQuery);
-  if (!query && !normalizedUid && !normalizedDetailId) return [];
-  const matches = [];
-  for (const [detailUid, record] of state.detailSearchByUid.entries()) {
-    const detailId = normalizeText(record && record.detail_id);
-    const title = normalizeText(record && record.title).toLowerCase();
-    if (
-      (normalizedUid && detailUid.startsWith(normalizedUid)) ||
-      (normalizedDetailId && detailId.startsWith(normalizedDetailId)) ||
-      detailUid.toLowerCase().startsWith(query) ||
-      title.includes(query)
-    ) {
-      matches.push({ detailUid, record });
-    }
-  }
-  matches.sort((a, b) => a.detailUid.localeCompare(b.detailUid, undefined, { numeric: true, sensitivity: "base" }));
-  return matches.slice(0, SEARCH_LIMIT);
-}
-
-function renderSearchMatches(state, matches, message = "") {
-  if (!matches.length && !message) {
-    state.popupListNode.innerHTML = "";
-    setPopupVisibility(state, false);
-    return;
-  }
-
-  if (!matches.length) {
-    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
-    setPopupVisibility(state, true);
-    return;
-  }
-
-  const rows = matches.map(({ detailUid, record }) => `
-    <button type="button" class="tagStudioSuggest__workButton" data-detail-uid="${escapeHtml(detailUid)}">
-      <span class="tagStudioSuggest__workId">${escapeHtml(detailUid)}</span>
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
-    </button>
-  `);
-  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
-  setPopupVisibility(state, true);
 }
 
 async function loadDetailLookupRecord(state, detailUid) {
@@ -829,7 +743,7 @@ function setNewDetailMode(state, workId, options = {}) {
     if (node) node.textContent = field.key === "work_id" ? displayValue(normalizedWorkId) : "—";
   });
   state.searchNode.value = "";
-  setPopupVisibility(state, false);
+  setWorkDetailSelectionPopupVisibility(state, false);
   syncUrl("", { mode: "new", workId: normalizedWorkId });
   if (!normalizedWorkId) {
     setTextWithState(state.contextNode, t(state, "new_context_parent_missing", "Open new detail mode from a parent work editor or provide a work id."));
@@ -974,6 +888,26 @@ function onFieldInput(state, fieldKey) {
 
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_detail_editor.${key}`, fallback, tokens);
+}
+
+function buildWorkDetailSelectionContext(state) {
+  return {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    loadDetailLookupRecord: (detailUid) => loadDetailLookupRecord(state, detailUid),
+    setLoadedBulkDetails: (detailUids, recordsById, recordHashes, options = {}) => {
+      setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, options);
+    },
+    setLoadedRecord: (detailUid, record, options = {}) => {
+      setLoadedRecord(state, detailUid, record, options);
+    },
+    setNewDetailMode: (workId, options = {}) => {
+      setNewDetailMode(state, workId, options);
+    },
+    refreshBuildPreview: () => refreshBuildPreview(state),
+    setTextWithState,
+    updateSummary: () => updateSummary(state),
+    updateEditorState: () => updateEditorState(state)
+  };
 }
 
 async function refreshBuildPreview(state) {
@@ -1235,7 +1169,7 @@ async function createCurrentDetail(state) {
     }
     state.isSaving = false;
     syncRouteBusyState(state);
-    await openDetailByUid(state, detailUid);
+    await openWorkDetailByUid(state, detailUid, buildWorkDetailSelectionContext(state));
     setTextWithState(state.resultNode, t(state, "create_result_success", "Created draft detail {detail_uid}. Opening edit mode...", { detail_uid: detailUid }), "success");
     setTextWithState(state.statusNode, t(state, "create_status_success", "Created draft detail {detail_uid}.", { detail_uid: detailUid }), "success");
   } catch (error) {
@@ -1510,80 +1444,6 @@ async function deleteCurrentDetail(state) {
   }
 }
 
-async function openDetailSelection(state, requestedValue) {
-  let detailUids;
-  try {
-    detailUids = parseDetailSelection(requestedValue);
-  } catch (error) {
-    renderSearchMatches(state, [], normalizeText(error && error.message) || t(state, "search_empty", "Enter a detail id."));
-    return;
-  }
-
-  if (!detailUids.length) {
-    renderSearchMatches(state, [], t(state, "search_empty", "Enter a detail id."));
-    return;
-  }
-  if (detailUids.length === 1) {
-    await openDetailByUid(state, detailUids[0]);
-    return;
-  }
-
-  const unknown = detailUids.find((detailUid) => !state.detailSearchByUid.has(detailUid));
-  if (unknown) {
-    renderSearchMatches(state, [], t(state, "unknown_detail_error", "Unknown detail id: {detail_uid}.", { detail_uid: unknown }));
-    return;
-  }
-
-  state.searchNode.value = detailUids.join(", ");
-  setPopupVisibility(state, false);
-  state.rebuildPending = false;
-  const lookups = await Promise.all(detailUids.map((detailUid) => loadDetailLookupRecord(state, detailUid)));
-  const recordsById = new Map();
-  const recordHashes = new Map();
-  for (let index = 0; index < detailUids.length; index += 1) {
-    const detailUid = detailUids[index];
-    const lookup = lookups[index];
-    const record = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : null;
-    if (!record) {
-      throw new Error(`detail lookup missing record for ${detailUid}`);
-    }
-    recordsById.set(detailUid, record);
-    recordHashes.set(detailUid, normalizeText(lookup.record_hash) || await computeRecordHash(record));
-  }
-  setLoadedBulkDetails(state, detailUids, recordsById, recordHashes);
-  await refreshBuildPreview(state);
-}
-
-async function openDetailByUid(state, requestedDetailUid) {
-  const detailUid = normalizeDetailUid(requestedDetailUid);
-  if (!detailUid) {
-    renderSearchMatches(state, [], t(state, "search_empty", "Enter a detail id."));
-    return;
-  }
-
-  const searchRecord = state.detailSearchByUid.get(detailUid);
-  if (!searchRecord) {
-    const matches = getSearchMatches(state, requestedDetailUid);
-    if (matches.length) renderSearchMatches(state, matches);
-    else renderSearchMatches(state, [], t(state, "unknown_detail_error", "Unknown detail id: {detail_uid}.", { detail_uid: detailUid }));
-    return;
-  }
-
-  state.searchNode.value = detailUid;
-  setPopupVisibility(state, false);
-  state.rebuildPending = false;
-  const lookup = await loadDetailLookupRecord(state, detailUid);
-  const record = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : null;
-  if (!record) {
-    throw new Error(`detail lookup missing record for ${detailUid}`);
-  }
-  setLoadedRecord(state, detailUid, record, {
-    recordHash: normalizeText(lookup.record_hash) || await computeRecordHash(record),
-    lookup
-  });
-  await refreshBuildPreview(state);
-}
-
 async function init() {
   const root = document.getElementById("catalogueWorkDetailRoot");
   const loadingNode = document.getElementById("catalogueWorkDetailLoading");
@@ -1707,45 +1567,8 @@ async function init() {
       if (!workId) return;
       state.workSearchById.set(workId, record);
     });
-    searchNode.addEventListener("input", () => {
-      const query = searchNode.value;
-      if (!normalizeText(query)) {
-        renderSearchMatches(state, [], "");
-        return;
-      }
-      if (isDetailBulkQuery(query)) {
-        renderSearchMatches(state, [], "");
-        return;
-      }
-      const matches = getSearchMatches(state, query);
-      if (!matches.length) {
-        renderSearchMatches(state, [], t(state, "search_no_match", "No matching detail ids."));
-        return;
-      }
-      renderSearchMatches(state, matches);
-    });
-
-    searchNode.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter") return;
-      event.preventDefault();
-      openDetailSelection(state, searchNode.value).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
-      });
-    });
-
-    popupListNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-detail-uid]") : null;
-      if (!button) return;
-      openDetailByUid(state, button.getAttribute("data-detail-uid")).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open selected detail", error);
-      });
-    });
-
-    openButton.addEventListener("click", () => {
-      openDetailSelection(state, searchNode.value).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
-      });
-    });
+    const selectionContext = buildWorkDetailSelectionContext(state);
+    bindWorkDetailSelectionControls(state, selectionContext);
     readinessNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
       if (!button) return;
@@ -1763,31 +1586,7 @@ async function init() {
       console.warn("catalogue_work_detail_editor: unexpected delete failure", error);
     }));
 
-    document.addEventListener("click", (event) => {
-      if (event.target === searchNode || popupNode.contains(event.target)) return;
-      setPopupVisibility(state, false);
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    const requestedMode = normalizeText(params.get("mode")).toLowerCase();
-    const requestedWorkValue = normalizeText(params.get("work"));
-    const requestedDetailValue = normalizeText(params.get("detail"));
-    if (requestedMode === "new") {
-      setNewDetailMode(state, requestedWorkValue);
-    } else if (requestedDetailValue) {
-      await openDetailSelection(state, requestedDetailValue).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
-        setTextWithState(
-          state.statusNode,
-          `${t(state, "load_requested_detail_failed", "Failed to load the requested detail.")} ${normalizeText(error && error.message)}`.trim(),
-          "error"
-        );
-      });
-    } else {
-      setTextWithState(contextNode, t(state, "missing_detail_param", "Search for a work detail by detail id."));
-      updateSummary(state);
-      updateEditorState(state);
-    }
+    await applyInitialWorkDetailRouteSelection(state, selectionContext);
 
     root.hidden = false;
     loadingNode.hidden = true;
