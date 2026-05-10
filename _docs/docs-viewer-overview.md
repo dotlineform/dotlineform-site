@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: "2026-05-10 14:30"
+last_updated: "2026-05-10 14:36"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -73,6 +73,7 @@ Current helper modules:
 
 - `assets/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `assets/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
+- `assets/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
 
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and switches between document and search modes.

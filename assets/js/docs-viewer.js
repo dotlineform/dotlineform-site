@@ -11,6 +11,15 @@ import {
   normalizeSearchEntries,
   normalizeSearchText
 } from "./docs-viewer-search.js";
+import {
+  bookmarkKey,
+  compareBookmarks,
+  deleteBookmarkRecord,
+  isoNow,
+  loadBookmarks,
+  normalizeBookmarkRecord,
+  persistBookmark
+} from "./docs-viewer-favourites.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -112,7 +121,6 @@ import {
     uiStatusByValue: new Map(),
     bookmarks: [],
     bookmarksLoaded: false,
-    bookmarkDbPromise: null,
     bookmarkSupport: Boolean(window.indexedDB),
     editingBookmarkKey: "",
     pendingBookmarkFocusKey: "",
@@ -396,39 +404,6 @@ import {
     return state.viewerConfigRequestPromise;
   }
 
-  function bookmarkKey(scope, docId) {
-    return String(scope || "") + "::" + String(docId || "");
-  }
-
-  function isoNow() {
-    return new Date().toISOString();
-  }
-
-  function compareBookmarks(left, right) {
-    var leftOrder = typeof left.order === "number" ? left.order : 0;
-    var rightOrder = typeof right.order === "number" ? right.order : 0;
-    if (leftOrder !== rightOrder) return leftOrder - rightOrder;
-    return String(left.created_at_utc || "").localeCompare(String(right.created_at_utc || ""));
-  }
-
-  function normalizeBookmarkRecord(record) {
-    if (!record || typeof record !== "object") return null;
-    var scope = String(record.scope || "").trim();
-    var docId = String(record.doc_id || "").trim();
-    if (!scope || !docId) return null;
-    var defaultTitle = String(record.default_title || record.label || docId).trim() || docId;
-    return {
-      key: bookmarkKey(scope, docId),
-      scope: scope,
-      doc_id: docId,
-      label: String(record.label || defaultTitle).trim() || defaultTitle,
-      default_title: defaultTitle,
-      created_at_utc: String(record.created_at_utc || record.updated_at_utc || isoNow()),
-      updated_at_utc: String(record.updated_at_utc || record.created_at_utc || isoNow()),
-      order: typeof record.order === "number" ? record.order : 0
-    };
-  }
-
   function getScopeBookmarks() {
     return state.bookmarks
       .filter(function (record) { return record.scope === bookmarkScope; })
@@ -600,82 +575,21 @@ import {
     }
   }
 
-  function openBookmarksDb() {
-    if (!state.bookmarkSupport) {
-      return Promise.reject(new Error("Bookmarks unavailable in this browser."));
-    }
-    if (state.bookmarkDbPromise) {
-      return state.bookmarkDbPromise;
-    }
+  function bookmarkStorageOptions() {
+    return {
+      indexedDB: window.indexedDB,
+      dbName: BOOKMARK_DB_NAME,
+      dbVersion: BOOKMARK_DB_VERSION,
+      storeName: BOOKMARK_STORE_NAME
+    };
+  }
 
-    state.bookmarkDbPromise = new Promise(function (resolve, reject) {
-      var request = window.indexedDB.open(BOOKMARK_DB_NAME, BOOKMARK_DB_VERSION);
-
-      request.onupgradeneeded = function () {
-        var db = request.result;
-        if (!db.objectStoreNames.contains(BOOKMARK_STORE_NAME)) {
-          db.createObjectStore(BOOKMARK_STORE_NAME, { keyPath: "key" });
-        }
-      };
-
-      request.onsuccess = function () {
-        var db = request.result;
-        db.onversionchange = function () {
-          db.close();
-          state.bookmarkDbPromise = null;
-        };
-        resolve(db);
-      };
-
-      request.onerror = function () {
-        reject(request.error || new Error("Failed to open bookmark storage."));
-      };
-    }).catch(function (error) {
+  function handleBookmarkStorageError(error) {
+    if (error && error.bookmarkStorageUnavailable) {
       state.bookmarkSupport = false;
       renderBookmarkUi();
-      throw error;
-    });
-
-    return state.bookmarkDbPromise;
-  }
-
-  function loadBookmarks() {
-    return openBookmarksDb().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction(BOOKMARK_STORE_NAME, "readonly");
-        var store = tx.objectStore(BOOKMARK_STORE_NAME);
-        var request = store.getAll();
-        request.onsuccess = function () {
-          var records = Array.isArray(request.result) ? request.result.map(normalizeBookmarkRecord).filter(Boolean) : [];
-          resolve(records);
-        };
-        request.onerror = function () {
-          reject(request.error || new Error("Failed to load bookmarks."));
-        };
-      });
-    });
-  }
-
-  function persistBookmark(record) {
-    return openBookmarksDb().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction(BOOKMARK_STORE_NAME, "readwrite");
-        tx.oncomplete = function () { resolve(record); };
-        tx.onerror = function () { reject(tx.error || new Error("Failed to save bookmark.")); };
-        tx.objectStore(BOOKMARK_STORE_NAME).put(record);
-      });
-    });
-  }
-
-  function deleteBookmarkRecord(key) {
-    return openBookmarksDb().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction(BOOKMARK_STORE_NAME, "readwrite");
-        tx.oncomplete = function () { resolve(); };
-        tx.onerror = function () { reject(tx.error || new Error("Failed to remove bookmark.")); };
-        tx.objectStore(BOOKMARK_STORE_NAME).delete(key);
-      });
-    });
+    }
+    return error;
   }
 
   function initializeBookmarks() {
@@ -685,13 +599,14 @@ import {
       return;
     }
 
-    loadBookmarks()
+    loadBookmarks(bookmarkStorageOptions())
       .then(function (records) {
         state.bookmarks = records;
         state.bookmarksLoaded = true;
         renderBookmarkUi();
       })
-      .catch(function () {
+      .catch(function (error) {
+        handleBookmarkStorageError(error);
         state.bookmarks = [];
         state.bookmarksLoaded = true;
         renderBookmarkUi();
@@ -712,7 +627,8 @@ import {
     });
     upsertBookmarkState(record);
     renderBookmarkUi();
-    persistBookmark(record).catch(function (error) {
+    persistBookmark(record, bookmarkStorageOptions()).catch(function (error) {
+      handleBookmarkStorageError(error);
       removeBookmarkState(record.key);
       renderBookmarkUi();
       setStatus(error.message || "Failed to save bookmark.", true);
@@ -724,7 +640,8 @@ import {
     if (!record) return;
     removeBookmarkState(key);
     renderBookmarkUi();
-    deleteBookmarkRecord(key).catch(function (error) {
+    deleteBookmarkRecord(key, bookmarkStorageOptions()).catch(function (error) {
+      handleBookmarkStorageError(error);
       upsertBookmarkState(record);
       renderBookmarkUi();
       setStatus(error.message || "Failed to remove bookmark.", true);
@@ -786,11 +703,18 @@ import {
 
     upsertBookmarkState(updated);
     renderBookmarkUi();
-    persistBookmark(updated).catch(function (error) {
+    persistBookmark(updated, bookmarkStorageOptions()).catch(function (error) {
+      handleBookmarkStorageError(error);
       upsertBookmarkState(record);
       renderBookmarkUi();
       setStatus(error.message || "Failed to rename bookmark.", true);
     });
+  }
+
+  function commitBookmarkInput(input, cancel) {
+    if (!input || input.dataset.bookmarkCommitted === "true") return;
+    input.dataset.bookmarkCommitted = "true";
+    finishBookmarkRename(input.dataset.bookmarkInput, input.value, cancel);
   }
 
   function viewerUrl(docId, hash, query) {
@@ -2583,17 +2507,17 @@ import {
         if (!input) return;
         if (event.key === "Enter") {
           event.preventDefault();
-          finishBookmarkRename(input.dataset.bookmarkInput, input.value, false);
+          commitBookmarkInput(input, false);
         } else if (event.key === "Escape") {
           event.preventDefault();
-          finishBookmarkRename(input.dataset.bookmarkInput, input.value, true);
+          commitBookmarkInput(input, true);
         }
       });
 
       bookmarkRow.addEventListener("focusout", function (event) {
         var input = event.target.closest("[data-bookmark-input]");
         if (!input) return;
-        finishBookmarkRename(input.dataset.bookmarkInput, input.value, false);
+        commitBookmarkInput(input, false);
       });
     }
 

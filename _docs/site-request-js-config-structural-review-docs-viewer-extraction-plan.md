@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:30"
+last_updated: "2026-05-10 14:36"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
@@ -15,7 +15,8 @@ Status:
 - completed plan
 - Slice A implemented
 - Slice B implemented
-- slices C-F to be implemented
+- Slice C implemented
+- slices D-F to be implemented
 
 ## Purpose
 
@@ -178,6 +179,8 @@ Verification:
 
 ### Slice C: Favourites Record And Storage Helpers
 
+Status: implemented.
+
 Move bookmark record helpers and IndexedDB storage helpers into `docs-viewer-favourites.js`.
 
 Candidate functions:
@@ -190,6 +193,13 @@ Candidate functions:
 - `loadBookmarks`
 - `persistBookmark`
 - `deleteBookmarkRecord`
+
+Implementation result:
+
+- `assets/js/docs-viewer-favourites.js` now owns bookmark key generation, timestamp generation, bookmark ordering, record normalization, and IndexedDB open/load/save/delete helpers
+- `assets/js/docs-viewer.js` imports the favourites helpers and keeps bookmark state list updates, row rendering, toggle rendering, click/contextmenu handling, rename handling, and status messages local
+- storage helpers receive the controller-provided `indexedDB` object and DB settings instead of reading viewer state or DOM directly
+- storage-open failures mark the controller bookmark UI as unsupported without exposing storage details to render code
 
 Keep in entry controller for this slice:
 

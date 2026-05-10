@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs
 added_date: 2026-04-24
-last_updated: "2026-05-10 14:30"
+last_updated: "2026-05-10 14:36"
 parent_id: ""
 sort_order: 40
 ---
@@ -23,6 +23,7 @@ The current implementation uses:
 - one shared runtime entry module in `assets/js/docs-viewer.js`
 - pure tree and visibility helpers in `assets/js/docs-viewer-tree.js`
 - pure inline-search and recently-added helpers in `assets/js/docs-viewer-search.js`
+- bookmark record and storage helpers in `assets/js/docs-viewer-favourites.js`
 - shared Docs Viewer settings in `assets/studio/data/studio_config.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 
