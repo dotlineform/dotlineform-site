@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:11:48Z",
+  "generated_at": "2026-05-10T14:21:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -594,7 +594,7 @@
       "doc_id": "site-request-js-config-structural-review-docs-viewer-extraction-plan",
       "title": "Docs Viewer Extraction Plan",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 15:01",
+      "last_updated": "2026-05-10 15:18",
       "parent_id": "site-request-js-config-structural-review-docs-viewer-boundary",
       "sort_order": 20,
       "published": true,
@@ -603,8 +603,8 @@
       "source_path": "site-request-js-config-structural-review-docs-viewer-extraction-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-extraction-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-extraction-plan.json",
-      "content_text_length": 13753,
-      "ui_status": "in-progress"
+      "content_text_length": 13279,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -943,6 +943,23 @@
       "viewer_url": "/docs/?scope=studio&doc=catalogue-status",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-status.json",
       "content_text_length": 2960
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-js-config-structural-review-catalogue-editor-boundary",
+      "title": "Catalogue Editor Boundary Spec Slice",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-10 15:20",
+      "parent_id": "site-request-js-config-structural-review",
+      "sort_order": 30,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-js-config-structural-review-catalogue-editor-boundary.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-boundary",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-catalogue-editor-boundary.json",
+      "content_text_length": 6202,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",
@@ -3293,7 +3310,7 @@
       "doc_id": "site-request-js-config-structural-review",
       "title": "JavaScript And Browser Config Structural Review Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10 14:10",
+      "last_updated": "2026-05-10 15:20",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3302,7 +3319,7 @@
       "source_path": "site-request-js-config-structural-review.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review.json",
-      "content_text_length": 15893,
+      "content_text_length": 16078,
       "ui_status": "in-progress"
     },
     {

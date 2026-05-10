@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:10"
+last_updated: "2026-05-10 15:20"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -12,7 +12,9 @@ hidden: false
 
 Status:
 
-- planned
+- Slice 1 implemented
+- Slice 2 implemented
+- Slice 3 planned
 
 ## Summary
 
@@ -259,6 +261,8 @@ Likely direction:
 
 ### Slice 1: Studio Module Asset Versioning
 
+Status: implemented.
+
 - add a shared include for Studio module scripts or update existing route script tags consistently
 - append the same asset version query used by `assets/js/*`
 - verify a representative Studio route loads versioned entry scripts
@@ -267,6 +271,8 @@ Likely direction:
 Detailed implementation tasks are tracked in [Studio Module Asset Versioning Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning).
 
 ### Slice 2: Docs Viewer Boundary Spec
+
+Status: implemented.
 
 - inventory Docs Viewer functions by owner
 - decide the target module list and public internal contracts
@@ -277,10 +283,14 @@ Detailed planning tasks are tracked in [Docs Viewer Boundary Spec Slice](/docs/?
 
 ### Slice 3: Catalogue Editor Boundary Spec
 
+Status: planned.
+
 - inventory work, work-detail, series, and moment editor overlap
 - define which helpers are Catalogue domain, Studio shell, transport, modal formatting, and route composition
 - start with work editor because it has the largest mixed surface
 - keep create/edit/bulk modes stable during extraction
+
+Detailed planning tasks are tracked in [Catalogue Editor Boundary Spec Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-boundary).
 
 ### Slice 4: Config Ownership Cleanup
 

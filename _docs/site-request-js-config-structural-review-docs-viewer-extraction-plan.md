@@ -2,8 +2,8 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:01"
-ui_status: in-progress
+last_updated: "2026-05-10 15:18"
+ui_status: done
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
 hidden: false
@@ -362,17 +362,3 @@ Generated-data reads:
 - route: direct selected doc and search route
 - setup: compare management unavailable fallback and available generated-read response
 - expect: static JSON fallback still works; generated-read path uses no-store request behavior when available
-
-## First Implementation Recommendation
-
-Start with Slice A.
-
-Reason:
-
-- the tree helpers are heavily used but mostly pure
-- the write set should be limited to `assets/js/docs-viewer.js` plus one new module
-- no management service is required for the basic smoke checks
-- failures should be easy to localize because behavior should remain unchanged
-
-Do not start with management, drag/drop, or modal code.
-Those paths mix too many concerns and need stronger smoke coverage before extraction.
