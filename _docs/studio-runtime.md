@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-11 00:07"
+last_updated: "2026-05-11 00:16"
 parent_id: studio
 sort_order: 20
 ---
@@ -136,6 +136,10 @@ Shared Studio runtime and wiring currently live in:
   provides Catalogue Moment Editor route-local field definitions, id/filename normalization, draft shaping, source-record payload shaping, and validation
 - `assets/studio/js/catalogue-moment-actions.js`
   provides Catalogue Moment Editor route-local save, build-preview, publication, delete, staged prose import, media refresh, public-update outcome, confirmation, and activity-context workflow sequencing
+- `assets/studio/js/catalogue-moment-form.js`
+  provides Catalogue Moment Editor route-local field DOM construction, field value reads/writes, readonly value display, and validation message rendering
+- `assets/studio/js/catalogue-moment-sections.js`
+  provides Catalogue Moment Editor route-local normal edit summary rendering, readiness rendering, and build-impact text rendering
 - `assets/studio/js/catalogue-moment-import.js`
   provides Catalogue Moment Editor route-local staged-file URL state, import metadata reads, preview seeding, import preview/apply sequencing, import detail rendering, and import control state
 
@@ -195,6 +199,8 @@ Controller splits that are already live:
   - `catalogue-moment-editor.js`
   - `catalogue-moment-fields.js`
   - `catalogue-moment-actions.js`
+  - `catalogue-moment-form.js`
+  - `catalogue-moment-sections.js`
   - `catalogue-moment-import.js`
 
 ## Route Ready State

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ef1e0a4da3eaf393f293972ffef1c8ce",
-    "generated_at_utc": "2026-05-10T23:09:27Z",
+    "version": "blake2b-4cc09da7722521daa0947eb53d8ab0ad",
+    "generated_at_utc": "2026-05-10T23:17:48Z",
     "count": 221
   },
   "entries": [
@@ -1273,23 +1273,23 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-11 00:07",
+      "last_updated": "2026-05-11 00:16",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-11 00:07 • Studio",
+      "display_meta": "2026-05-11 00:16 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-11 00:07",
+        "2026-05-11 00:16",
         "2026",
         "05",
         "11",
         "00",
-        "07"
+        "16"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-11 00:07 2026 05 11 00 07"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-11 00:16 2026 05 11 00 16"
     },
     {
       "id": "studio-ui-start",
@@ -3440,10 +3440,10 @@
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
       "href": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory",
-      "last_updated": "2026-05-11 00:07",
+      "last_updated": "2026-05-11 00:16",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-11 00:07 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-11 00:16 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-js-payload-runtime-cleanup-inventory",
         "site",
@@ -3461,14 +3461,14 @@
         "config",
         "structural",
         "review",
-        "2026-05-11 00:07",
+        "2026-05-11 00:16",
         "2026",
         "05",
         "11",
         "00",
-        "07"
+        "16"
       ],
-      "search_text": "site-request-js-payload-runtime-cleanup-inventory site request js payload runtime cleanup inventory javascript payload and runtime cleanup inventory javascript and javascript and browser config structural review request browser config structural review 2026-05-11 00:07 2026 05 11 00 07"
+      "search_text": "site-request-js-payload-runtime-cleanup-inventory site request js payload runtime cleanup inventory javascript payload and runtime cleanup inventory javascript and javascript and browser config structural review request browser config structural review 2026-05-11 00:16 2026 05 11 00 16"
     },
     {
       "id": "registry-driven-scoring-architecture",
@@ -3763,10 +3763,10 @@
       "kind": "doc",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
-      "last_updated": "2026-05-11 00:07",
+      "last_updated": "2026-05-11 00:16",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-11 00:07 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-11 00:16 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-catalogue-js-runtime-consistency",
         "site",
@@ -3783,14 +3783,14 @@
         "config",
         "structural",
         "review",
-        "2026-05-11 00:07",
+        "2026-05-11 00:16",
         "2026",
         "05",
         "11",
         "00",
-        "07"
+        "16"
       ],
-      "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-11 00:07 2026 05 11 00 07"
+      "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-11 00:16 2026 05 11 00 16"
     },
     {
       "id": "css-refactor",
@@ -5017,10 +5017,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-05-11 00:07",
+      "last_updated": "2026-05-11 00:16",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-11 00:07 • User Guide",
+      "display_meta": "2026-05-11 00:16 • User Guide",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -5030,14 +5030,14 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-11 00:07",
+        "2026-05-11 00:16",
         "2026",
         "05",
         "11",
         "00",
-        "07"
+        "16"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-11 00:07 2026 05 11 00 07"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-11 00:16 2026 05 11 00 16"
     },
     {
       "id": "library-export",
@@ -5603,22 +5603,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-11 00:07",
-      "display_meta": "2026-05-11 00:07",
+      "last_updated": "2026-05-11 00:16",
+      "display_meta": "2026-05-11 00:16",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-11 00:07",
+        "2026-05-11 00:16",
         "2026",
         "05",
         "11",
         "00",
-        "07"
+        "16"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-11 00:07 2026 05 11 00 07"
+      "search_text": "site-change-log site change log site change log 2026-05-11 00:16 2026 05 11 00 16"
     },
     {
       "id": "archive",

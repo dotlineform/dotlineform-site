@@ -1,5 +1,4 @@
 import {
-  getStudioRoute,
   getStudioText,
   loadStudioConfigWithText
 } from "./studio-config.js";
@@ -11,26 +10,14 @@ import {
   previewCatalogueMoment
 } from "./catalogue-editor-service-client.js";
 import {
-  catalogueGeneratedStatusText,
-  catalogueReadinessItems,
-  catalogueReadinessItemSummary,
-  catalogueReadinessTone
-} from "./catalogue-editor-readiness.js";
-import {
   computeRecordHash,
-  displayValue,
   recordsEqual
 } from "./catalogue-editor-records.js";
-import {
-  formatCatalogueBuildPreview
-} from "./catalogue-editor-modal-formatters.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText
 } from "./catalogue-editor-dirty-state.js";
 import {
-  MOMENT_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  MOMENT_READONLY_FIELDS as READONLY_FIELDS,
   normalizeMomentId,
   normalizeMomentRecord,
   normalizeText,
@@ -53,6 +40,20 @@ import {
 } from "./studio-route-state.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
 import {
+  applyMomentRecordToInputs,
+  clearMomentFieldMessages,
+  clearMomentReadonly,
+  getMomentFieldNodeValue,
+  renderMomentEditorFields,
+  renderMomentReadonlyFields,
+  updateMomentFieldMessages
+} from "./catalogue-moment-form.js";
+import {
+  renderMomentBuildImpact,
+  renderMomentReadiness,
+  renderMomentSummary
+} from "./catalogue-moment-sections.js";
+import {
   applyPublicationChange,
   currentMomentIsDraft,
   currentMomentIsPublished,
@@ -74,18 +75,8 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function setFieldNodeValue(node, value) {
-  const text = normalizeText(value);
-  if ("value" in node) {
-    node.value = text;
-  } else {
-    node.textContent = displayValue(text, { emptyText: "-" });
-  }
-}
-
 function getFieldNodeValue(node) {
-  if ("value" in node) return node.value;
-  return normalizeText(node.textContent);
+  return getMomentFieldNodeValue(node);
 }
 
 function setTextWithState(node, text, state = "") {
@@ -151,6 +142,14 @@ function buildActionContext(state) {
   };
 }
 
+function buildSectionContext(state) {
+  return {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+    draftHasChanges: () => draftHasChanges(state),
+    currentMomentIsPublished: () => currentMomentIsPublished(state, buildActionContext(state))
+  };
+}
+
 function readDraft(state) {
   return readMomentDraft(state, { getFieldNodeValue });
 }
@@ -188,152 +187,29 @@ function renderPopup(state) {
   setPopupVisibility(state, true);
 }
 
-function renderField(field, state) {
-  const wrapper = document.createElement(field.readonly ? "div" : "label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  if (!field.readonly) wrapper.htmlFor = `catalogueMomentField-${field.key}`;
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  let input;
-  if (field.readonly) {
-    input = document.createElement("span");
-    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  } else if (field.type === "select") {
-    input = document.createElement("select");
-    input.className = "tagStudio__input";
-    field.options.forEach((optionValue) => {
-      const option = document.createElement("option");
-      option.value = optionValue;
-      option.textContent = optionValue;
-      input.appendChild(option);
-    });
-  } else {
-    input = document.createElement("input");
-    input.className = "tagStudio__input";
-    input.type = field.type === "date" ? "date" : "text";
-    input.spellcheck = false;
-    input.autocomplete = "off";
-  }
-
-  input.id = `catalogueMomentField-${field.key}`;
-  input.dataset.field = field.key;
-  if (!field.readonly) {
-    input.addEventListener("input", () => onFieldInput(state, field.key));
-    input.addEventListener("change", () => onFieldInput(state, field.key));
-  }
-  wrapper.appendChild(input);
-
-  const message = document.createElement("span");
-  message.className = "catalogueWorkForm__fieldStatus";
-  message.dataset.fieldStatus = field.key;
-  wrapper.appendChild(message);
-
-  state.fieldsNode.appendChild(wrapper);
-  state.fieldNodes.set(field.key, input);
-  state.fieldStatusNodes.set(field.key, message);
-}
-
-function renderReadonlyField(field, state) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
-  wrapper.innerHTML = `
-    <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-    <div class="tagStudio__input tagStudio__input--readonlyDisplay" data-readonly-field="${escapeHtml(field.key)}">-</div>
-  `;
-  state.readonlyNode.appendChild(wrapper);
-  state.readonlyNodes.set(field.key, wrapper.querySelector("[data-readonly-field]"));
-}
-
 function fillForm(state, record) {
-  EDITABLE_FIELDS.forEach((field) => {
-    const node = state.fieldNodes.get(field.key);
-    if (!node) return;
-    setFieldNodeValue(node, normalizeText(record[field.key]));
-  });
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = displayValue(record[field.key], { emptyText: "-" });
-  });
+  applyMomentRecordToInputs(state, record);
 }
 
 function clearFieldMessages(state) {
-  state.fieldStatusNodes.forEach((node) => setTextWithState(node, ""));
+  clearMomentFieldMessages(state, { setTextWithState });
 }
 
 function validateDraft(state) {
-  clearFieldMessages(state);
   const draft = readDraft(state);
   const errors = validateMomentDraft(draft, {
     t: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
-  errors.forEach((message, key) => {
-    const node = state.fieldStatusNodes.get(key);
-    if (node) setTextWithState(node, message, "error");
-  });
+  updateMomentFieldMessages(state, errors, { setTextWithState });
   return { valid: !errors.size, draft };
 }
 
 function renderReadiness(state) {
-  const items = catalogueReadinessItems(state.buildPreview, { fallbackReadiness: state.previewReadiness });
-  if (!items.length) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
-  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
-  state.readinessNode.innerHTML = items.map((item) => {
-    const summaryItem = catalogueReadinessItemSummary(item);
-    const tone = catalogueReadinessTone(summaryItem.status, { missingFileTone: "error" });
-    const proseAction = summaryItem.key === "moment_prose";
-    const mediaAction = summaryItem.key === "moment_media";
-    const proseActionDisabled = actionDisabled || (proseAction && summaryItem.status !== "ready");
-    const mediaActionDisabled = actionDisabled || !summaryItem.exists;
-    const disabledNote = actionDisabled && (proseAction || mediaAction)
-      ? (draftHasChanges(state)
-	      ? (mediaAction ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.") : t(state, "dirty_warning", "Unsaved source changes."))
-        : t(state, "readiness_action_busy", "Wait for the current save or public update to finish."))
-      : "";
-    return `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
-          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
-          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
-          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="moment" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "prose_import_button", "Import staged prose"))}</button></div>` : ""}
-          ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="moment" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "media_refresh_button", "Refresh media"))}</button></div>` : ""}
-          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
-        </div>
-      </div>
-    `;
-  }).join("");
+  renderMomentReadiness(state, buildSectionContext(state));
 }
 
 function renderSummary(state) {
-  const preview = state.preview || {};
-  const publicUrl = normalizeText(preview.public_url) || `${getStudioRoute(state.config, "moments_page_base")}${state.currentMomentId}/`;
-  const fields = [
-    { label: "public URL", value: publicUrl },
-    { label: "generated", value: catalogueGeneratedStatusText(preview) },
-    { label: "source image", value: preview.source_image_exists ? "source image found" : "source image missing" },
-    { label: "prose source", value: preview.source_exists ? "source prose found" : "source prose missing" }
-  ];
-  state.summaryNode.innerHTML = `
-    ${fields.map((field) => `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-        <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(field.value, { emptyText: "-" }))}</span>
-      </div>
-    `).join("")}
-    <p class="tagStudioForm__impact"><a href="${escapeHtml(publicUrl)}">${escapeHtml(t(state, "summary_public_link", "Open public moment page"))}</a></p>
-  `;
-  state.runtimeStateNode.textContent = state.needsBuild
-    ? t(state, "summary_rebuild_needed", "public update failed in this session")
-    : t(state, "summary_rebuild_current", "source and public moment are aligned in this session");
-  renderReadiness(state);
+  renderMomentSummary(state, buildSectionContext(state));
 }
 
 function setEditModeChrome(state) {
@@ -373,9 +249,7 @@ function enterImportMode(state, momentFile = "") {
     source_image_file: "",
     image_alt: ""
   });
-  state.readonlyNodes.forEach((node) => {
-    node.textContent = "-";
-  });
+  clearMomentReadonly(state);
   state.saveButton.hidden = true;
   state.publicationButton.hidden = true;
   state.deleteButton.hidden = true;
@@ -524,20 +398,7 @@ async function openMoment(state, momentId, options = {}) {
 }
 
 function renderBuildImpact(state) {
-  if (!currentMomentIsPublished(state, buildActionContext(state))) {
-    state.buildImpactNode.textContent = t(state, "build_preview_unpublished", "Public update unavailable while the moment is not published.");
-    return;
-  }
-  if (!state.buildPreview) {
-    state.buildImpactNode.textContent = "";
-    return;
-  }
-  state.buildImpactNode.textContent = formatCatalogueBuildPreview(state.buildPreview, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    target: "moment",
-    fallbackMomentId: state.currentMomentId,
-    defaultTemplate: "Public update preview: moment {moment_ids}; catalogue search {search_rebuild}."
-  });
+  renderMomentBuildImpact(state, buildSectionContext(state));
 }
 
 function buildMomentRows(payload) {
@@ -682,8 +543,10 @@ async function init() {
     state.importApplyButton.textContent = t(state, "import_button", "Import");
     state.importFileDescriptionNode.textContent = t(state, "import_file_description", "filename only; the source file is resolved from var/docs/catalogue/import-staging/moments/");
 
-    EDITABLE_FIELDS.forEach((field) => renderField(field, state));
-    READONLY_FIELDS.forEach((field) => renderReadonlyField(field, state));
+    renderMomentEditorFields(state.fieldsNode, state, {
+      onFieldInput: () => onFieldInput(state)
+    });
+    renderMomentReadonlyFields(state.readonlyNode, state);
     bindEvents(state);
     state.importFileNode.value = readRequestedImportFile();
 

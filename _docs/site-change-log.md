@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 00:07"
+last_updated: "2026-05-11 00:16"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,29 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Extracted Catalogue Moment Editor display and form modules
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-moment-form.js` and `assets/studio/js/catalogue-moment-sections.js` as route-local display modules for the Catalogue Moment Editor.
+The form module owns field DOM construction, value reads/writes, readonly display, and validation messages; the sections module owns normal edit summary, readiness, and build-impact rendering.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-moment-form.js`
+- `assets/studio/js/catalogue-moment-sections.js`
+- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)
+
+**Impact:**
+The Moment route entry module keeps lifecycle, service availability, generated-data reads, search/open behavior, import mode coordination, post-import opening, dirty-state orchestration, context wiring, and route-ready state.
+Display concerns now match the Work and Series route-local module pattern without introducing a generic cross-editor form abstraction.
 
 ## [2026-05-11] Extracted Catalogue Moment Editor action workflows
 
