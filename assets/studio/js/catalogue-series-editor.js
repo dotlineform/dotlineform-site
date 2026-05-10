@@ -1,5 +1,4 @@
 import {
-  getStudioRoute,
   getStudioText,
   loadStudioConfigWithText
 } from "./studio-config.js";
@@ -7,14 +6,6 @@ import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.
 import {
   probeCatalogueHealth
 } from "./studio-transport.js";
-import {
-  catalogueReadinessItems,
-  catalogueReadinessItemSummary,
-  catalogueReadinessTone
-} from "./catalogue-editor-readiness.js";
-import {
-  displayValue
-} from "./catalogue-editor-records.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
@@ -31,7 +22,6 @@ import {
 } from "./tag-studio-save.js";
 import {
   SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  SERIES_READONLY_FIELDS as READONLY_FIELDS,
   buildSeriesDraftFromRecord,
   getSeriesTypeOptions,
   normalizeSeriesId,
@@ -41,6 +31,18 @@ import {
   validateCreateSeriesDraft,
   validateSeriesDraft
 } from "./catalogue-series-fields.js";
+import {
+  applySeriesDraftToInputs,
+  applySeriesReadonly,
+  clearSeriesReadonly,
+  getSeriesFieldNodeValue,
+  refreshSeriesTypeOptions,
+  renderSeriesEditorFields,
+  renderSeriesReadonlyFields,
+  setSeriesFieldNodeValue,
+  setSeriesModeFieldAvailability,
+  updateSeriesFieldMessages
+} from "./catalogue-series-form.js";
 import {
   addSeriesMember,
   getCurrentSeriesMemberEntries,
@@ -65,53 +67,10 @@ import {
   openSeriesById as openSeriesSelectionById,
   setSeriesSelectionPopupVisibility
 } from "./catalogue-series-selection.js";
-
-function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function renderReadiness(state) {
-  if (!state.readinessNode || !state.currentRecord) {
-    if (state.readinessNode) state.readinessNode.innerHTML = "";
-    return;
-  }
-  const items = catalogueReadinessItems(state.buildPreview);
-  if (!items.length) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
-
-  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
-  state.readinessNode.innerHTML = items.map((item) => {
-    const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
-    const tone = catalogueReadinessTone(summaryItem.status);
-    const proseAction = summaryItem.key === "series_prose";
-    const proseActionDisabled = actionDisabled || (proseAction && summaryItem.status !== "ready");
-    const disabledNote = proseAction && actionDisabled
-      ? (draftHasChanges(state)
-        ? t(state, "readiness_save_first", "Save source changes before importing prose.")
-        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
-      : "";
-    const proseActionLabel = t(state, "prose_import_button", "Import staged prose");
-    return `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
-          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
-          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
-          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="series" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(proseActionLabel)}</button></div>` : ""}
-          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
+import {
+  renderSeriesReadiness,
+  updateSeriesSummary
+} from "./catalogue-series-sections.js";
 
 function setTextWithState(node, text, state = "") {
   if (!node) return;
@@ -157,124 +116,15 @@ function setNewInputMode(state) {
   state.searchNode.setAttribute("aria-label", t(state, "new_series_id_label", "New series id"));
 }
 
-function refreshSeriesTypeOptions(state) {
-  const node = state.fieldNodes.get("series_type");
-  if (!node || node.tagName !== "SELECT") return;
-  const current = normalizeText(node.value || state.draft.series_type).toLowerCase();
-  node.innerHTML = "";
-  const options = state.seriesTypeOptions.slice();
-  if (current && !options.includes(current)) options.push(current);
-  options.forEach((optionValue) => {
-    const option = document.createElement("option");
-    option.value = optionValue;
-    option.textContent = optionValue || "(blank)";
-    node.appendChild(option);
-  });
-  if (current) node.value = current;
-}
-
-function renderField(field, fieldsNode, state) {
-  const wrapper = document.createElement(field.readonly ? "div" : "label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
-  if (!field.readonly) wrapper.htmlFor = `catalogueSeriesField-${field.key}`;
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  let input;
-  if (field.readonly) {
-    input = document.createElement("span");
-    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  } else if (field.type === "textarea") {
-    input = document.createElement("textarea");
-    input.className = "tagStudio__input tagStudioForm__descriptionInput";
-    input.rows = 4;
-  } else if (field.type === "select") {
-    input = document.createElement("select");
-    input.className = "tagStudio__input";
-    const options = field.key === "series_type" ? state.seriesTypeOptions : field.options;
-    options.forEach((optionValue) => {
-      const option = document.createElement("option");
-      option.value = optionValue;
-      option.textContent = optionValue || "(blank)";
-      input.appendChild(option);
-    });
-  } else {
-    input = document.createElement("input");
-    input.className = "tagStudio__input";
-    input.type = field.type === "date" ? "date" : "text";
-    if (field.type === "number") {
-      input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";
-    }
-  }
-
-  input.id = `catalogueSeriesField-${field.key}`;
-  input.dataset.field = field.key;
-  wrapper.appendChild(input);
-
-  const message = document.createElement("span");
-  message.className = "catalogueWorkForm__fieldStatus";
-  message.dataset.fieldStatus = field.key;
-  wrapper.appendChild(message);
-
-  if (!field.readonly) {
-    input.addEventListener("input", () => onFieldInput(state, field.key));
-    input.addEventListener("change", () => onFieldInput(state, field.key));
-  }
-  fieldsNode.appendChild(wrapper);
-  state.fieldNodes.set(field.key, input);
-  state.fieldStatusNodes.set(field.key, message);
-}
-
-function setFieldNodeValue(node, value) {
-  const text = normalizeText(value);
-  if ("value" in node) {
-    node.value = text;
-  } else {
-    node.textContent = displayValue(text);
-  }
-}
-
-function getFieldNodeValue(node) {
-  if ("value" in node) return node.value;
-  return normalizeText(node.textContent);
-}
-
-function renderReadonlyField(field, readonlyNode, state) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.textContent = field.label;
-  wrapper.appendChild(label);
-
-  const value = document.createElement("div");
-  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  value.textContent = "—";
-  wrapper.appendChild(value);
-
-  readonlyNode.appendChild(wrapper);
-  state.readonlyNodes.set(field.key, value);
-}
-
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_series_editor.${key}`, fallback, tokens);
-}
-
-function buildRecordSummary(record) {
-  const title = normalizeText(record && record.title);
-  return title || "—";
 }
 
 function membershipOptions(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
     setTextWithState,
-    setFieldNodeValue
+    setFieldNodeValue: setSeriesFieldNodeValue
   };
 }
 
@@ -282,23 +132,6 @@ async function loadSeriesLookupRecord(state, seriesId) {
   return loadStudioLookupRecordJson(state.config, "catalogue_lookup_series_base", seriesId, {
     cache: "no-store",
     catalogueServerAvailable: state.serverAvailable
-  });
-}
-
-function applyDraftToInputs(state) {
-  refreshSeriesTypeOptions(state);
-  EDITABLE_FIELDS.forEach((field) => {
-    const node = state.fieldNodes.get(field.key);
-    if (!node) return;
-    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
-  });
-}
-
-function applyReadonly(state) {
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (!node) return;
-    node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
   });
 }
 
@@ -334,32 +167,6 @@ function validateDraft(state) {
   });
 }
 
-function updateFieldMessages(state, errors) {
-  EDITABLE_FIELDS.forEach((field) => {
-    const node = state.fieldStatusNodes.get(field.key);
-    if (!node) return;
-    const message = errors.get(field.key) || "";
-    node.textContent = message;
-    node.hidden = !message;
-  });
-}
-
-function setModeFieldAvailability(state) {
-  EDITABLE_FIELDS.forEach((field) => {
-    const node = state.fieldNodes.get(field.key);
-    if (!node) return;
-    let disabled = state.isSaving || state.isBuilding || state.isDeleting;
-    if (state.mode === "new" && (field.key === "status" || field.key === "published_date" || field.key === "primary_work_id")) {
-      disabled = true;
-    }
-    if ("disabled" in node) node.disabled = disabled;
-    if (field.readonly) {
-      if ("disabled" in node) node.disabled = false;
-      if ("readOnly" in node) node.readOnly = true;
-    }
-  });
-}
-
 function updatePublishControls(state, { hasRecord, dirty, errors }) {
   const canPublish = hasRecord && state.mode !== "new" && currentSeriesIsDraft(state);
   const canUnpublish = hasRecord && state.mode !== "new" && currentSeriesIsPublished(state);
@@ -386,58 +193,17 @@ function syncUrl(seriesId, mode = "") {
   window.history.replaceState({}, "", url.toString());
 }
 
-function updateSummary(state) {
-  if (state.mode === "new") {
-    state.metaNode.textContent = t(state, "new_meta", "draft source record");
-    state.summaryNode.innerHTML = `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_series_id_label", "series id"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(state.draft.series_id))}</div>
-      </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_status_label", "status"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_status", "draft source record; not published"))}</div>
-      </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(t(state, "new_summary_next_label", "next step"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(t(state, "new_summary_next", "Create the draft, then add member works, set primary_work_id, and update the site when ready."))}</div>
-      </div>
-    `;
-    state.runtimeStateNode.textContent = t(state, "new_runtime_state", "Public site update is unavailable until the draft series exists.");
-    setTextWithState(state.buildImpactNode, "");
-    renderReadiness(state);
-    return;
-  }
-
-  const record = state.currentRecord;
-  state.metaNode.textContent = record ? `${record.series_id} · ${buildRecordSummary(record)}` : "";
-  const publicHref = record ? `${getStudioRoute(state.config, "series_page_base")}${encodeURIComponent(record.series_id)}/` : "";
-  const memberCount = getCurrentSeriesMemberEntries(state).length;
-  state.summaryNode.innerHTML = `
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_public_link", "Open public series page"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
-        ${record ? `<a href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">${escapeHtml(record.series_id)}</a>` : "—"}
-      </div>
-    </div>
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_member_count", "member works"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(String(memberCount))}</div>
-    </div>
-  `;
-  state.runtimeStateNode.textContent = state.rebuildPending
-    ? t(state, "summary_rebuild_needed", "source saved; site update pending")
-    : t(state, "summary_rebuild_current", "source and public catalogue are aligned in this session");
-  renderReadiness(state);
-}
-
 function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
-  updateFieldMessages(state, errors);
-  setModeFieldAvailability(state);
-  updateSummary(state);
+  updateSeriesFieldMessages(state, errors);
+  setSeriesModeFieldAvailability(state);
+  updateSeriesSummary(state, {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    setTextWithState,
+    draftHasChanges: () => draftHasChanges(state)
+  });
   updateSeriesMemberList(state, membershipOptions(state));
   if (!hasRecord) setTextWithState(state.buildImpactNode, "");
 
@@ -477,7 +243,10 @@ function updateEditorState(state) {
     serverAvailable: state.serverAvailable
   });
   updatePublishControls(state, { hasRecord, dirty, errors });
-  renderReadiness(state);
+  renderSeriesReadiness(state, {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    draftHasChanges: () => draftHasChanges(state)
+  });
   syncRouteBusyState(state);
 }
 
@@ -486,17 +255,17 @@ function onFieldInput(state, fieldKey) {
   if (!node) return;
   if (state.mode === "new" && fieldKey === "status") {
     state.draft.status = "draft";
-    setFieldNodeValue(node, "draft");
+    setSeriesFieldNodeValue(node, "draft");
     updateEditorState(state);
     return;
   }
   if (state.mode === "new" && (fieldKey === "published_date" || fieldKey === "primary_work_id")) {
     state.draft[fieldKey] = "";
-    setFieldNodeValue(node, "");
+    setSeriesFieldNodeValue(node, "");
     updateEditorState(state);
     return;
   }
-  state.draft[fieldKey] = getFieldNodeValue(node);
+  state.draft[fieldKey] = getSeriesFieldNodeValue(node);
   updateEditorState(state);
 }
 
@@ -509,8 +278,8 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.baselineDraft = buildSeriesDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   initializeSeriesMembershipState(state, seriesId);
-  applyDraftToInputs(state);
-  applyReadonly(state);
+  applySeriesDraftToInputs(state);
+  applySeriesReadonly(state);
   syncUrl(seriesId);
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
@@ -547,11 +316,8 @@ function setNewSeriesMode(state, options = {}) {
   state.buildPreview = null;
   state.searchNode.value = state.draft.series_id;
   setNewInputMode(state);
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
-  });
+  applySeriesDraftToInputs(state);
+  clearSeriesReadonly(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("", "new");
   state.memberSearchNode.value = "";
@@ -582,11 +348,8 @@ function setEmptySearchMode(state, options = {}) {
   state.buildPreview = null;
   setOpenInputMode(state);
   if (!options.keepSearchValue) state.searchNode.value = "";
-  applyDraftToInputs(state);
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
-  });
+  applySeriesDraftToInputs(state);
+  clearSeriesReadonly(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("");
   state.memberSearchNode.value = "";
@@ -604,10 +367,13 @@ function buildSeriesActionContext(state) {
     setTextWithState,
     draftHasChanges: () => draftHasChanges(state),
     validateDraft: () => validateDraft(state),
-    updateFieldMessages: (errors) => updateFieldMessages(state, errors),
+    updateFieldMessages: (errors) => updateSeriesFieldMessages(state, errors),
     updateEditorState: () => updateEditorState(state),
     syncRouteBusyState: () => syncRouteBusyState(state),
-    renderReadiness: () => renderReadiness(state),
+    renderReadiness: () => renderSeriesReadiness(state, {
+      text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+      draftHasChanges: () => draftHasChanges(state)
+    }),
     setLoadedSeries: (seriesId, record, options = {}) => {
       setLoadedSeries(state, seriesId, record, options);
     },
@@ -732,8 +498,13 @@ async function init() {
   };
   initializeStudioRouteState(root, { route: "catalogue-series" });
 
-  EDITABLE_FIELDS.forEach((field) => renderField(field, fieldsNode, state));
-  READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state));
+  renderSeriesEditorFields(fieldsNode, state, {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
+    onFieldInput: (fieldKey) => onFieldInput(state, fieldKey)
+  });
+  renderSeriesReadonlyFields(readonlyNode, state, {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+  });
 
   try {
     const config = await loadStudioConfigWithText("catalogue_series_editor");

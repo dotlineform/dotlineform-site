@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-js-runtime-consistency
 title: Catalogue JavaScript Runtime Consistency Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 22:41"
+last_updated: "2026-05-10 22:59"
 ui_status: draft
 parent_id: site-request-js-config-structural-review
 sort_order: 80
@@ -22,6 +22,7 @@ Status:
 - Slice C1 implemented for Series membership editing
 - Slice C2 implemented for Series action workflow sequencing
 - Slice C3 implemented for Series selection/opening
+- Slice C4 implemented for Series form and section rendering
 
 ## Implementation Progress
 
@@ -47,6 +48,10 @@ Status:
 - Added `assets/studio/js/catalogue-series-selection.js` for Series title/id search matching, popup result rendering, search-input behavior, open-button behavior, popup-click behavior, focused-series opening, and initial route selection.
 - Kept new-mode state construction in `assets/studio/js/catalogue-series-editor.js` and save/create sequencing in `assets/studio/js/catalogue-series-actions.js`, with the selection module calling route callbacks for those transitions.
 - `?mode=new` now takes precedence during initial route selection and uses the optional `?series=<series_id>` value as the draft `series_id`, matching the C3 acceptance target.
+- Slice C4 review found the remaining Series controller still mixed display concerns with route orchestration, specifically editable field rendering, readonly field rendering, field synchronization, field availability, validation message display, summary HTML, and readiness HTML.
+- Added `assets/studio/js/catalogue-series-form.js` for Series field DOM construction, type-option refresh, field value reads/writes, readonly value refresh, mode-specific field availability, and validation message rendering.
+- Added `assets/studio/js/catalogue-series-sections.js` for Series record summaries, new/edit summary rendering, runtime/build impact display updates, and prose readiness rendering.
+- Kept `assets/studio/js/catalogue-series-fields.js` as the owner for field definitions, normalization, payload shaping, and validation, while `assets/studio/js/catalogue-series-editor.js` remains the route coordinator for lifecycle, state transitions, service reads, validation orchestration, membership coordination, and action/selection contexts.
 
 ## Purpose
 
@@ -331,7 +336,7 @@ Targeted verification:
 
 Status:
 
-- proposed
+- implemented
 
 Target files:
 
@@ -350,6 +355,21 @@ Acceptance checks:
 - new-mode summary and focused-series summary remain equivalent
 - readiness rows still show staged prose import availability and disabled-state notes correctly
 - no generic Series/Work form abstraction is introduced unless a real shared contract appears
+
+Implementation notes:
+
+- `catalogue-series-form.js` owns Series field DOM construction, `series_type` option refresh, field value reads/writes, readonly value refresh, mode-specific field availability, and validation message rendering.
+- `catalogue-series-sections.js` owns Series summary and readiness rendering, including staged prose import action availability and runtime/build impact copy updates.
+- The route controller passes narrow callbacks for UI text lookup, dirty-state checks, field input handling, and status text updates rather than giving helpers route lifecycle or service ownership.
+- `catalogue-series-fields.js` continues to own field definitions, normalization, payload shaping, and validation.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-series-editor.js`, `assets/studio/js/catalogue-series-form.js`, and `assets/studio/js/catalogue-series-sections.js`.
+- A separate Jekyll build passed with `--destination /tmp/dlf-jekyll-build`.
+- Static route smoke passed for empty, focused `?series=001`, and `?mode=new&series=777` Series Editor routes with mocked Catalogue read/build endpoints, covering summary rendering, readonly series id display, staged prose readiness rendering, and no page errors.
+- Mobile-width field-message smoke passed for the focused Series Editor route, covering validation message rendering for a required `year` field and clearing the message after restoring the value.
+- `catalogue-series-editor.js` is now 605 lines after C4; the remaining route entry responsibilities are route lifecycle, data loading, mode transitions, validation orchestration, membership event coordination, action context wiring, and selection context wiring.
 
 ### Slice C5: Series Stop/Continue Decision
 
@@ -424,7 +444,7 @@ Docs-only changes should rebuild the Studio docs payloads and Studio docs search
 
 ## Recommended Next Step
 
-Start with Slice C2: Series Action Workflow Module.
+Start with Slice C5: Series Stop/Continue Decision.
 
-The Series membership extraction is in place.
-The next risk center is action workflow sequencing because save, create, build preview, publication, prose import, and delete still sit in the route controller beside mode and rendering coordination.
+The Series membership, action, selection, form, and section extractions are now in place.
+The next useful step is to decide whether the remaining Series route controller is an acceptable coordinator or whether one final Series-specific extraction is justified before moving to Moment Editor.
