@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2c4a87933d78ab059db2db471a951926",
-    "generated_at_utc": "2026-05-09T23:18:13Z",
-    "count": 210
+    "version": "blake2b-dd6e56236eb131350636fd590f1a79a6",
+    "generated_at_utc": "2026-05-10T10:44:02Z",
+    "count": 211
   },
   "entries": [
     {
@@ -5029,6 +5029,37 @@
         "47"
       ],
       "search_text": "site-request-import-export-system-review site request import export system review import/export system review request change requests change requests 2026-05-09 15:47 2026 05 09 15 47"
+    },
+    {
+      "id": "site-request-js-config-structural-review",
+      "kind": "doc",
+      "title": "JavaScript And Browser Config Structural Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
+      "last_updated": "2026-05-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-10 • Change Requests",
+      "search_terms": [
+        "site-request-js-config-structural-review",
+        "site",
+        "request",
+        "js",
+        "config",
+        "structural",
+        "review",
+        "javascript and browser config structural review request",
+        "javascript",
+        "and",
+        "browser",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-10",
+        "2026",
+        "05",
+        "10"
+      ],
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 2026 05 10"
     },
     {
       "id": "site-request-scripts-directory-organization",
