@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 15:52"
+last_updated: "2026-05-10 16:04"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue editor record helpers
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-editor-records.js` as the third runtime extraction from the Catalogue editor boundary plan.
+The work, work-detail, series, and moment editor controllers now share deterministic record stringification, record hashing, record equality, display-value fallback formatting, and injected changed-field comparison helpers.
+Field normalization, validation, save payload shaping, membership semantics, and embedded work item comparison stay with their existing route or field-module owners.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-editor-records.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)
+
+**Impact:**
+Record identity and dirty-summary primitives now have a shared pure helper boundary.
+Slice D can focus on modal formatter extraction without also moving hash or comparison helpers.
 
 ## [2026-05-10] Extracted Catalogue editor readiness helpers
 

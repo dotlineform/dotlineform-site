@@ -31,6 +31,11 @@ import {
   catalogueReadinessTone
 } from "./catalogue-editor-readiness.js";
 import {
+  buildChangedFieldNames,
+  computeRecordHash,
+  displayValue
+} from "./catalogue-editor-records.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -111,45 +116,24 @@ function normalizeDetailUid(value, currentWorkId = "") {
   return "";
 }
 
-async function computeRecordHash(record) {
-  if (!globalThis.crypto || !crypto.subtle) return "";
-  const json = stableStringify(record);
-  const bytes = new TextEncoder().encode(json);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, "0")).join("");
-}
-
-function stableStringify(value) {
-  if (Array.isArray(value)) {
-    return `[${value.map((item) => stableStringify(item)).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-function displayValue(value) {
-  const text = normalizeText(value);
-  return text || "—";
-}
-
 function changedWorkFieldNames(state) {
   if (state.mode !== "single" || !state.baselineDraft) return [];
-  const fields = [];
-  EDITABLE_FIELDS.forEach((field) => {
-    if (canonicalizeScalar(field, state.draft[field.key]) !== canonicalizeScalar(field, state.baselineDraft[field.key])) {
-      fields.push(field.key);
-    }
+  return buildChangedFieldNames({
+    fields: EDITABLE_FIELDS,
+    draft: state.draft,
+    baselineDraft: state.baselineDraft,
+    canonicalizeScalar,
+    extraComparisons: [
+      {
+        key: "downloads",
+        changed: ({ draft, baselineDraft }) => !embeddedEntriesEqual(draft.downloads, baselineDraft.downloads, DOWNLOAD_FIELDS)
+      },
+      {
+        key: "links",
+        changed: ({ draft, baselineDraft }) => !embeddedEntriesEqual(draft.links, baselineDraft.links, LINK_FIELDS)
+      }
+    ]
   });
-  if (!embeddedEntriesEqual(state.draft.downloads, state.baselineDraft.downloads, DOWNLOAD_FIELDS)) {
-    fields.push("downloads");
-  }
-  if (!embeddedEntriesEqual(state.draft.links, state.baselineDraft.links, LINK_FIELDS)) {
-    fields.push("links");
-  }
-  return fields;
 }
 
 function previewExtraSeriesIdsForDraft(state) {

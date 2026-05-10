@@ -28,6 +28,11 @@ import {
   catalogueReadinessTone
 } from "./catalogue-editor-readiness.js";
 import {
+  computeRecordHash,
+  displayValue,
+  recordsEqual
+} from "./catalogue-editor-records.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -75,17 +80,12 @@ function normalizeMomentFilename(value) {
   return raw.endsWith(".md") ? raw : `${raw}.md`;
 }
 
-function displayValue(value) {
-  const text = normalizeText(value);
-  return text || "-";
-}
-
 function setFieldNodeValue(node, value) {
   const text = normalizeText(value);
   if ("value" in node) {
     node.value = text;
   } else {
-    node.textContent = displayValue(text);
+    node.textContent = displayValue(text, { emptyText: "-" });
   }
 }
 
@@ -144,25 +144,6 @@ function buildMomentActivityContext(actionId, controlId, controlSelector, moment
   });
 }
 
-function stableStringify(value) {
-  if (Array.isArray(value)) {
-    return `[${value.map((item) => stableStringify(item)).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-async function computeRecordHash(record) {
-  if (!globalThis.crypto || !crypto.subtle) return "";
-  const json = stableStringify(record);
-  const bytes = new TextEncoder().encode(json);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, "0")).join("");
-}
-
 function normalizeRecord(momentId, record) {
   const out = {
     moment_id: normalizeMomentId(record && (record.moment_id || momentId)),
@@ -187,10 +168,6 @@ function readDraft(state) {
     record[field.key] = node ? normalizeText(getFieldNodeValue(node)) : "";
   });
   return normalizeRecord(state.currentMomentId, record);
-}
-
-function recordsEqual(a, b) {
-  return stableStringify(a || {}) === stableStringify(b || {});
 }
 
 function draftHasChanges(state) {
@@ -294,7 +271,7 @@ function fillForm(state, record) {
   });
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = displayValue(record[field.key]);
+    if (node) node.textContent = displayValue(record[field.key], { emptyText: "-" });
   });
 }
 
@@ -373,7 +350,7 @@ function renderSummary(state) {
     ${fields.map((field) => `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-        <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(field.value))}</span>
+        <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(field.value, { emptyText: "-" }))}</span>
       </div>
     `).join("")}
     <p class="tagStudioForm__impact"><a href="${escapeHtml(publicUrl)}">${escapeHtml(t(state, "summary_public_link", "Open public moment page"))}</a></p>

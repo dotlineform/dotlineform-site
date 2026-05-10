@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:52"
+last_updated: "2026-05-10 16:04"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
@@ -15,7 +15,8 @@ Status:
 - planned execution sequence
 - Slice A implemented
 - Slice B implemented
-- next executable slice: Slice C
+- Slice C implemented
+- next executable slice: Slice D
 
 ## Purpose
 
@@ -39,8 +40,8 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 | --- | --- | --- | --- |
 | A | implemented | `catalogue-editor-service-client.js` | Local-service wrapper functions over existing catalogue write endpoints |
 | B | implemented | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
-| C | planned next | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
-| D | planned | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
+| C | implemented | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
+| D | planned next | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
 | E | planned | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
 | F | deferred | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
 | G | deferred | `catalogue-editor-embedded-items.js` | Work file/link embedded item helpers only if another route needs the pattern |
@@ -152,7 +153,7 @@ Targeted verification:
 
 Status:
 
-- planned
+- implemented
 
 Target file:
 
@@ -178,6 +179,22 @@ Acceptance checks:
 - save buttons still enable after safe field edits
 - bulk draft comparison remains stable for work and work-detail editors
 - no field-module normalization is moved into the shared record helper
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-records.js` now owns deterministic record stringification, record hashing, display-value fallback formatting, record equality, and injected changed-field name comparison.
+- Work, work-detail, series, and moment editors import the shared record helpers instead of carrying duplicate local hash/stringify implementations.
+- Work editor changed-field summaries now use the injected comparison helper while preserving route-local field definitions, scalar canonicalization, and embedded downloads/links comparison.
+- Series editor still owns membership semantics and imports shared stable stringification for member-series comparisons.
+- Moment editor preserves its existing hyphen fallback display text by passing an explicit `emptyText` option.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-editor-records.js` and the four migrated catalogue editor controllers.
+- A targeted search found no remaining local `stableStringify`, `computeRecordHash`, or `recordsEqual` helper definitions in the migrated route controllers.
+- Studio docs payloads and the Studio search index were rebuilt.
+- Jekyll build passed.
+- Static Playwright smoke passed for work, work-detail, series, and moment editor routes against `_site`; with the local catalogue service unavailable, all four reached offline route-ready state with no page errors and no failed Studio JS module requests.
 
 ## Slice D: Modal Formatters
 

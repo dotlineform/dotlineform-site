@@ -25,6 +25,11 @@ import {
   catalogueReadinessTone
 } from "./catalogue-editor-readiness.js";
 import {
+  computeRecordHash,
+  displayValue,
+  stableStringify
+} from "./catalogue-editor-records.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -59,30 +64,6 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function stableStringify(value) {
-  if (Array.isArray(value)) {
-    return `[${value.map((item) => stableStringify(item)).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-async function computeRecordHash(record) {
-  if (!globalThis.crypto || !crypto.subtle) return "";
-  const json = stableStringify(record);
-  const bytes = new TextEncoder().encode(json);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, "0")).join("");
-}
-
-function displayValue(value) {
-  const text = normalizeText(value);
-  return text || "—";
 }
 
 function renderReadiness(state) {
