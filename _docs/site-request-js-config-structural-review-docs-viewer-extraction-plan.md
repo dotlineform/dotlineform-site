@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-docs-viewer-extraction-plan
 title: Docs Viewer Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 14:23"
+last_updated: "2026-05-10 14:30"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 20
@@ -14,7 +14,8 @@ Status:
 
 - completed plan
 - Slice A implemented
-- slices B-F to be implemented
+- Slice B implemented
+- slices C-F to be implemented
 
 ## Purpose
 
@@ -148,6 +149,8 @@ Verification:
 
 ### Slice B: Search And Recent Pure Helpers
 
+Status: implemented.
+
 Move pure search and recent-doc helpers into `docs-viewer-search.js`.
 
 Candidate functions:
@@ -158,6 +161,13 @@ Candidate functions:
 - `collectSearchMatches`
 - `compareRecentDocs`
 - `collectRecentDocs`
+
+Implementation result:
+
+- `assets/js/docs-viewer-search.js` now owns search text normalization, search-entry normalization, scoring, token matching, pure result ordering, recent-doc ordering, and recent-doc collection
+- `assets/js/docs-viewer.js` imports the search helpers and keeps search index loading, debounce behavior, URL state, pane switching, result rendering, and recently-added button state local
+- `collectSearchMatches` receives normalized entries and query text from the entry controller instead of reading viewer state directly
+- `collectRecentDocs` receives the already viewable docs array and recent limit from the entry controller instead of reading viewer state directly
 
 Verification:
 

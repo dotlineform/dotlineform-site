@@ -5,6 +5,12 @@ import {
   isDocViewable,
   normalizeDocIdSet
 } from "./docs-viewer-tree.js";
+import {
+  collectRecentDocs,
+  collectSearchMatches,
+  normalizeSearchEntries,
+  normalizeSearchText
+} from "./docs-viewer-search.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -184,7 +190,7 @@ import {
   }
 
   function hasActiveQuery(query) {
-    return Boolean(normalize(typeof query === "string" ? query : state.searchQuery));
+    return Boolean(normalizeSearchText(typeof query === "string" ? query : state.searchQuery));
   }
 
   function setRecentModeActive(active) {
@@ -2718,7 +2724,7 @@ import {
 
       searchInput.addEventListener("input", function () {
         var nextQuery = String(searchInput.value || "").trim();
-        var nextModeActive = Boolean(normalize(nextQuery));
+        var nextModeActive = Boolean(normalizeSearchText(nextQuery));
         var previousModeActive = state.searchRouteActive;
         var activeDocId = state.selectedDocId || resolveDocId().docId || "";
 
@@ -2882,108 +2888,6 @@ import {
     return state.searchRequestPromise;
   }
 
-  function normalizeSearchEntries(entries) {
-    return entries
-      .filter(function (entry) {
-        return entry && typeof entry === "object";
-      })
-      .map(function (entry) {
-        var kind = normalize(String(entry.kind || ""));
-        var id = String(entry.id || "").trim();
-        var title = String(entry.title || "").trim();
-        var href = String(entry.href || "").trim();
-        var displayMeta = String(entry.display_meta || "").trim();
-        var parentTitle = String(entry.parent_title || "").trim();
-        var searchTerms = Array.isArray(entry.search_terms)
-          ? entry.search_terms.map(function (item) { return normalize(String(item || "")); }).filter(Boolean)
-          : [];
-        return {
-          kind: kind,
-          id: id,
-          title: title,
-          href: href,
-          displayMeta: displayMeta,
-      parentTitle: parentTitle,
-      lastUpdated: String(entry.last_updated || "").trim(),
-      searchTerms: searchTerms,
-      searchText: normalize(String(entry.search_text || "")),
-          titleNorm: normalize(title),
-          idNorm: normalize(id),
-          titleTokens: normalize(title).split(" ").filter(Boolean),
-          parentTitleNorm: normalize(parentTitle)
-        };
-      })
-      .filter(function (entry) {
-        return entry.kind === "doc" && entry.id && entry.title;
-      });
-  }
-
-  function scoreSearchEntry(entry, query, queryTokens) {
-    if (entry.idNorm === query) return 900;
-    if (entry.titleNorm === query) return 860;
-    if (entry.searchTerms.indexOf(query) >= 0) return 780;
-    if (entry.titleNorm.indexOf(query) === 0) return 720;
-    if (entry.idNorm.indexOf(query) === 0) return 690;
-    if (queryTokens.every(function (token) {
-      return entry.titleTokens.some(function (candidate) {
-        return candidate === token || candidate.indexOf(token) === 0;
-      });
-    })) return 620;
-    if (entry.parentTitleNorm && entry.parentTitleNorm.indexOf(query) >= 0) return 460;
-    if (entry.searchText.indexOf(query) >= 0) return 320;
-    return null;
-  }
-
-  function matchesAllTokens(entry, queryTokens) {
-    return queryTokens.every(function (token) {
-      if (entry.searchTerms.some(function (candidate) { return candidate === token || candidate.indexOf(token) === 0; })) {
-        return true;
-      }
-      return entry.searchText.indexOf(token) >= 0;
-    });
-  }
-
-  function collectSearchMatches(query) {
-    var queryTokens = query.split(" ").filter(Boolean);
-    if (!queryTokens.length) return [];
-
-    var matches = [];
-    state.searchEntries.forEach(function (entry) {
-      if (!matchesAllTokens(entry, queryTokens)) return;
-      var score = scoreSearchEntry(entry, query, queryTokens);
-      if (score == null) return;
-      matches.push({ entry: entry, score: score });
-    });
-
-    matches.sort(function (left, right) {
-      if (left.score !== right.score) return right.score - left.score;
-      var titleCmp = left.entry.title.localeCompare(right.entry.title, undefined, { sensitivity: "base", numeric: true });
-      if (titleCmp !== 0) return titleCmp;
-      return left.entry.id.localeCompare(right.entry.id, undefined, { sensitivity: "base", numeric: true });
-    });
-
-    return matches;
-  }
-
-  function compareRecentDocs(left, right) {
-    var leftDate = String(left.added_date || left.last_updated || "");
-    var rightDate = String(right.added_date || right.last_updated || "");
-    if (leftDate !== rightDate) return rightDate.localeCompare(leftDate);
-    var titleCmp = String(left.title || "").localeCompare(String(right.title || ""), undefined, { sensitivity: "base", numeric: true });
-    if (titleCmp !== 0) return titleCmp;
-    return String(left.doc_id || "").localeCompare(String(right.doc_id || ""), undefined, { sensitivity: "base", numeric: true });
-  }
-
-  function collectRecentDocs() {
-    return state.docs
-      .filter(function (doc) {
-        return doc && doc.doc_id && isDocViewable(doc);
-      })
-      .slice()
-      .sort(compareRecentDocs)
-      .slice(0, state.recentLimit);
-  }
-
   function renderResultEntry(docId, title, metaText) {
     return (
       '<li class="docsViewer__resultItem">' +
@@ -3006,7 +2910,7 @@ import {
     if (!searchEnabled) return;
     showRecentPane();
     document.title = "Recently Added | dotlineform";
-    var recentDocs = collectRecentDocs();
+    var recentDocs = collectRecentDocs(state.docs.filter(isDocViewable), state.recentLimit);
     if (!recentDocs.length) {
       setStatus("No recently added docs.", false);
       results.innerHTML = "";
@@ -3041,7 +2945,7 @@ import {
       return;
     }
 
-    var query = normalize(state.searchQuery);
+    var query = normalizeSearchText(state.searchQuery);
     if (!query) {
       return;
     }
@@ -3068,7 +2972,7 @@ import {
       return;
     }
 
-    var matches = collectSearchMatches(query);
+    var matches = collectSearchMatches(state.searchEntries, query);
     if (!matches.length) {
       setStatus("No results.", false);
       results.innerHTML = "";
@@ -3286,14 +3190,6 @@ import {
     var meta = document.querySelector('meta[name="dlf-asset-version"]');
     if (!meta) return "";
     return String(meta.getAttribute("content") || "").trim();
-  }
-
-  function normalize(value) {
-    return String(value || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
   }
 
   function escapeHtml(value) {

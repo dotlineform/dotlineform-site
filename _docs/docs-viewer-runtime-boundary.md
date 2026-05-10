@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: "Docs Viewer Runtime Boundary"
 added_date: 2026-03-31
-last_updated: "2026-05-10 14:23"
+last_updated: "2026-05-10 14:30"
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -35,6 +35,7 @@ Current shared implementation:
 
 - `assets/js/docs-viewer.js` as the shared entry controller
 - `assets/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
+- `assets/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
 - `_includes/docs_viewer_shell.html`
 
 The shell loads the entry controller as an ES module.

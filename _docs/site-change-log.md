@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 14:23"
+last_updated: "2026-05-10 14:30"
 parent_id: ""
 sort_order: 270
 ---
@@ -24,14 +24,17 @@ Archives:
 **Area:** Docs Viewer runtime / JavaScript config / maintainability
 
 **Summary:**
-Split the first pure Docs Viewer helper boundary out of the shared entry controller.
-Document sorting, children-map construction, hidden/viewable checks, and doc-id set normalization now live in `assets/js/docs-viewer-tree.js`, while `assets/js/docs-viewer.js` remains the route, state, rendering, and lifecycle coordinator.
+Split the first pure Docs Viewer helper boundaries out of the shared entry controller.
+Document sorting, children-map construction, hidden/viewable checks, and doc-id set normalization now live in `assets/js/docs-viewer-tree.js`.
+Search-entry normalization, search scoring, token matching, result ordering, and recently-added document ordering now live in `assets/js/docs-viewer-search.js`.
+`assets/js/docs-viewer.js` remains the route, state, rendering, loading, and lifecycle coordinator.
 
 **Files changed/docs:**
 
 - `_includes/docs_viewer_shell.html`
 - `assets/js/docs-viewer.js`
 - `assets/js/docs-viewer-tree.js`
+- `assets/js/docs-viewer-search.js`
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
