@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 17:35"
+last_updated: "2026-05-10 17:53"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -37,6 +37,31 @@ The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-c
 [Config Ownership Cleanup Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-config-ownership) is complete.
 [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction) is complete.
 [Search Performance Instrumentation Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-search-performance-instrumentation) is complete.
+
+## Implementation Summary
+
+The requested structural review has now produced and implemented the planned browser-runtime slices.
+
+Completed outcomes:
+
+- Studio route entry modules now use a shared versioned script include.
+- Docs Viewer pure/data/client/drag-drop boundaries were extracted while keeping the viewer shell stable.
+- Catalogue editor shared service, readiness, record, modal, field, dirty-state, and embedded-item helpers were extracted without merging the route controllers into one generic editor.
+- Analysis tag scoring moved out of the generic Studio config loader.
+- Public catalogue route helpers moved into a shared public runtime module where there was immediate reuse.
+- Dedicated public search now has opt-in local performance instrumentation for payload, normalization, query, and render timing.
+
+Config remains intentionally open.
+The first cleanup moved analysis scoring to an owner module and documented `studio_config.json` as the root manifest plus shared UI-copy store, but Docs Viewer and catalogue editor copy still live under shared `ui_text`.
+That split should stay deferred until payload size, independent release cadence, or route ownership pressure creates a concrete benefit.
+
+Remaining follow-up decisions should be handled as separate requests rather than reopened inside this broad review:
+
+- whether static imports beneath versioned Studio entry modules ever need stronger cache-busting
+- whether Docs Viewer render or management UI code needs another extraction slice
+- whether public route renderers should move out of Liquid templates
+- whether search measurements justify workers, lazy aggregate loading, or index slimming
+- whether more non-viewer Studio pages need a docs-management service client
 
 ## Summary
 
