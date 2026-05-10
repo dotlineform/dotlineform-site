@@ -5,10 +5,22 @@ import {
 } from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
-  postJson,
   probeCatalogueHealth
 } from "./studio-transport.js";
+import {
+  applyCatalogueBuild,
+  applyCatalogueDelete,
+  applyCatalogueMomentImport,
+  applyCatalogueProseImport,
+  applyCataloguePublication,
+  previewCatalogueBuild,
+  previewCatalogueDelete,
+  previewCatalogueMoment,
+  previewCatalogueMomentImport,
+  previewCatalogueProseImport,
+  previewCataloguePublication,
+  saveCatalogueMoment
+} from "./catalogue-editor-service-client.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -691,7 +703,7 @@ async function previewMomentImport(state) {
   setTextWithState(state.importWarningNode, "");
   setTextWithState(state.importResultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewMomentImport, {
+    const response = await previewCatalogueMomentImport({
       moment_file: momentFile,
       metadata: readImportMetadata(state)
     });
@@ -735,7 +747,7 @@ async function applyMomentImport(state) {
   try {
     const metadata = readImportMetadata(state);
     const momentId = normalizeMomentId(normalizeMomentFilename(momentFile).replace(/\.md$/i, ""));
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, {
+    const response = await applyCatalogueMomentImport({
       moment_file: momentFile,
       metadata,
       activity_context: buildStudioActivityContext({
@@ -843,7 +855,7 @@ function onFieldInput(state) {
 async function previewMoment(state, momentId) {
   if (!state.serverAvailable) return;
   try {
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewMoment, { moment_id: momentId });
+    const payload = await previewCatalogueMoment({ moment_id: momentId });
     state.currentRecord = payload.record || state.currentRecord;
     state.expectedRecordHash = payload.record_hash || state.expectedRecordHash;
     state.preview = payload.preview || null;
@@ -926,7 +938,7 @@ async function refreshBuildPreview(state) {
     return;
   }
   try {
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, { moment_id: state.currentMomentId });
+    const payload = await previewCatalogueBuild({ moment_id: state.currentMomentId });
     state.buildPreview = payload.build || null;
     renderBuildImpact(state);
     renderSummary(state);
@@ -958,7 +970,7 @@ async function saveMoment(state) {
     "pending"
   );
   try {
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveMoment, {
+    const payload = await saveCatalogueMoment({
       moment_id: state.currentMomentId,
       expected_record_hash: state.expectedRecordHash,
       record: validation.draft,
@@ -1030,7 +1042,7 @@ async function applyPublicationChange(state) {
       expected_record_hash: state.expectedRecordHash,
       activity_context: buildMomentActivityContext(`${action}-moment`, "catalogueMomentPublication", "#catalogueMomentPublication", state.currentMomentId)
     };
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const previewResponse = await previewCataloguePublication(request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     if ((preview && preview.blocked) || blockers.length) {
@@ -1054,7 +1066,7 @@ async function applyPublicationChange(state) {
         : t(state, "publication_unpublish_running", "Unpublishing moment..."),
       "pending"
     );
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const payload = await applyCataloguePublication(request);
     const record = payload && payload.record && typeof payload.record === "object" ? payload.record : null;
     if (!record) throw new Error("publication response missing record");
     state.currentRecord = normalizeRecord(state.currentMomentId, record);
@@ -1106,7 +1118,7 @@ async function refreshMomentMedia(state) {
   setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media..."), "pending");
   setTextWithState(state.resultNode, "");
   try {
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+    const payload = await applyCatalogueBuild({
       moment_id: state.currentMomentId,
       media_only: true,
       force: true
@@ -1138,7 +1150,7 @@ async function importMomentProse(state) {
   updateDirtyState(state);
   setTextWithState(state.statusNode, t(state, "prose_import_preview_running", "Previewing staged prose..."), "pending");
   try {
-    const preview = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewProseImport, {
+    const preview = await previewCatalogueProseImport({
       target_kind: "moment",
       moment_id: state.currentMomentId
     });
@@ -1159,7 +1171,7 @@ async function importMomentProse(state) {
       }
     }
     setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing staged prose..."), "pending");
-    const payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyProseImport, {
+    const payload = await applyCatalogueProseImport({
       target_kind: "moment",
       moment_id: state.currentMomentId,
       confirm_overwrite: Boolean(preview.overwrite_required)
@@ -1197,7 +1209,7 @@ async function deleteMoment(state) {
       expected_record_hash: state.expectedRecordHash,
       activity_context: buildMomentActivityContext("delete-moment", "catalogueMomentDelete", "#catalogueMomentDelete", state.currentMomentId)
     };
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, request);
+    const previewResponse = await previewCatalogueDelete(request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
@@ -1216,7 +1228,7 @@ async function deleteMoment(state) {
       return;
     }
     setTextWithState(state.statusNode, t(state, "delete_status_deleting", "Deleting source record..."), "pending");
-    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, request);
+    await applyCatalogueDelete(request);
     const route = getStudioRoute(state.config, "catalogue_status");
     window.location.assign(route);
   } catch (error) {

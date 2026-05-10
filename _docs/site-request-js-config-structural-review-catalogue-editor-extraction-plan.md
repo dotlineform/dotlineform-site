@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:36"
+last_updated: "2026-05-10 15:42"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
@@ -13,7 +13,8 @@ hidden: false
 Status:
 
 - planned execution sequence
-- next executable slice: Slice A
+- Slice A implemented
+- next executable slice: Slice B
 
 ## Purpose
 
@@ -35,8 +36,8 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 
 | Slice | Status | Primary target | Scope |
 | --- | --- | --- | --- |
-| A | planned next | `catalogue-editor-service-client.js` | Local-service wrapper functions over existing catalogue write endpoints |
-| B | planned | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
+| A | implemented | `catalogue-editor-service-client.js` | Local-service wrapper functions over existing catalogue write endpoints |
+| B | planned next | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
 | C | planned | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
 | D | planned | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
 | E | planned | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
@@ -47,7 +48,7 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 
 Status:
 
-- planned next
+- implemented
 
 Target file:
 
@@ -82,18 +83,24 @@ Candidate functions:
 Acceptance checks:
 
 - direct endpoint names no longer appear in route event handlers for migrated calls
-- intercepted requests keep the same URLs and payloads as before
 - route controllers still own state transitions and returned lookup-data application
 - no modal HTML, field validation, or mode-state behavior changes are included
 
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-service-client.js` now owns named wrappers over the existing catalogue write endpoints.
+- Work, work-detail, series, and moment editors import the service client for create/save/bulk-save, build preview/apply, publication preview/apply, delete preview/apply, prose import, and moment import/preview calls.
+- `studio-transport.js` remains the low-level endpoint and `postJson` owner.
+- Route controllers still build payloads, activity contexts, modal copy, state transitions, and generated-data reload decisions.
+- Direct `CATALOGUE_WRITE_ENDPOINTS` and `postJson` usage was removed from the migrated route controllers.
+
 Targeted verification:
 
-- syntax or module import smoke for changed JS
-- work editor selected-record load smoke
-- work-detail selected-record load smoke
-- intercepted build-preview request from at least one editor
-- intercepted save request from at least one editor
-- intercepted publish/delete preview request if practical
+- `node --check` passed for the new service client and the four migrated route controllers.
+- A targeted search found no remaining `postJson(` or `CATALOGUE_WRITE_ENDPOINTS` references in the migrated route controllers.
+- Jekyll build passed.
+- Static Playwright smoke passed for selected work, work-detail, series, and moment editor routes against `_site`; all four reached route-ready state with no page errors and no failed Studio JS module requests.
+- The first Playwright launch failed inside the Codex sandbox; the same check passed when rerun with escalated permissions as required by the local validation guidance.
 
 ## Slice B: Readiness Helpers
 
@@ -268,16 +275,16 @@ Use this map proportionally after runtime extraction slices:
 
 ## Current Recommendation
 
-Execute Slice A next.
+Execute Slice B next.
 
 Benefits:
 
-- creates the transport boundary with the lowest UI risk
-- removes endpoint-string knowledge from route event handlers
-- gives later modal and readiness slices a cleaner route/controller surface
+- moves repeated build/readiness item helpers behind a pure route-agnostic boundary
+- keeps DOM rendering route-local while reducing duplicated status normalization
+- builds on the service-client extraction without changing write behavior
 
 Risks:
 
-- wrapper names can become too generic if they hide important record-family differences
-- a broad first pass could touch all four editors, so the initial write set should migrate only the common endpoint families needed for the slice
-- intercepted request checks are important because behavior changes may otherwise be visually invisible
+- readiness copy and fallback text differ slightly by route, so text lookup should stay injected
+- extracting too much render behavior in this slice would make it harder to verify equivalence
+- build-preview routes should still be smoke-tested because readiness output is user-visible

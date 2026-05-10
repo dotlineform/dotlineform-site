@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 14:36"
+last_updated: "2026-05-10 15:42"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Started Catalogue editor service-client extraction
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-editor-service-client.js` as the first runtime extraction from the Catalogue editor boundary plan.
+The work, work-detail, series, and moment editor controllers now call named service-client wrappers for catalogue create/save, build, publication, delete, prose import, and moment import/preview requests.
+`studio-transport.js` remains the low-level endpoint and JSON transport owner, while route controllers keep payload construction, activity contexts, modal behavior, state updates, and generated-data reload decisions.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-editor-service-client.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Catalogue write endpoint knowledge is now behind a named editor service-client boundary.
+This keeps Slice A behavior-preserving and makes the next readiness/modal/helper extractions easier to reason about.
 
 ## [2026-05-10] Started Docs Viewer helper extraction
 

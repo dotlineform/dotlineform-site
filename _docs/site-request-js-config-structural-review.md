@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review
 title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:36"
+last_updated: "2026-05-10 15:42"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -16,11 +16,12 @@ Status:
 - Slice 2 implemented
 - Slice 3 implemented
 - Catalogue editor execution plan created
+- Catalogue editor Slice A implemented
 
 ## Active Execution Queue
 
 The [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan) is the active queue for executing the catalogue editor boundary spec.
-The next executable runtime slice is Slice A, `catalogue-editor-service-client.js`.
+The next executable runtime slice is Slice B, `catalogue-editor-readiness.js`.
 
 ## Summary
 

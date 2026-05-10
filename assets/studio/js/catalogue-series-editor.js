@@ -5,10 +5,20 @@ import {
 } from "./studio-config.js";
 import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
-  postJson,
   probeCatalogueHealth
 } from "./studio-transport.js";
+import {
+  applyCatalogueBuild,
+  applyCatalogueDelete,
+  applyCatalogueProseImport,
+  applyCataloguePublication,
+  createCatalogueSeries,
+  previewCatalogueBuild,
+  previewCatalogueDelete,
+  previewCatalogueProseImport,
+  previewCataloguePublication,
+  saveCatalogueSeries
+} from "./catalogue-editor-service-client.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -858,7 +868,7 @@ async function refreshBuildPreview(state) {
     return;
   }
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, {
+    const response = await previewCatalogueBuild({
       series_id: state.currentSeriesId,
       extra_work_ids: state.pendingBuildExtraWorkIds
     });
@@ -884,7 +894,7 @@ async function importSeriesProse(state) {
   setTextWithState(state.statusNode, t(state, "prose_import_preview_running", "Previewing staged prose…"));
   setTextWithState(state.resultNode, "");
   try {
-    const preview = await postJson(CATALOGUE_WRITE_ENDPOINTS.previewProseImport, {
+    const preview = await previewCatalogueProseImport({
       target_kind: "series",
       series_id: state.currentSeriesId
     });
@@ -910,7 +920,7 @@ async function importSeriesProse(state) {
       }
     }
     setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing staged prose…"));
-    const importResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.applyProseImport, {
+    const importResponse = await applyCatalogueProseImport({
       target_kind: "series",
       series_id: state.currentSeriesId,
       confirm_overwrite: confirmOverwrite
@@ -1021,7 +1031,7 @@ async function saveCurrentSeries(state) {
   try {
     const previousMembers = new Set(Array.from(state.baselineMemberSeriesIdsByWorkId.keys()).filter((workId) => (state.baselineMemberSeriesIdsByWorkId.get(workId) || []).includes(state.currentSeriesId)));
     const currentMembers = new Set(getCurrentMemberEntries(state).map((entry) => entry.workId));
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveSeries, buildPayload(state, await buildChangedWorkUpdates(state)));
+    const response = await saveCatalogueSeries(buildPayload(state, await buildChangedWorkUpdates(state)));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
     state.seriesById.set(state.currentSeriesId, {
@@ -1124,7 +1134,7 @@ async function createCurrentSeries(state) {
   setTextWithState(state.resultNode, "");
 
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createSeries, {
+    const response = await createCatalogueSeries({
       ...buildCreateSeriesPayload(state.draft),
       activity_context: buildSeriesActivityContext("create-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.draft.series_id)
     });
@@ -1166,7 +1176,7 @@ async function buildCurrentSeries(state) {
   setTextWithState(state.statusNode, t(state, "build_status_running", "Updating site…"));
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+    const response = await applyCatalogueBuild({
       series_id: state.currentSeriesId,
       extra_work_ids: state.pendingBuildExtraWorkIds
     });
@@ -1224,7 +1234,7 @@ async function applyPublicationChange(state) {
       expected_record_hash: state.currentRecordHash,
       activity_context: buildSeriesActivityContext(`${action}-series`, "catalogueSeriesPublication", "#catalogueSeriesPublication", state.currentSeriesId)
     };
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const previewResponse = await previewCataloguePublication(request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     if ((preview && preview.blocked) || blockers.length) {
@@ -1248,7 +1258,7 @@ async function applyPublicationChange(state) {
         ? t(state, "publication_publish_running", "Publishing series…")
         : t(state, "publication_unpublish_running", "Unpublishing series…")
     );
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const response = await applyCataloguePublication(request);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("publication response missing record");
 
@@ -1307,7 +1317,7 @@ async function deleteCurrentSeries(state) {
       expected_record_hash: state.currentRecordHash,
       activity_context: buildSeriesActivityContext("delete-series", "catalogueSeriesDelete", "#catalogueSeriesDelete", state.currentSeriesId)
     };
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, request);
+    const previewResponse = await previewCatalogueDelete(request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
@@ -1326,7 +1336,7 @@ async function deleteCurrentSeries(state) {
       return;
     }
     setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
-    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, request);
+    await applyCatalogueDelete(request);
     const route = getStudioRoute(state.config, "catalogue_status");
     window.location.assign(route);
   } catch (error) {

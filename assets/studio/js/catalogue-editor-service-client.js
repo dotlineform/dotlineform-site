@@ -1,0 +1,80 @@
+import {
+  CATALOGUE_WRITE_ENDPOINTS,
+  postJson
+} from "./studio-transport.js";
+
+export function saveCatalogueBulkRecords(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, payload);
+}
+
+export function previewCatalogueDelete(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, payload);
+}
+
+export function applyCatalogueDelete(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, payload);
+}
+
+export function previewCataloguePublication(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, payload);
+}
+
+export function applyCataloguePublication(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, payload);
+}
+
+export function createCatalogueWork(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.createWork, payload);
+}
+
+export function saveCatalogueWork(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveWork, payload);
+}
+
+export function createCatalogueWorkDetail(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkDetail, payload);
+}
+
+export function saveCatalogueWorkDetail(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkDetail, payload);
+}
+
+export function createCatalogueSeries(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.createSeries, payload);
+}
+
+export function saveCatalogueSeries(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveSeries, payload);
+}
+
+export function previewCatalogueBuild(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, payload);
+}
+
+export function applyCatalogueBuild(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, payload);
+}
+
+export function previewCatalogueProseImport(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.previewProseImport, payload);
+}
+
+export function applyCatalogueProseImport(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.applyProseImport, payload);
+}
+
+export function previewCatalogueMomentImport(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.previewMomentImport, payload);
+}
+
+export function applyCatalogueMomentImport(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, payload);
+}
+
+export function previewCatalogueMoment(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.previewMoment, payload);
+}
+
+export function saveCatalogueMoment(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveMoment, payload);
+}

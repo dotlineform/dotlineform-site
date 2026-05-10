@@ -5,10 +5,19 @@ import {
 } from "./studio-config.js";
 import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
-  postJson,
   probeCatalogueHealth
 } from "./studio-transport.js";
+import {
+  applyCatalogueBuild,
+  applyCatalogueDelete,
+  applyCataloguePublication,
+  createCatalogueWorkDetail,
+  previewCatalogueBuild,
+  previewCatalogueDelete,
+  previewCataloguePublication,
+  saveCatalogueBulkRecords,
+  saveCatalogueWorkDetail
+} from "./catalogue-editor-service-client.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -1064,7 +1073,7 @@ async function refreshBuildPreview(state) {
     return;
   }
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, {
+    const response = await previewCatalogueBuild({
       work_id: state.currentWorkId,
       detail_uid: state.currentDetailUid
     });
@@ -1122,7 +1131,7 @@ async function saveCurrentDetail(state) {
 
   try {
     if (state.mode === "bulk") {
-      const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, buildPayload(state));
+      const response = await saveCatalogueBulkRecords(buildPayload(state));
       const changedRecords = Array.isArray(response && response.records) ? response.records : [];
       changedRecords.forEach((item) => {
         const detailUid = normalizeDetailUid(item && item.detail_uid);
@@ -1194,7 +1203,7 @@ async function saveCurrentDetail(state) {
       return;
     }
 
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkDetail, buildPayload(state));
+    const response = await saveCatalogueWorkDetail(buildPayload(state));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
     state.detailSearchByUid.set(state.currentDetailUid, buildDetailSearchRecord(state.currentDetailUid, record));
@@ -1274,7 +1283,7 @@ async function createCurrentDetail(state) {
 
   try {
     const requestedDetailUid = normalizeDetailUid(`${normalizeWorkId(state.draft.work_id)}-${normalizeDetailId(state.draft.detail_id)}`);
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkDetail, {
+    const response = await createCatalogueWorkDetail({
       ...buildCreateWorkDetailPayload(state.draft),
       activity_context: buildWorkDetailActivityContext("create-work-detail", "catalogueWorkDetailSave", "#catalogueWorkDetailSave", requestedDetailUid)
     });
@@ -1319,7 +1328,7 @@ async function buildCurrentDetail(state) {
           return normalizeWorkId(record && record.work_id);
         }).filter(Boolean))).map((workId) => ({ work_id: workId, extra_series_ids: [] }));
       for (const target of buildTargets) {
-        await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+        await applyCatalogueBuild({
           work_id: target.work_id,
           extra_series_ids: Array.isArray(target.extra_series_ids) ? target.extra_series_ids : []
         });
@@ -1340,7 +1349,7 @@ async function buildCurrentDetail(state) {
       return;
     }
 
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+    const response = await applyCatalogueBuild({
       work_id: state.currentWorkId,
       detail_uid: state.currentDetailUid
     });
@@ -1405,7 +1414,7 @@ async function applyPublicationChange(state) {
       expected_record_hash: state.currentRecordHash,
       activity_context: buildWorkDetailActivityContext(`${action}-work-detail`, "catalogueWorkDetailPublication", "#catalogueWorkDetailPublication", state.currentDetailUid)
     };
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, request);
+    const previewResponse = await previewCataloguePublication(request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     if ((preview && preview.blocked) || blockers.length) {
@@ -1429,7 +1438,7 @@ async function applyPublicationChange(state) {
         ? t(state, "publication_publish_running", "Publishing detail…")
         : t(state, "publication_unpublish_running", "Unpublishing detail…")
     );
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, request);
+    const response = await applyCataloguePublication(request);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("publication response missing record");
 
@@ -1485,7 +1494,7 @@ async function refreshDetailMedia(state) {
   setTextWithState(state.statusNode, t(state, "media_refresh_status_running", "Refreshing media…"));
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+    const response = await applyCatalogueBuild({
       work_id: state.currentWorkId,
       detail_uid: state.currentDetailUid,
       media_only: true,
@@ -1525,7 +1534,7 @@ async function deleteCurrentDetail(state) {
       expected_record_hash: state.currentRecordHash,
       activity_context: buildWorkDetailActivityContext("delete-work-detail", "catalogueWorkDetailDelete", "#catalogueWorkDetailDelete", state.currentDetailUid)
     };
-    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, request);
+    const previewResponse = await previewCatalogueDelete(request);
     const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
     const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
     const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
@@ -1544,7 +1553,7 @@ async function deleteCurrentDetail(state) {
       return;
     }
     setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
-    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, request);
+    await applyCatalogueDelete(request);
     const route = getStudioRoute(state.config, "catalogue_work_editor");
     window.location.assign(`${route}?work=${encodeURIComponent(state.currentWorkId)}`);
   } catch (error) {
