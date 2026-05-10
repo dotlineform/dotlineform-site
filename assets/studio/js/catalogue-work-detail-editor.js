@@ -19,6 +19,13 @@ import {
   saveCatalogueWorkDetail
 } from "./catalogue-editor-service-client.js";
 import {
+  cataloguePreviewFallback,
+  catalogueReadinessItem,
+  catalogueReadinessItems,
+  catalogueReadinessItemSummary,
+  catalogueReadinessTone
+} from "./catalogue-editor-readiness.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -67,12 +74,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function toneForReadinessStatus(status) {
-  if (status === "ready") return "ready";
-  if (status === "unavailable") return "error";
-  return "warning";
-}
-
 function stableStringify(value) {
   if (Array.isArray(value)) {
     return `[${value.map((item) => stableStringify(item)).join(",")}]`;
@@ -97,44 +98,6 @@ function displayValue(value) {
   return text || "—";
 }
 
-function getReadinessItems(state) {
-  const readiness = state.buildPreview && typeof state.buildPreview === "object" ? state.buildPreview.readiness : null;
-  const items = readiness && Array.isArray(readiness.items) ? readiness.items : [];
-  return items.filter((item) => normalizeText(item && item.key) === "detail_media");
-}
-
-function getReadinessItem(state, key) {
-  return getReadinessItems(state).find((item) => normalizeText(item && item.key) === key) || null;
-}
-
-function previewFallback(state, item, missingGeneratedText, missingSourceText) {
-  const status = normalizeText(item && item.status);
-  if (status === "ready" || status === "pending_generation") {
-    return {
-      fallbackState: "missing-generated",
-      fallbackText: status === "pending_generation"
-        ? (normalizeText(item && item.summary) || missingGeneratedText)
-        : missingGeneratedText
-    };
-  }
-  if (status === "missing_file") {
-    return {
-      fallbackState: "missing-source",
-      fallbackText: missingSourceText
-    };
-  }
-  if (status === "unavailable") {
-    return {
-      fallbackState: "unavailable",
-      fallbackText: normalizeText(item && item.summary) || t(state, "preview_unavailable", "Preview unavailable.")
-    };
-  }
-  return {
-    fallbackState: "not-configured",
-    fallbackText: normalizeText(item && item.summary) || t(state, "preview_not_configured", "Preview not configured.")
-  };
-}
-
 function renderCurrentPreview(state) {
   if (!state.previewNode) return;
   if (state.mode === "bulk" || !state.currentRecord) {
@@ -142,14 +105,14 @@ function renderCurrentPreview(state) {
     return;
   }
   const record = state.currentRecord;
-  const mediaItem = getReadinessItem(state, "detail_media");
+  const mediaItem = catalogueReadinessItem(state.buildPreview, "detail_media", { keys: ["detail_media"] });
   const preview = buildDetailThumbPreview(state.mediaConfig, record.detail_uid);
-  const fallback = previewFallback(
-    state,
-    mediaItem,
-    t(state, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
-    t(state, "preview_source_missing", "Source media missing.")
-  );
+  const fallback = cataloguePreviewFallback(mediaItem, {
+    missingGeneratedText: t(state, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
+    missingSourceText: t(state, "preview_source_missing", "Source media missing."),
+    unavailableText: t(state, "preview_unavailable", "Preview unavailable."),
+    notConfiguredText: t(state, "preview_not_configured", "Preview not configured.")
+  });
   const caption = buildRecordSummary(record);
   const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
   const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
@@ -171,21 +134,17 @@ function renderReadiness(state) {
     state.readinessNode.innerHTML = "";
     return;
   }
-  const items = getReadinessItems(state);
+  const items = catalogueReadinessItems(state.buildPreview, { keys: ["detail_media"] });
   if (!items.length) {
     state.readinessNode.innerHTML = "";
     return;
   }
   const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
   state.readinessNode.innerHTML = items.map((item) => {
-    const itemStatus = normalizeText(item && item.status);
-    const tone = toneForReadinessStatus(itemStatus);
-    const title = normalizeText(item && item.title) || "readiness";
-    const summary = normalizeText(item && item.summary) || "—";
-    const sourcePath = normalizeText(item && item.source_path);
-    const nextStep = normalizeText(item && item.next_step);
-    const mediaAction = normalizeText(item && item.key) === "detail_media";
-    const mediaActionDisabled = actionDisabled || !Boolean(item && item.exists);
+    const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
+    const tone = catalogueReadinessTone(summaryItem.status);
+    const mediaAction = summaryItem.key === "detail_media";
+    const mediaActionDisabled = actionDisabled || !summaryItem.exists;
     const disabledNote = mediaAction && actionDisabled
       ? (draftHasChanges(state)
         ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.")
@@ -194,11 +153,11 @@ function renderReadiness(state) {
     const mediaActionLabel = t(state, "media_refresh_button", "Refresh media");
     return `
       <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(title)}</span>
+        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
         <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
-          ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
-          ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
+          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
+          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
+          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
           ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="detail" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(mediaActionLabel)}</button></div>` : ""}
           ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
         </div>

@@ -2,7 +2,7 @@
 doc_id: site-request-js-config-structural-review-catalogue-editor-extraction-plan
 title: Catalogue Editor Extraction Plan
 added_date: 2026-05-10
-last_updated: "2026-05-10 15:42"
+last_updated: "2026-05-10 15:52"
 ui_status: in-progress
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 20
@@ -14,7 +14,8 @@ Status:
 
 - planned execution sequence
 - Slice A implemented
-- next executable slice: Slice B
+- Slice B implemented
+- next executable slice: Slice C
 
 ## Purpose
 
@@ -37,8 +38,8 @@ This plan is the work queue for actually extracting catalogue editor runtime cod
 | Slice | Status | Primary target | Scope |
 | --- | --- | --- | --- |
 | A | implemented | `catalogue-editor-service-client.js` | Local-service wrapper functions over existing catalogue write endpoints |
-| B | planned next | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
-| C | planned | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
+| B | implemented | `catalogue-editor-readiness.js` | Shared build/readiness item normalization and tone helpers |
+| C | planned next | `catalogue-editor-records.js` | Stable record hashing, display helpers, identity summaries, and changed-field summaries |
 | D | planned | `catalogue-editor-modal-formatters.js` | Pure build-preview, publication, delete, and field-plan confirmation formatters |
 | E | planned | `catalogue-moment-fields.js` | Route-local moment field module parity before sharing more moment editor behavior |
 | F | deferred | `catalogue-editor-dirty-state.js` | Shared dirty-state and field-plan helpers after service/modal boundaries are cleaner |
@@ -106,7 +107,7 @@ Targeted verification:
 
 Status:
 
-- planned
+- implemented
 
 Target file:
 
@@ -131,6 +132,21 @@ Acceptance checks:
 - readiness panels render equivalent item counts, labels, and tones
 - missing generated/source fallback copy still comes from the same route text keys
 - work, work-detail, series, and moment build-preview flows still load
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-readiness.js` now owns shared readiness item selection, item summary normalization, status tone selection, media-preview fallback state/text shaping, and compact generated-status text formatting.
+- Work, work-detail, series, and moment editors import the helper while keeping DOM rendering, route state, action enablement, and config-backed copy local.
+- Detail readiness keeps its route-specific `detail_media` filtering through an injected key filter.
+- Moment readiness preserves its stricter `missing_file` error tone through an injected tone option and keeps import-mode behavior route-local.
+
+Targeted verification:
+
+- `node --check` passed for `assets/studio/js/catalogue-editor-readiness.js` and the four migrated catalogue editor controllers.
+- A targeted search found no remaining local `toneForReadinessStatus`, `getReadinessItems`, `getReadinessItem`, `previewFallback`, or `generatedStatusText` helpers in the migrated route controllers.
+- Studio docs payloads and the Studio search index were rebuilt.
+- Jekyll build passed.
+- Static Playwright smoke passed for work, work-detail, series, and moment editor routes against `_site`; all four reached route-ready state with no page errors and no failed Studio JS module requests.
 
 ## Slice C: Record Helpers
 

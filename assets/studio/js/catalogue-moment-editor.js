@@ -22,6 +22,12 @@ import {
   saveCatalogueMoment
 } from "./catalogue-editor-service-client.js";
 import {
+  catalogueGeneratedStatusText,
+  catalogueReadinessItems,
+  catalogueReadinessItemSummary,
+  catalogueReadinessTone
+} from "./catalogue-editor-readiness.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -319,31 +325,20 @@ function validateDraft(state) {
   return { valid: !errors.length, draft };
 }
 
-function toneForReadinessStatus(status) {
-  if (status === "ready") return "ready";
-  if (status === "unavailable" || status === "missing_file") return "error";
-  return "warning";
-}
-
-function getReadinessItems(state) {
-  const source = state.buildPreview && state.buildPreview.readiness ? state.buildPreview.readiness : state.previewReadiness;
-  return source && Array.isArray(source.items) ? source.items : [];
-}
-
 function renderReadiness(state) {
-  const items = getReadinessItems(state);
+  const items = catalogueReadinessItems(state.buildPreview, { fallbackReadiness: state.previewReadiness });
   if (!items.length) {
     state.readinessNode.innerHTML = "";
     return;
   }
   const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
   state.readinessNode.innerHTML = items.map((item) => {
-    const itemStatus = normalizeText(item && item.status);
-    const tone = toneForReadinessStatus(itemStatus);
-    const proseAction = normalizeText(item && item.key) === "moment_prose";
-    const mediaAction = normalizeText(item && item.key) === "moment_media";
-    const proseActionDisabled = actionDisabled || (proseAction && itemStatus !== "ready");
-    const mediaActionDisabled = actionDisabled || !Boolean(item && item.exists);
+    const summaryItem = catalogueReadinessItemSummary(item);
+    const tone = catalogueReadinessTone(summaryItem.status, { missingFileTone: "error" });
+    const proseAction = summaryItem.key === "moment_prose";
+    const mediaAction = summaryItem.key === "moment_media";
+    const proseActionDisabled = actionDisabled || (proseAction && summaryItem.status !== "ready");
+    const mediaActionDisabled = actionDisabled || !summaryItem.exists;
     const disabledNote = actionDisabled && (proseAction || mediaAction)
       ? (draftHasChanges(state)
 	      ? (mediaAction ? t(state, "media_refresh_save_first", "Save source changes before refreshing media.") : t(state, "dirty_warning", "Unsaved source changes."))
@@ -351,11 +346,11 @@ function renderReadiness(state) {
       : "";
     return `
       <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(item && item.title ? item.title : "readiness")}</span>
+        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
         <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(item && item.summary ? item.summary : "-")}</span>
-          ${item && item.source_path ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(item.source_path)}</span>` : ""}
-          ${item && item.next_step ? `<span class="tagStudioForm__meta">${escapeHtml(item.next_step)}</span>` : ""}
+          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
+          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
+          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
           ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="moment" ${proseActionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "prose_import_button", "Import staged prose"))}</button></div>` : ""}
           ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="moment" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(t(state, "media_refresh_button", "Refresh media"))}</button></div>` : ""}
           ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
@@ -365,21 +360,12 @@ function renderReadiness(state) {
   }).join("");
 }
 
-function generatedStatusText(preview) {
-  if (!preview) return "-";
-  return [
-    preview.generated_page_exists ? "page yes" : "page no",
-    preview.generated_json_exists ? "json yes" : "json no",
-    preview.in_moments_index ? "index yes" : "index no"
-  ].join(" / ");
-}
-
 function renderSummary(state) {
   const preview = state.preview || {};
   const publicUrl = normalizeText(preview.public_url) || `${getStudioRoute(state.config, "moments_page_base")}${state.currentMomentId}/`;
   const fields = [
     { label: "public URL", value: publicUrl },
-    { label: "generated", value: generatedStatusText(preview) },
+    { label: "generated", value: catalogueGeneratedStatusText(preview) },
     { label: "source image", value: preview.source_image_exists ? "source image found" : "source image missing" },
     { label: "prose source", value: preview.source_exists ? "source prose found" : "source prose missing" }
   ];
@@ -432,11 +418,10 @@ function fillImportMetadataFromPreview(state, preview) {
 }
 
 function importGeneratedStatusText(state, preview) {
-  if (!preview) return t(state, "import_preview_missing_value", "none");
-  return [
-    preview.generated_page_exists ? "page yes" : "page no",
-    preview.generated_json_exists ? "json yes" : "json no"
-  ].join(" / ");
+  return catalogueGeneratedStatusText(preview, {
+    includeIndex: false,
+    missingText: t(state, "import_preview_missing_value", "none")
+  });
 }
 
 function buildImportSummaryHtml(state, preview) {

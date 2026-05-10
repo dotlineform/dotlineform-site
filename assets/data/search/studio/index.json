@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-71ad3b75606fc638fa2580fa420c6d92",
-    "generated_at_utc": "2026-05-10T14:45:21Z",
+    "version": "blake2b-67130a1c35697b23b65982fe69766cec",
+    "generated_at_utc": "2026-05-10T14:53:28Z",
     "count": 217
   },
   "entries": [
@@ -750,10 +750,10 @@
       "kind": "doc",
       "title": "Catalogue Editor Extraction Plan",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan",
-      "last_updated": "2026-05-10 15:42",
+      "last_updated": "2026-05-10 15:52",
       "parent_id": "site-request-js-config-structural-review-catalogue-editor-boundary",
       "parent_title": "Catalogue Editor Boundary Spec Slice",
-      "display_meta": "2026-05-10 15:42 • Catalogue Editor Boundary Spec Slice",
+      "display_meta": "2026-05-10 15:52 • Catalogue Editor Boundary Spec Slice",
       "search_terms": [
         "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
         "site",
@@ -771,14 +771,14 @@
         "boundary",
         "spec",
         "slice",
-        "2026-05-10 15:42",
+        "2026-05-10 15:52",
         "2026",
         "05",
         "10",
         "15",
-        "42"
+        "52"
       ],
-      "search_text": "site-request-js-config-structural-review-catalogue-editor-extraction-plan site request js config structural review catalogue editor extraction plan catalogue editor extraction plan catalogue editor boundary spec slice boundary spec slice 2026-05-10 15:42 2026 05 10 15 42"
+      "search_text": "site-request-js-config-structural-review-catalogue-editor-extraction-plan site request js config structural review catalogue editor extraction plan catalogue editor extraction plan catalogue editor boundary spec slice boundary spec slice 2026-05-10 15:52 2026 05 10 15 52"
     },
     {
       "id": "data-models-catalogue",
@@ -5249,10 +5249,10 @@
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 15:42",
+      "last_updated": "2026-05-10 15:52",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 15:42 • Change Requests",
+      "display_meta": "2026-05-10 15:52 • Change Requests",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -5268,14 +5268,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10 15:42",
+        "2026-05-10 15:52",
         "2026",
         "05",
         "10",
         "15",
-        "42"
+        "52"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 15:42 2026 05 10 15 42"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 15:52 2026 05 10 15 52"
     },
     {
       "id": "site-request-scripts-directory-organization",
@@ -5441,22 +5441,22 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-10 15:42",
-      "display_meta": "2026-05-10 15:42",
+      "last_updated": "2026-05-10 15:52",
+      "display_meta": "2026-05-10 15:52",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-10 15:42",
+        "2026-05-10 15:52",
         "2026",
         "05",
         "10",
         "15",
-        "42"
+        "52"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-10 15:42 2026 05 10 15 42"
+      "search_text": "site-change-log site change log site change log 2026-05-10 15:52 2026 05 10 15 52"
     },
     {
       "id": "archive",

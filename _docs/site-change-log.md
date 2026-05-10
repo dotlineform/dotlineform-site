@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 15:42"
+last_updated: "2026-05-10 15:52"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-10] Extracted Catalogue editor readiness helpers
+
+**Status:** implemented
+
+**Area:** Studio runtime / Catalogue editor JavaScript / maintainability
+
+**Summary:**
+Added `assets/studio/js/catalogue-editor-readiness.js` as the second runtime extraction from the Catalogue editor boundary plan.
+The work, work-detail, series, and moment editor controllers now share readiness item selection, item summary normalization, status tone selection, media-preview fallback shaping, and generated-status text formatting.
+Route controllers still own DOM rendering, action enablement, state checks, and config-backed visible copy.
+
+**Files changed/docs:**
+
+- `assets/studio/js/catalogue-editor-readiness.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)
+- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
+
+**Impact:**
+Readiness behavior now has a shared pure helper boundary without moving route-specific rendering or editor workflow policy.
+Slice C can proceed to record hashing and display helpers with less controller noise.
 
 ## [2026-05-10] Started Catalogue editor service-client extraction
 
