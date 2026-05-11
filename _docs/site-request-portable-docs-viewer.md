@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 17:16"
+last_updated: "2026-05-11 17:26"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -138,6 +138,38 @@ scripts/
   media/
   checks/
 ```
+
+Ownership decisions for this slice:
+
+| Area | Current examples | Target owner | Decision |
+| --- | --- | --- | --- |
+| Docs Viewer shell | `_includes/docs_viewer_shell.html`, `_includes/docs_import_shell.html` | Docs Viewer package plus consuming route adapter | Keep includes as the route integration boundary until the route-adapter slice defines templates. |
+| Docs Viewer runtime JS | `assets/js/docs-viewer*.js` | Docs Viewer | Move under `assets/docs-viewer/js/` in the next implementation slice that changes runtime paths. |
+| Docs Viewer CSS | `assets/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Move under `assets/docs-viewer/css/`; public and management CSS may remain separate. |
+| Docs Viewer browser config | `scripts/docs/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `scripts/docs/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
+| Docs Viewer UI text | `assets/studio/data/ui_text/docs-viewer.json`, Docs Import copy in `assets/studio/data/ui_text/docs-html-import.json` | Docs Viewer | Move viewer/import copy needed by the portable surface under `assets/docs-viewer/data/`. |
+| Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
+| Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
+| Docs management server | `scripts/docs/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
+| Studio application code | `assets/studio/js/*`, `assets/studio/data/studio_config.json`, Studio generated payloads | Studio | Do not reorganise broad Studio files in this request; only extract Docs Viewer dependencies. |
+| Catalogue and tag tools | `assets/studio/js/catalogue-*`, `assets/studio/js/tag-*`, `scripts/catalogue/`, `scripts/analytics/` | Catalogue, Analytics, Studio | Out of scope except where Docs Viewer currently imports them by mistake. |
+| Public site JS | `assets/js/work.js`, `assets/js/moment.js`, `assets/js/site-nav.js`, `assets/js/theme-toggle.js` | Consuming site/shared public site | Leave in `assets/js/`; this directory should become public site/shared JS after Docs Viewer moves out. |
+
+Next implementation slice should move or introduce only:
+
+- `assets/docs-viewer/js/` for the existing `assets/js/docs-viewer*.js` modules
+- `assets/docs-viewer/css/` for Docs Viewer-owned CSS
+- `assets/docs-viewer/data/` for browser config and Docs Viewer UI text
+- include path updates needed by `_includes/docs_viewer_shell.html` and route pages
+
+The next implementation slice should not move:
+
+- `assets/studio/js/catalogue-*`
+- `assets/studio/js/tag-*`
+- `assets/studio/js/data-*`
+- `assets/studio/data/catalogue*`
+- `assets/studio/data/tag_*`
+- `scripts/catalogue/`, `scripts/analytics/`, `scripts/media/`, or broad `scripts/studio/` services
 
 Tasks:
 

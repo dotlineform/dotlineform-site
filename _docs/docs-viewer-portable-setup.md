@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-11"
+last_updated: "2026-05-11 17:26"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -36,6 +36,8 @@ It can switch the active scope with the `scope` query parameter.
 ## Files To Copy
 
 These lists are the current copy set, not the desired future package boundary.
+Paths under `assets/studio/` are interim copy requirements only.
+The target ownership in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) moves reusable Docs Viewer runtime, CSS, browser config, and UI text under `assets/docs-viewer/`, while leaving broad Studio, Catalogue, tag, export, and media files in their existing domains.
 
 ### Viewer Shell
 
