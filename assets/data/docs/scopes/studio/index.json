@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T20:30:11Z",
+  "generated_at": "2026-05-11T21:00:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -458,6 +458,22 @@
       "viewer_url": "/docs/?scope=studio&doc=user-guide",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide.json",
       "content_text_length": 853
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-route-creation",
+      "title": "Docs Viewer Route Creation",
+      "added_date": "2026-05-11",
+      "last_updated": "2026-05-11 22:10",
+      "parent_id": "docs-viewer",
+      "sort_order": 16,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-route-creation.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-route-creation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-route-creation.json",
+      "content_text_length": 4881
     },
     {
       "scope": "studio",
@@ -1407,7 +1423,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-11 22:10",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1416,7 +1432,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 2843
+      "content_text_length": 2987
     },
     {
       "scope": "studio",

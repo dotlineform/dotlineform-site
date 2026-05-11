@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9281461edeef72cb1c26b0ade4d75000",
-    "generated_at_utc": "2026-05-11T20:29:56Z",
-    "count": 225
+    "version": "blake2b-94ae7dc6fb588a156843db38fa3e9cca",
+    "generated_at_utc": "2026-05-11T21:00:30Z",
+    "count": 226
   },
   "entries": [
     {
@@ -738,6 +738,31 @@
         "49"
       ],
       "search_text": "user-guide user guide user guide 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
+      "id": "docs-viewer-route-creation",
+      "kind": "doc",
+      "title": "Docs Viewer Route Creation",
+      "href": "/docs/?scope=studio&doc=docs-viewer-route-creation",
+      "last_updated": "2026-05-11 22:10",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs",
+      "display_meta": "2026-05-11 22:10 • Docs",
+      "search_terms": [
+        "docs-viewer-route-creation",
+        "docs",
+        "viewer",
+        "route",
+        "creation",
+        "docs viewer route creation",
+        "2026-05-11 22:10",
+        "2026",
+        "05",
+        "11",
+        "22",
+        "10"
+      ],
+      "search_text": "docs-viewer-route-creation docs viewer route creation docs viewer route creation 2026-05-11 22:10 2026 05 11 22 10"
     },
     {
       "id": "scripts-main-pipeline",
@@ -2251,20 +2276,20 @@
       "kind": "doc",
       "title": "Docs",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-11 17:50",
-      "display_meta": "2026-05-11 17:50",
+      "last_updated": "2026-05-11 22:10",
+      "display_meta": "2026-05-11 22:10",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
-        "2026-05-11 17:50",
+        "2026-05-11 22:10",
         "2026",
         "05",
         "11",
-        "17",
-        "50"
+        "22",
+        "10"
       ],
-      "search_text": "docs-viewer docs viewer 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "docs-viewer docs viewer 2026-05-11 22:10 2026 05 11 22 10"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",

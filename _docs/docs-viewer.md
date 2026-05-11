@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs
 added_date: 2026-04-24
-last_updated: "2026-05-11 17:50"
+last_updated: "2026-05-11 22:10"
 parent_id: ""
 sort_order: 40
 ---
@@ -53,6 +53,7 @@ Those boundaries are intentional:
 
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the shared route-shell, include, runtime, and URL/state model.
 - [Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) records what currently needs copying into another Jekyll project and how to add a Library-style scope with a management route and read-only route.
+- [Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation) explains the route-creation model and the options for public read-only, committed local-only, and uncommitted local-only scopes.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains the current source roots and how docs trees are organised by `parent_id` and `sort_order`.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.
 - [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec) records the separate `viewable: true | false` visibility workflow while preserving `published` as the docs generation gate.
