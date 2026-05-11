@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,33 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Retired the standalone Studio Search dashboard
+
+**Status:** implemented
+
+**Area:** Studio routing / search ownership
+
+**Summary:**
+Removed the `/studio/search/` dashboard and its Studio nav/home entry.
+Catalogue search now has a Catalogue dashboard entry, while future Docs Viewer search metrics or configuration belong in Docs Viewer manage mode.
+
+**Files changed/docs:**
+
+- `studio/search/index.md`
+- `studio/index.md`
+- `studio/catalogue/index.md`
+- `_includes/studio_header_nav.html`
+- `assets/studio/js/studio-dashboard.js`
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+
+**Impact:**
+Studio no longer exposes a standalone Search domain route.
+Catalogue search configuration belongs under Catalogue, and document-domain search management belongs under Docs Viewer management.
 
 ## [2026-05-11] Moved public Catalogue search to `/catalogue/search/`
 

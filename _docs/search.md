@@ -2,7 +2,7 @@
 doc_id: search
 title: Search
 added_date: 2026-03-31
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 32
 ---
@@ -23,6 +23,7 @@ Architecture direction:
 - Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`.
 - Catalogue search owns structured artwork/catalogue lookup.
 - The retired top-level `/search/` route should not return as a generic merged-result search product.
+- The retired `/studio/search/` dashboard should not return as a standalone Studio search domain. Catalogue search administration belongs under `/studio/catalogue/`; document search administration belongs in Docs Viewer manage mode.
 
 ## Current Implementation
 

@@ -1,6 +1,5 @@
 import {
   getDocsScopeDataPath,
-  getSearchScopeDataPath,
   loadStudioConfig
 } from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
@@ -37,20 +36,9 @@ function docsGeneratedIndexUrl(scope) {
   return url.href;
 }
 
-function docsGeneratedSearchUrl(scope) {
-  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedSearch);
-  url.searchParams.set("scope", scope);
-  return url.href;
-}
-
 function docsIndexReadUrl(config, scope, docsServerAvailable) {
   if (docsServerAvailable) return docsGeneratedIndexUrl(scope);
   return getDocsScopeDataPath(config, scope, "index") || `/assets/data/docs/scopes/${scope}/index.json`;
-}
-
-function docsSearchReadUrl(config, scope, docsServerAvailable) {
-  if (docsServerAvailable) return docsGeneratedSearchUrl(scope);
-  return getSearchScopeDataPath(config, scope, "index") || `/assets/data/search/${scope}/index.json`;
 }
 
 function setMetric(name, value) {
@@ -109,15 +97,6 @@ async function initStudioDashboard() {
       const groups = Array.isArray(payload?.policy?.allowed_groups) ? payload.policy.allowed_groups.length : 0;
       setMetric("tag-count", formatNumber(tags));
       setMetric("tag-group-count", formatNumber(groups));
-    }),
-    loadJson("/assets/data/search/catalogue/index.json").then((payload) => {
-      setMetric("catalogue-search-count", formatNumber(Number(payload?.header?.count || 0)));
-    }),
-    loadJson(docsSearchReadUrl(config, "library", docsServerAvailable)).then((payload) => {
-      setMetric("library-search-count", formatNumber(Number(payload?.header?.count || 0)));
-    }),
-    loadJson(docsSearchReadUrl(config, "studio", docsServerAvailable)).then((payload) => {
-      setMetric("studio-search-count", formatNumber(Number(payload?.header?.count || 0)));
     })
   ];
 

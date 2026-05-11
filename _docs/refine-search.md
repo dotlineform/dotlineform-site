@@ -2,7 +2,7 @@
 doc_id: new-pipeline-refine-search
 title: "Search Plan"
 added_date: 2026-04-18
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11"
 parent_id: archive
 sort_order: 62
 ---
@@ -11,23 +11,25 @@ sort_order: 62
 
 Archived: current Search documentation lives under [Search](/docs/?scope=studio&doc=search).
 
-This is a planning stub for the Search domain so search configuration, validation, and operational tooling can be developed in parallel with the wider Studio roadmap.
+This is an archived planning stub for the former Studio Search domain.
 
 This document should be developed in parallel with **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)**.
 
-The current `/studio/search/` dashboard is a lightweight Studio domain entry page.
-It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) to group the public search interface link and Search planning documents without route-card descriptions.
+The `/studio/search/` dashboard has been retired.
+Catalogue search configuration or review surfaces now belong under the Catalogue dashboard; Docs Viewer search metrics and configuration belong in Docs Viewer manage mode.
 
 ## Purpose
 
-- define the Studio Search domain
+- record the retired Studio Search domain boundary
 - identify the first search-focused maintenance and reporting workflows that need dedicated Studio surfaces
-- keep search planning separate from Catalogue unless a workflow directly crosses the domain boundary
+- keep future search work attached to its owning data domain
 
 ## Current Boundary
 
 - Search already has its own documentation set and implementation boundaries
-- `/studio/search/` surfaces Catalogue search and the core Search planning/change-log docs as dashboard route links
+- `/catalogue/search/` is the public Catalogue search surface
+- Catalogue search configuration or review pages should be linked from `/studio/catalogue/`
+- Docs Viewer search metrics or configuration should be handled by `/docs/` manage mode
 - this stub is for Studio planning and operational surfaces, not for rewriting the whole search architecture
 - shared shell, nav, and common Studio patterns belong to the Studio implementation plan
 
@@ -36,11 +38,11 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 ### Phase 1. Search Workflow Definition
 
 - define the main search administration and validation tasks that belong in Studio
-- identify what should be visible from the Search dashboard first
+- assign each task to Catalogue or Docs Viewer ownership
 
 ### Phase 2. Search Dashboard And Status
 
-- define the first Search landing/dashboard entry from `/studio/`
+- define Catalogue-owned search status entries from `/studio/catalogue/`
 - identify the most useful validation, pipeline, or status summaries
 
 ### Phase 3. Search Actions And Reporting
@@ -54,6 +56,6 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 
 ## Open Questions
 
-- what are the first Search workflows that need Studio entry points
+- what are the first search workflows that need Studio entry points
 - which search checks should surface as dashboard status versus deeper drill-down tools
 - where should Search operational reporting meet or stay separate from Catalogue and Studio Activity

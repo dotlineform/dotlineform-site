@@ -14,11 +14,9 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 {% assign studio_home_catalogue_panel_image = studio_home_panel_images.panels.catalogue %}
 {% assign studio_home_library_panel_image = studio_home_panel_images.panels.library %}
 {% assign studio_home_analytics_panel_image = studio_home_panel_images.panels.analytics %}
-{% assign studio_home_search_panel_image = studio_home_panel_images.panels.search %}
 {% capture studio_home_catalogue_panel_image_url %}{{ studio_home_panel_image_base }}/{{ studio_home_catalogue_panel_image.asset_id }}-{{ studio_home_catalogue_panel_image.variant }}-{{ studio_home_catalogue_panel_image.width | default: studio_home_panel_image_default_width }}.{{ studio_home_panel_image_format }}{% endcapture %}
 {% capture studio_home_library_panel_image_url %}{{ studio_home_panel_image_base }}/{{ studio_home_library_panel_image.asset_id }}-{{ studio_home_library_panel_image.variant }}-{{ studio_home_library_panel_image.width | default: studio_home_panel_image_default_width }}.{{ studio_home_panel_image_format }}{% endcapture %}
 {% capture studio_home_analytics_panel_image_url %}{{ studio_home_panel_image_base }}/{{ studio_home_analytics_panel_image.asset_id }}-{{ studio_home_analytics_panel_image.variant }}-{{ studio_home_analytics_panel_image.width | default: studio_home_panel_image_default_width }}.{{ studio_home_panel_image_format }}{% endcapture %}
-{% capture studio_home_search_panel_image_url %}{{ studio_home_panel_image_base }}/{{ studio_home_search_panel_image.asset_id }}-{{ studio_home_search_panel_image.variant }}-{{ studio_home_search_panel_image.width | default: studio_home_panel_image_default_width }}.{{ studio_home_panel_image_format }}{% endcapture %}
 
 <section
   class="studioHome"
@@ -40,10 +38,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
   <a class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image" href="{{ '/studio/analytics/' | relative_url }}" style="--panel-image: url('{{ studio_home_analytics_panel_image_url | strip | relative_url }}');">
     <h3>Analytics</h3>
     <p>Tools to support the analysis and contextualisation of the portfolio.</p>
-  </a>
-  <a class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image" href="{{ '/studio/search/' | relative_url }}" style="--panel-image: url('{{ studio_home_search_panel_image_url | strip | relative_url }}');">
-    <h3>Search</h3>
-    <p>Configure and manage site search.</p>
   </a>
 </section>
 

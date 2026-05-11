@@ -147,7 +147,6 @@ Adopted routes:
 - `/studio/export/` with `#dataExportRoot`
 - `/studio/import/` with `#dataImportRoot`
 - `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
-- `/studio/search/` with `#studioSearchDashboardRoot`
 - `/studio/ui-catalogue/` with `#studioUiCatalogueRoot`
 - `/studio/ui-catalogue/button/` with `#studioUiCatalogueButtonRoot`
 - `/studio/ui-catalogue/input/` with `#studioUiCatalogueInputRoot`

@@ -10,8 +10,6 @@
     {%- assign studio_domain = 'library' -%}
   {%- elsif studio_url == '/studio/analytics/' or studio_url contains '/studio/analytics/' -%}
     {%- assign studio_domain = 'analytics' -%}
-  {%- elsif studio_url == '/studio/search/' -%}
-    {%- assign studio_domain = 'search' -%}
   {%- elsif studio_url == '/studio/activity/' or studio_url == '/studio/bulk-add-work/' or studio_url == '/studio/studio-works/' -%}
     {%- assign studio_domain = 'catalogue' -%}
   {%- elsif studio_url == '/studio/catalogue/' or studio_url contains '/studio/catalogue-' -%}
@@ -24,16 +22,14 @@
 {%- assign is_catalogue_active = false -%}
 {%- assign is_library_active = false -%}
 {%- assign is_analytics_active = false -%}
-{%- assign is_search_active = false -%}
 {%- assign is_studio_home_active = false -%}
 {%- if studio_url == '/studio/' -%}{%- assign is_studio_home_active = true -%}{%- endif -%}
 {%- if studio_domain == 'catalogue' -%}{%- assign is_catalogue_active = true -%}{%- endif -%}
 {%- if studio_domain == 'library' -%}{%- assign is_library_active = true -%}{%- endif -%}
 {%- if studio_domain == 'analytics' -%}{%- assign is_analytics_active = true -%}{%- endif -%}
-{%- if studio_domain == 'search' -%}{%- assign is_search_active = true -%}{%- endif -%}
 
 {%- assign is_studio_more_active = false -%}
-{%- if is_catalogue_active or is_library_active or is_analytics_active or is_search_active or is_docs_page -%}
+{%- if is_catalogue_active or is_library_active or is_analytics_active or is_docs_page -%}
   {%- assign is_studio_more_active = true -%}
 {%- endif -%}
 
@@ -41,7 +37,6 @@
 {% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_catalogue_active %}
 {% include nav_item.html label="library" href='/studio/library/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_library_active %}
 {% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_analytics_active %}
-{% include nav_item.html label="search" href='/studio/search/' class_name='nav-item nav-item--overflow' is_current=false is_active=is_search_active %}
 {% include nav_item.html label="docs" href='/docs/?scope=studio&doc=site-docs&mode=manage' class_name='nav-item nav-item--overflow' is_current=is_docs_page is_active=is_docs_page %}
 
 <div class="nav-more" data-nav-more>
@@ -56,7 +51,6 @@
     {% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-more__item' is_current=false is_active=is_catalogue_active %}
     {% include nav_item.html label="library" href='/studio/library/' class_name='nav-more__item' is_current=false is_active=is_library_active %}
     {% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-more__item' is_current=false is_active=is_analytics_active %}
-    {% include nav_item.html label="search" href='/studio/search/' class_name='nav-more__item' is_current=false is_active=is_search_active %}
     {% include nav_item.html label="docs" href='/docs/?scope=studio&doc=site-docs&mode=manage' class_name='nav-more__item' is_current=is_docs_page is_active=is_docs_page %}
   </div>
 </div>

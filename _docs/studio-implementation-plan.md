@@ -60,7 +60,7 @@ Parallel domain planning lives in:
 ## Working Decisions
 
 - this plan is Studio-wide, but Catalogue remains the primary implementation thread
-- Studio landing and top-level navigation should be established early so Catalogue, Library, Analytics, Search, and Docs have a visible home
+- Studio landing and top-level navigation should keep Catalogue, Library, Analytics, and Docs visible; the former standalone Search dashboard is retired
 - Catalogue work does not need to be 100 percent complete or fully tested before adjacent domain planning begins
 - moments are a priority workflow and should get their own implementation phase
 - the first moments phase should support explicit file-based create/import and rebuild flows, not automated scanning of moment folders
@@ -81,9 +81,9 @@ Status:
 
 Scope:
 
-- redesign `/studio/` so it becomes a true landing page for the four functional domains: `Catalogue`, `Library`, `Analytics`, and `Search`
+- redesign `/studio/` so it becomes a true landing page for the functional domains: `Catalogue`, `Library`, and `Analytics`
 - establish one landing dashboard for each functional domain so users can enter workflows without reading docs first
-- establish top-level Studio navigation as `Catalogue`, `Library`, `Analytics`, `Search`, and `Docs`
+- establish top-level Studio navigation as `Catalogue`, `Library`, `Analytics`, and `Docs`
 - keep `Docs` in the top nav, but do not give it a separate dashboard page
 - surface the Docs rebuild action as a button beside the shared docs search field rather than as a dashboard destination
 - make current and future pipelines discoverable from domain dashboards through signposted links, workflow summaries, maintenance actions, and lightweight counts
@@ -91,13 +91,13 @@ Scope:
 
 Out of scope:
 
-- deep implementation of Library, Analytics, or Search workflows
+- deep implementation of Library or Analytics workflows
 - broad page-by-page visual redesign
 
 Target state:
 
-- `/studio/` contains a 2x2 panel grid only
-- the four panels link to the four domain dashboards: `Catalogue`, `Library`, `Analytics`, and `Search`
+- `/studio/` contains domain panels only
+- the panels link to the domain dashboards: `Catalogue`, `Library`, and `Analytics`
 - each panel contains only the domain title plus a short description
 - no other links are needed on `/studio/`; all routes should be signposted from the domain dashboards
 - the Studio top nav mirrors the dashboard structure and also retains `Docs`
@@ -112,33 +112,32 @@ Target state:
 
 Deliverables:
 
-- a `/studio/` home page with a four-panel grid for `Catalogue`, `Library`, `Analytics`, and `Search`
+- a `/studio/` home page with panels for `Catalogue`, `Library`, and `Analytics`
 - domain descriptions on the home panels:
   - `Catalogue`: Publish and maintain the works portfolio
   - `Library`: Publish reference and research documents
   - `Analytics`: Tools to support the analysis and contextualisation of the portfolio
-  - `Search`: Configure and manage site search
-- top navigation aligned to `Catalogue`, `Library`, `Analytics`, `Search`, and `Docs`
-- one landing dashboard route for each of the four functional domains
+- top navigation aligned to `Catalogue`, `Library`, `Analytics`, and `Docs`
+- one landing dashboard route for each active functional domain
 - a Docs rebuild button positioned next to the shared docs search field
 - a first Catalogue dashboard with links to work and series editing flows and brief workflow summaries
-- initial Library, Analytics, and Search dashboards that establish the entry surface even where deeper workflow implementation is still pending
+- initial Library and Analytics dashboards that establish the entry surface even where deeper workflow implementation is still pending
 - Studio-domain top-level nav on Studio and Docs routes only, with the public `Works` / `Library` top-level nav retained for the public site
 - the public/studio crossover reduced to the site title link and the footer `studio` link
 
 Delivered:
 
-1. Defined the domain dashboard routes under `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/`.
-2. Implemented the Studio-domain top nav as `Catalogue`, `Library`, `Analytics`, `Search`, and `Docs`.
-3. Replaced the old `/studio/` route list with the 2x2 domain landing page.
-4. Added landing dashboards for all four Studio domains with workflow links, guidance links, and lightweight metrics.
+1. Defined the domain dashboard routes under `/studio/catalogue/`, `/studio/library/`, and `/studio/analytics/`.
+2. Implemented the Studio-domain top nav as `Catalogue`, `Library`, `Analytics`, and `Docs`.
+3. Replaced the old `/studio/` route list with domain landing panels.
+4. Added landing dashboards for active Studio domains with workflow links, guidance links, and lightweight metrics.
 5. Implemented the first Catalogue dashboard with work/series/status/activity/build entry points and workflow summary copy.
 6. Added the Docs rebuild action beside the shared Studio docs search field.
 7. Updated shared Studio docs so the dashboard/navigation model is now the documented entry path.
 
 Verification:
 
-- `/studio/` shows only the four domain panels and no extra route list
+- `/studio/` shows only the active domain panels and no extra route list
 - user can move from `/studio/` into each domain dashboard directly
 - the top nav and landing page describe the same domain structure
 - `Docs` remains available from the top nav and the docs search area, without becoming a fifth dashboard
@@ -801,7 +800,7 @@ These domains should now develop in parallel as planning tracks, even where impl
 
 - **[Library](/docs/?scope=studio&doc=library)** for `/library/` maintenance workflows and their Studio administration boundary
 - **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for tagging and future analytical tooling
-- **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for search configuration, validation, pipelines, and operational visibility
+- **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the archived standalone Search-domain plan; future Catalogue search surfaces belong under Catalogue, and Docs search management belongs in Docs Viewer manage mode
 
 This document should only absorb work from those domains when the work directly affects the shared Studio shell or Catalogue workflows.
 

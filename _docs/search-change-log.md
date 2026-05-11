@@ -2,11 +2,40 @@
 doc_id: search-change-log
 title: Search Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11"
 parent_id: search
 sort_order: 140
 ---
 # Search Change Log
+
+## [2026-05-11] Retired the Studio Search dashboard
+
+**Status:** implemented
+
+**Area:** Studio routing / search ownership
+
+**Summary:**
+Removed the standalone `/studio/search/` dashboard.
+The Studio home page and Studio header nav no longer treat Search as a top-level domain, and the Catalogue dashboard now links to the public Catalogue search surface.
+
+**Reason:**
+Search ownership is split by data domain.
+Catalogue search configuration belongs with Catalogue workflows, and Docs Viewer search metrics or configuration belong in Docs Viewer manage mode.
+
+**Effect:**
+`/studio/search/` is no longer generated.
+Future Catalogue search admin or review pages should be added under `/studio/catalogue/`; future document-search management should be added to Docs Viewer manage mode.
+
+**Affected files/docs:**
+
+- `studio/search/index.md`
+- `studio/index.md`
+- `studio/catalogue/index.md`
+- `_includes/studio_header_nav.html`
+- `assets/studio/js/studio-dashboard.js`
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 
 ## [2026-05-11] Moved Catalogue search to a Catalogue-owned route
 

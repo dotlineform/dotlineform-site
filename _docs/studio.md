@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-09 21:45"
+last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 20
 ---
@@ -19,10 +19,10 @@ The current Studio shell is organized around domain dashboards:
 - `Catalogue`
 - `Library`
 - `Analytics`
-- `Search`
 - `Docs`
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
+There is no standalone Studio Search dashboard. Catalogue search configuration or review pages belong under the Catalogue dashboard; Docs Viewer search metrics or configuration belong in `/docs/` manage mode.
 
 The Library dashboard includes `/studio/library-documents/` for reviewing generated Library document records, `/studio/export/` for running configured exports from generated Library Docs Viewer data, and `/studio/import/` for generating preview Markdown from staged Library import data.
 Those pages depend on the docs-management local service for file writes; when the service is unavailable, command execution stays unavailable.
@@ -33,7 +33,7 @@ Export pattern definitions live in `assets/studio/data/library_export_configs.js
 Studio landing and dashboard routes expose the shared route-ready contract:
 
 - `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
-- `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/` use dashboard roots with `data-studio-mode="dashboard"`
+- `/studio/catalogue/`, `/studio/library/`, and `/studio/analytics/` use dashboard roots with `data-studio-mode="dashboard"`
 - dashboard routes set `data-studio-busy="true"` while lightweight metric hydration runs, then mark ready after metric reads settle
 - these routes are framework markers for future dashboard behavior; they do not imply a formal dashboard test suite
 
@@ -79,7 +79,6 @@ Current Studio landing routes:
 - `/studio/catalogue/`
 - `/studio/library/`
 - `/studio/analytics/`
-- `/studio/search/`
 - `/docs/`
 
 Current workflow/detail routes:

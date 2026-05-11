@@ -22,8 +22,9 @@ The Studio route shell now provides the shared admin-facing navigation model. On
 - `Catalogue`
 - `Library`
 - `Analytics`
-- `Search`
 - `Docs`
+
+Search is no longer a standalone Studio navigation domain. Catalogue search administration should be reached from the Catalogue dashboard, while document search administration should stay inside Docs Viewer manage mode.
 
 The Studio page layout then renders:
 
@@ -63,7 +64,6 @@ Current route inventory:
 - `studio/catalogue/index.md`
 - `studio/library/index.md`
 - `studio/analytics/index.md`
-- `studio/search/index.md`
 - `studio/catalogue-status/index.md`
 - `studio/activity/index.md`
 - `studio/docs-broken-links/index.md`
