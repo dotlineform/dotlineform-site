@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T18:47:08Z",
+  "generated_at": "2026-05-11T18:52:56Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -952,7 +952,7 @@
       "doc_id": "site-request-docs-viewer-config-settings",
       "title": "Docs Viewer Config And Settings Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 19:46",
+      "last_updated": "2026-05-11 19:52",
       "parent_id": "change-requests",
       "sort_order": 28,
       "published": true,
@@ -962,7 +962,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
       "content_text_length": 7360,
-      "ui_status": "proposed"
+      "ui_status": "draft"
     },
     {
       "scope": "studio",

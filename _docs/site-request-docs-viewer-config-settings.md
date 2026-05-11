@@ -2,8 +2,8 @@
 doc_id: site-request-docs-viewer-config-settings
 title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 19:46"
-ui_status: proposed
+last_updated: "2026-05-11 19:52"
+ui_status: draft
 parent_id: change-requests
 sort_order: 28
 hidden: false
