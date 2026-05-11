@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: Search Overview
 added_date: 2026-03-31
-last_updated: "2026-05-11 17:50"
+last_updated: "2026-05-11 21:30"
 parent_id: search
 sort_order: 10
 ---
@@ -69,13 +69,13 @@ Current routes:
 - `/library/`
 - `/analysis/`
 
-Current transitional generated artifacts:
+Current generated artifacts:
 
 - `assets/data/search/studio/index.json`
 - `assets/data/search/library/index.json`
 - `assets/data/search/analysis/index.json`
 
-Target direction:
+Current ownership:
 
 - Docs Viewer owns docs search build configuration
 - Docs Viewer owns docs search runtime policy
@@ -92,8 +92,7 @@ Docs search should stay inside Docs Viewer routes.
 
 ## Current Implementation
 
-The implementation is transitional.
-It already has separate runtime surfaces, but the build plumbing still groups Catalogue and Docs search together.
+The implementation now uses one stable command wrapper that dispatches to domain-owned builders.
 
 Current files:
 
@@ -101,9 +100,12 @@ Current files:
 - Catalogue runtime policy: `assets/data/search/policy.json`
 - Docs browser runtime: `assets/docs-viewer/js/docs-viewer.js`
 - Docs search helpers: `assets/docs-viewer/js/docs-viewer-search.js`
-- Transitional search build entrypoint: `scripts/build_search.rb`
-- Transitional search build implementation: `scripts/search/build_search.rb`
-- Transitional search build config: `scripts/search/build_config.json`
+- Search build entrypoint and dispatcher: `scripts/build_search.rb`
+- Search adapter registry: `scripts/search/adapter_registry.json`
+- Catalogue search build implementation: `scripts/search/build_search.rb`
+- Catalogue search build config: `scripts/search/build_config.json`
+- Docs Viewer search build implementation: `scripts/docs/build_search.rb`
+- Docs Viewer search scope config: `scripts/docs/docs_scopes.json`
 
 Current live surfaces:
 
@@ -115,19 +117,14 @@ Current live surfaces:
 Current build behavior:
 
 - `catalogue` search reads canonical generated catalogue JSON
-- `studio`, `library`, and `analysis` search read generated Docs Viewer indexes
+- configured docs scopes such as `studio`, `library`, and `analysis` search read generated Docs Viewer indexes
 - docs search skips rows where `viewable: false`
 - docs search supports targeted updates by `doc_id`
 - catalogue search remains full-rebuild-only for existing-record changes
 
 ## Extraction Direction
 
-The next cleanup should move docs search out of the generic search build/config layer and under Docs Viewer ownership.
-
-Near-term steps:
-
-1. Move docs-search scope configuration into Docs Viewer scope config.
-2. Keep existing generated docs-search artifact paths compatible while the runtime changes settle.
+The next cleanup should package the route adapter pattern and continue removing dotlineform-specific assumptions from Docs Viewer management and import flows.
 3. Move docs-search policy into Docs Viewer config/runtime.
 4. Keep Catalogue search build/runtime policy separate.
 5. Share only low-level helpers that are genuinely domain-neutral.

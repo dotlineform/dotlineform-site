@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T19:58:27Z",
+  "generated_at": "2026-05-11T20:08:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -319,7 +319,7 @@
       "doc_id": "search-overview",
       "title": "Search Overview",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "sort_order": 10,
       "published": true,
@@ -328,7 +328,7 @@
       "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
-      "content_text_length": 4766
+      "content_text_length": 4782
     },
     {
       "scope": "studio",
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 11025
+      "content_text_length": 11224
     },
     {
       "scope": "studio",
@@ -951,7 +951,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 20:58",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -960,7 +960,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 21502,
+      "content_text_length": 21604,
       "ui_status": "in-progress"
     },
     {
@@ -2492,7 +2492,7 @@
       "doc_id": "search-build-pipeline",
       "title": "Search Build Pipeline",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "sort_order": 80,
       "published": true,
@@ -2501,7 +2501,7 @@
       "source_path": "search-build-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json",
-      "content_text_length": 15006
+      "content_text_length": 15924
     },
     {
       "scope": "studio",
@@ -2654,7 +2654,7 @@
       "doc_id": "search-validation-checklist",
       "title": "Search Validation Checklist",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "sort_order": 100,
       "published": true,
@@ -2663,7 +2663,7 @@
       "source_path": "search-validation-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-validation-checklist.json",
-      "content_text_length": 8298
+      "content_text_length": 8681
     },
     {
       "scope": "studio",
@@ -3074,7 +3074,7 @@
       "source_path": "search-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=search-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
-      "content_text_length": 46781
+      "content_text_length": 48146
     },
     {
       "scope": "studio",
@@ -3196,7 +3196,7 @@
       "doc_id": "config-search-build-json",
       "title": "Search Build Config JSON",
       "added_date": "2026-04-25",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "sort_order": 160,
       "published": true,
@@ -3205,7 +3205,7 @@
       "source_path": "config-search-build-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-build-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-build-json.json",
-      "content_text_length": 2615
+      "content_text_length": 3049
     },
     {
       "scope": "studio",

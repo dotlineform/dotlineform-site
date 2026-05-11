@@ -2,7 +2,7 @@
 doc_id: config-search-build-json
 title: Search Build Config JSON
 added_date: 2026-04-25
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 21:30"
 parent_id: search
 sort_order: 160
 ---
@@ -14,11 +14,12 @@ Config file:
 
 ## Scope
 
-`build_config.json` is the build-owned source-family and field-dependency contract for `scripts/build_search.rb`.
+`build_config.json` is the Catalogue search source-family and field-dependency contract used behind `scripts/build_search.rb --scope catalogue`.
+Docs Viewer search no longer uses this file.
 
 Current responsibilities include:
 
-- declaring source artifact families used by each live search scope
+- declaring source artifact families used by Catalogue search
 - declaring each source family's `targeted_policy`
 - declaring `targeted_operations` for policies that allow targeted updates
 - mapping emitted search fields to their source families
@@ -28,13 +29,13 @@ Current responsibilities include:
 
 Current caller:
 
-- `scripts/build_search.rb`
+- `scripts/search/build_search.rb`, reached through `scripts/build_search.rb --scope catalogue`
 
-The builder loads this config at startup for every scope, validates the config shape, and then checks that emitted entry fields have source-family declarations.
+The Catalogue builder loads this config at startup, validates the config shape, and then checks that emitted entry fields have source-family declarations.
 
 ## When it is read
 
-- once per `./scripts/build_search.rb` invocation
+- once per `./scripts/build_search.rb --scope catalogue` invocation
 - before build output is written or skipped
 
 ## Current boundaries
@@ -45,9 +46,11 @@ What stays here:
 - scope eligibility for each source family
 - targeted policy values such as `record_update`, `additive_only`, and `full_rebuild`
 - field-to-source-family declarations
+- Catalogue-only field dependency checks
 
 What does not stay here:
 
+- Docs Viewer scope lists, docs-search input paths, or docs-search field policy
 - record-construction algorithms
 - ranking rules
 - runtime UI policy
@@ -60,7 +63,7 @@ Those remain in builder code, search runtime code, CLI/server output, or the ded
 Current policy values:
 
 - `record_update`
-  Used by docs-domain scopes where create, update, and delete can target explicit `doc_id` records.
+  Supported by the shared policy vocabulary and used by Docs Viewer search, but not currently declared in this Catalogue-owned config.
 - `additive_only`
   Used by the first catalogue targeted-search slice, where only new work, series, and moment entries are safe to insert without changing existing records.
 - `full_rebuild`
@@ -73,6 +76,7 @@ Validation rejects the old `targeted` boolean form. Policies that allow targeted
 ## Heavy-index readiness
 
 The config exists so future body, summary, or prose-heavy indexing can add source-family declarations before adding heavier fields to the public search artifacts.
+For Docs Viewer body or summary indexing, update the Docs Viewer search builder/config surfaces rather than this Catalogue config.
 
 The first implementation deliberately avoids per-record checksums and sidecar payloads. The current fallback remains a full same-scope rebuild when a dependency cannot be invalidated cheaply and explicitly.
 

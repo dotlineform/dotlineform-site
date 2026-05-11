@@ -1,0 +1,15 @@
+{
+  "schema_version": "search_adapter_registry_v1",
+  "default_scope": "studio",
+  "scopes": {
+    "catalogue": {
+      "domain": "catalogue",
+      "script": "scripts/search/build_search.rb"
+    }
+  },
+  "docs_viewer": {
+    "domain": "docs_viewer",
+    "scope_config": "scripts/docs/docs_scopes.json",
+    "script": "scripts/docs/build_search.rb"
+  }
+}

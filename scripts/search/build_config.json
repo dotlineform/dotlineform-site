@@ -1,14 +1,6 @@
 {
   "search_build_config_version": "search_build_config_v2",
   "source_families": {
-    "docs_index": {
-      "description": "Generated docs scope index payloads under assets/data/docs/scopes/<scope>/index.json.",
-      "scopes": ["studio", "library", "analysis"],
-      "targeted_policy": "record_update",
-      "targeted_operations": ["create", "update", "delete"],
-      "id_field": "doc_id",
-      "fallback": "full_rebuild"
-    },
     "catalogue_indexes": {
       "description": "Generated catalogue aggregate indexes for series, works, and moments.",
       "scopes": ["catalogue"],
@@ -74,57 +66,6 @@
           ],
           "derived": true
         }
-      }
-    },
-    "studio": {
-      "artifact_strategy": "combined",
-      "targeted_policy": "record_update",
-      "targeted_operations": ["create", "update", "delete"],
-      "fields": {
-        "id": { "source_families": ["docs_index"] },
-        "kind": { "source_families": ["docs_index"] },
-        "title": { "source_families": ["docs_index"] },
-        "href": { "source_families": ["docs_index"] },
-        "last_updated": { "source_families": ["docs_index"] },
-        "parent_id": { "source_families": ["docs_index"] },
-        "parent_title": { "source_families": ["docs_index"] },
-        "display_meta": { "source_families": ["docs_index"] },
-        "search_terms": { "source_families": ["docs_index"], "derived": true },
-        "search_text": { "source_families": ["docs_index"], "derived": true }
-      }
-    },
-    "library": {
-      "artifact_strategy": "combined",
-      "targeted_policy": "record_update",
-      "targeted_operations": ["create", "update", "delete"],
-      "fields": {
-        "id": { "source_families": ["docs_index"] },
-        "kind": { "source_families": ["docs_index"] },
-        "title": { "source_families": ["docs_index"] },
-        "href": { "source_families": ["docs_index"] },
-        "last_updated": { "source_families": ["docs_index"] },
-        "parent_id": { "source_families": ["docs_index"] },
-        "parent_title": { "source_families": ["docs_index"] },
-        "display_meta": { "source_families": ["docs_index"] },
-        "search_terms": { "source_families": ["docs_index"], "derived": true },
-        "search_text": { "source_families": ["docs_index"], "derived": true }
-      }
-    },
-    "analysis": {
-      "artifact_strategy": "combined",
-      "targeted_policy": "record_update",
-      "targeted_operations": ["create", "update", "delete"],
-      "fields": {
-        "id": { "source_families": ["docs_index"] },
-        "kind": { "source_families": ["docs_index"] },
-        "title": { "source_families": ["docs_index"] },
-        "href": { "source_families": ["docs_index"] },
-        "last_updated": { "source_families": ["docs_index"] },
-        "parent_id": { "source_families": ["docs_index"] },
-        "parent_title": { "source_families": ["docs_index"] },
-        "display_meta": { "source_families": ["docs_index"] },
-        "search_terms": { "source_families": ["docs_index"], "derived": true },
-        "search_text": { "source_families": ["docs_index"], "derived": true }
       }
     }
   }

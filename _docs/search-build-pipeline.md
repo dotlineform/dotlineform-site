@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline
 title: Search Build Pipeline
 added_date: 2026-04-23
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11 21:30"
 parent_id: search
 sort_order: 80
 ---
@@ -14,8 +14,8 @@ This document defines how the current search artifacts are built.
 
 It covers:
 
-- the current design of the search build layer
-- the single build entrypoint that now owns all live scopes
+- the current domain-adapter design of the search build layer
+- the stable build entrypoint that dispatches to domain-owned builders
 - what each scope reads and writes
 - how record construction, validation, and change detection work in practice
 
@@ -23,10 +23,12 @@ This is a build-time document. It does not define ranking or UI behaviour.
 
 ## Current Design And Implementation
 
-The current search build is one subsystem with one build entrypoint:
+The current search build uses one stable entrypoint with domain-owned adapters:
 
-- stable command wrapper: `scripts/build_search.rb`
-- implementation owner: `scripts/search/build_search.rb`
+- stable command wrapper and dispatcher: `scripts/build_search.rb`
+- adapter registry: `scripts/search/adapter_registry.json`
+- Catalogue implementation owner: `scripts/search/build_search.rb`
+- Docs Viewer implementation owner: `scripts/docs/build_search.rb`
 
 Current live search outputs:
 
@@ -49,7 +51,7 @@ Current source boundary:
 - `catalogue` search reads canonical repo JSON artifacts, not retired workbook sources or non-repo source files
 - `studio`, `analysis`, and `library` search read canonical generated docs indexes and include only rows where `viewable !== false`
 
-This means search now has one owner even though the upstream source artifacts are different per scope.
+This means the stable command shape is shared, while ownership stays with each data domain.
 
 ## Cross-Scope Conventions
 
@@ -64,8 +66,9 @@ Current shared build conventions:
 - records are generated at build time, not assembled in the browser
 - content-version hashing is used for write skipping
 - generated payloads stay compact and avoid body-prose indexing
-- current fields declare their source artifact family and dependency policy in `scripts/search/build_config.json`
-- builder code validates that dependency config while keeping record-generation algorithms in code
+- Catalogue fields declare their source artifact family and dependency policy in `scripts/search/build_config.json`
+- Docs search policy is Docs Viewer-owned and emitted through `assets/docs-viewer/data/docs-viewer-config.json`
+- builder code validates the relevant domain config while keeping record-generation algorithms in code
 - public search artifacts should not become operation logs; targeted-update changed-id diagnostics belong in CLI/server output or local logs, not in the artifact by default
 - keep one combined artifact per scope until payload size or browser performance proves sidecar payloads are needed
 
@@ -77,33 +80,36 @@ Current non-goals across all scopes:
 - no strict schema-fail validation layer separate from the builders themselves
 - no per-record checksums for body or summary indexing in the first heavy-index slice
 
-## Build Config
+## Adapter Registry And Build Config
 
-The search builder loads `scripts/search/build_config.json` for every run.
+The top-level command loads `scripts/search/adapter_registry.json` to map requested scopes to domain builders.
+The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `scripts/docs/docs_scopes.json` to the Docs Viewer adapter.
 
-Current config responsibilities:
+`scripts/search/build_config.json` is now Catalogue-owned.
+Current Catalogue config responsibilities:
 
-- declare source families such as `docs_index`, `catalogue_indexes`, `catalogue_work_payloads`, `tag_assignments`, and `tag_registry`
+- declare source families such as `catalogue_indexes`, `catalogue_work_payloads`, `tag_assignments`, and `tag_registry`
 - declare scope eligibility for each source family
 - declare explicit `targeted_policy` values for each source family and scope
 - map emitted search fields to source families
-- keep one combined artifact strategy per scope
+- keep the Catalogue artifact strategy combined
 
 Current validation responsibilities in `scripts/search/build_search.rb`:
 
 - reject unsupported config versions
-- reject source-family references outside their declared scopes
+- reject source-family references outside the Catalogue scope
 - reject unsupported `targeted_policy` values
 - reject obsolete boolean `targeted` flags
 - reject missing, misplaced, or policy-incompatible `targeted_operations`
 - reject fields without source-family declarations
 - reject emitted entry fields that are missing from the config for the current scope
 
-The config is intentionally not a record-generation DSL. The builder still owns field derivation, sorting, normalization, hashing, and targeted-update algorithms.
+The config is intentionally not a record-generation DSL. The Catalogue builder still owns field derivation, sorting, normalization, hashing, and targeted-update algorithms.
+Docs Viewer search derives scope input and output paths from `scripts/docs/docs_scopes.json`; its `record_update` policy remains in the Docs Viewer builder and generated browser config.
 
 Current targeted policy values:
 
-- `record_update`: targeted create, update, and delete by explicit record id
+- `record_update`: targeted create, update, and delete by explicit record id, currently used by Docs Viewer search
 - `additive_only`: targeted insertion only, currently used by the first catalogue targeted-search slice
 - `full_rebuild`: targeted updates are not allowed for that source family or scope
 
@@ -262,13 +268,13 @@ Current safeguards include:
 - normalized and deduplicated token generation
 - deterministic sort order before serialization
 - content-version hashing for change detection
-- build-config validation before output is written or skipped
+- domain-specific config validation before output is written or skipped
 
 ## Studio Scope
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope studio`
+- `./scripts/build_search.rb --scope studio`, dispatched to `scripts/docs/build_search.rb`
 
 ### Current Output
 
@@ -347,7 +353,7 @@ Current derived search support fields:
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope library`
+- `./scripts/build_search.rb --scope library`, dispatched to `scripts/docs/build_search.rb`
 
 ### Current Output
 
@@ -414,7 +420,7 @@ Current builder behaviour for Library:
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope analysis`
+- `./scripts/build_search.rb --scope analysis`, dispatched to `scripts/docs/build_search.rb`
 
 ### Current Output
 

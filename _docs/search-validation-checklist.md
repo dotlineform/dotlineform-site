@@ -2,7 +2,7 @@
 doc_id: search-validation-checklist
 title: Search Validation Checklist
 added_date: 2026-04-01
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11 21:30"
 parent_id: search
 sort_order: 100
 ---
@@ -35,7 +35,7 @@ Prefer real site examples over synthetic test strings.
 
 - [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/catalogue/generate_work_pages.py`
 - [ ] Run `./scripts/build_search.rb --scope catalogue`
-- [ ] Confirm the dry run completes without error, including build-config validation
+- [ ] Confirm the dry run completes without error, including Catalogue build-config validation
 - [ ] Run `./scripts/build_search.rb --scope catalogue --write`
 - [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
@@ -45,11 +45,13 @@ Prefer real site examples over synthetic test strings.
 ## B. Docs-Domain Build And Artifact Checks
 
 - [ ] Run `./scripts/build_docs.rb`
-- [ ] Confirm the docs dry run completes without error for both `studio` and `library`
+- [ ] Confirm the docs dry run completes without error for configured docs scopes
 - [ ] Run `./scripts/build_search.rb --scope studio`
-- [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check, including build-config validation
+- [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
 - [ ] Run `./scripts/build_search.rb --scope library`
-- [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check, including build-config validation
+- [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
+- [ ] Run `./scripts/build_search.rb --scope analysis`
+- [ ] Confirm the dry run reports `assets/data/search/analysis/index.json` or correctly skips by version check
 - [ ] If the change touched targeted docs-search updates, run `./scripts/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
 - [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
 - [ ] If the change touched docs-management search orchestration, confirm docs-management rebuild responses report `search.mode: targeted` for explicit affected ids
@@ -60,13 +62,16 @@ Prefer real site examples over synthetic test strings.
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`
 
-## C. Search Build Config Checks
+## C. Search Adapter And Config Checks
 
+- [ ] Confirm `scripts/search/adapter_registry.json` is valid JSON
 - [ ] Confirm `scripts/search/build_config.json` is valid JSON
-- [ ] Confirm every emitted field for the changed scope has a source-family declaration
-- [ ] Confirm source-family scope declarations match the intended `targeted_policy`
-- [ ] Confirm `targeted_operations` values are valid for the configured `targeted_policy`
-- [ ] Confirm future heavy-index field additions update `scripts/search/build_config.json` before changing builder output
+- [ ] Confirm every emitted Catalogue field has a source-family declaration
+- [ ] Confirm Catalogue source-family scope declarations match the intended `targeted_policy`
+- [ ] Confirm Catalogue `targeted_operations` values are valid for the configured `targeted_policy`
+- [ ] Confirm Docs Viewer scopes derive from `scripts/docs/docs_scopes.json`
+- [ ] Confirm future Catalogue heavy-index field additions update `scripts/search/build_config.json` before changing builder output
+- [ ] Confirm future Docs Viewer heavy-index field additions update Docs Viewer-owned search config/runtime surfaces before changing builder output
 
 ## D. Catalogue Index Integrity Checks
 

@@ -105,6 +105,7 @@ Docs Import still reads its modal copy from the Studio UI-text file until the im
 
 `assets/docs-viewer/data/docs-viewer-config.json` is generated from `scripts/docs/docs_scopes.json`.
 It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.
+Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
 
 ### Generated Data Outputs
@@ -133,12 +134,12 @@ Copy:
 For inline docs search, copy:
 
 - `scripts/build_search.rb`
-- `scripts/search/build_search.rb`
-- `scripts/search/build_config.json`
+- `scripts/docs/build_search.rb`
+- `scripts/search/adapter_registry.json`
 
-Current issue:
-the docs-search builder still lives in the generic search subsystem and hardcodes `studio`, `library`, and `analysis` in `scripts/search/build_search.rb`.
-Adding a new arbitrary docs scope currently requires editing that script and `scripts/search/build_config.json`.
+`scripts/build_search.rb` is a compatibility dispatcher.
+Configured docs scopes route to `scripts/docs/build_search.rb`, while the Catalogue adapter remains separate in this repo.
+Adding a new docs scope should only require adding that scope to `scripts/docs/docs_scopes.json`, rebuilding docs data, and then running the same search command for the new scope.
 
 The target direction is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
@@ -297,15 +298,11 @@ If the new scope needs UI-status pills, add the status options to the `docs_view
 
 ### 6. Add Search Support
 
-If the read-only route should have inline search, update:
+If the read-only route should have inline search, make sure the scope exists in `scripts/docs/docs_scopes.json`.
+The Docs Viewer search builder derives its input and output paths from that scope config:
 
-- `scripts/search/build_search.rb`
-- `scripts/search/build_config.json`
-
-Current hardcoded work required:
-
-- add a scope entry with schema, output path, and source docs-index path
-- add the scope to the docs-index source family in `scripts/search/build_config.json`
+- input docs index: `assets/data/docs/scopes/<scope>/index.json`
+- search output: `assets/data/search/<scope>/index.json`
 
 Then build search with:
 

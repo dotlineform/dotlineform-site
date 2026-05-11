@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ba423855a5fdd9256b37dd862422f7f4",
-    "generated_at_utc": "2026-05-11T19:58:27Z",
+    "version": "blake2b-8249b87e3bc417d51551de574b029f1b",
+    "generated_at_utc": "2026-05-11T20:08:23Z",
     "count": 225
   },
   "entries": [
@@ -521,23 +521,23 @@
       "kind": "doc",
       "title": "Search Overview",
       "href": "/docs/?scope=studio&doc=search-overview",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 17:50 • Search",
+      "display_meta": "2026-05-11 21:30 • Search",
       "search_terms": [
         "search-overview",
         "search",
         "overview",
         "search overview",
-        "2026-05-11 17:50",
+        "2026-05-11 21:30",
         "2026",
         "05",
         "11",
-        "17",
-        "50"
+        "21",
+        "30"
       ],
-      "search_text": "search-overview search overview search overview 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "search-overview search overview search overview 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
       "id": "site-change-log-guidance",
@@ -1515,10 +1515,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-11 20:58",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 20:58 • Change Requests",
+      "display_meta": "2026-05-11 21:30 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1530,14 +1530,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11 20:58",
+        "2026-05-11 21:30",
         "2026",
         "05",
         "11",
-        "20",
-        "58"
+        "21",
+        "30"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 20:58 2026 05 11 20 58"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
       "id": "site-request-docs-viewer-config-settings",
@@ -3964,24 +3964,24 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 14:10 • Search",
+      "display_meta": "2026-05-11 21:30 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-05-11 14:10",
+        "2026-05-11 21:30",
         "2026",
         "05",
         "11",
-        "14",
-        "10"
+        "21",
+        "30"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
       "id": "scripts-studio-backup-retention",
@@ -4219,24 +4219,24 @@
       "kind": "doc",
       "title": "Search Validation Checklist",
       "href": "/docs/?scope=studio&doc=search-validation-checklist",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 14:10 • Search",
+      "display_meta": "2026-05-11 21:30 • Search",
       "search_terms": [
         "search-validation-checklist",
         "search",
         "validation",
         "checklist",
         "search validation checklist",
-        "2026-05-11 14:10",
+        "2026-05-11 21:30",
         "2026",
         "05",
         "11",
-        "14",
-        "10"
+        "21",
+        "30"
       ],
-      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
       "id": "config-studio-config-js",
@@ -5081,10 +5081,10 @@
       "kind": "doc",
       "title": "Search Build Config JSON",
       "href": "/docs/?scope=studio&doc=config-search-build-json",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 21:30",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 12:50 • Search",
+      "display_meta": "2026-05-11 21:30 • Search",
       "search_terms": [
         "config-search-build-json",
         "config",
@@ -5092,14 +5092,14 @@
         "build",
         "json",
         "search build config json",
-        "2026-05-11 12:50",
+        "2026-05-11 21:30",
         "2026",
         "05",
         "11",
-        "12",
-        "50"
+        "21",
+        "30"
       ],
-      "search_text": "config-search-build-json config search build json search build config json 2026-05-11 12:50 2026 05 11 12 50"
+      "search_text": "config-search-build-json config search build json search build config json 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
       "id": "ui-request-docs-html-import-task",

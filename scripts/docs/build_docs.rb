@@ -615,6 +615,16 @@ def browser_search_index_url(config)
   "/assets/data/search/#{config.scope_id}/index.json"
 end
 
+def browser_search_policy_payload(config)
+  {
+    "domain" => "docs_viewer",
+    "schema" => "search_index_#{config.scope_id}_v1",
+    "index_url" => browser_search_index_url(config),
+    "targeted_policy" => "record_update",
+    "targeted_operations" => %w[create update delete]
+  }
+end
+
 def browser_scope_config_payload(scope_configs)
   payload = {
     "schema_version" => DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
@@ -626,7 +636,8 @@ def browser_scope_config_payload(scope_configs)
         "include_scope_param" => config.include_scope_param == true,
         "default_doc_id" => config.default_doc_id,
         "index_url" => browser_docs_index_url(config),
-        "search_index_url" => browser_search_index_url(config)
+        "search_index_url" => browser_search_index_url(config),
+        "search" => browser_search_policy_payload(config)
       }
     end
   }

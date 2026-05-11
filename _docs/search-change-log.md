@@ -8,6 +8,39 @@ sort_order: 140
 ---
 # Search Change Log
 
+## [2026-05-11] Moved Docs search under Docs Viewer ownership
+
+**Status:** implemented
+
+**Area:** search build architecture / Docs Viewer portability
+
+**Summary:**
+Split the stable `./scripts/build_search.rb` command into a dispatcher backed by `scripts/search/adapter_registry.json`.
+Catalogue search now runs through the Catalogue adapter in `scripts/search/build_search.rb`, while configured Docs Viewer scopes run through the Docs Viewer-owned builder in `scripts/docs/build_search.rb`.
+
+**Reason:**
+Portable Docs Viewer installs need inline docs search without copying the Catalogue/public search product.
+Docs search scopes now derive from `scripts/docs/docs_scopes.json` instead of hardcoded `studio`, `library`, and `analysis` entries in the generic search config.
+
+**Effect:**
+`./scripts/build_search.rb --scope <scope> --write` remains the supported command for Catalogue and docs scopes.
+Docs-search output remains under `assets/data/search/<scope>/index.json`, and Catalogue search behavior remains stable behind its adapter.
+
+**Affected files/docs:**
+
+- `scripts/build_search.rb`
+- `scripts/docs/build_search.rb`
+- `scripts/search/build_search.rb`
+- `scripts/search/adapter_registry.json`
+- `scripts/search/build_config.json`
+- `scripts/docs/build_docs.rb`
+- `assets/docs-viewer/data/docs-viewer-config.json`
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+
 ## [2026-05-11] Retired the Studio Search dashboard
 
 **Status:** implemented
