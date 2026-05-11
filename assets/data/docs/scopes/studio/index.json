@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T16:47:27Z",
+  "generated_at": "2026-05-11T16:56:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -287,7 +287,7 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "docs-viewer",
       "sort_order": 10,
       "published": true,
@@ -296,7 +296,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 7321
+      "content_text_length": 7369
     },
     {
       "scope": "studio",
@@ -319,7 +319,7 @@
       "doc_id": "search-overview",
       "title": "Search Overview",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "search",
       "sort_order": 10,
       "published": true,
@@ -328,7 +328,7 @@
       "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
-      "content_text_length": 4742
+      "content_text_length": 4766
     },
     {
       "scope": "studio",
@@ -432,7 +432,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 17:26",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "docs-viewer",
       "sort_order": 15,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 10902
+      "content_text_length": 10966
     },
     {
       "scope": "studio",
@@ -935,7 +935,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 17:33",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -944,7 +944,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 17993,
+      "content_text_length": 18183,
       "ui_status": "in-progress"
     },
     {
@@ -1050,7 +1050,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "docs-viewer",
       "sort_order": 30,
       "published": true,
@@ -1059,7 +1059,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 5755
+      "content_text_length": 5863
     },
     {
       "scope": "studio",
@@ -1130,7 +1130,7 @@
       "doc_id": "site-shell-runtime",
       "title": "Site Shell Runtime",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-10 17:20",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "architecture",
       "sort_order": 30,
       "published": true,
@@ -1139,7 +1139,7 @@
       "source_path": "site-shell-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=site-shell-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-shell-runtime.json",
-      "content_text_length": 4807
+      "content_text_length": 4819
     },
     {
       "scope": "studio",
@@ -1374,7 +1374,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1383,7 +1383,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 2723
+      "content_text_length": 2843
     },
     {
       "scope": "studio",
@@ -2571,7 +2571,7 @@
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 19:05",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "studio",
       "sort_order": 90,
       "published": true,
@@ -2580,7 +2580,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 8970
+      "content_text_length": 9109
     },
     {
       "scope": "studio",
@@ -2999,7 +2999,7 @@
       "doc_id": "ui-request-docs-viewer-favourites-task",
       "title": "Docs Viewer Favourites",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "sort_order": 140,
       "published": true,
@@ -3008,7 +3008,7 @@
       "source_path": "docs-viewer-favourites-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json",
-      "content_text_length": 5864,
+      "content_text_length": 5900,
       "ui_status": "done"
     },
     {
@@ -3048,7 +3048,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -3057,7 +3057,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 27604,
+      "content_text_length": 27640,
       "ui_status": "done"
     },
     {
@@ -3344,7 +3344,7 @@
       "doc_id": "ui-status-emoji",
       "title": "UI Status Emoji",
       "added_date": "2026-05-02",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "sort_order": 200,
       "published": true,
@@ -3353,7 +3353,7 @@
       "source_path": "ui-status-emoji.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json",
-      "content_text_length": 9038,
+      "content_text_length": 9050,
       "ui_status": "done"
     },
     {
@@ -3622,7 +3622,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 139417
+      "content_text_length": 140365
     },
     {
       "scope": "studio",

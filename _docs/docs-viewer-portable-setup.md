@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-11 17:26"
+last_updated: "2026-05-11 17:50"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -36,8 +36,8 @@ It can switch the active scope with the `scope` query parameter.
 ## Files To Copy
 
 These lists are the current copy set, not the desired future package boundary.
-Paths under `assets/studio/` are interim copy requirements only.
-The target ownership in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) moves reusable Docs Viewer runtime, CSS, browser config, and UI text under `assets/docs-viewer/`, while leaving broad Studio, Catalogue, tag, export, and media files in their existing domains.
+Most reusable Docs Viewer runtime, CSS, and UI text now lives under `assets/docs-viewer/`.
+Remaining paths under `assets/studio/` are interim copy requirements for Studio config and the Docs Import modal only.
 
 ### Viewer Shell
 
@@ -60,16 +60,17 @@ Examples in this repo are:
 
 Copy the shared viewer runtime files:
 
-- `assets/js/docs-viewer.js`
-- `assets/js/docs-viewer-data.js`
-- `assets/js/docs-viewer-tree.js`
-- `assets/js/docs-viewer-search.js`
-- `assets/js/docs-viewer-favourites.js`
+- `assets/docs-viewer/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer-data.js`
+- `assets/docs-viewer/js/docs-viewer-tree.js`
+- `assets/docs-viewer/js/docs-viewer-search.js`
+- `assets/docs-viewer/js/docs-viewer-favourites.js`
 
 For management mode, also copy:
 
-- `assets/js/docs-viewer-management-client.js`
-- `assets/js/docs-viewer-drag-drop.js`
+- `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/js/docs-viewer-management-client.js`
+- `assets/docs-viewer/js/docs-viewer-drag-drop.js`
 
 For Docs Import inside the management modal, also copy:
 
@@ -84,7 +85,7 @@ For Docs Import inside the management modal, also copy:
 
 Copy:
 
-- `assets/css/docs-viewer-management.css`
+- `assets/docs-viewer/css/docs-viewer-management.css`
 
 Also copy or extract the Docs Viewer rules from:
 
@@ -106,12 +107,12 @@ This is another packaging leak: management mode is not yet styled only by Docs V
 Copy:
 
 - `assets/studio/data/studio_config.json`
-- `assets/studio/data/ui_text/docs-viewer.json`
+- `assets/docs-viewer/data/ui-text.json`
 - `assets/studio/data/ui_text/docs-html-import.json`
 
 Current issue:
-the viewer reads `studio_config.json` for Docs Viewer settings and UI-status options, even on public docs routes.
-A portable package should move those settings into Docs Viewer-owned config files or route include parameters.
+the viewer still reads `studio_config.json` for Docs Viewer settings and UI-status options, even on public docs routes.
+A portable package should move those remaining settings into Docs Viewer-owned config files or route include parameters.
 
 ### Generated Data Outputs
 
@@ -307,7 +308,7 @@ It already renders `/docs/` with:
 Current hardcoded work required for a new scope:
 
 - add an option to `_includes/docs_viewer_shell.html` scope select
-- add a route entry to `DOCS_ROUTE_SCOPES` in `assets/js/docs-viewer.js`
+- add a route entry to `DOCS_ROUTE_SCOPES` in `assets/docs-viewer/js/docs-viewer.js`
 - make sure `assets/studio/data/studio_config.json` has any status options needed for the new scope
 
 The intended future shape is that the scope select and route map come from `scripts/docs/docs_scopes.json` or a generated browser config.

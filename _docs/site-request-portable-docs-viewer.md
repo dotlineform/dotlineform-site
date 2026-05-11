@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 17:33"
+last_updated: "2026-05-11 17:50"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -144,10 +144,10 @@ Ownership decisions for this slice:
 | Area | Current examples | Target owner | Decision |
 | --- | --- | --- | --- |
 | Docs Viewer shell | `_includes/docs_viewer_shell.html`, `_includes/docs_import_shell.html` | Docs Viewer package plus consuming route adapter | Keep includes as the route integration boundary until the route-adapter slice defines templates. |
-| Docs Viewer runtime JS | `assets/js/docs-viewer*.js` | Docs Viewer | Move under `assets/docs-viewer/js/` in the next implementation slice that changes runtime paths. |
-| Docs Viewer CSS | `assets/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Move under `assets/docs-viewer/css/`; public and management CSS may remain separate. |
+| Docs Viewer runtime JS | `assets/docs-viewer/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `assets/docs-viewer/js/`. |
+| Docs Viewer CSS | `assets/docs-viewer/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `assets/docs-viewer/css/`; public CSS extraction is still a later slice. |
 | Docs Viewer browser config | `scripts/docs/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `scripts/docs/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
-| Docs Viewer UI text | `assets/studio/data/ui_text/docs-viewer.json`, Docs Import copy in `assets/studio/data/ui_text/docs-html-import.json` | Docs Viewer | Move viewer/import copy needed by the portable surface under `assets/docs-viewer/data/`. |
+| Docs Viewer UI text | `assets/docs-viewer/data/ui-text.json`, Docs Import copy in `assets/studio/data/ui_text/docs-html-import.json` | Docs Viewer | Viewer copy lives under `assets/docs-viewer/data/`; Docs Import copy remains Studio-owned until the import/config slices. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
 | Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
 | Docs management server | `scripts/docs/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
@@ -155,9 +155,9 @@ Ownership decisions for this slice:
 | Catalogue and tag tools | `assets/studio/js/catalogue-*`, `assets/studio/js/tag-*`, `scripts/catalogue/`, `scripts/analytics/` | Catalogue, Analytics, Studio | Out of scope except where Docs Viewer currently imports them by mistake. |
 | Public site JS | `assets/js/work.js`, `assets/js/moment.js`, `assets/js/site-nav.js`, `assets/js/theme-toggle.js` | Consuming site/shared public site | Leave in `assets/js/`; this directory should become public site/shared JS after Docs Viewer moves out. |
 
-Next implementation slice should move or introduce only:
+The file-move implementation slice should move or introduce only:
 
-- `assets/docs-viewer/js/` for the existing `assets/js/docs-viewer*.js` modules
+- `assets/docs-viewer/js/` for the Docs Viewer runtime modules
 - `assets/docs-viewer/css/` for Docs Viewer-owned CSS
 - `assets/docs-viewer/data/` for browser config and Docs Viewer UI text
 - include path updates needed by `_includes/docs_viewer_shell.html` and route pages
@@ -190,20 +190,22 @@ Acceptance:
 
 ### 3. Move Docs Viewer Files Into Portable Paths
 
+Status: implemented.
+
 Move the Docs Viewer-owned files into the layout agreed in slice 2 before changing scope behavior, search ownership, or import scope rules.
 This slice is mostly mechanical, but it should leave the live routes working from the new locations.
 
 Tasks:
 
-- create `assets/docs-viewer/js/`, `assets/docs-viewer/css/`, and `assets/docs-viewer/data/`
-- move existing `assets/js/docs-viewer*.js` modules into `assets/docs-viewer/js/`
-- move `assets/css/docs-viewer-management.css` into `assets/docs-viewer/css/`
-- add a Docs Viewer-owned public CSS file under `assets/docs-viewer/css/` only if a small extracted stylesheet is needed to keep includes coherent before the full CSS extraction slice
-- move or copy Docs Viewer UI text needed by the current runtime into `assets/docs-viewer/data/`, while leaving any Studio-only source in place until callers are switched
-- update `_includes/docs_viewer_shell.html`, route pages, and module imports to load from the new Docs Viewer paths
-- keep generated docs payloads under `assets/data/docs/scopes/` and docs-search payloads under `assets/data/search/` for compatibility
-- do not move broad Studio, Catalogue, tag, export, media, or public-site files in this slice
-- update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) so the current copy list points at the new Docs Viewer-owned paths
+- create `assets/docs-viewer/js/`, `assets/docs-viewer/css/`, and `assets/docs-viewer/data/` (done)
+- move existing `assets/js/docs-viewer*.js` modules into `assets/docs-viewer/js/` (done)
+- move `assets/css/docs-viewer-management.css` into `assets/docs-viewer/css/` (done)
+- add a Docs Viewer-owned public CSS file under `assets/docs-viewer/css/` only if a small extracted stylesheet is needed to keep includes coherent before the full CSS extraction slice (not needed in this slice)
+- move or copy Docs Viewer UI text needed by the current runtime into `assets/docs-viewer/data/`, while leaving any Studio-only source in place until callers are switched (done for viewer UI text)
+- update `_includes/docs_viewer_shell.html`, route pages, and module imports to load from the new Docs Viewer paths (done through the shared include)
+- keep generated docs payloads under `assets/data/docs/scopes/` and docs-search payloads under `assets/data/search/` for compatibility (done)
+- do not move broad Studio, Catalogue, tag, export, media, or public-site files in this slice (done)
+- update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) so the current copy list points at the new Docs Viewer-owned paths (done)
 
 Acceptance:
 
@@ -215,14 +217,14 @@ Acceptance:
 
 ### 4. Make Scope Config The Single Source Of Truth
 
-Current scope data is split between `scripts/docs/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `assets/js/docs-viewer.js`, search config, and import-service allowlists.
+Current scope data is split between `scripts/docs/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `assets/docs-viewer/js/docs-viewer.js`, search config, and import-service allowlists.
 
 Tasks:
 
 - create a Docs Viewer-owned browser config
 - generate or load the management scope list from scope config
 - remove hardcoded scope options from `_includes/docs_viewer_shell.html`
-- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/js/docs-viewer.js`
+- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/docs-viewer/js/docs-viewer.js`
 - make generated data URLs, search URLs, default doc ids, route bases, and `include_scope_param` scope-config driven
 - remove remaining hardcoded scope lists that the generated config replaces in the same slice
 

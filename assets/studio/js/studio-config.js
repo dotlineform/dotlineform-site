@@ -95,7 +95,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "tag_aliases": "/assets/studio/data/ui_text/tag-aliases.json",
         "data_import": "/assets/studio/data/ui_text/data-import.json",
         "data_export": "/assets/studio/data/ui_text/data-export.json",
-        "docs_viewer": "/assets/studio/data/ui_text/docs-viewer.json",
+        "docs_viewer": "/assets/docs-viewer/data/ui-text.json",
         "activity_log": "/assets/studio/data/ui_text/activity-log.json",
         "bulk_add_work": "/assets/studio/data/ui_text/bulk-add-work.json",
         "catalogue_field_registry_review": "/assets/studio/data/ui_text/catalogue-field-registry-review.json",

@@ -2,7 +2,7 @@
 doc_id: ui-status-emoji
 title: UI Status Emoji
 added_date: 2026-05-02
-last_updated: "2026-05-07 21:52"
+last_updated: "2026-05-11 17:50"
 ui_status: done
 parent_id: change-requests
 sort_order: 200
@@ -164,7 +164,7 @@ Status: implemented.
 Status: implemented.
 
 - Run `./scripts/build_docs.rb --scope studio --write` after docs-source changes.
-- Run `node --check assets/js/docs-viewer.js` after runtime changes.
+- Run `node --check assets/docs-viewer/js/docs-viewer.js` after runtime changes.
 - Run a targeted docs build or `./scripts/run_checks.py --profile docs` if the implementation changes docs builder, docs-management server, generated payloads, and viewer runtime together.
 - Manually verify `/docs/` and `/library/` on desktop and mobile: scope-specific status config, index-only prefix rendering, edit-modal default selection, modal save behavior, immediate pill writes in manage mode, read-only pills outside manage mode, status clearing, reload persistence, invalid-status ignore behavior, and no search/recent/bookmark label emoji leakage.
 

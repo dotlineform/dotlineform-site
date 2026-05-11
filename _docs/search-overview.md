@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: Search Overview
 added_date: 2026-03-31
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-11 17:50"
 parent_id: search
 sort_order: 10
 ---
@@ -99,8 +99,8 @@ Current files:
 
 - Catalogue browser runtime: `assets/js/catalogue-search.js`
 - Catalogue runtime policy: `assets/data/search/policy.json`
-- Docs browser runtime: `assets/js/docs-viewer.js`
-- Docs search helpers: `assets/js/docs-viewer-search.js`
+- Docs browser runtime: `assets/docs-viewer/js/docs-viewer.js`
+- Docs search helpers: `assets/docs-viewer/js/docs-viewer-search.js`
 - Transitional search build entrypoint: `scripts/build_search.rb`
 - Transitional search build implementation: `scripts/search/build_search.rb`
 - Transitional search build config: `scripts/search/build_config.json`

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-11"
+last_updated: "2026-05-11 17:50"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -20,7 +20,7 @@ Status:
 - Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
 - Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
 - Phase 9 implemented: Docs Import runs inside the Docs Viewer management modal from the shared importer module
-- Phase 10 implemented: management UI orchestration lives in `assets/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
+- Phase 10 implemented: management UI orchestration lives in `assets/docs-viewer/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -83,8 +83,8 @@ Implemented now:
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
 - Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
 - `assets/studio/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
-- `assets/js/docs-viewer-management.js` owns manage-mode toolbar rendering, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
-- `assets/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
+- `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
+- `assets/docs-viewer/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
 
 Not implemented yet:
 

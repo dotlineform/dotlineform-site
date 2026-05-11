@@ -2,7 +2,7 @@
 doc_id: ui-request-docs-viewer-favourites-task
 title: Docs Viewer Favourites
 added_date: 2026-04-19
-last_updated: 2026-05-03
+last_updated: "2026-05-11 17:50"
 ui_status: done
 parent_id: change-requests
 sort_order: 140
@@ -49,7 +49,7 @@ Delivered behavior:
 Implemented files:
 
 - `_includes/docs_viewer_shell.html`
-- `assets/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer.js`
 - `assets/css/main.css`
 
 ## Implementation Boundary
@@ -59,7 +59,7 @@ This should be implemented as a shared Docs Viewer feature.
 Likely ownership:
 
 - shared shell markup: `_includes/docs_viewer_shell.html`
-- shared runtime: `assets/js/docs-viewer.js`
+- shared runtime: `assets/docs-viewer/js/docs-viewer.js`
 - shared docs-viewer styling in the site CSS layer used by both scopes
 - route shell adjustments only if a small shared config hook is needed
 
@@ -147,7 +147,7 @@ Likely scope-owned routes to verify:
 
 Build verification completed:
 
-- `node --check assets/js/docs-viewer.js`
+- `node --check assets/docs-viewer/js/docs-viewer.js`
 - `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 
 ## Open Decisions

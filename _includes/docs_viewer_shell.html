@@ -1,6 +1,6 @@
 {%- if include.allow_management -%}
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-<link rel="stylesheet" href="{{ '/assets/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<link rel="stylesheet" href="{{ '/assets/docs-viewer/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 {%- endif -%}
 {%- assign docs_viewer_generated_base_url = include.generated_base_url | default: site.docs_viewer_generated_base_url | default: '' -%}
 
@@ -16,7 +16,7 @@
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
   data-studio-config-url="{{ include.studio_config_url | default: '/assets/studio/data/studio_config.json' | relative_url }}"
-  data-ui-text-url="{{ include.ui_text_url | default: '/assets/studio/data/ui_text/docs-viewer.json' | relative_url }}"
+  data-ui-text-url="{{ include.ui_text_url | default: '/assets/docs-viewer/data/ui-text.json' | relative_url }}"
   data-generated-base-url="{{ docs_viewer_generated_base_url }}"
   data-management-base-url="{{ include.management_base_url | default: '' }}"
 >
@@ -197,4 +197,4 @@
   </article>
 </section>
 
-<script type="module" src="{{ '/assets/js/docs-viewer.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/assets/docs-viewer/js/docs-viewer.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-11] Moved Docs Viewer runtime files into portable asset paths
+
+**Status:** implemented
+
+**Area:** Docs Viewer portability / file ownership
+
+**Summary:**
+Moved the active Docs Viewer runtime modules, management stylesheet, and viewer UI text into `assets/docs-viewer/`.
+The shared viewer include now loads the runtime from `assets/docs-viewer/js/`, management CSS from `assets/docs-viewer/css/`, and viewer UI text from `assets/docs-viewer/data/`.
+
+**Files changed/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/docs-viewer/js/`
+- `assets/docs-viewer/css/docs-viewer-management.css`
+- `assets/docs-viewer/data/ui-text.json`
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+
+**Impact:**
+Reusable Docs Viewer assets no longer live in the generic public JS directory or Studio UI-text directory.
+Studio still supplies some viewer settings through `studio_config.json`, and Docs Import remains on Studio assets until its later portability slice.
+
 ## [2026-05-11] Split Docs Viewer management into a lazy controller
 
 **Status:** implemented

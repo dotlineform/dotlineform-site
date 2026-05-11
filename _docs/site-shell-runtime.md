@@ -2,7 +2,7 @@
 doc_id: site-shell-runtime
 title: Site Shell Runtime
 added_date: 2026-03-31
-last_updated: "2026-05-10 17:20"
+last_updated: "2026-05-11 17:50"
 parent_id: architecture
 sort_order: 30
 ---
@@ -144,7 +144,7 @@ Current route shells:
 Current shared docs-viewer layer:
 
 - `_includes/docs_viewer_shell.html`
-- `assets/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer.js`
 
 The fork/no-fork rule for that shared viewer is documented in [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary).
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-62ae64543e15bf7e0a3c9b034bfcd470",
-    "generated_at_utc": "2026-05-11T16:34:08Z",
+    "version": "blake2b-943b3266495d5ef32f515820f0ccdd81",
+    "generated_at_utc": "2026-05-11T16:56:57Z",
     "count": 223
   },
   "entries": [
@@ -475,21 +475,23 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 • Docs",
+      "display_meta": "2026-05-11 17:50 • Docs",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
-        "2026-05-11",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "11"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview 2026-05-11 2026 05 11"
+      "search_text": "docs-viewer-overview docs viewer overview 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "pipeline-use-cases",
@@ -519,23 +521,23 @@
       "kind": "doc",
       "title": "Search Overview",
       "href": "/docs/?scope=studio&doc=search-overview",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 14:10 • Search",
+      "display_meta": "2026-05-11 17:50 • Search",
       "search_terms": [
         "search-overview",
         "search",
         "overview",
         "search overview",
-        "2026-05-11 14:10",
+        "2026-05-11 17:50",
         "2026",
         "05",
         "11",
-        "14",
-        "10"
+        "17",
+        "50"
       ],
-      "search_text": "search-overview search overview search overview 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "search-overview search overview search overview 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "site-change-log-guidance",
@@ -696,10 +698,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-11 17:26",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 17:26 • Docs",
+      "display_meta": "2026-05-11 17:50 • Docs",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -707,14 +709,14 @@
         "portable",
         "setup",
         "docs viewer portable setup",
-        "2026-05-11 17:26",
+        "2026-05-11 17:50",
         "2026",
         "05",
         "11",
         "17",
-        "26"
+        "50"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-11 17:26 2026 05 11 17 26"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "user-guide",
@@ -1488,10 +1490,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-11 17:33",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 17:33 • Change Requests",
+      "display_meta": "2026-05-11 17:50 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1503,14 +1505,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11 17:33",
+        "2026-05-11 17:50",
         "2026",
         "05",
         "11",
         "17",
-        "33"
+        "50"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 17:33 2026 05 11 17 33"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "analytics",
@@ -1672,10 +1674,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 • Docs",
+      "display_meta": "2026-05-11 17:50 • Docs",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -1683,12 +1685,14 @@
         "runtime",
         "boundary",
         "docs viewer runtime boundary",
-        "2026-05-11",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "11"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary 2026-05-11 2026 05 11"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "ui-primitive-list",
@@ -1797,10 +1801,10 @@
       "kind": "doc",
       "title": "Site Shell Runtime",
       "href": "/docs/?scope=studio&doc=site-shell-runtime",
-      "last_updated": "2026-05-10 17:20",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-10 17:20 • Architecture",
+      "display_meta": "2026-05-11 17:50 • Architecture",
       "search_terms": [
         "site-shell-runtime",
         "site",
@@ -1808,14 +1812,14 @@
         "runtime",
         "site shell runtime",
         "architecture",
-        "2026-05-10 17:20",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "10",
+        "11",
         "17",
-        "20"
+        "50"
       ],
-      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-10 17:20 2026 05 10 17 20"
+      "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "studio-config-and-save-flow",
@@ -2191,18 +2195,20 @@
       "kind": "doc",
       "title": "Docs",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-11",
-      "display_meta": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
+      "display_meta": "2026-05-11 17:50",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
-        "2026-05-11",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "11"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "docs-viewer docs viewer 2026-05-11 2026 05 11"
+      "search_text": "docs-viewer docs viewer 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",
@@ -4075,23 +4081,24 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-10 19:05",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-10 19:05 • Studio",
+      "display_meta": "2026-05-11 17:50 • Studio",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-10 19:05",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "10",
-        "19"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-10 19:05 2026 05 10 19"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "site-request-work-owned-files-links",
@@ -4760,10 +4767,10 @@
       "kind": "doc",
       "title": "Docs Viewer Favourites",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 • Change Requests",
+      "display_meta": "2026-05-11 17:50 • Change Requests",
       "search_terms": [
         "ui-request-docs-viewer-favourites-task",
         "ui",
@@ -4776,12 +4783,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "03"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites change requests change requests 2026-05-03 2026 05 03"
+      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "scripts-project-state-report",
@@ -4836,10 +4845,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 • Change Requests",
+      "display_meta": "2026-05-11 17:50 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4849,12 +4858,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "11"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-11 2026 05 11"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -5302,10 +5313,10 @@
       "kind": "doc",
       "title": "UI Status Emoji",
       "href": "/docs/?scope=studio&doc=ui-status-emoji",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-11 17:50",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-07 21:52 • Change Requests",
+      "display_meta": "2026-05-11 17:50 • Change Requests",
       "search_terms": [
         "ui-status-emoji",
         "ui",
@@ -5315,14 +5326,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-07 21:52",
+        "2026-05-11 17:50",
         "2026",
         "05",
-        "07",
-        "21",
-        "52"
+        "11",
+        "17",
+        "50"
       ],
-      "search_text": "ui-status-emoji ui status emoji ui status emoji change requests change requests 2026-05-07 21:52 2026 05 07 21 52"
+      "search_text": "ui-status-emoji ui status emoji ui status emoji change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "site-request-docs-import-source-registry-media",

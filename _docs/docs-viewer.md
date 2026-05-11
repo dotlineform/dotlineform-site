@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: "2026-05-11 17:50"
 parent_id: ""
 sort_order: 40
 ---
@@ -20,13 +20,14 @@ The current implementation uses:
 
 - scope-specific route shells to define the route, scope, and generated data URLs
 - one shared shell include in `_includes/docs_viewer_shell.html`
-- one shared runtime entry module in `assets/js/docs-viewer.js`
-- pure tree and visibility helpers in `assets/js/docs-viewer-tree.js`
-- pure inline-search and recently-added helpers in `assets/js/docs-viewer-search.js`
-- bookmark record and storage helpers in `assets/js/docs-viewer-favourites.js`
+- one shared runtime entry module in `assets/docs-viewer/js/docs-viewer.js`
+- pure tree and visibility helpers in `assets/docs-viewer/js/docs-viewer-tree.js`
+- pure inline-search and recently-added helpers in `assets/docs-viewer/js/docs-viewer-search.js`
+- bookmark record and storage helpers in `assets/docs-viewer/js/docs-viewer-favourites.js`
 - shared Docs Viewer settings in `assets/studio/data/studio_config.json`
+- Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
-- a management-only stylesheet in `assets/css/docs-viewer-management.css`, loaded only by `/docs/`
+- a management-only stylesheet in `assets/docs-viewer/css/docs-viewer-management.css`, loaded only by `/docs/`
 
 Public viewer routes are read-only:
 

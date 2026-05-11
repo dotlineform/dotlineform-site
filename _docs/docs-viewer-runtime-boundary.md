@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: "Docs Viewer Runtime Boundary"
 added_date: 2026-03-31
-last_updated: "2026-05-11"
+last_updated: "2026-05-11 17:50"
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -14,7 +14,7 @@ sort_order: 30
 This document records the current boundary between:
 
 - scope-specific docs page shells such as `/docs/` and `/library/`
-- the shared docs viewer runtime in `assets/js/docs-viewer.js`
+- the shared docs viewer runtime in `assets/docs-viewer/js/docs-viewer.js`
 
 It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking the core viewer too early.
 
@@ -34,15 +34,15 @@ Current route-shell examples:
 
 Current shared implementation:
 
-- `assets/js/docs-viewer.js` as the shared entry controller
-- `assets/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
-- `assets/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
-- `assets/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
-- `assets/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
-- `assets/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
-- `assets/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the entry controller
+- `assets/docs-viewer/js/docs-viewer.js` as the shared entry controller
+- `assets/docs-viewer/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
+- `assets/docs-viewer/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
+- `assets/docs-viewer/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
+- `assets/docs-viewer/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
+- `assets/docs-viewer/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
+- `assets/docs-viewer/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the entry controller
 - `_includes/docs_viewer_shell.html`
-- `assets/css/docs-viewer-management.css` for management-only shell and modal styling
+- `assets/docs-viewer/css/docs-viewer-management.css` for management-only shell and modal styling
 
 The shell loads the entry controller as an ES module.
 Extracted helper modules must not import the entry controller or mutate its shared state directly.

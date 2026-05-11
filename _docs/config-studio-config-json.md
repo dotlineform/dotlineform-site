@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-10 19:05"
+last_updated: "2026-05-11 17:50"
 parent_id: studio
 sort_order: 90
 ---
@@ -25,13 +25,13 @@ Current responsibilities include:
 - the route and feed path for the current Studio activity page
 - route and data paths for catalogue status, unified activity, project-state reporting, and catalogue editor pages
 - route and data paths for the shared Studio data export/import pages
-- scoped UI-text bundle paths under `paths.data.ui_text`
+- scoped UI-text bundle paths under `paths.data.ui_text`, including the Docs Viewer-owned path under `assets/docs-viewer/data/`
 - the Studio Audits route path and scoped UI-text bundle path
 - catalogue UI options such as the Studio series-type dropdown values
 - Studio analysis group and RAG settings
 
 The file is the root browser manifest.
-It does not own visible UI text directly; Studio UI copy belongs in scoped payloads under `assets/studio/data/ui_text/`.
+It does not own visible UI text directly; Studio UI copy belongs in scoped payloads under `assets/studio/data/ui_text/`, while Docs Viewer copy belongs under `assets/docs-viewer/data/`.
 Domain behavior should live with the domain runtime that uses the config.
 For example, Studio analysis scoring code lives in `assets/studio/js/analysis-tag-scoring.js`; `studio_config.json` only supplies the current scoring policy values.
 
@@ -59,7 +59,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
-- `assets/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer.js`
 
 It also feeds shared path resolution used by:
 
@@ -187,7 +187,7 @@ Contract:
 - `emoji` is the compact visual marker for index and status-pill UI
 - malformed, duplicate, blank, or overlong entries are ignored by the viewer rather than treated as build failures
 
-Related status-pill labels and save-state messages live in `assets/studio/data/ui_text/docs-viewer.json`, loaded through `paths.data.ui_text.docs_viewer`, including:
+Related status-pill labels and save-state messages live in `assets/docs-viewer/data/ui-text.json`, loaded through `paths.data.ui_text.docs_viewer`, including:
 
 - `draft_toggle_label`
 - `draft_toggle_aria_label`
