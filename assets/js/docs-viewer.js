@@ -34,7 +34,6 @@ import {
   if (!root) return;
 
   var nav = document.getElementById("docsViewerNav");
-  var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
   var sidebarToggle = document.getElementById("docsViewerSidebarToggle");
   var status = document.getElementById("docsViewerStatus");
   var meta = document.getElementById("docsViewerMeta");
@@ -45,44 +44,11 @@ import {
   var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
   var statusPills = document.getElementById("docsViewerStatusPills");
   var content = document.getElementById("docsViewerContent");
-  var contextMenu = document.getElementById("docsViewerContextMenu");
   var scopeSelect = document.getElementById("docsViewerScopeSelect");
   var recentButton = document.getElementById("docsViewerRecentButton");
   var searchInput = document.getElementById("docsViewerSearchInput");
   var results = document.getElementById("docsViewerResults");
   var more = document.getElementById("docsViewerMore");
-  var manageRow = document.getElementById("docsViewerManageRow");
-  var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
-  var manageNote = document.getElementById("docsViewerManageNote");
-  var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
-  var manageImportButton = document.getElementById("docsViewerManageImportButton");
-  var manageNewButton = document.getElementById("docsViewerManageNewButton");
-  var manageEditButton = document.getElementById("docsViewerManageEditButton");
-  var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
-  var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
-  var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
-  var draftToggle = document.getElementById("docsViewerDraftToggle");
-  var draftLabel = document.querySelector(".docsViewer__draftLabel");
-  var metadataModal = document.getElementById("docsViewerMetadataModal");
-  var metadataForm = document.getElementById("docsViewerMetadataForm");
-  var metadataDocId = document.getElementById("docsViewerMetadataDocId");
-  var metadataTitleInput = document.getElementById("docsViewerMetadataTitleInput");
-  var metadataSummaryInput = document.getElementById("docsViewerMetadataSummaryInput");
-  var metadataStatusLabel = document.getElementById("docsViewerMetadataStatusLabel");
-  var metadataStatusInput = document.getElementById("docsViewerMetadataStatusInput");
-  var metadataHiddenInput = document.getElementById("docsViewerMetadataHiddenInput");
-  var metadataHiddenLabel = document.getElementById("docsViewerMetadataHiddenLabel");
-  var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
-  var metadataParentList = document.getElementById("docsViewerMetadataParentList");
-  var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
-  var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
-  var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
-  var metadataSaveButton = document.getElementById("docsViewerMetadataSaveButton");
-  var importModal = document.getElementById("docsViewerImportModal");
-  var importRoot = document.getElementById("docsHtmlImportRoot");
-  var importBootStatus = document.getElementById("docsHtmlImportBootStatus");
-  var importScope = document.getElementById("docsViewerImportScope");
-  var importCloseButton = document.getElementById("docsViewerImportCloseButton");
 
   var allowManagement = root.dataset.allowManagement === "true";
   var allowScopeQuery = root.dataset.allowScopeQuery === "true";
@@ -137,32 +103,8 @@ import {
   var bookmarkScope = viewerScope || viewerPathname || "docs";
   var sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
   var assetVersion = readAssetVersion(document);
-  var managementModulesRequestPromise = null;
-  var applyManagedDocDelete = null;
-  var archiveManagedDoc = null;
-  var createManagedDoc = null;
-  var moveManagedDoc = null;
-  var openManagedDocSource = null;
-  var previewManagedDocDelete = null;
-  var readManagementCapabilities = null;
-  var rebuildManagedDocs = null;
-  var restoreManagedDocMove = null;
-  var scopeSupportsGeneratedDataReads = function () { return false; };
-  var scopeSupportsGeneratedSearchReads = function () { return false; };
-  var updateManagedDocMetadata = null;
-  var updateManagedDocsViewability = null;
-  var canDragDoc = function () { return false; };
-  var canDropOnDoc = function () { return false; };
-  var currentDropTargetFromEvent = function () { return { targetDocId: "", position: "" }; };
-  var moveUndoPayloadRecords = function () { return []; };
-  var moveUndoRecordChanged = function () { return false; };
-  var normalizeMoveUndoRecords = function () { return []; };
-  var normalizeSortOrderValue = function (value) {
-    return value == null ? "" : String(value).trim();
-  };
-  var rowDropPosition = function () { return ""; };
-  var docsImportRequestPromise = null;
-  var docsImportInitialized = false;
+  var managementController = null;
+  var managementControllerRequestPromise = null;
 
   var state = {
     allDocs: [],
@@ -267,17 +209,6 @@ import {
     }, settings);
   }
 
-  function managementClientOptions() {
-    return {
-      baseUrl: managementBaseUrl,
-      scope: viewerScope,
-      serverNotConfiguredError: state.managementText.serverNotConfiguredError,
-      fetch: function (url, options) {
-        return window.fetch(url, options);
-      }
-    };
-  }
-
   function scopeGeneratedCapability(capabilities, scope, key) {
     var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
     return Boolean(
@@ -304,50 +235,101 @@ import {
       });
   }
 
-  function loadManagementModules() {
-    if (!allowManagement) return Promise.resolve(false);
-    if (readManagementCapabilities) return Promise.resolve(true);
-    if (managementModulesRequestPromise) return managementModulesRequestPromise;
+  function checkGeneratedDataReadCapability() {
+    if (!generatedBaseUrl) {
+      state.generatedDataReadChecked = true;
+      state.generatedDataReadAvailable = false;
+      return Promise.resolve(false);
+    }
+    if (state.generatedDataReadChecked) {
+      return Promise.resolve(state.generatedDataReadAvailable);
+    }
+    if (state.generatedDataReadRequestPromise) {
+      return state.generatedDataReadRequestPromise;
+    }
 
-    managementModulesRequestPromise = Promise.all([
-      import("./docs-viewer-management-client.js"),
-      import("./docs-viewer-drag-drop.js")
-    ])
-      .then(function (modules) {
-        var managementClient = modules[0];
-        var dragDrop = modules[1];
-        applyManagedDocDelete = managementClient.applyManagedDocDelete;
-        archiveManagedDoc = managementClient.archiveManagedDoc;
-        createManagedDoc = managementClient.createManagedDoc;
-        moveManagedDoc = managementClient.moveManagedDoc;
-        openManagedDocSource = managementClient.openManagedDocSource;
-        previewManagedDocDelete = managementClient.previewManagedDocDelete;
-        readManagementCapabilities = managementClient.readManagementCapabilities;
-        rebuildManagedDocs = managementClient.rebuildManagedDocs;
-        restoreManagedDocMove = managementClient.restoreManagedDocMove;
-        scopeSupportsGeneratedDataReads = managementClient.scopeSupportsGeneratedDataReads;
-        scopeSupportsGeneratedSearchReads = managementClient.scopeSupportsGeneratedSearchReads;
-        updateManagedDocMetadata = managementClient.updateManagedDocMetadata;
-        updateManagedDocsViewability = managementClient.updateManagedDocsViewability;
-        canDragDoc = dragDrop.canDragDoc;
-        canDropOnDoc = dragDrop.canDropOnDoc;
-        currentDropTargetFromEvent = dragDrop.currentDropTargetFromEvent;
-        moveUndoPayloadRecords = dragDrop.moveUndoPayloadRecords;
-        moveUndoRecordChanged = dragDrop.moveUndoRecordChanged;
-        normalizeMoveUndoRecords = dragDrop.normalizeMoveUndoRecords;
-        normalizeSortOrderValue = dragDrop.normalizeSortOrderValue;
-        rowDropPosition = dragDrop.rowDropPosition;
-        return true;
+    state.generatedDataReadRequestPromise = readGeneratedCapabilities()
+      .then(function (payload) {
+        if (!payload) {
+          state.generatedDataReadAvailable = false;
+          state.generatedDataReadChecked = true;
+          return false;
+        }
+        state.managementCapabilities = payload.capabilities || null;
+        state.generatedDataReadAvailable = scopeGeneratedCapability(state.managementCapabilities, viewerScope, "generated_data_reads");
+        state.generatedDataReadChecked = true;
+        return state.generatedDataReadAvailable;
       })
-      .catch(function (error) {
-        console.warn("docs_viewer: management modules unavailable", error);
+      .catch(function () {
+        state.generatedDataReadAvailable = false;
+        state.generatedDataReadChecked = true;
         return false;
       })
       .finally(function () {
-        managementModulesRequestPromise = null;
+        state.generatedDataReadRequestPromise = null;
       });
 
-    return managementModulesRequestPromise;
+    return state.generatedDataReadRequestPromise;
+  }
+
+  function managementContext() {
+    return {
+      MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS: MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS,
+      MANAGEMENT_CAPABILITY_RETRY_DELAY_MS: MANAGEMENT_CAPABILITY_RETRY_DELAY_MS,
+      MANAGEMENT_MODE: MANAGEMENT_MODE,
+      SEARCH_BATCH_SIZE: SEARCH_BATCH_SIZE,
+      applyDocVisibility: applyDocVisibility,
+      cancelSearchDebounce: cancelSearchDebounce,
+      cssEscape: cssEscape,
+      currentStatusValue: currentStatusValue,
+      currentViewerConfig: function () { return state.viewerConfig || {}; },
+      defaultDocId: defaultDocId,
+      defaultRouteDocId: function () { return defaultRouteDocId; },
+      escapeHtml: escapeHtml,
+      findAllDocById: findAllDocById,
+      formatText: formatText,
+      getConfigText: getConfigText,
+      getConfigValue: getConfigValue,
+      getCurrentMode: getCurrentMode,
+      loadDoc: loadDoc,
+      loadIndex: loadIndex,
+      managementBaseUrl: managementBaseUrl,
+      nav: nav,
+      renderBookmarkUi: renderBookmarkUi,
+      renderRecentMode: renderRecentMode,
+      renderSearchMode: renderSearchMode,
+      renderSidebar: renderSidebar,
+      renderStatusPills: renderStatusPills,
+      root: root,
+      searchInput: searchInput,
+      setHistory: setHistory,
+      setStatus: setStatus,
+      state: state,
+      statusPillsCanWrite: statusPillsCanWrite,
+      viewerScope: function () { return viewerScope; }
+    };
+  }
+
+  function loadManagementController() {
+    if (!allowManagement) return Promise.resolve(null);
+    if (managementController) return Promise.resolve(managementController);
+    if (managementControllerRequestPromise) return managementControllerRequestPromise;
+
+    managementControllerRequestPromise = import("./docs-viewer-management.js")
+      .then(function (module) {
+        managementController = module.initDocsViewerManagement(managementContext());
+        renderSidebar();
+        return managementController;
+      })
+      .catch(function (error) {
+        console.warn("docs_viewer: management controller unavailable", error);
+        return null;
+      })
+      .finally(function () {
+        managementControllerRequestPromise = null;
+      });
+
+    return managementControllerRequestPromise;
   }
 
   function routeScopeFromUrl() {
@@ -510,6 +492,7 @@ import {
   }
 
   function applyViewerConfig(config) {
+    state.viewerConfig = config || {};
     state.viewerConfigLoaded = true;
     state.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), DEFAULT_RECENT_LIMIT);
     state.uiStatuses = normalizeUiStatuses(config, viewerScope);
@@ -526,51 +509,14 @@ import {
       recentButton.setAttribute("aria-label", label);
       recentButton.title = label;
     }
-    if (draftLabel) {
-      draftLabel.textContent = getConfigText(config, "docs_viewer.hidden_toggle_label", getConfigText(config, "docs_viewer.draft_toggle_label", "show hidden"));
-    }
-    if (draftToggle) {
-      draftToggle.setAttribute("aria-label", getConfigText(config, "docs_viewer.hidden_toggle_aria_label", getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show hidden docs")));
-    }
-    if (manageViewableButton) {
-      var makeViewableLabel = getConfigText(config, "docs_viewer.make_viewable_button", "Show");
-      manageViewableButton.textContent = makeViewableLabel;
-      manageViewableButton.setAttribute("aria-label", makeViewableLabel);
-      manageViewableButton.title = makeViewableLabel;
-    }
-    state.managementText.archiveUnavailableNote = getConfigText(config, "docs_viewer.manage_archive_unavailable_note", state.managementText.archiveUnavailableNote);
-    state.managementText.checkingNote = getConfigText(config, "docs_viewer.manage_checking_note", state.managementText.checkingNote);
-    state.managementText.clearSearchNote = getConfigText(config, "docs_viewer.manage_clear_search_note", state.managementText.clearSearchNote);
-    state.managementText.undoMoveLabel = getConfigText(config, "docs_viewer.undo_move_label", state.managementText.undoMoveLabel);
-    state.managementText.undoMoveStatus = getConfigText(config, "docs_viewer.undo_move_status", state.managementText.undoMoveStatus);
-    state.managementText.serverNotConfiguredError = getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
-    state.managementText.unavailableNote = getConfigText(config, "docs_viewer.manage_unavailable_note", state.managementText.unavailableNote);
-    state.managementText.viewableAncestorPrompt = getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
-    state.managementText.viewableDescendantPrompt = getConfigText(config, "docs_viewer.viewable_descendant_prompt", state.managementText.viewableDescendantPrompt);
-    state.managementText.viewableInvalidChoice = getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
-    state.managementText.metadataStatusLabel = getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
-    state.managementText.metadataStatusNoneOption = getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
-    state.managementText.metadataStatusSelectedSuffix = getConfigText(config, "docs_viewer.metadata_status_selected_suffix", state.managementText.metadataStatusSelectedSuffix);
-    state.managementText.metadataHiddenLabel = getConfigText(config, "docs_viewer.metadata_hidden_label", getConfigText(config, "docs_viewer.metadata_viewable_label", state.managementText.metadataHiddenLabel));
-    state.managementText.metadataParentRootOption = getConfigText(config, "docs_viewer.metadata_parent_root_option", state.managementText.metadataParentRootOption);
-    state.managementText.metadataParentInvalid = getConfigText(config, "docs_viewer.metadata_parent_invalid", state.managementText.metadataParentInvalid);
-    state.managementText.docHiddenEmoji = String(getConfigValue(config, "docs_viewer.doc_hidden_emoji") || state.managementText.docHiddenEmoji);
     state.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
     state.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
     state.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
     state.managementText.statusPillSaving = getConfigText(config, "docs_viewer.status_pill_saving", state.managementText.statusPillSaving);
     state.managementText.statusPillSaved = getConfigText(config, "docs_viewer.status_pill_saved", state.managementText.statusPillSaved);
     state.managementText.statusPillFailed = getConfigText(config, "docs_viewer.status_pill_failed", state.managementText.statusPillFailed);
-    if (metadataStatusLabel) {
-      metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
-    }
-    if (metadataHiddenLabel) {
-      metadataHiddenLabel.textContent = state.managementText.metadataHiddenLabel;
-    }
-    if (state.metadataEditingDocId && metadataStatusInput) {
-      var metadataDoc = state.docsById.get(state.metadataEditingDocId);
-      renderMetadataStatusOptions(metadataDoc);
-      renderMetadataParentOptions(metadataDoc);
+    if (managementController) {
+      managementController.applyConfig(config);
     }
     if (state.docs.length) {
       renderSidebar();
@@ -1000,6 +946,10 @@ import {
     return null;
   }
 
+  function docChildren(docId) {
+    return state.childrenByParent.get(docId) || [];
+  }
+
   function syncHiddenVisibilityForRequestedDoc() {
     if (!state.managementMode) return;
     var requestedDocId = getCurrentDocId();
@@ -1240,1076 +1190,35 @@ import {
     status.classList.toggle("is-error", Boolean(isError));
   }
 
-  function setManagementMessage(message, isError) {
-    state.managementMessage = String(message || "");
-    state.managementMessageIsError = Boolean(isError);
-    renderManagementUi();
-  }
-
-  function scopeManagementCapabilities() {
-    if (!state.managementCapabilities || !state.managementCapabilities.scopes) return null;
-    return state.managementCapabilities.scopes[viewerScope] || null;
-  }
-
-  function currentSelectedDoc() {
-    return state.docsById.get(state.selectedDocId) || null;
-  }
-
-  function currentContextMenuDoc() {
-    return state.docsById.get(state.contextMenuDocId) || null;
-  }
-
-  function docChildren(docId) {
-    return state.childrenByParent.get(docId) || [];
-  }
-
-  function docHasChildren(docId) {
-    return docChildren(docId).length > 0;
-  }
-
-  function managementDragEnabled() {
-    return allowManagement && state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
-  }
-
-  function dragDropOptions() {
-    return {
-      dragDocId: state.dragDocId,
-      dragEnabled: managementDragEnabled(),
-      docsById: state.docsById,
-      hasChildren: docHasChildren
-    };
-  }
-
-  function canDragCurrentDoc(doc) {
-    return canDragDoc(doc, dragDropOptions());
-  }
-
-  function clearDragState() {
-    state.dragDocId = "";
-    state.dropTargetDocId = "";
-    state.dropPosition = "";
-    updateNavDragState();
-  }
-
-  function contextMenuEnabled() {
-    return allowManagement && state.managementMode && state.managementAvailable;
-  }
-
-  function metadataModalOpen() {
-    return Boolean(metadataModal && !metadataModal.hidden);
-  }
-
   function hideContextMenu() {
-    state.contextMenuDocId = "";
-    if (contextMenu) {
-      contextMenu.hidden = true;
-      contextMenu.style.left = "";
-      contextMenu.style.top = "";
+    if (managementController) {
+      managementController.hideContextMenu();
     }
-  }
-
-  function showContextMenu(docId, clientX, clientY) {
-    if (!contextMenu || !contextMenuEnabled()) return;
-    state.contextMenuDocId = docId;
-    contextMenu.hidden = false;
-    contextMenu.style.left = "0px";
-    contextMenu.style.top = "0px";
-    var menuRect = contextMenu.getBoundingClientRect();
-    var maxLeft = Math.max(8, window.innerWidth - menuRect.width - 8);
-    var maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
-    contextMenu.style.left = Math.min(clientX, maxLeft) + "px";
-    contextMenu.style.top = Math.min(clientY, maxTop) + "px";
-  }
-
-  function collectDescendantDocIds(docId, bucket) {
-    docChildren(docId).forEach(function (child) {
-      if (bucket.has(child.doc_id)) return;
-      bucket.add(child.doc_id);
-      collectDescendantDocIds(child.doc_id, bucket);
-    });
-    return bucket;
-  }
-
-  function collectAllDescendantDocIds(docId, bucket) {
-    state.allDocs.forEach(function (candidate) {
-      if ((candidate.parent_id || "") !== docId || bucket.has(candidate.doc_id)) return;
-      bucket.add(candidate.doc_id);
-      collectAllDescendantDocIds(candidate.doc_id, bucket);
-    });
-    return bucket;
-  }
-
-  function nonViewableAncestorDocs(doc) {
-    var ancestors = [];
-    var current = doc && doc.parent_id ? findAllDocById(doc.parent_id) : null;
-    while (current) {
-      if (!isDocViewable(current)) {
-        ancestors.unshift(current);
-      }
-      current = current.parent_id ? findAllDocById(current.parent_id) : null;
-    }
-    return ancestors;
-  }
-
-  function docTitleList(docs) {
-    return docs.map(function (item) {
-      return item.title || item.doc_id;
-    }).join(", ");
-  }
-
-  function viewabilityTargetDocIds(doc) {
-    var ancestors = nonViewableAncestorDocs(doc);
-    if (ancestors.length) {
-      var ancestorMessage = formatText(state.managementText.viewableAncestorPrompt, {
-        titles: docTitleList(ancestors)
-      });
-      if (!window.confirm(ancestorMessage)) {
-        return null;
-      }
-    }
-
-    var includeDescendants = false;
-    var descendantIds = Array.from(collectAllDescendantDocIds(doc.doc_id, new Set()));
-    if (descendantIds.length) {
-      var descendantChoice = window.prompt(
-        state.managementText.viewableDescendantPrompt,
-        "selected"
-      );
-      if (descendantChoice === null) {
-        return null;
-      }
-      var normalizedChoice = descendantChoice.trim().toLowerCase();
-      if (normalizedChoice === "all") {
-        includeDescendants = true;
-      } else if (normalizedChoice !== "selected") {
-        setManagementMessage(state.managementText.viewableInvalidChoice, true);
-        setStatus(state.managementText.viewableInvalidChoice, true);
-        return null;
-      }
-    }
-
-    var targetIds = new Set();
-    ancestors.forEach(function (ancestor) {
-      targetIds.add(ancestor.doc_id);
-    });
-    targetIds.add(doc.doc_id);
-    if (includeDescendants) {
-      descendantIds.forEach(function (docId) {
-        targetIds.add(docId);
-      });
-    }
-    return Array.from(targetIds);
-  }
-
-  function metadataParentOptions(doc) {
-    var blockedIds = collectAllDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
-    var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
-    var docsByParent = buildChildrenMap(state.allDocs, {
-      managementMode: state.managementMode,
-      showHidden: state.showHidden
-    });
-    function pushChildren(parentId, depth) {
-      (docsByParent.get(parentId) || []).forEach(function (candidate) {
-        if (!blockedIds.has(candidate.doc_id)) {
-          options.push({
-            value: candidate.doc_id,
-            label: (depth > 0 ? new Array(depth + 1).join("— ") : "") + candidate.title
-          });
-        }
-        pushChildren(candidate.doc_id, depth + 1);
-      });
-    }
-    pushChildren("", 0);
-    return options;
-  }
-
-  function metadataParentOptionDisplay(option) {
-    if (!option || !option.value) return state.managementText.metadataParentRootOption;
-    return option.label + " [" + option.value + "]";
-  }
-
-  function renderMetadataParentOptions(doc) {
-    if (!metadataParentInput || !metadataParentList) return;
-    metadataParentInput.setAttribute("list", "docsViewerMetadataParentList");
-    var currentParentId = String(doc && doc.parent_id || "").trim();
-    var options = metadataParentOptions(doc);
-    var currentOption = options.find(function (option) {
-      return option.value === currentParentId;
-    }) || options[0];
-    metadataParentInput.value = metadataParentOptionDisplay(currentOption);
-    metadataParentList.innerHTML = options.map(function (option) {
-      return '<option value="' + escapeHtml(metadataParentOptionDisplay(option)) + '"></option>';
-    }).join("");
-  }
-
-  function resolveMetadataParentId(doc) {
-    if (!metadataParentInput) return "";
-    var inputValue = String(metadataParentInput.value || "").trim();
-    var rootLabel = state.managementText.metadataParentRootOption;
-    if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
-    var options = metadataParentOptions(doc);
-    var exactDisplay = options.find(function (option) {
-      return metadataParentOptionDisplay(option) === inputValue;
-    });
-    if (exactDisplay) return exactDisplay.value;
-    var exactDocId = options.find(function (option) {
-      return option.value && option.value === inputValue;
-    });
-    if (exactDocId) return exactDocId.value;
-    var exactTitle = options.filter(function (option) {
-      return option.value && option.label.replace(/^(—\s*)+/, "") === inputValue;
-    });
-    if (exactTitle.length === 1) return exactTitle[0].value;
-    return null;
-  }
-
-  function metadataStatusOptions() {
-    var options = [{
-      value: "",
-      label: state.managementText.metadataStatusNoneOption
-    }];
-    state.uiStatuses.forEach(function (status) {
-      options.push({
-        value: status.ui_status,
-        label: status.emoji + " " + status.label
-      });
-    });
-    return options;
-  }
-
-  function renderMetadataStatusOptions(doc) {
-    if (!metadataStatusInput) return;
-    var selectedValue = String(doc && doc.ui_status || "").trim();
-    renderMetadataStatusSelection(selectedValue);
-  }
-
-  function renderMetadataStatusSelection(selectedValue) {
-    if (!metadataStatusInput) return;
-    metadataStatusInput.innerHTML = metadataStatusOptions().map(function (option) {
-      var selected = option.value === selectedValue ? ' selected' : "";
-      var label = option.label + (selected ? state.managementText.metadataStatusSelectedSuffix : "");
-      return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(label) + "</option>";
-    }).join("");
-    metadataStatusInput.size = Math.max(1, metadataStatusInput.options.length);
-  }
-
-  function dismissMetadataParentSuggestions() {
-    if (!metadataParentInput) return;
-    metadataParentInput.blur();
-    metadataParentInput.value = "";
-    metadataParentInput.removeAttribute("list");
-    if (metadataParentList) {
-      metadataParentList.innerHTML = "";
-    }
-  }
-
-  function closeMetadataModal() {
-    if (!metadataModal) return;
-    if (document.activeElement && metadataModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
-    dismissMetadataParentSuggestions();
-    metadataModal.hidden = true;
-    state.metadataEditingDocId = "";
-    var restoreDocId = state.metadataRestoreFocusId;
-    state.metadataRestoreFocusId = "";
-    if (!restoreDocId || !nav) return;
-    var target = nav.querySelector('[data-doc-row-id="' + cssEscape(restoreDocId) + '"] .docsViewer__navLink');
-    if (target) target.focus();
-  }
-
-  function importModalOpen() {
-    return Boolean(importModal && !importModal.hidden);
-  }
-
-  function initializeImportModal(scope) {
-    if (!importRoot || !importBootStatus || docsImportInitialized) return Promise.resolve();
-    if (docsImportRequestPromise) return docsImportRequestPromise;
-
-    docsImportRequestPromise = import("../studio/js/docs-html-import.js")
-      .then(function (module) {
-        if (!module || typeof module.initDocsHtmlImport !== "function") {
-          throw new Error("Docs Import module did not expose initDocsHtmlImport().");
-        }
-        return module.initDocsHtmlImport({
-          root: importRoot,
-          bootStatus: importBootStatus,
-          initialScope: scope || viewerScope || "library",
-          routePath: "/docs/"
-        });
-      })
-      .then(function () {
-        docsImportInitialized = true;
-      })
-      .catch(function (error) {
-        console.warn("docs_viewer: docs import modal failed to initialize", error);
-        if (importBootStatus) {
-          importBootStatus.hidden = false;
-          importBootStatus.textContent = error && error.message ? error.message : "Failed to initialize docs import.";
-          importBootStatus.dataset.state = "error";
-        }
-      })
-      .finally(function () {
-        docsImportRequestPromise = null;
-      });
-
-    return docsImportRequestPromise;
-  }
-
-  function openImportModal() {
-    if (!allowManagement || !importModal || !importRoot) return;
-    var scope = viewerScope || "library";
-    if (importScope) {
-      importScope.textContent = "scope: " + scope;
-    }
-    importModal.hidden = false;
-    initializeImportModal(scope);
-    if (importCloseButton) {
-      importCloseButton.focus();
-    }
-  }
-
-  function closeImportModal() {
-    if (!importModal) return;
-    if (document.activeElement && importModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
-    importModal.hidden = true;
-    if (manageImportButton) {
-      manageImportButton.focus();
-    }
-  }
-
-  function openMetadataModal() {
-    var doc = currentSelectedDoc();
-    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
-    hideContextMenu();
-    state.metadataEditingDocId = doc.doc_id;
-    state.metadataRestoreFocusId = doc.doc_id;
-    if (metadataDocId) {
-      metadataDocId.textContent = doc.doc_id;
-    }
-
-    metadataTitleInput.value = doc.title || "";
-    metadataSummaryInput.value = doc.summary || "";
-    renderMetadataStatusOptions(doc);
-    metadataHiddenInput.checked = isDocHidden(doc);
-    metadataSortOrderInput.value = doc.sort_order == null ? "" : String(doc.sort_order);
-    metadataSortOrderInput.min = "0";
-    renderMetadataParentOptions(doc);
-
-    metadataModal.hidden = false;
-    window.requestAnimationFrame(function () {
-      metadataTitleInput.focus();
-      metadataTitleInput.select();
-    });
   }
 
   function updateNavDragState() {
-    if (!nav) return;
-    nav.querySelectorAll(".docsViewer__navRow").forEach(function (row) {
-      row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside");
-    });
-    if (state.dragDocId) {
-      var dragRow = nav.querySelector('[data-doc-row-id="' + cssEscape(state.dragDocId) + '"]');
-      if (dragRow) {
-        dragRow.classList.add("is-dragging");
-      }
-    }
-    if (state.dropTargetDocId && state.dropPosition) {
-      var dropRow = nav.querySelector('[data-doc-row-id="' + cssEscape(state.dropTargetDocId) + '"]');
-      if (dropRow) {
-        dropRow.classList.add(state.dropPosition === "inside" ? "is-drop-inside" : "is-drop-after");
-      }
+    if (managementController) {
+      managementController.updateNavDragState();
     }
   }
 
-  function managementArchiveAvailable() {
-    var scopeCaps = scopeManagementCapabilities();
-    return Boolean(scopeCaps && scopeCaps.archive_available);
-  }
-
-  function managementNoteText() {
-    if (state.managementMessage) return state.managementMessage;
-    if (state.searchRouteActive) {
-      return state.managementText.clearSearchNote;
-    }
-    if (!managementArchiveAvailable()) {
-      return state.managementText.archiveUnavailableNote;
-    }
-    return "";
+  function canDragCurrentDoc(doc) {
+    return Boolean(managementController && managementController.canDragCurrentDoc(doc));
   }
 
   function renderManagementUi() {
-    if (!allowManagement || !manageRow) return;
-
-    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    if (!state.managementMode) {
-      manageRow.hidden = true;
-      if (indexUndoButton) {
-        indexUndoButton.hidden = true;
-      }
-      return;
+    if (managementController) {
+      managementController.render();
     }
-
-    manageRow.hidden = false;
-    if (manageActions) {
-      manageActions.hidden = !state.managementChecked || !state.managementAvailable;
-    }
-
-    if (manageNote) {
-      var noteText = "";
-      var noteIsError = false;
-      if (!state.managementChecked) {
-        noteText = state.managementText.checkingNote;
-      } else if (!state.managementAvailable) {
-        noteText = state.managementText.unavailableNote;
-        noteIsError = true;
-      } else {
-        noteText = managementNoteText();
-        noteIsError = state.managementMessageIsError;
-      }
-      manageNote.textContent = noteText;
-      manageNote.hidden = !noteText;
-      manageNote.classList.toggle("is-error", noteIsError);
-    }
-
-    if (indexUndoButton) {
-      indexUndoButton.hidden = !state.managementMode;
-      indexUndoButton.disabled = (
-        state.managementBusy ||
-        !state.managementChecked ||
-        !state.managementAvailable ||
-        !state.moveUndo
-      );
-      indexUndoButton.setAttribute("aria-label", state.managementText.undoMoveLabel);
-      indexUndoButton.title = state.managementText.undoMoveLabel;
-    }
-
-    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
-
-    var doc = currentSelectedDoc();
-    var draftDoc = Boolean(doc && isDocHidden(doc));
-    var editDisabled = (
-      state.managementBusy ||
-      !doc ||
-      state.searchRouteActive
-    );
-    var archiveDisabled = (
-      state.managementBusy ||
-      !doc ||
-      state.searchRouteActive ||
-      !managementArchiveAvailable() ||
-      doc.parent_id === "archive"
-    );
-    var deleteDisabled = (
-      state.managementBusy ||
-      !doc ||
-      state.searchRouteActive
-    );
-    var viewableDisabled = (
-      state.managementBusy ||
-      !doc ||
-      state.searchRouteActive ||
-      !draftDoc
-    );
-
-    manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
-    if (manageImportButton) {
-      manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
-    }
-    manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
-    manageEditButton.disabled = !state.managementAvailable || editDisabled;
-    manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
-    manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
-    manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
-    if (draftToggle) {
-      draftToggle.disabled = !state.managementAvailable || state.managementBusy;
-      draftToggle.checked = state.showHidden;
-    }
-    if (metadataSaveButton) {
-      metadataSaveButton.disabled = state.managementBusy;
-    }
-    renderStatusPills();
-  }
-
-  function checkGeneratedDataReadCapability() {
-    if (!generatedBaseUrl) {
-      state.generatedDataReadChecked = true;
-      state.generatedDataReadAvailable = false;
-      return Promise.resolve(false);
-    }
-    if (state.generatedDataReadChecked) {
-      return Promise.resolve(state.generatedDataReadAvailable);
-    }
-    if (state.generatedDataReadRequestPromise) {
-      return state.generatedDataReadRequestPromise;
-    }
-
-    state.generatedDataReadRequestPromise = readGeneratedCapabilities()
-      .then(function (payload) {
-        if (!payload) {
-          state.generatedDataReadAvailable = false;
-          state.generatedDataReadChecked = true;
-          return false;
-        }
-        state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeGeneratedCapability(state.managementCapabilities, viewerScope, "generated_data_reads");
-        state.generatedDataReadChecked = true;
-        return state.generatedDataReadAvailable;
-      })
-      .catch(function () {
-        state.generatedDataReadAvailable = false;
-        state.generatedDataReadChecked = true;
-        return false;
-      })
-      .finally(function () {
-        state.generatedDataReadRequestPromise = null;
-      });
-
-    return state.generatedDataReadRequestPromise;
   }
 
   function initializeManagement() {
     if (!allowManagement) return;
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    renderManagementUi();
     if (!state.managementMode) return;
-
-    if (!managementBaseUrl) {
-      state.managementChecked = true;
-      state.managementAvailable = false;
-      renderManagementUi();
-      return;
-    }
-
-    state.managementCapabilityCheckId += 1;
-    loadManagementModules().then(function (loaded) {
-      if (!loaded) {
-        state.managementChecked = true;
-        state.managementAvailable = false;
-        renderManagementUi();
-        return;
-      }
-      checkManagementCapabilities(0, state.managementCapabilityCheckId);
+    loadManagementController().then(function (controller) {
+      if (controller) controller.initialize();
     });
-  }
-
-  function checkManagementCapabilities(attempt, checkId) {
-    if (!readManagementCapabilities) {
-      state.managementChecked = true;
-      state.managementAvailable = false;
-      renderManagementUi();
-      return;
-    }
-    readManagementCapabilities(managementClientOptions())
-      .then(function (payload) {
-        if (checkId !== state.managementCapabilityCheckId) return;
-        var scopeCaps = payload && payload.capabilities && payload.capabilities.scopes
-          ? payload.capabilities.scopes[viewerScope]
-          : null;
-        state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities, viewerScope);
-        state.generatedDataReadChecked = true;
-        state.managementChecked = true;
-        state.managementAvailable = Boolean(scopeCaps && scopeCaps.available);
-        renderManagementUi();
-      })
-      .catch(function () {
-        if (checkId !== state.managementCapabilityCheckId) return;
-        if (attempt < MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
-          window.setTimeout(function () {
-            checkManagementCapabilities(attempt + 1, checkId);
-          }, MANAGEMENT_CAPABILITY_RETRY_DELAY_MS);
-          return;
-        }
-        state.managementCapabilities = null;
-        state.managementChecked = true;
-        state.managementAvailable = false;
-        renderManagementUi();
-      });
-  }
-
-  function reloadDocsIndex(targetDocId, summaryText) {
-    state.payloadCache.clear();
-    state.searchEntries = [];
-    state.searchLoaded = false;
-    state.searchRequestPromise = null;
-    state.reloadNonce = String(Date.now());
-    state.reloadExpectedDocId = String(targetDocId || "").trim();
-    state.searchQuery = "";
-    state.searchVisibleCount = SEARCH_BATCH_SIZE;
-    state.searchRouteActive = false;
-    cancelSearchDebounce();
-    if (searchInput) {
-      searchInput.value = "";
-    }
-
-    if (targetDocId) {
-      setHistory(targetDocId, "", "", "replace");
-    }
-
-    return loadIndex().then(function () {
-      setStatus(summaryText ? summaryText : "", false);
-      renderManagementUi();
-    });
-  }
-
-  function handleCreateDoc() {
-    var titleInput = window.prompt("New doc title", "New Doc");
-    if (titleInput == null) return;
-
-    var title = String(titleInput || "").trim() || "New Doc";
-    var currentDoc = currentSelectedDoc();
-
-    state.managementBusy = true;
-    setManagementMessage("Creating doc...", false);
-    setStatus("Creating doc...", false);
-
-    createManagedDoc({
-      title: title,
-      after_doc_id: currentDoc ? currentDoc.doc_id : ""
-    }, managementClientOptions())
-      .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc created.", false);
-        return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc created.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Create failed.", true);
-        setStatus(error.message || "Create failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleCreateRelatedDoc(kind) {
-    var baseDoc = currentContextMenuDoc();
-    if (!baseDoc) return;
-
-    var titleInput = window.prompt(kind === "child" ? "New child title" : "New sibling title", "New Doc");
-    if (titleInput == null) return;
-
-    var title = String(titleInput || "").trim() || "New Doc";
-    var payload = {
-      title: title
-    };
-    if (kind === "child") {
-      payload.parent_id = baseDoc.doc_id;
-    } else {
-      payload.after_doc_id = baseDoc.doc_id;
-    }
-
-    state.managementBusy = true;
-    hideContextMenu();
-    setManagementMessage("Creating doc...", false);
-    setStatus("Creating doc...", false);
-
-    createManagedDoc(payload, managementClientOptions())
-      .then(function (response) {
-        setManagementMessage(response.summary_text || "Doc created.", false);
-        return reloadDocsIndex(response.doc_id, response.summary_text || "Doc created.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Create failed.", true);
-        setStatus(error.message || "Create failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleEditMetadataSubmit() {
-    var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
-
-    var title = String(metadataTitleInput.value || "").trim();
-    if (!title) {
-      metadataTitleInput.focus();
-      return;
-    }
-
-    var parentId = resolveMetadataParentId(doc);
-    if (parentId === null) {
-      setManagementMessage(state.managementText.metadataParentInvalid, true);
-      setStatus(state.managementText.metadataParentInvalid, true);
-      metadataParentInput.focus();
-      return;
-    }
-    var originalParentId = String(doc.parent_id || "").trim();
-    var originalSortOrderText = normalizeSortOrderValue(doc.sort_order);
-    var sortOrderText = String(metadataSortOrderInput.value || "").trim();
-    if (sortOrderText && Number(sortOrderText) < 0) {
-      setManagementMessage("sort_order must be zero or greater.", true);
-      setStatus("sort_order must be zero or greater.", true);
-      metadataSortOrderInput.focus();
-      return;
-    }
-    var payloadSortOrder = sortOrderText;
-    if (parentId && parentId !== originalParentId && sortOrderText === originalSortOrderText) {
-      payloadSortOrder = "append";
-    }
-    var selectedStatus = String(metadataStatusInput.value || "").trim();
-    var payload = {
-      doc_id: doc.doc_id,
-      title: title,
-      summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
-      ui_status: selectedStatus,
-      hidden: metadataHiddenInput.checked,
-      parent_id: parentId,
-      sort_order: payloadSortOrder
-    };
-
-    state.managementBusy = true;
-    setManagementMessage("Saving metadata for " + doc.title + "...", false);
-    setStatus("Saving metadata for " + doc.title + "...", false);
-
-    updateManagedDocMetadata(payload, managementClientOptions())
-      .then(function (response) {
-        closeMetadataModal();
-        setManagementMessage(response.summary_text || "Metadata saved.", false);
-        return reloadDocsIndex(doc.doc_id, response.summary_text || "Metadata saved.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Metadata update failed.", true);
-        setStatus(error.message || "Metadata update failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function metadataPayloadForStatus(doc, uiStatus) {
-    return {
-      doc_id: doc.doc_id,
-      title: String(doc.title || "").trim(),
-      summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
-      ui_status: String(uiStatus || "").trim(),
-      hidden: isDocHidden(doc),
-      parent_id: String(doc.parent_id || "").trim(),
-      sort_order: normalizeSortOrderValue(doc.sort_order)
-    };
-  }
-
-  function handleStatusPillClick(statusValue) {
-    var doc = currentSelectedDoc();
-    if (!statusPillsCanWrite(doc)) return;
-    var selectedStatus = String(statusValue || "").trim();
-    if (!selectedStatus || !state.uiStatusByValue.has(selectedStatus)) return;
-
-    var nextStatus = currentStatusValue(doc) === selectedStatus ? "" : selectedStatus;
-    var savingText = formatText(state.managementText.statusPillSaving, { title: doc.title });
-
-    state.managementBusy = true;
-    setManagementMessage(savingText, false);
-    setStatus(savingText, false);
-    renderStatusPills();
-
-    updateManagedDocMetadata(metadataPayloadForStatus(doc, nextStatus), managementClientOptions())
-      .then(function (response) {
-        var savedText = response.summary_text || state.managementText.statusPillSaved;
-        setManagementMessage(savedText, false);
-        return reloadDocsIndex(doc.doc_id, savedText);
-      })
-      .catch(function (error) {
-        var failedText = error.message || state.managementText.statusPillFailed;
-        setManagementMessage(failedText, true);
-        setStatus(failedText, true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-        renderStatusPills();
-      });
-  }
-
-  function handleRebuildDocs() {
-    state.managementBusy = true;
-    setManagementMessage("Rebuilding docs...", false);
-    setStatus("Rebuilding docs...", false);
-
-    rebuildManagedDocs(managementClientOptions())
-      .then(function (payload) {
-        var targetDocId = state.selectedDocId || defaultRouteDocId || defaultDocId();
-        setManagementMessage(payload.summary_text || "Docs rebuilt.", false);
-        return reloadDocsIndex(targetDocId, payload.summary_text || "Docs rebuilt.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Docs rebuild failed.", true);
-        setStatus(error.message || "Docs rebuild failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleImportDocs() {
-    if (!allowManagement) return;
-    openImportModal();
-  }
-
-  function handleArchiveDoc() {
-    var doc = currentSelectedDoc();
-    if (!doc) return;
-    if (!window.confirm("Archive " + doc.title + "?")) return;
-
-    state.managementBusy = true;
-    setManagementMessage("Archiving " + doc.title + "...", false);
-    setStatus("Archiving " + doc.title + "...", false);
-
-    archiveManagedDoc(doc.doc_id, managementClientOptions())
-      .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc archived.", false);
-        return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc archived.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Archive failed.", true);
-        setStatus(error.message || "Archive failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function buildDeleteConfirmation(preview) {
-    var lines = ["Delete " + preview.title + "?"];
-    if (Array.isArray(preview.warnings) && preview.warnings.length) {
-      lines.push("");
-      lines.push("Warnings:");
-      preview.warnings.forEach(function (item) {
-        lines.push("- " + item);
-      });
-    }
-    if (Array.isArray(preview.inbound_refs) && preview.inbound_refs.length) {
-      lines.push("");
-      lines.push("Inbound refs:");
-      preview.inbound_refs.slice(0, 6).forEach(function (item) {
-        lines.push("- " + item.doc_id);
-      });
-      if (preview.inbound_refs.length > 6) {
-        lines.push("- +" + (preview.inbound_refs.length - 6) + " more");
-      }
-    }
-    return lines.join("\n");
-  }
-
-  function handleDeleteDoc() {
-    var doc = currentSelectedDoc();
-    if (!doc) return;
-
-    state.managementBusy = true;
-    setManagementMessage("Checking delete impact for " + doc.title + "...", false);
-    setStatus("Checking delete impact for " + doc.title + "...", false);
-
-    previewManagedDocDelete(doc.doc_id, managementClientOptions())
-      .then(function (preview) {
-        if (!preview.allowed) {
-          var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
-          setManagementMessage(blockerText, true);
-          setStatus(blockerText, true);
-          return null;
-        }
-        if (!window.confirm(buildDeleteConfirmation(preview))) {
-          setManagementMessage("", false);
-          setStatus("", false);
-          return null;
-        }
-        setManagementMessage("Deleting " + doc.title + "...", false);
-        setStatus("Deleting " + doc.title + "...", false);
-        return applyManagedDocDelete(doc.doc_id, managementClientOptions());
-      })
-      .then(function (payload) {
-        if (!payload) return;
-        var fallbackDocId = doc.parent_id || defaultRouteDocId || defaultDocId();
-        setManagementMessage("", false);
-        return reloadDocsIndex(fallbackDocId, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Delete failed.", true);
-        setStatus(error.message || "Delete failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleMakeViewable() {
-    var doc = currentSelectedDoc();
-    if (!doc || isDocViewable(doc)) return;
-    var targetDocIds = viewabilityTargetDocIds(doc);
-    if (!targetDocIds) return;
-
-    state.managementBusy = true;
-    var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
-    setManagementMessage("Showing " + countText + "...", false);
-    setStatus("Showing " + countText + "...", false);
-
-    updateManagedDocsViewability(targetDocIds, false, managementClientOptions())
-      .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc shown.", false);
-        return reloadDocsIndex(doc.doc_id, payload.summary_text || "Doc shown.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Viewability update failed.", true);
-        setStatus(error.message || "Viewability update failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleDraftToggleChange() {
-    if (!draftToggle) return;
-    state.showHidden = Boolean(draftToggle.checked);
-    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    applyDocVisibility();
-    renderSidebar();
-    renderBookmarkUi();
-    renderManagementUi();
-
-    var currentDocId = state.selectedDocId;
-    var targetDocId = currentDocId && state.docsById.has(currentDocId) ? currentDocId : defaultDocId();
-    if (state.recentModeActive) {
-      renderRecentMode();
-      return;
-    }
-    if (state.searchRouteActive) {
-      renderSearchMode();
-      return;
-    }
-    if (targetDocId) {
-      loadDoc(targetDocId, { historyMode: "replace", hash: "" });
-    }
-  }
-
-  function handleScopeChange() {
-    if (!allowScopeQuery || !scopeSelect) return;
-    var nextScope = String(scopeSelect.value || "").trim().toLowerCase();
-    var config = DOCS_ROUTE_SCOPES[nextScope];
-    if (!config || nextScope === viewerScope) return;
-
-    var url = new URL(viewerBaseUrl, window.location.origin);
-    url.searchParams.set("scope", nextScope);
-    if (getCurrentMode() === MANAGEMENT_MODE) {
-      url.searchParams.set("mode", MANAGEMENT_MODE);
-    }
-    url.searchParams.set("doc", config.defaultDocId);
-    window.location.href = url.pathname + url.search;
-  }
-
-  function handleMoveDoc(docId, targetDocId, position) {
-    if (!docId || !targetDocId || !position) return;
-    var movingDoc = state.docsById.get(docId);
-    var targetDoc = state.docsById.get(targetDocId);
-    if (!movingDoc || !targetDoc) return;
-
-    state.managementBusy = true;
-    clearDragState();
-    setManagementMessage("Moving " + movingDoc.title + "...", false);
-    setStatus("Moving " + movingDoc.title + "...", false);
-
-    moveManagedDoc(movingDoc.doc_id, targetDoc.doc_id, position, managementClientOptions())
-      .then(function (payload) {
-        var undoRecords = normalizeMoveUndoRecords(payload.undo_records);
-        if (undoRecords.length) {
-          state.moveUndo = {
-            doc_id: movingDoc.doc_id,
-            title: movingDoc.title || movingDoc.doc_id,
-            records: undoRecords
-          };
-        } else if (moveUndoRecordChanged({
-          parent_id: movingDoc.parent_id || "",
-          sort_order: normalizeSortOrderValue(movingDoc.sort_order)
-        }, payload.record)) {
-          state.moveUndo = {
-            doc_id: movingDoc.doc_id,
-            title: movingDoc.title || movingDoc.doc_id,
-            records: [{
-              doc_id: movingDoc.doc_id,
-              title: movingDoc.title || movingDoc.doc_id,
-              parent_id: movingDoc.parent_id || "",
-              sort_order: normalizeSortOrderValue(movingDoc.sort_order)
-            }]
-          };
-        }
-        setManagementMessage("", false);
-        return reloadDocsIndex(movingDoc.doc_id, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Move failed.", true);
-        setStatus(error.message || "Move failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleUndoMove() {
-    var undoRecord = state.moveUndo;
-    if (!undoRecord || state.managementBusy) return;
-
-    var undoRecords = normalizeMoveUndoRecords(undoRecord.records || [undoRecord]);
-    var focusDocId = String(undoRecord.doc_id || (undoRecords[0] && undoRecords[0].doc_id) || "").trim();
-    if (!focusDocId || !findAllDocById(focusDocId) || !undoRecords.length) {
-      state.moveUndo = null;
-      setManagementMessage("Undo unavailable: moved doc is no longer in the current index.", true);
-      setStatus("Undo unavailable: moved doc is no longer in the current index.", true);
-      renderManagementUi();
-      return;
-    }
-
-    state.managementBusy = true;
-    hideContextMenu();
-    setManagementMessage(state.managementText.undoMoveStatus, false);
-    setStatus(state.managementText.undoMoveStatus, false);
-
-    restoreManagedDocMove(focusDocId, moveUndoPayloadRecords(undoRecords), managementClientOptions())
-      .then(function (response) {
-        state.moveUndo = null;
-        setManagementMessage(response.summary_text || "Move undone.", false);
-        return reloadDocsIndex(response.doc_id || focusDocId, response.summary_text || "Move undone.");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Undo failed.", true);
-        setStatus(error.message || "Undo failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleOpenSource(editor) {
-    var docId = state.contextMenuDocId;
-    var doc = state.docsById.get(docId);
-    if (!doc) return;
-
-    state.managementBusy = true;
-    hideContextMenu();
-    setManagementMessage("Opening source for " + doc.title + "...", false);
-    setStatus("Opening source for " + doc.title + "...", false);
-
-    openManagedDocSource(doc.doc_id, editor, managementClientOptions())
-      .then(function () {
-        setManagementMessage("", false);
-        setStatus("", false);
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Open source failed.", true);
-        setStatus(error.message || "Open source failed.", true);
-      })
-      .finally(function () {
-        state.managementBusy = false;
-        renderManagementUi();
-      });
   }
 
   function scrollToHash(hash) {
@@ -2475,122 +1384,9 @@ import {
   }
 
   function bindLinkInterception() {
-    if (nav) {
-      nav.addEventListener("mousedown", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row || !contextMenuEnabled() || event.button !== 2) return;
-        event.preventDefault();
-        if (window.getSelection) {
-          var selection = window.getSelection();
-          if (selection) selection.removeAllRanges();
-        }
-      });
-
-      nav.addEventListener("contextmenu", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row || !contextMenuEnabled()) return;
-        event.preventDefault();
-        if (window.getSelection) {
-          var selection = window.getSelection();
-          if (selection) selection.removeAllRanges();
-        }
-        showContextMenu(row.dataset.docRowId || "", event.clientX, event.clientY);
-      });
-
-      nav.addEventListener("dragstart", function (event) {
-        var dragHandle = event.target.closest("[data-drag-doc-id]");
-        if (!dragHandle || !managementDragEnabled()) return;
-        hideContextMenu();
-        state.dragDocId = dragHandle.dataset.dragDocId || "";
-        state.dropTargetDocId = "";
-        state.dropPosition = "";
-        if (event.dataTransfer) {
-          event.dataTransfer.effectAllowed = "move";
-          event.dataTransfer.setData("text/plain", state.dragDocId);
-        }
-        updateNavDragState();
-      });
-
-      nav.addEventListener("dragover", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row) {
-          if (state.dropTargetDocId || state.dropPosition) {
-            state.dropTargetDocId = "";
-            state.dropPosition = "";
-            updateNavDragState();
-          }
-          return;
-        }
-
-        var targetDocId = row.dataset.docRowId || "";
-        var dropOptions = dragDropOptions();
-        var nextPosition = rowDropPosition(row, event, dropOptions);
-        if (!canDropOnDoc(targetDocId, nextPosition, dropOptions)) {
-          if (state.dropTargetDocId || state.dropPosition) {
-            state.dropTargetDocId = "";
-            state.dropPosition = "";
-            updateNavDragState();
-          }
-          return;
-        }
-
-        event.preventDefault();
-        if (event.dataTransfer) {
-          event.dataTransfer.dropEffect = "move";
-        }
-        if (state.dropTargetDocId !== targetDocId || state.dropPosition !== nextPosition) {
-          state.dropTargetDocId = targetDocId;
-          state.dropPosition = nextPosition;
-          updateNavDragState();
-        }
-      });
-
-      nav.addEventListener("drop", function (event) {
-        event.preventDefault();
-        var dropOptions = dragDropOptions();
-        var dropTarget = currentDropTargetFromEvent(event, {
-          targetDocId: state.dropTargetDocId,
-          position: state.dropPosition
-        }, dropOptions);
-        var targetDocId = dropTarget.targetDocId;
-        var position = dropTarget.position;
-        if ((!targetDocId || !position) && state.dropTargetDocId && state.dropPosition) {
-          targetDocId = state.dropTargetDocId;
-          position = state.dropPosition;
-        }
-        if (!canDropOnDoc(targetDocId, position, dropOptions) || !position) {
-          clearDragState();
-          return;
-        }
-        var movingDocId = state.dragDocId;
-        clearDragState();
-        handleMoveDoc(movingDocId, targetDocId, position);
-      });
-
-      nav.addEventListener("dragend", function () {
-        clearDragState();
-      });
-    }
-
     root.addEventListener("click", function (event) {
-      if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
-        hideContextMenu();
-      }
-      if (metadataModalOpen()) {
-        var closeTrigger = event.target.closest("[data-metadata-close]");
-        if (closeTrigger) {
-          event.preventDefault();
-          closeMetadataModal();
-          return;
-        }
-      }
-      if (importModalOpen()) {
-        var importCloseTrigger = event.target.closest("[data-import-close]");
-        if (importCloseTrigger) {
-          event.preventDefault();
-          closeImportModal();
-          return;
-        }
+      if (managementController && managementController.handleRootClick(event)) {
+        return;
       }
       var toggle = event.target.closest("[data-toggle-doc-id]");
       if (toggle) {
@@ -2719,133 +1515,15 @@ import {
         var button = event.target.closest("[data-ui-status]");
         if (!button) return;
         event.preventDefault();
-        handleStatusPillClick(button.dataset.uiStatus);
-      });
-    }
-
-    if (manageRebuildButton) {
-      manageRebuildButton.addEventListener("click", function () {
-        hideContextMenu();
-        handleRebuildDocs();
-      });
-    }
-
-    if (manageImportButton) {
-      manageImportButton.addEventListener("click", function () {
-        hideContextMenu();
-        handleImportDocs();
-      });
-    }
-
-    if (indexUndoButton) {
-      indexUndoButton.addEventListener("click", function () {
-        handleUndoMove();
-      });
-    }
-
-    if (manageNewButton) {
-      manageNewButton.addEventListener("click", function () {
-        hideContextMenu();
-        handleCreateDoc();
-      });
-    }
-
-    if (manageEditButton) {
-      manageEditButton.addEventListener("click", function () {
-        openMetadataModal();
-      });
-    }
-
-    if (manageArchiveButton) {
-      manageArchiveButton.addEventListener("click", function () {
-        hideContextMenu();
-        handleArchiveDoc();
-      });
-    }
-
-    if (manageDeleteButton) {
-      manageDeleteButton.addEventListener("click", function () {
-        hideContextMenu();
-        handleDeleteDoc();
-      });
-    }
-
-    if (manageViewableButton) {
-      manageViewableButton.addEventListener("click", function () {
-        hideContextMenu();
-        handleMakeViewable();
-      });
-    }
-
-    if (draftToggle) {
-      draftToggle.addEventListener("change", function () {
-        hideContextMenu();
-        handleDraftToggleChange();
-      });
-    }
-
-    if (contextMenu) {
-      contextMenu.addEventListener("click", function (event) {
-        var action = event.target.closest("[data-context-action]");
-        if (!action) return;
-        if (action.dataset.contextAction === "new-sibling") {
-          handleCreateRelatedDoc("sibling");
-          return;
+        if (managementController) {
+          managementController.handleStatusPillClick(button.dataset.uiStatus);
         }
-        if (action.dataset.contextAction === "new-child") {
-          handleCreateRelatedDoc("child");
-          return;
-        }
-        if (action.dataset.contextAction === "open-vscode") {
-          handleOpenSource("vscode");
-          return;
-        }
-        if (action.dataset.contextAction === "open") {
-          handleOpenSource("default");
-        }
-      });
-    }
-
-    if (metadataCloseButton) {
-      metadataCloseButton.addEventListener("click", function () {
-        closeMetadataModal();
-      });
-    }
-
-    if (metadataCancelButton) {
-      metadataCancelButton.addEventListener("click", function () {
-        closeMetadataModal();
-      });
-    }
-
-    if (importCloseButton) {
-      importCloseButton.addEventListener("click", function () {
-        closeImportModal();
-      });
-    }
-
-    if (metadataForm) {
-      metadataForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        handleEditMetadataSubmit();
-      });
-    }
-
-    if (metadataStatusInput) {
-      metadataStatusInput.addEventListener("change", function () {
-        renderMetadataStatusSelection(String(metadataStatusInput.value || "").trim());
       });
     }
 
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && metadataModalOpen()) {
-        event.preventDefault();
-        closeMetadataModal();
+      if (managementController && managementController.handleDocumentKeydown(event)) {
         return;
-      }
-      if (event.key === "Escape" && importModalOpen()) {
-        event.preventDefault();
-        closeImportModal();
       }
     });
 
@@ -3168,7 +1846,9 @@ import {
   loadIndex()
     .then(function () {
       if (openImportOnLoad && getCurrentMode() === MANAGEMENT_MODE) {
-        openImportModal();
+        loadManagementController().then(function (controller) {
+          if (controller) controller.openImportModal();
+        });
       }
     })
     .catch(function () {});

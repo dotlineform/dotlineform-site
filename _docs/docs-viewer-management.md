@@ -20,6 +20,7 @@ Status:
 - Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
 - Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
 - Phase 9 implemented: Docs Import runs inside the Docs Viewer management modal from the shared importer module
+- Phase 10 implemented: management UI orchestration lives in `assets/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -31,6 +32,7 @@ Implemented now:
 - manage mode enabled only for `/docs/` behind `?mode=manage`
 - `/docs/` can change the active management scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - public `/library/` and `/analysis/` viewer routes remain read-only and do not render management controls, configure the local docs-management server, or load management-only CSS
+- public read-only viewer routes use the shared reader controller without loading the management controller module
 - create, archive, delete-preview, and delete-apply implemented
 - drag/drop move implemented for leaf docs only
 - dropping on the upper half of any doc row moves the dragged doc inside that doc as its last child
@@ -81,6 +83,8 @@ Implemented now:
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
 - Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
 - `assets/studio/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
+- `assets/js/docs-viewer-management.js` owns manage-mode toolbar rendering, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
+- `assets/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
 
 Not implemented yet:
 

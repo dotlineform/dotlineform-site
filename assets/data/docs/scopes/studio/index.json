@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T13:47:52Z",
+  "generated_at": "2026-05-11T14:15:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1059,7 +1059,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 5178
+      "content_text_length": 5755
     },
     {
       "scope": "studio",
@@ -3057,7 +3057,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 27016,
+      "content_text_length": 27604,
       "ui_status": "done"
     },
     {
@@ -3622,7 +3622,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 138658
+      "content_text_length": 139417
     },
     {
       "scope": "studio",

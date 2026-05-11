@@ -17,6 +17,27 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-11] Split Docs Viewer management into a lazy controller
+
+**Status:** implemented
+
+**Area:** Docs Viewer runtime / public read-only boundary
+
+**Summary:**
+Moved manage-mode toolbar, modal, drag/drop, mutation, and capability orchestration out of `assets/js/docs-viewer.js` into `assets/js/docs-viewer-management.js`.
+The shared reader controller now keeps public viewing, search, history, generated-data reads, and a small management bridge.
+
+**Files changed/docs:**
+
+- `assets/js/docs-viewer.js`
+- `assets/js/docs-viewer-management.js`
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+
+**Impact:**
+Public read-only viewers such as `/library/` and `/analysis/` no longer download the management controller.
+`/docs/?mode=manage` keeps the same management surface through lazy module loading.
+
 ## [2026-05-11] Retired the standalone Studio Search dashboard
 
 **Status:** implemented

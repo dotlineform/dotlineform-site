@@ -35,6 +35,9 @@ Current route-shell examples:
 Current shared implementation:
 
 - `assets/js/docs-viewer.js` as the shared entry controller
+- `assets/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
+- `assets/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
+- `assets/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
 - `assets/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
 - `assets/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
 - `assets/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the entry controller
@@ -43,6 +46,7 @@ Current shared implementation:
 
 The shell loads the entry controller as an ES module.
 Extracted helper modules must not import the entry controller or mutate its shared state directly.
+The management controller receives a narrow context API from the entry controller so public read-only viewers do not download or execute management orchestration.
 
 Current scope-owned data:
 
@@ -55,6 +59,7 @@ Current route capability boundary:
 - `/docs/` is the only route shell that enables `?mode=manage`
 - `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure write-capable management mode, or load management-only CSS
+- public read-only viewer routes also avoid loading the management controller module
 - local `bin/dev-studio` builds may configure `data-generated-base-url` for read-only generated-data reads because the local Jekyll overlay excludes generated docs/search JSON from the watch surface
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 
