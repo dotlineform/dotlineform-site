@@ -2,23 +2,27 @@
 doc_id: search
 title: Search
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 32
 ---
 # Search
 
-This section describes the current search implementation.
+This section describes the current search implementation and the direction toward separate domain search products.
 
-Current live search scopes:
+Current live search surfaces:
 
-- `all` on `/search/`
-- `catalogue` on `/search/?scope=catalogue`
-- `library` on `/search/?scope=library`
-- `studio` on `/search/?scope=studio`
-- `analysis` on `/search/?scope=analysis`
-- `studio` inline on `/docs/`
-- `library` inline on `/library/`
+- Catalogue search on `/search/?scope=catalogue`
+- Studio docs search inline on `/docs/`
+- Library docs search inline on `/library/`
+- Analysis docs search inline on `/analysis/`
+
+Architecture direction:
+
+- Catalogue search and Docs search are separate data-domain products.
+- Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`.
+- Catalogue search owns structured artwork/catalogue lookup.
+- A top-level `/search/` route, if kept, should act as a chooser or dispatcher rather than a generic merged-result search product.
 
 ## Current Implementation
 

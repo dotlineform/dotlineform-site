@@ -2,9 +2,9 @@
 doc_id: config-search-build-json
 title: Search Build Config JSON
 added_date: 2026-04-25
-last_updated: "2026-05-06 21:13"
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 1030
+sort_order: 160
 ---
 # Search Build Config JSON
 

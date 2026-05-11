@@ -1,12 +1,11 @@
 ---
 doc_id: search-validation-checklist
-title: "Search Validation Checklist"
+title: Search Validation Checklist
 added_date: 2026-04-01
-last_updated: "2026-05-10 17:35"
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 80
+sort_order: 100
 ---
-
 # Search Validation Checklist
 
 ## Purpose

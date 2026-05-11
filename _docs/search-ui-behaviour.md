@@ -1,12 +1,11 @@
 ---
 doc_id: search-ui-behaviour
-title: "Search UI Behaviour"
+title: Search UI Behaviour
 added_date: 2026-03-31
-last_updated: "2026-05-10 17:35"
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 60
+sort_order: 70
 ---
-
 # Search UI Behaviour
 
 ## Purpose

@@ -1,10 +1,10 @@
 ---
 doc_id: search-catalogue-targeted-plan
-title: "Catalogue Targeted Search Plan"
+title: Catalogue Targeted Search Plan
 added_date: 2026-04-25
-last_updated: 2026-04-25
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 95
+sort_order: 120
 ---
 # Catalogue Targeted Search Plan
 

@@ -1,12 +1,11 @@
 ---
 doc_id: search-studio-v1-index-shape
-title: "Docs Scope Index Shape"
+title: Docs Scope Index Shape
 added_date: 2026-03-31
-last_updated: 2026-04-24
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 75
+sort_order: 90
 ---
-
 # Docs Scope Index Shape
 
 ## Purpose

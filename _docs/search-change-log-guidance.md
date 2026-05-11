@@ -1,12 +1,11 @@
 ---
 doc_id: search-change-log-guidance
-title: "Search Change Log Guidance"
+title: Search Change Log Guidance
 added_date: 2026-03-31
-last_updated: 2026-03-31
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 1000
+sort_order: 130
 ---
-
 # Search Change Log Guidance
 
 ## Purpose

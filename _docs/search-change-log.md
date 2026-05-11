@@ -1,13 +1,37 @@
 ---
 doc_id: search-change-log
-title: "Search Change Log"
+title: Search Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-10 18:45"
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 1010
+sort_order: 140
 ---
-
 # Search Change Log
+
+## [2026-05-11] Recorded the Catalogue and Docs search ownership split
+
+**Status:** decision recorded
+
+**Area:** search architecture / Docs Viewer portability
+
+**Summary:**
+Clarified that this project does not need a generic global site-search product.
+The meaningful search domains are Catalogue and Docs, with separate source models, ranking goals, and UI objectives.
+Docs Viewer should own document-domain search for `/docs/`, `/library/`, and `/analysis/`; Catalogue search should own structured catalogue lookup.
+
+**Reason:**
+Making Docs Viewer portable should not require copying a generic site-search product.
+Docs search is a critical part of a useful docs viewer, while Catalogue search serves a different data model.
+
+**Effect:**
+This is a documentation and architecture direction update only.
+Runtime behavior and generated artifact shapes are unchanged in this slice.
+
+**Affected files/docs:**
+
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
 
 ## [2026-05-10] Made public search policy self-contained
 

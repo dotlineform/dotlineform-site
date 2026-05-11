@@ -1,10 +1,10 @@
 ---
 doc_id: search-incremental-orchestration-plan
-title: "Incremental Search Orchestration Plan"
+title: Incremental Search Orchestration Plan
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 90
+sort_order: 110
 ---
 # Incremental Search Orchestration Plan
 

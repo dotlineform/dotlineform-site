@@ -1,12 +1,11 @@
 ---
 doc_id: search-build-pipeline
-title: "Search Build Pipeline"
+title: Search Build Pipeline
 added_date: 2026-04-23
-last_updated: "2026-05-09 21:53"
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 70
+sort_order: 80
 ---
-
 # Search Build Pipeline
 
 ## Purpose

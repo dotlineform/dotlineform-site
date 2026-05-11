@@ -1,12 +1,11 @@
 ---
 doc_id: search-public-ui-contract
-title: "Search Public UI Contract"
+title: Search Public UI Contract
 added_date: 2026-03-31
-last_updated: "2026-05-05"
+last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 55
+sort_order: 60
 ---
-
 # Search Public UI Contract
 
 ## Purpose
