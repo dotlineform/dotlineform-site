@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3ccce44f2216b5bc50e86ecb14ae7303",
-    "generated_at_utc": "2026-05-11T19:22:59Z",
+    "version": "blake2b-ba423855a5fdd9256b37dd862422f7f4",
+    "generated_at_utc": "2026-05-11T19:58:27Z",
     "count": 225
   },
   "entries": [
@@ -1515,10 +1515,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-11 20:22",
+      "last_updated": "2026-05-11 20:58",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 20:22 • Change Requests",
+      "display_meta": "2026-05-11 20:58 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1530,14 +1530,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11 20:22",
+        "2026-05-11 20:58",
         "2026",
         "05",
         "11",
         "20",
-        "22"
+        "58"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 20:22 2026 05 11 20 22"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 20:58 2026 05 11 20 58"
     },
     {
       "id": "site-request-docs-viewer-config-settings",
