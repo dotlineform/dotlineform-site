@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: Search Overview
 added_date: 2026-03-31
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11"
 parent_id: search
 sort_order: 10
 ---
@@ -10,198 +10,160 @@ sort_order: 10
 
 ## Purpose
 
-This document gives a high-level overview of the current search subsystems.
+This document defines the current search direction.
+It separates search by data domain rather than treating search as one global site product.
 
-It explains the current implementation and the architecture direction for separating search by data domain.
-It is intentionally broader than the schema, ranking, or UI documents.
+The detailed schema, ranking, normalization, UI, and build-flow notes remain in the focused search child docs.
 
-## Search goals
-
-Search exists to help users locate data-domain content quickly and predictably without external plugins or hosted services.
+## Core Decision
 
 There is no meaningful generic global site search target for this project.
-The searchable domains are:
+The useful searchable domains are:
 
-- Catalogue, which is structured artwork data
-- Docs, which is document-domain content served by Docs Viewer
+- **Catalogue search** for structured artwork/catalogue records
+- **Docs search** for document corpora served by Docs Viewer
 
-`/analysis/` may be concerned with catalogue subject matter, but architecturally it is still a document corpus.
+These domains have different source models, ranking goals, UI objectives, and maintenance boundaries.
+They should not share one product policy.
+
+`/analysis/` may discuss catalogue subject matter, but architecturally it is still a document corpus.
 It belongs to Docs search.
 
-Current goals:
+## Search Ownership
 
-- support direct lookup of known items such as work ids, titles, series ids, series titles, and moment titles
-- support broader discovery through compact metadata such as series relationships and selected structured fields
-- support document lookup inside each Docs Viewer corpus
-- keep the runtime understandable and deterministic
-- keep the payload small enough for responsive client-side use
-- keep Catalogue search policy separate from Docs search policy
+### Catalogue Search
 
-## Current scope
+Catalogue search owns structured catalogue lookup.
 
-The current implementation has these live search surfaces:
+It should optimize for:
 
-- a dedicated Catalogue search page at `/search/?scope=catalogue`
-- inline Studio docs search on `/docs/`
-- inline Library docs search on `/library/`
-- inline Analysis docs search on `/analysis/`
+- work, series, moment, and tag lookup
+- catalogue identifiers
+- artwork titles and relationships
+- catalogue metadata and status fields
+- navigation from results into catalogue pages
 
-It is based on:
+Current route:
 
-- a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
-- a current transitional Studio docs search artifact: `assets/data/search/studio/index.json`
-- a current transitional Library docs search artifact: `assets/data/search/library/index.json`
-- a current transitional Analysis docs search artifact: `assets/data/search/analysis/index.json`
-- an in-house client-side search runtime in `assets/js/search/search-page.js`
-- opt-in dedicated-route performance instrumentation in `assets/js/search/search-performance.js`
-- a shared docs viewer runtime in `assets/js/docs-viewer.js` which owns inline docs search behavior
-- no third-party search libraries, plugins, or external search services
-- a current transitional builder entrypoint for all live search artifacts at `scripts/build_search.rb`
-- a current transitional build-owned source-family config at `scripts/search/build_config.json`
+- `/search/?scope=catalogue`
 
-The browser loads domain-owned search data into memory per surface as needed.
-The dedicated `/search/` page should be treated as Catalogue search unless a later route becomes a chooser between domain-specific search surfaces.
+Current generated artifact:
 
-For the role of those artifacts in the wider site model, use [Data Models](/docs/?scope=studio&doc=data-models). This section stays focused on the search subsystem itself.
+- `assets/data/search/catalogue/index.json`
 
-## Content covered by search
+### Docs Search
 
-Current indexed content types:
+Docs search belongs to Docs Viewer.
 
-- works
-- series
-- moments
-- Studio docs
-- Library docs
-- Analysis docs
+It should optimize for:
 
-Current content intentionally excluded from v1 search:
+- title, summary, headings, and document text
+- document hierarchy and parent titles
+- `hidden` / `viewable` filtering
+- recently-added ordering
+- opening results inside the active Docs Viewer route
 
-- long-form prose or full-text body content
-- Studio/admin tools and non-doc pages
-- notes or other non-canonical site sections not represented in the search index
+Current routes:
 
-Catalogue search and Docs search both currently emit one record per searchable item, but they should not be treated as one product policy.
-They have different source models and different search objectives.
+- `/docs/`
+- `/library/`
+- `/analysis/`
 
-## Search architecture summary
+Current transitional generated artifacts:
 
-The current implementation still has a shared build entrypoint, but the target architecture has two domain search products.
-
-### 1. Source Content
-
-Catalogue search reads canonical site data for works, series, moments, and available tag metadata.
-Docs search reads generated Docs Viewer indexes for document scopes.
-
-Those source and upstream artifact families are documented in:
-
-- [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
-- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
-- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)
-
-### 2. Search Index Generation
-
-`scripts/build_search.rb` currently builds all live search artifacts at build time.
-For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/catalogue/generate_work_pages.py`.
-For docs scopes, it reads the canonical generated Docs Viewer indexes, skips docs with `viewable: false`, and can patch affected docs-search entries by `doc_id`.
+- `assets/data/search/studio/index.json`
+- `assets/data/search/library/index.json`
+- `assets/data/search/analysis/index.json`
 
 Target direction:
-Docs search build configuration should move under Docs Viewer ownership so portable Docs Viewer installs do not need the Catalogue/public search product.
 
-### 3. Search Policy
+- Docs Viewer owns docs search build configuration
+- Docs Viewer owns docs search runtime policy
+- Docs Viewer owns docs search output shape
+- portable Docs Viewer installs do not need the Catalogue/public search product
 
-Search policy currently exists in a combination of:
+## Top-Level Search Route
 
-- generated field preparation in the build script
-- deterministic ranking tiers in the client runtime
-- dedicated `/search/` runtime policy in `assets/data/search/policy.json`
-- shared route/data-path lookup and shared UI text in `assets/studio/data/studio_config.json`
+A top-level `/search/` route, if kept, should be a chooser or dispatcher between domain searches.
+It should not become the owner of a merged cross-domain ranking policy.
 
-Target direction:
-Catalogue search and Docs search should own separate policies.
-Shared low-level text helpers are acceptable only when they stay domain-neutral.
+The current dedicated public search runtime should be treated as Catalogue search unless a later change turns `/search/` into an explicit chooser.
 
-The file-level config boundary is documented in the new **[Config](/docs/?scope=studio&doc=config)** section.
+## Current Implementation
 
-### 4. Search Engine
+The implementation is transitional.
+It already has separate runtime surfaces, but the build plumbing still groups Catalogue and Docs search together.
 
-Each search runtime loads its domain search index, normalizes the loaded values into runtime-friendly fields, evaluates query matches, assigns score tiers, sorts matches, and returns an ordered result set.
-The dedicated `/search/` route can also expose opt-in local performance instrumentation for payload load, normalization, query, and render timings without changing search semantics.
+Current files:
 
-### 5. Search UI
+- Catalogue browser runtime: `assets/js/search/search-page.js`
+- Catalogue runtime policy: `assets/data/search/policy.json`
+- Docs browser runtime: `assets/js/docs-viewer.js`
+- Docs search helpers: `assets/js/docs-viewer-search.js`
+- Transitional search build entrypoint: `scripts/build_search.rb`
+- Transitional search build implementation: `scripts/search/build_search.rb`
+- Transitional search build config: `scripts/search/build_config.json`
 
-Catalogue search uses its dedicated public route.
-Docs search lives inline in Docs Viewer by replacing the right content pane with results when `q` is present in the docs URL.
+Current live surfaces:
 
-Any top-level `/search/` route, if kept, should be a chooser or dispatcher between domain searches rather than a merged-result product.
+- Catalogue search on `/search/?scope=catalogue`
+- Studio docs search inline on `/docs/`
+- Library docs search inline on `/library/`
+- Analysis docs search inline on `/analysis/`
 
-## Design principles
+Current build behavior:
 
-The current implementation follows these principles.
+- `catalogue` search reads canonical generated catalogue JSON
+- `studio`, `library`, and `analysis` search read generated Docs Viewer indexes
+- docs search skips rows where `viewable: false`
+- docs search supports targeted updates by `doc_id`
+- catalogue search remains full-rebuild-only for existing-record changes
 
-### Lightweight
+## Extraction Direction
 
-The base search experience should remain fast without external infrastructure and without loading prose-heavy payloads by default.
+The next cleanup should move docs search out of the generic search build/config layer and under Docs Viewer ownership.
 
-### Structured
+Near-term steps:
 
-Catalogue search and Docs search should each have artifacts and documentation that match their domain, rather than piggybacking on a generic global site-search abstraction.
+1. Move docs-search scope configuration into Docs Viewer scope config.
+2. Keep existing generated docs-search artifact paths compatible while the runtime changes settle.
+3. Move docs-search policy into Docs Viewer config/runtime.
+4. Keep Catalogue search build/runtime policy separate.
+5. Share only low-level helpers that are genuinely domain-neutral.
 
-### Reviewable
+The broader ordered plan is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
-Search behaviour should be understandable from focused documents covering schema, ranking, normalization, UI behaviour, and build flow.
+## Design Principles
 
-### Incremental
+### Domain First
 
-The base artifact stays compact and structured rather than trying to index prose-heavy payloads by default.
+Search follows the source data domain.
+Catalogue records and document corpora should not be forced into one global ranking model.
 
-### Static-site compatible
+### Static Compatible
 
-Search remains part of the existing static build pipeline and browser runtime. It does not depend on a dynamic backend.
+Search remains compatible with static-site builds.
+Generated artifacts are read by browser runtimes without a hosted search service.
 
-## Out of scope for this document
+### Portable Docs
 
-This document does not define:
+Docs search is part of Docs Viewer portability.
+A downstream Jekyll repo should be able to install Docs Viewer with inline docs search without copying Catalogue search.
 
-- the full catalogue search index field schema
-- normalization rules or token-preparation logic
-- ranking tiers or scoring details
-- UI event timing and pagination details
-- validation procedure
+### Reviewable Policy
 
-Those belong in the dedicated companion documents.
+Ranking and field participation should be understandable from focused docs.
+As docs search moves under Docs Viewer, its policy should be documented there or in a Docs Viewer child doc.
 
-## Related documents
+## Related Documents
 
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
 - [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
-- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
-- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
-- [Config](/docs/?scope=studio&doc=config)
-- [Data Models](/docs/?scope=studio&doc=data-models)
-- [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
 - [Search Change Log](/docs/?scope=studio&doc=search-change-log)
-
-## Current status
-
-Current implementation status:
-
-- public Catalogue search is implemented as a page at `/search/?scope=catalogue`
-- the current dedicated public route is `/search/?scope=catalogue`
-- the dedicated `/search/` runtime and policy are now trimmed to catalogue-only behavior
-- the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
-- a single transitional builder emits `assets/data/search/catalogue/index.json`, `assets/data/search/studio/index.json`, `assets/data/search/analysis/index.json`, and `assets/data/search/library/index.json`
-- the search builder validates source-family config before writing or skipping output
-- docs-domain targeted updates are available for `studio`, `analysis`, and `library` by `doc_id`
-- `catalogue` remains full-rebuild-only under the current source-family policy
-- indexed content types are works, series, moments, Studio docs, Analysis docs, and Library docs
-- ranking is field-aware and deterministic rather than flat
-- the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons
-- Studio docs search is inline on `/docs/`
-- Library docs search is inline on `/library/`
-- Analysis docs search is inline on `/analysis/`
-- results are rendered client-side in ranked order, with additional batches revealed via `more`

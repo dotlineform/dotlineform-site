@@ -18,6 +18,7 @@ sort_order: 140
 Clarified that this project does not need a generic global site-search product.
 The meaningful search domains are Catalogue and Docs, with separate source models, ranking goals, and UI objectives.
 Docs Viewer should own document-domain search for `/docs/`, `/library/`, and `/analysis/`; Catalogue search should own structured catalogue lookup.
+Tidied Search Overview around that domain split and linked the implementation direction to the Portable Docs Viewer request.
 
 **Reason:**
 Making Docs Viewer portable should not require copying a generic site-search product.
@@ -30,6 +31,7 @@ Runtime behavior and generated artifact shapes are unchanged in this slice.
 **Affected files/docs:**
 
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
 - [Search](/docs/?scope=studio&doc=search)
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
 

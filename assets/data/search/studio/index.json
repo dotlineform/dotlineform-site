@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5ecdcf9ebf98c5be204a1437c3fb879d",
-    "generated_at_utc": "2026-05-11T11:50:44Z",
-    "count": 222
+    "version": "blake2b-44810d7ec5f1f72cc68249dc68ba9116",
+    "generated_at_utc": "2026-05-11T11:58:24Z",
+    "count": 223
   },
   "entries": [
     {
@@ -1150,22 +1150,24 @@
       "kind": "doc",
       "title": "Search Field Registry",
       "href": "/docs/?scope=studio&doc=search-field-registry",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-01 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-field-registry",
         "search",
         "field",
         "registry",
         "search field registry",
-        "2026-04-01",
+        "2026-05-11 12:50",
         "2026",
-        "04",
-        "01"
+        "05",
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-field-registry search field registry search field registry 2026-04-01 2026 04 01"
+      "search_text": "search-field-registry search field registry search field registry 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "data-models-shared",
@@ -1474,6 +1476,33 @@
         "07"
       ],
       "search_text": "library 2026-05-07 2026 05 07"
+    },
+    {
+      "id": "site-request-portable-docs-viewer",
+      "kind": "doc",
+      "title": "Portable Docs Viewer Request",
+      "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
+      "last_updated": "2026-05-11",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-11 • Change Requests",
+      "search_terms": [
+        "site-request-portable-docs-viewer",
+        "site",
+        "request",
+        "portable",
+        "docs",
+        "viewer",
+        "portable docs viewer request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-11",
+        "2026",
+        "05",
+        "11"
+      ],
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 2026 05 11"
     },
     {
       "id": "analytics",
@@ -3102,10 +3131,10 @@
       "kind": "doc",
       "title": "Search Public UI Contract",
       "href": "/docs/?scope=studio&doc=search-public-ui-contract",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-05 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-public-ui-contract",
         "search",
@@ -3113,11 +3142,14 @@
         "ui",
         "contract",
         "search public ui contract",
-        "2026-05-05",
+        "2026-05-11 12:50",
         "2026",
-        "05"
+        "05",
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-public-ui-contract search public ui contract search public ui contract 2026-05-05 2026 05"
+      "search_text": "search-public-ui-contract search public ui contract search public ui contract 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "series-tags",
@@ -3484,24 +3516,24 @@
       "kind": "doc",
       "title": "Search UI Behaviour",
       "href": "/docs/?scope=studio&doc=search-ui-behaviour",
-      "last_updated": "2026-05-10 17:35",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-10 17:35 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-ui-behaviour",
         "search",
         "ui",
         "behaviour",
         "search ui behaviour",
-        "2026-05-10 17:35",
+        "2026-05-11 12:50",
         "2026",
         "05",
-        "10",
-        "17",
-        "35"
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-10 17:35 2026 05 10 17 35"
+      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -3861,24 +3893,24 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-05-09 21:53",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-09 21:53 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-05-09 21:53",
+        "2026-05-11 12:50",
         "2026",
         "05",
-        "09",
-        "21",
-        "53"
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-09 21:53 2026 05 09 21 53"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "scripts-studio-backup-retention",
@@ -3956,10 +3988,10 @@
       "kind": "doc",
       "title": "Docs Scope Index Shape",
       "href": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
-      "last_updated": "2026-04-24",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-24 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-studio-v1-index-shape",
         "search",
@@ -3970,12 +4002,14 @@
         "docs scope index shape",
         "docs",
         "scope",
-        "2026-04-24",
+        "2026-05-11 12:50",
         "2026",
-        "04",
-        "24"
+        "05",
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-04-24 2026 04 24"
+      "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "experimental-dimension-framework",
@@ -4113,24 +4147,24 @@
       "kind": "doc",
       "title": "Search Validation Checklist",
       "href": "/docs/?scope=studio&doc=search-validation-checklist",
-      "last_updated": "2026-05-10 17:35",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-10 17:35 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-validation-checklist",
         "search",
         "validation",
         "checklist",
         "search validation checklist",
-        "2026-05-10 17:35",
+        "2026-05-11 12:50",
         "2026",
         "05",
-        "10",
-        "17",
-        "35"
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-10 17:35 2026 05 10 17 35"
+      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "config-studio-config-js",
@@ -4352,10 +4386,10 @@
       "kind": "doc",
       "title": "Incremental Search Orchestration Plan",
       "href": "/docs/?scope=studio&doc=search-incremental-orchestration-plan",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-25 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-incremental-orchestration-plan",
         "search",
@@ -4363,12 +4397,14 @@
         "orchestration",
         "plan",
         "incremental search orchestration plan",
-        "2026-04-25",
+        "2026-05-11 12:50",
         "2026",
-        "04",
-        "25"
+        "05",
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-04-25 2026 04 25"
+      "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "scripts-publish-media-to-r2",
@@ -4427,10 +4463,10 @@
       "kind": "doc",
       "title": "Catalogue Targeted Search Plan",
       "href": "/docs/?scope=studio&doc=search-catalogue-targeted-plan",
-      "last_updated": "2026-04-25",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-25 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-catalogue-targeted-plan",
         "search",
@@ -4438,12 +4474,14 @@
         "targeted",
         "plan",
         "catalogue targeted search plan",
-        "2026-04-25",
+        "2026-05-11 12:50",
         "2026",
-        "04",
-        "25"
+        "05",
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-catalogue-targeted-plan search catalogue targeted plan catalogue targeted search plan 2026-04-25 2026 04 25"
+      "search_text": "search-catalogue-targeted-plan search catalogue targeted plan catalogue targeted search plan 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "site-request-catalogue-work-detail-unified-editor",
@@ -4611,10 +4649,10 @@
       "kind": "doc",
       "title": "Search Change Log Guidance",
       "href": "/docs/?scope=studio&doc=search-change-log-guidance",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-change-log-guidance",
         "search",
@@ -4622,12 +4660,14 @@
         "log",
         "guidance",
         "search change log guidance",
-        "2026-03-31",
+        "2026-05-11 12:50",
         "2026",
-        "03",
-        "31"
+        "05",
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-03-31 2026 03 31"
+      "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "site-request-catalogue-publication-workflow",
@@ -4761,22 +4801,24 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-05-11",
+        "2026-05-11 12:50",
         "2026",
         "05",
-        "11"
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "search-change-log search change log search change log 2026-05-11 2026 05 11"
+      "search_text": "search-change-log search change log search change log 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "docs-viewer-management",
@@ -4883,10 +4925,10 @@
       "kind": "doc",
       "title": "Search Policy JSON",
       "href": "/docs/?scope=studio&doc=config-search-policy-json",
-      "last_updated": "2026-05-10 18:45",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-10 18:45 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "config-search-policy-json",
         "config",
@@ -4894,14 +4936,14 @@
         "policy",
         "json",
         "search policy json",
-        "2026-05-10 18:45",
+        "2026-05-11 12:50",
         "2026",
         "05",
-        "10",
-        "18",
-        "45"
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "config-search-policy-json config search policy json search policy json 2026-05-10 18:45 2026 05 10 18 45"
+      "search_text": "config-search-policy-json config search policy json search policy json 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -4961,10 +5003,10 @@
       "kind": "doc",
       "title": "Search Build Config JSON",
       "href": "/docs/?scope=studio&doc=config-search-build-json",
-      "last_updated": "2026-05-06 21:13",
+      "last_updated": "2026-05-11 12:50",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-06 21:13 • Search",
+      "display_meta": "2026-05-11 12:50 • Search",
       "search_terms": [
         "config-search-build-json",
         "config",
@@ -4972,14 +5014,14 @@
         "build",
         "json",
         "search build config json",
-        "2026-05-06 21:13",
+        "2026-05-11 12:50",
         "2026",
         "05",
-        "06",
-        "21",
-        "13"
+        "11",
+        "12",
+        "50"
       ],
-      "search_text": "config-search-build-json config search build json search build config json 2026-05-06 21:13 2026 05 06 21 13"
+      "search_text": "config-search-build-json config search build json search build config json 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "ui-request-docs-html-import-task",

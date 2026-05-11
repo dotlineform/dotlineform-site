@@ -14,7 +14,7 @@ This document answers two practical questions from the current implementation st
 - how to set up a new Library-style docs scope with one local management view and one read-only public view
 
 It intentionally describes the current repo as it is now.
-The final section lists the parts that still need extraction before the Docs Viewer is a clean self-contained package.
+The extraction plan for making these steps shorter and more self-contained lives in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
 ## Current Shape
 
@@ -125,38 +125,6 @@ If inline docs search is enabled, each scope also needs:
 These files are generated outputs.
 Copy them only if you are copying existing built content; otherwise generate them from source docs.
 
-### Search Ownership
-
-Docs Viewer search should be treated as part of Docs Viewer.
-It searches document-domain corpora and should optimize for document tasks:
-
-- title, summary, headings, and body text
-- document hierarchy and parent titles
-- `hidden` / `viewable` filtering
-- recently-added ordering
-- opening results inside the active viewer route
-
-Catalogue search is a separate data-domain product.
-It searches structured catalogue records and should optimize for catalogue tasks:
-
-- work, series, moment, and tag lookup
-- catalogue metadata and relationship fields
-- artwork-specific identifiers and status fields
-
-There is no useful generic "global site search" owner for this project.
-The searchable domains are Catalogue and Docs, and they have different source models, ranking goals, and UI objectives.
-
-`/analysis/` may discuss catalogue subject matter, but architecturally it is still a document corpus.
-It should use Docs Viewer search, not Catalogue search.
-
-The current implementation still has transitional search plumbing under `scripts/search/`.
-The desired portable boundary is:
-
-- Docs Viewer owns docs search build config, docs search runtime policy, and docs search output shape
-- Catalogue owns catalogue search build config, runtime policy, and output shape
-- any top-level `/search/` route, if kept, should be a chooser or dispatcher between domain searches rather than the owner of merged search policy
-- low-level text helpers may be shared only when they remain domain-neutral
-
 ### Build Scripts
 
 Copy:
@@ -176,8 +144,7 @@ Current issue:
 the docs-search builder still lives in the generic search subsystem and hardcodes `studio`, `library`, and `analysis` in `scripts/search/build_search.rb`.
 Adding a new arbitrary docs scope currently requires editing that script and `scripts/search/build_config.json`.
 
-Target direction:
-docs-search scope configuration should move into Docs Viewer scope configuration so a portable Docs Viewer install does not need the Catalogue/public search product.
+The target direction is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
 ### Management Server
 
@@ -417,20 +384,7 @@ Confirm:
 - no management controls are rendered
 - no management-only CSS or import JavaScript is fetched
 
-## Current Self-Containment Gaps
+## Related Planning
 
-These are the main areas to address before Docs Viewer is easy to move between Jekyll repos.
-
-- Read-only viewer CSS is mixed into `assets/css/main.css` instead of a dedicated Docs Viewer stylesheet.
-- Management mode depends on `assets/studio/css/studio.css` for importer and modal/control styling.
-- Viewer config and UI copy live under `assets/studio/data/`, even for public read-only viewer routes.
-- `_includes/docs_viewer_shell.html` hardcodes the management scope select options.
-- `assets/js/docs-viewer.js` hardcodes known `/docs/` scope route data in `DOCS_ROUTE_SCOPES`.
-- Docs search is still built by the generic `scripts/search/build_search.rb` pipeline instead of a Docs Viewer-owned search builder.
-- `scripts/search/build_config.json` still mixes docs-index source declarations into the generic search build config.
-- Docs Import accepts only the current `studio`, `library`, and `analysis` scopes.
-- The management server and import flow are still a set of repo scripts rather than a small documented command package.
-- Setup requires copying several Studio helper modules even when the desired feature is only Docs Viewer management.
-
-These gaps are useful extraction targets.
-The immediate architectural direction should be to make Docs Viewer own its CSS, browser config, UI text, scope list, docs-search engine and policy, import shell, and local management command surface.
+Use this page as the current install guide.
+Use [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) for the ordered work to reduce hardcoded scope lists, move docs search under Docs Viewer ownership, extract CSS/config, and package the local management/import surface.
