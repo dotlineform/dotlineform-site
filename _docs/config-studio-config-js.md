@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Studio Config Loader JS
 added_date: 2026-04-01
-last_updated: "2026-05-10 19:05"
+last_updated: "2026-05-11 14:10"
 parent_id: studio
 sort_order: 100
 ---
@@ -79,7 +79,7 @@ What does not stay here:
 
 - Studio tag metric and RAG scoring
   that lives in `assets/studio/js/analysis-tag-scoring.js`
-- dedicated `/search/` policy parsing
+- dedicated `/catalogue/search/` policy parsing
   that lives in `assets/js/search/search-policy.js`
 - local write transport
   that lives in `assets/studio/js/studio-transport.js`

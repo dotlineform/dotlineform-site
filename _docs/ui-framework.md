@@ -2,7 +2,7 @@
 doc_id: ui-framework
 title: UI Framework
 added_date: 2026-04-24
-last_updated: "2026-05-07 21:52"
+last_updated: "2026-05-11 14:10"
 parent_id: ui
 sort_order: 10
 ---
@@ -40,7 +40,7 @@ This framework covers:
 
 - site-wide behavior contracts for progressive enhancement, navigation interactions, and DOM hooks
 - docs-viewer UI standards for `/docs/` and `/library/`
-- public search UI standards for `/search/`
+- public search UI standards for `/catalogue/search/`
 
 ## Site UI Contract Boundary
 
@@ -216,7 +216,7 @@ The current shared treatment is:
 
 These standards apply to the dedicated public search page:
 
-- `/search/`
+- `/catalogue/search/`
 
 Detailed search behavior, scope policy, and ranking are documented elsewhere. This section only records the current UI shape.
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T12:19:16Z",
+  "generated_at": "2026-05-11T12:43:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -319,7 +319,7 @@
       "doc_id": "search-overview",
       "title": "Search Overview",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 13:20",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 10,
       "published": true,
@@ -328,7 +328,7 @@
       "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
-      "content_text_length": 5030
+      "content_text_length": 4742
     },
     {
       "scope": "studio",
@@ -400,7 +400,7 @@
       "doc_id": "ui-framework",
       "title": "UI Framework",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-07 21:52",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "ui",
       "sort_order": 10,
       "published": true,
@@ -409,7 +409,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
-      "content_text_length": 11305
+      "content_text_length": 11325
     },
     {
       "scope": "studio",
@@ -935,7 +935,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 13:20",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -944,7 +944,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 11117,
+      "content_text_length": 11207,
       "ui_status": "in-progress"
     },
     {
@@ -1259,7 +1259,7 @@
       "doc_id": "search",
       "title": "Search",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "",
       "sort_order": 32,
       "published": true,
@@ -1268,7 +1268,7 @@
       "source_path": "search.md",
       "viewer_url": "/docs/?scope=studio&doc=search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search.json",
-      "content_text_length": 1883
+      "content_text_length": 1832
     },
     {
       "scope": "studio",
@@ -1634,7 +1634,7 @@
       "doc_id": "config",
       "title": "Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 21:18",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "architecture",
       "sort_order": 50,
       "published": true,
@@ -1643,7 +1643,7 @@
       "source_path": "config.md",
       "viewer_url": "/docs/?scope=studio&doc=config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config.json",
-      "content_text_length": 1100
+      "content_text_length": 1110
     },
     {
       "scope": "studio",
@@ -1682,7 +1682,7 @@
       "doc_id": "config-jekyll-site-config",
       "title": "Jekyll Site Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "site-docs",
       "sort_order": 50,
       "published": true,
@@ -1691,7 +1691,7 @@
       "source_path": "config-jekyll-site-config.md",
       "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-jekyll-site-config.json",
-      "content_text_length": 1850
+      "content_text_length": 1860
     },
     {
       "scope": "studio",
@@ -1974,7 +1974,7 @@
       "doc_id": "search-public-ui-contract",
       "title": "Search Public UI Contract",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 60,
       "published": true,
@@ -1983,7 +1983,7 @@
       "source_path": "search-public-ui-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=search-public-ui-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-public-ui-contract.json",
-      "content_text_length": 6065
+      "content_text_length": 2799
     },
     {
       "scope": "studio",
@@ -2086,7 +2086,7 @@
       "doc_id": "new-pipeline-refine-search",
       "title": "Search Plan",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "archive",
       "sort_order": 62,
       "published": true,
@@ -2095,7 +2095,7 @@
       "source_path": "refine-search.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-search.json",
-      "content_text_length": 2103
+      "content_text_length": 2106
     },
     {
       "scope": "studio",
@@ -2216,7 +2216,7 @@
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 70,
       "published": true,
@@ -2225,7 +2225,7 @@
       "source_path": "search-ui-behaviour.md",
       "viewer_url": "/docs/?scope=studio&doc=search-ui-behaviour",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-ui-behaviour.json",
-      "content_text_length": 12748
+      "content_text_length": 11661
     },
     {
       "scope": "studio",
@@ -2459,7 +2459,7 @@
       "doc_id": "search-build-pipeline",
       "title": "Search Build Pipeline",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 80,
       "published": true,
@@ -2468,7 +2468,7 @@
       "source_path": "search-build-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json",
-      "content_text_length": 14976
+      "content_text_length": 15006
     },
     {
       "scope": "studio",
@@ -2523,7 +2523,7 @@
       "doc_id": "search-studio-v1-index-shape",
       "title": "Docs Scope Index Shape",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 90,
       "published": true,
@@ -2532,7 +2532,7 @@
       "source_path": "search-studio-v1-index-shape.md",
       "viewer_url": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-studio-v1-index-shape.json",
-      "content_text_length": 2848
+      "content_text_length": 2858
     },
     {
       "scope": "studio",
@@ -2621,7 +2621,7 @@
       "doc_id": "search-validation-checklist",
       "title": "Search Validation Checklist",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 100,
       "published": true,
@@ -2630,14 +2630,14 @@
       "source_path": "search-validation-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-validation-checklist.json",
-      "content_text_length": 8370
+      "content_text_length": 8298
     },
     {
       "scope": "studio",
       "doc_id": "config-studio-config-js",
       "title": "Studio Config Loader JS",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-10 19:05",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "studio",
       "sort_order": 100,
       "published": true,
@@ -2646,7 +2646,7 @@
       "source_path": "config-studio-config-js.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json",
-      "content_text_length": 2584
+      "content_text_length": 2594
     },
     {
       "scope": "studio",
@@ -2754,7 +2754,7 @@
       "doc_id": "data-flow",
       "title": "Data Flow",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "catalogue",
       "sort_order": 110,
       "published": true,
@@ -2763,7 +2763,7 @@
       "source_path": "data-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=data-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-flow.json",
-      "content_text_length": 4206
+      "content_text_length": 4194
     },
     {
       "scope": "studio",
@@ -3032,7 +3032,7 @@
       "doc_id": "search-change-log",
       "title": "Search Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 13:20",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 140,
       "published": true,
@@ -3041,7 +3041,7 @@
       "source_path": "search-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=search-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
-      "content_text_length": 44762
+      "content_text_length": 45843
     },
     {
       "scope": "studio",
@@ -3114,7 +3114,7 @@
       "doc_id": "config-search-policy-json",
       "title": "Search Policy JSON",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "search",
       "sort_order": 150,
       "published": true,
@@ -3123,7 +3123,7 @@
       "source_path": "config-search-policy-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-policy-json.json",
-      "content_text_length": 1917
+      "content_text_length": 1868
     },
     {
       "scope": "studio",
@@ -3613,7 +3613,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 14:10",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3622,7 +3622,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 137301
+      "content_text_length": 137901
     },
     {
       "scope": "studio",

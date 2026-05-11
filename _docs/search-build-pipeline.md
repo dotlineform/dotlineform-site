@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline
 title: Search Build Pipeline
 added_date: 2026-04-23
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 80
 ---
@@ -331,7 +331,7 @@ Current derived search support fields:
 ### Current Runtime Mapping
 
 - consumed by inline docs search on `/docs/`
-- not consumed by the dedicated `/search/` page
+- not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
   - `./scripts/build_docs.rb --scope studio --write`
   - `./scripts/build_search.rb --scope studio --write`
@@ -397,7 +397,7 @@ Current builder behaviour for Library:
 ### Current Runtime Mapping
 
 - consumed by inline docs search on `/library/`
-- not consumed by the dedicated `/search/` page
+- not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
   - `./scripts/build_docs.rb --scope library --write`
   - `./scripts/build_search.rb --scope library --write`
@@ -464,7 +464,7 @@ Current builder behaviour for Analysis:
 ### Current Runtime Mapping
 
 - consumed by inline docs search on `/analysis/`
-- not consumed by the dedicated `/search/` page
+- not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
   - `./scripts/build_docs.rb --scope analysis --write`
   - `./scripts/build_search.rb --scope analysis --write`

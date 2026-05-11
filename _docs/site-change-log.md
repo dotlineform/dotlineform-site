@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: "2026-05-11 14:10"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,27 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Moved public Catalogue search to `/catalogue/search/`
+
+**Status:** implemented
+
+**Area:** public site routing / Catalogue search
+
+**Summary:**
+Moved the public Catalogue search page from `/search/?scope=catalogue` to `/catalogue/search/`.
+The `/series/` toolbar search button now opens the Catalogue-owned route.
+
+**Files changed/docs:**
+
+- `catalogue/search/index.md`
+- `series/index.md`
+- `assets/js/catalogue-search.js`
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+
+**Impact:**
+The top-level `/search/` route is no longer generated.
+The `/series/` browse route is unchanged; a future `/series/` to `/catalogue/` route migration remains a separate design decision.
 
 ## [2026-05-11] Retired the standalone Docs Import route
 

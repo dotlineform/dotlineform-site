@@ -2,7 +2,7 @@
 doc_id: new-pipeline-refine-search
 title: "Search Plan"
 added_date: 2026-04-18
-last_updated: "2026-05-05"
+last_updated: "2026-05-11 14:10"
 parent_id: archive
 sort_order: 62
 ---
@@ -27,7 +27,7 @@ It uses the shared [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-col
 ## Current Boundary
 
 - Search already has its own documentation set and implementation boundaries
-- `/studio/search/` surfaces public search and the core Search planning/change-log docs as dashboard route links
+- `/studio/search/` surfaces Catalogue search and the core Search planning/change-log docs as dashboard route links
 - this stub is for Studio planning and operational surfaces, not for rewriting the whole search architecture
 - shared shell, nav, and common Studio patterns belong to the Studio implementation plan
 

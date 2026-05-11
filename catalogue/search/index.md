@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Search"
-permalink: /search/
-section: search
+title: "Catalogue Search"
+permalink: /catalogue/search/
+section: catalogue
 ---
 
 <div
@@ -35,4 +35,4 @@ section: search
   <div class="studioSearch__more" id="studioSearchMore"></div>
 </div>
 
-<script type="module" src="{{ '/assets/js/search/search-page.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/assets/js/catalogue-search.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

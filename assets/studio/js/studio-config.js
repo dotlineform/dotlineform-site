@@ -5,7 +5,7 @@ const DEFAULT_STUDIO_CONFIG = {
     "routes": {
       "studio_home": "/studio/",
       "studio_audits": "/studio/audits/",
-      "search": "/search/",
+      "search": "/catalogue/search/",
       "series_tags": "/studio/analytics/series-tags/",
       "series_tag_editor": "/studio/analytics/series-tag-editor/",
       "catalogue_field_registry_review": "/studio/catalogue-field-registry/",

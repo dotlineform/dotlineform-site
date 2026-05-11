@@ -2,7 +2,7 @@
 doc_id: search-public-ui-contract
 title: Search Public UI Contract
 added_date: 2026-03-31
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 60
 ---
@@ -12,215 +12,101 @@ sort_order: 60
 
 This document defines the current public-site search entry model and URL contract for search.
 
-It records the route and scope contract that the current implementation already uses across the dedicated search page and the inline docs-viewer search surfaces.
+The current public dedicated-route search surface is Catalogue-owned.
+Docs-domain search lives inside Docs Viewer routes.
 
-This is a contract-and-behaviour document. It does not define ranking rules, index schema, or implementation internals.
+This is a contract-and-behaviour document.
+It does not define ranking rules, index schema, or implementation internals.
 
-## Why this document exists now
+## Current Public Search Surfaces
 
-Search now has:
+Current live surfaces:
 
-- a dedicated public route at `/search/`, with `catalogue` backed by `assets/data/search/catalogue/index.json`
-- an aggregate `/search/` mode that searches all enabled dedicated-route scopes when no `scope` query parameter is supplied
-- an inline Studio docs search surface on `/docs/`
-- an inline Library docs search surface on `/library/`
+- Catalogue search on `/catalogue/search/`
+- Studio docs search inline on `/docs/`
+- Library docs search inline on `/library/`
+- Analysis docs search inline on `/analysis/`
 
-The route/state contract still needs to stay explicit because:
+There is no active top-level `/search/` route.
+The former scope-routed `/search/?scope=...` model has been retired because it implied a generic cross-domain search product.
 
-- multiple search surfaces already coexist across the site
-- each live surface owns its own search artifact and route model
+## Core Decision
 
-The public UI contract therefore needs to stay explicit in the current implementation.
+Search entry points should belong to the data domain being searched.
 
-## Core decision
+Catalogue search:
 
-Public search should use:
+- owns the dedicated `/catalogue/search/` page
+- searches works, series, and moments
+- reads `assets/data/search/catalogue/index.json`
+- is entered from the Catalogue browse surface, currently `/series/`
 
-- explicit scope passed in the URL
-- search call-to-action entry points placed on the page that owns the search scope
-- the page anatomy that best fits the content domain, whether that is a dedicated route or inline viewer search
+Docs search:
 
-Public search should not infer a hidden scope from referrer context.
-When the page is opened directly without `scope`, it uses an explicit aggregate scope internally; the route remains visually unheaded rather than showing `all` as page chrome.
+- belongs to Docs Viewer
+- runs inline on `/docs/`, `/library/`, and `/analysis/`
+- opens results inside the active viewer route
 
-## Public route contract
+## Catalogue Route Contract
 
-### Base route
+Base route:
 
-The public search page route should be:
+- `/catalogue/search/`
 
-- `/search/`
+Supported query parameter:
 
-This route is the dedicated public search shell for catalogue search.
-
-### Query parameter contract
-
-Recommended URL contract:
-
-- `scope=<domain>`
 - `q=<query>`
-
-Examples for dedicated route search:
-
-- `/search/`
-- `/search/?scope=all`
-- `/search/?scope=catalogue`
-- `/search/?scope=catalogue&q=forest`
-
-### Why `scope` and `q`
-
-Use:
-
-- `scope`
-  to define which content domain is being searched
-- `q`
-  to define the actual user query
-
-Do not use:
-
-- `search=works`
-- `search=studio`
-
-Reason:
-
-- `search` is the natural name for the query itself, not the domain
-- the current “works” search scope already includes works, series, and moments, so `works` is not a precise domain label
-- a stable route vocabulary is more important once multiple search domains exist
-
-## Scope vocabulary
-
-The current agreed public scope vocabulary is:
-
-- `all`
-- `catalogue`
-- `library`
-- `studio`
-- `analysis`
-
-### `all`
-
-This virtual scope is used by `/search/` when no `scope` query parameter is supplied.
-It loads the enabled dedicated-route scope indexes and renders one mixed ranked list.
-Each result keeps its own scope label in the metadata line.
-
-### `catalogue`
-
-This scope covers the current public browse domain:
-
-- works
-- series
-- moments
-
-Reason:
-
-- this name matches the actual user-facing content domain better than `works`
-- it remains accurate even though the scope includes more than one record kind
-
-### `library`
-
-This scope exists as an inline docs-viewer search scope on `/library/` and as a dedicated-route scope on `/search/?scope=library`.
-
-### `studio`
-
-This scope exists as an inline docs-viewer search scope on `/docs/` and as a dedicated-route scope on `/search/?scope=studio`.
-
-Current coverage:
-
-- Studio docs
-
-Reason:
-
-- `studio` matches the site domain more clearly than the generic label `docs`
-- it remains scalable even if the first searchable Studio content is documentation-led
-
-### `analysis`
-
-This scope exists as a dedicated-route docs scope on `/search/?scope=analysis`.
-
-## Search entry-point rule
-
-The search call to action should live on the page that matches the search scope.
 
 Examples:
 
-- the catalogue search CTA should live on `/series/` and open `/search/?scope=catalogue`
-- Studio docs search should live inline on `/docs/`
-- Library docs search should live inline on `/library/`
+- `/catalogue/search/`
+- `/catalogue/search/?q=forest`
+
+The route does not accept `scope`.
+The domain is fixed by the route.
+
+## Catalogue Entry-Point Rule
+
+The Catalogue search call to action should live on the page that matches the Catalogue browsing context.
+
+Current entry point:
+
+- `/series/` search button opens `/catalogue/search/`
+
+The wider `/series/` to `/catalogue/` route naming cleanup is intentionally separate.
+Until that route migration is designed, `/series/` remains the Catalogue browse entry point and `/catalogue/search/` is the Catalogue search entry point.
+
+## Public Navigation Rule
+
+Do not introduce a top-level public nav item called `search` as the primary public entry point.
 
 Reason:
 
-- the user already understands the content domain from the page they are on
-- the CTA can make the scope explicit without adding a second ambiguous navigation concept
-- this avoids a top-level “search” nav item whose scope is unclear
+- it is unclear whether that nav item searches the current page, Catalogue, Docs, or the whole site
+- the public site has distinct Catalogue and Docs data domains
+- scope-specific entry points are clearer than a global search route
 
-## Public navigation rule
+## Dedicated Catalogue Search Responsibilities
 
-Do not introduce a top-level public nav item called `search` as the primary public entry point for scoped search.
+The `/catalogue/search/` page should:
 
-Reason:
+- display Catalogue search context clearly
+- accept and persist the `q` parameter
+- load only the Catalogue search index and Catalogue search policy
+- render work, series, and moment results
+- keep result links and related series links usable by keyboard
 
-- it is unclear whether that nav item searches the current page, the current section, or the whole site
-- the public site is moving toward multiple content domains, not one undifferentiated body of content
-- scope-specific entry points are clearer and scale better
+The `/catalogue/search/` page should not:
 
-## Dedicated search-page UI responsibilities
+- infer hidden scope from referrer context
+- expose docs-domain scopes
+- search Studio, Library, or Analysis documents
+- preserve the retired `/search/?scope=...` URL contract
 
-The `/search/` page should:
+## Related Documents
 
-- display the current search scope clearly in the page UI
-- accept and persist the `scope` parameter in the URL
-- accept and persist the `q` parameter in the URL
-- load the correct search data/config for the active scope
-- render one shared search-shell UI with scope-specific data and presentation policy
-
-The `/search/` page should not:
-
-- rely on hidden scope inference from the referrer page
-- present an unlabelled generic search box with no visible scope context
-
-## Scope clarity in the UI
-
-The active scope should be visible in the search page itself.
-
-Examples of acceptable signals:
-
-- page title or heading
-- supporting scope label near the input
-- empty-state copy that names the active domain
-- result metadata and filter options that clearly match the active domain
-
-The user should not need to infer scope only from the URL.
-
-## Current Dedicated-Route Scope
-
-The dedicated `/search/` page currently enables:
-
-- `catalogue`
-
-That scope is configured in `assets/data/search/policy.json`.
-
-Current docs-domain scopes:
-
-- `studio`
-- `library`
-
-Those scopes currently use inline docs-viewer search rather than the dedicated `/search/` page.
-
-## Current implementation status
-
-The current public rollout is now split by page anatomy:
-
-1. the dedicated public search page exists at `/search/`
-2. the live dedicated-route scope is `catalogue`
-3. `/series/` provides the catalogue search CTA
-4. Studio docs search lives inline on `/docs/`
-5. Library docs search lives inline on `/library/`
-
-## Out of scope for this document
-
-This document does not define:
-
-- the internal search engine API
-- the exact modular JSON/config file structure
-- ranking rules for any domain
-- search-result row layout details beyond the current dedicated-route shell
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)

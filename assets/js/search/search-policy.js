@@ -12,14 +12,6 @@ const DEFAULT_SEARCH_POLICY = {
     }
   },
   scopes: {
-    all: {
-      enabled: true,
-      scope_label: "all",
-      back_label: "",
-      back_route_key: "",
-      input_aria_label: "Search across all scopes",
-      input_placeholder: "search all scopes"
-    },
     catalogue: {
       enabled: true,
       scope_label: "catalogue",
@@ -29,36 +21,6 @@ const DEFAULT_SEARCH_POLICY = {
       index: "/assets/data/search/catalogue/index.json",
       input_aria_label: "Search works, series, and moments",
       input_placeholder: "search works, series, moments"
-    },
-    library: {
-      enabled: true,
-      scope_label: "library",
-      back_label: "← library",
-      back_route_key: "library_page",
-      back_href: "/library/",
-      index: "/assets/data/search/library/index.json",
-      input_aria_label: "Search Library documents",
-      input_placeholder: "search library"
-    },
-    studio: {
-      enabled: true,
-      scope_label: "studio",
-      back_label: "← docs",
-      back_route_key: "docs_page",
-      back_href: "/docs/",
-      index: "/assets/data/search/studio/index.json",
-      input_aria_label: "Search Studio documents",
-      input_placeholder: "search studio docs"
-    },
-    analysis: {
-      enabled: true,
-      scope_label: "analysis",
-      back_label: "← analysis",
-      back_route_key: "analysis_page",
-      back_href: "/analysis/",
-      index: "/assets/data/search/analysis/index.json",
-      input_aria_label: "Search Analysis documents",
-      input_placeholder: "search analysis"
     }
   },
   messages: {
@@ -76,7 +38,6 @@ const DEFAULT_SEARCH_POLICY = {
     result_kind_work: "work",
     result_kind_series: "series",
     result_kind_moment: "moment",
-    result_kind_doc: "doc",
     performance_summary: "Search performance"
   }
 };

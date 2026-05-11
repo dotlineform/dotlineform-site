@@ -2,7 +2,7 @@
 doc_id: config-jekyll-site-config
 title: Jekyll Site Config
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-11 14:10"
 parent_id: site-docs
 sort_order: 50
 ---
@@ -71,5 +71,5 @@ What does not stay here:
   those live in **[Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)**
 - Studio/search browser text and JSON path settings
   those live in **[Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)**
-- dedicated `/search/` runtime policy
+- dedicated `/catalogue/search/` runtime policy
   that lives in **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**

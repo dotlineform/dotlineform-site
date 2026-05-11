@@ -1,18 +1,15 @@
 import {
   createSearchPerformanceInstrumentation,
   estimatePayloadBytes
-} from "./search-performance.js";
+} from "./search/search-performance.js";
 
 let loadSearchPolicyFn = null;
 let getSearchRuntimePolicyFn = null;
 let getSearchScopePolicyFn = null;
 let getSearchMessageFn = null;
-let DOCS_MANAGEMENT_ENDPOINTS = null;
 let searchDepsPromise = null;
 
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
-const DOCS_SEARCH_SERVICE_SCOPES = new Set(["library", "studio", "analysis"]);
-const DOCS_SEARCH_SERVICE_TIMEOUT_MS = 500;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSearchPage);
@@ -53,8 +50,7 @@ async function initSearchPage() {
     applyPerformanceText({ policy, performanceSummary });
     status.textContent = searchText(policy, "loading", "loading search index…");
 
-    const requestedScope = resolveScope();
-    const scope = requestedScope || "all";
+    const scope = "catalogue";
     applyNavScopeState(scope);
     const scopePolicy = getSearchScopePolicyFn(policy, scope);
     if (!scopePolicy) {
@@ -71,9 +67,9 @@ async function initSearchPage() {
       return;
     }
 
-    const entries = scope === "all"
-      ? await loadAggregateSearchEntries(policy, instrumentation)
-      : await loadScopedSearchEntries(scopePolicy, instrumentation);
+    const entries = await loadScopedSearchEntries(scopePolicy, instrumentation);
+    const initialQuery = resolveQuery();
+    input.value = initialQuery;
     const state = {
       policy,
       scope,
@@ -86,7 +82,7 @@ async function initSearchPage() {
       more,
       entries,
       filterKind: "all",
-      queryText: "",
+      queryText: initialQuery,
       debounceId: null,
       visibleCount: runtimePolicy.initialBatchSize,
       instrumentation
@@ -135,19 +131,6 @@ async function loadScopedSearchEntries(scopePolicy, instrumentation) {
 }
 
 async function loadSearchIndexPayload(scopePolicy, instrumentation) {
-  if (shouldUseDocsManagementSearch(scopePolicy.scope)) {
-    try {
-      return await loadDocsManagementSearchIndex(scopePolicy.scope, instrumentation);
-    } catch (error) {
-      instrumentation.recordScope({
-        scope: scopePolicy.scope,
-        source: "docs-management",
-        status: "failed",
-        error
-      });
-      console.warn("search: docs-management search read failed", scopePolicy.scope, error);
-    }
-  }
   if (!instrumentation.enabled) {
     const loadTimer = instrumentation.timer();
     const payload = await loadSearchIndexJson(scopePolicy);
@@ -199,95 +182,14 @@ function searchScopeIndexUrl(scopePolicy) {
   return withAssetVersion(resolveSiteAssetPath(path), readAssetVersion(import.meta.url));
 }
 
-async function loadDocsManagementSearchIndex(scope, instrumentation) {
-  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedSearch);
-  url.searchParams.set("scope", scope);
-  const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), DOCS_SEARCH_SERVICE_TIMEOUT_MS);
-  try {
-    const loadTimer = instrumentation.timer();
-    const response = await fetch(url.toString(), {
-      cache: "no-store",
-      signal: controller.signal
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    if (!instrumentation.enabled) {
-      return {
-        payload: await response.json(),
-        source: "docs-management",
-        payloadBytes: 0,
-        loadMs: loadTimer.end(),
-        parseMs: 0
-      };
-    }
-    const text = await response.text();
-    const loadMs = loadTimer.end();
-    const parseTimer = instrumentation.timer();
-    const payload = JSON.parse(text);
-    return {
-      payload,
-      source: "docs-management",
-      payloadBytes: estimatePayloadBytes(text),
-      loadMs,
-      parseMs: parseTimer.end()
-    };
-  } finally {
-    window.clearTimeout(timer);
-  }
-}
-
-function shouldUseDocsManagementSearch(scope) {
-  return Boolean(
-    DOCS_MANAGEMENT_ENDPOINTS &&
-    DOCS_MANAGEMENT_ENDPOINTS.generatedSearch &&
-    DOCS_SEARCH_SERVICE_SCOPES.has(scope) &&
-    isLocalSearchHost()
-  );
-}
-
-function isLocalSearchHost() {
-  const hostname = String(window.location.hostname || "").toLowerCase();
-  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname.endsWith(".localhost");
-}
-
-async function loadAggregateSearchEntries(policy, instrumentation) {
-  const scopePolicies = getAggregateSearchScopePolicies(policy);
-  const batches = await Promise.allSettled(scopePolicies.map((scopePolicy) => loadScopedSearchEntries(scopePolicy, instrumentation)));
-  const entries = [];
-  batches.forEach((result, index) => {
-    if (result.status === "fulfilled") {
-      entries.push(...result.value);
-      return;
-    }
-    console.warn("search: aggregate scope load failed", scopePolicies[index].scope, result.reason);
-  });
-  if (!entries.length && scopePolicies.length) {
-    throw new Error("No aggregate search scopes loaded.");
-  }
-  return entries;
-}
-
-function getAggregateSearchScopePolicies(policy) {
-  const scopes = policy && policy.scopes && typeof policy.scopes === "object" ? policy.scopes : {};
-  return Object.keys(scopes)
-    .map((scope) => getSearchScopePolicyFn(policy, scope))
-    .filter((scopePolicy) => scopePolicy && scopePolicy.enabled && scopePolicy.scope !== "all");
-}
-
 async function loadSearchDeps() {
   if (!searchDepsPromise) {
     const assetVersion = readAssetVersion(import.meta.url);
-    searchDepsPromise = Promise.all([
-      import(withAssetVersion("./search-policy.js", assetVersion)),
-      import(withAssetVersion("../../studio/js/studio-transport.js", assetVersion))
-    ]).then(([policyModule, transportModule]) => {
+    searchDepsPromise = import(withAssetVersion("./search/search-policy.js", assetVersion)).then((policyModule) => {
       loadSearchPolicyFn = policyModule.loadSearchPolicy;
       getSearchRuntimePolicyFn = policyModule.getSearchRuntimePolicy;
       getSearchScopePolicyFn = policyModule.getSearchScopePolicy;
       getSearchMessageFn = policyModule.getSearchMessage;
-      DOCS_MANAGEMENT_ENDPOINTS = transportModule.DOCS_MANAGEMENT_ENDPOINTS;
     });
   }
   return searchDepsPromise;
@@ -479,7 +381,6 @@ function matchesAllTokens(entry, queryTokens) {
 function renderEntry(state, entry) {
   const metaParts = [];
   const separator = searchText(state.policy, "result_meta_separator", " • ");
-  if (state.scope === "all" && entry.scopeLabel) metaParts.push(escapeHtml(entry.scopeLabel));
   if (entry.displayMeta) metaParts.push(escapeHtml(entry.displayMeta));
   if (entry.kind === "work" && entry.mediumType) metaParts.push(escapeHtml(entry.mediumType));
   if (entry.kind === "work" && entry.seriesTitles.length) {
@@ -531,13 +432,12 @@ function kindLabel(policy, kind) {
   if (kind === "work") return searchText(policy, "result_kind_work", "work");
   if (kind === "series") return searchText(policy, "result_kind_series", "series");
   if (kind === "moment") return searchText(policy, "result_kind_moment", "moment");
-  if (kind === "doc") return searchText(policy, "result_kind_doc", "doc");
   return kind;
 }
 
-function resolveScope() {
+function resolveQuery() {
   const params = new URLSearchParams(window.location.search);
-  return normalize(String(params.get("scope") || ""));
+  return String(params.get("q") || "");
 }
 
 function applyScopeText({ backLink, scopeLabel, input, scopePolicy, inputEnabled }) {
@@ -557,9 +457,8 @@ function applyScopeText({ backLink, scopeLabel, input, scopePolicy, inputEnabled
   }
 
   if (scopeLabel) {
-    const isAggregateScope = scopePolicy && scopePolicy.scope === "all";
-    scopeLabel.hidden = Boolean(isAggregateScope);
-    scopeLabel.textContent = scopePolicy && !isAggregateScope ? scopePolicy.scopeLabel : "scope unavailable";
+    scopeLabel.hidden = false;
+    scopeLabel.textContent = scopePolicy ? scopePolicy.scopeLabel : "scope unavailable";
   }
 
   input.disabled = !inputEnabled;
@@ -590,7 +489,6 @@ function applyNavScopeState(scope) {
 
   let activeHref = "";
   if (scope === "catalogue") activeHref = "/series/";
-  if (scope === "library") activeHref = "/library/";
   if (!activeHref) return;
 
   const activeItem = navItems.find((item) => {
@@ -627,10 +525,7 @@ function showUnsupportedScopeState({ root, status, results, more, policy }) {
 
 function routePath(key, fallback) {
   const routes = {
-    series_page_base: "/series/",
-    library_page: "/library/",
-    docs_page: "/docs/",
-    analysis_page: "/analysis/"
+    series_page_base: "/series/"
   };
   return routes[key] || fallback;
 }
@@ -669,7 +564,7 @@ function withAssetVersion(path, assetVersion) {
 
 function deriveSiteBasePath(importUrl) {
   const pathname = new URL(importUrl).pathname || "";
-  const marker = "/assets/js/search/";
+  const marker = "/assets/js/";
   const index = pathname.indexOf(marker);
   if (index < 0) return "";
   return pathname.slice(0, index).replace(/\/+$/, "");

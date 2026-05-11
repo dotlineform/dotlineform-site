@@ -2,7 +2,7 @@
 doc_id: data-flow
 title: Data Flow
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-11 14:10"
 parent_id: catalogue
 sort_order: 110
 ---
@@ -156,7 +156,7 @@ The moment page is moment-local. It does not read `moments_index.json` at runtim
 
 Catalogue search is a separate surface:
 
-- `/search/?scope=catalogue`
+- `/catalogue/search/`
 
 It reads:
 
@@ -190,5 +190,5 @@ The implemented data flow is now:
 5. `/moments/<moment_id>/`
    - uses `assets/moments/index/<moment_id>.json`
 
-6. `/search/?scope=catalogue`
+6. `/catalogue/search/`
    - uses `assets/data/search/catalogue/index.json`

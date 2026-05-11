@@ -2,7 +2,7 @@
 doc_id: search-validation-checklist
 title: Search Validation Checklist
 added_date: 2026-04-01
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 100
 ---
@@ -100,7 +100,7 @@ Suggested current examples:
 
 ## F. Dedicated Search Page UI Checks
 
-- [ ] Open `/search/?scope=catalogue`
+- [ ] Open `/catalogue/search/`
 - [ ] Confirm the page loads and the input is visible
 - [ ] Confirm the loading state clears and the page becomes usable
 - [ ] Confirm live search updates after typing
@@ -108,7 +108,7 @@ Suggested current examples:
 - [ ] Confirm the result count text matches the visible result set
 - [ ] Confirm results render inline below the controls
 - [ ] Confirm result rows show kind, title link, id, and metadata where expected
-- [ ] Confirm work, series, and moment title links open in a new tab on `/search/?scope=catalogue`
+- [ ] Confirm work, series, and moment title links open in a new tab on `/catalogue/search/`
 - [ ] Confirm linked series titles in work result metadata open the related series page in a new tab
 - [ ] Confirm a work opened from search without URL return context uses its primary series for the work-page back link when metadata loads
 - [ ] Confirm empty query returns the prompt state
@@ -116,11 +116,10 @@ Suggested current examples:
 - [ ] Confirm a large result set shows the `more` control
 - [ ] Confirm `more` reveals the next batch without resetting the query
 - [ ] Confirm the performance debug panel is hidden by default
-- [ ] Open `/search/?scope=catalogue&searchPerf=1`
+- [ ] Open `/catalogue/search/?searchPerf=1`
 - [ ] Confirm the performance debug panel appears and reports scope payload/load/normalization and query/render timing after a representative query
 - [ ] Confirm enabling instrumentation does not change result count or first-result ordering for the representative query
-- [ ] Open `/search/` without `scope`
-- [ ] Confirm the aggregate search input is enabled and loads enabled dedicated-route scopes
+- [ ] Confirm `/search/` is not generated as an active public route
 
 ## G. Docs-Viewer Search Checks
 
@@ -137,7 +136,7 @@ Suggested current examples:
 
 - [ ] Confirm the input receives focus on page load
 - [ ] Confirm the page can be used without a pointer
-- [ ] Confirm the input, result links, and `more` are reachable by Tab when `scope=catalogue`
+- [ ] Confirm the input, result links, and `more` are reachable by Tab on `/catalogue/search/`
 - [ ] Confirm linked work-result series titles are reachable by Tab when present
 - [ ] Confirm inline docs-viewer search results are keyboard reachable on `/docs/` and `/library/`
 - [ ] Confirm focus-visible styling is present on interactive controls

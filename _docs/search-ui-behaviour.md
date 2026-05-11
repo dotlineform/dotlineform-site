@@ -2,7 +2,7 @@
 doc_id: search-ui-behaviour
 title: Search UI Behaviour
 added_date: 2026-03-31
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 70
 ---
@@ -18,7 +18,7 @@ This is a UI-behaviour document. It is not the ranking, schema, or build-pipelin
 
 ## Scope
 
-This document applies to the current dedicated public search page at `/search/`.
+This document applies to the current dedicated Catalogue search page at `/catalogue/search/`.
 
 It covers:
 
@@ -33,7 +33,7 @@ It covers:
 ## Relationship to other documents
 
 - [Search Overview](/docs/?scope=studio&doc=search-overview) describes the subsystem at a high level
-- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) defines the public `/search/` route and scope-led entry model
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) defines the Catalogue-owned `/catalogue/search/` route and entry model
 - [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the data available to the UI
 - [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines which fields contribute to search and display
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) defines result ordering
@@ -67,21 +67,20 @@ The v1 public surface favors explicit behaviour over more advanced overlay or au
 
 Current entry point:
 
-- dedicated public page: `/search/`
-- dedicated public page: `/search/?scope=catalogue`
+- dedicated Catalogue page: `/catalogue/search/`
 
 Current status:
 
-- search is global across the indexed content types in the current index
+- search is Catalogue-domain across works, series, and moments
 - there is one search input on this page
-- the header includes a scope-owned back link to the calling browse page when the scope is valid
+- the header includes a Catalogue back link to the current browse page
 - the UI is page-specific rather than persistent in the main site shell
 
 Not yet implemented:
 
 - main site header search
 - overlay or dropdown search
-- public library search entry points outside the dedicated `/search/` route and inline Library viewer
+- public library search entry points outside the inline Library viewer
 
 ## Search activation behaviour
 
@@ -117,33 +116,14 @@ Current behaviour:
 
 - the page loads the search index during page initialization
 - the page appends a lightweight build-version query to the search module, shared config/data modules, and search JSON fetches to reduce stale-cache breakage after local JS or data changes
-- the page treats a missing `scope` URL parameter as the aggregate `all` scope
+- the page has a fixed Catalogue domain and does not read a `scope` URL parameter
 - the root remains hidden until the initial search config and search index load attempt completes
 - while the page is loading, the status message is set to `loading search index…`
 - after the index is loaded, it stays in memory for the page session
-- when running on localhost, docs-domain dedicated search scopes prefer the docs-management generated-search endpoint before falling back to static JSON assets
 
 Current scope policy:
 
-- `all` is enabled and searches all enabled dedicated-route scopes
 - `catalogue` is enabled
-- `library`, `studio`, and `analysis` docs-domain scopes are enabled on the dedicated search page
-
-If the page loads without a `scope` parameter:
-
-- the page still becomes visible
-- the aggregate scope label is hidden rather than rendering a visible `all` heading
-- the scope-owned back link is hidden
-- the input is enabled
-- the runtime loads the enabled dedicated-route scope indexes into one mixed search set
-- if one enabled scope index fails to load, the aggregate route logs that scope failure and continues with the remaining loaded scopes
-
-If the page loads with an unsupported explicit scope:
-
-- the page still becomes visible
-- the input is disabled
-- the status area shows an unsupported-scope message
-- results and `more` are cleared
 
 If loading fails:
 
@@ -155,7 +135,7 @@ The current implementation is eager-load on page entry, not lazy-load on focus.
 
 ## Opt-In Performance Instrumentation
 
-The dedicated `/search/` route has local-only performance instrumentation for search runtime review.
+The dedicated `/catalogue/search/` route has local-only performance instrumentation for search runtime review.
 
 Default behaviour:
 
@@ -167,15 +147,15 @@ Default behaviour:
 
 Enablement:
 
-- `/search/?scope=catalogue&searchPerf=1` shows the debug panel
-- `/search/?scope=catalogue&debug=search-performance` shows the debug panel
-- `/search/?scope=catalogue&searchPerf=console` writes compact snapshots to the console
+- `/catalogue/search/?searchPerf=1` shows the debug panel
+- `/catalogue/search/?debug=search-performance` shows the debug panel
+- `/catalogue/search/?searchPerf=console` writes compact snapshots to the console
 - local storage key `dlf.search.performance` may be set to `1`, `panel`, or `console` for repeat local testing
 
 Measured phases:
 
 - dependency/config/policy load timing
-- per-scope search payload load timing
+- Catalogue search payload load timing
 - payload byte estimate when instrumentation is enabled
 - JSON parse timing when instrumentation is enabled
 - entry normalization timing
@@ -236,7 +216,6 @@ Each result currently displays:
 
 The metadata line may include:
 
-- the source scope label when searching the aggregate `all` scope
 - `display_meta`
 - `medium_type` for works
 - linked `series_titles` for works
@@ -339,19 +318,19 @@ Current behaviour:
 
 There is also no blur-driven result dismissal because results are rendered inline on the page.
 
-## Scoped search behaviour
+## Catalogue Domain Behaviour
 
-Current implemented scope control:
+Current implemented domain control:
 
-- URL scope only: `scope=catalogue`
+- route-owned Catalogue domain: `/catalogue/search/`
 
 Current non-features:
 
 - no visible per-kind filter buttons
 - no “search within current series”
-- no hidden fallback scope when the URL context is missing
+- no `scope` query parameter
 
-The current public page is usable only when a valid scope is supplied in the URL.
+The current public page is usable directly because the Catalogue domain is fixed by the route.
 
 ## Content-type display policy
 
@@ -399,9 +378,9 @@ Those gaps are acceptable in the current implementation.
 
 Current UI behaviour in practice:
 
-- search lives on one dedicated public page
-- the header back link is scope-driven and currently resolves `catalogue` to `← works`
-- the page currently expects `scope=catalogue`
+- Catalogue search lives on one dedicated public page
+- the header back link currently resolves to `← works`
+- the page does not expect a `scope` query parameter
 - the index loads eagerly when the page initializes
 - results update live after a short debounce, and Enter can force immediate search
 - results appear inline below the controls

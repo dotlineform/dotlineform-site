@@ -2,7 +2,7 @@
 doc_id: search-studio-v1-index-shape
 title: Docs Scope Index Shape
 added_date: 2026-03-31
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 90
 ---
@@ -124,7 +124,7 @@ These docs-domain search artifacts are separate from:
 
 - `assets/data/search/catalogue/index.json`
 
-The dedicated `/search/` page currently uses only `catalogue`.
+The dedicated `/catalogue/search/` page currently uses only `catalogue`.
 The Studio and Library artifacts are currently consumed by the shared Docs Viewer runtime for inline search.
 
 ## Related documents

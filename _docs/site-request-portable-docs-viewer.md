@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 13:20"
+last_updated: "2026-05-11 14:10"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -76,7 +76,7 @@ The project should not keep a separate final cleanup phase that leaves old route
 
 Immediate cleanup already implied by the current decisions:
 
-- retire the global `/search/` page and route instead of preserving a merged-search surface
+- retire the global `/search/` page and route instead of preserving a merged-search surface (completed in the Catalogue search route cleanup)
 - keep Catalogue search as a Catalogue-owned concern, with any future dedicated Catalogue route handled outside Docs Viewer portability
 - retire the standalone `/studio/docs-import/` page and route after Studio links open the Docs Viewer management modal directly (completed in the initial cleanup)
 - remove stale Studio links to `/studio/docs-import/` (completed in the initial cleanup)
@@ -96,8 +96,8 @@ Tasks:
 - treat each later slice as reducing the current copy/setup burden
 - remove links from Studio dashboards or nav surfaces that still open `/studio/docs-import/` (done)
 - remove the standalone `/studio/docs-import/` page once the modal entry links are in place (done)
-- retire the global `/search/` route rather than keeping it as a cross-domain search bridge
-- update Search docs that still describe direct `/search/` as aggregate, global, or docs-scope search
+- retire the global `/search/` route rather than keeping it as a cross-domain search bridge (done)
+- update Search docs that still describe direct `/search/` as aggregate, global, or docs-scope search (done for current contract docs)
 
 Acceptance:
 

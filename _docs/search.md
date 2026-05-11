@@ -2,7 +2,7 @@
 doc_id: search
 title: Search
 added_date: 2026-03-31
-last_updated: "2026-05-11"
+last_updated: "2026-05-11 14:10"
 parent_id: ""
 sort_order: 32
 ---
@@ -12,7 +12,7 @@ This section describes the current search implementation and the direction towar
 
 Current live search surfaces:
 
-- Catalogue search on `/search/?scope=catalogue`
+- Catalogue search on `/catalogue/search/`
 - Studio docs search inline on `/docs/`
 - Library docs search inline on `/library/`
 - Analysis docs search inline on `/analysis/`
@@ -22,12 +22,12 @@ Architecture direction:
 - Catalogue search and Docs search are separate data-domain products.
 - Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`.
 - Catalogue search owns structured artwork/catalogue lookup.
-- A top-level `/search/` route, if kept, should act as a chooser or dispatcher rather than a generic merged-result search product.
+- The retired top-level `/search/` route should not return as a generic merged-result search product.
 
 ## Current Implementation
 
 - [Overview](/docs/?scope=studio&doc=search-overview) - a concise overview of the site search subsystem.
-- [Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) - defines the public `/search/` route, `scope`/`q` URL contract, and scope-led entry-point model.
+- [Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) - defines the Catalogue-owned `/catalogue/search/` route and entry-point model.
 - [Index Schema](/docs/?scope=studio&doc=search-index-schema) - describes the current catalogue search index shape.
 - [Field Registry](/docs/?scope=studio&doc=search-field-registry) - separates “field exists in schema” from “field participates in search and how.”
 - [Ranking Model](/docs/?scope=studio&doc=search-ranking-model) - explain current relevance behaviour separately from schema and field policy.

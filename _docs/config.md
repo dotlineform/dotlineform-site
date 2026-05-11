@@ -2,7 +2,7 @@
 doc_id: config
 title: Config
 added_date: 2026-03-31
-last_updated: "2026-05-06 21:18"
+last_updated: "2026-05-11 14:10"
 parent_id: architecture
 sort_order: 50
 ---
@@ -14,7 +14,7 @@ Checked-in configuration artifacts that the current site and build scripts load 
 - shared catalogue/media/runtime defaults in `_data/pipeline.json`
 - shared Studio/search browser config in `assets/studio/data/studio_config.json`
 - the Studio/search config loader in `assets/studio/js/studio-config.js`
-- dedicated `/search/` runtime policy in `assets/data/search/policy.json`
+- dedicated `/catalogue/search/` runtime policy in `assets/data/search/policy.json`
 - build-owned search source-family config in `scripts/search/build_config.json`
 - Library export config patterns in `assets/studio/data/library_export_configs.json`
 - Library export config schema in `assets/studio/data/library_export_configs.schema.json`

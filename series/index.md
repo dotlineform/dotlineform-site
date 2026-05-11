@@ -144,7 +144,7 @@ permalink: /series/
       </div>
       <a
         class="theme-toggle seriesIndex__searchBtn"
-        href="{{ '/search/?scope=catalogue' | relative_url }}"
+        href="{{ '/catalogue/search/' | relative_url }}"
         aria-label="Search the catalogue"
       >
         <svg class="seriesIndex__searchIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">

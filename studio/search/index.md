@@ -34,7 +34,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-search
     <section class="catalogueDashboardColumn">
       <h3>interface</h3>
       <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/search/' | relative_url }}">public search</a></li>
+        <li><a href="{{ '/catalogue/search/' | relative_url }}">catalogue search</a></li>
       </ul>
     </section>
     <section class="catalogueDashboardColumn">

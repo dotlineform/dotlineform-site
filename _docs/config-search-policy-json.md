@@ -2,7 +2,7 @@
 doc_id: config-search-policy-json
 title: Search Policy JSON
 added_date: 2026-03-31
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 150
 ---
@@ -14,7 +14,7 @@ Config file:
 
 ## Scope
 
-`policy.json` is the dedicated runtime policy file for the public `/search/` page.
+`policy.json` is the dedicated runtime policy file for the Catalogue-owned `/catalogue/search/` page.
 
 It is a likely candidate for a future JSON Schema because it is compact, source-controlled runtime config with constrained option values.
 That follow-up is tracked in [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption).
@@ -25,19 +25,18 @@ Current responsibilities include:
 - minimum query length
 - debounce timing
 - initial and incremental result batch sizes
-- supported dedicated-route scopes and their labels
-- per-scope static search index paths
-- per-scope back-link hrefs for the public search shell
-- the virtual `all` scope used by direct `/search/`
+- the supported Catalogue search scope and label
+- the Catalogue static search index path
+- the Catalogue back-link href for the search shell
 - dedicated search-shell messages, result labels, and performance summary copy
 
 ## What calls it
 
 Current runtime path:
 
-1. `assets/js/search/search-page.js` imports `assets/js/search/search-policy.js`
-2. `assets/js/search/search-page.js` loads `/assets/data/search/policy.json` directly
-3. `assets/js/search/search-page.js` uses policy scope entries to resolve labels, back links, messages, and static search index paths
+1. `assets/js/catalogue-search.js` imports `assets/js/search/search-policy.js`
+2. `assets/js/catalogue-search.js` loads `/assets/data/search/policy.json` directly
+3. `assets/js/catalogue-search.js` uses the Catalogue policy entry to resolve labels, back links, messages, and the static search index path
 
 The policy helpers in `assets/js/search/search-policy.js` then expose:
 
@@ -47,27 +46,24 @@ The policy helpers in `assets/js/search/search-policy.js` then expose:
 
 ## When it is read
 
-- once per `/search/` page load
-- before the dedicated search page decides whether the requested scope is enabled and before it fetches the scope-owned search index
+- once per `/catalogue/search/` page load
+- before the dedicated search page fetches the Catalogue search index
 
-The public `/search/` page does not fetch `assets/studio/data/studio_config.json` for normal operation.
+The public `/catalogue/search/` page does not fetch `assets/studio/data/studio_config.json` for normal operation.
 This keeps the public search shell independent from Studio bootstrap config size.
 
 ## Current scope boundary
 
 Current live dedicated-route scope:
 
-- `all`
 - `catalogue`
-- `library`
-- `studio`
-- `analysis`
 
 Current non-users of this file:
 
 - inline Studio docs search on `/docs/`
 - inline Library docs search on `/library/`
+- inline Analysis docs search on `/analysis/`
 
-Those docs-domain searches use the shared Docs Viewer runtime instead of the dedicated `/search/` shell.
+Those docs-domain searches use the shared Docs Viewer runtime instead of the dedicated Catalogue search shell.
 
 For the wider search subsystem, see **[Search Overview](/docs/?scope=studio&doc=search-overview)**.

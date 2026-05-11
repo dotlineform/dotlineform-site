@@ -2,11 +2,41 @@
 doc_id: search-change-log
 title: Search Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 13:20"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 140
 ---
 # Search Change Log
+
+## [2026-05-11] Moved Catalogue search to a Catalogue-owned route
+
+**Status:** implemented
+
+**Area:** public Catalogue search / route ownership
+
+**Summary:**
+Moved the public Catalogue search surface from the retired global `/search/?scope=catalogue` model to `/catalogue/search/`.
+The `/series/` search button now opens the Catalogue-owned route, and the browser runtime no longer carries aggregate or docs-scope loading branches.
+
+**Reason:**
+Catalogue search and Docs search are separate data-domain products.
+Keeping Catalogue search behind `/search/?scope=...` preserved the older global search model and made Docs Viewer portability harder to reason about.
+
+**Effect:**
+`/catalogue/search/` is now the public Catalogue search route.
+The top-level `/search/` route is no longer generated, while `/series/` remains the Catalogue browse entry point until a wider route migration is designed.
+
+**Affected files/docs:**
+
+- `catalogue/search/index.md`
+- `series/index.md`
+- `assets/js/catalogue-search.js`
+- `assets/js/search/search-policy.js`
+- `assets/data/search/policy.json`
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 ## [2026-05-11] Recorded the Catalogue and Docs search ownership split
 

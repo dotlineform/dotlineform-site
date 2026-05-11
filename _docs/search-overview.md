@@ -2,7 +2,7 @@
 doc_id: search-overview
 title: Search Overview
 added_date: 2026-03-31
-last_updated: "2026-05-11 13:20"
+last_updated: "2026-05-11 14:10"
 parent_id: search
 sort_order: 10
 ---
@@ -45,8 +45,7 @@ It should optimize for:
 
 Current route:
 
-- current transitional route: `/search/?scope=catalogue`
-- target route: Catalogue-owned route or entry point, not a global search surface
+- `/catalogue/search/`
 
 Current generated artifact:
 
@@ -85,10 +84,10 @@ Target direction:
 
 ## Top-Level Search Route
 
-The top-level `/search/` route should be retired as a global search surface.
-It should not remain as an aggregate, merged-result, or docs-scope search route.
+The top-level `/search/` route has been retired as a global search surface.
+It should not return as an aggregate, merged-result, or docs-scope search route.
 
-Catalogue search can keep or gain a dedicated Catalogue-owned entry point, but that is a Catalogue product decision.
+Catalogue search now uses the Catalogue-owned `/catalogue/search/` route.
 Docs search should stay inside Docs Viewer routes.
 
 ## Current Implementation
@@ -98,7 +97,7 @@ It already has separate runtime surfaces, but the build plumbing still groups Ca
 
 Current files:
 
-- Catalogue browser runtime: `assets/js/search/search-page.js`
+- Catalogue browser runtime: `assets/js/catalogue-search.js`
 - Catalogue runtime policy: `assets/data/search/policy.json`
 - Docs browser runtime: `assets/js/docs-viewer.js`
 - Docs search helpers: `assets/js/docs-viewer-search.js`
@@ -108,7 +107,7 @@ Current files:
 
 Current live surfaces:
 
-- Catalogue search on the transitional `/search/?scope=catalogue` route
+- Catalogue search on `/catalogue/search/`
 - Studio docs search inline on `/docs/`
 - Library docs search inline on `/library/`
 - Analysis docs search inline on `/analysis/`
@@ -127,12 +126,11 @@ The next cleanup should move docs search out of the generic search build/config 
 
 Near-term steps:
 
-1. Retire the global `/search/` route and remove docs-scope references from the public search policy.
-2. Move docs-search scope configuration into Docs Viewer scope config.
-3. Keep existing generated docs-search artifact paths compatible while the runtime changes settle.
-4. Move docs-search policy into Docs Viewer config/runtime.
-5. Keep Catalogue search build/runtime policy separate.
-6. Share only low-level helpers that are genuinely domain-neutral.
+1. Move docs-search scope configuration into Docs Viewer scope config.
+2. Keep existing generated docs-search artifact paths compatible while the runtime changes settle.
+3. Move docs-search policy into Docs Viewer config/runtime.
+4. Keep Catalogue search build/runtime policy separate.
+5. Share only low-level helpers that are genuinely domain-neutral.
 
 The broader ordered plan is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
