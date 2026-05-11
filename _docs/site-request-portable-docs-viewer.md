@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 18:35"
+last_updated: "2026-05-11 20:05"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -241,19 +241,34 @@ Acceptance:
 Current read-only Docs Viewer styling lives partly in `assets/css/main.css`.
 Management mode also loads `assets/studio/css/studio.css` for importer and modal/control styling.
 
+Target CSS cascade:
+
+- the consuming Jekyll layout continues to load the host stylesheet, currently `assets/css/main.css`
+- the Docs Viewer include always loads `assets/docs-viewer/css/docs-viewer.css`
+- management mode also loads `assets/docs-viewer/css/docs-viewer-management.css`
+- management mode no longer loads `assets/studio/css/studio.css`
+
+The host stylesheet remains responsible for site tokens, base typography, prose/document rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
+Docs Viewer styles should define the viewer shell, index, controls, search, results, bookmarks, status pills, and management surfaces while consuming host tokens through CSS custom properties with portable fallbacks.
+
 Tasks:
 
-- move read-only `.docsViewer*` CSS into a Docs Viewer-owned stylesheet
-- keep management-only styles in Docs Viewer-owned management CSS
-- decide which modal/control styles are copied into Docs Viewer management CSS
+- create `assets/docs-viewer/css/docs-viewer.css` for public Docs Viewer shell/component styles
+- move read-only `.docsViewer*` CSS out of `assets/css/main.css` into `assets/docs-viewer/css/docs-viewer.css`
+- keep management-only styles in `assets/docs-viewer/css/docs-viewer-management.css`
+- copy the narrow `tagStudio*` form/control styles used by Docs Import into Docs Viewer management CSS as a transitional dependency
+- remove `assets/studio/css/studio.css` from `_includes/docs_viewer_shell.html`
+- keep generic host styles such as font tokens, `.content`, document typography, and responsive image defaults in `assets/css/main.css`
 - allow intentional visual drift from Studio UI primitives where it improves Docs Viewer identity
 - move Docs Viewer UI text/config out of `assets/studio/data/`
 - remove public-route CSS/JS includes made redundant by the extracted Docs Viewer CSS/config
 
 Acceptance:
 
-- public read-only viewer routes load Docs Viewer CSS without Studio CSS
+- public read-only viewer routes load host CSS plus Docs Viewer CSS, without Studio CSS
 - `/docs/` management mode loads only Docs Viewer-owned management CSS for viewer/import controls
+- generated docs content continues to inherit host `.content` prose/media styles
+- transitional `tagStudio*` selectors may remain only inside Docs Viewer management CSS until a later rename/refactor
 - public routes no longer need `studio_config.json` for normal viewer copy/settings
 
 ### 6. Move Docs Search Under Docs Viewer Ownership
