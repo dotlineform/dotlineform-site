@@ -219,7 +219,7 @@ Current scope data is split between `scripts/docs/docs_scopes.json`, `_includes/
 
 Tasks:
 
-- extend `scripts/docs/docs_scopes.json` or create a Docs Viewer-owned browser config derived from it
+- create a Docs Viewer-owned browser config
 - generate or load the management scope list from scope config
 - remove hardcoded scope options from `_includes/docs_viewer_shell.html`
 - remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/js/docs-viewer.js`
