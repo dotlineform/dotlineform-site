@@ -320,6 +320,10 @@ import {
     return Boolean(searchInput && results && more && searchIndexUrl);
   }
 
+  function searchControlsAvailable() {
+    return Boolean(searchInput && results && more);
+  }
+
   function normalizeBrowserScopeConfig(rawScope) {
     if (!rawScope || typeof rawScope !== "object") return null;
     var scopeId = String(rawScope.scope_id || "").trim().toLowerCase();
@@ -1667,7 +1671,7 @@ import {
       }
     });
 
-    if (searchIsEnabled()) {
+    if (searchControlsAvailable()) {
       more.addEventListener("click", function (event) {
         var button = event.target.closest("button[data-role='more']");
         if (!button) return;
