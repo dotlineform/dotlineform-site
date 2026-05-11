@@ -13,7 +13,8 @@ Use this page when you have a staged source file that should become a Library, A
 The import workflow is owned by Docs Viewer management.
 Open it from `/docs/?scope=<scope>&mode=manage` with the `Import` toolbar action.
 
-The current embedded implementation still uses the Studio route:
+The import UI now runs directly inside the Docs Viewer management modal.
+The old Studio route remains as a temporary compatibility wrapper around the same importer module:
 
 - `/studio/docs-import/`
 

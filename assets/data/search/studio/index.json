@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3d0219887aad90dbac836b35185c1c73",
-    "generated_at_utc": "2026-05-11T09:27:53Z",
+    "version": "blake2b-fdfccf75af20f5def5eb533562c9b52b",
+    "generated_at_utc": "2026-05-11T10:03:27Z",
     "count": 221
   },
   "entries": [
@@ -1356,10 +1356,10 @@
       "kind": "doc",
       "title": "Local Docs Data Server Reads Request",
       "href": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-04 • Change Requests",
+      "display_meta": "2026-05-11 • Change Requests",
       "search_terms": [
         "site-request-local-docs-data-server-reads",
         "site",
@@ -1373,12 +1373,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-04",
+        "2026-05-11",
         "2026",
         "05",
-        "04"
+        "11"
       ],
-      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request change requests change requests 2026-05-04 2026 05 04"
+      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request change requests change requests 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-docs-toolkit-extraction",

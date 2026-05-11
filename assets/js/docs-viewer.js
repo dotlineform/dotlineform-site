@@ -79,7 +79,8 @@ import {
   var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
   var metadataSaveButton = document.getElementById("docsViewerMetadataSaveButton");
   var importModal = document.getElementById("docsViewerImportModal");
-  var importFrame = document.getElementById("docsViewerImportFrame");
+  var importRoot = document.getElementById("docsHtmlImportRoot");
+  var importBootStatus = document.getElementById("docsHtmlImportBootStatus");
   var importScope = document.getElementById("docsViewerImportScope");
   var importCloseButton = document.getElementById("docsViewerImportCloseButton");
 
@@ -160,6 +161,8 @@ import {
     return value == null ? "" : String(value).trim();
   };
   var rowDropPosition = function () { return ""; };
+  var docsImportRequestPromise = null;
+  var docsImportInitialized = false;
 
   var state = {
     allDocs: [],
@@ -1519,16 +1522,48 @@ import {
     return Boolean(importModal && !importModal.hidden);
   }
 
+  function initializeImportModal(scope) {
+    if (!importRoot || !importBootStatus || docsImportInitialized) return Promise.resolve();
+    if (docsImportRequestPromise) return docsImportRequestPromise;
+
+    docsImportRequestPromise = import("../studio/js/docs-html-import.js")
+      .then(function (module) {
+        if (!module || typeof module.initDocsHtmlImport !== "function") {
+          throw new Error("Docs Import module did not expose initDocsHtmlImport().");
+        }
+        return module.initDocsHtmlImport({
+          root: importRoot,
+          bootStatus: importBootStatus,
+          initialScope: scope || viewerScope || "library",
+          routePath: "/docs/"
+        });
+      })
+      .then(function () {
+        docsImportInitialized = true;
+      })
+      .catch(function (error) {
+        console.warn("docs_viewer: docs import modal failed to initialize", error);
+        if (importBootStatus) {
+          importBootStatus.hidden = false;
+          importBootStatus.textContent = error && error.message ? error.message : "Failed to initialize docs import.";
+          importBootStatus.dataset.state = "error";
+        }
+      })
+      .finally(function () {
+        docsImportRequestPromise = null;
+      });
+
+    return docsImportRequestPromise;
+  }
+
   function openImportModal() {
-    if (!allowManagement || !importModal || !importFrame) return;
+    if (!allowManagement || !importModal || !importRoot) return;
     var scope = viewerScope || "library";
-    var url = new URL("/studio/docs-import/", window.location.origin);
-    url.searchParams.set("scope", scope);
-    importFrame.src = url.pathname + url.search;
     if (importScope) {
       importScope.textContent = "scope: " + scope;
     }
     importModal.hidden = false;
+    initializeImportModal(scope);
     if (importCloseButton) {
       importCloseButton.focus();
     }
@@ -1540,9 +1575,6 @@ import {
       document.activeElement.blur();
     }
     importModal.hidden = true;
-    if (importFrame) {
-      importFrame.removeAttribute("src");
-    }
     if (manageImportButton) {
       manageImportButton.focus();
     }

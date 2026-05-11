@@ -68,17 +68,18 @@ function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
-function selectedScopeFromUrl() {
+function selectedScopeFromUrl(fallbackScope = "library") {
   try {
     const url = new URL(window.location.href);
     const scope = normalizeText(url.searchParams.get("scope")).toLowerCase();
-    return ["analysis", "library", "studio"].includes(scope) ? scope : "library";
+    return ["analysis", "library", "studio"].includes(scope) ? scope : fallbackScope;
   } catch (_error) {
-    return "library";
+    return fallbackScope;
   }
 }
 
-function persistSelectedScope(scope) {
+function persistSelectedScope(state, scope) {
+  if (state && state.persistScope === false) return;
   try {
     const url = new URL(window.location.href);
     url.searchParams.set("scope", scope);
@@ -454,7 +455,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
   const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
   const scope = ["analysis", "library", "studio"].includes(selectedScope) ? selectedScope : "library";
   const normalizedReplacementDocId = normalizeText(replacementDocId);
-  persistSelectedScope(scope);
+  persistSelectedScope(state, scope);
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
@@ -477,7 +478,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
       activity_context: buildStudioActivityContext({
         pageId: "docs-import",
         actionId: "import-docs-source",
-        route: "/studio/docs-import/",
+        route: state.routePath || "/studio/docs-import/",
         controlId: "docsHtmlImportRun",
         controlSelector: "#docsHtmlImportRun",
         recordIdField: "staged_filename",
@@ -525,10 +526,12 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
   }
 }
 
-async function init() {
-  const bootStatus = document.getElementById("docsHtmlImportBootStatus");
-  const root = document.getElementById("docsHtmlImportRoot");
+export async function initDocsHtmlImport(options = {}) {
+  const bootStatus = options.bootStatus || document.getElementById("docsHtmlImportBootStatus");
+  const root = options.root || document.getElementById("docsHtmlImportRoot");
   if (!bootStatus || !root) return;
+  if (root.dataset.docsImportInitialized === "true") return;
+  root.dataset.docsImportInitialized = "true";
   initializeStudioRouteState(root, { route: "docs-import" });
 
   const state = {
@@ -579,6 +582,8 @@ async function init() {
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     pendingOverwriteDocId: "",
+    persistScope: options.persistScope !== false,
+    routePath: normalizeText(options.routePath) || "/studio/docs-import/",
     serviceAvailable: false,
     isRunning: false,
     files: [],
@@ -678,8 +683,11 @@ async function init() {
       <option value="analysis">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_analysis", "analysis"))}</option>
       <option value="studio">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_studio", "studio"))}</option>
     `;
-    state.scopeSelect.value = selectedScopeFromUrl();
-    state.scopeSelect.addEventListener("change", () => persistSelectedScope(state.scopeSelect.value));
+    const initialScope = normalizeText(options.initialScope).toLowerCase();
+    state.scopeSelect.value = ["analysis", "library", "studio"].includes(initialScope)
+      ? initialScope
+      : selectedScopeFromUrl("library");
+    state.scopeSelect.addEventListener("change", () => persistSelectedScope(state, state.scopeSelect.value));
     state.includePromptMeta.checked = false;
 
     root.hidden = false;
@@ -794,4 +802,7 @@ async function init() {
   }
 }
 
-init();
+const autoInitRoot = document.getElementById("docsHtmlImportRoot");
+if (!autoInitRoot || autoInitRoot.dataset.docsImportAutoInit !== "false") {
+  initDocsHtmlImport();
+}

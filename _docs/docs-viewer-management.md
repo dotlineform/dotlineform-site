@@ -19,6 +19,7 @@ Status:
 - Phase 6 implemented: hidden-doc review and bulk-backed `Show`
 - Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
 - Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
+- Phase 9 implemented: Docs Import runs inside the Docs Viewer management modal from the shared importer module
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -78,13 +79,14 @@ Implemented now:
 - when the metadata modal changes `parent_id` to a non-root parent and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
 - when the metadata modal changes `parent_id` to root, the visible `sort_order` field is respected rather than converted to append
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
-- Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope; the existing `/studio/docs-import/` route remains the embedded implementation until the importer JavaScript is fully folded into the Docs Viewer package
+- Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
+- `assets/studio/js/docs-html-import.js` exports the shared importer initializer used by the Docs Viewer modal and the temporary `/studio/docs-import/` compatibility wrapper
 
 Not implemented yet:
 
 - dragging any doc with child docs
 - incremental docs-search updates
-- native Docs Viewer import modal implementation without the embedded Studio route
+- retiring `/studio/docs-import/` after any remaining links move to the Docs Viewer management modal
 
 ## Suggested Follow-On Features
 

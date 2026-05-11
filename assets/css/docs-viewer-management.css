@@ -278,13 +278,13 @@ select.docsViewer__fieldInput--listbox{
   gap: 0.6rem;
 }
 
-.docsViewer__modalFrame{
-  display: block;
-  width: 100%;
-  height: min(72vh, 48rem);
+.docsViewer__importBody{
+  max-height: min(72vh, 48rem);
+  overflow: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg);
+  padding: 0.95rem;
 }
 
 .docsViewer__manageRow{

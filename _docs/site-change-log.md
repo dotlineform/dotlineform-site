@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-11] Embedded Docs Import in the Docs Viewer management modal
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / Docs Import UI ownership
+
+**Summary:**
+Moved the Docs Import UI out of the iframe-style handoff and into the Docs Viewer management modal.
+The importer markup now lives in a shared include, and `assets/studio/js/docs-html-import.js` exports an initializer used by both the modal and the temporary `/studio/docs-import/` compatibility page.
+
+**Files changed/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `_includes/docs_import_shell.html`
+- `assets/js/docs-viewer.js`
+- `assets/studio/js/docs-html-import.js`
+- `studio/docs-import/index.md`
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+
+**Impact:**
+Docs Import is now packaged with the Docs Viewer management surface and seeded from the active `/docs/?scope=...` route.
+The old Studio route remains only as a wrapper so existing links do not break while callers move to the modal.
+
 ## [2026-05-11] Scoped Docs Viewer management to `/docs/`
 
 **Status:** implemented
