@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-09 21:53"
+last_updated: "2026-05-11 20:22"
 parent_id: docs-viewer
 sort_order: 85
 ---
@@ -44,7 +44,7 @@ Scope configuration:
 
 - `scripts/docs/docs_scopes.json`
 
-This config is the shared source of truth for docs scope ids, Markdown source roots, generated output roots, viewer route bases, nested-source policy, updated-date display, and unresolved-parent validation policy.
+This config is the shared source of truth for docs scope ids, Markdown source roots, generated output roots, viewer route bases, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
 `./scripts/build_docs.rb`, the docs-management server, the docs HTML importer, and the live rebuild watcher all read the same config.
 
 ## What The Builder Does
@@ -57,6 +57,7 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - rewrites same-scope doc-to-doc links onto the scope-owned viewer route
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
+- writes `assets/docs-viewer/data/docs-viewer-config.json` from `scripts/docs/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by public and management routes
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 
 ## Publishing Rules

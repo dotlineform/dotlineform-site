@@ -40,5 +40,48 @@
       "show_updated_date": true,
       "allow_unresolved_parent_ids": false
     }
-  ]
+  ],
+  "docs_viewer": {
+    "recently_added_limit": 10,
+    "hidden_nav_color": "var(--muted)",
+    "doc_hidden_emoji": "🚫",
+    "ui_statuses_by_scope": {
+      "studio": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        },
+        {
+          "ui_status": "done",
+          "label": "Done",
+          "emoji": "✅"
+        },
+        {
+          "ui_status": "urgent",
+          "label": "Urgent",
+          "emoji": "❗"
+        },
+        {
+          "ui_status": "in-progress",
+          "label": "In progress",
+          "emoji": "🔄"
+        }
+      ],
+      "library": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        }
+      ],
+      "analysis": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        }
+      ]
+    }
+  }
 }

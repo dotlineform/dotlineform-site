@@ -17,6 +17,35 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-11] Extracted Docs Viewer CSS and viewer settings
+
+**Status:** implemented
+
+**Area:** Docs Viewer portability / CSS and browser config
+
+**Summary:**
+Moved public Docs Viewer shell/component styles from `assets/css/main.css` into `assets/docs-viewer/css/docs-viewer.css`.
+The shared viewer include now loads Docs Viewer CSS directly, management mode no longer loads `assets/studio/css/studio.css`, and viewer settings such as UI-status options now come from the Docs Viewer browser config instead of `studio_config.json`.
+
+**Files changed/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/css/main.css`
+- `assets/docs-viewer/css/docs-viewer.css`
+- `assets/docs-viewer/css/docs-viewer-management.css`
+- `assets/docs-viewer/js/docs-viewer.js`
+- `assets/docs-viewer/data/docs-viewer-config.json`
+- `assets/studio/data/studio_config.json`
+- `scripts/docs/docs_scopes.json`
+- `scripts/docs/build_docs.rb`
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+
+**Impact:**
+Public Docs Viewer routes now need the host stylesheet plus Docs Viewer-owned CSS and config, not Studio CSS or Studio config.
+Docs Import still uses Studio-owned JavaScript and UI text until the later import ownership slice.
+
 ## [2026-05-11] Moved Docs Viewer runtime files into portable asset paths
 
 **Status:** implemented

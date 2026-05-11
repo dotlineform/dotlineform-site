@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T19:06:42Z",
+  "generated_at": "2026-05-11T19:22:59Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -432,7 +432,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 18:35",
+      "last_updated": "2026-05-11 20:22",
       "parent_id": "docs-viewer",
       "sort_order": 15,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 11004
+      "content_text_length": 11025
     },
     {
       "scope": "studio",
@@ -951,7 +951,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 20:05",
+      "last_updated": "2026-05-11 20:22",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -960,7 +960,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 19998,
+      "content_text_length": 20270,
       "ui_status": "in-progress"
     },
     {
@@ -2524,7 +2524,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09 21:53",
+      "last_updated": "2026-05-11 20:22",
       "parent_id": "docs-viewer",
       "sort_order": 85,
       "published": true,
@@ -2533,7 +2533,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 9169
+      "content_text_length": 9397
     },
     {
       "scope": "studio",
@@ -3655,7 +3655,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 140365
+      "content_text_length": 141527
     },
     {
       "scope": "studio",

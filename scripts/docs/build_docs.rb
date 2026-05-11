@@ -616,7 +616,7 @@ def browser_search_index_url(config)
 end
 
 def browser_scope_config_payload(scope_configs)
-  {
+  payload = {
     "schema_version" => DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
     "default_scope_id" => scope_configs.first&.scope_id.to_s,
     "scopes" => scope_configs.map do |config|
@@ -630,6 +630,12 @@ def browser_scope_config_payload(scope_configs)
       }
     end
   }
+  docs_scope_payload = JSON.parse(File.read(DOCS_SCOPE_CONFIG_PATH))
+  docs_viewer_settings = docs_scope_payload["docs_viewer"]
+  if docs_viewer_settings.is_a?(Hash)
+    payload["docs_viewer"] = docs_viewer_settings
+  end
+  payload
 end
 
 def write_docs_viewer_browser_config(scope_configs)

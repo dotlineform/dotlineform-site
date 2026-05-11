@@ -61,7 +61,6 @@ import {
   var defaultRouteDocId = String(root.dataset.defaultDocId || "").trim();
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
-  var studioConfigUrl = String(root.dataset.studioConfigUrl || "").trim();
   var uiTextUrl = String(root.dataset.uiTextUrl || "").trim();
   var managementBaseUrl = allowManagement ? String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "") : "";
   var generatedBaseUrl = String(root.dataset.generatedBaseUrl || "").trim().replace(/\/+$/, "") || managementBaseUrl;
@@ -369,7 +368,10 @@ import {
       scopes: scopes,
       scopesById: new Map(scopes.map(function (config) {
         return [config.scopeId, config];
-      }))
+      })),
+      docsViewerSettings: payload.docs_viewer && typeof payload.docs_viewer === "object" && !Array.isArray(payload.docs_viewer)
+        ? payload.docs_viewer
+        : {}
     };
   }
 
@@ -664,17 +666,21 @@ import {
   function loadViewerConfig() {
     if (state.viewerConfigLoaded) return Promise.resolve(null);
     if (state.viewerConfigRequestPromise) return state.viewerConfigRequestPromise;
-    if (!studioConfigUrl) {
+    if (!docsViewerConfigUrl) {
       applyViewerConfig({});
       return Promise.resolve(null);
     }
 
     state.viewerConfigRequestPromise = Promise.all([
-      fetchJsonWithRetry(studioConfigUrl, "Failed to load Studio config", "", dataRequestOptions()),
+      loadDocsViewerConfig(),
       loadDocsViewerText()
     ])
       .then(function (results) {
-        var config = mergeDocsViewerText(results[0] || {}, results[1]);
+        var browserConfig = results[0] || {};
+        var config = {
+          docs_viewer: browserConfig.docsViewerSettings || {}
+        };
+        config = mergeDocsViewerText(config, results[1]);
         applyViewerConfig(config);
         return config;
       })

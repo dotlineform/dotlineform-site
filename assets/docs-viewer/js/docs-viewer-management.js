@@ -355,7 +355,7 @@ export function initDocsViewerManagement(context) {
     if (!importRoot || !importBootStatus || docsImportInitialized) return Promise.resolve();
     if (docsImportRequestPromise) return docsImportRequestPromise;
 
-    docsImportRequestPromise = import("../studio/js/docs-html-import.js")
+    docsImportRequestPromise = import("../../studio/js/docs-html-import.js")
       .then(function (module) {
         if (!module || typeof module.initDocsHtmlImport !== "function") {
           throw new Error("Docs Import module did not expose initDocsHtmlImport().");

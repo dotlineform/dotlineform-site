@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 20:05"
+last_updated: "2026-05-11 20:22"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -238,6 +238,8 @@ Acceptance:
 
 ### 5. Extract Docs Viewer CSS And UI Text
 
+Status: implemented.
+
 Current read-only Docs Viewer styling lives partly in `assets/css/main.css`.
 Management mode also loads `assets/studio/css/studio.css` for importer and modal/control styling.
 
@@ -253,15 +255,15 @@ Docs Viewer styles should define the viewer shell, index, controls, search, resu
 
 Tasks:
 
-- create `assets/docs-viewer/css/docs-viewer.css` for public Docs Viewer shell/component styles
-- move read-only `.docsViewer*` CSS out of `assets/css/main.css` into `assets/docs-viewer/css/docs-viewer.css`
-- keep management-only styles in `assets/docs-viewer/css/docs-viewer-management.css`
-- copy the narrow `tagStudio*` form/control styles used by Docs Import into Docs Viewer management CSS as a transitional dependency
-- remove `assets/studio/css/studio.css` from `_includes/docs_viewer_shell.html`
-- keep generic host styles such as font tokens, `.content`, document typography, and responsive image defaults in `assets/css/main.css`
-- allow intentional visual drift from Studio UI primitives where it improves Docs Viewer identity
-- move Docs Viewer UI text/config out of `assets/studio/data/`
-- remove public-route CSS/JS includes made redundant by the extracted Docs Viewer CSS/config
+- create `assets/docs-viewer/css/docs-viewer.css` for public Docs Viewer shell/component styles (done)
+- move read-only `.docsViewer*` CSS out of `assets/css/main.css` into `assets/docs-viewer/css/docs-viewer.css` (done)
+- keep management-only styles in `assets/docs-viewer/css/docs-viewer-management.css` (done)
+- copy the narrow `tagStudio*` form/control styles used by Docs Import into Docs Viewer management CSS as a transitional dependency (done)
+- remove `assets/studio/css/studio.css` from `_includes/docs_viewer_shell.html` (done)
+- keep generic host styles such as font tokens, `.content`, document typography, and responsive image defaults in `assets/css/main.css` (done)
+- allow intentional visual drift from Studio UI primitives where it improves Docs Viewer identity (done through Docs Viewer-owned CSS variables and fallbacks)
+- move Docs Viewer UI text/config out of `assets/studio/data/` (done for viewer UI text and viewer settings; Docs Import copy remains Studio-owned until the import slice)
+- remove public-route CSS/JS includes made redundant by the extracted Docs Viewer CSS/config (done for Studio CSS and Studio config)
 
 Acceptance:
 

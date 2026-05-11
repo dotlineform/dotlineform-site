@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-11 18:35"
+last_updated: "2026-05-11 20:22"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -86,37 +86,26 @@ For Docs Import inside the management modal, also copy:
 Copy:
 
 - `assets/docs-viewer/css/docs-viewer-management.css`
+- `assets/docs-viewer/css/docs-viewer.css`
 
-Also copy or extract the Docs Viewer rules from:
-
-- `assets/css/main.css`
-
-Current issue:
-the read-only Docs Viewer CSS is still mixed into the site-wide stylesheet.
-For a clean portable install, those `.docsViewer*` rules and small utility dependencies should become their own `docs-viewer.css`.
-
-Management mode currently also loads:
-
-- `assets/studio/css/studio.css`
-
-That is mainly for Docs Import and shared Studio modal/control primitives.
-This is another packaging leak: management mode is not yet styled only by Docs Viewer-owned CSS.
+The host site should still load its own base stylesheet for tokens, prose rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
+The viewer include now loads Docs Viewer-owned CSS for the shell, controls, index, search, results, bookmarks, status pills, management surfaces, and the transitional Docs Import form/control primitives.
+Management mode no longer loads `assets/studio/css/studio.css`.
 
 ### Config And UI Text
 
 Copy:
 
 - `assets/docs-viewer/data/docs-viewer-config.json`
-- `assets/studio/data/studio_config.json`
 - `assets/docs-viewer/data/ui-text.json`
 - `assets/studio/data/ui_text/docs-html-import.json`
 
 Current issue:
-the viewer still reads `studio_config.json` for Docs Viewer settings and UI-status options, even on public docs routes.
-A portable package should move those remaining settings into Docs Viewer-owned config files or route include parameters.
+Docs Import still reads its modal copy from the Studio UI-text file until the import slice moves it under Docs Viewer ownership.
 
 `assets/docs-viewer/data/docs-viewer-config.json` is generated from `scripts/docs/docs_scopes.json`.
-It is required by the browser runtime; the viewer does not keep a hardcoded fallback scope list.
+It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.
+The viewer does not keep a hardcoded fallback scope list.
 
 ### Generated Data Outputs
 
@@ -304,7 +293,7 @@ It already renders `/docs/` with:
 
 The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
-If the new scope needs UI-status pills, add the status options to `assets/studio/data/studio_config.json` until that remaining config moves into Docs Viewer-owned files.
+If the new scope needs UI-status pills, add the status options to the `docs_viewer.ui_statuses_by_scope` section in `scripts/docs/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
 
 ### 6. Add Search Support
 
