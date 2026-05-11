@@ -1,0 +1,15 @@
+{%- assign docs_viewer_route_base_url = include.viewer_base_url | default: page.permalink | default: page.url | relative_url -%}
+{%- assign docs_management_base_url = include.management_base_url | default: 'http://127.0.0.1:8789' -%}
+
+{% include docs_viewer_shell.html
+  viewer_base_url=docs_viewer_route_base_url
+  viewer_scope=include.viewer_scope
+  default_doc_id=include.default_doc_id
+  include_scope_param=true
+  allow_scope_query=true
+  allow_management=true
+  management_base_url=docs_management_base_url
+  enable_search=include.enable_search
+  search_placeholder=include.search_placeholder
+  search_aria_label=include.search_aria_label
+%}

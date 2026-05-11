@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-11 20:22"
+last_updated: "2026-05-11 21:55"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -44,17 +44,22 @@ Remaining paths under `assets/studio/` are interim copy requirements for Studio 
 Copy:
 
 - `_includes/docs_viewer_shell.html`
+- `_includes/docs_viewer_readonly_route.html`
+- `_includes/docs_viewer_management_route.html`
 
 If management mode should include Docs Import, also copy:
 
 - `_includes/docs_import_shell.html`
 
-The include expects a page shell to pass URLs and scope settings.
+The route adapter includes wrap `docs_viewer_shell.html` with the right public or management flags.
 Examples in this repo are:
 
 - `docs/index.md`
 - `library/index.md`
 - `analysis/index.md`
+
+Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
+Use `docs_viewer_management_route.html` for the local `/docs/` management shell.
 
 ### Browser Runtime
 
@@ -274,7 +279,7 @@ section: research
 permalink: /research/
 ---
 
-{% include docs_viewer_shell.html
+{% include docs_viewer_readonly_route.html
   search_placeholder='search research'
   search_aria_label='Search research'
 %}
@@ -282,11 +287,29 @@ permalink: /research/
 
 The route path is matched to `viewer_base_url` in the generated Docs Viewer browser config.
 Do not pass `allow_management`, `allow_scope_query`, or `management_base_url` on public read-only routes.
+The read-only adapter intentionally fixes those values to false.
+
+Read-only route adapter inputs:
+
+- `viewer_base_url`: optional override; defaults to the page permalink or URL
+- `viewer_scope`: optional fixed scope hint; normally omitted so the route is matched from `viewer_base_url`
+- `default_doc_id`: optional route-local fallback; normally omitted so scope config owns the default
+- `enable_search`: optional `false` to hide search controls
+- `search_placeholder`: optional search input placeholder
+- `search_aria_label`: optional search input label
+
+Read-only canonical URL behavior:
+
+- `doc` selects the active document; missing or invalid values normalize to the scope's default doc
+- `q` activates inline docs search and is preserved while search is active
+- `scope` is ignored on read-only routes and normalized away
+- `mode` is ignored on read-only routes and normalized away
+- generated links use the route's `viewer_base_url`
 
 ### 5. Add The Scope To The Management Shell
 
 The current management shell is `docs/index.md`.
-It already renders `/docs/` with:
+It renders `/docs/` through `docs_viewer_management_route.html` with:
 
 - `allow_management=true`
 - `allow_scope_query=true`
@@ -295,6 +318,25 @@ It already renders `/docs/` with:
 The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
 If the new scope needs UI-status pills, add the status options to the `docs_viewer.ui_statuses_by_scope` section in `scripts/docs/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
+
+Management route adapter inputs:
+
+- `viewer_base_url`: optional override; defaults to the page permalink or URL
+- `viewer_scope`: optional fixed initial scope hint
+- `default_doc_id`: optional route-local fallback
+- `management_base_url`: optional localhost server base URL; defaults to `http://127.0.0.1:8789`
+- `enable_search`: optional `false` to hide search controls
+- `search_placeholder`: optional search input placeholder
+- `search_aria_label`: optional search input label
+
+Management canonical URL behavior:
+
+- `scope` selects the active configured docs scope
+- `mode=manage` enables local management features when the localhost server is available
+- missing `scope` normalizes to the configured default scope
+- `doc` selects the active document in the selected scope
+- `q` activates inline docs search for the selected scope
+- `/docs/` is the only management-capable shell in this install pattern
 
 ### 6. Add Search Support
 

@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 21:30"
+last_updated: "2026-05-11 21:55"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -323,17 +323,19 @@ Acceptance:
 
 ### 7. Package The Route Adapter Pattern
 
+Status: implemented.
+
 Current route pages are simple but hand-written.
 They should become the documented adapter layer for downstream Jekyll projects.
 
 Tasks:
 
-- define read-only route template inputs
-- define local management route template inputs
-- document canonical URL behavior for `scope`, `doc`, `q`, and `mode`
-- make public routes normalize away manage mode
-- keep `/docs/` as the only management-capable shell
-- remove any public-route management hooks or query affordances superseded by the route templates
+- define read-only route template inputs (done)
+- define local management route template inputs (done)
+- document canonical URL behavior for `scope`, `doc`, `q`, and `mode` (done)
+- make public routes normalize away manage mode (done)
+- keep `/docs/` as the only management-capable shell (done)
+- remove any public-route management hooks or query affordances superseded by the route templates (done)
 
 Acceptance:
 

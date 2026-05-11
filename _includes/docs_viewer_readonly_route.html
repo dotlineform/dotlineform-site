@@ -1,0 +1,13 @@
+{%- assign docs_viewer_route_base_url = include.viewer_base_url | default: page.permalink | default: page.url | relative_url -%}
+
+{% include docs_viewer_shell.html
+  viewer_base_url=docs_viewer_route_base_url
+  viewer_scope=include.viewer_scope
+  default_doc_id=include.default_doc_id
+  include_scope_param=false
+  allow_scope_query=false
+  allow_management=false
+  enable_search=include.enable_search
+  search_placeholder=include.search_placeholder
+  search_aria_label=include.search_aria_label
+%}

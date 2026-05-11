@@ -396,7 +396,7 @@ import {
 
   function routeScopeFromUrl() {
     var requestedScope = String(new URLSearchParams(window.location.search).get("scope") || "").trim().toLowerCase();
-    if (requestedScope) {
+    if (allowScopeQuery && requestedScope) {
       if (!state.scopeConfigsById.has(requestedScope)) {
         throw new Error("Unknown docs scope: " + requestedScope);
       }
@@ -517,6 +517,10 @@ import {
 
   function hasDisallowedModeInUrl() {
     return !allowManagement && new URLSearchParams(window.location.search).has("mode");
+  }
+
+  function hasDisallowedScopeInUrl() {
+    return !allowScopeQuery && new URLSearchParams(window.location.search).has("scope");
   }
 
   function hasActiveQuery(query) {
@@ -1782,7 +1786,7 @@ import {
     renderBookmarkUi();
     renderManagementUi();
 
-    if (route.corrected || !hasCanonicalScopeInUrl() || hasDisallowedModeInUrl()) {
+    if (route.corrected || !hasCanonicalScopeInUrl() || hasDisallowedModeInUrl() || hasDisallowedScopeInUrl()) {
       setHistory(docId, "", query, "replace");
     }
 

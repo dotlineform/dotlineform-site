@@ -17,6 +17,32 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-11] Packaged Docs Viewer route adapters
+
+**Status:** implemented
+
+**Area:** Docs Viewer portability / route integration
+
+**Summary:**
+Added read-only and management route adapter includes for Docs Viewer routes.
+The current `/docs/`, `/library/`, and `/analysis/` route pages now consume those adapters instead of passing shell flags directly.
+Public read-only routes ignore and normalize away `scope` and `mode` query parameters, while `/docs/` remains the only management-capable shell.
+
+**Files changed/docs:**
+
+- `_includes/docs_viewer_readonly_route.html`
+- `_includes/docs_viewer_management_route.html`
+- `assets/docs-viewer/js/docs-viewer.js`
+- `docs/index.md`
+- `library/index.md`
+- `analysis/index.md`
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+
+**Impact:**
+Adding a read-only docs corpus is now a small route file plus a scope-config entry.
+The route contract is explicit enough for a later local UI to generate read-only scopes without exposing management hooks on public routes.
+
 ## [2026-05-11] Extracted Docs Viewer CSS and viewer settings
 
 **Status:** implemented

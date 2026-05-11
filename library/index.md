@@ -5,7 +5,7 @@ section: library
 permalink: /library/
 ---
 
-{% include docs_viewer_shell.html
+{% include docs_viewer_readonly_route.html
   search_placeholder='search library'
   search_aria_label='Search library'
 %}
