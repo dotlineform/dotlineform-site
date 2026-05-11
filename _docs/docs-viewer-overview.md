@@ -78,7 +78,9 @@ Current helper modules:
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and switches between document and search modes.
 
-When the configured localhost docs-management server advertises generated-data read capability, the runtime reads the active scope index, document payloads, and docs-search index through that server. Public/static routes still use the generated JSON asset URLs directly when the local server is unavailable.
+When a route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, and docs-search index through that server.
+The local `bin/dev-studio` overlay uses this path because generated docs/search JSON is excluded from the Jekyll watch surface.
+Public/static builds leave `data-generated-base-url` blank and use the generated JSON asset URLs directly.
 
 ## Current URL And State Contract
 

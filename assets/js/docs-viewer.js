@@ -117,6 +117,7 @@ import {
   }
   var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
   var managementBaseUrl = allowManagement ? String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "") : "";
+  var generatedBaseUrl = String(root.dataset.generatedBaseUrl || "").trim().replace(/\/+$/, "") || managementBaseUrl;
   var openImportOnLoad = allowManagement && new URLSearchParams(window.location.search).get("import") === "1";
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
@@ -249,7 +250,7 @@ import {
       reloadRetryAttempts: RELOAD_RETRY_ATTEMPTS,
       reloadRetryDelayMs: RELOAD_RETRY_DELAY_MS,
       managementAvailable: state.managementAvailable,
-      managementBaseUrl: managementBaseUrl,
+      managementBaseUrl: generatedBaseUrl,
       fetch: function (url, options) {
         return window.fetch(url, options);
       },
@@ -258,7 +259,7 @@ import {
       },
       checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
       scopeSupportsGeneratedSearchReads: function () {
-        return scopeSupportsGeneratedSearchReads(state.managementCapabilities || {}, viewerScope);
+        return scopeGeneratedCapability(state.managementCapabilities || {}, viewerScope, "generated_search_reads");
       }
     }, settings);
   }
@@ -272,6 +273,32 @@ import {
         return window.fetch(url, options);
       }
     };
+  }
+
+  function scopeGeneratedCapability(capabilities, scope, key) {
+    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
+    return Boolean(
+      capabilities &&
+      capabilities.generated_data_reads &&
+      scopeCaps &&
+      scopeCaps.available &&
+      scopeCaps[key]
+    );
+  }
+
+  function readGeneratedCapabilities() {
+    if (!generatedBaseUrl) return Promise.resolve(null);
+    return window.fetch(generatedBaseUrl + "/capabilities", {
+      headers: { Accept: "application/json" },
+      cache: "no-store"
+    })
+      .then(function (response) {
+        if (!response.ok) return null;
+        return response.json();
+      })
+      .catch(function () {
+        return null;
+      });
   }
 
   function loadManagementModules() {
@@ -1675,7 +1702,7 @@ import {
   }
 
   function checkGeneratedDataReadCapability() {
-    if (!allowManagement || !managementBaseUrl) {
+    if (!generatedBaseUrl) {
       state.generatedDataReadChecked = true;
       state.generatedDataReadAvailable = false;
       return Promise.resolve(false);
@@ -1687,11 +1714,7 @@ import {
       return state.generatedDataReadRequestPromise;
     }
 
-    state.generatedDataReadRequestPromise = loadManagementModules()
-      .then(function (loaded) {
-        if (!loaded || !readManagementCapabilities) return null;
-        return readManagementCapabilities(managementClientOptions());
-      })
+    state.generatedDataReadRequestPromise = readGeneratedCapabilities()
       .then(function (payload) {
         if (!payload) {
           state.generatedDataReadAvailable = false;
@@ -1699,7 +1722,7 @@ import {
           return false;
         }
         state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities, viewerScope);
+        state.generatedDataReadAvailable = scopeGeneratedCapability(state.managementCapabilities, viewerScope, "generated_data_reads");
         state.generatedDataReadChecked = true;
         return state.generatedDataReadAvailable;
       })

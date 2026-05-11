@@ -42,6 +42,7 @@ The public `/library/` and `/analysis/` viewers now render as read-only shells w
 **Impact:**
 The public site no longer exposes a useful `?mode=manage` surface on public docs routes.
 Docs Import is now opened from the `/docs/` management toolbar in an embedded modal seeded with the active scope, with full importer ownership still tracked as a follow-up extraction from the existing Studio route.
+The local `bin/dev-studio` overlay separately configures read-only generated-data reads for public viewer shells so `/library/` and `/analysis/` still work while generated docs/search JSON is excluded from local Jekyll.
 
 ## [2026-05-11] Closed the Catalogue JavaScript route consistency pass
 

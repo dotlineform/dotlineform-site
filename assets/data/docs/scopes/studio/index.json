@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T09:22:10Z",
+  "generated_at": "2026-05-11T09:44:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -295,7 +295,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 7182
+      "content_text_length": 7321
     },
     {
       "scope": "studio",
@@ -852,7 +852,7 @@
       "doc_id": "site-request-local-docs-data-server-reads",
       "title": "Local Docs Data Server Reads Request",
       "added_date": "2026-05-03 21:56",
-      "last_updated": "2026-05-04",
+      "last_updated": "2026-05-11",
       "parent_id": "change-requests",
       "sort_order": 25,
       "published": true,
@@ -861,7 +861,7 @@
       "source_path": "site-request-local-docs-data-server-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-local-docs-data-server-reads.json",
-      "content_text_length": 10304,
+      "content_text_length": 10526,
       "ui_status": "done"
     },
     {
@@ -1025,7 +1025,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 4987
+      "content_text_length": 5178
     },
     {
       "scope": "studio",
@@ -3523,7 +3523,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 135506
+      "content_text_length": 135720
     },
     {
       "scope": "studio",

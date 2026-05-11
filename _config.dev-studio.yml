@@ -1,5 +1,7 @@
 # Local-only overlay used by bin/dev-studio.
 # Keep public builds on _config.yml so generated docs/search JSON is still published.
+docs_viewer_generated_base_url: "http://127.0.0.1:8789"
+
 exclude:
   - scripts
   - _site

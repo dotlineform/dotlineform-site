@@ -2,7 +2,7 @@
 doc_id: site-request-local-docs-data-server-reads
 title: Local Docs Data Server Reads Request
 added_date: "2026-05-03 21:56"
-last_updated: "2026-05-04"
+last_updated: "2026-05-11"
 ui_status: "done"
 parent_id: change-requests
 sort_order: 25
@@ -143,6 +143,7 @@ Resolved:
 - `studio`, `library`, and `analysis` use the same generated-data endpoints.
 - Generated-data endpoints return the raw generated JSON unchanged.
 - `bin/dev-studio` uses `_config.dev-studio.yml` as a local-only Jekyll overlay; normal builds keep `_config.yml`.
+- `_config.dev-studio.yml` sets `docs_viewer_generated_base_url` to the local docs-management server so read-only public viewer shells can use generated-data reads while generated docs/search JSON is excluded from local Jekyll.
 - The viewer falls back to static assets only when the local server capability probe is unavailable. Once generated-data reads are advertised for the scope, failed server reads surface as load errors rather than silently using stale static data.
 
 ## Task List
