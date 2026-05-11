@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-943b3266495d5ef32f515820f0ccdd81",
-    "generated_at_utc": "2026-05-11T16:56:57Z",
+    "version": "blake2b-2c6e40f4087148704dcce5296ad4d490",
+    "generated_at_utc": "2026-05-11T17:31:55Z",
     "count": 223
   },
   "entries": [
@@ -698,10 +698,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-11 18:35",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 17:50 • Docs",
+      "display_meta": "2026-05-11 18:35 • Docs",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -709,14 +709,14 @@
         "portable",
         "setup",
         "docs viewer portable setup",
-        "2026-05-11 17:50",
+        "2026-05-11 18:35",
         "2026",
         "05",
         "11",
-        "17",
-        "50"
+        "18",
+        "35"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-11 18:35 2026 05 11 18 35"
     },
     {
       "id": "user-guide",
@@ -1490,10 +1490,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-11 18:35",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 17:50 • Change Requests",
+      "display_meta": "2026-05-11 18:35 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1505,14 +1505,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11 17:50",
+        "2026-05-11 18:35",
         "2026",
         "05",
         "11",
-        "17",
-        "50"
+        "18",
+        "35"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 18:35 2026 05 11 18 35"
     },
     {
       "id": "analytics",

@@ -7,3 +7,7 @@ parent_id: ""
 sort_order: 10
 ---
 
+# Library
+
+Library is site's public document space for research and reference.
+

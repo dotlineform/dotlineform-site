@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, NESTED_SOURCE_SCOPES, SCOPE_ROOTS
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
@@ -235,7 +235,10 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 viewable=not hidden,
             )
         )
-    validate_scope_docs(docs, allow_unknown_parent_ids=scope == "library")
+    validate_scope_docs(
+        docs,
+        allow_unknown_parent_ids=DOCS_SCOPE_CONFIGS[scope].allow_unresolved_parent_ids,
+    )
     return docs
 
 

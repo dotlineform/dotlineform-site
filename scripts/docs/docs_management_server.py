@@ -72,7 +72,7 @@ import docs_management_mutations as mutations  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews  # noqa: E402
-from docs_scope_config import SCOPE_ROOTS  # noqa: E402
+from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 
 
@@ -219,7 +219,7 @@ def relative_path(repo_root: Path, path: Path) -> str:
 
 
 def viewer_url_for(scope: str, doc_id: str) -> str:
-    normalized_scope = scope if scope in {"studio", "library", "analysis"} else "studio"
+    normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
     return f"/docs/?scope={normalized_scope}&doc={doc_id}&mode=manage"
 
 

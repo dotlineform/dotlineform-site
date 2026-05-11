@@ -15,6 +15,7 @@
   data-allow-scope-query="{{ include.allow_scope_query | default: false }}"
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
+  data-docs-viewer-config-url="{{ include.docs_viewer_config_url | default: '/assets/docs-viewer/data/docs-viewer-config.json' | relative_url }}"
   data-studio-config-url="{{ include.studio_config_url | default: '/assets/studio/data/studio_config.json' | relative_url }}"
   data-ui-text-url="{{ include.ui_text_url | default: '/assets/docs-viewer/data/ui-text.json' | relative_url }}"
   data-generated-base-url="{{ docs_viewer_generated_base_url }}"
@@ -25,15 +26,11 @@
     <div class="docsViewer__scopeRow" id="docsViewerScopeRow">
       <label class="docsViewer__scopeField" for="docsViewerScopeSelect">
         <span class="docsViewer__scopeLabel">scope</span>
-        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect">
-          <option value="studio">studio</option>
-          <option value="library">library</option>
-          <option value="analysis">analysis</option>
-        </select>
+        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
       </label>
     </div>
     {%- endif -%}
-    {%- if include.search_index_url -%}
+    {%- unless include.enable_search == false -%}
     <div class="docsViewer__searchRow">
       <button class="docsViewer__actionButton docsViewer__recentButton" type="button" id="docsViewerRecentButton" aria-pressed="false">recently added</button>
       <div class="docsViewer__search">
@@ -49,7 +46,7 @@
         >
       </div>
     </div>
-    {%- endif -%}
+    {%- endunless -%}
     {%- if include.allow_management -%}
     <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
       <div class="docsViewer__manageActions">

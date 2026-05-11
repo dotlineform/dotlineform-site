@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
+from docs_scope_config import DOCS_SCOPE_CONFIGS
 from docs_source_model import scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -158,10 +159,9 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
 
     commands = [
         [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"],
-        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "studio", "--write"],
-        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "library", "--write"],
-        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "analysis", "--write"],
     ]
+    for scope in DOCS_SCOPE_CONFIGS:
+        commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
     steps = []
     for command in commands:
         completed = subprocess.run(
@@ -185,5 +185,5 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
     return {
         "ok": True,
         "steps": steps,
-        "summary_text": "Docs and docs search rebuilt for studio, library, and analysis.",
+        "summary_text": f"Docs and docs search rebuilt for {', '.join(DOCS_SCOPE_CONFIGS)}.",
     }

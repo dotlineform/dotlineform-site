@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-11 17:50"
+last_updated: "2026-05-11 18:35"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -106,6 +106,7 @@ This is another packaging leak: management mode is not yet styled only by Docs V
 
 Copy:
 
+- `assets/docs-viewer/data/docs-viewer-config.json`
 - `assets/studio/data/studio_config.json`
 - `assets/docs-viewer/data/ui-text.json`
 - `assets/studio/data/ui_text/docs-html-import.json`
@@ -113,6 +114,9 @@ Copy:
 Current issue:
 the viewer still reads `studio_config.json` for Docs Viewer settings and UI-status options, even on public docs routes.
 A portable package should move those remaining settings into Docs Viewer-owned config files or route include parameters.
+
+`assets/docs-viewer/data/docs-viewer-config.json` is generated from `scripts/docs/docs_scopes.json`.
+It is required by the browser runtime; the viewer does not keep a hardcoded fallback scope list.
 
 ### Generated Data Outputs
 
@@ -241,7 +245,7 @@ Create the source directory and at least one root doc:
 
 - `_docs_research/research.md`
 
-The root doc's `doc_id` should match the route shell's `default_doc_id`.
+The root doc's `doc_id` should match the scope config's `default_doc_id`.
 
 ### 3. Register The Scope For Docs Builds
 
@@ -254,6 +258,7 @@ Add a scope entry to `scripts/docs/docs_scopes.json`:
   "output": "assets/data/docs/scopes/research",
   "viewer_base_url": "/research/",
   "include_scope_param": false,
+  "default_doc_id": "research",
   "allow_nested_source": false,
   "non_loadable_doc_ids": [],
   "manage_only_tree_root_ids": [],
@@ -263,7 +268,9 @@ Add a scope entry to `scripts/docs/docs_scopes.json`:
 ```
 
 Use `include_scope_param: false` for a public route that only ever reads one scope.
-Use `include_scope_param: true` only for a multi-scope route such as `/docs/`.
+Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
+
+Running `./scripts/build_docs.rb --write` updates `assets/docs-viewer/data/docs-viewer-config.json` from this source config.
 
 ### 4. Add The Read-Only Route
 
@@ -277,22 +284,13 @@ section: research
 permalink: /research/
 ---
 
-{%- assign docs_index_url = '/assets/data/docs/scopes/research/index.json' | relative_url -%}
-{%- assign docs_viewer_base_url = '/research/' | relative_url -%}
-{%- assign docs_search_index_url = '/assets/data/search/research/index.json' | relative_url -%}
-
 {% include docs_viewer_shell.html
-  index_url=docs_index_url
-  viewer_base_url=docs_viewer_base_url
-  viewer_scope='research'
-  include_scope_param=false
-  default_doc_id='research'
-  search_index_url=docs_search_index_url
   search_placeholder='search research'
   search_aria_label='Search research'
 %}
 ```
 
+The route path is matched to `viewer_base_url` in the generated Docs Viewer browser config.
 Do not pass `allow_management`, `allow_scope_query`, or `management_base_url` on public read-only routes.
 
 ### 5. Add The Scope To The Management Shell
@@ -302,16 +300,11 @@ It already renders `/docs/` with:
 
 - `allow_management=true`
 - `allow_scope_query=true`
-- `include_scope_param=true`
 - `management_base_url='http://127.0.0.1:8789'`
 
-Current hardcoded work required for a new scope:
-
-- add an option to `_includes/docs_viewer_shell.html` scope select
-- add a route entry to `DOCS_ROUTE_SCOPES` in `assets/docs-viewer/js/docs-viewer.js`
-- make sure `assets/studio/data/studio_config.json` has any status options needed for the new scope
-
-The intended future shape is that the scope select and route map come from `scripts/docs/docs_scopes.json` or a generated browser config.
+The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
+Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
+If the new scope needs UI-status pills, add the status options to `assets/studio/data/studio_config.json` until that remaining config moves into Docs Viewer-owned files.
 
 ### 6. Add Search Support
 

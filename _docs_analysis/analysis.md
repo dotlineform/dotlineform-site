@@ -18,4 +18,3 @@ Use this scope for:
 - LLM-assisted review outputs
 - comparative catalogue observations
 
-Library documents and Studio implementation docs remain separate scopes.

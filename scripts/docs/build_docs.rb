@@ -14,6 +14,8 @@ require_relative "../jekyll_markdown_renderer"
 
 DOCS_SCOPE_CONFIG_PATH = File.expand_path("docs_scopes.json", __dir__)
 DOCS_SCOPE_CONFIG_SCHEMA_VERSION = "docs_scopes_v1"
+DOCS_VIEWER_BROWSER_CONFIG_PATH = File.expand_path("../../assets/docs-viewer/data/docs-viewer-config.json", __dir__)
+DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
 
 ScopeConfig = Struct.new(
   :scope_id,
@@ -21,6 +23,7 @@ ScopeConfig = Struct.new(
   :output,
   :viewer_base_url,
   :include_scope_param,
+  :default_doc_id,
   :allow_nested_source,
   :non_loadable_doc_ids,
   :manage_only_tree_root_ids,
@@ -418,16 +421,16 @@ class DocsDataBuilder
   end
 
   def viewer_scope_for_path(path_part)
-    case path_part
-    when "/docs/"
-      "studio"
-    when "/library/"
-      "library"
-    when "/analysis/"
-      "analysis"
-    else
-      ""
+    @viewer_scope_for_path ||= load_scope_configs.to_h do |config|
+      normalized = config.viewer_base_url.to_s.strip
+      normalized = "/#{normalized}" unless normalized.start_with?("/")
+      normalized = "#{normalized}/" unless normalized.end_with?("/")
+      [normalized, config.scope_id]
     end
+    normalized_path = path_part.to_s.strip
+    normalized_path = "/#{normalized_path}" unless normalized_path.start_with?("/")
+    normalized_path = "#{normalized_path}/" unless normalized_path.end_with?("/")
+    @viewer_scope_for_path.fetch(normalized_path, "")
   end
 
   def doc_sort_key(doc)
@@ -597,6 +600,45 @@ def normalize_scope_config_array(value, label)
   Array(value).map { |item| item.to_s.strip }.reject(&:empty?)
 end
 
+def normalized_browser_viewer_base_url(value)
+  text = value.to_s.strip
+  text = "/docs/" if text.empty?
+  text = "/#{text}" unless text.start_with?("/")
+  text.end_with?("/") ? text : "#{text}/"
+end
+
+def browser_docs_index_url(config)
+  "/#{config.output.sub(%r{\A/+}, "")}/index.json"
+end
+
+def browser_search_index_url(config)
+  "/assets/data/search/#{config.scope_id}/index.json"
+end
+
+def browser_scope_config_payload(scope_configs)
+  {
+    "schema_version" => DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
+    "default_scope_id" => scope_configs.first&.scope_id.to_s,
+    "scopes" => scope_configs.map do |config|
+      {
+        "scope_id" => config.scope_id,
+        "viewer_base_url" => normalized_browser_viewer_base_url(config.viewer_base_url),
+        "include_scope_param" => config.include_scope_param == true,
+        "default_doc_id" => config.default_doc_id,
+        "index_url" => browser_docs_index_url(config),
+        "search_index_url" => browser_search_index_url(config)
+      }
+    end
+  }
+end
+
+def write_docs_viewer_browser_config(scope_configs)
+  payload = browser_scope_config_payload(scope_configs)
+  FileUtils.mkdir_p(File.dirname(DOCS_VIEWER_BROWSER_CONFIG_PATH))
+  File.write(DOCS_VIEWER_BROWSER_CONFIG_PATH, JSON.pretty_generate(payload) + "\n")
+  puts "Docs Viewer browser config wrote: #{DOCS_VIEWER_BROWSER_CONFIG_PATH}"
+end
+
 def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
   payload = JSON.parse(File.read(path))
   unless payload.is_a?(Hash) && payload["schema_version"] == DOCS_SCOPE_CONFIG_SCHEMA_VERSION
@@ -610,7 +652,9 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
     raise "Docs scope config scopes[#{index}] must be an object" unless item.is_a?(Hash)
 
     scope_id = item["scope_id"].to_s.strip.downcase
+    default_doc_id = item["default_doc_id"].to_s.strip
     raise "Docs scope config scopes[#{index}].scope_id is required" if scope_id.empty?
+    raise "Docs scope config scopes[#{index}].default_doc_id is required" if default_doc_id.empty?
     raise "Docs scope config scope_id #{scope_id.inspect} is duplicated" if seen[scope_id]
 
     seen[scope_id] = true
@@ -620,6 +664,7 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
       output: normalize_scope_config_path(item["output"], "scopes[#{index}].output"),
       viewer_base_url: item["viewer_base_url"].to_s,
       include_scope_param: item["include_scope_param"] == true,
+      default_doc_id: default_doc_id,
       allow_nested_source: item["allow_nested_source"] == true,
       non_loadable_doc_ids: normalize_scope_config_array(
         item["non_loadable_doc_ids"],
@@ -678,6 +723,8 @@ raise "Unknown docs scope(s): #{options[:scopes].join(', ')}" if selected_scopes
 if [options[:source], options[:output], options[:viewer_base_url]].any? && selected_scopes.length != 1
   raise "--source, --output, and --viewer-base-url can only be used when exactly one scope is selected"
 end
+
+write_docs_viewer_browser_config(scope_configs) if options[:write]
 
 selected_scopes.each do |config|
   builder = DocsDataBuilder.new(

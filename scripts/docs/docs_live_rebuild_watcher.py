@@ -269,17 +269,15 @@ def main() -> int:
             "dirty_at": None,
             "changed_files": [],
         }
+    scope_ids = list(SCOPE_ROOTS.keys())
 
-    log(
-        "Watching _docs/*.md -> studio, _docs_library/*.md -> library, "
-        "and _docs_analysis/**/*.md -> analysis "
-        f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
-    )
+    watched_roots = ", ".join(f"{states[scope]['root']} -> {scope}" for scope in scope_ids)
+    log(f"Watching {watched_roots} (poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s).")
 
     try:
         while True:
             now = time.monotonic()
-            for scope in ("studio", "library", "analysis"):
+            for scope in scope_ids:
                 state = states[scope]
                 previous_snapshot = state["snapshot"]
                 current_snapshot = snapshot_scope(state["root"], scope)
@@ -291,7 +289,7 @@ def main() -> int:
                     log(f"Detected source changes for {scope}: {changed_text}.")
 
             ready_scope = None
-            for scope in ("studio", "library", "analysis"):
+            for scope in scope_ids:
                 dirty_at = states[scope]["dirty_at"]
                 if dirty_at is not None and (now - dirty_at) >= args.debounce_seconds:
                     ready_scope = scope

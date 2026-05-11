@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 17:50"
+last_updated: "2026-05-11 18:35"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -217,16 +217,18 @@ Acceptance:
 
 ### 4. Make Scope Config The Single Source Of Truth
 
+Status: implemented.
+
 Current scope data is split between `scripts/docs/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `assets/docs-viewer/js/docs-viewer.js`, search config, and import-service allowlists.
 
 Tasks:
 
-- create a Docs Viewer-owned browser config
-- generate or load the management scope list from scope config
-- remove hardcoded scope options from `_includes/docs_viewer_shell.html`
-- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/docs-viewer/js/docs-viewer.js`
-- make generated data URLs, search URLs, default doc ids, route bases, and `include_scope_param` scope-config driven
-- remove remaining hardcoded scope lists that the generated config replaces in the same slice
+- create a Docs Viewer-owned browser config (done)
+- generate or load the management scope list from scope config (done)
+- remove hardcoded scope options from `_includes/docs_viewer_shell.html` (done)
+- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/docs-viewer/js/docs-viewer.js` (done)
+- make generated data URLs, search URLs, default doc ids, route bases, and `include_scope_param` scope-config driven (done)
+- remove remaining hardcoded scope lists that the generated config replaces in the same slice (done for viewer runtime, Docs Import scope options, management URLs, docs-source validation, docs rebuild loops, live rebuild watching, and broken-link route parsing)
 
 Acceptance:
 
@@ -304,12 +306,13 @@ Acceptance:
 
 ### 8. Make Docs Import Scope-Config Driven
 
-Docs Import now lives inside the Docs Viewer management modal, but import scope support is still hardcoded to the current known scopes.
+Docs Import now lives inside the Docs Viewer management modal, and its scope picker reads the generated Docs Viewer browser config.
+The remaining import work is ownership and packaging: the import runtime still lives under Studio paths, and the import/media behavior has not been tested as a standalone Docs Viewer package.
 
 Tasks:
 
-- make the import modal read configured docs scopes
-- remove `studio`, `library`, and `analysis` hardcoding from import scope normalization
+- make the import modal read configured docs scopes (done for the picker)
+- remove `studio`, `library`, and `analysis` hardcoding from import scope normalization (done for the picker and management result URLs)
 - ensure imported media token paths and target source roots come from scope config
 - keep filename-collision modal behavior intact
 - delete the old `/studio/docs-import/` wrapper as part of the same slice if it still exists

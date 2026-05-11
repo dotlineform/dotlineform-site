@@ -68,11 +68,33 @@ function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
-function selectedScopeFromUrl(fallbackScope = "library") {
+async function loadDocsViewerScopeOptions(configUrl = "/assets/docs-viewer/data/docs-viewer-config.json") {
+  const response = await fetch(configUrl, {
+    headers: { Accept: "application/json" },
+    cache: "default"
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to load Docs Viewer config (${response.status})`);
+  }
+  const payload = await response.json();
+  if (!payload || payload.schema_version !== "docs_viewer_config_v1" || !Array.isArray(payload.scopes)) {
+    throw new Error("Docs Viewer config has an unsupported schema.");
+  }
+  const scopes = payload.scopes
+    .map((scope) => normalizeText(scope && scope.scope_id).toLowerCase())
+    .filter(Boolean);
+  const uniqueScopes = Array.from(new Set(scopes));
+  if (!uniqueScopes.length) {
+    throw new Error("Docs Viewer config does not define any scopes.");
+  }
+  return uniqueScopes;
+}
+
+function selectedScopeFromUrl(validScopes, fallbackScope = "") {
   try {
     const url = new URL(window.location.href);
     const scope = normalizeText(url.searchParams.get("scope")).toLowerCase();
-    return ["analysis", "library", "studio"].includes(scope) ? scope : fallbackScope;
+    return validScopes.includes(scope) ? scope : fallbackScope;
   } catch (_error) {
     return fallbackScope;
   }
@@ -453,7 +475,11 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
   }
 
   const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
-  const scope = ["analysis", "library", "studio"].includes(selectedScope) ? selectedScope : "library";
+  const scope = state.docsScopeIds.includes(selectedScope) ? selectedScope : state.docsScopeIds[0];
+  if (!scope) {
+    setStatus(state.statusNode, "error", "Docs Viewer config does not define any import scopes.");
+    return;
+  }
   const normalizedReplacementDocId = normalizeText(replacementDocId);
   persistSelectedScope(state, scope);
   state.runButton.disabled = true;
@@ -587,7 +613,8 @@ export async function initDocsHtmlImport(options = {}) {
     serviceAvailable: false,
     isRunning: false,
     files: [],
-    config: null
+    config: null,
+    docsScopeIds: []
   };
 
   const requiredNodes = [
@@ -640,6 +667,7 @@ export async function initDocsHtmlImport(options = {}) {
 
   try {
     state.config = await loadStudioConfigWithText("docs_html_import");
+    state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
     const serviceAvailable = await probeDocsManagementHealth();
     state.serviceAvailable = Boolean(serviceAvailable);
 
@@ -678,15 +706,14 @@ export async function initDocsHtmlImport(options = {}) {
       state.cancelButton,
       getStudioText(state.config, "docs_html_import.cancel_overwrite_button", "Cancel")
     );
-    state.scopeSelect.innerHTML = `
-      <option value="library">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_library", "library"))}</option>
-      <option value="analysis">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_analysis", "analysis"))}</option>
-      <option value="studio">${escapeHtml(getStudioText(state.config, "docs_html_import.scope_option_studio", "studio"))}</option>
-    `;
+    state.scopeSelect.innerHTML = state.docsScopeIds
+      .map((scope) => `<option value="${escapeHtml(scope)}">${escapeHtml(scope)}</option>`)
+      .join("");
     const initialScope = normalizeText(options.initialScope).toLowerCase();
-    state.scopeSelect.value = ["analysis", "library", "studio"].includes(initialScope)
+    const fallbackScope = state.docsScopeIds[0] || "";
+    state.scopeSelect.value = state.docsScopeIds.includes(initialScope)
       ? initialScope
-      : selectedScopeFromUrl("library");
+      : selectedScopeFromUrl(state.docsScopeIds, fallbackScope);
     state.scopeSelect.addEventListener("change", () => persistSelectedScope(state, state.scopeSelect.value));
     state.includePromptMeta.checked = false;
 

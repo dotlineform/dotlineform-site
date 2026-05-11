@@ -15,6 +15,7 @@ from docs_html_import import (
     retarget_inline_raster_media_plans,
 )
 from docs_management_mutations import metadata_search_doc_ids
+from docs_scope_config import DOCS_SCOPE_CONFIGS
 from docs_source_model import (
     ScopeDoc,
     current_doc_timestamp,
@@ -49,7 +50,7 @@ def relative_path(repo_root: Path, path: Path) -> str:
 
 
 def viewer_url_for(scope: str, doc_id: str) -> str:
-    normalized_scope = scope if scope in {"studio", "library", "analysis"} else "studio"
+    normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
     return f"/docs/?scope={normalized_scope}&doc={doc_id}&mode=manage"
 
 

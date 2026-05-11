@@ -20,6 +20,7 @@ class DocsScopeConfig:
     output: Path
     viewer_base_url: str
     include_scope_param: bool
+    default_doc_id: str
     allow_nested_source: bool
     non_loadable_doc_ids: tuple[str, ...]
     manage_only_tree_root_ids: tuple[str, ...]
@@ -56,6 +57,13 @@ def normalize_viewer_base_url(value: Any) -> str:
     return text if text.endswith("/") else f"{text}/"
 
 
+def normalize_doc_id(value: Any, *, field: str) -> str:
+    text = str(value or "").strip()
+    if not text:
+        raise ValueError(f"docs scope config field {field} is required")
+    return text
+
+
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
     root = repo_root or default_repo_root()
     config_path = root / CONFIG_REL_PATH
@@ -86,6 +94,10 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             output=safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
             viewer_base_url=normalize_viewer_base_url(item.get("viewer_base_url")),
             include_scope_param=item.get("include_scope_param") is True,
+            default_doc_id=normalize_doc_id(
+                item.get("default_doc_id"),
+                field=f"scopes[{index}].default_doc_id",
+            ),
             allow_nested_source=item.get("allow_nested_source") is True,
             non_loadable_doc_ids=string_tuple(
                 item.get("non_loadable_doc_ids"),

@@ -363,7 +363,8 @@ export function initDocsViewerManagement(context) {
         return module.initDocsHtmlImport({
           root: importRoot,
           bootStatus: importBootStatus,
-          initialScope: scope || viewerScope() || "library",
+          initialScope: scope || viewerScope(),
+          docsViewerConfigUrl: root.dataset.docsViewerConfigUrl || "/assets/docs-viewer/data/docs-viewer-config.json",
           routePath: "/docs/"
         });
       })
@@ -387,7 +388,7 @@ export function initDocsViewerManagement(context) {
 
   function openImportModal() {
     if (!importModal || !importRoot) return;
-    var scope = viewerScope() || "library";
+    var scope = viewerScope();
     if (importScope) {
       importScope.textContent = "scope: " + scope;
     }

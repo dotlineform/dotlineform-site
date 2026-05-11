@@ -1,0 +1,30 @@
+{
+  "schema_version": "docs_viewer_config_v1",
+  "default_scope_id": "studio",
+  "scopes": [
+    {
+      "scope_id": "studio",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "site-docs",
+      "index_url": "/assets/data/docs/scopes/studio/index.json",
+      "search_index_url": "/assets/data/search/studio/index.json"
+    },
+    {
+      "scope_id": "library",
+      "viewer_base_url": "/library/",
+      "include_scope_param": false,
+      "default_doc_id": "library",
+      "index_url": "/assets/data/docs/scopes/library/index.json",
+      "search_index_url": "/assets/data/search/library/index.json"
+    },
+    {
+      "scope_id": "analysis",
+      "viewer_base_url": "/analysis/",
+      "include_scope_param": false,
+      "default_doc_id": "analysis",
+      "index_url": "/assets/data/docs/scopes/analysis/index.json",
+      "search_index_url": "/assets/data/search/analysis/index.json"
+    }
+  ]
+}

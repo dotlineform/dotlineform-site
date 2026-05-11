@@ -18,11 +18,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urljoin, urlparse
 
+from docs_scope_config import DOCS_SCOPE_CONFIGS
 
-SCOPE_OUTPUT_DIRS = {
-    "studio": Path("assets/data/docs/scopes/studio"),
-    "library": Path("assets/data/docs/scopes/library"),
-}
+
+SCOPE_OUTPUT_DIRS = {scope: config.output for scope, config in DOCS_SCOPE_CONFIGS.items()}
 TEMP_BASE_URL = "https://dotlineform.local"
 WHITESPACE_PATTERN = re.compile(r"\s+")
 
@@ -88,7 +87,7 @@ class AnchorCollector(HTMLParser):
 def normalize_scope(scope: Any) -> str:
     value = str(scope or "").strip().lower()
     if value not in SCOPE_OUTPUT_DIRS:
-        raise ValueError("scope must be 'studio' or 'library'")
+        raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_OUTPUT_DIRS))}")
     return value
 
 
@@ -206,17 +205,16 @@ def parse_docs_target(resolved_href: str) -> dict[str, str] | None:
     trimmed_path = path.rstrip("/")
     fragment = normalize_text(parsed.fragment)
 
-    if trimmed_path == "/docs":
+    for scope, config in DOCS_SCOPE_CONFIGS.items():
+        viewer_path = config.viewer_base_url.rstrip("/")
+        if trimmed_path != viewer_path.rstrip("/"):
+            continue
         doc_id = normalize_text(query.get("doc", [""])[0])
         if not doc_id:
             return None
-        return {"kind": "viewer", "scope": "studio", "doc_id": doc_id, "fragment": fragment}
-
-    if trimmed_path == "/library":
-        doc_id = normalize_text(query.get("doc", [""])[0])
-        if not doc_id:
-            return None
-        return {"kind": "viewer", "scope": "library", "doc_id": doc_id, "fragment": fragment}
+        explicit_scope = normalize_text(query.get("scope", [""])[0])
+        target_scope = explicit_scope if explicit_scope in DOCS_SCOPE_CONFIGS else scope
+        return {"kind": "viewer", "scope": target_scope, "doc_id": doc_id, "fragment": fragment}
 
     if path.endswith(".md"):
         return {"kind": "source_markdown", "path": path, "fragment": fragment}
@@ -348,7 +346,7 @@ def print_human_summary(payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit Docs Viewer links for missing targets.")
-    parser.add_argument("--scope", required=True, help="Docs scope to audit: studio or library")
+    parser.add_argument("--scope", required=True, help=f"Docs scope to audit: {', '.join(sorted(SCOPE_OUTPUT_DIRS))}")
     parser.add_argument("--repo-root", help="Override repo root auto-detection")
     parser.add_argument("--json", action="store_true", help="Print JSON payload")
     args = parser.parse_args(argv)

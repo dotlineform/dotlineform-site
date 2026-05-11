@@ -52,25 +52,10 @@ import {
 
   var allowManagement = root.dataset.allowManagement === "true";
   var allowScopeQuery = root.dataset.allowScopeQuery === "true";
-  var DOCS_ROUTE_SCOPES = {
-    studio: {
-      indexUrl: "/assets/data/docs/scopes/studio/index.json",
-      searchIndexUrl: "/assets/data/search/studio/index.json",
-      defaultDocId: "site-docs"
-    },
-    library: {
-      indexUrl: "/assets/data/docs/scopes/library/index.json",
-      searchIndexUrl: "/assets/data/search/library/index.json",
-      defaultDocId: "library"
-    },
-    analysis: {
-      indexUrl: "/assets/data/docs/scopes/analysis/index.json",
-      searchIndexUrl: "/assets/data/search/analysis/index.json",
-      defaultDocId: "analysis"
-    }
-  };
+  var docsViewerConfigUrl = String(root.dataset.docsViewerConfigUrl || "").trim();
+  var routeViewerBaseUrl = String(root.dataset.viewerBaseUrl || "").trim();
   var indexUrl = appendAssetVersion(root.dataset.indexUrl);
-  var viewerBaseUrl = root.dataset.viewerBaseUrl || "/docs/";
+  var viewerBaseUrl = routeViewerBaseUrl || window.location.pathname;
   var viewerScope = String(root.dataset.viewerScope || "").trim();
   var includeScopeParam = root.dataset.includeScopeParam === "true";
   var defaultRouteDocId = String(root.dataset.defaultDocId || "").trim();
@@ -78,11 +63,6 @@ import {
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
   var studioConfigUrl = String(root.dataset.studioConfigUrl || "").trim();
   var uiTextUrl = String(root.dataset.uiTextUrl || "").trim();
-  var requestedRouteScope = routeScopeFromUrl();
-  if (allowScopeQuery && DOCS_ROUTE_SCOPES[requestedRouteScope]) {
-    applyRouteScopeConfig(requestedRouteScope);
-  }
-  var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
   var managementBaseUrl = allowManagement ? String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "") : "";
   var generatedBaseUrl = String(root.dataset.generatedBaseUrl || "").trim().replace(/\/+$/, "") || managementBaseUrl;
   var openImportOnLoad = allowManagement && new URLSearchParams(window.location.search).get("import") === "1";
@@ -125,6 +105,11 @@ import {
     searchRouteActive: false,
     recentModeActive: false,
     recentLimit: DEFAULT_RECENT_LIMIT,
+    docsViewerConfigLoaded: false,
+    docsViewerConfigRequestPromise: null,
+    scopeConfigs: [],
+    scopeConfigsById: new Map(),
+    defaultScopeId: "",
     viewerConfigLoaded: false,
     viewerConfigRequestPromise: null,
     uiStatuses: [],
@@ -332,37 +317,166 @@ import {
     return managementControllerRequestPromise;
   }
 
+  function searchIsEnabled() {
+    return Boolean(searchInput && results && more && searchIndexUrl);
+  }
+
+  function normalizeBrowserScopeConfig(rawScope) {
+    if (!rawScope || typeof rawScope !== "object") return null;
+    var scopeId = String(rawScope.scope_id || "").trim().toLowerCase();
+    if (!scopeId) return null;
+    var rawViewerBaseUrl = String(rawScope.viewer_base_url || "").trim() || "/docs/";
+    var viewerBase = rawViewerBaseUrl.charAt(0) === "/" ? rawViewerBaseUrl : "/" + rawViewerBaseUrl;
+    if (viewerBase.charAt(viewerBase.length - 1) !== "/") {
+      viewerBase += "/";
+    }
+    return {
+      scopeId: scopeId,
+      viewerBaseUrl: viewerBase,
+      includeScopeParam: rawScope.include_scope_param === true,
+      defaultDocId: String(rawScope.default_doc_id || "").trim(),
+      indexUrl: String(rawScope.index_url || "").trim(),
+      searchIndexUrl: String(rawScope.search_index_url || "").trim()
+    };
+  }
+
+  function normalizeBrowserConfig(payload) {
+    if (!payload || typeof payload !== "object") {
+      throw new Error("Docs Viewer config must be a JSON object.");
+    }
+    if (payload.schema_version !== "docs_viewer_config_v1") {
+      throw new Error("Docs Viewer config has an unsupported schema.");
+    }
+    if (!Array.isArray(payload.scopes)) {
+      throw new Error("Docs Viewer config requires a scopes array.");
+    }
+    var seen = new Set();
+    var scopes = payload.scopes.map(normalizeBrowserScopeConfig).filter(Boolean).filter(function (config) {
+      if (seen.has(config.scopeId)) return false;
+      seen.add(config.scopeId);
+      return true;
+    });
+    if (!scopes.length) {
+      throw new Error("Docs Viewer config does not define any scopes.");
+    }
+    scopes.forEach(function (config) {
+      if (!config.defaultDocId || !config.indexUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing default_doc_id or index_url.");
+      }
+    });
+    return {
+      defaultScopeId: String(payload.default_scope_id || scopes[0].scopeId || "").trim().toLowerCase(),
+      scopes: scopes,
+      scopesById: new Map(scopes.map(function (config) {
+        return [config.scopeId, config];
+      }))
+    };
+  }
+
+  function pathMatchesViewerBase(pathname, viewerBaseUrl) {
+    return pathname.replace(/\/+$/, "/") === new URL(viewerBaseUrl, window.location.origin).pathname.replace(/\/+$/, "/");
+  }
+
+  function scopeFromCurrentPath(config) {
+    var pathname = window.location.pathname.replace(/\/+$/, "/") || "/";
+    var scopes = config.scopes || config.scopeConfigs || [];
+    for (var i = 0; i < scopes.length; i += 1) {
+      if (pathMatchesViewerBase(pathname, scopes[i].viewerBaseUrl)) {
+        return scopes[i].scopeId;
+      }
+    }
+    return "";
+  }
+
   function routeScopeFromUrl() {
-    if (!allowScopeQuery) return viewerScope;
     var requestedScope = String(new URLSearchParams(window.location.search).get("scope") || "").trim().toLowerCase();
-    return DOCS_ROUTE_SCOPES[requestedScope] ? requestedScope : (viewerScope || "studio");
+    if (requestedScope) {
+      if (!state.scopeConfigsById.has(requestedScope)) {
+        throw new Error("Unknown docs scope: " + requestedScope);
+      }
+      return requestedScope;
+    }
+    if (!allowScopeQuery) {
+      var pathScope = scopeFromCurrentPath(state);
+      if (pathScope) return pathScope;
+      if (viewerScope && state.scopeConfigsById.has(viewerScope)) return viewerScope;
+    }
+    if (viewerScope && state.scopeConfigsById.has(viewerScope)) return viewerScope;
+    return state.defaultScopeId;
+  }
+
+  function renderScopeOptions() {
+    if (!scopeSelect) return;
+    scopeSelect.innerHTML = state.scopeConfigs.map(function (config) {
+      return '<option value="' + escapeHtml(config.scopeId) + '">' + escapeHtml(config.scopeId) + '</option>';
+    }).join("");
+    scopeSelect.value = viewerScope;
   }
 
   function applyRouteScopeConfig(scope) {
-    var config = DOCS_ROUTE_SCOPES[scope] || DOCS_ROUTE_SCOPES.studio;
+    var config = state.scopeConfigsById.get(scope);
+    if (!config) {
+      throw new Error("Unknown docs scope: " + scope);
+    }
     viewerScope = scope;
     indexUrl = appendAssetVersion(config.indexUrl);
     searchIndexUrl = appendAssetVersion(config.searchIndexUrl);
     defaultRouteDocId = config.defaultDocId;
+    viewerBaseUrl = allowScopeQuery ? (routeViewerBaseUrl || window.location.pathname) : config.viewerBaseUrl;
+    includeScopeParam = allowScopeQuery ? true : config.includeScopeParam;
+    viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
+    bookmarkScope = viewerScope || viewerPathname || "docs";
+    sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
+    state.sidebarCollapsed = readSidebarCollapsedState();
     root.dataset.viewerScope = viewerScope;
     root.dataset.indexUrl = config.indexUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
     root.dataset.defaultDocId = defaultRouteDocId;
-    if (scopeSelect) {
-      scopeSelect.value = viewerScope;
+    root.dataset.viewerBaseUrl = viewerBaseUrl;
+    root.dataset.includeScopeParam = includeScopeParam ? "true" : "false";
+    renderScopeOptions();
+  }
+
+  function loadDocsViewerConfig() {
+    if (state.docsViewerConfigLoaded) return Promise.resolve(state.docsViewerConfig);
+    if (state.docsViewerConfigRequestPromise) return state.docsViewerConfigRequestPromise;
+    if (!docsViewerConfigUrl) {
+      return Promise.reject(new Error("Docs Viewer config URL is not configured."));
     }
+
+    state.docsViewerConfigRequestPromise = fetchJsonWithRetry(
+      docsViewerConfigUrl,
+      "Failed to load Docs Viewer config",
+      "",
+      dataRequestOptions()
+    )
+      .then(function (payload) {
+        var config = normalizeBrowserConfig(payload);
+        state.docsViewerConfig = config;
+        state.scopeConfigs = config.scopes;
+        state.scopeConfigsById = config.scopesById;
+        state.defaultScopeId = config.defaultScopeId;
+        state.docsViewerConfigLoaded = true;
+        applyRouteScopeConfig(routeScopeFromUrl());
+        return config;
+      })
+      .finally(function () {
+        state.docsViewerConfigRequestPromise = null;
+      });
+
+    return state.docsViewerConfigRequestPromise;
   }
 
   function handleScopeChange() {
     if (!allowScopeQuery || !scopeSelect) return;
     var nextScope = String(scopeSelect.value || "").trim().toLowerCase();
-    var config = DOCS_ROUTE_SCOPES[nextScope];
+    var config = state.scopeConfigsById.get(nextScope);
     if (!config) {
       scopeSelect.value = viewerScope;
       return;
     }
 
-    var url = new URL(viewerBaseUrl, window.location.origin);
+    var url = new URL(routeViewerBaseUrl || viewerBaseUrl, window.location.origin);
     url.searchParams.set("scope", nextScope);
     if (state.managementMode || getCurrentMode() === MANAGEMENT_MODE) {
       url.searchParams.set("mode", MANAGEMENT_MODE);
@@ -1547,7 +1661,7 @@ import {
       }
     });
 
-    if (searchEnabled) {
+    if (searchIsEnabled()) {
       more.addEventListener("click", function (event) {
         var button = event.target.closest("button[data-role='more']");
         if (!button) return;
@@ -1692,7 +1806,7 @@ import {
   }
 
   function loadSearchEntries() {
-    if (!searchEnabled) {
+    if (!searchIsEnabled()) {
       return Promise.reject(new Error("Search unavailable."));
     }
     if (state.searchLoaded) {
@@ -1743,7 +1857,7 @@ import {
   }
 
   function renderRecentMode() {
-    if (!searchEnabled) return;
+    if (!searchIsEnabled()) return;
     showRecentPane();
     document.title = "Recently Added | dotlineform";
     var recentDocs = collectRecentDocs(state.docs.filter(isDocViewable), state.recentLimit);
@@ -1762,7 +1876,7 @@ import {
   }
 
   function renderSearchPendingState() {
-    if (!searchEnabled || !hasActiveQuery()) return;
+    if (!searchIsEnabled() || !hasActiveQuery()) return;
     setRecentModeActive(false);
     showSearchPane();
     setStatus(state.searchLoaded ? "Searching..." : "Loading search index...", false);
@@ -1773,7 +1887,7 @@ import {
   }
 
   function renderSearchMode() {
-    if (!searchEnabled) {
+    if (!searchIsEnabled()) {
       setStatus("Search unavailable.", true);
       hideDocPane();
       results.hidden = true;
@@ -1838,9 +1952,16 @@ import {
 
   window.addEventListener("popstate", function () {
     if (state.docs.length === 0) return;
-    if (allowScopeQuery && routeScopeFromUrl() !== viewerScope) {
-      window.location.reload();
-      return;
+    if (allowScopeQuery) {
+      try {
+        if (routeScopeFromUrl() !== viewerScope) {
+          window.location.reload();
+          return;
+        }
+      } catch (error) {
+        setStatus(error.message || "Unknown docs scope.", true);
+        return;
+      }
     }
     hideContextMenu();
     cancelSearchDebounce();
@@ -1859,11 +1980,16 @@ import {
   });
 
   bindLinkInterception();
-  renderSidebarCollapsedState();
-  loadViewerConfig();
-  initializeBookmarks();
-  initializeManagement();
-  loadIndex()
+  loadDocsViewerConfig()
+    .then(function () {
+      renderSidebarCollapsedState();
+      return loadViewerConfig();
+    })
+    .then(function () {
+      initializeBookmarks();
+      initializeManagement();
+      return loadIndex();
+    })
     .then(function () {
       if (openImportOnLoad && getCurrentMode() === MANAGEMENT_MODE) {
         loadManagementController().then(function (controller) {
@@ -1871,7 +1997,13 @@ import {
         });
       }
     })
-    .catch(function () {});
+    .catch(function (error) {
+      setStatus(error.message || "Failed to initialize Docs Viewer.", true);
+      hideDocPane();
+      content.textContent = "";
+      if (results) results.hidden = true;
+      if (more) more.hidden = true;
+    });
 
   function escapeHtml(value) {
     return String(value || "")
