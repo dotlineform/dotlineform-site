@@ -1,10 +1,12 @@
 ---
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
-added_date: "2026-05-11"
-last_updated: "2026-05-11"
+added_date: 2026-05-11
+last_updated: "2026-05-11 13:20"
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
+hidden: false
 ---
 # Portable Docs Viewer Request
 
@@ -64,12 +66,25 @@ Risks:
 
 - Allowing Docs Viewer CSS to drift from Studio primitives creates two UI systems to maintain.
 - Moving docs search under Docs Viewer may temporarily duplicate low-level search helper behavior.
-- Keeping compatibility with existing `/docs/`, `/library/`, and `/analysis/` routes may require short-lived adapters.
+- Keeping compatibility with existing `/docs/`, `/library/`, and `/analysis/` routes may require adapters inside an implementation slice, but those adapters should not survive that slice if they only bridge old and new ownership.
 - A minimal portable boundary may still expose hidden dotlineform assumptions until tested in a fixture repo.
+
+## Cleanup Rule
+
+Each implementation slice must retire the transitional surface it replaces before the slice is accepted.
+The project should not keep a separate final cleanup phase that leaves old routes, links, or ownership bridges behind after the replacement is already live.
+
+Immediate cleanup already implied by the current decisions:
+
+- retire the global `/search/` page and route instead of preserving a merged-search surface
+- keep Catalogue search as a Catalogue-owned concern, with any future dedicated Catalogue route handled outside Docs Viewer portability
+- retire the standalone `/studio/docs-import/` page and route after Studio links open the Docs Viewer management modal directly (completed in the initial cleanup)
+- remove stale Studio links to `/studio/docs-import/` (completed in the initial cleanup)
+- update docs that still describe `/search/` as an aggregate or docs-scope search surface
 
 ## Ordered Implementation Plan
 
-### 1. Freeze The Current Install Contract
+### 1. Freeze The Current Install Contract And Remove Superseded Entrypoints
 
 Use [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) as the live install page.
 Keep it focused on what a user must copy, configure, run, and verify.
@@ -79,11 +94,17 @@ Tasks:
 - keep the install page free of architecture debate
 - link from the install page to this request for extraction status
 - treat each later slice as reducing the current copy/setup burden
+- remove links from Studio dashboards or nav surfaces that still open `/studio/docs-import/` (done)
+- remove the standalone `/studio/docs-import/` page once the modal entry links are in place (done)
+- retire the global `/search/` route rather than keeping it as a cross-domain search bridge
+- update Search docs that still describe direct `/search/` as aggregate, global, or docs-scope search
 
 Acceptance:
 
 - the install page says what to do now
 - this request says what to improve next
+- Docs Import is reached from `/docs/?scope=<scope>&mode=manage&import=1`
+- no public/global search route claims ownership of Docs search
 
 ### 2. Make Scope Config The Single Source Of Truth
 
@@ -96,11 +117,13 @@ Tasks:
 - remove hardcoded scope options from `_includes/docs_viewer_shell.html`
 - remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/js/docs-viewer.js`
 - make generated data URLs, search URLs, default doc ids, route bases, and `include_scope_param` scope-config driven
+- remove remaining hardcoded scope lists that the generated config replaces in the same slice
 
 Acceptance:
 
 - adding a new docs scope does not require editing the viewer shell or runtime route map
 - `/docs/?scope=<scope>` can manage any configured scope supported by the local server
+- no compatibility scope list remains as a second source of truth
 
 ### 3. Extract Docs Viewer CSS And UI Text
 
@@ -114,6 +137,7 @@ Tasks:
 - decide which modal/control styles are copied into Docs Viewer management CSS
 - allow intentional visual drift from Studio UI primitives where it improves Docs Viewer identity
 - move Docs Viewer UI text/config out of `assets/studio/data/`
+- remove public-route CSS/JS includes made redundant by the extracted Docs Viewer CSS/config
 
 Acceptance:
 
@@ -130,7 +154,7 @@ Direction:
 
 - Catalogue search and Docs search are separate data-domain products
 - Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`
-- any top-level `/search/` route should be a chooser or dispatcher, not the owner of merged policy
+- the top-level `/search/` route should not remain as a global or merged-result search product
 
 Tasks:
 
@@ -139,12 +163,16 @@ Tasks:
 - keep generated docs-search output compatible during transition
 - make docs-search policy explicit inside Docs Viewer runtime/config
 - share only genuinely domain-neutral text helpers with Catalogue search
+- remove docs-scope entries from the generic/public search policy in the same slice
+- remove docs-search generation from the generic search config once the Docs Viewer builder owns it
+- update Search docs so Catalogue and Docs search ownership is reflected consistently
 
 Acceptance:
 
 - a portable Docs Viewer install can build inline docs search without copying Catalogue/public search files
 - Catalogue search continues to build and run independently
 - `/analysis/` uses Docs search because it is document-domain content
+- the public/global search runtime no longer has docs-scope responsibilities
 
 ### 5. Package The Route Adapter Pattern
 
@@ -158,6 +186,7 @@ Tasks:
 - document canonical URL behavior for `scope`, `doc`, `q`, and `mode`
 - make public routes normalize away manage mode
 - keep `/docs/` as the only management-capable shell
+- remove any public-route management hooks or query affordances superseded by the route templates
 
 Acceptance:
 
@@ -174,12 +203,13 @@ Tasks:
 - remove `studio`, `library`, and `analysis` hardcoding from import scope normalization
 - ensure imported media token paths and target source roots come from scope config
 - keep filename-collision modal behavior intact
-- keep the old `/studio/docs-import/` wrapper only until links are moved
+- delete the old `/studio/docs-import/` wrapper as part of the same slice if it still exists
+- remove route defaults, activity-contract references, tests, and docs that assume `/studio/docs-import/` is the user-facing import surface
 
 Acceptance:
 
 - Docs Import works for any configured writable docs scope
-- the compatibility route can be retired safely
+- the Docs Viewer management modal is the only user-facing Docs Import surface
 
 ### 7. Consolidate Local Management Server Packaging
 
@@ -192,6 +222,7 @@ Tasks:
 - make generated-data reads, source writes, backups, rebuilds, and import endpoints use the same scope config
 - define a project-local way to start the server outside `bin/dev-studio`
 - document required Python/Ruby/Jekyll assumptions for downstream projects
+- remove server configuration branches that only support retired import/search routes
 
 Acceptance:
 
@@ -214,23 +245,6 @@ Acceptance:
 
 - the fixture proves the install guide works without dotlineform-only routes or data
 - any remaining hidden assumptions are added back to this request as follow-up tasks
-
-### 9. Retire Transitional Couplings
-
-After the portable boundary works, remove compatibility code that only exists because the viewer was still embedded in Studio/search infrastructure.
-
-Tasks:
-
-- retire `/studio/docs-import/` after callers move to the Docs Viewer modal
-- remove docs-search generation from generic search config
-- remove public Docs Viewer dependencies on Studio config/data paths
-- update Search docs so Catalogue and Docs search ownership is reflected consistently
-- update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) to the reduced file set
-
-Acceptance:
-
-- the install page is shorter because the module owns its runtime, CSS, config, search, import, and management files
-- remaining project-local steps are route placement, source content, theme choices, and local command wiring
 
 ## Verification Strategy
 

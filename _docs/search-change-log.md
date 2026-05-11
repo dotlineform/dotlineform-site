@@ -2,7 +2,7 @@
 doc_id: search-change-log
 title: Search Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 12:50"
+last_updated: "2026-05-11 13:20"
 parent_id: search
 sort_order: 140
 ---
@@ -19,6 +19,7 @@ Clarified that this project does not need a generic global site-search product.
 The meaningful search domains are Catalogue and Docs, with separate source models, ranking goals, and UI objectives.
 Docs Viewer should own document-domain search for `/docs/`, `/library/`, and `/analysis/`; Catalogue search should own structured catalogue lookup.
 Tidied Search Overview around that domain split and linked the implementation direction to the Portable Docs Viewer request.
+The follow-up clarification is that `/search/` should be retired as a global or aggregate route rather than preserved as a transitional bridge.
 
 **Reason:**
 Making Docs Viewer portable should not require copying a generic site-search product.
@@ -26,7 +27,7 @@ Docs search is a critical part of a useful docs viewer, while Catalogue search s
 
 **Effect:**
 This is a documentation and architecture direction update only.
-Runtime behavior and generated artifact shapes are unchanged in this slice.
+Runtime behavior and generated artifact shapes are unchanged in this slice, but the next cleanup should remove the global `/search/` route and keep any future Catalogue search entry point Catalogue-owned.
 
 **Affected files/docs:**
 

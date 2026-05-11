@@ -69,7 +69,7 @@ Adopted routes:
 - `/studio/catalogue-status/`
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
-- `/studio/docs-import/`
+- `/docs/?mode=manage&import=1`
 - `/studio/import/`
 - `/studio/audits/`
 - `/studio/project-state/`
@@ -117,7 +117,7 @@ Primary async or service-backed Studio routes:
 - [x] `/studio/catalogue-work-detail/` root `#catalogueWorkDetailRoot`
 - [x] `/studio/catalogue-work/` root `#catalogueWorkRoot`
 - [x] `/studio/docs-broken-links/` root `#docsBrokenLinksRoot`
-- [x] `/studio/docs-import/` root `#docsHtmlImportRoot`
+- [x] `/docs/?mode=manage&import=1` import modal root `#docsHtmlImportRoot`
 - [x] `/studio/export/` root `#dataExportRoot`
 - [x] `/studio/import/` root `#dataImportRoot`
 - [x] `/studio/audits/` root `#studioAuditsRoot`

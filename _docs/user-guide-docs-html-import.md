@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: "Docs Import"
 added_date: 2026-04-24
-last_updated: 2026-05-11
+last_updated: "2026-05-11 13:20"
 parent_id: user-guide
 sort_order: 20
 ---
@@ -13,10 +13,8 @@ Use this page when you have a staged source file that should become a Library, A
 The import workflow is owned by Docs Viewer management.
 Open it from `/docs/?scope=<scope>&mode=manage` with the `Import` toolbar action.
 
-The import UI now runs directly inside the Docs Viewer management modal.
-The old Studio route remains as a temporary compatibility wrapper around the same importer module:
-
-- `/studio/docs-import/`
+The import UI runs directly inside the Docs Viewer management modal.
+There is no separate Studio Docs Import route.
 
 ## Before You Start
 
@@ -33,9 +31,9 @@ For image and downloadable file imports, copy the media file to R2 manually afte
 The importer creates the wrapper Markdown and reports the expected R2 key, but it does not upload media.
 For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file to R2 after import.
 
-## What The Page Does
+## What The Modal Does
 
-The import page:
+The import modal:
 
 - lists supported staged files from `var/docs/import-staging/`
 - lets you choose whether the imported doc should publish into `library`, `analysis`, or `studio`
@@ -54,7 +52,7 @@ The import page:
 
 ## Basic Workflow
 
-1. Open `/docs/?scope=library&mode=manage` or the matching Docs Viewer management scope.
+1. Open `/docs/?scope=library&mode=manage&import=1` or the matching Docs Viewer management scope.
 2. Click `Import`.
 3. Choose the staged file.
 4. Confirm or change the publish scope:

@@ -724,7 +724,7 @@
     },
     "docs-import": {
       "label": "docs import",
-      "route": "/studio/docs-import/",
+      "route": "/docs/",
       "actions": {
         "import-docs-source": {
           "label": "import docs source",

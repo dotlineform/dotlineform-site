@@ -43,7 +43,7 @@ def write_activity_contract(repo_root: Path) -> None:
                     },
                     "docs-import": {
                         "label": "docs import",
-                        "route": "/studio/docs-import/",
+                        "route": "/docs/",
                         "actions": {
                             "import-docs-source": {
                                 "label": "import docs source",
@@ -170,7 +170,7 @@ def import_source_body() -> dict[str, object]:
         "activity_context": {
             "page_id": "docs-import",
             "action_id": "import-docs-source",
-            "route": "/studio/docs-import/",
+            "route": "/docs/",
             "control_id": "docsHtmlImportRun",
             "control_selector": "#docsHtmlImportRun",
             "correlation_id": "import-source:import-me",

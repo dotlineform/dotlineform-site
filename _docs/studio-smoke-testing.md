@@ -132,7 +132,7 @@ Adopted routes:
 - `/studio/catalogue-series/` with `#catalogueSeriesRoot`
 - `/studio/catalogue-moment/` with `#catalogueMomentRoot`
 - `/studio/docs-broken-links/` with `#docsBrokenLinksRoot`
-- `/studio/docs-import/` with `#docsHtmlImportRoot`
+- `/docs/?mode=manage&import=1` with `#docsHtmlImportRoot` inside the Docs Viewer import modal
 - `/studio/project-state/` with `#projectStateRoot`
 - `/studio/analytics/series-tag-editor/` with `#seriesTagEditorRoot`
 - `/studio/analytics/series-tags/` with `#series-tags`

@@ -128,9 +128,9 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
-| Docs import | `/studio/docs-import/` | `#docsHtmlImportRun` | `import docs source` | staged source conversion; validation; source doc write; backup; media source registration when applicable | `done` | Batch C coverage. Preview/replacement-required states stay excluded until the import writes source files. |
-| Docs import | `/studio/docs-import/` | `#docsHtmlImportConfirm` | none | none | `excluded` | Confirmation should preserve the original `import docs source` context rather than creating a separate action row. |
-| Docs import | `/studio/docs-import/` | result source link | none | none | `excluded` | Opening the source file is not activity-report scope for v1. |
+| Docs import | `/docs/?mode=manage&import=1` | `#docsHtmlImportRun` | `import docs source` | staged source conversion; validation; source doc write; backup; media source registration when applicable | `done` | Batch C coverage. Preview/replacement-required states stay excluded until the import writes source files. |
+| Docs import | `/docs/?mode=manage&import=1` | `#docsHtmlImportConfirm` | none | none | `excluded` | Confirmation should preserve the original `import docs source` context rather than creating a separate action row. |
+| Docs import | `/docs/?mode=manage&import=1` | result source link | none | none | `excluded` | Opening the source file is not activity-report scope for v1. |
 | Studio data export | `/studio/export/` | `#dataExportRun` | `export data` | docs export generation; selected records; output file/report; warnings or skipped records | `done` | Batch C coverage for output-writing exports. |
 | Studio data import | `/studio/import/` | `#dataImportPreview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Studio data import | `/studio/import/` | `#dataImportUpdateSummary` | `update import summaries` | import apply preflight; source doc backups; summary field writes; result counts | `done` | Batch C coverage for confirmed apply writes; preflight remains excluded. |

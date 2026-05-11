@@ -67,7 +67,6 @@ Current route inventory:
 - `studio/catalogue-status/index.md`
 - `studio/activity/index.md`
 - `studio/docs-broken-links/index.md`
-- `studio/docs-import/index.md`
 - `studio/bulk-add-work/index.md`
 - `studio/catalogue-moment/index.md`
 - `studio/catalogue-work/index.md`
@@ -86,7 +85,6 @@ Current page-level doc links:
 - Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
 - Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
 - Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
-- Docs Import -> `/docs/?scope=studio&doc=user-guide-docs-html-import`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-44810d7ec5f1f72cc68249dc68ba9116",
-    "generated_at_utc": "2026-05-11T11:58:24Z",
+    "version": "blake2b-e9d8e9a0b3118310301c812ffe68abe9",
+    "generated_at_utc": "2026-05-11T12:18:01Z",
     "count": 223
   },
   "entries": [
@@ -376,10 +376,10 @@
       "kind": "doc",
       "title": "Inventory",
       "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-11 13:03",
       "parent_id": "site-request-moment-source-cleanup",
-      "parent_title": "Moment Source Cleanup ✅",
-      "display_meta": "2026-05-01 • Moment Source Cleanup ✅",
+      "parent_title": "Moment Source Cleanup",
+      "display_meta": "2026-05-11 13:03 • Moment Source Cleanup",
       "search_terms": [
         "site-request-moment-source-cleanup-inventory",
         "site",
@@ -388,13 +388,15 @@
         "source",
         "cleanup",
         "inventory",
-        "moment source cleanup ✅",
-        "2026-05-01",
+        "moment source cleanup",
+        "2026-05-11 13:03",
         "2026",
         "05",
-        "01"
+        "11",
+        "13",
+        "03"
       ],
-      "search_text": "site-request-moment-source-cleanup-inventory site request moment source cleanup inventory moment source cleanup ✅ 2026-05-01 2026 05 01"
+      "search_text": "site-request-moment-source-cleanup-inventory site request moment source cleanup inventory moment source cleanup 2026-05-11 13:03 2026 05 11 13 03"
     },
     {
       "id": "data-models-library",
@@ -517,21 +519,23 @@
       "kind": "doc",
       "title": "Search Overview",
       "href": "/docs/?scope=studio&doc=search-overview",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 13:20",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 • Search",
+      "display_meta": "2026-05-11 13:20 • Search",
       "search_terms": [
         "search-overview",
         "search",
         "overview",
         "search overview",
-        "2026-05-11",
+        "2026-05-11 13:20",
         "2026",
         "05",
-        "11"
+        "11",
+        "13",
+        "20"
       ],
-      "search_text": "search-overview search overview search overview 2026-05-11 2026 05 11"
+      "search_text": "search-overview search overview search overview 2026-05-11 13:20 2026 05 11 13 20"
     },
     {
       "id": "site-change-log-guidance",
@@ -930,10 +934,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 13:20",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-11 • User Guide",
+      "display_meta": "2026-05-11 13:20 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -943,12 +947,14 @@
         "import",
         "docs import",
         "user guide",
-        "2026-05-11",
+        "2026-05-11 13:20",
         "2026",
         "05",
-        "11"
+        "11",
+        "13",
+        "20"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-11 2026 05 11"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-11 13:20 2026 05 11 13 20"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",
@@ -1482,10 +1488,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-11 13:20",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 • Change Requests",
+      "display_meta": "2026-05-11 13:20 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1497,12 +1503,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11",
+        "2026-05-11 13:20",
         "2026",
         "05",
-        "11"
+        "11",
+        "13",
+        "20"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 2026 05 11"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 13:20 2026 05 11 13 20"
     },
     {
       "id": "analytics",
@@ -4245,12 +4253,12 @@
     {
       "id": "site-request-moment-source-cleanup",
       "kind": "doc",
-      "title": "Moment Source Cleanup ✅",
+      "title": "Moment Source Cleanup",
       "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup",
-      "last_updated": "2026-05-01",
+      "last_updated": "2026-05-11 13:03",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-01 • Change Requests",
+      "display_meta": "2026-05-11 13:03 • Change Requests",
       "search_terms": [
         "site-request-moment-source-cleanup",
         "site",
@@ -4258,16 +4266,18 @@
         "moment",
         "source",
         "cleanup",
-        "moment source cleanup ✅",
+        "moment source cleanup",
         "change requests",
         "change",
         "requests",
-        "2026-05-01",
+        "2026-05-11 13:03",
         "2026",
         "05",
-        "01"
+        "11",
+        "13",
+        "03"
       ],
-      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup ✅ change requests change requests 2026-05-01 2026 05 01"
+      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup change requests change requests 2026-05-11 13:03 2026 05 11 13 03"
     },
     {
       "id": "site-request-catalogue-media-section-schema",
@@ -4801,24 +4811,24 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-11 13:20",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 12:50 • Search",
+      "display_meta": "2026-05-11 13:20 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-05-11 12:50",
+        "2026-05-11 13:20",
         "2026",
         "05",
         "11",
-        "12",
-        "50"
+        "13",
+        "20"
       ],
-      "search_text": "search-change-log search change log search change log 2026-05-11 12:50 2026 05 11 12 50"
+      "search_text": "search-change-log search change log search change log 2026-05-11 13:20 2026 05 11 13 20"
     },
     {
       "id": "docs-viewer-management",

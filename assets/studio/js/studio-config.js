@@ -11,7 +11,7 @@ const DEFAULT_STUDIO_CONFIG = {
       "catalogue_field_registry_review": "/studio/catalogue-field-registry/",
       "docs_broken_links": "/studio/docs-broken-links/",
       "project_state": "/studio/project-state/",
-      "docs_html_import": "/studio/docs-import/",
+      "docs_html_import": "/docs/?mode=manage&import=1",
       "library_documents": "/studio/library-documents/",
       "data_export": "/studio/export/",
       "data_import": "/studio/import/",

@@ -61,12 +61,12 @@ Current behavior:
 - generated Docs Viewer JSON read helpers are owned by `scripts/docs/docs_generated_reads.py`
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
-- staged source import orchestration for `/studio/docs-import/` is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
+- staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
 - management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - structured import/export adapter orchestration remains server-owned for now and is tracked separately from the Docs Management Server restructuring request
 - used by `/docs/?scope=studio&mode=manage`, `/docs/?scope=library&mode=manage`, and `/docs/?scope=analysis&mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
-- also used by `/studio/docs-import/` for staged-file listing and source import writes
+- also used by the `/docs/` management import modal for staged-file listing and source import writes
 - also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
 - also used by `/studio/import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
 - appends unified Studio activity rows for covered docs import/export/import-apply and broken-links audit actions when valid activity context is supplied
