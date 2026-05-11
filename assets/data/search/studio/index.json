@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2c6e40f4087148704dcce5296ad4d490",
-    "generated_at_utc": "2026-05-11T17:31:55Z",
-    "count": 223
+    "version": "blake2b-7a63e68c97317e9b4347e0e41bf8db51",
+    "generated_at_utc": "2026-05-11T18:47:08Z",
+    "count": 224
   },
   "entries": [
     {
@@ -1513,6 +1513,37 @@
         "35"
       ],
       "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 18:35 2026 05 11 18 35"
+    },
+    {
+      "id": "site-request-docs-viewer-config-settings",
+      "kind": "doc",
+      "title": "Docs Viewer Config And Settings Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
+      "last_updated": "2026-05-11 19:46",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-11 19:46 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-config-settings",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "config",
+        "settings",
+        "docs viewer config and settings request",
+        "and",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-11 19:46",
+        "2026",
+        "05",
+        "11",
+        "19",
+        "46"
+      ],
+      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-11 19:46 2026 05 11 19 46"
     },
     {
       "id": "analytics",
